@@ -1,0 +1,125 @@
+/* Locus Page Styles */
+
+.locus-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header */
+.locus-header {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 3px solid #1976d2;
+}
+
+.locus-header h1 {
+  margin: 0;
+  color: #1976d2;
+  font-size: 2em;
+}
+
+.locus-header .subtitle {
+  margin: 5px 0 0 0;
+  color: #666;
+  font-size: 1.1em;
+}
+
+/* Tab Navigation */
+.tab-navigation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 20px;
+  padding: 10px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.tab-button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #f5f5f5;
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px 4px 0 0;
+  transition: all 0.2s ease;
+}
+
+.tab-button:hover {
+  background-color: #e0e0e0;
+}
+
+.tab-button.active {
+  background-color: #1976d2;
+  color: white;
+}
+
+/* Tab Content */
+.tab-content {
+  min-height: 400px;
+}
+
+/* Organism Selector */
+.organism-selector {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #e3f2fd;
+  border-radius: 4px;
+}
+
+.organism-selector label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.organism-selector select {
+  padding: 8px 15px;
+  font-size: 14px;
+  border: 1px solid #1976d2;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+}
+
+/* Loading and Error states */
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-style: italic;
+}
+
+.error {
+  padding: 20px;
+  background-color: #ffebee;
+  color: #c62828;
+  border-radius: 4px;
+  margin: 20px 0;
+}
+
+.no-data {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .locus-page {
+    padding: 10px;
+  }
+
+  .tab-navigation {
+    flex-direction: column;
+  }
+
+  .tab-button {
+    border-radius: 4px;
+  }
+
+  .locus-header h1 {
+    font-size: 1.5em;
+  }
+}

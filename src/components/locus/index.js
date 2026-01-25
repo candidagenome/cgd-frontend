@@ -1,0 +1,10 @@
+export { default as LocusSummary } from './LocusSummary';
+export { default as GoDetails } from './GoDetails';
+export { default as PhenotypeDetails } from './PhenotypeDetails';
+export { default as InteractionDetails } from './InteractionDetails';
+export { default as ProteinDetails } from './ProteinDetails';
+export { default as HomologyDetails } from './HomologyDetails';
+export { default as SequenceDetails } from './SequenceDetails';
+export { default as References } from './References';
+export { default as SummaryNotes } from './SummaryNotes';
+export { default as History } from './History';
