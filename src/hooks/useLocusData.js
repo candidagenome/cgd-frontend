@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import locusApi from '../api/locusApi';
 
 export function useLocusData(locusName) {
@@ -109,21 +109,33 @@ export function useLocusData(locusName) {
     }
   }, [data.history, loading.history, fetchData]);
 
+  const loaders = useMemo(() => ({
+    loadGoDetails,
+    loadPhenotypeDetails,
+    loadInteractionDetails,
+    loadProteinDetails,
+    loadHomologyDetails,
+    loadSequenceDetails,
+    loadReferences,
+    loadSummaryNotes,
+    loadHistory,
+  }), [
+    loadGoDetails,
+    loadPhenotypeDetails,
+    loadInteractionDetails,
+    loadProteinDetails,
+    loadHomologyDetails,
+    loadSequenceDetails,
+    loadReferences,
+    loadSummaryNotes,
+    loadHistory,
+  ]);
+
   return {
     data,
     loading,
     errors,
-    loaders: {
-      loadGoDetails,
-      loadPhenotypeDetails,
-      loadInteractionDetails,
-      loadProteinDetails,
-      loadHomologyDetails,
-      loadSequenceDetails,
-      loadReferences,
-      loadSummaryNotes,
-      loadHistory,
-    },
+    loaders,
   };
 }
 
