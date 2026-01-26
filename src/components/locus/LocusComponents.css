@@ -114,16 +114,82 @@
 }
 
 /* GO section */
-.aspect-section {
-  margin: 20px 0;
+.go-aspects {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-.aspect-section h4 {
-  color: #388e3c;
-  margin-bottom: 10px;
-  padding: 5px 10px;
+.aspect-section {
+  margin: 0;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.aspect-header {
+  color: #2e7d32;
+  margin: 0;
+  padding: 12px 15px;
   background-color: #e8f5e9;
-  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background-color 0.2s;
+}
+
+.aspect-header:hover {
+  background-color: #c8e6c9;
+}
+
+.aspect-icon {
+  font-size: 1.1em;
+}
+
+.aspect-content {
+  padding: 0;
+}
+
+.evidence-category {
+  border-top: 1px solid #e0e0e0;
+}
+
+.evidence-category-header {
+  padding: 10px 15px;
+  background-color: #f5f5f5;
+  font-weight: 500;
+  color: #555;
+  font-size: 0.9em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.go-table {
+  margin: 0;
+}
+
+.go-id-link {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+.evidence-code {
+  display: inline-block;
+  background-color: #e3f2fd;
+  color: #1565c0;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.85em;
+  font-weight: 500;
+  cursor: help;
+}
+
+.evidence-with {
+  color: #666;
+  font-size: 0.85em;
+  margin-left: 5px;
 }
 
 /* Homology groups */
@@ -170,20 +236,25 @@
   word-break: break-all;
 }
 
-.sequence-block {
-  margin: 15px 0;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  overflow: hidden;
+/* Location highlight card */
+.location-highlight {
+  margin-bottom: 20px;
 }
 
-.sequence-block.current {
-  border-color: #4caf50;
+.location-highlight h4 {
+  color: #1976d2;
+  margin-bottom: 10px;
 }
 
-.sequence-header {
-  padding: 10px 15px;
-  background-color: #f5f5f5;
+.current-location-card {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  border: 1px solid #90caf9;
+  border-radius: 8px;
+  padding: 15px 20px;
+  margin-bottom: 10px;
+}
+
+.location-main {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -191,14 +262,142 @@
   gap: 10px;
 }
 
+.chromosome-name {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #1565c0;
+}
+
+.location-coords {
+  font-family: 'Courier New', monospace;
+  background-color: white;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.95em;
+}
+
+.location-details {
+  margin-top: 8px;
+  color: #555;
+  font-size: 0.9em;
+}
+
+.strand-info strong {
+  color: #1976d2;
+}
+
+/* Archived locations */
+.archived-locations {
+  margin: 15px 0;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.archived-header {
+  padding: 10px 15px;
+  background-color: #f5f5f5;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #666;
+}
+
+.archived-header:hover {
+  background-color: #eeeeee;
+}
+
+.archived-table {
+  margin: 0;
+}
+
+.archived-table td {
+  color: #888;
+}
+
+/* Sequence type groups */
+.sequences-section h4 {
+  color: #1976d2;
+  margin-bottom: 15px;
+}
+
+.sequence-type-group {
+  margin-bottom: 20px;
+}
+
+.sequence-type-header {
+  margin: 0 0 10px 0;
+  padding: 8px 12px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  color: #555;
+  font-size: 0.95em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sequence-block {
+  margin: 10px 0;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.sequence-block.current {
+  border-color: #4caf50;
+  border-left: 4px solid #4caf50;
+}
+
+.sequence-block.archived {
+  opacity: 0.7;
+}
+
+.sequence-header {
+  padding: 12px 15px;
+  background-color: #f9f9f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  transition: background-color 0.2s;
+}
+
+.sequence-header:hover {
+  background-color: #f0f0f0;
+}
+
+.seq-info-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.seq-info-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
 .seq-type {
   font-weight: bold;
   color: #1976d2;
 }
 
+.seq-stat {
+  color: #333;
+}
+
+.seq-stat strong {
+  color: #1976d2;
+}
+
 .seq-meta {
   color: #666;
-  font-size: 0.9em;
+  font-size: 0.85em;
 }
 
 .current-badge {
@@ -206,24 +405,54 @@
   color: white;
   padding: 2px 8px;
   border-radius: 10px;
-  font-size: 0.8em;
-  margin-left: 10px;
+  font-size: 0.75em;
 }
 
 .sequence-content {
-  padding: 15px;
+  padding: 0;
   background-color: #fafafa;
+}
+
+.sequence-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.copy-btn {
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85em;
+  transition: background-color 0.2s;
+}
+
+.copy-btn:hover {
+  background-color: #1565c0;
+}
+
+.sequence-length-info {
+  color: #666;
+  font-size: 0.85em;
 }
 
 .sequence-text {
   font-family: 'Courier New', monospace;
   font-size: 12px;
-  line-height: 1.5;
+  line-height: 1.6;
   word-break: break-all;
   white-space: pre-wrap;
   margin: 0;
+  padding: 15px;
   max-height: 300px;
   overflow-y: auto;
+  background-color: #fafafa;
 }
 
 /* References */
@@ -316,4 +545,329 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+
+/* =====================================================
+   SUMMARY TAB IMPROVEMENTS
+   ===================================================== */
+
+.gene-name {
+  font-size: 1.2em;
+  color: #1976d2;
+}
+
+.systematic-name {
+  font-family: 'Courier New', monospace;
+  background-color: #f5f5f5;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.95em;
+}
+
+.feature-type-badge {
+  display: inline-block;
+  background-color: #e3f2fd;
+  color: #1565c0;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.no-value {
+  color: #999;
+  font-style: italic;
+}
+
+.taxon-id {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.dbxref-id {
+  font-family: 'Courier New', monospace;
+  background-color: #fff3e0;
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: #e65100;
+}
+
+/* Alias grouping */
+.alias-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.alias-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.alias-type-label {
+  font-weight: 600;
+  color: #555;
+  min-width: 120px;
+}
+
+.alias-names {
+  color: #333;
+}
+
+.retired-names {
+  color: #757575;
+}
+
+.retired-name em {
+  text-decoration: line-through;
+}
+
+/* External link grouping */
+.external-link-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.link-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.link-source-label {
+  font-weight: 600;
+  color: #555;
+  min-width: 120px;
+}
+
+.link-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+/* =====================================================
+   PHENOTYPE TAB IMPROVEMENTS
+   ===================================================== */
+
+.phenotype-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.phenotype-category {
+  background-color: white;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+}
+
+.category-header {
+  margin: 0;
+  padding: 12px 15px;
+  background-color: #f5f5f5;
+  border-left: 4px solid #1976d2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.category-header .annotation-count {
+  font-weight: normal;
+  color: #666;
+  font-size: 0.85em;
+}
+
+.experiment-type-section {
+  border-top: 1px solid #e0e0e0;
+}
+
+.experiment-type-header {
+  padding: 10px 15px;
+  background-color: #fafafa;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background-color 0.2s;
+}
+
+.experiment-type-header:hover {
+  background-color: #f0f0f0;
+}
+
+.collapse-icon {
+  color: #666;
+  font-size: 0.8em;
+  width: 15px;
+}
+
+.experiment-type-name {
+  font-weight: 500;
+  color: #333;
+}
+
+.experiment-type-header .annotation-count {
+  color: #888;
+  font-size: 0.85em;
+}
+
+.phenotype-table {
+  margin: 0;
+}
+
+.phenotype-table th:first-child,
+.phenotype-table td:first-child {
+  padding-left: 40px;
+}
+
+/* =====================================================
+   GO TAB IMPROVEMENTS
+   ===================================================== */
+
+.go-annotation-type {
+  margin: 15px 0;
+  padding: 10px 15px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.annotation-type-header {
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 10px;
+  font-size: 0.95em;
+}
+
+.go-qualifier {
+  font-style: italic;
+  color: #666;
+  margin-left: 5px;
+}
+
+.go-qualifier.qualifier-not {
+  color: #d32f2f;
+  font-weight: 500;
+}
+
+/* =====================================================
+   SEQUENCE TAB IMPROVEMENTS
+   ===================================================== */
+
+.subfeature-section {
+  margin-top: 20px;
+}
+
+.subfeature-section h5 {
+  color: #555;
+  margin-bottom: 10px;
+  padding: 5px 10px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+.assembly-section {
+  margin: 15px 0;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.assembly-header {
+  padding: 10px 15px;
+  background-color: #e8f5e9;
+  font-weight: 500;
+  color: #2e7d32;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.assembly-header:hover {
+  background-color: #c8e6c9;
+}
+
+.assembly-content {
+  padding: 15px;
+}
+
+/* =====================================================
+   GENERAL IMPROVEMENTS
+   ===================================================== */
+
+/* Collapsible sections */
+.collapsible-header {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.collapsible-header:hover {
+  opacity: 0.8;
+}
+
+/* Better table styling */
+.data-table th {
+  white-space: nowrap;
+}
+
+.data-table td {
+  vertical-align: top;
+}
+
+/* Count badges */
+.count-badge {
+  display: inline-block;
+  background-color: #e0e0e0;
+  color: #555;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.8em;
+  margin-left: 8px;
+}
+
+/* Section dividers */
+.section-divider {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 20px 0;
+}
+
+/* Empty state improvements */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.empty-state-icon {
+  font-size: 3em;
+  margin-bottom: 15px;
+  opacity: 0.5;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .alias-type-label,
+  .link-source-label {
+    min-width: 100%;
+    margin-bottom: 3px;
+  }
+
+  .category-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .phenotype-table th:first-child,
+  .phenotype-table td:first-child {
+    padding-left: 15px;
+  }
 }

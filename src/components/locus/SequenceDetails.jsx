@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './LocusComponents.css';
 
 function SequenceDetails({ data, loading, error }) {
+  const [expandedSequences, setExpandedSequences] = useState({});
+  const [showArchivedLocations, setShowArchivedLocations] = useState(false);
+
   if (loading) return <div className="loading">Loading sequence data...</div>;
   if (error) return <div className="error">Error: {error}</div>;
   if (!data || !data.results) return <div className="no-data">No sequence data available</div>;
@@ -15,76 +18,188 @@ function SequenceDetails({ data, loading, error }) {
   const formatStrand = (strand) => {
     if (strand === 'W') return 'Watson (+)';
     if (strand === 'C') return 'Crick (-)';
+    if (strand === '+') return 'Forward (+)';
+    if (strand === '-') return 'Reverse (-)';
     return strand;
+  };
+
+  const formatCoordinates = (start, stop) => {
+    if (!start || !stop) return '-';
+    const length = Math.abs(stop - start) + 1;
+    return `${start.toLocaleString()} - ${stop.toLocaleString()} (${length.toLocaleString()} bp)`;
+  };
+
+  const toggleSequence = (key) => {
+    setExpandedSequences(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  };
+
+  // Group sequences by type
+  const groupSequencesByType = (sequences) => {
+    const groups = {};
+    sequences.forEach(seq => {
+      const type = seq.seq_type || 'Other';
+      if (!groups[type]) {
+        groups[type] = [];
+      }
+      groups[type].push(seq);
+    });
+    return groups;
   };
 
   return (
     <div className="sequence-details">
-      {organisms.map(([orgName, orgData]) => (
-        <div key={orgName} className="organism-section">
-          <h3 className="organism-name">{orgName}</h3>
-          <p className="locus-display">Locus: {orgData.locus_display_name}</p>
+      {organisms.map(([orgName, orgData]) => {
+        const currentLocations = orgData.locations?.filter(l => l.is_current) || [];
+        const archivedLocations = orgData.locations?.filter(l => !l.is_current) || [];
+        const sequenceGroups = groupSequencesByType(orgData.sequences || []);
 
-          {/* Locations */}
-          {orgData.locations && orgData.locations.length > 0 && (
-            <div className="locations-section">
-              <h4>Chromosomal Location</h4>
-              <table className="data-table">
-                <thead>
-                  <tr>
-                    <th>Chromosome</th>
-                    <th>Start</th>
-                    <th>Stop</th>
-                    <th>Strand</th>
-                    <th>Current</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orgData.locations.map((loc, idx) => (
-                    <tr key={idx} className={loc.is_current ? 'current' : 'archived'}>
-                      <td>{loc.chromosome || '-'}</td>
-                      <td>{loc.start_coord?.toLocaleString()}</td>
-                      <td>{loc.stop_coord?.toLocaleString()}</td>
-                      <td>{formatStrand(loc.strand)}</td>
-                      <td>{loc.is_current ? 'Yes' : 'No'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+        return (
+          <div key={orgName} className="organism-section">
+            <h3 className="organism-name">{orgName}</h3>
+            <p className="locus-display">Locus: {orgData.locus_display_name}</p>
 
-          {/* Sequences */}
-          {orgData.sequences && orgData.sequences.length > 0 && (
-            <div className="sequences-section">
-              <h4>Sequences</h4>
-              {orgData.sequences.map((seq, idx) => (
-                <div key={idx} className={`sequence-block ${seq.is_current ? 'current' : 'archived'}`}>
-                  <div className="sequence-header">
-                    <span className="seq-type">{seq.seq_type}</span>
-                    <span className="seq-meta">
-                      Length: {seq.seq_length?.toLocaleString()} |
-                      Source: {seq.source} |
-                      Version: {new Date(seq.seq_version).toLocaleDateString()}
-                      {seq.is_current && <span className="current-badge">Current</span>}
-                    </span>
-                  </div>
-                  {seq.residues && (
-                    <div className="sequence-content">
-                      <pre className="sequence-text">{seq.residues}</pre>
+            {/* Current Chromosomal Location - Highlighted */}
+            {currentLocations.length > 0 && (
+              <div className="location-highlight">
+                <h4>📍 Chromosomal Location</h4>
+                {currentLocations.map((loc, idx) => (
+                  <div key={idx} className="current-location-card">
+                    <div className="location-main">
+                      <span className="chromosome-name">
+                        {loc.chromosome || 'Unknown Chromosome'}
+                      </span>
+                      <span className="location-coords">
+                        {formatCoordinates(loc.start_coord, loc.stop_coord)}
+                      </span>
                     </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
+                    <div className="location-details">
+                      <span className="strand-info">
+                        Strand: <strong>{formatStrand(loc.strand)}</strong>
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
 
-          {(!orgData.locations || orgData.locations.length === 0) &&
-           (!orgData.sequences || orgData.sequences.length === 0) && (
-            <p className="no-data">No sequence information for this organism</p>
-          )}
-        </div>
-      ))}
+            {/* Archived Locations - Collapsible */}
+            {archivedLocations.length > 0 && (
+              <div className="archived-locations">
+                <div
+                  className="archived-header"
+                  onClick={() => setShowArchivedLocations(!showArchivedLocations)}
+                >
+                  <span className="collapse-icon">{showArchivedLocations ? '▼' : '▶'}</span>
+                  <span>Archived Locations</span>
+                  <span className="count-badge">{archivedLocations.length}</span>
+                </div>
+                {showArchivedLocations && (
+                  <table className="data-table archived-table">
+                    <thead>
+                      <tr>
+                        <th>Chromosome</th>
+                        <th>Coordinates</th>
+                        <th>Strand</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {archivedLocations.map((loc, idx) => (
+                        <tr key={idx}>
+                          <td>{loc.chromosome || '-'}</td>
+                          <td>{formatCoordinates(loc.start_coord, loc.stop_coord)}</td>
+                          <td>{formatStrand(loc.strand)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+            )}
+
+            {/* Sequences - Grouped by Type */}
+            {Object.keys(sequenceGroups).length > 0 && (
+              <div className="sequences-section">
+                <h4>🧬 Sequences</h4>
+                {Object.entries(sequenceGroups).map(([seqType, sequences]) => (
+                  <div key={seqType} className="sequence-type-group">
+                    <h5 className="sequence-type-header">
+                      {seqType}
+                      <span className="count-badge">{sequences.length}</span>
+                    </h5>
+
+                    {sequences.map((seq, idx) => {
+                      const seqKey = `${orgName}-${seqType}-${idx}`;
+                      const isExpanded = expandedSequences[seqKey];
+
+                      return (
+                        <div
+                          key={idx}
+                          className={`sequence-block ${seq.is_current ? 'current' : 'archived'}`}
+                        >
+                          <div
+                            className="sequence-header"
+                            onClick={() => seq.residues && toggleSequence(seqKey)}
+                            style={{ cursor: seq.residues ? 'pointer' : 'default' }}
+                          >
+                            <div className="seq-info-left">
+                              {seq.residues && (
+                                <span className="collapse-icon">{isExpanded ? '▼' : '▶'}</span>
+                              )}
+                              <span className="seq-type">{seq.seq_type}</span>
+                              {seq.is_current && <span className="current-badge">Current</span>}
+                            </div>
+                            <div className="seq-info-right">
+                              <span className="seq-stat">
+                                <strong>{seq.seq_length?.toLocaleString()}</strong>
+                                {seq.seq_type === 'Protein' ? ' aa' : ' bp'}
+                              </span>
+                              <span className="seq-meta">
+                                Source: {seq.source}
+                              </span>
+                              <span className="seq-meta">
+                                Version: {new Date(seq.seq_version).toLocaleDateString()}
+                              </span>
+                            </div>
+                          </div>
+
+                          {isExpanded && seq.residues && (
+                            <div className="sequence-content">
+                              <div className="sequence-toolbar">
+                                <button
+                                  className="copy-btn"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    navigator.clipboard.writeText(seq.residues);
+                                  }}
+                                >
+                                  📋 Copy Sequence
+                                </button>
+                                <span className="sequence-length-info">
+                                  Showing {seq.residues.length.toLocaleString()} characters
+                                  {seq.residues.endsWith('...') && ' (truncated)'}
+                                </span>
+                              </div>
+                              <pre className="sequence-text">{seq.residues}</pre>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {(!orgData.locations || orgData.locations.length === 0) &&
+             (!orgData.sequences || orgData.sequences.length === 0) && (
+              <p className="no-data">No sequence information for this organism</p>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
