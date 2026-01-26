@@ -852,7 +852,492 @@ a:hover {
   opacity: 0.5;
 }
 
-/* Responsive improvements */
+/* =====================================================
+   INTERACTION TAB IMPROVEMENTS
+   ===================================================== */
+
+.interaction-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.interaction-type-section {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.interaction-type-header {
+  padding: 12px 15px;
+  background-color: #f5f5f5;
+  border-left: 4px solid #1976d2;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background-color 0.2s;
+}
+
+.interaction-type-header:hover {
+  background-color: #eeeeee;
+}
+
+.interaction-type-name {
+  font-weight: 500;
+  color: #333;
+}
+
+.interaction-cards {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.interaction-card {
+  padding: 12px 15px;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+.interaction-interactors {
+  margin-bottom: 8px;
+}
+
+.interactor-label {
+  font-size: 0.85em;
+  color: #666;
+  margin-right: 8px;
+}
+
+.interactor-list {
+  display: inline;
+}
+
+.interactor-link {
+  font-weight: 500;
+}
+
+.interactor-action {
+  color: #888;
+  font-size: 0.85em;
+  margin-left: 3px;
+}
+
+.interaction-description {
+  color: #555;
+  font-size: 0.9em;
+  margin-bottom: 8px;
+  padding: 8px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+.interaction-meta {
+  display: flex;
+  gap: 15px;
+  font-size: 0.85em;
+  color: #666;
+}
+
+.interaction-source {
+  color: #888;
+}
+
+.pmid-link {
+  color: #1976d2;
+}
+
+.total-count {
+  color: #666;
+  font-size: 0.9em;
+}
+
+/* =====================================================
+   PROTEIN TAB IMPROVEMENTS
+   ===================================================== */
+
+.protein-primary-stats {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 150px;
+  padding: 20px;
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 1.8em;
+  font-weight: bold;
+  color: #1565c0;
+}
+
+.stat-label {
+  font-size: 0.85em;
+  color: #555;
+  margin-top: 5px;
+}
+
+.protein-section {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+}
+
+.protein-section h4 {
+  margin: 0 0 15px 0;
+  color: #333;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.property-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.property-item {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+.property-label {
+  font-size: 0.85em;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.property-value {
+  font-size: 1.1em;
+  font-weight: 500;
+  color: #333;
+}
+
+.property-hint {
+  font-size: 0.8em;
+  color: #888;
+  font-style: italic;
+}
+
+.terminal-seq {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.terminal-label {
+  font-weight: 500;
+  color: #555;
+  min-width: 100px;
+}
+
+.terminal-sequence {
+  font-family: 'Courier New', monospace;
+  background-color: #f5f5f5;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  letter-spacing: 1px;
+}
+
+.aa-composition {
+  margin-top: 15px;
+}
+
+.aa-legend {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.8em;
+}
+
+.aa-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 8px;
+}
+
+.aa-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.aa-code {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.aa-count {
+  font-size: 0.9em;
+  color: #333;
+}
+
+.aa-percent {
+  font-size: 0.75em;
+  color: #666;
+}
+
+/* =====================================================
+   HOMOLOGY TAB IMPROVEMENTS
+   ===================================================== */
+
+.homology-groups-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.homology-group-card {
+  border: 1px solid #e0e0e0;
+  border-left: 4px solid #5e35b1;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.homology-group-header {
+  padding: 12px 15px;
+  background-color: #f5f5f5;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  transition: background-color 0.2s;
+}
+
+.homology-group-header:hover {
+  background-color: #eeeeee;
+}
+
+.group-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.group-icon {
+  font-size: 1.2em;
+}
+
+.group-type {
+  font-weight: 500;
+  color: #333;
+}
+
+.group-method {
+  font-size: 0.85em;
+  color: #666;
+}
+
+.homology-members {
+  padding: 15px;
+}
+
+.organism-members-group {
+  margin-bottom: 15px;
+}
+
+.organism-members-group:last-child {
+  margin-bottom: 0;
+}
+
+.member-organism-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.member-organism-header em {
+  color: #555;
+}
+
+.count-badge.small {
+  font-size: 0.75em;
+  padding: 1px 6px;
+}
+
+.member-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  padding-left: 10px;
+}
+
+.member-item {
+  padding: 8px 12px;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+.member-name {
+  font-weight: 500;
+}
+
+.member-link {
+  color: #1976d2;
+}
+
+.external-member {
+  color: #666;
+}
+
+.member-id {
+  margin-top: 4px;
+}
+
+.member-id code {
+  font-size: 0.8em;
+  color: #888;
+}
+
+/* =====================================================
+   REFERENCES TAB IMPROVEMENTS
+   ===================================================== */
+
+.view-toggle {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.toggle-btn {
+  padding: 8px 15px;
+  border: 1px solid #e0e0e0;
+  background-color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: all 0.2s;
+}
+
+.toggle-btn:hover {
+  background-color: #f5f5f5;
+}
+
+.toggle-btn.active {
+  background-color: #1976d2;
+  color: white;
+  border-color: #1976d2;
+}
+
+.references-by-year {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.year-group {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.year-header {
+  padding: 10px 15px;
+  background-color: #f5f5f5;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background-color 0.2s;
+}
+
+.year-header:hover {
+  background-color: #eeeeee;
+}
+
+.year-label {
+  font-weight: 600;
+  font-size: 1.1em;
+  color: #1976d2;
+}
+
+.year-references {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reference-card {
+  padding: 12px 15px;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-left: 3px solid #1976d2;
+  border-radius: 4px;
+}
+
+.ref-citation {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.ref-title-block {
+  color: #555;
+  font-style: italic;
+  font-size: 0.9em;
+  margin: 8px 0;
+  padding: 8px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+.ref-links {
+  margin-top: 8px;
+}
+
+.pubmed-link {
+  display: inline-block;
+  padding: 4px 10px;
+  background-color: #e3f2fd;
+  color: #1565c0;
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+
+.references-table .year-cell {
+  font-weight: 600;
+  color: #1976d2;
+  text-align: center;
+  width: 80px;
+}
+
+/* =====================================================
+   RESPONSIVE IMPROVEMENTS
+   ===================================================== */
+
 @media (max-width: 768px) {
   .alias-type-label,
   .link-source-label {
@@ -869,5 +1354,38 @@ a:hover {
   .phenotype-table th:first-child,
   .phenotype-table td:first-child {
     padding-left: 15px;
+  }
+
+  .protein-primary-stats {
+    flex-direction: column;
+  }
+
+  .stat-card {
+    min-width: 100%;
+  }
+
+  .property-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .aa-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .member-list {
+    grid-template-columns: 1fr;
+  }
+
+  .view-toggle {
+    flex-direction: column;
+  }
+
+  .toggle-btn {
+    width: 100%;
+  }
+
+  .interaction-meta {
+    flex-direction: column;
+    gap: 5px;
   }
 }
