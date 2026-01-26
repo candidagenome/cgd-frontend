@@ -12,6 +12,13 @@ function GoDetails({ data, loading, error }) {
     return <div className="no-data">No GO annotations found</div>;
   }
 
+  // Map single-letter aspect codes to full names
+  const aspectCodeMap = {
+    'f': 'molecular_function',
+    'p': 'biological_process',
+    'c': 'cellular_component',
+  };
+
   // Group annotations by aspect
   const groupByAspect = (annotations) => {
     const groups = {
@@ -21,7 +28,9 @@ function GoDetails({ data, loading, error }) {
     };
 
     annotations.forEach(ann => {
-      const aspect = ann.term?.aspect?.toLowerCase().replace(' ', '_') || 'unknown';
+      const rawAspect = ann.term?.aspect?.toLowerCase().replace(' ', '_') || 'unknown';
+      // Handle both single-letter codes (F, P, C) and full names
+      const aspect = aspectCodeMap[rawAspect] || rawAspect;
       if (groups[aspect]) {
         groups[aspect].push(ann);
       }
