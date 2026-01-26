@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './LocusComponents.css';
 
 function ProteinDetails({ data, loading, error }) {
+  const [showAllAA, setShowAllAA] = useState(false);
+
   if (loading) return <div className="loading">Loading protein data...</div>;
   if (error) return <div className="error">Error: {error}</div>;
   if (!data || !data.results) return <div className="no-data">No protein data available</div>;
@@ -17,117 +19,189 @@ function ProteinDetails({ data, loading, error }) {
     return typeof num === 'number' ? num.toFixed(decimals) : num;
   };
 
+  const formatMW = (mw) => {
+    if (mw === null || mw === undefined) return '-';
+    if (mw >= 1000) {
+      return `${(mw / 1000).toFixed(2)} kDa`;
+    }
+    return `${mw} Da`;
+  };
+
+  // Amino acid full names and properties
+  const aaInfo = {
+    ala: { code: 'A', name: 'Alanine', type: 'nonpolar' },
+    arg: { code: 'R', name: 'Arginine', type: 'positive' },
+    asn: { code: 'N', name: 'Asparagine', type: 'polar' },
+    asp: { code: 'D', name: 'Aspartic acid', type: 'negative' },
+    cys: { code: 'C', name: 'Cysteine', type: 'polar' },
+    gln: { code: 'Q', name: 'Glutamine', type: 'polar' },
+    glu: { code: 'E', name: 'Glutamic acid', type: 'negative' },
+    gly: { code: 'G', name: 'Glycine', type: 'nonpolar' },
+    his: { code: 'H', name: 'Histidine', type: 'positive' },
+    ile: { code: 'I', name: 'Isoleucine', type: 'nonpolar' },
+    leu: { code: 'L', name: 'Leucine', type: 'nonpolar' },
+    lys: { code: 'K', name: 'Lysine', type: 'positive' },
+    met: { code: 'M', name: 'Methionine', type: 'nonpolar' },
+    phe: { code: 'F', name: 'Phenylalanine', type: 'nonpolar' },
+    pro: { code: 'P', name: 'Proline', type: 'nonpolar' },
+    ser: { code: 'S', name: 'Serine', type: 'polar' },
+    thr: { code: 'T', name: 'Threonine', type: 'polar' },
+    trp: { code: 'W', name: 'Tryptophan', type: 'nonpolar' },
+    tyr: { code: 'Y', name: 'Tyrosine', type: 'polar' },
+    val: { code: 'V', name: 'Valine', type: 'nonpolar' },
+  };
+
+  const aaTypeColors = {
+    nonpolar: '#ffecb3',
+    polar: '#c8e6c9',
+    positive: '#bbdefb',
+    negative: '#ffcdd2',
+  };
+
   return (
     <div className="protein-details">
-      {organisms.map(([orgName, orgData]) => (
-        <div key={orgName} className="organism-section">
-          <h3 className="organism-name">{orgName}</h3>
-          <p className="locus-display">Locus: {orgData.locus_display_name}</p>
+      {organisms.map(([orgName, orgData]) => {
+        const pi = orgData.protein_info;
+        if (!pi) {
+          return (
+            <div key={orgName} className="organism-section">
+              <h3 className="organism-name">{orgName}</h3>
+              <p className="locus-display">Locus: {orgData.locus_display_name}</p>
+              <p className="no-data">No protein information for this organism</p>
+            </div>
+          );
+        }
 
-          {orgData.protein_info ? (
+        const totalAA = pi.protein_length || 0;
+
+        return (
+          <div key={orgName} className="organism-section">
+            <h3 className="organism-name">{orgName}</h3>
+            <p className="locus-display">Locus: {orgData.locus_display_name}</p>
+
             <div className="protein-info">
-              <h4>Protein Properties</h4>
-              <table className="info-table">
-                <tbody>
-                  <tr>
-                    <th>Length</th>
-                    <td>{orgData.protein_info.protein_length} amino acids</td>
-                  </tr>
-                  <tr>
-                    <th>Molecular Weight</th>
-                    <td>{formatNumber(orgData.protein_info.molecular_weight)} Da</td>
-                  </tr>
-                  <tr>
-                    <th>Isoelectric Point (pI)</th>
-                    <td>{formatNumber(orgData.protein_info.pi)}</td>
-                  </tr>
-                  <tr>
-                    <th>CAI</th>
-                    <td>{formatNumber(orgData.protein_info.cai)}</td>
-                  </tr>
-                  <tr>
-                    <th>Codon Bias</th>
-                    <td>{formatNumber(orgData.protein_info.codon_bias)}</td>
-                  </tr>
-                  <tr>
-                    <th>FOP Score</th>
-                    <td>{formatNumber(orgData.protein_info.fop_score)}</td>
-                  </tr>
-                  <tr>
-                    <th>GRAVY Score</th>
-                    <td>{formatNumber(orgData.protein_info.gravy_score)}</td>
-                  </tr>
-                  <tr>
-                    <th>Aromaticity Score</th>
-                    <td>{formatNumber(orgData.protein_info.aromaticity_score)}</td>
-                  </tr>
-                  {orgData.protein_info.n_term_seq && (
-                    <tr>
-                      <th>N-terminal Sequence</th>
-                      <td className="sequence">{orgData.protein_info.n_term_seq}</td>
-                    </tr>
-                  )}
-                  {orgData.protein_info.c_term_seq && (
-                    <tr>
-                      <th>C-terminal Sequence</th>
-                      <td className="sequence">{orgData.protein_info.c_term_seq}</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+              {/* Primary Properties - Highlighted */}
+              <div className="protein-primary-stats">
+                <div className="stat-card">
+                  <div className="stat-value">{pi.protein_length?.toLocaleString() || '-'}</div>
+                  <div className="stat-label">Amino Acids</div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-value">{formatMW(pi.molecular_weight)}</div>
+                  <div className="stat-label">Molecular Weight</div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-value">{formatNumber(pi.pi)}</div>
+                  <div className="stat-label">Isoelectric Point (pI)</div>
+                </div>
+              </div>
 
-              {orgData.protein_info.amino_acids && Object.keys(orgData.protein_info.amino_acids).length > 0 && (
-                <>
-                  <h4>Amino Acid Composition</h4>
-                  <table className="aa-table">
-                    <thead>
-                      <tr>
-                        <th>AA</th>
-                        <th>Count</th>
-                        <th>AA</th>
-                        <th>Count</th>
-                        <th>AA</th>
-                        <th>Count</th>
-                        <th>AA</th>
-                        <th>Count</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {(() => {
-                        const aas = Object.entries(orgData.protein_info.amino_acids);
-                        const rows = [];
-                        for (let i = 0; i < aas.length; i += 4) {
-                          rows.push(
-                            <tr key={i}>
-                              {[0, 1, 2, 3].map(j => {
-                                const aa = aas[i + j];
-                                return aa ? (
-                                  <React.Fragment key={j}>
-                                    <td>{aa[0].toUpperCase()}</td>
-                                    <td>{aa[1]}</td>
-                                  </React.Fragment>
-                                ) : (
-                                  <React.Fragment key={j}>
-                                    <td></td>
-                                    <td></td>
-                                  </React.Fragment>
-                                );
-                              })}
-                            </tr>
-                          );
-                        }
-                        return rows;
-                      })()}
-                    </tbody>
-                  </table>
-                </>
+              {/* Codon Usage Properties */}
+              <div className="protein-section">
+                <h4>🧬 Codon Usage Properties</h4>
+                <div className="property-grid">
+                  <div className="property-item">
+                    <span className="property-label">CAI (Codon Adaptation Index)</span>
+                    <span className="property-value">{formatNumber(pi.cai)}</span>
+                  </div>
+                  <div className="property-item">
+                    <span className="property-label">Codon Bias</span>
+                    <span className="property-value">{formatNumber(pi.codon_bias)}</span>
+                  </div>
+                  <div className="property-item">
+                    <span className="property-label">FOP Score</span>
+                    <span className="property-value">{formatNumber(pi.fop_score)}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Physicochemical Properties */}
+              <div className="protein-section">
+                <h4>⚗️ Physicochemical Properties</h4>
+                <div className="property-grid">
+                  <div className="property-item">
+                    <span className="property-label">GRAVY Score</span>
+                    <span className="property-value">{formatNumber(pi.gravy_score)}</span>
+                    <span className="property-hint">
+                      {pi.gravy_score > 0 ? '(hydrophobic)' : pi.gravy_score < 0 ? '(hydrophilic)' : ''}
+                    </span>
+                  </div>
+                  <div className="property-item">
+                    <span className="property-label">Aromaticity Score</span>
+                    <span className="property-value">{formatNumber(pi.aromaticity_score)}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Terminal Sequences */}
+              {(pi.n_term_seq || pi.c_term_seq) && (
+                <div className="protein-section">
+                  <h4>🔗 Terminal Sequences</h4>
+                  {pi.n_term_seq && (
+                    <div className="terminal-seq">
+                      <span className="terminal-label">N-terminus:</span>
+                      <code className="terminal-sequence">{pi.n_term_seq}</code>
+                    </div>
+                  )}
+                  {pi.c_term_seq && (
+                    <div className="terminal-seq">
+                      <span className="terminal-label">C-terminus:</span>
+                      <code className="terminal-sequence">{pi.c_term_seq}</code>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Amino Acid Composition */}
+              {pi.amino_acids && Object.keys(pi.amino_acids).length > 0 && (
+                <div className="protein-section">
+                  <h4
+                    className="collapsible-header"
+                    onClick={() => setShowAllAA(!showAllAA)}
+                  >
+                    <span className="collapse-icon">{showAllAA ? '▼' : '▶'}</span>
+                    🔤 Amino Acid Composition
+                    <span className="count-badge">{Object.keys(pi.amino_acids).length} types</span>
+                  </h4>
+
+                  {showAllAA && (
+                    <div className="aa-composition">
+                      <div className="aa-legend">
+                        <span className="legend-item" style={{ backgroundColor: aaTypeColors.nonpolar }}>Nonpolar</span>
+                        <span className="legend-item" style={{ backgroundColor: aaTypeColors.polar }}>Polar</span>
+                        <span className="legend-item" style={{ backgroundColor: aaTypeColors.positive }}>Positive</span>
+                        <span className="legend-item" style={{ backgroundColor: aaTypeColors.negative }}>Negative</span>
+                      </div>
+
+                      <div className="aa-grid">
+                        {Object.entries(pi.amino_acids)
+                          .sort((a, b) => b[1] - a[1])
+                          .map(([aa, count]) => {
+                            const info = aaInfo[aa.toLowerCase()] || { code: aa.toUpperCase(), name: aa, type: 'nonpolar' };
+                            const percentage = totalAA > 0 ? ((count / totalAA) * 100).toFixed(1) : 0;
+
+                            return (
+                              <div
+                                key={aa}
+                                className="aa-item"
+                                style={{ backgroundColor: aaTypeColors[info.type] }}
+                                title={info.name}
+                              >
+                                <span className="aa-code">{info.code}</span>
+                                <span className="aa-count">{count}</span>
+                                <span className="aa-percent">{percentage}%</span>
+                              </div>
+                            );
+                          })}
+                      </div>
+                    </div>
+                  )}
+                </div>
               )}
             </div>
-          ) : (
-            <p className="no-data">No protein information for this organism</p>
-          )}
-        </div>
-      ))}
+          </div>
+        );
+      })}
     </div>
   );
 }
