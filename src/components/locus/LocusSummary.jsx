@@ -42,8 +42,8 @@ function LocusSummary({ data, organismName }) {
   const aliasGroups = groupAliasesByType(feature.aliases);
   const hasRetiredNames = aliasGroups['Retired name'] && aliasGroups['Retired name'].length > 0;
 
-  // Group external links by source
-  const groupLinksBySource = (links) => {
+  // Group external links by source and substitute ORF name in URLs
+  const groupLinksBySource = (links, featureName) => {
     if (!links || links.length === 0) return {};
 
     const groups = {};
@@ -52,13 +52,18 @@ function LocusSummary({ data, organismName }) {
       if (!groups[source]) {
         groups[source] = [];
       }
-      groups[source].push(link);
+      // Replace _SUBSTITUTE_THIS_ placeholder with the ORF name (feature_name)
+      const processedLink = {
+        ...link,
+        url: link.url ? link.url.replace(/_SUBSTITUTE_THIS_/g, featureName || '') : link.url
+      };
+      groups[source].push(processedLink);
     });
 
     return groups;
   };
 
-  const linkGroups = groupLinksBySource(feature.external_links);
+  const linkGroups = groupLinksBySource(feature.external_links, feature.feature_name);
 
   return (
     <div className="locus-summary">
