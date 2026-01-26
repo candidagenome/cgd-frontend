@@ -648,6 +648,54 @@ a:hover {
   gap: 5px;
 }
 
+/* Feature qualifier */
+.feature-qualifier {
+  color: #666;
+  font-weight: normal;
+}
+
+/* Ortholog lists */
+.ortholog-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ortholog-item {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.external-ortholog-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ortholog-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.ortholog-source-label {
+  font-weight: 600;
+  color: #555;
+  min-width: 120px;
+}
+
+.ortholog-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.ortholog-desc {
+  color: #666;
+  font-size: 0.9em;
+}
+
 /* =====================================================
    PHENOTYPE TAB IMPROVEMENTS
    ===================================================== */

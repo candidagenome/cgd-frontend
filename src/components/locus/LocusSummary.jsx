@@ -7,12 +7,15 @@ function LocusSummary({ data, organismName }) {
   const feature = data;
 
   // Group aliases by type (like Perl does: Uniform, Non-uniform, Protein name, etc.)
+  // Exclude 'Other strain feature name' as it's displayed separately
   const groupAliasesByType = (aliases) => {
     if (!aliases || aliases.length === 0) return {};
 
     const groups = {};
     aliases.forEach(alias => {
       const type = alias.alias_type || 'Other';
+      // Skip 'Other strain feature name' - displayed in separate row
+      if (type === 'Other strain feature name') return;
       if (!groups[type]) {
         groups[type] = [];
       }
@@ -41,6 +44,7 @@ function LocusSummary({ data, organismName }) {
 
   const aliasGroups = groupAliasesByType(feature.aliases);
   const hasRetiredNames = aliasGroups['Retired name'] && aliasGroups['Retired name'].length > 0;
+  const hasNonRetiredAliases = Object.keys(aliasGroups).filter(type => type !== 'Retired name').length > 0;
 
   // Group external links by source and substitute ORF name in URLs
   const groupLinksBySource = (links, featureName) => {
@@ -65,6 +69,24 @@ function LocusSummary({ data, organismName }) {
 
   const linkGroups = groupLinksBySource(feature.external_links, feature.feature_name);
 
+  // Group external orthologs by source
+  const groupOrthologsBySource = (orthologs) => {
+    if (!orthologs || orthologs.length === 0) return {};
+
+    const groups = {};
+    orthologs.forEach(orth => {
+      const source = orth.source || 'Other';
+      if (!groups[source]) {
+        groups[source] = [];
+      }
+      groups[source].push(orth);
+    });
+
+    return groups;
+  };
+
+  const externalOrthologGroups = groupOrthologsBySource(feature.external_orthologs);
+
   return (
     <div className="locus-summary">
       <table className="info-table">
@@ -87,13 +109,76 @@ function LocusSummary({ data, organismName }) {
             <td><code className="systematic-name">{feature.feature_name}</code></td>
           </tr>
 
-          {/* Feature Type with badge styling */}
+          {/* Assembly 19/21 Identifier - shown if different from Systematic Name */}
+          {feature.assembly_21_identifier && (
+            <tr>
+              <th>Assembly 19/21 Identifier</th>
+              <td><code className="systematic-name">{feature.assembly_21_identifier}</code></td>
+            </tr>
+          )}
+
+          {/* Aliases - grouped by type (excluding Retired name and Other strain feature name) */}
+          {hasNonRetiredAliases && (
+            <tr>
+              <th>Alias</th>
+              <td>
+                <div className="alias-groups">
+                  {Object.entries(aliasGroups)
+                    .filter(([type]) => type !== 'Retired name')
+                    .map(([type, names]) => (
+                      <div key={type} className="alias-group">
+                        <span className="alias-type-label">{type}:</span>
+                        <span className="alias-names">{names.join(', ')}</span>
+                      </div>
+                    ))}
+                </div>
+              </td>
+            </tr>
+          )}
+
+          {/* Feature Type with qualifier */}
           <tr>
             <th>Feature Type</th>
             <td>
               <span className="feature-type-badge">{feature.feature_type}</span>
+              {feature.feature_qualifier && (
+                <span className="feature-qualifier">, {feature.feature_qualifier}</span>
+              )}
             </td>
           </tr>
+
+          {/* Allele - shown if alleles exist */}
+          {feature.alleles && feature.alleles.length > 0 && (
+            <tr>
+              <th>Allele</th>
+              <td>
+                {feature.alleles.map((allele, idx) => (
+                  <span key={allele.feature_no}>
+                    <a href={`/locus/${allele.feature_name}`}>
+                      {allele.gene_name || allele.feature_name}
+                    </a>
+                    {idx < feature.alleles.length - 1 ? ', ' : ''}
+                  </span>
+                ))}
+              </td>
+            </tr>
+          )}
+
+          {/* Allelic Variation - shown if data exists */}
+          {feature.allelic_variation && (
+            <tr>
+              <th>Allelic Variation</th>
+              <td>{feature.allelic_variation}</td>
+            </tr>
+          )}
+
+          {/* CUG Codons - shown if data exists */}
+          {feature.cug_codons !== null && feature.cug_codons !== undefined && (
+            <tr>
+              <th>CUG Codons</th>
+              <td>{feature.cug_codons}</td>
+            </tr>
+          )}
 
           {/* Description/Headline */}
           <tr>
@@ -106,6 +191,73 @@ function LocusSummary({ data, organismName }) {
             <tr>
               <th>Name Description</th>
               <td><em>{feature.name_description}</em></td>
+            </tr>
+          )}
+
+          {/* Systematic Names Used in Other Strains */}
+          {feature.other_strain_names && feature.other_strain_names.length > 0 && (
+            <tr>
+              <th>Systematic Names Used in Other Strains</th>
+              <td>
+                <code className="systematic-name">
+                  {feature.other_strain_names.join(', ')}
+                </code>
+              </td>
+            </tr>
+          )}
+
+          {/* Orthologous genes in Candida species */}
+          {feature.candida_orthologs && feature.candida_orthologs.length > 0 && (
+            <tr>
+              <th>Orthologous genes in Candida species</th>
+              <td>
+                <div className="ortholog-list">
+                  {feature.candida_orthologs.map((orth, idx) => (
+                    <div key={idx} className="ortholog-item">
+                      <a href={`/locus/${orth.feature_name}`}>
+                        {orth.gene_name || orth.feature_name}
+                      </a>
+                      <span className="organism-name"> (<em>{orth.organism_name}</em>)</span>
+                    </div>
+                  ))}
+                </div>
+              </td>
+            </tr>
+          )}
+
+          {/* Ortholog(s) in non-CGD species */}
+          {Object.keys(externalOrthologGroups).length > 0 && (
+            <tr>
+              <th>Ortholog(s) in non-CGD species</th>
+              <td>
+                <div className="external-ortholog-groups">
+                  {Object.entries(externalOrthologGroups).map(([source, orthologs]) => (
+                    <div key={source} className="ortholog-group">
+                      <span className="ortholog-source-label">{source}:</span>
+                      <span className="ortholog-items">
+                        {orthologs.map((orth, idx) => (
+                          <span key={idx}>
+                            {orth.url ? (
+                              <a
+                                href={orth.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                title={orth.description || ''}
+                              >
+                                {orth.dbxref_id}
+                              </a>
+                            ) : (
+                              <span>{orth.dbxref_id}</span>
+                            )}
+                            {orth.description && <span className="ortholog-desc"> - {orth.description}</span>}
+                            {idx < orthologs.length - 1 ? ', ' : ''}
+                          </span>
+                        ))}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </td>
             </tr>
           )}
 
@@ -139,25 +291,6 @@ function LocusSummary({ data, organismName }) {
             <tr>
               <th>Date Created</th>
               <td>{new Date(feature.date_created).toLocaleDateString()}</td>
-            </tr>
-          )}
-
-          {/* Aliases - grouped by type */}
-          {Object.keys(aliasGroups).filter(type => type !== 'Retired name').length > 0 && (
-            <tr>
-              <th>Aliases</th>
-              <td>
-                <div className="alias-groups">
-                  {Object.entries(aliasGroups)
-                    .filter(([type]) => type !== 'Retired name')
-                    .map(([type, names]) => (
-                      <div key={type} className="alias-group">
-                        <span className="alias-type-label">{type}:</span>
-                        <span className="alias-names">{names.join(', ')}</span>
-                      </div>
-                    ))}
-                </div>
-              </td>
             </tr>
           )}
 
