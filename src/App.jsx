@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import LocusPage from './pages/LocusPage';
+import ReferencePage from './pages/ReferencePage';
 import './App.css';
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/locus/:name" element={<LocusPage />} />
+          <Route path="/reference/:id" element={<ReferencePage />} />
         </Routes>
 
         <footer className="main-footer">
