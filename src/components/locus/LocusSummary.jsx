@@ -184,28 +184,24 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
   const hasRetiredNames = aliasGroups['Retired name'] && aliasGroups['Retired name'].length > 0;
   const hasNonRetiredAliases = Object.keys(aliasGroups).filter(type => type !== 'Retired name').length > 0;
 
-  // Group external links by source and substitute ORF name in URLs
-  const groupLinksBySource = (links, featureName) => {
+  // Group external links by label (from web_display.label_name)
+  // Format matches Perl: label | label (1, 2, 3) for multiple URLs with same label
+  const groupLinksByLabel = (links) => {
     if (!links || links.length === 0) return {};
 
     const groups = {};
     links.forEach(link => {
-      const source = link.source || 'Other';
-      if (!groups[source]) {
-        groups[source] = [];
+      const label = link.label || 'Other';
+      if (!groups[label]) {
+        groups[label] = [];
       }
-      // Replace _SUBSTITUTE_THIS_ placeholder with the ORF name (feature_name)
-      const processedLink = {
-        ...link,
-        url: link.url ? link.url.replace(/_SUBSTITUTE_THIS_/g, featureName || '') : link.url
-      };
-      groups[source].push(processedLink);
+      groups[label].push(link);
     });
 
     return groups;
   };
 
-  const linkGroups = groupLinksBySource(feature.external_links, feature.feature_name);
+  const linkGroups = groupLinksByLabel(feature.external_links);
 
   return (
     <div className="locus-summary">
@@ -862,20 +858,6 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
             <td>{feature.dbxref_id}</td>
           </tr>
 
-          {/* Source */}
-          <tr>
-            <th>Source</th>
-            <td>{feature.source}</td>
-          </tr>
-
-          {/* Date Created */}
-          {feature.date_created && (
-            <tr>
-              <th>Date Created</th>
-              <td>{new Date(feature.date_created).toLocaleDateString()}</td>
-            </tr>
-          )}
-
           {/* Retired Names - shown separately with different styling */}
           {hasRetiredNames && (
             <tr>
@@ -893,33 +875,46 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
             </tr>
           )}
 
-          {/* External Links - grouped by source */}
+          {/* External Links - grouped by label, Perl format: label | label (1, 2, 3) */}
           {Object.keys(linkGroups).length > 0 && (
             <tr>
               <th>External Links</th>
               <td>
-                <div className="external-link-groups">
-                  {Object.entries(linkGroups).map(([source, links]) => (
-                    <div key={source} className="link-group">
-                      <span className="link-source-label">{source}:</span>
-                      <span className="link-items">
-                        {links.map((link, idx) => (
-                          <span key={idx}>
-                            <a
-                              href={link.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              title={link.url_type}
-                            >
-                              {link.url_type}
-                            </a>
-                            {idx < links.length - 1 ? ', ' : ''}
-                          </span>
-                        ))}
-                      </span>
-                    </div>
+                <span className="external-links-inline">
+                  {Object.entries(linkGroups).map(([label, links], groupIdx) => (
+                    <span key={label}>
+                      {links.length === 1 ? (
+                        // Single URL: just show the label as a link
+                        <a
+                          href={links[0].url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {label}
+                        </a>
+                      ) : (
+                        // Multiple URLs: show as "label (1, 2, 3)"
+                        <span>
+                          {label} (
+                          {links.map((link, idx) => (
+                            <span key={idx}>
+                              <a
+                                href={link.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {idx + 1}
+                              </a>
+                              {idx < links.length - 1 ? ', ' : ''}
+                            </span>
+                          ))}
+                          )
+                        </span>
+                      )}
+                      {groupIdx < Object.keys(linkGroups).length - 1 ? ' | ' : ''}
+                    </span>
                   ))}
-                </div>
+                </span>
               </td>
             </tr>
           )}

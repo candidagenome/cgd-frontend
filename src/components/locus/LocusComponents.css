@@ -618,7 +618,21 @@ a:hover {
   text-decoration: line-through;
 }
 
-/* External link grouping */
+/* External link inline format (Perl style: label | label (1, 2, 3)) */
+.external-links-inline {
+  line-height: 1.6;
+}
+
+.external-links-inline a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.external-links-inline a:hover {
+  text-decoration: underline;
+}
+
+/* Legacy styles - kept for backward compatibility */
 .external-link-groups {
   display: flex;
   flex-direction: column;
