@@ -742,11 +742,6 @@ a:hover {
 }
 
 /* Phenotype Annotations in Summary tab */
-.phenotype-section-header th {
-  background-color: #fce4ec;
-  border-color: #f8bbd9;
-}
-
 .phenotype-experiment-type-row th {
   font-weight: 600;
 }
