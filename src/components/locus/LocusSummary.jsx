@@ -69,24 +69,6 @@ function LocusSummary({ data, organismName }) {
 
   const linkGroups = groupLinksBySource(feature.external_links, feature.feature_name);
 
-  // Group external orthologs by source
-  const groupOrthologsBySource = (orthologs) => {
-    if (!orthologs || orthologs.length === 0) return {};
-
-    const groups = {};
-    orthologs.forEach(orth => {
-      const source = orth.source || 'Other';
-      if (!groups[source]) {
-        groups[source] = [];
-      }
-      groups[source].push(orth);
-    });
-
-    return groups;
-  };
-
-  const externalOrthologGroups = groupOrthologsBySource(feature.external_orthologs);
-
   return (
     <div className="locus-summary">
       <table className="info-table">
@@ -199,9 +181,19 @@ function LocusSummary({ data, organismName }) {
             <tr>
               <th>Systematic Names Used in Other Strains</th>
               <td>
-                <code className="systematic-name">
-                  {feature.other_strain_names.join(', ')}
-                </code>
+                {feature.other_strain_names.map((item, idx) => (
+                  <span key={idx}>
+                    {typeof item === 'string' ? (
+                      <code className="systematic-name">{item}</code>
+                    ) : (
+                      <>
+                        <code className="systematic-name">{item.alias_name}</code>
+                        {item.strain_name && <span> (<em>{item.strain_name}</em>)</span>}
+                      </>
+                    )}
+                    {idx < feature.other_strain_names.length - 1 ? ' ; ' : ''}
+                  </span>
+                ))}
               </td>
             </tr>
           )}
@@ -221,42 +213,37 @@ function LocusSummary({ data, organismName }) {
                     </div>
                   ))}
                 </div>
+                {feature.ortholog_cluster_url && (
+                  <div style={{marginTop: '8px'}}>
+                    <a href={feature.ortholog_cluster_url} target="_blank" rel="noopener noreferrer">
+                      View ortholog cluster
+                    </a>
+                  </div>
+                )}
               </td>
             </tr>
           )}
 
-          {/* Ortholog(s) in non-CGD species */}
-          {Object.keys(externalOrthologGroups).length > 0 && (
+          {/* Ortholog(s) in non-CGD species - inline format with species names */}
+          {feature.external_orthologs && feature.external_orthologs.length > 0 && (
             <tr>
               <th>Ortholog(s) in non-CGD species</th>
               <td>
-                <div className="external-ortholog-groups">
-                  {Object.entries(externalOrthologGroups).map(([source, orthologs]) => (
-                    <div key={source} className="ortholog-group">
-                      <span className="ortholog-source-label">{source}:</span>
-                      <span className="ortholog-items">
-                        {orthologs.map((orth, idx) => (
-                          <span key={idx}>
-                            {orth.url ? (
-                              <a
-                                href={orth.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                title={orth.description || ''}
-                              >
-                                {orth.dbxref_id}
-                              </a>
-                            ) : (
-                              <span>{orth.dbxref_id}</span>
-                            )}
-                            {orth.description && <span className="ortholog-desc"> - {orth.description}</span>}
-                            {idx < orthologs.length - 1 ? ', ' : ''}
-                          </span>
-                        ))}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+                {feature.external_orthologs.map((orth, idx) => (
+                  <span key={idx}>
+                    <em>{orth.species_name || orth.source}</em>
+                    {' ('}
+                    {orth.url ? (
+                      <a href={orth.url} target="_blank" rel="noopener noreferrer">
+                        {orth.dbxref_id}
+                      </a>
+                    ) : (
+                      <span>{orth.dbxref_id}</span>
+                    )}
+                    {')'}
+                    {idx < feature.external_orthologs.length - 1 ? ' ; ' : ''}
+                  </span>
+                ))}
               </td>
             </tr>
           )}

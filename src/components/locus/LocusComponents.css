@@ -565,12 +565,7 @@ a:hover {
 }
 
 .feature-type-badge {
-  display: inline-block;
-  background-color: #e3f2fd;
-  color: #1565c0;
-  padding: 3px 10px;
-  border-radius: 12px;
-  font-size: 0.9em;
+  display: inline;
   font-weight: 500;
 }
 
