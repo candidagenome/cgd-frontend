@@ -6,7 +6,7 @@ function LocusSummary({ data, organismName, goData, goLoading }) {
 
   const feature = data;
 
-  // Group GO annotations by aspect, then by term+qualifier, collecting evidence codes
+  // Group GO annotations by aspect, then annotation_type, then by term+qualifier
   const groupGoByAspect = (annotations) => {
     if (!annotations || annotations.length === 0) return {};
 
@@ -16,6 +16,7 @@ function LocusSummary({ data, organismName, goData, goLoading }) {
       'c': 'cellular_component',
     };
 
+    // Structure: { aspect: { annotationType: { termKey: termData } } }
     const groups = {
       'molecular_function': {},
       'biological_process': {},
@@ -25,45 +26,68 @@ function LocusSummary({ data, organismName, goData, goLoading }) {
     annotations.forEach(ann => {
       const rawAspect = ann.term?.aspect?.toLowerCase().replace(' ', '_') || 'unknown';
       const aspect = aspectCodeMap[rawAspect] || rawAspect;
-      if (groups[aspect]) {
-        const termName = ann.term?.display_name;
-        const qualifier = ann.qualifier || '';
-        const evidenceCode = ann.evidence?.code;
+      if (!groups[aspect]) return;
 
-        if (termName) {
-          // Create unique key for term+qualifier combination
-          const key = `${termName}|${qualifier}`;
+      const termName = ann.term?.display_name;
+      const qualifier = ann.qualifier || '';
+      const evidenceCode = ann.evidence?.code;
+      const withFrom = ann.evidence?.with_from;
+      const annotationType = ann.annotation_type || 'other';
 
-          if (!groups[aspect][key]) {
-            groups[aspect][key] = {
-              name: termName,
-              goid: ann.term?.goid,
-              qualifier: qualifier,
-              evidenceCodes: new Set(),
-            };
-          }
+      if (termName) {
+        // Initialize annotation type group if needed
+        if (!groups[aspect][annotationType]) {
+          groups[aspect][annotationType] = {};
+        }
 
-          // Add evidence code if present
-          if (evidenceCode) {
-            groups[aspect][key].evidenceCodes.add(evidenceCode);
+        // Create unique key for term+qualifier combination
+        const key = `${termName}|${qualifier}`;
+
+        if (!groups[aspect][annotationType][key]) {
+          groups[aspect][annotationType][key] = {
+            name: termName,
+            goid: ann.term?.goid,
+            qualifier: qualifier,
+            evidenceEntries: [],  // Array of { code, withFrom }
+          };
+        }
+
+        // Add evidence entry (code + withFrom) if present
+        if (evidenceCode) {
+          const existingEntry = groups[aspect][annotationType][key].evidenceEntries.find(
+            e => e.code === evidenceCode && e.withFrom === withFrom
+          );
+          if (!existingEntry) {
+            groups[aspect][annotationType][key].evidenceEntries.push({
+              code: evidenceCode,
+              withFrom: withFrom,
+            });
           }
         }
       }
     });
 
-    // Convert to arrays and Sets to arrays
+    // Convert to final structure: { aspect: { annotationType: [terms] } }
     const result = {};
-    for (const [aspect, terms] of Object.entries(groups)) {
-      result[aspect] = Object.values(terms).map(term => ({
-        ...term,
-        evidenceCodes: Array.from(term.evidenceCodes).sort(),
-      }));
+    for (const [aspect, typeGroups] of Object.entries(groups)) {
+      result[aspect] = {};
+      for (const [annType, terms] of Object.entries(typeGroups)) {
+        result[aspect][annType] = Object.values(terms);
+      }
     }
 
     return result;
   };
 
   const goGroups = goData ? groupGoByAspect(goData.annotations) : {};
+
+  // Annotation type display order and labels
+  const annotationTypeOrder = ['manually_curated', 'high-throughput', 'computational'];
+  const annotationTypeLabels = {
+    'manually_curated': 'Manually curated',
+    'high-throughput': 'High-throughput',
+    'computational': 'Computational',
+  };
 
   const aspectLabels = {
     'molecular_function': 'Molecular Function',
@@ -329,52 +353,75 @@ function LocusSummary({ data, organismName, goData, goLoading }) {
                   </a>
                 </td>
               </tr>
-              {Object.entries(goGroups).map(([aspect, terms]) => {
-                if (terms.length === 0) return null;
+              {Object.entries(goGroups).map(([aspect, typeGroups]) => {
+                // Check if this aspect has any terms
+                const hasTerms = Object.values(typeGroups).some(terms => terms.length > 0);
+                if (!hasTerms) return null;
+
                 return (
-                  <tr key={aspect} className="go-aspect-row">
-                    <th style={{paddingLeft: '20px'}}>{aspectLabels[aspect]}</th>
-                    <td>
-                      <div className="go-terms-list">
-                        {terms.map((term, idx) => (
-                          <div key={idx} className="go-term-item">
-                            <span className="go-bullet">•</span>
-                            {term.qualifier && (
-                              <em className={`go-qualifier ${term.qualifier.toLowerCase() === 'not' ? 'qualifier-not' : ''}`}>
-                                {term.qualifier}
-                              </em>
-                            )}{' '}
-                            <a
-                              href={`https://amigo.geneontology.org/amigo/term/${term.goid}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {term.name}
-                            </a>
-                            {term.evidenceCodes.length > 0 && (
-                              <span className="go-evidence-codes">
-                                {' ('}
-                                {term.evidenceCodes.map((code, codeIdx) => (
-                                  <span key={code}>
-                                    <a
-                                      href="http://geneontology.org/docs/guide-go-evidence-codes/"
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      title={code}
-                                    >
-                                      {code}
-                                    </a>
-                                    {codeIdx < term.evidenceCodes.length - 1 ? ', ' : ''}
-                                  </span>
-                                ))}
-                                {')'}
-                              </span>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </td>
-                  </tr>
+                  <React.Fragment key={aspect}>
+                    {/* Aspect header row */}
+                    <tr className="go-aspect-header-row">
+                      <th style={{paddingLeft: '10px'}}>{aspectLabels[aspect]}</th>
+                      <td></td>
+                    </tr>
+                    {/* Annotation type rows */}
+                    {annotationTypeOrder.map(annType => {
+                      const terms = typeGroups[annType];
+                      if (!terms || terms.length === 0) return null;
+
+                      return (
+                        <tr key={`${aspect}-${annType}`} className="go-annotation-type-row">
+                          <th style={{paddingLeft: '30px', fontWeight: 'normal', fontStyle: 'italic'}}>
+                            {annotationTypeLabels[annType] || annType}
+                          </th>
+                          <td>
+                            <div className="go-terms-list">
+                              {terms.map((term, idx) => (
+                                <div key={idx} className="go-term-item">
+                                  <span className="go-bullet">•</span>
+                                  {term.qualifier && (
+                                    <em className={`go-qualifier ${term.qualifier.toLowerCase() === 'not' ? 'qualifier-not' : ''}`}>
+                                      {term.qualifier}
+                                    </em>
+                                  )}{term.qualifier ? ' ' : ''}
+                                  <a
+                                    href={`https://amigo.geneontology.org/amigo/term/${term.goid}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    {term.name}
+                                  </a>
+                                  {term.evidenceEntries && term.evidenceEntries.length > 0 && (
+                                    <span className="go-evidence-codes">
+                                      {' ('}
+                                      {term.evidenceEntries.map((entry, entryIdx) => (
+                                        <span key={entryIdx}>
+                                          <a
+                                            href="http://geneontology.org/docs/guide-go-evidence-codes/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            title={entry.code}
+                                          >
+                                            {entry.code}
+                                          </a>
+                                          {entry.withFrom && (
+                                            <span className="go-with-from"> with {entry.withFrom}</span>
+                                          )}
+                                          {entryIdx < term.evidenceEntries.length - 1 ? ', ' : ''}
+                                        </span>
+                                      ))}
+                                      {')'}
+                                    </span>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </React.Fragment>
                 );
               })}
             </>

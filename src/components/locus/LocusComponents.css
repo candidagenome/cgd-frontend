@@ -728,6 +728,19 @@ a:hover {
   color: #1976d2;
 }
 
+.go-with-from {
+  color: #666;
+  font-style: italic;
+}
+
+.go-aspect-header-row th {
+  font-weight: 600;
+}
+
+.go-annotation-type-row th {
+  color: #555;
+}
+
 /* =====================================================
    PHENOTYPE TAB IMPROVEMENTS
    ===================================================== */
