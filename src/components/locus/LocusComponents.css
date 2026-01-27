@@ -768,6 +768,103 @@ a:hover {
   margin-right: 4px;
 }
 
+/* Sequence Information in Summary tab */
+.sequence-coords-text {
+  font-family: 'Courier New', monospace;
+}
+
+.sequence-update-text {
+  color: #666;
+  font-size: 0.9em;
+}
+
+/* Subfeature table */
+.subfeature-table {
+  border-collapse: collapse;
+  font-size: 0.9em;
+  margin-top: 5px;
+}
+
+.subfeature-table th {
+  background-color: #f5f5f5;
+  padding: 4px 8px;
+  text-align: center;
+  font-weight: normal;
+  font-size: 0.85em;
+  color: #666;
+  border-bottom: 1px solid #ddd;
+}
+
+.subfeature-table td {
+  padding: 3px 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.subfeature-table .subfeature-type {
+  font-weight: 500;
+  color: #333;
+}
+
+.subfeature-table .subfeature-coord {
+  font-family: 'Courier New', monospace;
+  text-align: right;
+  color: #555;
+}
+
+.subfeature-table .subfeature-coord-to {
+  text-align: center;
+  color: #555;
+  padding: 3px 4px;
+}
+
+.subfeature-table .subfeature-version {
+  font-size: 0.85em;
+  color: #666;
+  text-align: center;
+}
+
+/* Sequence Tools Container */
+.sequence-tools-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+.sequence-tool-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sequence-tool-dropdown label {
+  white-space: nowrap;
+}
+
+.sequence-tool-dropdown select {
+  min-width: 200px;
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background-color: white;
+}
+
+.sequence-tool-dropdown button {
+  padding: 4px 12px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.sequence-tool-dropdown button:hover {
+  background-color: #1565c0;
+}
+
 /* =====================================================
    PHENOTYPE TAB IMPROVEMENTS
    ===================================================== */
