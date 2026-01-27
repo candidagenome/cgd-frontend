@@ -858,20 +858,6 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
             <td>{feature.dbxref_id}</td>
           </tr>
 
-          {/* Source */}
-          <tr>
-            <th>Source</th>
-            <td>{feature.source}</td>
-          </tr>
-
-          {/* Date Created */}
-          {feature.date_created && (
-            <tr>
-              <th>Date Created</th>
-              <td>{new Date(feature.date_created).toLocaleDateString()}</td>
-            </tr>
-          )}
-
           {/* Retired Names - shown separately with different styling */}
           {hasRetiredNames && (
             <tr>
