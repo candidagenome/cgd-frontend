@@ -769,18 +769,46 @@ a:hover {
 }
 
 /* Sequence Information in Summary tab */
-.sequence-coords {
+.sequence-coords-text {
   font-family: 'Courier New', monospace;
 }
 
-.sequence-coords .chromosome-name {
-  font-weight: 600;
-  color: #1565c0;
-}
-
-.strand-indicator {
+.sequence-update-text {
   color: #666;
   font-size: 0.9em;
+}
+
+/* Subfeature table */
+.subfeature-table {
+  border-collapse: collapse;
+  font-size: 0.9em;
+  margin-top: 5px;
+}
+
+.subfeature-table th {
+  background-color: #f5f5f5;
+  padding: 4px 8px;
+  text-align: center;
+  font-weight: normal;
+  font-size: 0.85em;
+  color: #666;
+  border-bottom: 1px solid #ddd;
+}
+
+.subfeature-table td {
+  padding: 3px 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.subfeature-table .subfeature-type {
+  font-weight: 500;
+  color: #333;
+}
+
+.subfeature-table .subfeature-coord {
+  font-family: 'Courier New', monospace;
+  text-align: right;
+  color: #555;
 }
 
 /* =====================================================

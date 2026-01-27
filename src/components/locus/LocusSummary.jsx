@@ -544,23 +544,67 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                 </td>
               </tr>
               {sequenceData.locations.filter(loc => loc.is_current).map((location, idx) => (
-                <tr key={idx} className="sequence-location-row">
+                <React.Fragment key={idx}>
+                  {/* Coordinates row */}
+                  <tr className="sequence-location-row">
+                    <th style={{paddingLeft: '10px', fontWeight: 'normal'}}>
+                      Coordinates
+                    </th>
+                    <td>
+                      <span className="sequence-coords-text">
+                        {location.chromosome && `${location.chromosome}: `}
+                        {location.start_coord.toLocaleString()} to {location.stop_coord.toLocaleString()}
+                        {location.strand && `, ${location.strand === 'W' || location.strand === '+' ? 'Watson' : 'Crick'} strand`}
+                      </span>
+                    </td>
+                  </tr>
+                  {/* Last Update row */}
+                  {(location.coord_version || location.seq_version) && (
+                    <tr className="sequence-update-row">
+                      <th style={{paddingLeft: '10px', fontWeight: 'normal'}}>
+                        Last Update
+                      </th>
+                      <td>
+                        <span className="sequence-update-text">
+                          {location.coord_version && `Coordinates: ${new Date(location.coord_version).toLocaleDateString()}`}
+                          {location.coord_version && location.seq_version && ' | '}
+                          {location.seq_version && `Sequence: ${new Date(location.seq_version).toLocaleDateString()}`}
+                        </span>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
+              ))}
+              {/* Subfeature Details */}
+              {sequenceData.subfeatures && sequenceData.subfeatures.length > 0 && (
+                <tr className="sequence-subfeature-row">
                   <th style={{paddingLeft: '10px', fontWeight: 'normal'}}>
-                    Coordinates
+                    Subfeature Details
                   </th>
                   <td>
-                    <span className="sequence-coords">
-                      {location.chromosome && <span className="chromosome-name">{location.chromosome}: </span>}
-                      {location.start_coord.toLocaleString()} to {location.stop_coord.toLocaleString()}
-                      {location.strand && (
-                        <span className="strand-indicator">
-                          {' '}({location.strand === 'W' || location.strand === '+' ? 'Watson' : 'Crick'} strand)
-                        </span>
-                      )}
-                    </span>
+                    <table className="subfeature-table">
+                      <thead>
+                        <tr>
+                          <th></th>
+                          <th colSpan="2">Relative Coordinates</th>
+                          <th colSpan="2">Chromosomal Coordinates</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {sequenceData.subfeatures.map((sf, idx) => (
+                          <tr key={idx}>
+                            <td className="subfeature-type">{sf.feature_type}</td>
+                            <td className="subfeature-coord">{sf.relative_start}</td>
+                            <td className="subfeature-coord">to {sf.relative_stop}</td>
+                            <td className="subfeature-coord">{sf.start_coord?.toLocaleString()}</td>
+                            <td className="subfeature-coord">to {sf.stop_coord?.toLocaleString()}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </td>
                 </tr>
-              ))}
+              )}
             </>
           )}
 
