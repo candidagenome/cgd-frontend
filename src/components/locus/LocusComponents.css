@@ -865,6 +865,52 @@ a:hover {
   background-color: #1565c0;
 }
 
+/* Allele Location Section */
+.allele-location-header th {
+  background-color: #f5f5f5;
+  border-top: 2px solid #ddd;
+  padding-top: 10px;
+}
+
+.allele-location-header td {
+  border-top: 2px solid #ddd;
+  padding-top: 10px;
+}
+
+/* JBrowse Section */
+.jbrowse-section th {
+  vertical-align: middle;
+}
+
+.jbrowse-link-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.jbrowse-button {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #2e7d32;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.95em;
+}
+
+.jbrowse-button:hover {
+  background-color: #1b5e20;
+  color: white;
+  text-decoration: none;
+}
+
+.jbrowse-location {
+  font-family: 'Courier New', monospace;
+  color: #555;
+  font-size: 0.9em;
+}
+
 /* =====================================================
    PHENOTYPE TAB IMPROVEMENTS
    ===================================================== */

@@ -386,6 +386,28 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
             </tr>
           )}
 
+          {/* JBrowse - genome browser link */}
+          {sequenceData && sequenceData.jbrowse_info && (
+            <tr className="jbrowse-section">
+              <th>JBrowse</th>
+              <td>
+                <div className="jbrowse-link-container">
+                  <a
+                    href={sequenceData.jbrowse_info.full_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="jbrowse-button"
+                  >
+                    View in JBrowse
+                  </a>
+                  <span className="jbrowse-location">
+                    {sequenceData.jbrowse_info.chromosome}:{sequenceData.jbrowse_info.start_coord.toLocaleString()}..{sequenceData.jbrowse_info.stop_coord.toLocaleString()}
+                  </span>
+                </div>
+              </td>
+            </tr>
+          )}
+
           {/* GO Annotations */}
           {goLoading ? (
             <tr>
@@ -734,6 +756,91 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                     </div>
                   </td>
                 </tr>
+              )}
+              {/* Allele Location - shown for each secondary allele */}
+              {sequenceData.allele_locations && sequenceData.allele_locations.length > 0 && (
+                sequenceData.allele_locations.map((allele, alleleIdx) => (
+                  <React.Fragment key={alleleIdx}>
+                    {/* Allele Location header with coordinates */}
+                    <tr className="allele-location-header">
+                      <th>
+                        Allele Location<br/>
+                        <span style={{fontWeight: 'normal', paddingLeft: '10px'}}>
+                          Allele {allele.feature_name}
+                        </span>
+                      </th>
+                      <td>
+                        <span className="sequence-coords-text">
+                          {allele.chromosome && `${allele.chromosome}:`}
+                          {allele.start_coord?.toLocaleString()} to {allele.stop_coord?.toLocaleString()}
+                          {allele.strand && `, ${allele.strand === 'W' || allele.strand === '+' ? 'Watson' : 'Crick'} strand`}
+                        </span>
+                      </td>
+                    </tr>
+                    {/* Allele Last Update row */}
+                    {(allele.coord_version || allele.seq_version) && (
+                      <tr className="sequence-update-row">
+                        <th style={{paddingLeft: '10px', fontWeight: 'normal'}}>
+                          Last Update
+                        </th>
+                        <td>
+                          <span className="sequence-update-text">
+                            {allele.coord_version && `Coordinates: ${new Date(allele.coord_version).toISOString().split('T')[0]}`}
+                            {allele.coord_version && allele.seq_version && ' | '}
+                            {allele.seq_version && `Sequence: ${new Date(allele.seq_version).toISOString().split('T')[0]}`}
+                          </span>
+                        </td>
+                      </tr>
+                    )}
+                    {/* Allele Subfeature Details */}
+                    {allele.subfeatures && allele.subfeatures.length > 0 && (
+                      <tr className="sequence-subfeature-row">
+                        <th style={{paddingLeft: '10px', fontWeight: 'normal'}}>
+                          Subfeature Details
+                        </th>
+                        <td>
+                          <table className="subfeature-table">
+                            <thead>
+                              <tr>
+                                <th rowSpan="2"></th>
+                                <th rowSpan="2"></th>
+                                <th colSpan="3" rowSpan="2">Relative<br/>Coordinates</th>
+                                <th rowSpan="2"></th>
+                                <th colSpan="3" rowSpan="2">Chromosomal<br/>Coordinates</th>
+                                <th rowSpan="2"></th>
+                                <th colSpan="3">Most Recent Update</th>
+                              </tr>
+                              <tr>
+                                <th>Coordinates</th>
+                                <th></th>
+                                <th>Sequence</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {allele.subfeatures.map((sf, idx) => (
+                                <tr key={idx}>
+                                  <td className="subfeature-type">{sf.feature_type}</td>
+                                  <td></td>
+                                  <td className="subfeature-coord">{sf.relative_start}</td>
+                                  <td className="subfeature-coord-to">to</td>
+                                  <td className="subfeature-coord">{sf.relative_stop}</td>
+                                  <td></td>
+                                  <td className="subfeature-coord">{sf.start_coord?.toLocaleString()}</td>
+                                  <td className="subfeature-coord-to">to</td>
+                                  <td className="subfeature-coord">{sf.stop_coord?.toLocaleString()}</td>
+                                  <td></td>
+                                  <td className="subfeature-version"><em>{sf.coord_version ? new Date(sf.coord_version).toISOString().split('T')[0] : ''}</em></td>
+                                  <td></td>
+                                  <td className="subfeature-version"><em>{sf.seq_version ? new Date(sf.seq_version).toISOString().split('T')[0] : ''}</em></td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                ))
               )}
             </>
           )}
