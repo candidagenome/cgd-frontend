@@ -1766,3 +1766,113 @@ a:hover {
 .summary-note-paragraph strong {
   font-weight: bold;
 }
+
+/* ===== REFERENCES CITED ON THIS PAGE Section ===== */
+.cited-references-section {
+  margin-top: 25px;
+  padding: 15px;
+  background-color: #f5f5f5;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+}
+
+.cited-references-section .section-header {
+  margin: 0 0 15px 0;
+  font-size: 1.1em;
+  color: #333;
+  font-weight: bold;
+}
+
+.cited-references-section .literature-guide-link {
+  font-weight: normal;
+  font-size: 0.9em;
+}
+
+.cited-references-section .literature-guide-link a {
+  color: #1565c0;
+  text-decoration: none;
+}
+
+.cited-references-section .literature-guide-link a:hover {
+  text-decoration: underline;
+}
+
+.cited-references-section .literature-guide-link em {
+  font-style: italic;
+}
+
+.references-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reference-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px;
+  background-color: #fff;
+  border-radius: 4px;
+}
+
+.reference-item:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.reference-number {
+  font-weight: bold;
+  color: #666;
+  min-width: 30px;
+}
+
+.reference-citation {
+  flex: 1;
+  line-height: 1.5;
+}
+
+.pubmed-link {
+  color: #1565c0;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.pubmed-link:hover {
+  text-decoration: underline;
+}
+
+/* ===== Reference Superscript Links ===== */
+.ref-link {
+  color: #1565c0;
+  text-decoration: none;
+  font-size: 0.85em;
+}
+
+.ref-link:hover {
+  text-decoration: underline;
+}
+
+.ref-link sup {
+  font-size: 0.85em;
+  vertical-align: super;
+}
+
+/* Smooth scroll for reference links */
+.reference-item {
+  scroll-margin-top: 100px;
+}
+
+/* Highlight target reference when jumping */
+.reference-item:target {
+  background-color: #fff3cd;
+  animation: highlight-fade 2s ease-out;
+}
+
+@keyframes highlight-fade {
+  from {
+    background-color: #fff3cd;
+  }
+  to {
+    background-color: #fff;
+  }
+}
