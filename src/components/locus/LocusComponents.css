@@ -888,24 +888,21 @@ a:hover {
   gap: 15px;
 }
 
-.jbrowse-link {
+.jbrowse-button {
   display: inline-block;
+  padding: 8px 16px;
+  background-color: #2e7d32;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.95em;
 }
 
-.jbrowse-logo {
-  height: 41px;
-  width: auto;
-  border: none;
-}
-
-.jbrowse-logo:hover {
-  opacity: 0.8;
-}
-
-.jbrowse-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+.jbrowse-button:hover {
+  background-color: #1b5e20;
+  color: white;
+  text-decoration: none;
 }
 
 .jbrowse-location {

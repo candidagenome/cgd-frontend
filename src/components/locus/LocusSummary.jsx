@@ -396,19 +396,13 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                     href={sequenceData.jbrowse_info.full_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="jbrowse-link"
+                    className="jbrowse-button"
                   >
-                    <img
-                      src="http://www.candidagenome.org/images/JBrowseLogo_gmod.PNG"
-                      alt="JBrowse"
-                      className="jbrowse-logo"
-                    />
+                    View in JBrowse
                   </a>
-                  <div className="jbrowse-info">
-                    <span className="jbrowse-location">
-                      {sequenceData.jbrowse_info.chromosome}:{sequenceData.jbrowse_info.start_coord.toLocaleString()}..{sequenceData.jbrowse_info.stop_coord.toLocaleString()}
-                    </span>
-                  </div>
+                  <span className="jbrowse-location">
+                    {sequenceData.jbrowse_info.chromosome}:{sequenceData.jbrowse_info.start_coord.toLocaleString()}..{sequenceData.jbrowse_info.stop_coord.toLocaleString()}
+                  </span>
                 </div>
               </td>
             </tr>
