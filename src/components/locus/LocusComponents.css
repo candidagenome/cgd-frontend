@@ -741,6 +741,38 @@ a:hover {
   color: #555;
 }
 
+/* Phenotype Annotations in Summary tab */
+.phenotype-section-header th {
+  background-color: #fce4ec;
+  border-color: #f8bbd9;
+}
+
+.phenotype-experiment-type-row th {
+  font-weight: 600;
+}
+
+.phenotype-mutant-type-row th {
+  color: #555;
+}
+
+.phenotype-observables-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.phenotype-observable-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.phenotype-bullet {
+  color: #333;
+  margin-right: 4px;
+}
+
 /* =====================================================
    PHENOTYPE TAB IMPROVEMENTS
    ===================================================== */

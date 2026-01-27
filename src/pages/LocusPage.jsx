@@ -13,7 +13,7 @@ import History from '../components/locus/History';
 import './LocusPage.css';
 
 const TABS = [
-  { id: 'summary', label: 'Summary', component: 'summary', loader: 'loadGoDetails' },
+  { id: 'summary', label: 'Summary', component: 'summary', loader: 'loadSummaryData' },
   { id: 'go', label: 'Gene Ontology', component: 'go', loader: 'loadGoDetails' },
   { id: 'phenotype', label: 'Phenotype', component: 'phenotype', loader: 'loadPhenotypeDetails' },
   { id: 'protein', label: 'Protein', component: 'protein', loader: 'loadProteinDetails' },
@@ -93,6 +93,8 @@ function LocusPage() {
                 organismName={selectedOrganism}
                 goData={data.goDetails?.results?.[selectedOrganism]}
                 goLoading={loading.goDetails}
+                phenotypeData={data.phenotypeDetails?.results?.[selectedOrganism]}
+                phenotypeLoading={loading.phenotypeDetails}
               />
             )}
           </div>

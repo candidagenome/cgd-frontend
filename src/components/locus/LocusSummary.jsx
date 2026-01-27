@@ -1,7 +1,7 @@
 import React from 'react';
 import './LocusComponents.css';
 
-function LocusSummary({ data, organismName, goData, goLoading }) {
+function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, phenotypeLoading }) {
   if (!data) return null;
 
   const feature = data;
@@ -80,6 +80,55 @@ function LocusSummary({ data, organismName, goData, goLoading }) {
   };
 
   const goGroups = goData ? groupGoByAspect(goData.annotations) : {};
+
+  // Group phenotype annotations by experiment_type, then mutant_type, then unique observables
+  const groupPhenotypesByType = (annotations) => {
+    if (!annotations || annotations.length === 0) return {};
+
+    // Structure: { experimentType: { mutantType: Set of unique observables } }
+    const groups = {};
+
+    annotations.forEach(ann => {
+      const experimentType = ann.experiment_type || 'Classical genetics';
+      const mutantType = ann.mutant_type || 'unspecified';
+      const observable = ann.phenotype?.display_name;
+      const qualifier = ann.qualifier;
+
+      if (!observable) return;
+
+      if (!groups[experimentType]) {
+        groups[experimentType] = {};
+      }
+
+      if (!groups[experimentType][mutantType]) {
+        groups[experimentType][mutantType] = new Set();
+      }
+
+      // Combine observable with qualifier if present
+      let displayName = observable;
+      if (qualifier) {
+        displayName = `${observable}: ${qualifier}`;
+      }
+
+      groups[experimentType][mutantType].add(displayName);
+    });
+
+    // Convert Sets to sorted arrays
+    const result = {};
+    for (const [expType, mutantTypes] of Object.entries(groups)) {
+      result[expType] = {};
+      for (const [mutType, observables] of Object.entries(mutantTypes)) {
+        result[expType][mutType] = Array.from(observables).sort();
+      }
+    }
+
+    return result;
+  };
+
+  const phenotypeGroups = phenotypeData ? groupPhenotypesByType(phenotypeData.annotations) : {};
+
+  // Experiment type display order
+  const experimentTypeOrder = ['Classical genetics', 'Large-scale survey'];
 
   // Annotation type display order and labels
   const annotationTypeOrder = ['manually curated', 'high-throughput', 'computational'];
@@ -421,6 +470,57 @@ function LocusSummary({ data, organismName, goData, goLoading }) {
                         </tr>
                       );
                     })}
+                  </React.Fragment>
+                );
+              })}
+            </>
+          )}
+
+          {/* Mutant Phenotype */}
+          {phenotypeLoading ? (
+            <tr>
+              <th>Mutant Phenotype</th>
+              <td><em>Loading phenotype annotations...</em></td>
+            </tr>
+          ) : (phenotypeData && phenotypeData.annotations && phenotypeData.annotations.length > 0) && (
+            <>
+              <tr className="phenotype-section-header">
+                <th>Mutant Phenotype</th>
+                <td>
+                  <a href={`?tab=phenotype`}>
+                    View all <em>{feature.gene_name || feature.feature_name}</em> Phenotype details and references
+                  </a>
+                </td>
+              </tr>
+              {experimentTypeOrder.map(expType => {
+                const mutantTypes = phenotypeGroups[expType];
+                if (!mutantTypes || Object.keys(mutantTypes).length === 0) return null;
+
+                return (
+                  <React.Fragment key={expType}>
+                    {/* Experiment type header row */}
+                    <tr className="phenotype-experiment-type-row">
+                      <th style={{paddingLeft: '10px', fontWeight: 'bold'}}>{expType}</th>
+                      <td></td>
+                    </tr>
+                    {/* Mutant type rows */}
+                    {Object.entries(mutantTypes).sort(([a], [b]) => a.localeCompare(b)).map(([mutantType, observables]) => (
+                      <tr key={`${expType}-${mutantType}`} className="phenotype-mutant-type-row">
+                        <th style={{paddingLeft: '30px', fontWeight: 'normal'}}>
+                          {mutantType}
+                        </th>
+                        <td>
+                          <div className="phenotype-observables-list">
+                            {observables.map((obs, idx) => (
+                              <div key={idx} className="phenotype-observable-item">
+                                <span className="phenotype-bullet">•</span>
+                                <span>{obs}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
                   </React.Fragment>
                 );
               })}
