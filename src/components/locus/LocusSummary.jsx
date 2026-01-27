@@ -1,10 +1,53 @@
 import React from 'react';
 import './LocusComponents.css';
 
-function LocusSummary({ data, organismName }) {
+function LocusSummary({ data, organismName, goData, goLoading }) {
   if (!data) return null;
 
   const feature = data;
+
+  // Group GO annotations by aspect
+  const groupGoByAspect = (annotations) => {
+    if (!annotations || annotations.length === 0) return {};
+
+    const aspectCodeMap = {
+      'f': 'molecular_function',
+      'p': 'biological_process',
+      'c': 'cellular_component',
+    };
+
+    const groups = {
+      'molecular_function': [],
+      'biological_process': [],
+      'cellular_component': [],
+    };
+
+    annotations.forEach(ann => {
+      const rawAspect = ann.term?.aspect?.toLowerCase().replace(' ', '_') || 'unknown';
+      const aspect = aspectCodeMap[rawAspect] || rawAspect;
+      if (groups[aspect]) {
+        // Avoid duplicate terms
+        const termName = ann.term?.display_name;
+        if (termName && !groups[aspect].some(t => t.name === termName)) {
+          groups[aspect].push({
+            name: termName,
+            goid: ann.term?.goid,
+            qualifier: ann.qualifier,
+          });
+        }
+      }
+    });
+
+    return groups;
+  };
+
+  const goGroups = goData ? groupGoByAspect(goData.annotations) : {};
+
+  const aspectLabels = {
+    'molecular_function': 'Molecular Function',
+    'biological_process': 'Biological Process',
+    'cellular_component': 'Cellular Component',
+  };
 
   // Group aliases by type (like Perl does: Uniform, Non-uniform, Protein name, etc.)
   // Exclude 'Other strain feature name' as it's displayed separately
@@ -246,6 +289,52 @@ function LocusSummary({ data, organismName }) {
                 ))}
               </td>
             </tr>
+          )}
+
+          {/* GO Annotations */}
+          {goLoading ? (
+            <tr>
+              <th>GO Annotations</th>
+              <td><em>Loading GO annotations...</em></td>
+            </tr>
+          ) : (goData && goData.annotations && goData.annotations.length > 0) && (
+            <>
+              <tr className="go-section-header">
+                <th>GO Annotations</th>
+                <td>
+                  <a href={`?tab=go`}>
+                    View all <em>{feature.gene_name || feature.feature_name}</em> GO evidence and references
+                  </a>
+                </td>
+              </tr>
+              {Object.entries(goGroups).map(([aspect, terms]) => {
+                if (terms.length === 0) return null;
+                return (
+                  <tr key={aspect} className="go-aspect-row">
+                    <th style={{paddingLeft: '20px'}}>{aspectLabels[aspect]}</th>
+                    <td>
+                      {terms.map((term, idx) => (
+                        <span key={idx}>
+                          {term.qualifier && (
+                            <span className={`go-qualifier ${term.qualifier.toLowerCase() === 'not' ? 'qualifier-not' : ''}`}>
+                              {term.qualifier}{' '}
+                            </span>
+                          )}
+                          <a
+                            href={`https://amigo.geneontology.org/amigo/term/${term.goid}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {term.name}
+                          </a>
+                          {idx < terms.length - 1 ? ' • ' : ''}
+                        </span>
+                      ))}
+                    </td>
+                  </tr>
+                );
+              })}
+            </>
           )}
 
           {/* Organism */}
