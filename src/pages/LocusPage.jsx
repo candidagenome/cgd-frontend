@@ -95,6 +95,8 @@ function LocusPage() {
                 goLoading={loading.goDetails}
                 phenotypeData={data.phenotypeDetails?.results?.[selectedOrganism]}
                 phenotypeLoading={loading.phenotypeDetails}
+                sequenceData={data.sequenceDetails?.results?.[selectedOrganism]}
+                sequenceLoading={loading.sequenceDetails}
               />
             )}
           </div>

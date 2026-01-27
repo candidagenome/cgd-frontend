@@ -768,6 +768,21 @@ a:hover {
   margin-right: 4px;
 }
 
+/* Sequence Information in Summary tab */
+.sequence-coords {
+  font-family: 'Courier New', monospace;
+}
+
+.sequence-coords .chromosome-name {
+  font-weight: 600;
+  color: #1565c0;
+}
+
+.strand-indicator {
+  color: #666;
+  font-size: 0.9em;
+}
+
 /* =====================================================
    PHENOTYPE TAB IMPROVEMENTS
    ===================================================== */

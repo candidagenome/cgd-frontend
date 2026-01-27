@@ -67,7 +67,7 @@ export function useLocusData(locusName) {
     }
   }, [data.phenotypeDetails, loading.phenotypeDetails, fetchData]);
 
-  // Load both GO and Phenotype details for Summary tab
+  // Load GO, Phenotype, and Sequence details for Summary tab
   const loadSummaryData = useCallback(() => {
     if (!data.goDetails && !loading.goDetails) {
       fetchData('goDetails', locusApi.getGoDetails);
@@ -75,7 +75,10 @@ export function useLocusData(locusName) {
     if (!data.phenotypeDetails && !loading.phenotypeDetails) {
       fetchData('phenotypeDetails', locusApi.getPhenotypeDetails);
     }
-  }, [data.goDetails, data.phenotypeDetails, loading.goDetails, loading.phenotypeDetails, fetchData]);
+    if (!data.sequenceDetails && !loading.sequenceDetails) {
+      fetchData('sequenceDetails', locusApi.getSequenceDetails);
+    }
+  }, [data.goDetails, data.phenotypeDetails, data.sequenceDetails, loading.goDetails, loading.phenotypeDetails, loading.sequenceDetails, fetchData]);
 
   const loadInteractionDetails = useCallback(() => {
     if (!data.interactionDetails && !loading.interactionDetails) {

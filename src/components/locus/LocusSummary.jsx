@@ -1,7 +1,7 @@
 import React from 'react';
 import './LocusComponents.css';
 
-function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, phenotypeLoading }) {
+function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, phenotypeLoading, sequenceData, sequenceLoading }) {
   if (!data) return null;
 
   const feature = data;
@@ -524,6 +524,43 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                   </React.Fragment>
                 );
               })}
+            </>
+          )}
+
+          {/* Sequence Information */}
+          {sequenceLoading ? (
+            <tr>
+              <th>Sequence Information</th>
+              <td><em>Loading sequence information...</em></td>
+            </tr>
+          ) : (sequenceData && sequenceData.locations && sequenceData.locations.length > 0) && (
+            <>
+              <tr className="sequence-section-header">
+                <th>Sequence Information</th>
+                <td>
+                  <a href={`?tab=sequence`}>
+                    View all <em>{feature.gene_name || feature.feature_name}</em> Sequence details
+                  </a>
+                </td>
+              </tr>
+              {sequenceData.locations.filter(loc => loc.is_current).map((location, idx) => (
+                <tr key={idx} className="sequence-location-row">
+                  <th style={{paddingLeft: '10px', fontWeight: 'normal'}}>
+                    Coordinates
+                  </th>
+                  <td>
+                    <span className="sequence-coords">
+                      {location.chromosome && <span className="chromosome-name">{location.chromosome}: </span>}
+                      {location.start_coord.toLocaleString()} to {location.stop_coord.toLocaleString()}
+                      {location.strand && (
+                        <span className="strand-indicator">
+                          {' '}({location.strand === 'W' || location.strand === '+' ? 'Watson' : 'Crick'} strand)
+                        </span>
+                      )}
+                    </span>
+                  </td>
+                </tr>
+              ))}
             </>
           )}
 
