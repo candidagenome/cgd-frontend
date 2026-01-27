@@ -386,30 +386,29 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
             </tr>
           )}
 
-          {/* JBrowse - embedded genome browser */}
+          {/* JBrowse - genome browser link */}
           {sequenceData && sequenceData.jbrowse_info && (
             <tr className="jbrowse-section">
               <th>JBrowse</th>
               <td>
-                <div className="jbrowse-container">
-                  <div className="jbrowse-header">
-                    <span>Genome browser view for <em>{sequenceData.jbrowse_info.feature_name}</em></span>
-                    <a
-                      href={sequenceData.jbrowse_info.full_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="jbrowse-fullscreen-link"
-                    >
-                      Open full JBrowse view ↗
-                    </a>
+                <div className="jbrowse-link-container">
+                  <a
+                    href={sequenceData.jbrowse_info.full_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="jbrowse-link"
+                  >
+                    <img
+                      src="http://www.candidagenome.org/images/JBrowseLogo_gmod.PNG"
+                      alt="JBrowse"
+                      className="jbrowse-logo"
+                    />
+                  </a>
+                  <div className="jbrowse-info">
+                    <span className="jbrowse-location">
+                      {sequenceData.jbrowse_info.chromosome}:{sequenceData.jbrowse_info.start_coord.toLocaleString()}..{sequenceData.jbrowse_info.stop_coord.toLocaleString()}
+                    </span>
                   </div>
-                  <iframe
-                    src={sequenceData.jbrowse_info.embed_url}
-                    title={`JBrowse for ${sequenceData.jbrowse_info.feature_name}`}
-                    className="jbrowse-iframe"
-                    width="750"
-                    height="350"
-                  />
                 </div>
               </td>
             </tr>

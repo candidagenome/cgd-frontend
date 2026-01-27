@@ -879,37 +879,39 @@ a:hover {
 
 /* JBrowse Section */
 .jbrowse-section th {
-  vertical-align: top;
-  padding-top: 10px;
+  vertical-align: middle;
 }
 
-.jbrowse-container {
-  margin: 5px 0;
-}
-
-.jbrowse-header {
+.jbrowse-link-container {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
-  padding: 8px 12px;
-  background-color: #f5f5f5;
-  border-radius: 4px;
+  gap: 15px;
 }
 
-.jbrowse-fullscreen-link {
+.jbrowse-link {
+  display: inline-block;
+}
+
+.jbrowse-logo {
+  height: 41px;
+  width: auto;
+  border: none;
+}
+
+.jbrowse-logo:hover {
+  opacity: 0.8;
+}
+
+.jbrowse-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.jbrowse-location {
+  font-family: 'Courier New', monospace;
+  color: #555;
   font-size: 0.9em;
-  color: #1976d2;
-  text-decoration: none;
-}
-
-.jbrowse-fullscreen-link:hover {
-  text-decoration: underline;
-}
-
-.jbrowse-iframe {
-  border: 1px solid #ccc;
-  border-radius: 4px;
 }
 
 /* =====================================================
