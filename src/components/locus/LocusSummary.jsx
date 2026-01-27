@@ -961,6 +961,46 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
           </div>
         </div>
       )}
+
+      {/* REFERENCES CITED ON THIS PAGE section */}
+      {feature.cited_references && feature.cited_references.length > 0 && (
+        <div className="cited-references-section">
+          <h3 className="section-header">
+            REFERENCES CITED ON THIS PAGE
+            {feature.literature_guide_url && (
+              <span className="literature-guide-link">
+                {' '}[<a
+                  href={feature.literature_guide_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View Complete Literature Guide for <em>{feature.gene_name || feature.feature_name}</em>
+                </a>]
+              </span>
+            )}
+          </h3>
+          <div className="references-list">
+            {feature.cited_references.map((ref, idx) => (
+              <div key={ref.reference_no} className="reference-item">
+                <span className="reference-number">{idx + 1})</span>
+                <span className="reference-citation">
+                  {ref.citation}
+                  {ref.pubmed && (
+                    <a
+                      href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}/`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="pubmed-link"
+                    >
+                      {' '}PMID: {ref.pubmed}
+                    </a>
+                  )}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
