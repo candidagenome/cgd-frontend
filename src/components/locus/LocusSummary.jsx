@@ -535,26 +535,21 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
             </tr>
           ) : (sequenceData && sequenceData.locations && sequenceData.locations.length > 0) && (
             <>
-              <tr className="sequence-section-header">
-                <th>Sequence Information</th>
-                <td>
-                  <a href={`?tab=sequence`}>
-                    View all <em>{feature.gene_name || feature.feature_name}</em> Sequence details
-                  </a>
-                </td>
-              </tr>
+              {/* Sequence Information header with chromosomal coordinates */}
               {sequenceData.locations.filter(loc => loc.is_current).map((location, idx) => (
                 <React.Fragment key={idx}>
-                  {/* Coordinates row */}
-                  <tr className="sequence-location-row">
-                    <th style={{paddingLeft: '10px', fontWeight: 'normal'}}>
-                      Coordinates
-                    </th>
+                  <tr className="sequence-section-header">
+                    <th>Sequence Information</th>
                     <td>
                       <span className="sequence-coords-text">
-                        {location.chromosome && `${location.chromosome}: `}
+                        {location.chromosome && `${location.chromosome}:`}
                         {location.start_coord.toLocaleString()} to {location.stop_coord.toLocaleString()}
                         {location.strand && `, ${location.strand === 'W' || location.strand === '+' ? 'Watson' : 'Crick'} strand`}
+                      </span>
+                      <span style={{marginLeft: '15px'}}>
+                        <a href={`?tab=sequence`}>
+                          View all <em>{feature.gene_name || feature.feature_name}</em> Sequence details
+                        </a>
                       </span>
                     </td>
                   </tr>
@@ -566,9 +561,9 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                       </th>
                       <td>
                         <span className="sequence-update-text">
-                          {location.coord_version && `Coordinates: ${new Date(location.coord_version).toLocaleDateString()}`}
+                          {location.coord_version && `Coordinates: ${new Date(location.coord_version).toISOString().split('T')[0]}`}
                           {location.coord_version && location.seq_version && ' | '}
-                          {location.seq_version && `Sequence: ${new Date(location.seq_version).toLocaleDateString()}`}
+                          {location.seq_version && `Sequence: ${new Date(location.seq_version).toISOString().split('T')[0]}`}
                         </span>
                       </td>
                     </tr>
@@ -585,23 +580,158 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                     <table className="subfeature-table">
                       <thead>
                         <tr>
+                          <th rowSpan="2"></th>
+                          <th rowSpan="2"></th>
+                          <th colSpan="3" rowSpan="2">Relative<br/>Coordinates</th>
+                          <th rowSpan="2"></th>
+                          <th colSpan="3" rowSpan="2">Chromosomal<br/>Coordinates</th>
+                          <th rowSpan="2"></th>
+                          <th colSpan="3">Most Recent Update</th>
+                        </tr>
+                        <tr>
+                          <th>Coordinates</th>
                           <th></th>
-                          <th colSpan="2">Relative Coordinates</th>
-                          <th colSpan="2">Chromosomal Coordinates</th>
+                          <th>Sequence</th>
                         </tr>
                       </thead>
                       <tbody>
                         {sequenceData.subfeatures.map((sf, idx) => (
                           <tr key={idx}>
                             <td className="subfeature-type">{sf.feature_type}</td>
+                            <td></td>
                             <td className="subfeature-coord">{sf.relative_start}</td>
-                            <td className="subfeature-coord">to {sf.relative_stop}</td>
+                            <td className="subfeature-coord-to">to</td>
+                            <td className="subfeature-coord">{sf.relative_stop}</td>
+                            <td></td>
                             <td className="subfeature-coord">{sf.start_coord?.toLocaleString()}</td>
-                            <td className="subfeature-coord">to {sf.stop_coord?.toLocaleString()}</td>
+                            <td className="subfeature-coord-to">to</td>
+                            <td className="subfeature-coord">{sf.stop_coord?.toLocaleString()}</td>
+                            <td></td>
+                            <td className="subfeature-version"><em>{sf.coord_version ? new Date(sf.coord_version).toISOString().split('T')[0] : ''}</em></td>
+                            <td></td>
+                            <td className="subfeature-version"><em>{sf.seq_version ? new Date(sf.seq_version).toISOString().split('T')[0] : ''}</em></td>
                           </tr>
                         ))}
                       </tbody>
                     </table>
+                  </td>
+                </tr>
+              )}
+              {/* Sequence Tools Pulldowns */}
+              {sequenceData.sequence_resources && (
+                <tr className="sequence-tools-row">
+                  <th style={{paddingLeft: '10px', fontWeight: 'normal'}}></th>
+                  <td>
+                    <div className="sequence-tools-container">
+                      {sequenceData.sequence_resources.retrieve_sequences && sequenceData.sequence_resources.retrieve_sequences.length > 0 && (
+                        <div className="sequence-tool-dropdown">
+                          <label><strong>Retrieve Sequences</strong></label>
+                          <select
+                            onChange={(e) => {
+                              if (e.target.value && !e.target.value.startsWith('?query=')) {
+                                window.open(e.target.value, '_blank');
+                              }
+                            }}
+                            defaultValue=""
+                          >
+                            <option value="">Select...</option>
+                            {sequenceData.sequence_resources.retrieve_sequences.map((item, idx) => (
+                              <option
+                                key={idx}
+                                value={item.url}
+                                disabled={item.url.startsWith('?query=')}
+                                style={item.url.startsWith('?query=') ? {fontWeight: 'bold', backgroundColor: '#eee'} : {}}
+                              >
+                                {item.label}
+                              </option>
+                            ))}
+                          </select>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              const select = e.target.previousSibling;
+                              if (select.value && !select.value.startsWith('?query=')) {
+                                window.open(select.value, '_blank');
+                              }
+                            }}
+                          >
+                            View
+                          </button>
+                        </div>
+                      )}
+                      {sequenceData.sequence_resources.sequence_analysis_tools && sequenceData.sequence_resources.sequence_analysis_tools.length > 0 && (
+                        <div className="sequence-tool-dropdown">
+                          <label><strong>Sequence Analysis Tools</strong></label>
+                          <select
+                            onChange={(e) => {
+                              if (e.target.value && !e.target.value.startsWith('?query=')) {
+                                window.open(e.target.value, '_blank');
+                              }
+                            }}
+                            defaultValue=""
+                          >
+                            <option value="">Select...</option>
+                            {sequenceData.sequence_resources.sequence_analysis_tools.map((item, idx) => (
+                              <option
+                                key={idx}
+                                value={item.url}
+                                disabled={item.url.startsWith('?query=')}
+                                style={item.url.startsWith('?query=') ? {fontWeight: 'bold', backgroundColor: '#eee'} : {}}
+                              >
+                                {item.label}
+                              </option>
+                            ))}
+                          </select>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              const select = e.target.previousSibling;
+                              if (select.value && !select.value.startsWith('?query=')) {
+                                window.open(select.value, '_blank');
+                              }
+                            }}
+                          >
+                            View
+                          </button>
+                        </div>
+                      )}
+                      {sequenceData.sequence_resources.maps_displays && sequenceData.sequence_resources.maps_displays.length > 0 && (
+                        <div className="sequence-tool-dropdown">
+                          <label><strong>Maps & Displays</strong></label>
+                          <select
+                            onChange={(e) => {
+                              if (e.target.value && !e.target.value.startsWith('?query=')) {
+                                window.open(e.target.value, '_blank');
+                              }
+                            }}
+                            defaultValue=""
+                          >
+                            <option value="">Select...</option>
+                            {sequenceData.sequence_resources.maps_displays.map((item, idx) => (
+                              <option
+                                key={idx}
+                                value={item.url}
+                                disabled={item.url.startsWith('?query=')}
+                                style={item.url.startsWith('?query=') ? {fontWeight: 'bold', backgroundColor: '#eee'} : {}}
+                              >
+                                {item.label}
+                              </option>
+                            ))}
+                          </select>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              const select = e.target.previousSibling;
+                              if (select.value && !select.value.startsWith('?query=')) {
+                                window.open(select.value, '_blank');
+                              }
+                            }}
+                          >
+                            View
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </td>
                 </tr>
               )}
