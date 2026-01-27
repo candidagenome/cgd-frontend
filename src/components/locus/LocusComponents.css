@@ -565,12 +565,7 @@ a:hover {
 }
 
 .feature-type-badge {
-  display: inline-block;
-  background-color: #e3f2fd;
-  color: #1565c0;
-  padding: 3px 10px;
-  border-radius: 12px;
-  font-size: 0.9em;
+  display: inline;
   font-weight: 500;
 }
 
@@ -646,6 +641,104 @@ a:hover {
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
+}
+
+/* Feature qualifier */
+.feature-qualifier {
+  color: #666;
+  font-weight: normal;
+}
+
+/* Ortholog lists */
+.ortholog-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ortholog-item {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.external-ortholog-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ortholog-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.ortholog-source-label {
+  font-weight: 600;
+  color: #555;
+  min-width: 120px;
+}
+
+.ortholog-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.ortholog-desc {
+  color: #666;
+  font-size: 0.9em;
+}
+
+/* GO Annotations in Summary tab */
+.go-terms-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.go-term-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.go-bullet {
+  color: #333;
+  margin-right: 4px;
+}
+
+.go-qualifier {
+  color: #666;
+}
+
+.go-qualifier.qualifier-not {
+  color: #d32f2f;
+  font-weight: 500;
+}
+
+.go-evidence-codes {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.go-evidence-codes a {
+  color: #1976d2;
+}
+
+.go-with-from {
+  color: #666;
+  font-style: italic;
+}
+
+.go-aspect-header-row th {
+  font-weight: 600;
+}
+
+.go-annotation-type-row th {
+  color: #555;
 }
 
 /* =====================================================

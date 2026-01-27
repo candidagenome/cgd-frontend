@@ -4,7 +4,6 @@ import useLocusData from '../hooks/useLocusData';
 import LocusSummary from '../components/locus/LocusSummary';
 import GoDetails from '../components/locus/GoDetails';
 import PhenotypeDetails from '../components/locus/PhenotypeDetails';
-import InteractionDetails from '../components/locus/InteractionDetails';
 import ProteinDetails from '../components/locus/ProteinDetails';
 import HomologyDetails from '../components/locus/HomologyDetails';
 import SequenceDetails from '../components/locus/SequenceDetails';
@@ -14,10 +13,9 @@ import History from '../components/locus/History';
 import './LocusPage.css';
 
 const TABS = [
-  { id: 'summary', label: 'Summary', component: 'summary' },
+  { id: 'summary', label: 'Summary', component: 'summary', loader: 'loadGoDetails' },
   { id: 'go', label: 'Gene Ontology', component: 'go', loader: 'loadGoDetails' },
   { id: 'phenotype', label: 'Phenotype', component: 'phenotype', loader: 'loadPhenotypeDetails' },
-  { id: 'interactions', label: 'Interactions', component: 'interactions', loader: 'loadInteractionDetails' },
   { id: 'protein', label: 'Protein', component: 'protein', loader: 'loadProteinDetails' },
   { id: 'homology', label: 'Homologs', component: 'homology', loader: 'loadHomologyDetails' },
   { id: 'sequence', label: 'Sequence', component: 'sequence', loader: 'loadSequenceDetails' },
@@ -93,6 +91,8 @@ function LocusPage() {
               <LocusSummary
                 data={data.info.results[selectedOrganism]}
                 organismName={selectedOrganism}
+                goData={data.goDetails?.results?.[selectedOrganism]}
+                goLoading={loading.goDetails}
               />
             )}
           </div>
@@ -113,15 +113,6 @@ function LocusPage() {
             data={data.phenotypeDetails}
             loading={loading.phenotypeDetails}
             error={errors.phenotypeDetails}
-          />
-        );
-
-      case 'interactions':
-        return (
-          <InteractionDetails
-            data={data.interactionDetails}
-            loading={loading.interactionDetails}
-            error={errors.interactionDetails}
           />
         );
 
