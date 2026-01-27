@@ -920,6 +920,47 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
           )}
         </tbody>
       </table>
+
+      {/* ADDITIONAL INFORMATION section */}
+      {feature.additional_info_links && feature.additional_info_links.length > 0 && (
+        <div className="additional-info-section">
+          <h3 className="section-header">
+            ADDITIONAL INFORMATION for <em>{feature.gene_name || feature.feature_name}</em>
+          </h3>
+          <div className="additional-info-links">
+            {feature.additional_info_links.map((link, idx) => (
+              <a
+                key={idx}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="additional-info-link"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* LOCUS SUMMARY NOTES section */}
+      {feature.summary_notes && feature.summary_notes.length > 0 && (
+        <div className="summary-notes-section">
+          <h3 className="section-header">
+            LOCUS SUMMARY NOTES for <em>{feature.gene_name || feature.feature_name}</em>
+            {feature.summary_notes_last_updated && (
+              <span className="last-updated">
+                {' '}(Last Updated: {new Date(feature.summary_notes_last_updated).toISOString().split('T')[0]})
+              </span>
+            )}
+          </h3>
+          <div className="summary-notes-content">
+            {feature.summary_notes.map((note, idx) => (
+              <p key={idx} className="summary-note-paragraph" dangerouslySetInnerHTML={{ __html: note.paragraph_text }} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

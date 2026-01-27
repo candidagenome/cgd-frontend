@@ -1666,3 +1666,103 @@ a:hover {
     gap: 5px;
   }
 }
+
+/* ===== ADDITIONAL INFORMATION Section ===== */
+.additional-info-section {
+  margin-top: 25px;
+  padding: 15px;
+  background-color: #f5f5f5;
+  border-radius: 6px;
+}
+
+.additional-info-section .section-header {
+  margin: 0 0 15px 0;
+  font-size: 1.1em;
+  color: #333;
+  font-weight: bold;
+}
+
+.additional-info-section .section-header em {
+  font-style: italic;
+}
+
+.additional-info-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.additional-info-link {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #e3f2fd;
+  color: #1565c0;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 0.9em;
+  transition: background-color 0.2s;
+}
+
+.additional-info-link:hover {
+  background-color: #bbdefb;
+  text-decoration: none;
+}
+
+/* ===== LOCUS SUMMARY NOTES Section ===== */
+.summary-notes-section {
+  margin-top: 25px;
+  padding: 15px;
+  background-color: #fff8e1;
+  border-radius: 6px;
+  border: 1px solid #ffe082;
+}
+
+.summary-notes-section .section-header {
+  margin: 0 0 15px 0;
+  font-size: 1.1em;
+  color: #333;
+  font-weight: bold;
+}
+
+.summary-notes-section .section-header em {
+  font-style: italic;
+}
+
+.summary-notes-section .last-updated {
+  font-weight: normal;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.summary-notes-content {
+  line-height: 1.6;
+}
+
+.summary-note-paragraph {
+  margin: 0 0 15px 0;
+  text-align: justify;
+}
+
+.summary-note-paragraph:last-child {
+  margin-bottom: 0;
+}
+
+/* Handle HTML tags in summary notes (links, italics, etc.) */
+.summary-note-paragraph a {
+  color: #1565c0;
+  text-decoration: none;
+}
+
+.summary-note-paragraph a:hover {
+  text-decoration: underline;
+}
+
+.summary-note-paragraph i,
+.summary-note-paragraph em {
+  font-style: italic;
+}
+
+.summary-note-paragraph b,
+.summary-note-paragraph strong {
+  font-weight: bold;
+}
