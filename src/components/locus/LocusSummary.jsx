@@ -73,12 +73,12 @@ function LocusSummary({ data, organismName }) {
     <div className="locus-summary">
       <table className="info-table">
         <tbody>
-          {/* Standard Name - highlighted if exists */}
+          {/* Standard Name */}
           <tr>
             <th>Standard Name</th>
             <td>
               {feature.gene_name ? (
-                <strong className="gene-name">{feature.gene_name}</strong>
+                <span>{feature.gene_name}</span>
               ) : (
                 <span className="no-value">-</span>
               )}
@@ -88,14 +88,14 @@ function LocusSummary({ data, organismName }) {
           {/* Systematic Name */}
           <tr>
             <th>Systematic Name</th>
-            <td><code className="systematic-name">{feature.feature_name}</code></td>
+            <td>{feature.feature_name}</td>
           </tr>
 
           {/* Assembly 19/21 Identifier - shown if different from Systematic Name */}
           {feature.assembly_21_identifier && (
             <tr>
               <th>Assembly 19/21 Identifier</th>
-              <td><code className="systematic-name">{feature.assembly_21_identifier}</code></td>
+              <td>{feature.assembly_21_identifier}</td>
             </tr>
           )}
 
@@ -184,10 +184,10 @@ function LocusSummary({ data, organismName }) {
                 {feature.other_strain_names.map((item, idx) => (
                   <span key={idx}>
                     {typeof item === 'string' ? (
-                      <code className="systematic-name">{item}</code>
+                      <span>{item}</span>
                     ) : (
                       <>
-                        <code className="systematic-name">{item.alias_name}</code>
+                        <span>{item.alias_name}</span>
                         {item.strain_name && <span> (<em>{item.strain_name}</em>)</span>}
                       </>
                     )}
@@ -235,10 +235,10 @@ function LocusSummary({ data, organismName }) {
                     {' ('}
                     {orth.url ? (
                       <a href={orth.url} target="_blank" rel="noopener noreferrer">
-                        {orth.dbxref_id}
+                        {orth.description || orth.dbxref_id}
                       </a>
                     ) : (
-                      <span>{orth.dbxref_id}</span>
+                      <span>{orth.description || orth.dbxref_id}</span>
                     )}
                     {')'}
                     {idx < feature.external_orthologs.length - 1 ? ' ; ' : ''}
@@ -262,9 +262,7 @@ function LocusSummary({ data, organismName }) {
           {/* Primary DBID */}
           <tr>
             <th>Primary CGDID</th>
-            <td>
-              <code className="dbxref-id">{feature.dbxref_id}</code>
-            </td>
+            <td>{feature.dbxref_id}</td>
           </tr>
 
           {/* Source */}
