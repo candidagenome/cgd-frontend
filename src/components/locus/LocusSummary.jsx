@@ -212,7 +212,11 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
             <th>Standard Name</th>
             <td>
               {feature.gene_name ? (
-                <span>{feature.gene_name}</span>
+                feature.gene_name_with_refs ? (
+                  <span dangerouslySetInnerHTML={{ __html: feature.gene_name_with_refs }} />
+                ) : (
+                  <span><em>{feature.gene_name}</em></span>
+                )
               ) : (
                 <span className="no-value">-</span>
               )}
@@ -239,14 +243,34 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
               <th>Alias</th>
               <td>
                 <div className="alias-groups">
-                  {Object.entries(aliasGroups)
-                    .filter(([type]) => type !== 'Retired name')
-                    .map(([type, names]) => (
-                      <div key={type} className="alias-group">
-                        <span className="alias-type-label">{type}:</span>
-                        <span className="alias-names">{names.join(', ')}</span>
-                      </div>
-                    ))}
+                  {(() => {
+                    // Build alias groups with reference annotations
+                    const aliasRefsMap = {};
+                    if (feature.aliases_with_refs) {
+                      feature.aliases_with_refs.forEach(a => {
+                        aliasRefsMap[a.alias_name] = a.alias_name_with_refs;
+                      });
+                    }
+                    return Object.entries(aliasGroups)
+                      .filter(([type]) => type !== 'Retired name')
+                      .map(([type, names]) => (
+                        <div key={type} className="alias-group">
+                          <span className="alias-type-label">{type}:</span>
+                          <span className="alias-names">
+                            {names.map((name, idx) => (
+                              <span key={idx}>
+                                {aliasRefsMap[name] ? (
+                                  <span dangerouslySetInnerHTML={{ __html: aliasRefsMap[name] }} />
+                                ) : (
+                                  <span>{name}</span>
+                                )}
+                                {idx < names.length - 1 ? ', ' : ''}
+                              </span>
+                            ))}
+                          </span>
+                        </div>
+                      ));
+                  })()}
                 </div>
               </td>
             </tr>
@@ -299,14 +323,30 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
           {/* Description/Headline */}
           <tr>
             <th>Description</th>
-            <td>{feature.headline || <span className="no-value">No description available</span>}</td>
+            <td>
+              {feature.headline ? (
+                feature.headline_with_refs ? (
+                  <span dangerouslySetInnerHTML={{ __html: feature.headline_with_refs }} />
+                ) : (
+                  <span>{feature.headline}</span>
+                )
+              ) : (
+                <span className="no-value">No description available</span>
+              )}
+            </td>
           </tr>
 
           {/* Name Description (what the gene name stands for) */}
           {feature.name_description && (
             <tr>
               <th>Name Description</th>
-              <td><em>{feature.name_description}</em></td>
+              <td>
+                {feature.name_description_with_refs ? (
+                  <span dangerouslySetInnerHTML={{ __html: feature.name_description_with_refs }} />
+                ) : (
+                  <em>{feature.name_description}</em>
+                )}
+              </td>
             </tr>
           )}
 
@@ -981,7 +1021,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
           </h3>
           <div className="references-list">
             {feature.cited_references.map((ref, idx) => (
-              <div key={ref.reference_no} className="reference-item">
+              <div key={ref.reference_no} id={`ref${idx + 1}`} className="reference-item">
                 <span className="reference-number">{idx + 1})</span>
                 <span className="reference-citation">
                   {ref.citation}
