@@ -184,29 +184,24 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
   const hasRetiredNames = aliasGroups['Retired name'] && aliasGroups['Retired name'].length > 0;
   const hasNonRetiredAliases = Object.keys(aliasGroups).filter(type => type !== 'Retired name').length > 0;
 
-  // Group external links by url_type (label) and substitute ORF name in URLs
+  // Group external links by label (from web_display.label_name)
   // Format matches Perl: label | label (1, 2, 3) for multiple URLs with same label
-  const groupLinksByLabel = (links, featureName) => {
+  const groupLinksByLabel = (links) => {
     if (!links || links.length === 0) return {};
 
     const groups = {};
     links.forEach(link => {
-      const label = link.url_type || 'Other';
+      const label = link.label || 'Other';
       if (!groups[label]) {
         groups[label] = [];
       }
-      // Replace _SUBSTITUTE_THIS_ placeholder with the ORF name (feature_name)
-      const processedLink = {
-        ...link,
-        url: link.url ? link.url.replace(/_SUBSTITUTE_THIS_/g, featureName || '') : link.url
-      };
-      groups[label].push(processedLink);
+      groups[label].push(link);
     });
 
     return groups;
   };
 
-  const linkGroups = groupLinksByLabel(feature.external_links, feature.feature_name);
+  const linkGroups = groupLinksByLabel(feature.external_links);
 
   return (
     <div className="locus-summary">
