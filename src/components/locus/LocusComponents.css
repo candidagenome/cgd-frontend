@@ -691,6 +691,43 @@ a:hover {
   font-size: 0.9em;
 }
 
+/* GO Annotations in Summary tab */
+.go-terms-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.go-term-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.go-bullet {
+  color: #333;
+  margin-right: 4px;
+}
+
+.go-qualifier {
+  color: #666;
+}
+
+.go-qualifier.qualifier-not {
+  color: #d32f2f;
+  font-weight: 500;
+}
+
+.go-evidence-codes {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.go-evidence-codes a {
+  color: #1976d2;
+}
+
 /* =====================================================
    PHENOTYPE TAB IMPROVEMENTS
    ===================================================== */

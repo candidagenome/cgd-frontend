@@ -6,7 +6,7 @@ function LocusSummary({ data, organismName, goData, goLoading }) {
 
   const feature = data;
 
-  // Group GO annotations by aspect
+  // Group GO annotations by aspect, then by term+qualifier, collecting evidence codes
   const groupGoByAspect = (annotations) => {
     if (!annotations || annotations.length === 0) return {};
 
@@ -17,28 +17,50 @@ function LocusSummary({ data, organismName, goData, goLoading }) {
     };
 
     const groups = {
-      'molecular_function': [],
-      'biological_process': [],
-      'cellular_component': [],
+      'molecular_function': {},
+      'biological_process': {},
+      'cellular_component': {},
     };
 
     annotations.forEach(ann => {
       const rawAspect = ann.term?.aspect?.toLowerCase().replace(' ', '_') || 'unknown';
       const aspect = aspectCodeMap[rawAspect] || rawAspect;
       if (groups[aspect]) {
-        // Avoid duplicate terms
         const termName = ann.term?.display_name;
-        if (termName && !groups[aspect].some(t => t.name === termName)) {
-          groups[aspect].push({
-            name: termName,
-            goid: ann.term?.goid,
-            qualifier: ann.qualifier,
-          });
+        const qualifier = ann.qualifier || '';
+        const evidenceCode = ann.evidence?.code;
+
+        if (termName) {
+          // Create unique key for term+qualifier combination
+          const key = `${termName}|${qualifier}`;
+
+          if (!groups[aspect][key]) {
+            groups[aspect][key] = {
+              name: termName,
+              goid: ann.term?.goid,
+              qualifier: qualifier,
+              evidenceCodes: new Set(),
+            };
+          }
+
+          // Add evidence code if present
+          if (evidenceCode) {
+            groups[aspect][key].evidenceCodes.add(evidenceCode);
+          }
         }
       }
     });
 
-    return groups;
+    // Convert to arrays and Sets to arrays
+    const result = {};
+    for (const [aspect, terms] of Object.entries(groups)) {
+      result[aspect] = Object.values(terms).map(term => ({
+        ...term,
+        evidenceCodes: Array.from(term.evidenceCodes).sort(),
+      }));
+    }
+
+    return result;
   };
 
   const goGroups = goData ? groupGoByAspect(goData.annotations) : {};
@@ -313,23 +335,44 @@ function LocusSummary({ data, organismName, goData, goLoading }) {
                   <tr key={aspect} className="go-aspect-row">
                     <th style={{paddingLeft: '20px'}}>{aspectLabels[aspect]}</th>
                     <td>
-                      {terms.map((term, idx) => (
-                        <span key={idx}>
-                          {term.qualifier && (
-                            <span className={`go-qualifier ${term.qualifier.toLowerCase() === 'not' ? 'qualifier-not' : ''}`}>
-                              {term.qualifier}{' '}
-                            </span>
-                          )}
-                          <a
-                            href={`https://amigo.geneontology.org/amigo/term/${term.goid}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {term.name}
-                          </a>
-                          {idx < terms.length - 1 ? ' • ' : ''}
-                        </span>
-                      ))}
+                      <div className="go-terms-list">
+                        {terms.map((term, idx) => (
+                          <div key={idx} className="go-term-item">
+                            <span className="go-bullet">•</span>
+                            {term.qualifier && (
+                              <em className={`go-qualifier ${term.qualifier.toLowerCase() === 'not' ? 'qualifier-not' : ''}`}>
+                                {term.qualifier}
+                              </em>
+                            )}{' '}
+                            <a
+                              href={`https://amigo.geneontology.org/amigo/term/${term.goid}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {term.name}
+                            </a>
+                            {term.evidenceCodes.length > 0 && (
+                              <span className="go-evidence-codes">
+                                {' ('}
+                                {term.evidenceCodes.map((code, codeIdx) => (
+                                  <span key={code}>
+                                    <a
+                                      href="http://geneontology.org/docs/guide-go-evidence-codes/"
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      title={code}
+                                    >
+                                      {code}
+                                    </a>
+                                    {codeIdx < term.evidenceCodes.length - 1 ? ', ' : ''}
+                                  </span>
+                                ))}
+                                {')'}
+                              </span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
                     </td>
                   </tr>
                 );
