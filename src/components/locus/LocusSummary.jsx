@@ -386,6 +386,35 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
             </tr>
           )}
 
+          {/* JBrowse - embedded genome browser */}
+          {sequenceData && sequenceData.jbrowse_info && (
+            <tr className="jbrowse-section">
+              <th>JBrowse</th>
+              <td>
+                <div className="jbrowse-container">
+                  <div className="jbrowse-header">
+                    <span>Genome browser view for <em>{sequenceData.jbrowse_info.feature_name}</em></span>
+                    <a
+                      href={sequenceData.jbrowse_info.full_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="jbrowse-fullscreen-link"
+                    >
+                      Open full JBrowse view ↗
+                    </a>
+                  </div>
+                  <iframe
+                    src={sequenceData.jbrowse_info.embed_url}
+                    title={`JBrowse for ${sequenceData.jbrowse_info.feature_name}`}
+                    className="jbrowse-iframe"
+                    width="750"
+                    height="350"
+                  />
+                </div>
+              </td>
+            </tr>
+          )}
+
           {/* GO Annotations */}
           {goLoading ? (
             <tr>
