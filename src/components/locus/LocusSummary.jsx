@@ -82,9 +82,9 @@ function LocusSummary({ data, organismName, goData, goLoading }) {
   const goGroups = goData ? groupGoByAspect(goData.annotations) : {};
 
   // Annotation type display order and labels
-  const annotationTypeOrder = ['manually_curated', 'high-throughput', 'computational'];
+  const annotationTypeOrder = ['manually curated', 'high-throughput', 'computational'];
   const annotationTypeLabels = {
-    'manually_curated': 'Manually curated',
+    'manually curated': 'Manually curated',
     'high-throughput': 'High-throughput',
     'computational': 'Computational',
   };
