@@ -1239,8 +1239,8 @@ a:hover {
 /* Count badges */
 .count-badge {
   display: inline-block;
-  background-color: #e0e0e0;
-  color: #555;
+  background-color: #f0f0f0;
+  color: #333;
   padding: 2px 8px;
   border-radius: 10px;
   font-size: 0.8em;
