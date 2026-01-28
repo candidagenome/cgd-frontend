@@ -2025,3 +2025,126 @@ a:hover {
 .info-table tr.section-grey-bg > th {
   background-color: #f0f0f0;
 }
+
+/* =========================
+   Sequence tables (coords / versions) — additions
+   Paste into LocusComponents.css
+   ========================= */
+
+/* Inline header inside "Sequence Information" / "Allele Location" rows */
+.seq-header-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 14px;
+}
+
+.seq-coords {
+  font-weight: 500;
+  color: #1f2d3d;
+}
+
+.seq-header-link a {
+  font-weight: 500;
+}
+
+/* Last update line: Coordinates | Sequence */
+.seq-last-update {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: #555;
+}
+
+.seq-last-update .seq-sep {
+  color: #999;
+}
+
+/* Wrap to avoid table touching edges on small screens */
+.subfeature-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  padding: 6px 0;
+}
+
+/* Improved subfeature table */
+.subfeature-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px; /* keeps header layout readable; scrolls on small screens */
+  background: #fff;
+  border: 1px solid #d9e2ef;
+}
+
+.subfeature-table thead th {
+  background: #f6f9ff;
+  color: #213547;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  border-bottom: 1px solid #d9e2ef;
+  padding: 10px 8px;
+  white-space: nowrap;
+}
+
+.subfeature-table thead th.sf-colgroup {
+  font-weight: 700;
+}
+
+.subfeature-table tbody td {
+  border-top: 1px solid #e7eef8;
+  padding: 10px 8px;
+  font-size: 14px;
+  vertical-align: top;
+}
+
+.subfeature-table tbody tr:nth-child(even) {
+  background: #fbfdff;
+}
+
+/* Column sizing + alignment */
+.sf-col-type {
+  text-align: left !important;
+  width: 140px;
+  min-width: 140px;
+}
+
+.sf-type {
+  font-weight: 600;
+  color: #203244;
+  white-space: nowrap;
+}
+
+.sf-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: #1f2d3d;
+}
+
+.sf-date {
+  text-align: center;
+  white-space: nowrap;
+  color: #4b5563;
+}
+
+/* Optional: slightly stronger divider between the 3 column groups */
+.subfeature-table thead tr:first-child th {
+  border-right: 1px solid #d9e2ef;
+}
+.subfeature-table thead tr:first-child th:last-child {
+  border-right: none;
+}
+
+/* Mobile tweaks */
+@media (max-width: 768px) {
+  .seq-header-inline {
+    gap: 8px;
+  }
+  .seq-coords {
+    font-weight: 600;
+  }
+  .subfeature-table {
+    min-width: 700px;
+  }
+}
