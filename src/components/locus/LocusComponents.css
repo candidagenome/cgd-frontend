@@ -1236,15 +1236,21 @@ a:hover {
   vertical-align: top;
 }
 
-/* Count badges */
 .count-badge {
-  display: inline-block;
-  background-color: #f0f0f0;
-  color: #333;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #eef6ff;   /* keep this */
+  color: #3a6ea5;              /* lighter, less saturated */
+
   padding: 2px 8px;
   border-radius: 10px;
-  font-size: 0.8em;
+  font-size: 0.75em;           /* slightly smaller */
+  font-weight: 500;            /* NOT bold */
   margin-left: 8px;
+
+  border: 1px solid #d9eaff;
 }
 
 /* Section dividers */
