@@ -51,9 +51,12 @@
 }
 
 .tab-button.active {
-  background-color: #1976d2;
-  color: white;
+  background-color: #cfe4fb;   /* slightly darker than now */
+  color: #1565c0;
+  border: 1px solid #b3d7f5;
+  border-bottom: 2px solid #1976d2;
 }
+
 
 /* Tab Content */
 .tab-content {

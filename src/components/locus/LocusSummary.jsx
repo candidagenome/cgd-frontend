@@ -1,73 +1,93 @@
 import React from 'react';
 import './LocusComponents.css';
 
-function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, phenotypeLoading, sequenceData, sequenceLoading }) {
+function LocusSummary({
+  data,
+  organismName,
+  goData,
+  goLoading,
+  phenotypeData,
+  phenotypeLoading,
+  sequenceData,
+  sequenceLoading,
+}) {
   if (!data) return null;
 
   const feature = data;
 
-  // Group GO annotations by aspect, then annotation_type, then by term+qualifier
+  // ---------- Formatting helpers ----------
+  const fmtInt = (v) => {
+    if (v === null || v === undefined || v === '') return '';
+    const n = Number(v);
+    return Number.isFinite(n) ? n.toLocaleString() : String(v);
+  };
+
+  const fmtDate = (v) => {
+    if (!v) return '';
+    const d = new Date(v);
+    if (Number.isNaN(d.getTime())) return '';
+    return d.toISOString().slice(0, 10);
+  };
+
+  const fmtStrand = (strand) => {
+    if (!strand) return '';
+    return strand === 'W' || strand === '+' ? 'Watson' : 'Crick';
+  };
+
+  // ---------- GO grouping ----------
   const groupGoByAspect = (annotations) => {
     if (!annotations || annotations.length === 0) return {};
 
     const aspectCodeMap = {
-      'f': 'molecular_function',
-      'p': 'biological_process',
-      'c': 'cellular_component',
+      f: 'molecular_function',
+      p: 'biological_process',
+      c: 'cellular_component',
     };
 
-    // Structure: { aspect: { annotationType: { termKey: termData } } }
     const groups = {
-      'molecular_function': {},
-      'biological_process': {},
-      'cellular_component': {},
+      molecular_function: {},
+      biological_process: {},
+      cellular_component: {},
     };
 
-    annotations.forEach(ann => {
+    annotations.forEach((ann) => {
       const rawAspect = ann.term?.aspect?.toLowerCase().replace(' ', '_') || 'unknown';
       const aspect = aspectCodeMap[rawAspect] || rawAspect;
       if (!groups[aspect]) return;
 
       const termName = ann.term?.display_name;
+      if (!termName) return;
+
       const qualifier = ann.qualifier || '';
       const evidenceCode = ann.evidence?.code;
       const withFrom = ann.evidence?.with_from;
       const annotationType = ann.annotation_type || 'other';
 
-      if (termName) {
-        // Initialize annotation type group if needed
-        if (!groups[aspect][annotationType]) {
-          groups[aspect][annotationType] = {};
-        }
+      if (!groups[aspect][annotationType]) {
+        groups[aspect][annotationType] = {};
+      }
 
-        // Create unique key for term+qualifier combination
-        const key = `${termName}|${qualifier}`;
+      const key = `${termName}|${qualifier}`;
 
-        if (!groups[aspect][annotationType][key]) {
-          groups[aspect][annotationType][key] = {
-            name: termName,
-            goid: ann.term?.goid,
-            qualifier: qualifier,
-            evidenceEntries: [],  // Array of { code, withFrom }
-          };
-        }
+      if (!groups[aspect][annotationType][key]) {
+        groups[aspect][annotationType][key] = {
+          name: termName,
+          goid: ann.term?.goid,
+          qualifier,
+          evidenceEntries: [],
+        };
+      }
 
-        // Add evidence entry (code + withFrom) if present
-        if (evidenceCode) {
-          const existingEntry = groups[aspect][annotationType][key].evidenceEntries.find(
-            e => e.code === evidenceCode && e.withFrom === withFrom
-          );
-          if (!existingEntry) {
-            groups[aspect][annotationType][key].evidenceEntries.push({
-              code: evidenceCode,
-              withFrom: withFrom,
-            });
-          }
+      if (evidenceCode) {
+        const existing = groups[aspect][annotationType][key].evidenceEntries.find(
+          (e) => e.code === evidenceCode && e.withFrom === withFrom
+        );
+        if (!existing) {
+          groups[aspect][annotationType][key].evidenceEntries.push({ code: evidenceCode, withFrom });
         }
       }
     });
 
-    // Convert to final structure: { aspect: { annotationType: [terms] } }
     const result = {};
     for (const [aspect, typeGroups] of Object.entries(groups)) {
       result[aspect] = {};
@@ -75,20 +95,30 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
         result[aspect][annType] = Object.values(terms);
       }
     }
-
     return result;
   };
 
   const goGroups = goData ? groupGoByAspect(goData.annotations) : {};
 
-  // Group phenotype annotations by experiment_type, then mutant_type, then unique observables
+  const annotationTypeOrder = ['manually curated', 'high-throughput', 'computational'];
+  const annotationTypeLabels = {
+    'manually curated': 'Manually curated',
+    'high-throughput': 'High-throughput',
+    computational: 'Computational',
+  };
+
+  const aspectLabels = {
+    molecular_function: 'Molecular Function',
+    biological_process: 'Biological Process',
+    cellular_component: 'Cellular Component',
+  };
+
+  // ---------- Phenotype grouping ----------
   const groupPhenotypesByType = (annotations) => {
     if (!annotations || annotations.length === 0) return {};
 
-    // Structure: { experimentType: { mutantType: Set of unique observables } }
     const groups = {};
-
-    annotations.forEach(ann => {
+    annotations.forEach((ann) => {
       const experimentType = ann.experiment_type || 'Classical genetics';
       const mutantType = ann.mutant_type || 'unspecified';
       const observable = ann.phenotype?.display_name;
@@ -96,24 +126,13 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
 
       if (!observable) return;
 
-      if (!groups[experimentType]) {
-        groups[experimentType] = {};
-      }
+      if (!groups[experimentType]) groups[experimentType] = {};
+      if (!groups[experimentType][mutantType]) groups[experimentType][mutantType] = new Set();
 
-      if (!groups[experimentType][mutantType]) {
-        groups[experimentType][mutantType] = new Set();
-      }
-
-      // Combine observable with qualifier if present
-      let displayName = observable;
-      if (qualifier) {
-        displayName = `${observable}: ${qualifier}`;
-      }
-
-      groups[experimentType][mutantType].add(displayName);
+      const display = qualifier ? `${observable}: ${qualifier}` : observable;
+      groups[experimentType][mutantType].add(display);
     });
 
-    // Convert Sets to sorted arrays
     const result = {};
     for (const [expType, mutantTypes] of Object.entries(groups)) {
       result[expType] = {};
@@ -121,88 +140,183 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
         result[expType][mutType] = Array.from(observables).sort();
       }
     }
-
     return result;
   };
 
   const phenotypeGroups = phenotypeData ? groupPhenotypesByType(phenotypeData.annotations) : {};
-
-  // Experiment type display order
   const experimentTypeOrder = ['Classical genetics', 'Large-scale survey'];
 
-  // Annotation type display order and labels
-  const annotationTypeOrder = ['manually curated', 'high-throughput', 'computational'];
-  const annotationTypeLabels = {
-    'manually curated': 'Manually curated',
-    'high-throughput': 'High-throughput',
-    'computational': 'Computational',
-  };
-
-  const aspectLabels = {
-    'molecular_function': 'Molecular Function',
-    'biological_process': 'Biological Process',
-    'cellular_component': 'Cellular Component',
-  };
-
-  // Group aliases by type (like Perl does: Uniform, Non-uniform, Protein name, etc.)
-  // Exclude 'Other strain feature name' as it's displayed separately
+  // ---------- Alias grouping ----------
   const groupAliasesByType = (aliases) => {
     if (!aliases || aliases.length === 0) return {};
 
     const groups = {};
-    aliases.forEach(alias => {
+    aliases.forEach((alias) => {
       const type = alias.alias_type || 'Other';
-      // Skip 'Other strain feature name' - displayed in separate row
       if (type === 'Other strain feature name') return;
-      if (!groups[type]) {
-        groups[type] = [];
-      }
+      if (!groups[type]) groups[type] = [];
       groups[type].push(alias.alias_name);
     });
 
-    // Sort alias types in a logical order
     const typeOrder = ['Uniform', 'Non-uniform', 'Protein name', 'NCBI protein name', 'Retired name'];
-    const sortedGroups = {};
+    const sorted = {};
 
-    typeOrder.forEach(type => {
-      if (groups[type]) {
-        sortedGroups[type] = groups[type];
-      }
+    typeOrder.forEach((t) => {
+      if (groups[t]) sorted[t] = groups[t];
     });
 
-    // Add any remaining types
-    Object.keys(groups).forEach(type => {
-      if (!sortedGroups[type]) {
-        sortedGroups[type] = groups[type];
-      }
+    Object.keys(groups).forEach((t) => {
+      if (!sorted[t]) sorted[t] = groups[t];
     });
 
-    return sortedGroups;
+    return sorted;
   };
 
   const aliasGroups = groupAliasesByType(feature.aliases);
   const hasRetiredNames = aliasGroups['Retired name'] && aliasGroups['Retired name'].length > 0;
-  const hasNonRetiredAliases = Object.keys(aliasGroups).filter(type => type !== 'Retired name').length > 0;
+  const hasNonRetiredAliases =
+    Object.keys(aliasGroups).filter((t) => t !== 'Retired name').length > 0;
 
-  // Group external links by label (from web_display.label_name)
-  // Format matches Perl: label | label (1, 2, 3) for multiple URLs with same label
+  // ---------- External links grouping ----------
   const groupLinksByLabel = (links) => {
     if (!links || links.length === 0) return {};
-
     const groups = {};
-    links.forEach(link => {
+    links.forEach((link) => {
       const label = link.label || 'Other';
-      if (!groups[label]) {
-        groups[label] = [];
-      }
+      if (!groups[label]) groups[label] = [];
       groups[label].push(link);
     });
-
     return groups;
   };
 
   const linkGroups = groupLinksByLabel(feature.external_links);
 
+  // ---------- Sequence helpers (NEW "nice" tables) ----------
+  const renderLocationHeader = (loc, rightLink) => {
+    if (!loc) return null;
+
+    return (
+      <div className="seq-header-inline">
+        <span className="seq-coords">
+          {loc.chromosome ? `${loc.chromosome}:` : ''}
+          {fmtInt(loc.start_coord)} to {fmtInt(loc.stop_coord)}
+          {loc.strand ? `, ${fmtStrand(loc.strand)} strand` : ''}
+        </span>
+        {rightLink ? <span className="seq-header-link">{rightLink}</span> : null}
+      </div>
+    );
+  };
+
+  const renderLastUpdate = (coordVersion, seqVersion) => {
+    if (!coordVersion && !seqVersion) return null;
+
+    return (
+      <div className="seq-last-update">
+        {coordVersion ? <span>Coordinates: {fmtDate(coordVersion)}</span> : null}
+        {coordVersion && seqVersion ? <span className="seq-sep">|</span> : null}
+        {seqVersion ? <span>Sequence: {fmtDate(seqVersion)}</span> : null}
+      </div>
+    );
+  };
+
+  const normalizeFeatureType = (t) => {
+    if (!t) return '';
+    if (t.toLowerCase() === 'cds') return 'CDS';
+    return t;
+  };
+
+  const renderSubfeatureTable = (subfeatures) => {
+    if (!subfeatures || subfeatures.length === 0) return null;
+
+    return (
+      <div className="subfeature-table-wrap">
+        <table className="subfeature-table">
+          <thead>
+            <tr>
+              <th className="sf-col-type">Subfeature</th>
+              <th colSpan={2} className="sf-colgroup">
+                Relative Coordinates
+              </th>
+              <th colSpan={2} className="sf-colgroup">
+                Chromosomal Coordinates
+              </th>
+              <th colSpan={2} className="sf-colgroup">
+                Most Recent Update
+              </th>
+            </tr>
+            <tr>
+              <th className="sf-col-type"></th>
+              <th className="sf-col-start">Start</th>
+              <th className="sf-col-stop">Stop</th>
+              <th className="sf-col-start">Start</th>
+              <th className="sf-col-stop">Stop</th>
+              <th className="sf-col-date">Coordinates</th>
+              <th className="sf-col-date">Sequence</th>
+            </tr>
+          </thead>
+          <tbody>
+            {subfeatures.map((sf, idx) => (
+              <tr key={idx}>
+                <td className="sf-type">{normalizeFeatureType(sf.feature_type) || ''}</td>
+                <td className="sf-num">{fmtInt(sf.relative_start)}</td>
+                <td className="sf-num">{fmtInt(sf.relative_stop)}</td>
+                <td className="sf-num">{fmtInt(sf.start_coord)}</td>
+                <td className="sf-num">{fmtInt(sf.stop_coord)}</td>
+                <td className="sf-date">
+                  <em>{fmtDate(sf.coord_version)}</em>
+                </td>
+                <td className="sf-date">
+                  <em>{fmtDate(sf.seq_version)}</em>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
+  const renderSequenceBlock = ({ title, locusName, loc, subfeatures }) => {
+    if (!loc) return null;
+
+    return (
+      <>
+        <tr className="sequence-section-header section-with-divider section-grey-bg">
+          <th>{title}</th>
+          <td>
+            {renderLocationHeader(
+              loc,
+              locusName ? (
+                <a href={`?tab=sequence`}>
+                  View all <em>{locusName}</em> Sequence details
+                </a>
+              ) : null
+            )}
+          </td>
+        </tr>
+
+        {(loc.coord_version || loc.seq_version) && (
+          <tr className="sequence-update-row">
+            <th style={{ paddingLeft: '10px', fontWeight: 'normal' }}>Last Update</th>
+            <td>{renderLastUpdate(loc.coord_version, loc.seq_version)}</td>
+          </tr>
+        )}
+
+        {subfeatures && subfeatures.length > 0 && (
+          <tr className="sequence-subfeature-row">
+            <th style={{ paddingLeft: '10px', fontWeight: 'normal' }}>Subfeature Details</th>
+            <td>{renderSubfeatureTable(subfeatures)}</td>
+          </tr>
+        )}
+      </>
+    );
+  };
+
+  // Pick current main location (first current location)
+  const currentMainLocation =
+    sequenceData?.locations?.filter((l) => l.is_current)?.[0] || null;
+
+  // ---------- Render ----------
   return (
     <div className="locus-summary">
       <table className="info-table">
@@ -215,7 +329,9 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                 feature.gene_name_with_refs ? (
                   <span dangerouslySetInnerHTML={{ __html: feature.gene_name_with_refs }} />
                 ) : (
-                  <span><em>{feature.gene_name}</em></span>
+                  <span>
+                    <em>{feature.gene_name}</em>
+                  </span>
                 )
               ) : (
                 <span className="no-value">-</span>
@@ -229,7 +345,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
             <td>{feature.feature_name}</td>
           </tr>
 
-          {/* Assembly 19/21 Identifier - shown if different from Systematic Name */}
+          {/* Assembly 19/21 Identifier */}
           {feature.assembly_21_identifier && (
             <tr>
               <th>Assembly 19/21 Identifier</th>
@@ -237,20 +353,20 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
             </tr>
           )}
 
-          {/* Aliases - grouped by type (excluding Retired name and Other strain feature name) */}
+          {/* Aliases */}
           {hasNonRetiredAliases && (
             <tr>
               <th>Alias</th>
               <td>
                 <div className="alias-groups">
                   {(() => {
-                    // Build alias groups with reference annotations
                     const aliasRefsMap = {};
                     if (feature.aliases_with_refs) {
-                      feature.aliases_with_refs.forEach(a => {
+                      feature.aliases_with_refs.forEach((a) => {
                         aliasRefsMap[a.alias_name] = a.alias_name_with_refs;
                       });
                     }
+
                     return Object.entries(aliasGroups)
                       .filter(([type]) => type !== 'Retired name')
                       .map(([type, names]) => (
@@ -276,14 +392,12 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
             </tr>
           )}
 
-          {/* Feature Type with qualifier */}
+          {/* Feature Type */}
           <tr>
             <th>Feature Type</th>
             <td>
               <span className="feature-type-badge">{feature.feature_type}</span>
-              {feature.feature_qualifier && (
-                <span className="feature-qualifier">, {feature.feature_qualifier}</span>
-              )}
+              {feature.feature_qualifier && <span className="feature-qualifier">, {feature.feature_qualifier}</span>}
             </td>
           </tr>
 
@@ -292,28 +406,24 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
             <th>Organism</th>
             <td>
               <em>{organismName}</em>
-              {feature.taxon_id && (
-                <span className="taxon-id"> (Taxon ID: {feature.taxon_id})</span>
-              )}
+              {feature.taxon_id && <span className="taxon-id"> (Taxon ID: {feature.taxon_id})</span>}
             </td>
           </tr>
 
-          {/* Primary DBID */}
+          {/* Primary CGDID */}
           <tr>
             <th>Primary CGDID</th>
             <td>{feature.dbxref_id}</td>
           </tr>
 
-          {/* Allele - shown if alleles exist */}
+          {/* Allele */}
           {feature.alleles && feature.alleles.length > 0 && (
             <tr>
               <th>Allele</th>
               <td>
                 {feature.alleles.map((allele, idx) => (
                   <span key={allele.feature_no}>
-                    <a href={`/locus/${allele.feature_name}`}>
-                      {allele.gene_name || allele.feature_name}
-                    </a>
+                    <a href={`/locus/${allele.feature_name}`}>{allele.gene_name || allele.feature_name}</a>
                     {idx < feature.alleles.length - 1 ? ', ' : ''}
                   </span>
                 ))}
@@ -321,7 +431,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
             </tr>
           )}
 
-          {/* Allelic Variation - shown if data exists */}
+          {/* Allelic Variation */}
           {feature.allelic_variation && (
             <tr>
               <th>Allelic Variation</th>
@@ -329,7 +439,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
             </tr>
           )}
 
-          {/* CUG Codons - shown if data exists */}
+          {/* CUG Codons */}
           {feature.cug_codons !== null && feature.cug_codons !== undefined && (
             <tr>
               <th>CUG Codons</th>
@@ -337,7 +447,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
             </tr>
           )}
 
-          {/* Description/Headline */}
+          {/* Description */}
           <tr>
             <th>Description</th>
             <td>
@@ -353,7 +463,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
             </td>
           </tr>
 
-          {/* Name Description (what the gene name stands for) */}
+          {/* Name Description */}
           {feature.name_description && (
             <tr>
               <th>Name Description</th>
@@ -367,7 +477,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
             </tr>
           )}
 
-          {/* Systematic Names Used in Other Strains */}
+          {/* Other strain names */}
           {feature.other_strain_names && feature.other_strain_names.length > 0 && (
             <tr>
               <th>Systematic Names Used in Other Strains</th>
@@ -379,7 +489,12 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                     ) : (
                       <>
                         <span>{item.alias_name}</span>
-                        {item.strain_name && <span> (<em>{item.strain_name}</em>)</span>}
+                        {item.strain_name && (
+                          <span>
+                            {' '}
+                            (<em>{item.strain_name}</em>)
+                          </span>
+                        )}
                       </>
                     )}
                     {idx < feature.other_strain_names.length - 1 ? ' ; ' : ''}
@@ -389,7 +504,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
             </tr>
           )}
 
-          {/* Orthologous genes in Candida species */}
+          {/* Candida orthologs */}
           {feature.candida_orthologs && feature.candida_orthologs.length > 0 && (
             <tr>
               <th>Orthologous genes in Candida species</th>
@@ -397,15 +512,16 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                 <div className="ortholog-list">
                   {feature.candida_orthologs.map((orth, idx) => (
                     <div key={idx} className="ortholog-item">
-                      <a href={`/locus/${orth.feature_name}`}>
-                        {orth.gene_name || orth.feature_name}
-                      </a>
-                      <span className="organism-name"> (<em>{orth.organism_name}</em>)</span>
+                      <a href={`/locus/${orth.feature_name}`}>{orth.gene_name || orth.feature_name}</a>
+                      <span className="organism-name">
+                        {' '}
+                        (<em>{orth.organism_name}</em>)
+                      </span>
                     </div>
                   ))}
                 </div>
                 {feature.ortholog_cluster_url && (
-                  <div style={{marginTop: '8px'}}>
+                  <div style={{ marginTop: '8px' }}>
                     <a href={feature.ortholog_cluster_url} target="_blank" rel="noopener noreferrer">
                       View ortholog cluster
                     </a>
@@ -415,7 +531,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
             </tr>
           )}
 
-          {/* Ortholog(s) in non-CGD species - inline format with species names */}
+          {/* External orthologs */}
           {feature.external_orthologs && feature.external_orthologs.length > 0 && (
             <tr>
               <th>Ortholog(s) in non-CGD species</th>
@@ -439,7 +555,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
             </tr>
           )}
 
-          {/* JBrowse - genome browser link */}
+          {/* JBrowse */}
           {sequenceData && sequenceData.jbrowse_info && (
             <tr className="jbrowse-section">
               <th>JBrowse</th>
@@ -454,20 +570,23 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                     View in JBrowse
                   </a>
                   <span className="jbrowse-location">
-                    {sequenceData.jbrowse_info.chromosome}:{sequenceData.jbrowse_info.start_coord.toLocaleString()}..{sequenceData.jbrowse_info.stop_coord.toLocaleString()}
+                    {sequenceData.jbrowse_info.chromosome}:{fmtInt(sequenceData.jbrowse_info.start_coord)}..
+                    {fmtInt(sequenceData.jbrowse_info.stop_coord)}
                   </span>
                 </div>
               </td>
             </tr>
           )}
 
-          {/* GO Annotations */}
+          {/* GO */}
           {goLoading ? (
             <tr className="section-with-divider section-grey-bg">
               <th>GO Annotations</th>
-              <td><em>Loading GO annotations...</em></td>
+              <td>
+                <em>Loading GO annotations...</em>
+              </td>
             </tr>
-          ) : (goData && goData.annotations && goData.annotations.length > 0) && (
+          ) : goData && goData.annotations && goData.annotations.length > 0 ? (
             <>
               <tr className="go-section-header section-with-divider section-grey-bg">
                 <th>GO Annotations</th>
@@ -477,26 +596,25 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                   </a>
                 </td>
               </tr>
+
               {Object.entries(goGroups).map(([aspect, typeGroups]) => {
-                // Check if this aspect has any terms
-                const hasTerms = Object.values(typeGroups).some(terms => terms.length > 0);
+                const hasTerms = Object.values(typeGroups).some((terms) => terms.length > 0);
                 if (!hasTerms) return null;
 
                 return (
                   <React.Fragment key={aspect}>
-                    {/* Aspect header row */}
                     <tr className="go-aspect-header-row">
-                      <th style={{paddingLeft: '10px'}}>{aspectLabels[aspect]}</th>
+                      <th style={{ paddingLeft: '10px' }}>{aspectLabels[aspect]}</th>
                       <td></td>
                     </tr>
-                    {/* Annotation type rows */}
-                    {annotationTypeOrder.map(annType => {
+
+                    {annotationTypeOrder.map((annType) => {
                       const terms = typeGroups[annType];
                       if (!terms || terms.length === 0) return null;
 
                       return (
                         <tr key={`${aspect}-${annType}`} className="go-annotation-type-row">
-                          <th style={{paddingLeft: '30px', fontWeight: 'normal', fontStyle: 'italic'}}>
+                          <th style={{ paddingLeft: '30px', fontWeight: 'normal', fontStyle: 'italic' }}>
                             {annotationTypeLabels[annType] || annType}
                           </th>
                           <td>
@@ -505,10 +623,15 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                                 <div key={idx} className="go-term-item">
                                   <span className="go-bullet">•</span>
                                   {term.qualifier && (
-                                    <em className={`go-qualifier ${term.qualifier.toLowerCase() === 'not' ? 'qualifier-not' : ''}`}>
+                                    <em
+                                      className={`go-qualifier ${
+                                        term.qualifier.toLowerCase() === 'not' ? 'qualifier-not' : ''
+                                      }`}
+                                    >
                                       {term.qualifier}
                                     </em>
-                                  )}{term.qualifier ? ' ' : ''}
+                                  )}
+                                  {term.qualifier ? ' ' : ''}
                                   <a
                                     href={`https://amigo.geneontology.org/amigo/term/${term.goid}`}
                                     target="_blank"
@@ -516,6 +639,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                                   >
                                     {term.name}
                                   </a>
+
                                   {term.evidenceEntries && term.evidenceEntries.length > 0 && (
                                     <span className="go-evidence-codes">
                                       {' ('}
@@ -529,9 +653,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                                           >
                                             {entry.code}
                                           </a>
-                                          {entry.withFrom && (
-                                            <span className="go-with-from"> with {entry.withFrom}</span>
-                                          )}
+                                          {entry.withFrom && <span className="go-with-from"> with {entry.withFrom}</span>}
                                           {entryIdx < term.evidenceEntries.length - 1 ? ', ' : ''}
                                         </span>
                                       ))}
@@ -549,15 +671,17 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                 );
               })}
             </>
-          )}
+          ) : null}
 
-          {/* Mutant Phenotype */}
+          {/* Phenotype */}
           {phenotypeLoading ? (
             <tr className="section-with-divider section-grey-bg">
               <th>Mutant Phenotype</th>
-              <td><em>Loading phenotype annotations...</em></td>
+              <td>
+                <em>Loading phenotype annotations...</em>
+              </td>
             </tr>
-          ) : (phenotypeData && phenotypeData.annotations && phenotypeData.annotations.length > 0) && (
+          ) : phenotypeData && phenotypeData.annotations && phenotypeData.annotations.length > 0 ? (
             <>
               <tr className="phenotype-section-header section-with-divider section-grey-bg">
                 <th>Mutant Phenotype</th>
@@ -567,338 +691,84 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                   </a>
                 </td>
               </tr>
-              {experimentTypeOrder.map(expType => {
+
+              {experimentTypeOrder.map((expType) => {
                 const mutantTypes = phenotypeGroups[expType];
                 if (!mutantTypes || Object.keys(mutantTypes).length === 0) return null;
 
                 return (
                   <React.Fragment key={expType}>
-                    {/* Experiment type header row */}
                     <tr className="phenotype-experiment-type-row">
-                      <th style={{paddingLeft: '10px', fontWeight: 'bold'}}>{expType}</th>
+                      <th style={{ paddingLeft: '10px', fontWeight: 'bold' }}>{expType}</th>
                       <td></td>
                     </tr>
-                    {/* Mutant type rows */}
-                    {Object.entries(mutantTypes).sort(([a], [b]) => a.localeCompare(b)).map(([mutantType, observables]) => (
-                      <tr key={`${expType}-${mutantType}`} className="phenotype-mutant-type-row">
-                        <th style={{paddingLeft: '30px', fontWeight: 'normal'}}>
-                          {mutantType}
-                        </th>
-                        <td>
-                          <div className="phenotype-observables-list">
-                            {observables.map((obs, idx) => (
-                              <div key={idx} className="phenotype-observable-item">
-                                <span className="phenotype-bullet">•</span>
-                                <span>{obs}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+
+                    {Object.entries(mutantTypes)
+                      .sort(([a], [b]) => a.localeCompare(b))
+                      .map(([mutantType, observables]) => (
+                        <tr key={`${expType}-${mutantType}`} className="phenotype-mutant-type-row">
+                          <th style={{ paddingLeft: '30px', fontWeight: 'normal' }}>{mutantType}</th>
+                          <td>
+                            <div className="phenotype-observables-list">
+                              {observables.map((obs, idx) => (
+                                <div key={idx} className="phenotype-observable-item">
+                                  <span className="phenotype-bullet">•</span>
+                                  <span>{obs}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
                   </React.Fragment>
                 );
               })}
             </>
-          )}
+          ) : null}
 
           {/* Sequence Information */}
           {sequenceLoading ? (
             <tr className="section-with-divider section-grey-bg">
               <th>Sequence Information</th>
-              <td><em>Loading sequence information...</em></td>
+              <td>
+                <em>Loading sequence information...</em>
+              </td>
             </tr>
-          ) : (sequenceData && sequenceData.locations && sequenceData.locations.length > 0) && (
+          ) : sequenceData && (sequenceData.locations?.length > 0 || sequenceData.allele_locations?.length > 0) ? (
             <>
-              {/* Sequence Information header with chromosomal coordinates */}
-              {sequenceData.locations.filter(loc => loc.is_current).map((location, idx) => (
-                <React.Fragment key={idx}>
-                  <tr className="sequence-section-header section-with-divider section-grey-bg">
-                    <th>Sequence Information</th>
-                    <td>
-                      <span className="sequence-coords-text">
-                        {location.chromosome && `${location.chromosome}:`}
-                        {location.start_coord.toLocaleString()} to {location.stop_coord.toLocaleString()}
-                        {location.strand && `, ${location.strand === 'W' || location.strand === '+' ? 'Watson' : 'Crick'} strand`}
-                      </span>
-                      <span style={{marginLeft: '15px'}}>
-                        <a href={`?tab=sequence`}>
-                          View all <em>{feature.gene_name || feature.feature_name}</em> Sequence details
-                        </a>
-                      </span>
-                    </td>
-                  </tr>
-                  {/* Last Update row */}
-                  {(location.coord_version || location.seq_version) && (
-                    <tr className="sequence-update-row">
-                      <th style={{paddingLeft: '10px', fontWeight: 'normal'}}>
-                        Last Update
-                      </th>
-                      <td>
-                        <span className="sequence-update-text">
-                          {location.coord_version && `Coordinates: ${new Date(location.coord_version).toISOString().split('T')[0]}`}
-                          {location.coord_version && location.seq_version && ' | '}
-                          {location.seq_version && `Sequence: ${new Date(location.seq_version).toISOString().split('T')[0]}`}
-                        </span>
-                      </td>
-                    </tr>
-                  )}
-                </React.Fragment>
-              ))}
-              {/* Subfeature Details */}
-              {sequenceData.subfeatures && sequenceData.subfeatures.length > 0 && (
-                <tr className="sequence-subfeature-row">
-                  <th style={{paddingLeft: '10px', fontWeight: 'normal'}}>
-                    Subfeature Details
-                  </th>
-                  <td>
-                    <table className="subfeature-table">
-                      <thead>
-                        <tr>
-                          <th rowSpan="2"></th>
-                          <th rowSpan="2"></th>
-                          <th colSpan="3" rowSpan="2">Relative<br/>Coordinates</th>
-                          <th rowSpan="2"></th>
-                          <th colSpan="3" rowSpan="2">Chromosomal<br/>Coordinates</th>
-                          <th rowSpan="2"></th>
-                          <th colSpan="3">Most Recent Update</th>
-                        </tr>
-                        <tr>
-                          <th>Coordinates</th>
-                          <th></th>
-                          <th>Sequence</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {sequenceData.subfeatures.map((sf, idx) => (
-                          <tr key={idx}>
-                            <td className="subfeature-type">{sf.feature_type}</td>
-                            <td></td>
-                            <td className="subfeature-coord">{sf.relative_start}</td>
-                            <td className="subfeature-coord-to">to</td>
-                            <td className="subfeature-coord">{sf.relative_stop}</td>
-                            <td></td>
-                            <td className="subfeature-coord">{sf.start_coord?.toLocaleString()}</td>
-                            <td className="subfeature-coord-to">to</td>
-                            <td className="subfeature-coord">{sf.stop_coord?.toLocaleString()}</td>
-                            <td></td>
-                            <td className="subfeature-version"><em>{sf.coord_version ? new Date(sf.coord_version).toISOString().split('T')[0] : ''}</em></td>
-                            <td></td>
-                            <td className="subfeature-version"><em>{sf.seq_version ? new Date(sf.seq_version).toISOString().split('T')[0] : ''}</em></td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </td>
-                </tr>
-              )}
-              {/* Sequence Tools Pulldowns */}
-              {sequenceData.sequence_resources && (
-                <tr className="sequence-tools-row">
-                  <th style={{paddingLeft: '10px', fontWeight: 'normal'}}></th>
-                  <td>
-                    <div className="sequence-tools-container">
-                      {sequenceData.sequence_resources.retrieve_sequences && sequenceData.sequence_resources.retrieve_sequences.length > 0 && (
-                        <div className="sequence-tool-dropdown">
-                          <label><strong>Retrieve Sequences</strong></label>
-                          <select
-                            onChange={(e) => {
-                              if (e.target.value && !e.target.value.startsWith('?query=')) {
-                                window.open(e.target.value, '_blank');
-                              }
-                            }}
-                            defaultValue=""
-                          >
-                            <option value="">Select...</option>
-                            {sequenceData.sequence_resources.retrieve_sequences.map((item, idx) => (
-                              <option
-                                key={idx}
-                                value={item.url}
-                                disabled={item.url.startsWith('?query=')}
-                                style={item.url.startsWith('?query=') ? {fontWeight: 'bold', backgroundColor: '#eee'} : {}}
-                              >
-                                {item.label}
-                              </option>
-                            ))}
-                          </select>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              const select = e.target.previousSibling;
-                              if (select.value && !select.value.startsWith('?query=')) {
-                                window.open(select.value, '_blank');
-                              }
-                            }}
-                          >
-                            View
-                          </button>
-                        </div>
-                      )}
-                      {sequenceData.sequence_resources.sequence_analysis_tools && sequenceData.sequence_resources.sequence_analysis_tools.length > 0 && (
-                        <div className="sequence-tool-dropdown">
-                          <label><strong>Sequence Analysis Tools</strong></label>
-                          <select
-                            onChange={(e) => {
-                              if (e.target.value && !e.target.value.startsWith('?query=')) {
-                                window.open(e.target.value, '_blank');
-                              }
-                            }}
-                            defaultValue=""
-                          >
-                            <option value="">Select...</option>
-                            {sequenceData.sequence_resources.sequence_analysis_tools.map((item, idx) => (
-                              <option
-                                key={idx}
-                                value={item.url}
-                                disabled={item.url.startsWith('?query=')}
-                                style={item.url.startsWith('?query=') ? {fontWeight: 'bold', backgroundColor: '#eee'} : {}}
-                              >
-                                {item.label}
-                              </option>
-                            ))}
-                          </select>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              const select = e.target.previousSibling;
-                              if (select.value && !select.value.startsWith('?query=')) {
-                                window.open(select.value, '_blank');
-                              }
-                            }}
-                          >
-                            View
-                          </button>
-                        </div>
-                      )}
-                      {sequenceData.sequence_resources.maps_displays && sequenceData.sequence_resources.maps_displays.length > 0 && (
-                        <div className="sequence-tool-dropdown">
-                          <label><strong>Maps & Displays</strong></label>
-                          <select
-                            onChange={(e) => {
-                              if (e.target.value && !e.target.value.startsWith('?query=')) {
-                                window.open(e.target.value, '_blank');
-                              }
-                            }}
-                            defaultValue=""
-                          >
-                            <option value="">Select...</option>
-                            {sequenceData.sequence_resources.maps_displays.map((item, idx) => (
-                              <option
-                                key={idx}
-                                value={item.url}
-                                disabled={item.url.startsWith('?query=')}
-                                style={item.url.startsWith('?query=') ? {fontWeight: 'bold', backgroundColor: '#eee'} : {}}
-                              >
-                                {item.label}
-                              </option>
-                            ))}
-                          </select>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              const select = e.target.previousSibling;
-                              if (select.value && !select.value.startsWith('?query=')) {
-                                window.open(select.value, '_blank');
-                              }
-                            }}
-                          >
-                            View
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              )}
-              {/* Allele Location - shown for each secondary allele */}
-              {sequenceData.allele_locations && sequenceData.allele_locations.length > 0 && (
+              {/* Main locus sequence block */}
+              {renderSequenceBlock({
+                title: 'Sequence Information',
+                locusName: feature.gene_name || feature.feature_name,
+                loc: currentMainLocation,
+                subfeatures: sequenceData.subfeatures || [],
+              })}
+
+              {/* Allele locations blocks */}
+              {sequenceData.allele_locations &&
+                sequenceData.allele_locations.length > 0 &&
                 sequenceData.allele_locations.map((allele, alleleIdx) => (
                   <React.Fragment key={alleleIdx}>
-                    {/* Allele Location header with coordinates */}
-                    <tr className="allele-location-header section-with-divider">
-                      <th>
-                        Allele Location<br/>
-                        <span style={{fontWeight: 'normal', paddingLeft: '10px'}}>
-                          Allele {allele.feature_name}
-                        </span>
-                      </th>
-                      <td>
-                        <span className="sequence-coords-text">
-                          {allele.chromosome && `${allele.chromosome}:`}
-                          {allele.start_coord?.toLocaleString()} to {allele.stop_coord?.toLocaleString()}
-                          {allele.strand && `, ${allele.strand === 'W' || allele.strand === '+' ? 'Watson' : 'Crick'} strand`}
-                        </span>
-                      </td>
-                    </tr>
-                    {/* Allele Last Update row */}
-                    {(allele.coord_version || allele.seq_version) && (
-                      <tr className="sequence-update-row">
-                        <th style={{paddingLeft: '10px', fontWeight: 'normal'}}>
-                          Last Update
-                        </th>
-                        <td>
-                          <span className="sequence-update-text">
-                            {allele.coord_version && `Coordinates: ${new Date(allele.coord_version).toISOString().split('T')[0]}`}
-                            {allele.coord_version && allele.seq_version && ' | '}
-                            {allele.seq_version && `Sequence: ${new Date(allele.seq_version).toISOString().split('T')[0]}`}
+                    {renderSequenceBlock({
+                      title: (
+                        <>
+                          Allele Location
+                          <br />
+                          <span style={{ fontWeight: 'normal', paddingLeft: '10px' }}>
+                            Allele {allele.feature_name}
                           </span>
-                        </td>
-                      </tr>
-                    )}
-                    {/* Allele Subfeature Details */}
-                    {allele.subfeatures && allele.subfeatures.length > 0 && (
-                      <tr className="sequence-subfeature-row">
-                        <th style={{paddingLeft: '10px', fontWeight: 'normal'}}>
-                          Subfeature Details
-                        </th>
-                        <td>
-                          <table className="subfeature-table">
-                            <thead>
-                              <tr>
-                                <th rowSpan="2"></th>
-                                <th rowSpan="2"></th>
-                                <th colSpan="3" rowSpan="2">Relative<br/>Coordinates</th>
-                                <th rowSpan="2"></th>
-                                <th colSpan="3" rowSpan="2">Chromosomal<br/>Coordinates</th>
-                                <th rowSpan="2"></th>
-                                <th colSpan="3">Most Recent Update</th>
-                              </tr>
-                              <tr>
-                                <th>Coordinates</th>
-                                <th></th>
-                                <th>Sequence</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {allele.subfeatures.map((sf, idx) => (
-                                <tr key={idx}>
-                                  <td className="subfeature-type">{sf.feature_type}</td>
-                                  <td></td>
-                                  <td className="subfeature-coord">{sf.relative_start}</td>
-                                  <td className="subfeature-coord-to">to</td>
-                                  <td className="subfeature-coord">{sf.relative_stop}</td>
-                                  <td></td>
-                                  <td className="subfeature-coord">{sf.start_coord?.toLocaleString()}</td>
-                                  <td className="subfeature-coord-to">to</td>
-                                  <td className="subfeature-coord">{sf.stop_coord?.toLocaleString()}</td>
-                                  <td></td>
-                                  <td className="subfeature-version"><em>{sf.coord_version ? new Date(sf.coord_version).toISOString().split('T')[0] : ''}</em></td>
-                                  <td></td>
-                                  <td className="subfeature-version"><em>{sf.seq_version ? new Date(sf.seq_version).toISOString().split('T')[0] : ''}</em></td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </td>
-                      </tr>
-                    )}
+                        </>
+                      ),
+                      locusName: null,
+                      loc: allele,
+                      subfeatures: allele.subfeatures || [],
+                    })}
                   </React.Fragment>
-                ))
-              )}
+                ))}
             </>
-          )}
+          ) : null}
 
-          {/* Retired Names - shown separately with different styling */}
+          {/* Retired Names */}
           {hasRetiredNames && (
             <tr>
               <th>Retired Names</th>
@@ -915,7 +785,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
             </tr>
           )}
 
-          {/* External Links - grouped by label, Perl format: label | label (1, 2, 3) */}
+          {/* External Links */}
           {Object.keys(linkGroups).length > 0 && (
             <tr className="section-with-divider">
               <th>External Links</th>
@@ -924,25 +794,15 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                   {Object.entries(linkGroups).map(([label, links], groupIdx) => (
                     <span key={label}>
                       {links.length === 1 ? (
-                        // Single URL: just show the label as a link
-                        <a
-                          href={links[0].url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
+                        <a href={links[0].url} target="_blank" rel="noopener noreferrer">
                           {label}
                         </a>
                       ) : (
-                        // Multiple URLs: show as "label (1, 2, 3)"
                         <span>
                           {label} (
                           {links.map((link, idx) => (
                             <span key={idx}>
-                              <a
-                                href={link.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
+                              <a href={link.url} target="_blank" rel="noopener noreferrer">
                                 {idx + 1}
                               </a>
                               {idx < links.length - 1 ? ', ' : ''}
@@ -961,7 +821,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
         </tbody>
       </table>
 
-      {/* ADDITIONAL INFORMATION section */}
+      {/* ADDITIONAL INFORMATION */}
       {feature.additional_info_links && feature.additional_info_links.length > 0 && (
         <div className="additional-info-section">
           <h3 className="section-header">
@@ -983,39 +843,40 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
         </div>
       )}
 
-      {/* LOCUS SUMMARY NOTES section */}
+      {/* LOCUS SUMMARY NOTES */}
       {feature.summary_notes && feature.summary_notes.length > 0 && (
         <div className="summary-notes-section">
           <h3 className="section-header">
             LOCUS SUMMARY NOTES for <em>{feature.gene_name || feature.feature_name}</em>
             {feature.summary_notes_last_updated && (
-              <span className="last-updated">
-                {' '}(Last Updated: {new Date(feature.summary_notes_last_updated).toISOString().split('T')[0]})
-              </span>
+              <span className="last-updated"> (Last Updated: {fmtDate(feature.summary_notes_last_updated)})</span>
             )}
           </h3>
           <div className="summary-notes-content">
             {feature.summary_notes.map((note, idx) => (
-              <p key={idx} className="summary-note-paragraph" dangerouslySetInnerHTML={{ __html: note.paragraph_text }} />
+              <p
+                key={idx}
+                className="summary-note-paragraph"
+                dangerouslySetInnerHTML={{ __html: note.paragraph_text }}
+              />
             ))}
           </div>
         </div>
       )}
 
-      {/* REFERENCES CITED ON THIS PAGE section */}
+      {/* REFERENCES CITED ON THIS PAGE */}
       {feature.cited_references && feature.cited_references.length > 0 && (
         <div className="cited-references-section">
           <h3 className="section-header">
             REFERENCES CITED ON THIS PAGE
             {feature.literature_guide_url && (
               <span className="literature-guide-link">
-                {' '}[<a
-                  href={feature.literature_guide_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                {' '}
+                [
+                <a href={feature.literature_guide_url} target="_blank" rel="noopener noreferrer">
                   View Complete Literature Guide for <em>{feature.gene_name || feature.feature_name}</em>
-                </a>]
+                </a>
+                ]
               </span>
             )}
           </h3>
@@ -1032,7 +893,8 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                       rel="noopener noreferrer"
                       className="pubmed-link"
                     >
-                      {' '}PMID: {ref.pubmed}
+                      {' '}
+                      PMID: {ref.pubmed}
                     </a>
                   )}
                 </span>
