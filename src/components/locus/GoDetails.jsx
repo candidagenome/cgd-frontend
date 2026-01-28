@@ -1,9 +1,54 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
 import './LocusComponents.css';
 
+// Annotation type labels (matching Perl format)
+const ANNOTATION_TYPE_LABELS = {
+  'manually curated': 'Manually Curated',
+  'high-throughput': 'High-Throughput Experiments',
+  'computational': 'Computational',
+};
+
+// Aspect labels
+const ASPECT_LABELS = {
+  'F': 'Molecular Function',
+  'P': 'Biological Process',
+  'C': 'Cellular Component',
+};
+
+// Evidence code descriptions
+const EVIDENCE_DESCRIPTIONS = {
+  'EXP': 'Inferred from Experiment',
+  'IDA': 'Inferred from Direct Assay',
+  'IPI': 'Inferred from Physical Interaction',
+  'IMP': 'Inferred from Mutant Phenotype',
+  'IGI': 'Inferred from Genetic Interaction',
+  'IEP': 'Inferred from Expression Pattern',
+  'HTP': 'High Throughput Experiment',
+  'HDA': 'High Throughput Direct Assay',
+  'HMP': 'High Throughput Mutant Phenotype',
+  'HGI': 'High Throughput Genetic Interaction',
+  'HEP': 'High Throughput Expression Pattern',
+  'IBA': 'Inferred from Biological Aspect of Ancestor',
+  'IBD': 'Inferred from Biological Aspect of Descendant',
+  'IKR': 'Inferred from Key Residues',
+  'IRD': 'Inferred from Rapid Divergence',
+  'ISS': 'Inferred from Sequence or Structural Similarity',
+  'ISO': 'Inferred from Sequence Orthology',
+  'ISA': 'Inferred from Sequence Alignment',
+  'ISM': 'Inferred from Sequence Model',
+  'IGC': 'Inferred from Genomic Context',
+  'RCA': 'Reviewed Computational Analysis',
+  'TAS': 'Traceable Author Statement',
+  'NAS': 'Non-traceable Author Statement',
+  'IC': 'Inferred by Curator',
+  'ND': 'No Biological Data Available',
+  'IEA': 'Inferred from Electronic Annotation',
+};
+
 function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
-  const [collapsedAspects, setCollapsedAspects] = useState({});
+  const [collapsedSections, setCollapsedSections] = useState({});
 
   // Get available organisms from the data
   const organisms = data?.results ? Object.keys(data.results) : [];
@@ -29,101 +74,137 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
   // Get data for the selected organism
   const orgData = selectedOrganism ? data.results[selectedOrganism] : null;
 
-  // Map single-letter aspect codes to full names
-  const aspectCodeMap = {
-    'f': 'molecular_function',
-    'p': 'biological_process',
-    'c': 'cellular_component',
-  };
+  // Group annotations by annotation_type, then by aspect
+  const groupAnnotations = (annotations) => {
+    const groups = {};
 
-  // Evidence code descriptions (from GO Consortium)
-  const evidenceDescriptions = {
-    'EXP': 'Inferred from Experiment',
-    'IDA': 'Inferred from Direct Assay',
-    'IPI': 'Inferred from Physical Interaction',
-    'IMP': 'Inferred from Mutant Phenotype',
-    'IGI': 'Inferred from Genetic Interaction',
-    'IEP': 'Inferred from Expression Pattern',
-    'HTP': 'High Throughput Experiment',
-    'HDA': 'High Throughput Direct Assay',
-    'HMP': 'High Throughput Mutant Phenotype',
-    'HGI': 'High Throughput Genetic Interaction',
-    'HEP': 'High Throughput Expression Pattern',
-    'IBA': 'Inferred from Biological Aspect of Ancestor',
-    'IBD': 'Inferred from Biological Aspect of Descendant',
-    'IKR': 'Inferred from Key Residues',
-    'IRD': 'Inferred from Rapid Divergence',
-    'ISS': 'Inferred from Sequence or Structural Similarity',
-    'ISO': 'Inferred from Sequence Orthology',
-    'ISA': 'Inferred from Sequence Alignment',
-    'ISM': 'Inferred from Sequence Model',
-    'IGC': 'Inferred from Genomic Context',
-    'RCA': 'Reviewed Computational Analysis',
-    'TAS': 'Traceable Author Statement',
-    'NAS': 'Non-traceable Author Statement',
-    'IC': 'Inferred by Curator',
-    'ND': 'No Biological Data Available',
-    'IEA': 'Inferred from Electronic Annotation',
-  };
-
-  // Categorize evidence codes
-  const getEvidenceCategory = (code) => {
-    const experimentalCodes = ['EXP', 'IDA', 'IPI', 'IMP', 'IGI', 'IEP', 'HTP', 'HDA', 'HMP', 'HGI', 'HEP'];
-    const computationalCodes = ['IBA', 'IBD', 'IKR', 'IRD', 'ISS', 'ISO', 'ISA', 'ISM', 'IGC', 'RCA', 'IEA'];
-
-    if (experimentalCodes.includes(code)) return 'Experimental';
-    if (computationalCodes.includes(code)) return 'Computational';
-    return 'Other';
-  };
-
-  // Group annotations by aspect, then optionally by evidence category
-  const groupByAspect = (annotations) => {
-    const groups = {
-      'molecular_function': { annotations: [], byEvidence: {} },
-      'biological_process': { annotations: [], byEvidence: {} },
-      'cellular_component': { annotations: [], byEvidence: {} },
-    };
+    // Initialize groups for each annotation type
+    Object.keys(ANNOTATION_TYPE_LABELS).forEach(type => {
+      groups[type] = {
+        'F': [],  // Molecular Function
+        'P': [],  // Biological Process
+        'C': [],  // Cellular Component
+      };
+    });
 
     annotations.forEach(ann => {
-      const rawAspect = ann.term?.aspect?.toLowerCase().replace(' ', '_') || 'unknown';
-      const aspect = aspectCodeMap[rawAspect] || rawAspect;
+      const type = ann.annotation_type?.toLowerCase() || 'manually curated';
+      const aspect = ann.term?.aspect?.toUpperCase() || 'P';
 
-      if (groups[aspect]) {
-        groups[aspect].annotations.push(ann);
-
-        // Also group by evidence category
-        const evidenceCategory = getEvidenceCategory(ann.evidence?.code);
-        if (!groups[aspect].byEvidence[evidenceCategory]) {
-          groups[aspect].byEvidence[evidenceCategory] = [];
-        }
-        groups[aspect].byEvidence[evidenceCategory].push(ann);
+      if (groups[type] && groups[type][aspect]) {
+        groups[type][aspect].push(ann);
       }
     });
 
     return groups;
   };
 
-  const aspectLabels = {
-    'molecular_function': 'Molecular Function',
-    'biological_process': 'Biological Process',
-    'cellular_component': 'Cellular Component',
-  };
-
-  const aspectIcons = {
-    'molecular_function': '⚙️',
-    'biological_process': '🔄',
-    'cellular_component': '📍',
-  };
-
-  const toggleAspect = (key) => {
-    setCollapsedAspects(prev => ({
+  const toggleSection = (key) => {
+    setCollapsedSections(prev => ({
       ...prev,
       [key]: !prev[key]
     }));
   };
 
   // Group annotations for the selected organism
-  const grouped = orgData ? groupByAspect(orgData.annotations || []) : null;
+  const grouped = orgData ? groupAnnotations(orgData.annotations || []) : null;
+
+  // Count total annotations per type
+  const countAnnotationsForType = (typeData) => {
+    return Object.values(typeData).reduce((sum, arr) => sum + arr.length, 0);
+  };
+
+  // Render a single GO annotation table for an aspect
+  const renderAspectTable = (annotations, aspectKey, typeKey) => {
+    if (!annotations || annotations.length === 0) return null;
+
+    const sectionKey = `${selectedOrganism}-${typeKey}-${aspectKey}`;
+    const isCollapsed = collapsedSections[sectionKey];
+
+    return (
+      <div key={aspectKey} className="go-aspect-section">
+        <h5
+          className="aspect-subheader"
+          onClick={() => toggleSection(sectionKey)}
+        >
+          <span className="collapse-icon">{isCollapsed ? '>' : 'v'}</span>
+          {ASPECT_LABELS[aspectKey]}
+          <span className="count-badge">{annotations.length}</span>
+        </h5>
+
+        {!isCollapsed && (
+          <table className="data-table go-table">
+            <thead>
+              <tr>
+                <th>Annotation</th>
+                <th>Reference</th>
+                <th>Evidence</th>
+                <th>Assigned By</th>
+              </tr>
+            </thead>
+            <tbody>
+              {annotations.map((ann, idx) => (
+                <tr key={idx}>
+                  <td>
+                    {ann.qualifier && (
+                      <span className={`go-qualifier ${ann.qualifier.toLowerCase() === 'not' ? 'qualifier-not' : ''}`}>
+                        {ann.qualifier}
+                      </span>
+                    )}
+                    {' '}
+                    <a
+                      href={`https://amigo.geneontology.org/amigo/term/${ann.term?.goid}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {ann.term?.display_name}
+                    </a>
+                  </td>
+                  <td>
+                    {ann.references?.map((ref, refIdx) => (
+                      <span key={refIdx}>
+                        {ref.startsWith('PMID:') ? (
+                          <a
+                            href={`https://pubmed.ncbi.nlm.nih.gov/${ref.replace('PMID:', '')}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {ref}
+                          </a>
+                        ) : ref.startsWith('CGD_REF:') || ref.startsWith('CA') ? (
+                          <Link to={`/reference/${ref}`}>{ref}</Link>
+                        ) : (
+                          ref
+                        )}
+                        {refIdx < ann.references.length - 1 ? ', ' : ''}
+                      </span>
+                    ))}
+                  </td>
+                  <td>
+                    <span title={EVIDENCE_DESCRIPTIONS[ann.evidence?.code] || ann.evidence?.code}>
+                      {ann.evidence?.code}
+                    </span>
+                    {EVIDENCE_DESCRIPTIONS[ann.evidence?.code] && (
+                      <span className="evidence-description">
+                        {' : '}{EVIDENCE_DESCRIPTIONS[ann.evidence?.code]}
+                      </span>
+                    )}
+                    {ann.evidence?.with_from && (
+                      <div className="evidence-with">with {ann.evidence.with_from}</div>
+                    )}
+                    {ann.date_created && (
+                      <div className="assigned-date">Assigned on {ann.date_created}</div>
+                    )}
+                  </td>
+                  <td>{ann.source || '-'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="go-details">
@@ -142,103 +223,31 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
           <p className="locus-display">Locus: {orgData.locus_display_name}</p>
 
           {orgData.annotations && orgData.annotations.length > 0 ? (
-            <div className="go-aspects">
-              {Object.entries(grouped).map(([aspect, aspectData]) => {
-                if (aspectData.annotations.length === 0) return null;
+            <div className="go-annotation-types">
+              {/* Iterate through annotation types in order */}
+              {Object.entries(ANNOTATION_TYPE_LABELS).map(([typeKey, typeLabel]) => {
+                const typeData = grouped[typeKey];
+                const totalCount = countAnnotationsForType(typeData);
 
-                const sectionKey = `${selectedOrganism}-${aspect}`;
-                const isCollapsed = collapsedAspects[sectionKey];
+                if (totalCount === 0) {
+                  return (
+                    <div key={typeKey} className="annotation-type-section">
+                      <h4 className="annotation-type-header">{typeLabel} GO Annotations</h4>
+                      <p className="no-data">No {typeLabel} GO Annotations for {orgData.locus_display_name}.</p>
+                    </div>
+                  );
+                }
 
                 return (
-                  <div key={aspect} className="aspect-section">
-                    <h4
-                      className="aspect-header"
-                      onClick={() => toggleAspect(sectionKey)}
-                    >
-                      <span className="collapse-icon">{isCollapsed ? '▶' : '▼'}</span>
-                      <span className="aspect-icon">{aspectIcons[aspect]}</span>
-                      <span>{aspectLabels[aspect] || aspect}</span>
-                      <span className="count-badge">{aspectData.annotations.length}</span>
+                  <div key={typeKey} className="annotation-type-section">
+                    <h4 className="annotation-type-header">
+                      {typeLabel} GO Annotations
+                      <span className="count-badge">{totalCount}</span>
                     </h4>
 
-                    {!isCollapsed && (
-                      <div className="aspect-content">
-                        {/* Show annotations grouped by evidence category */}
-                        {Object.entries(aspectData.byEvidence).map(([category, annotations]) => (
-                          <div key={category} className="evidence-category">
-                            <div className="evidence-category-header">
-                              {category} Evidence
-                              <span className="count-badge">{annotations.length}</span>
-                            </div>
-
-                            <table className="data-table go-table">
-                              <thead>
-                                <tr>
-                                  <th>GO Term</th>
-                                  <th>GO ID</th>
-                                  <th>Evidence</th>
-                                  <th>References</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {annotations.map((ann, idx) => (
-                                  <tr key={idx}>
-                                    <td>
-                                      {ann.qualifier && (
-                                        <span
-                                          className={`go-qualifier ${ann.qualifier.toLowerCase() === 'not' ? 'qualifier-not' : ''}`}
-                                        >
-                                          {ann.qualifier}
-                                        </span>
-                                      )}
-                                      {ann.term?.display_name}
-                                    </td>
-                                    <td>
-                                      <a
-                                        href={`https://amigo.geneontology.org/amigo/term/${ann.term?.goid}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="go-id-link"
-                                      >
-                                        {ann.term?.goid}
-                                      </a>
-                                    </td>
-                                    <td>
-                                      <span
-                                        className="evidence-code"
-                                        title={evidenceDescriptions[ann.evidence?.code] || ann.evidence?.code}
-                                      >
-                                        {ann.evidence?.code}
-                                      </span>
-                                      {ann.evidence?.with_from && (
-                                        <span className="evidence-with"> with {ann.evidence.with_from}</span>
-                                      )}
-                                    </td>
-                                    <td>
-                                      {ann.references?.map((ref, refIdx) => (
-                                        <span key={refIdx}>
-                                          {ref.startsWith('PMID:') ? (
-                                            <a
-                                              href={`https://pubmed.ncbi.nlm.nih.gov/${ref.replace('PMID:', '')}`}
-                                              target="_blank"
-                                              rel="noopener noreferrer"
-                                            >
-                                              {ref}
-                                            </a>
-                                          ) : (
-                                            ref
-                                          )}
-                                          {refIdx < ann.references.length - 1 ? ', ' : ''}
-                                        </span>
-                                      ))}
-                                    </td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
-                        ))}
-                      </div>
+                    {/* Render each aspect (F, P, C) */}
+                    {['F', 'P', 'C'].map(aspectKey =>
+                      renderAspectTable(typeData[aspectKey], aspectKey, typeKey)
                     )}
                   </div>
                 );
