@@ -1,20 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './LocusComponents.css';
+import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
 
 function References({ data, loading, error }) {
   const [collapsedYears, setCollapsedYears] = useState({});
   const [viewMode, setViewMode] = useState('grouped'); // 'grouped' or 'list'
+  const [selectedOrganism, setSelectedOrganism] = useState(null);
+
+  const organismNames = data?.results ? Object.keys(data.results) : [];
+
+  useEffect(() => {
+    if (organismNames.length > 0 && !selectedOrganism) {
+      setSelectedOrganism(getDefaultOrganism(organismNames));
+    }
+  }, [organismNames, selectedOrganism]);
 
   if (loading) return <div className="loading">Loading references...</div>;
   if (error) return <div className="error">Error: {error}</div>;
   if (!data || !data.results) return <div className="no-data">No reference data available</div>;
 
-  const organisms = Object.entries(data.results);
-
-  if (organisms.length === 0) {
+  if (organismNames.length === 0) {
     return <div className="no-data">No references found</div>;
   }
+
+  // Filter to selected organism only
+  const organisms = selectedOrganism
+    ? [[selectedOrganism, data.results[selectedOrganism]]].filter(([, v]) => v)
+    : Object.entries(data.results);
 
   // Group references by year
   const groupByYear = (references) => {
@@ -43,6 +56,12 @@ function References({ data, loading, error }) {
 
   return (
     <div className="references-details">
+      <OrganismSelector
+        organisms={organismNames}
+        selectedOrganism={selectedOrganism}
+        onOrganismChange={setSelectedOrganism}
+        dataType="references"
+      />
       {organisms.map(([orgName, orgData]) => {
         const refs = orgData.references || [];
         const groupedRefs = groupByYear(refs);

@@ -10,6 +10,7 @@ import SequenceDetails from '../components/locus/SequenceDetails';
 import References from '../components/locus/References';
 import SummaryNotes from '../components/locus/SummaryNotes';
 import History from '../components/locus/History';
+import { getDefaultOrganism } from '../components/locus/OrganismSelector';
 import './LocusPage.css';
 
 const TABS = [
@@ -49,12 +50,13 @@ function LocusPage() {
     }
   }, [activeTab, loaders]);
 
-  // Set default organism when data loads
+  // Set default organism when data loads - prefer "Candida albicans SC5314" if available
   useEffect(() => {
     if (data.info && !selectedOrganism) {
       const organisms = Object.keys(data.info.results || {});
-      if (organisms.length > 0) {
-        setSelectedOrganism(organisms[0]);
+      const defaultOrg = getDefaultOrganism(organisms);
+      if (defaultOrg) {
+        setSelectedOrganism(defaultOrg);
       }
     }
   }, [data.info, selectedOrganism]);
@@ -108,6 +110,8 @@ function LocusPage() {
             data={data.goDetails}
             loading={loading.goDetails}
             error={errors.goDetails}
+            selectedOrganism={selectedOrganism}
+            onOrganismChange={setSelectedOrganism}
           />
         );
 
@@ -117,6 +121,8 @@ function LocusPage() {
             data={data.phenotypeDetails}
             loading={loading.phenotypeDetails}
             error={errors.phenotypeDetails}
+            selectedOrganism={selectedOrganism}
+            onOrganismChange={setSelectedOrganism}
           />
         );
 
@@ -126,6 +132,8 @@ function LocusPage() {
             data={data.proteinDetails}
             loading={loading.proteinDetails}
             error={errors.proteinDetails}
+            selectedOrganism={selectedOrganism}
+            onOrganismChange={setSelectedOrganism}
           />
         );
 
@@ -135,6 +143,8 @@ function LocusPage() {
             data={data.homologyDetails}
             loading={loading.homologyDetails}
             error={errors.homologyDetails}
+            selectedOrganism={selectedOrganism}
+            onOrganismChange={setSelectedOrganism}
           />
         );
 
@@ -144,6 +154,8 @@ function LocusPage() {
             data={data.sequenceDetails}
             loading={loading.sequenceDetails}
             error={errors.sequenceDetails}
+            selectedOrganism={selectedOrganism}
+            onOrganismChange={setSelectedOrganism}
           />
         );
 

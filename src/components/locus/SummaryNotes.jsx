@@ -1,19 +1,39 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './LocusComponents.css';
+import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
 
 function SummaryNotes({ data, loading, error }) {
+  const [selectedOrganism, setSelectedOrganism] = useState(null);
+
+  const organismNames = data?.results ? Object.keys(data.results) : [];
+
+  useEffect(() => {
+    if (organismNames.length > 0 && !selectedOrganism) {
+      setSelectedOrganism(getDefaultOrganism(organismNames));
+    }
+  }, [organismNames, selectedOrganism]);
+
   if (loading) return <div className="loading">Loading summary notes...</div>;
   if (error) return <div className="error">Error: {error}</div>;
   if (!data || !data.results) return <div className="no-data">No summary notes available</div>;
 
-  const organisms = Object.entries(data.results);
-
-  if (organisms.length === 0) {
+  if (organismNames.length === 0) {
     return <div className="no-data">No summary notes found</div>;
   }
 
+  // Filter to selected organism only
+  const organisms = selectedOrganism
+    ? [[selectedOrganism, data.results[selectedOrganism]]].filter(([, v]) => v)
+    : Object.entries(data.results);
+
   return (
     <div className="summary-notes">
+      <OrganismSelector
+        organisms={organismNames}
+        selectedOrganism={selectedOrganism}
+        onOrganismChange={setSelectedOrganism}
+        dataType="summary-notes"
+      />
       {organisms.map(([orgName, orgData]) => (
         <div key={orgName} className="organism-section">
           <h3 className="organism-name">{orgName}</h3>
