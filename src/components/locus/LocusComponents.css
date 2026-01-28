@@ -1878,17 +1878,12 @@ a:hover {
 }
 
 /* ===== Section Dividers and Backgrounds ===== */
-/* Thick divider before major sections */
-.info-table tr.section-with-divider > th,
-.info-table tr.section-with-divider > td {
-  border-top: 3px solid #999;
+/* Thick divider before major sections - only on left category bar (th) */
+.info-table tr.section-with-divider > th {
+  border-top: 3px solid white;
 }
 
-/* Light grey background for certain sections */
+/* Light grey background for section headers - only on left category bar (th) */
 .info-table tr.section-grey-bg > th {
   background-color: #f0f0f0;
-}
-
-.info-table tr.section-grey-bg > td {
-  background-color: #f9f9f9;
 }

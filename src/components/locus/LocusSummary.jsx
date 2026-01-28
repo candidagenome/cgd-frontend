@@ -441,7 +441,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
 
           {/* JBrowse - genome browser link */}
           {sequenceData && sequenceData.jbrowse_info && (
-            <tr className="jbrowse-section section-with-divider">
+            <tr className="jbrowse-section">
               <th>JBrowse</th>
               <td>
                 <div className="jbrowse-link-container">
@@ -485,7 +485,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                 return (
                   <React.Fragment key={aspect}>
                     {/* Aspect header row */}
-                    <tr className="go-aspect-header-row section-grey-bg">
+                    <tr className="go-aspect-header-row">
                       <th style={{paddingLeft: '10px'}}>{aspectLabels[aspect]}</th>
                       <td></td>
                     </tr>
@@ -495,7 +495,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                       if (!terms || terms.length === 0) return null;
 
                       return (
-                        <tr key={`${aspect}-${annType}`} className="go-annotation-type-row section-grey-bg">
+                        <tr key={`${aspect}-${annType}`} className="go-annotation-type-row">
                           <th style={{paddingLeft: '30px', fontWeight: 'normal', fontStyle: 'italic'}}>
                             {annotationTypeLabels[annType] || annType}
                           </th>
@@ -574,13 +574,13 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                 return (
                   <React.Fragment key={expType}>
                     {/* Experiment type header row */}
-                    <tr className="phenotype-experiment-type-row section-grey-bg">
+                    <tr className="phenotype-experiment-type-row">
                       <th style={{paddingLeft: '10px', fontWeight: 'bold'}}>{expType}</th>
                       <td></td>
                     </tr>
                     {/* Mutant type rows */}
                     {Object.entries(mutantTypes).sort(([a], [b]) => a.localeCompare(b)).map(([mutantType, observables]) => (
-                      <tr key={`${expType}-${mutantType}`} className="phenotype-mutant-type-row section-grey-bg">
+                      <tr key={`${expType}-${mutantType}`} className="phenotype-mutant-type-row">
                         <th style={{paddingLeft: '30px', fontWeight: 'normal'}}>
                           {mutantType}
                         </th>
@@ -630,7 +630,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                   </tr>
                   {/* Last Update row */}
                   {(location.coord_version || location.seq_version) && (
-                    <tr className="sequence-update-row section-grey-bg">
+                    <tr className="sequence-update-row">
                       <th style={{paddingLeft: '10px', fontWeight: 'normal'}}>
                         Last Update
                       </th>
@@ -647,7 +647,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
               ))}
               {/* Subfeature Details */}
               {sequenceData.subfeatures && sequenceData.subfeatures.length > 0 && (
-                <tr className="sequence-subfeature-row section-grey-bg">
+                <tr className="sequence-subfeature-row">
                   <th style={{paddingLeft: '10px', fontWeight: 'normal'}}>
                     Subfeature Details
                   </th>
