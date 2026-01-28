@@ -287,6 +287,23 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
             </td>
           </tr>
 
+          {/* Organism */}
+          <tr>
+            <th>Organism</th>
+            <td>
+              <em>{organismName}</em>
+              {feature.taxon_id && (
+                <span className="taxon-id"> (Taxon ID: {feature.taxon_id})</span>
+              )}
+            </td>
+          </tr>
+
+          {/* Primary DBID */}
+          <tr>
+            <th>Primary CGDID</th>
+            <td>{feature.dbxref_id}</td>
+          </tr>
+
           {/* Allele - shown if alleles exist */}
           {feature.alleles && feature.alleles.length > 0 && (
             <tr>
@@ -424,7 +441,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
 
           {/* JBrowse - genome browser link */}
           {sequenceData && sequenceData.jbrowse_info && (
-            <tr className="jbrowse-section">
+            <tr className="jbrowse-section section-with-divider">
               <th>JBrowse</th>
               <td>
                 <div className="jbrowse-link-container">
@@ -446,13 +463,13 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
 
           {/* GO Annotations */}
           {goLoading ? (
-            <tr>
+            <tr className="section-with-divider section-grey-bg">
               <th>GO Annotations</th>
               <td><em>Loading GO annotations...</em></td>
             </tr>
           ) : (goData && goData.annotations && goData.annotations.length > 0) && (
             <>
-              <tr className="go-section-header">
+              <tr className="go-section-header section-with-divider section-grey-bg">
                 <th>GO Annotations</th>
                 <td>
                   <a href={`?tab=go`}>
@@ -468,7 +485,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                 return (
                   <React.Fragment key={aspect}>
                     {/* Aspect header row */}
-                    <tr className="go-aspect-header-row">
+                    <tr className="go-aspect-header-row section-grey-bg">
                       <th style={{paddingLeft: '10px'}}>{aspectLabels[aspect]}</th>
                       <td></td>
                     </tr>
@@ -478,7 +495,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                       if (!terms || terms.length === 0) return null;
 
                       return (
-                        <tr key={`${aspect}-${annType}`} className="go-annotation-type-row">
+                        <tr key={`${aspect}-${annType}`} className="go-annotation-type-row section-grey-bg">
                           <th style={{paddingLeft: '30px', fontWeight: 'normal', fontStyle: 'italic'}}>
                             {annotationTypeLabels[annType] || annType}
                           </th>
@@ -536,13 +553,13 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
 
           {/* Mutant Phenotype */}
           {phenotypeLoading ? (
-            <tr>
+            <tr className="section-with-divider section-grey-bg">
               <th>Mutant Phenotype</th>
               <td><em>Loading phenotype annotations...</em></td>
             </tr>
           ) : (phenotypeData && phenotypeData.annotations && phenotypeData.annotations.length > 0) && (
             <>
-              <tr className="phenotype-section-header">
+              <tr className="phenotype-section-header section-with-divider section-grey-bg">
                 <th>Mutant Phenotype</th>
                 <td>
                   <a href={`?tab=phenotype`}>
@@ -557,13 +574,13 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                 return (
                   <React.Fragment key={expType}>
                     {/* Experiment type header row */}
-                    <tr className="phenotype-experiment-type-row">
+                    <tr className="phenotype-experiment-type-row section-grey-bg">
                       <th style={{paddingLeft: '10px', fontWeight: 'bold'}}>{expType}</th>
                       <td></td>
                     </tr>
                     {/* Mutant type rows */}
                     {Object.entries(mutantTypes).sort(([a], [b]) => a.localeCompare(b)).map(([mutantType, observables]) => (
-                      <tr key={`${expType}-${mutantType}`} className="phenotype-mutant-type-row">
+                      <tr key={`${expType}-${mutantType}`} className="phenotype-mutant-type-row section-grey-bg">
                         <th style={{paddingLeft: '30px', fontWeight: 'normal'}}>
                           {mutantType}
                         </th>
@@ -587,7 +604,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
 
           {/* Sequence Information */}
           {sequenceLoading ? (
-            <tr>
+            <tr className="section-with-divider section-grey-bg">
               <th>Sequence Information</th>
               <td><em>Loading sequence information...</em></td>
             </tr>
@@ -596,7 +613,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
               {/* Sequence Information header with chromosomal coordinates */}
               {sequenceData.locations.filter(loc => loc.is_current).map((location, idx) => (
                 <React.Fragment key={idx}>
-                  <tr className="sequence-section-header">
+                  <tr className="sequence-section-header section-with-divider section-grey-bg">
                     <th>Sequence Information</th>
                     <td>
                       <span className="sequence-coords-text">
@@ -613,7 +630,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                   </tr>
                   {/* Last Update row */}
                   {(location.coord_version || location.seq_version) && (
-                    <tr className="sequence-update-row">
+                    <tr className="sequence-update-row section-grey-bg">
                       <th style={{paddingLeft: '10px', fontWeight: 'normal'}}>
                         Last Update
                       </th>
@@ -630,7 +647,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
               ))}
               {/* Subfeature Details */}
               {sequenceData.subfeatures && sequenceData.subfeatures.length > 0 && (
-                <tr className="sequence-subfeature-row">
+                <tr className="sequence-subfeature-row section-grey-bg">
                   <th style={{paddingLeft: '10px', fontWeight: 'normal'}}>
                     Subfeature Details
                   </th>
@@ -798,7 +815,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
                 sequenceData.allele_locations.map((allele, alleleIdx) => (
                   <React.Fragment key={alleleIdx}>
                     {/* Allele Location header with coordinates */}
-                    <tr className="allele-location-header">
+                    <tr className="allele-location-header section-with-divider">
                       <th>
                         Allele Location<br/>
                         <span style={{fontWeight: 'normal', paddingLeft: '10px'}}>
@@ -881,23 +898,6 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
             </>
           )}
 
-          {/* Organism */}
-          <tr>
-            <th>Organism</th>
-            <td>
-              <em>{organismName}</em>
-              {feature.taxon_id && (
-                <span className="taxon-id"> (Taxon ID: {feature.taxon_id})</span>
-              )}
-            </td>
-          </tr>
-
-          {/* Primary DBID */}
-          <tr>
-            <th>Primary CGDID</th>
-            <td>{feature.dbxref_id}</td>
-          </tr>
-
           {/* Retired Names - shown separately with different styling */}
           {hasRetiredNames && (
             <tr>
@@ -917,7 +917,7 @@ function LocusSummary({ data, organismName, goData, goLoading, phenotypeData, ph
 
           {/* External Links - grouped by label, Perl format: label | label (1, 2, 3) */}
           {Object.keys(linkGroups).length > 0 && (
-            <tr>
+            <tr className="section-with-divider">
               <th>External Links</th>
               <td>
                 <span className="external-links-inline">
