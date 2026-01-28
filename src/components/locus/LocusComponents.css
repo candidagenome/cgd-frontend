@@ -134,8 +134,8 @@
 .data-table th {
   text-align: left;
   padding: 10px;
-  background-color: #1976d2;
-  color: white;
+  background-color: #e3f2fd;
+  color: #333;
   font-weight: 500;
 }
 
@@ -844,7 +844,7 @@ a:hover {
 
 /* Sequence Information in Summary tab */
 .sequence-coords-text {
-  font-family: 'Courier New', monospace;
+  /* Normal font style (not monospace) */
 }
 
 .sequence-update-text {
@@ -980,7 +980,7 @@ a:hover {
 }
 
 .jbrowse-location {
-  font-family: 'Courier New', monospace;
+  /* Normal font style (not monospace) */
   color: #555;
   font-size: 0.9em;
 }
