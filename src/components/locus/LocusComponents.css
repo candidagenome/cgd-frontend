@@ -1876,3 +1876,14 @@ a:hover {
     background-color: #fff;
   }
 }
+
+/* ===== Section Dividers and Backgrounds ===== */
+/* Thick divider before major sections - only on left category bar (th) */
+.info-table tr.section-with-divider > th {
+  border-top: 3px solid white;
+}
+
+/* Light grey background for section headers - only on left category bar (th) */
+.info-table tr.section-grey-bg > th {
+  background-color: #f0f0f0;
+}
