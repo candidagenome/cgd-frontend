@@ -19,6 +19,33 @@ function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismCha
     }
   }, [organisms, selectedOrganism, onOrganismChange]);
 
+  // Expand all sequences by default when data loads
+  useEffect(() => {
+    if (selectedOrganism && data?.results?.[selectedOrganism]?.sequences) {
+      const sequences = data.results[selectedOrganism].sequences;
+      const sequenceGroups = {};
+      sequences.forEach(seq => {
+        const type = seq.seq_type || 'Other';
+        if (!sequenceGroups[type]) {
+          sequenceGroups[type] = [];
+        }
+        sequenceGroups[type].push(seq);
+      });
+
+      // Set all sequences as expanded by default
+      const expandedByDefault = {};
+      Object.entries(sequenceGroups).forEach(([seqType, seqs]) => {
+        seqs.forEach((seq, idx) => {
+          if (seq.residues) {
+            const seqKey = `${selectedOrganism}-${seqType}-${idx}`;
+            expandedByDefault[seqKey] = true;
+          }
+        });
+      });
+      setExpandedSequences(expandedByDefault);
+    }
+  }, [selectedOrganism, data]);
+
   if (loading) return <div className="loading">Loading sequence data...</div>;
   if (error) return <div className="error">Error: {error}</div>;
   if (!data || !data.results) return <div className="no-data">No sequence data available</div>;
