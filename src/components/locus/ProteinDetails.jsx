@@ -1,18 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
 import './LocusComponents.css';
 
-function ProteinDetails({ data, loading, error }) {
+function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
   const [showAllAA, setShowAllAA] = useState(false);
+
+  // Get available organisms from the data
+  const organisms = data?.results ? Object.keys(data.results) : [];
+
+  // Set default organism if not already set and data is available
+  useEffect(() => {
+    if (organisms.length > 0 && !selectedOrganism) {
+      const defaultOrg = getDefaultOrganism(organisms);
+      if (defaultOrg && onOrganismChange) {
+        onOrganismChange(defaultOrg);
+      }
+    }
+  }, [organisms, selectedOrganism, onOrganismChange]);
 
   if (loading) return <div className="loading">Loading protein data...</div>;
   if (error) return <div className="error">Error: {error}</div>;
   if (!data || !data.results) return <div className="no-data">No protein data available</div>;
 
-  const organisms = Object.entries(data.results);
-
   if (organisms.length === 0) {
     return <div className="no-data">No protein information found</div>;
   }
+
+  // Get data for the selected organism
+  const orgData = selectedOrganism ? data.results[selectedOrganism] : null;
 
   const formatNumber = (num, decimals = 2) => {
     if (num === null || num === undefined) return '-';
@@ -58,27 +73,26 @@ function ProteinDetails({ data, loading, error }) {
     negative: '#ffcdd2',
   };
 
+  // Get protein info for selected organism
+  const pi = orgData?.protein_info;
+
   return (
     <div className="protein-details">
-      {organisms.map(([orgName, orgData]) => {
-        const pi = orgData.protein_info;
-        if (!pi) {
-          return (
-            <div key={orgName} className="organism-section">
-              <h3 className="organism-name">{orgName}</h3>
-              <p className="locus-display">Locus: {orgData.locus_display_name}</p>
-              <p className="no-data">No protein information for this organism</p>
-            </div>
-          );
-        }
+      {/* Organism Selector */}
+      <OrganismSelector
+        organisms={organisms}
+        selectedOrganism={selectedOrganism}
+        onOrganismChange={onOrganismChange}
+        dataType="protein"
+      />
 
-        const totalAA = pi.protein_length || 0;
+      {/* Display data for selected organism */}
+      {selectedOrganism && orgData ? (
+        <div className="organism-section">
+          <h3 className="organism-name">{selectedOrganism}</h3>
+          <p className="locus-display">Locus: {orgData.locus_display_name}</p>
 
-        return (
-          <div key={orgName} className="organism-section">
-            <h3 className="organism-name">{orgName}</h3>
-            <p className="locus-display">Locus: {orgData.locus_display_name}</p>
-
+          {pi ? (
             <div className="protein-info">
               {/* Primary Properties - Highlighted */}
               <div className="protein-primary-stats">
@@ -98,7 +112,7 @@ function ProteinDetails({ data, loading, error }) {
 
               {/* Codon Usage Properties */}
               <div className="protein-section">
-                <h4>🧬 Codon Usage Properties</h4>
+                <h4>Codon Usage Properties</h4>
                 <div className="property-grid">
                   <div className="property-item">
                     <span className="property-label">CAI (Codon Adaptation Index)</span>
@@ -117,7 +131,7 @@ function ProteinDetails({ data, loading, error }) {
 
               {/* Physicochemical Properties */}
               <div className="protein-section">
-                <h4>⚗️ Physicochemical Properties</h4>
+                <h4>Physicochemical Properties</h4>
                 <div className="property-grid">
                   <div className="property-item">
                     <span className="property-label">GRAVY Score</span>
@@ -136,7 +150,7 @@ function ProteinDetails({ data, loading, error }) {
               {/* Terminal Sequences */}
               {(pi.n_term_seq || pi.c_term_seq) && (
                 <div className="protein-section">
-                  <h4>🔗 Terminal Sequences</h4>
+                  <h4>Terminal Sequences</h4>
                   {pi.n_term_seq && (
                     <div className="terminal-seq">
                       <span className="terminal-label">N-terminus:</span>
@@ -160,7 +174,7 @@ function ProteinDetails({ data, loading, error }) {
                     onClick={() => setShowAllAA(!showAllAA)}
                   >
                     <span className="collapse-icon">{showAllAA ? '▼' : '▶'}</span>
-                    🔤 Amino Acid Composition
+                    Amino Acid Composition
                     <span className="count-badge">{Object.keys(pi.amino_acids).length} types</span>
                   </h4>
 
@@ -178,6 +192,7 @@ function ProteinDetails({ data, loading, error }) {
                           .sort((a, b) => b[1] - a[1])
                           .map(([aa, count]) => {
                             const info = aaInfo[aa.toLowerCase()] || { code: aa.toUpperCase(), name: aa, type: 'nonpolar' };
+                            const totalAA = pi.protein_length || 0;
                             const percentage = totalAA > 0 ? ((count / totalAA) * 100).toFixed(1) : 0;
 
                             return (
@@ -199,9 +214,13 @@ function ProteinDetails({ data, loading, error }) {
                 </div>
               )}
             </div>
-          </div>
-        );
-      })}
+          ) : (
+            <p className="no-data">No protein information for this organism</p>
+          )}
+        </div>
+      ) : (
+        <p className="no-data">Select an organism to view protein information</p>
+      )}
     </div>
   );
 }

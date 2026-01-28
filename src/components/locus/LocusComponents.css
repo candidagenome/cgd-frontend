@@ -1,5 +1,65 @@
 /* Common styles for locus components */
 
+/* =====================================================
+   ORGANISM SELECTOR
+   ===================================================== */
+
+.organism-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 15px;
+  background-color: #e8f5e9;
+  border: 1px solid #c8e6c9;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.organism-selector label {
+  font-weight: 500;
+  color: #2e7d32;
+  white-space: nowrap;
+}
+
+.organism-selector .organism-dropdown {
+  flex: 1;
+  max-width: 400px;
+  padding: 8px 12px;
+  border: 1px solid #a5d6a7;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 0.95em;
+  color: #333;
+  cursor: pointer;
+}
+
+.organism-selector .organism-dropdown:focus {
+  outline: none;
+  border-color: #66bb6a;
+  box-shadow: 0 0 0 2px rgba(102, 187, 106, 0.2);
+}
+
+.organism-selector .organism-dropdown:hover {
+  border-color: #66bb6a;
+}
+
+.organism-selector.single-organism {
+  background-color: #f5f5f5;
+  border-color: #e0e0e0;
+}
+
+.organism-selector .organism-info {
+  color: #555;
+}
+
+.organism-selector .organism-info strong {
+  color: #1976d2;
+}
+
+/* =====================================================
+   LOADING, ERROR, NO DATA
+   ===================================================== */
+
 .loading {
   padding: 20px;
   text-align: center;
