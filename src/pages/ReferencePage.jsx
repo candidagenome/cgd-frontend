@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useSearchParams, Link } from 'react-router-dom';
 import useReferenceData from '../hooks/useReferenceData';
 import { formatAuthors, formatCitationString } from '../utils/formatCitation.jsx';
@@ -19,6 +19,10 @@ function ReferencePage() {
 
   const { data, loading, errors, loaders } = useReferenceData(id);
 
+  // Store loaders in ref to avoid dependency in useEffect
+  const loadersRef = useRef(loaders);
+  loadersRef.current = loaders;
+
   // Update URL when tab changes
   useEffect(() => {
     if (activeTab !== 'summary') {
@@ -28,13 +32,13 @@ function ReferencePage() {
     }
   }, [activeTab, setSearchParams]);
 
-  // Load data when tab is selected
+  // Load data when tab is selected - only triggers on activeTab change
   useEffect(() => {
     const tab = TABS.find(t => t.id === activeTab);
-    if (tab && tab.loader && loaders[tab.loader]) {
-      loaders[tab.loader]();
+    if (tab && tab.loader && loadersRef.current[tab.loader]) {
+      loadersRef.current[tab.loader]();
     }
-  }, [activeTab, loaders]);
+  }, [activeTab]);
 
   const handleTabClick = (tabId) => {
     setActiveTab(tabId);
