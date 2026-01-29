@@ -18,16 +18,23 @@ export function useReferenceData(pubmedId) {
   });
   const [errors, setErrors] = useState({});
 
-  // Use refs for state to keep loader identities stable
-  // This prevents unnecessary re-renders and infinite API call loops
-  // Update refs synchronously during render (not in useEffect) to avoid stale values
-  const dataRef = useRef(data);
-  const loadingRef = useRef(loading);
-  dataRef.current = data;
-  loadingRef.current = loading;
+  // Track which endpoints have been requested to prevent duplicate calls
+  // This is updated synchronously BEFORE any async operation
+  const requestedRef = useRef({});
+
+  // Reset requested state when pubmedId changes
+  useEffect(() => {
+    requestedRef.current = {};
+  }, [pubmedId]);
 
   const fetchData = useCallback(async (key, fetchFn) => {
     if (!pubmedId) return;
+
+    // Synchronous guard - check and set in same operation
+    if (requestedRef.current[key]) {
+      return;
+    }
+    requestedRef.current[key] = true;
 
     setLoading(prev => ({ ...prev, [key]: true }));
     setErrors(prev => ({ ...prev, [key]: null }));
@@ -40,6 +47,8 @@ export function useReferenceData(pubmedId) {
         ...prev,
         [key]: error.response?.data?.detail || error.message
       }));
+      // Allow retry on error
+      requestedRef.current[key] = false;
     } finally {
       setLoading(prev => ({ ...prev, [key]: false }));
     }
@@ -52,32 +61,23 @@ export function useReferenceData(pubmedId) {
     }
   }, [pubmedId, fetchData]);
 
-  // Lazy loaders for tab data - use refs for guards to keep stable identities
+  // Lazy loaders for tab data
   const loadLocusDetails = useCallback(() => {
-    if (!dataRef.current.locusDetails && !loadingRef.current.locusDetails) {
-      fetchData('locusDetails', referenceApi.getLocusDetails);
-    }
+    fetchData('locusDetails', referenceApi.getLocusDetails);
   }, [fetchData]);
 
   const loadGoDetails = useCallback(() => {
-    if (!dataRef.current.goDetails && !loadingRef.current.goDetails) {
-      fetchData('goDetails', referenceApi.getGoDetails);
-    }
+    fetchData('goDetails', referenceApi.getGoDetails);
   }, [fetchData]);
 
   const loadPhenotypeDetails = useCallback(() => {
-    if (!dataRef.current.phenotypeDetails && !loadingRef.current.phenotypeDetails) {
-      fetchData('phenotypeDetails', referenceApi.getPhenotypeDetails);
-    }
+    fetchData('phenotypeDetails', referenceApi.getPhenotypeDetails);
   }, [fetchData]);
 
   const loadInteractionDetails = useCallback(() => {
-    if (!dataRef.current.interactionDetails && !loadingRef.current.interactionDetails) {
-      fetchData('interactionDetails', referenceApi.getInteractionDetails);
-    }
+    fetchData('interactionDetails', referenceApi.getInteractionDetails);
   }, [fetchData]);
 
-  // Loaders object is now stable since all loader functions have stable identities
   const loaders = useMemo(() => ({
     loadLocusDetails,
     loadGoDetails,

@@ -48,8 +48,10 @@ function LocusPage() {
 
   // Load data when tab is selected - only triggers on activeTab change
   useEffect(() => {
+    console.log('[LocusPage useEffect] activeTab changed to:', activeTab);
     const tab = TABS.find(t => t.id === activeTab);
     if (tab && tab.loader && loadersRef.current[tab.loader]) {
+      console.log('[LocusPage useEffect] Calling loader:', tab.loader);
       loadersRef.current[tab.loader]();
     }
   }, [activeTab]);
