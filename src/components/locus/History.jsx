@@ -87,7 +87,7 @@ function History({ data, loading, error }) {
 
   // Reference rendering:
   // - If backend gives HTML, render it.
-  // - Otherwise show citation/display_name, optionally linked.
+  // - Otherwise show display_name/formatted_citation (short "Author et al" format) or citation, optionally linked.
   const renderReference = (ref) => {
     if (!ref) return null;
     if (typeof ref === 'string') return <span>{ref}</span>;
@@ -96,7 +96,8 @@ function History({ data, loading, error }) {
       return <span dangerouslySetInnerHTML={{ __html: ref.html }} />;
     }
 
-    const label = ref.citation || ref.display_name || ref.title || ref.text;
+    // Prefer display_name or formatted_citation (short format) over full citation
+    const label = ref.display_name || ref.formatted_citation || ref.citation || ref.title || ref.text;
     const link = ref.link || ref.url;
 
     if (link && label) {
