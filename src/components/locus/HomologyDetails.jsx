@@ -49,19 +49,27 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
               <tr className="section-with-divider section-grey-bg">
                 <th>Ortholog Cluster</th>
                 <td>
-                  {orgData.ortholog_cluster?.cluster_url ? (
-                    <a
-                      href={orgData.ortholog_cluster.cluster_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      View ortholog cluster in CGOB
-                    </a>
-                  ) : (
-                    <span>CGOB Ortholog Cluster</span>
-                  )}
+                  <strong>From CGOB</strong>
                 </td>
               </tr>
+
+              {/* Download Links */}
+              {orgData.ortholog_cluster?.download_links && orgData.ortholog_cluster.download_links.length > 0 && (
+                <tr>
+                  <th style={{ paddingLeft: '20px', fontWeight: 'normal', verticalAlign: 'top' }}>
+                    Download cluster sequence files:
+                  </th>
+                  <td>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      {orgData.ortholog_cluster.download_links.map((link, idx) => (
+                        <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer">
+                          {link.label}
+                        </a>
+                      ))}
+                    </div>
+                  </td>
+                </tr>
+              )}
 
               {/* Orthologs Table */}
               {orgData.ortholog_cluster?.orthologs && orgData.ortholog_cluster.orthologs.length > 0 && (
