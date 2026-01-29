@@ -8,7 +8,6 @@ import ProteinDetails from '../components/locus/ProteinDetails';
 import HomologyDetails from '../components/locus/HomologyDetails';
 import SequenceDetails from '../components/locus/SequenceDetails';
 import References from '../components/locus/References';
-import SummaryNotes from '../components/locus/SummaryNotes';
 import History from '../components/locus/History';
 import { getDefaultOrganism } from '../components/locus/OrganismSelector';
 import './LocusPage.css';
@@ -21,7 +20,6 @@ const TABS = [
   { id: 'homology', label: 'Homologs', component: 'homology', loader: 'loadHomologyDetails' },
   { id: 'sequence', label: 'Sequence', component: 'sequence', loader: 'loadSequenceDetails' },
   { id: 'references', label: 'References', component: 'references', loader: 'loadReferences' },
-  { id: 'notes', label: 'Summary Notes', component: 'notes', loader: 'loadSummaryNotes' },
   { id: 'history', label: 'History', component: 'history', loader: 'loadHistory' },
 ];
 
