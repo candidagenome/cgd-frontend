@@ -6,7 +6,7 @@ import { formatCitationString } from '../../utils/formatCitation.jsx';
 
 function References({ data, loading, error }) {
   const [collapsedYears, setCollapsedYears] = useState({});
-  const [viewMode, setViewMode] = useState('grouped'); // 'grouped' or 'list'
+  const [viewMode, setViewMode] = useState('list'); // 'list' or 'grouped'
   const [selectedOrganism, setSelectedOrganism] = useState(null);
 
   const organismNames = data?.results ? Object.keys(data.results) : [];
@@ -82,20 +82,59 @@ function References({ data, loading, error }) {
                 {/* View toggle */}
                 <div className="view-toggle">
                   <button
-                    className={`toggle-btn ${viewMode === 'grouped' ? 'active' : ''}`}
-                    onClick={() => setViewMode('grouped')}
-                  >
-                    📅 By Year
-                  </button>
-                  <button
                     className={`toggle-btn ${viewMode === 'list' ? 'active' : ''}`}
                     onClick={() => setViewMode('list')}
                   >
                     📋 List View
                   </button>
+                  <button
+                    className={`toggle-btn ${viewMode === 'grouped' ? 'active' : ''}`}
+                    onClick={() => setViewMode('grouped')}
+                  >
+                    📅 By Year
+                  </button>
                 </div>
 
-                {viewMode === 'grouped' ? (
+                {viewMode === 'list' ? (
+                  <table className="data-table references-table">
+                    <thead>
+                      <tr>
+                        <th>Year</th>
+                        <th>Citation</th>
+                        <th>PubMed</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {refs
+                        .sort((a, b) => (b.year || 0) - (a.year || 0))
+                        .map((ref, idx) => (
+                          <tr key={idx}>
+                            <td className="year-cell">{ref.year || '-'}</td>
+                            <td>
+                              <Link to={`/reference/${ref.pubmed || ref.reference_no}`}>
+                                {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
+                              </Link>
+                              {ref.title && <div className="ref-title">{ref.title}</div>}
+                            </td>
+                            <td>
+                              {ref.pubmed ? (
+                                <a
+                                  href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="pmid-link"
+                                >
+                                  {ref.pubmed}
+                                </a>
+                              ) : (
+                                '-'
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                ) : (
                   <div className="references-by-year">
                     {groupedRefs.map(([year, yearRefs]) => {
                       const yearKey = `${orgName}-${year}`;
@@ -146,45 +185,6 @@ function References({ data, loading, error }) {
                       );
                     })}
                   </div>
-                ) : (
-                  <table className="data-table references-table">
-                    <thead>
-                      <tr>
-                        <th>Year</th>
-                        <th>Citation</th>
-                        <th>PubMed</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {refs
-                        .sort((a, b) => (b.year || 0) - (a.year || 0))
-                        .map((ref, idx) => (
-                          <tr key={idx}>
-                            <td className="year-cell">{ref.year || '-'}</td>
-                            <td>
-                              <Link to={`/reference/${ref.pubmed || ref.reference_no}`}>
-                                {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
-                              </Link>
-                              {ref.title && <div className="ref-title">{ref.title}</div>}
-                            </td>
-                            <td>
-                              {ref.pubmed ? (
-                                <a
-                                  href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="pmid-link"
-                                >
-                                  {ref.pubmed}
-                                </a>
-                              ) : (
-                                '-'
-                              )}
-                            </td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
                 )}
               </>
             ) : (
