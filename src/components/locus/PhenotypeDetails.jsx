@@ -133,6 +133,8 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
                                 <th>Mutant Information</th>
                                 <th>Strain Background</th>
                                 <th>Phenotype</th>
+                                <th>Chemical</th>
+                                <th>Details</th>
                                 <th>References</th>
                               </tr>
                             </thead>
@@ -158,8 +160,8 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
                                           {ann.alleles && ann.alleles.length > 0 && (
                                             ann.alleles.map((allele, aIdx) => (
                                               <div key={aIdx}>
-                                                Allele: {allele.value || allele.property_value}
-                                                {allele.description && <span> ({allele.description})</span>}
+                                                Allele: {allele.property_value}
+                                                {allele.property_description && <span> ({allele.property_description})</span>}
                                               </div>
                                             ))
                                           )}
@@ -178,6 +180,28 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
                                         ann.phenotype?.display_name || '-'
                                       )}
                                       {ann.qualifier && `: ${ann.qualifier}`}
+                                    </td>
+                                    {/* Chemical */}
+                                    <td>
+                                      {ann.chemicals && ann.chemicals.length > 0 ? (
+                                        ann.chemicals.map((chem, cIdx) => (
+                                          <div key={cIdx}>
+                                            {chem.property_value}
+                                            {chem.property_description && <div>({chem.property_description})</div>}
+                                          </div>
+                                        ))
+                                      ) : '-'}
+                                    </td>
+                                    {/* Details */}
+                                    <td>
+                                      {ann.details && ann.details.length > 0 ? (
+                                        ann.details.map((detail, dIdx) => (
+                                          <div key={dIdx}>
+                                            {detail.property_type}: {detail.property_value}
+                                            {detail.property_description && <div>({detail.property_description})</div>}
+                                          </div>
+                                        ))
+                                      ) : '-'}
                                     </td>
                                     {/* References */}
                                     <td>
