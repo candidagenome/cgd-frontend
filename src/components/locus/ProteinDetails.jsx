@@ -4,7 +4,6 @@ import './LocusComponents.css';
 
 function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
   const [showAllAA, setShowAllAA] = useState(false);
-  const [showSequence, setShowSequence] = useState(false);
 
   // Get available organisms from the data - memoize to prevent new array reference each render
   const organisms = useMemo(() => {
@@ -79,71 +78,6 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
   // Get protein info for selected organism
   const pi = orgData?.protein_info;
 
-  // Render domain graphic
-  const renderDomainGraphic = (domains, proteinLength) => {
-    if (!domains || domains.length === 0 || !proteinLength) return null;
-
-    const width = 600;
-    const height = 60;
-    const trackHeight = 20;
-    const scale = width / proteinLength;
-
-    // Color palette for different domain types
-    const domainColors = {
-      'Pfam': '#4CAF50',
-      'SMART': '#2196F3',
-      'InterPro': '#FF9800',
-      'PROSITE': '#9C27B0',
-      'default': '#607D8B',
-    };
-
-    return (
-      <div className="domain-graphic">
-        <svg width={width} height={height} style={{ border: '1px solid #ddd', backgroundColor: '#fafafa' }}>
-          {/* Protein backbone */}
-          <rect x="0" y={height / 2 - 3} width={width} height="6" fill="#ccc" />
-
-          {/* Domains */}
-          {domains.map((domain, idx) => {
-            if (!domain.start_coord || !domain.stop_coord) return null;
-            const x = domain.start_coord * scale;
-            const domainWidth = (domain.stop_coord - domain.start_coord) * scale;
-            const color = domainColors[domain.domain_type] || domainColors.default;
-
-            return (
-              <g key={idx}>
-                <rect
-                  x={x}
-                  y={height / 2 - trackHeight / 2}
-                  width={Math.max(domainWidth, 5)}
-                  height={trackHeight}
-                  fill={color}
-                  stroke="#333"
-                  strokeWidth="1"
-                  rx="3"
-                >
-                  <title>{`${domain.domain_name} (${domain.start_coord}-${domain.stop_coord})`}</title>
-                </rect>
-              </g>
-            );
-          })}
-
-          {/* Scale markers */}
-          <text x="5" y={height - 5} fontSize="10" fill="#666">1</text>
-          <text x={width - 30} y={height - 5} fontSize="10" fill="#666">{proteinLength}</text>
-        </svg>
-        <div className="domain-legend">
-          {Object.entries(domainColors).filter(([k]) => k !== 'default').map(([type, color]) => (
-            <span key={type} className="legend-item" style={{ marginRight: '15px' }}>
-              <span style={{ display: 'inline-block', width: '12px', height: '12px', backgroundColor: color, marginRight: '4px', borderRadius: '2px' }}></span>
-              {type}
-            </span>
-          ))}
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div className="protein-details locus-summary">
       {/* Organism Selector */}
@@ -205,169 +139,138 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
               </tr>
 
               {/* Structural Information Section Header */}
-              {(pi || orgData.alphafold_info) && (
+              {pi && (
                 <>
                   <tr className="section-with-divider section-grey-bg">
                     <th>Structural Information</th>
                     <td>
-                      {orgData.alphafold_info && orgData.alphafold_info.structure_available && (
-                        <a
-                          href={orgData.alphafold_info.alphafold_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="alphafold-link"
-                        >
-                          View AlphaFold Structure
-                        </a>
-                      )}
+                      <em style={{ color: '#666' }}>Will add AlphaFold soon</em>
                     </td>
                   </tr>
 
-                  {/* AlphaFold */}
-                  {orgData.alphafold_info && orgData.alphafold_info.structure_available && (
+                  {/* Length */}
+                  <tr>
+                    <th style={{ paddingLeft: '20px' }}>Length</th>
+                    <td>{pi.protein_length?.toLocaleString() || '-'} amino acids</td>
+                  </tr>
+
+                  {/* Molecular Weight */}
+                  <tr>
+                    <th style={{ paddingLeft: '20px' }}>Molecular Weight</th>
+                    <td>{formatMW(pi.molecular_weight)}</td>
+                  </tr>
+
+                  {/* Isoelectric Point */}
+                  <tr>
+                    <th style={{ paddingLeft: '20px' }}>Isoelectric Point (pI)</th>
+                    <td>{formatNumber(pi.pi)}</td>
+                  </tr>
+
+                  {/* CAI */}
+                  {pi.cai !== null && pi.cai !== undefined && (
                     <tr>
-                      <th style={{ paddingLeft: '20px' }}>AlphaFold</th>
+                      <th style={{ paddingLeft: '20px' }}>CAI (Codon Adaptation Index)</th>
+                      <td>{formatNumber(pi.cai)}</td>
+                    </tr>
+                  )}
+
+                  {/* Codon Bias */}
+                  {pi.codon_bias !== null && pi.codon_bias !== undefined && (
+                    <tr>
+                      <th style={{ paddingLeft: '20px' }}>Codon Bias</th>
+                      <td>{formatNumber(pi.codon_bias)}</td>
+                    </tr>
+                  )}
+
+                  {/* FOP Score */}
+                  {pi.fop_score !== null && pi.fop_score !== undefined && (
+                    <tr>
+                      <th style={{ paddingLeft: '20px' }}>FOP Score</th>
+                      <td>{formatNumber(pi.fop_score)}</td>
+                    </tr>
+                  )}
+
+                  {/* GRAVY Score */}
+                  {pi.gravy_score !== null && pi.gravy_score !== undefined && (
+                    <tr>
+                      <th style={{ paddingLeft: '20px' }}>GRAVY Score</th>
                       <td>
-                        <a
-                          href={orgData.alphafold_info.alphafold_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {orgData.alphafold_info.uniprot_id}
-                        </a>
-                        {' '}
-                        <span className="external-link-hint">(predicted structure)</span>
+                        {formatNumber(pi.gravy_score)}
+                        {pi.gravy_score > 0 ? ' (hydrophobic)' : pi.gravy_score < 0 ? ' (hydrophilic)' : ''}
                       </td>
                     </tr>
                   )}
 
-                  {pi && (
-                    <>
-                      {/* Length */}
-                      <tr>
-                        <th style={{ paddingLeft: '20px' }}>Length</th>
-                        <td>{pi.protein_length?.toLocaleString() || '-'} amino acids</td>
-                      </tr>
+                  {/* Aromaticity Score */}
+                  {pi.aromaticity_score !== null && pi.aromaticity_score !== undefined && (
+                    <tr>
+                      <th style={{ paddingLeft: '20px' }}>Aromaticity Score</th>
+                      <td>{formatNumber(pi.aromaticity_score)}</td>
+                    </tr>
+                  )}
 
-                      {/* Molecular Weight */}
-                      <tr>
-                        <th style={{ paddingLeft: '20px' }}>Molecular Weight</th>
-                        <td>{formatMW(pi.molecular_weight)}</td>
-                      </tr>
+                  {/* N-terminus */}
+                  {pi.n_term_seq && (
+                    <tr>
+                      <th style={{ paddingLeft: '20px' }}>N-terminus</th>
+                      <td><code className="terminal-sequence">{pi.n_term_seq}</code></td>
+                    </tr>
+                  )}
 
-                      {/* Isoelectric Point */}
-                      <tr>
-                        <th style={{ paddingLeft: '20px' }}>Isoelectric Point (pI)</th>
-                        <td>{formatNumber(pi.pi)}</td>
-                      </tr>
+                  {/* C-terminus */}
+                  {pi.c_term_seq && (
+                    <tr>
+                      <th style={{ paddingLeft: '20px' }}>C-terminus</th>
+                      <td><code className="terminal-sequence">{pi.c_term_seq}</code></td>
+                    </tr>
+                  )}
 
-                      {/* CAI */}
-                      {pi.cai !== null && pi.cai !== undefined && (
-                        <tr>
-                          <th style={{ paddingLeft: '20px' }}>CAI (Codon Adaptation Index)</th>
-                          <td>{formatNumber(pi.cai)}</td>
-                        </tr>
-                      )}
-
-                      {/* Codon Bias */}
-                      {pi.codon_bias !== null && pi.codon_bias !== undefined && (
-                        <tr>
-                          <th style={{ paddingLeft: '20px' }}>Codon Bias</th>
-                          <td>{formatNumber(pi.codon_bias)}</td>
-                        </tr>
-                      )}
-
-                      {/* FOP Score */}
-                      {pi.fop_score !== null && pi.fop_score !== undefined && (
-                        <tr>
-                          <th style={{ paddingLeft: '20px' }}>FOP Score</th>
-                          <td>{formatNumber(pi.fop_score)}</td>
-                        </tr>
-                      )}
-
-                      {/* GRAVY Score */}
-                      {pi.gravy_score !== null && pi.gravy_score !== undefined && (
-                        <tr>
-                          <th style={{ paddingLeft: '20px' }}>GRAVY Score</th>
-                          <td>
-                            {formatNumber(pi.gravy_score)}
-                            {pi.gravy_score > 0 ? ' (hydrophobic)' : pi.gravy_score < 0 ? ' (hydrophilic)' : ''}
-                          </td>
-                        </tr>
-                      )}
-
-                      {/* Aromaticity Score */}
-                      {pi.aromaticity_score !== null && pi.aromaticity_score !== undefined && (
-                        <tr>
-                          <th style={{ paddingLeft: '20px' }}>Aromaticity Score</th>
-                          <td>{formatNumber(pi.aromaticity_score)}</td>
-                        </tr>
-                      )}
-
-                      {/* N-terminus */}
-                      {pi.n_term_seq && (
-                        <tr>
-                          <th style={{ paddingLeft: '20px' }}>N-terminus</th>
-                          <td><code className="terminal-sequence">{pi.n_term_seq}</code></td>
-                        </tr>
-                      )}
-
-                      {/* C-terminus */}
-                      {pi.c_term_seq && (
-                        <tr>
-                          <th style={{ paddingLeft: '20px' }}>C-terminus</th>
-                          <td><code className="terminal-sequence">{pi.c_term_seq}</code></td>
-                        </tr>
-                      )}
-
-                      {/* Amino Acid Composition */}
-                      {pi.amino_acids && Object.keys(pi.amino_acids).length > 0 && (
-                        <tr>
-                          <th
-                            style={{ paddingLeft: '20px', cursor: 'pointer' }}
-                            onClick={() => setShowAllAA(!showAllAA)}
-                          >
-                            <span className="collapse-icon">{showAllAA ? '▼' : '▶'}</span>
-                            {' '}Amino Acid Composition
-                          </th>
-                          <td>
-                            {!showAllAA ? (
-                              <span className="count-badge">{Object.keys(pi.amino_acids).length} types</span>
-                            ) : (
-                              <div className="aa-composition">
-                                <div className="aa-legend">
-                                  <span className="legend-item" style={{ backgroundColor: aaTypeColors.nonpolar }}>Nonpolar</span>
-                                  <span className="legend-item" style={{ backgroundColor: aaTypeColors.polar }}>Polar</span>
-                                  <span className="legend-item" style={{ backgroundColor: aaTypeColors.positive }}>Positive</span>
-                                  <span className="legend-item" style={{ backgroundColor: aaTypeColors.negative }}>Negative</span>
-                                </div>
-                                <div className="aa-grid">
-                                  {Object.entries(pi.amino_acids)
-                                    .sort((a, b) => b[1] - a[1])
-                                    .map(([aa, count]) => {
-                                      const info = aaInfo[aa.toLowerCase()] || { code: aa.toUpperCase(), name: aa, type: 'nonpolar' };
-                                      const totalAA = pi.protein_length || 0;
-                                      const percentage = totalAA > 0 ? ((count / totalAA) * 100).toFixed(1) : 0;
-                                      return (
-                                        <div
-                                          key={aa}
-                                          className="aa-item"
-                                          style={{ backgroundColor: aaTypeColors[info.type] }}
-                                          title={info.name}
-                                        >
-                                          <span className="aa-code">{info.code}</span>
-                                          <span className="aa-count">{count}</span>
-                                          <span className="aa-percent">{percentage}%</span>
-                                        </div>
-                                      );
-                                    })}
-                                </div>
-                              </div>
-                            )}
-                          </td>
-                        </tr>
-                      )}
-                    </>
+                  {/* Amino Acid Composition */}
+                  {pi.amino_acids && Object.keys(pi.amino_acids).length > 0 && (
+                    <tr>
+                      <th
+                        style={{ paddingLeft: '20px', cursor: 'pointer' }}
+                        onClick={() => setShowAllAA(!showAllAA)}
+                      >
+                        <span className="collapse-icon">{showAllAA ? '▼' : '▶'}</span>
+                        {' '}Amino Acid Composition
+                      </th>
+                      <td>
+                        {!showAllAA ? (
+                          <span className="count-badge">{Object.keys(pi.amino_acids).length} types</span>
+                        ) : (
+                          <div className="aa-composition">
+                            <div className="aa-legend">
+                              <span className="legend-item" style={{ backgroundColor: aaTypeColors.nonpolar }}>Nonpolar</span>
+                              <span className="legend-item" style={{ backgroundColor: aaTypeColors.polar }}>Polar</span>
+                              <span className="legend-item" style={{ backgroundColor: aaTypeColors.positive }}>Positive</span>
+                              <span className="legend-item" style={{ backgroundColor: aaTypeColors.negative }}>Negative</span>
+                            </div>
+                            <div className="aa-grid">
+                              {Object.entries(pi.amino_acids)
+                                .sort((a, b) => b[1] - a[1])
+                                .map(([aa, count]) => {
+                                  const info = aaInfo[aa.toLowerCase()] || { code: aa.toUpperCase(), name: aa, type: 'nonpolar' };
+                                  const totalAA = pi.protein_length || 0;
+                                  const percentage = totalAA > 0 ? ((count / totalAA) * 100).toFixed(1) : 0;
+                                  return (
+                                    <div
+                                      key={aa}
+                                      className="aa-item"
+                                      style={{ backgroundColor: aaTypeColors[info.type] }}
+                                      title={info.name}
+                                    >
+                                      <span className="aa-code">{info.code}</span>
+                                      <span className="aa-count">{count}</span>
+                                      <span className="aa-percent">{percentage}%</span>
+                                    </div>
+                                  );
+                                })}
+                            </div>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
                   )}
                 </>
               )}
@@ -378,19 +281,9 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                   <tr className="section-with-divider section-grey-bg">
                     <th>Conserved Domains</th>
                     <td>
-                      <span className="count-badge">{orgData.conserved_domains.length} domain{orgData.conserved_domains.length > 1 ? 's' : ''}</span>
+                      <em style={{ color: '#666' }}>Will add domain graphic soon</em>
                     </td>
                   </tr>
-
-                  {/* Domain Graphic */}
-                  {pi && pi.protein_length && (
-                    <tr>
-                      <th style={{ paddingLeft: '20px', fontWeight: 'normal' }}>Domain Map</th>
-                      <td>
-                        {renderDomainGraphic(orgData.conserved_domains, pi.protein_length)}
-                      </td>
-                    </tr>
-                  )}
 
                   {orgData.conserved_domains.map((domain, idx) => (
                     <tr key={idx}>
@@ -419,19 +312,11 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                 </>
               )}
 
-              {/* Sequence Detail Section */}
+              {/* Sequence Detail Section - show GCG sequence by default */}
               {orgData.sequence_detail && (orgData.sequence_detail.protein_sequence_gcg || orgData.sequence_detail.protein_length) && (
                 <>
                   <tr className="section-with-divider section-grey-bg">
-                    <th
-                      style={{ cursor: orgData.sequence_detail.protein_sequence_gcg ? 'pointer' : 'default' }}
-                      onClick={() => orgData.sequence_detail.protein_sequence_gcg && setShowSequence(!showSequence)}
-                    >
-                      {orgData.sequence_detail.protein_sequence_gcg && (
-                        <span className="collapse-icon">{showSequence ? '▼' : '▶'}</span>
-                      )}
-                      {' '}Sequence Detail
-                    </th>
+                    <th>Sequence Detail</th>
                     <td>
                       {orgData.sequence_detail.protein_length && (
                         <span>{orgData.sequence_detail.protein_length} aa</span>
@@ -441,7 +326,7 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                       )}
                     </td>
                   </tr>
-                  {showSequence && orgData.sequence_detail.protein_sequence_gcg && (
+                  {orgData.sequence_detail.protein_sequence_gcg && (
                     <tr>
                       <th style={{ paddingLeft: '20px', fontWeight: 'normal' }}>Protein Sequence (GCG Format)</th>
                       <td>
@@ -454,49 +339,23 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                 </>
               )}
 
-              {/* Homologs Section */}
-              {(orgData.homologs && orgData.homologs.length > 0) || orgData.blast_url ? (
+              {/* Homologs Section - only show BLAST link */}
+              {orgData.blast_url && (
                 <>
                   <tr className="section-with-divider section-grey-bg">
                     <th>Homologs</th>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <th style={{ paddingLeft: '20px', fontWeight: 'normal' }}>BLAST Search</th>
                     <td>
-                      {orgData.homologs && orgData.homologs.length > 0 && (
-                        <span className="count-badge">{orgData.homologs.length} homolog{orgData.homologs.length > 1 ? 's' : ''}</span>
-                      )}
+                      <a href={orgData.blast_url} target="_blank" rel="noopener noreferrer">
+                        BLAST {orgData.protein_standard_name || orgData.locus_display_name} against other Candida sequences
+                      </a>
                     </td>
                   </tr>
-
-                  {/* BLAST Link */}
-                  {orgData.blast_url && (
-                    <tr>
-                      <th style={{ paddingLeft: '20px', fontWeight: 'normal' }}>BLAST Search</th>
-                      <td>
-                        <a href={orgData.blast_url} target="_blank" rel="noopener noreferrer">
-                          BLAST {orgData.protein_standard_name || orgData.locus_display_name} against other Candida sequences
-                        </a>
-                      </td>
-                    </tr>
-                  )}
-
-                  {orgData.homologs && orgData.homologs.map((homolog, idx) => (
-                    <tr key={idx}>
-                      <th style={{ paddingLeft: '20px', fontWeight: 'normal', fontStyle: 'italic' }}>
-                        {homolog.organism_name}
-                      </th>
-                      <td>
-                        {homolog.url ? (
-                          <a href={homolog.url} target="_blank" rel="noopener noreferrer">
-                            {homolog.protein_name || homolog.gene_name || homolog.feature_name}
-                          </a>
-                        ) : (
-                          <span>{homolog.protein_name || homolog.gene_name || homolog.feature_name}</span>
-                        )}
-                        {homolog.source && <span className="homolog-source"> [{homolog.source}]</span>}
-                      </td>
-                    </tr>
-                  ))}
                 </>
-              ) : null}
+              )}
 
               {/* External Sequence Database */}
               {orgData.external_links && orgData.external_links.length > 0 && (
@@ -558,7 +417,7 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
           )}
 
           {/* Show message if no protein info at all */}
-          {!pi && !orgData.conserved_domains?.length && !orgData.homologs?.length && (
+          {!pi && !orgData.conserved_domains?.length && !orgData.blast_url && (
             <p className="no-data">No protein information for this organism</p>
           )}
         </>
