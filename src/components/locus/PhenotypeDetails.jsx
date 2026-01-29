@@ -34,8 +34,12 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
   const orgData = selectedOrganism ? data.results[selectedOrganism] : null;
 
   // Map experiment types to root categories (like Perl does)
+  // IMPORTANT: Do NOT produce an "Other" category (it hid the whole table for records lacking experiment type).
   const getExperimentCategory = (experimentType) => {
-    if (!experimentType) return 'Other';
+    // Default missing/unknown experiment types into "Classical Genetics"
+    // so we avoid displaying an "Other" section header while still showing data.
+    if (!experimentType) return 'Classical Genetics';
+
     const type = experimentType.toLowerCase();
     if (type.includes('large-scale') || type.includes('large scale') || type.includes('survey')) {
       return 'Large-Scale Survey';
@@ -47,7 +51,7 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
   const groupAnnotations = (annotations) => {
     const groups = {};
 
-    annotations.forEach(ann => {
+    (annotations || []).forEach((ann) => {
       const category = getExperimentCategory(ann.experiment);
       const expType = ann.experiment || 'Unspecified';
 
@@ -64,9 +68,9 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
   };
 
   const toggleSection = (key) => {
-    setCollapsedSections(prev => ({
+    setCollapsedSections((prev) => ({
       ...prev,
-      [key]: !prev[key]
+      [key]: !prev[key],
     }));
   };
 
@@ -74,7 +78,6 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
   const categoryColors = {
     'Classical Genetics': '#1976d2',
     'Large-Scale Survey': '#7b1fa2',
-    'Other': '#616161'
   };
 
   // Group annotations for the selected organism
@@ -94,7 +97,6 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
       {selectedOrganism && orgData ? (
         <div className="organism-section">
           <h3 className="organism-name">{selectedOrganism}</h3>
-          <p className="locus-display">Locus: {orgData.locus_display_name}</p>
 
           {grouped && Object.keys(grouped).length > 0 ? (
             <div className="phenotype-groups">
@@ -114,16 +116,22 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
                     const sectionKey = `${selectedOrganism}-${category}-${expType}`;
                     const isCollapsed = collapsedSections[sectionKey];
 
+                    const showHeader = expType !== 'Unspecified';
+
                     return (
                       <div key={expType} className="experiment-type-section">
-                        <div
-                          className="experiment-type-header"
-                          onClick={() => toggleSection(sectionKey)}
-                        >
-                          <span className="collapse-icon">{isCollapsed ? '▶' : '▼'}</span>
-                          <span className="experiment-type-name">{expType}</span>
-                          <span className="annotation-count">({annotations.length})</span>
-                        </div>
+                        {showHeader && (
+                          <div
+                            className="experiment-type-header"
+                            onClick={() => toggleSection(sectionKey)}
+                            role="button"
+                            tabIndex={0}
+                          >
+                            <span className="collapse-icon">{isCollapsed ? '▶' : '▼'}</span>
+                            <span className="experiment-type-name">{expType}</span>
+                            <span className="annotation-count">({annotations.length})</span>
+                          </div>
+                        )}
 
                         {!isCollapsed && (
                           <table className="data-table phenotype-table">
@@ -140,7 +148,6 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
                             </thead>
                             <tbody>
                               {annotations.map((ann, idx) => {
-                                // Handle references array
                                 const refs = ann.references || (ann.reference ? [ann.reference] : []);
 
                                 return (
@@ -152,35 +159,40 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
                                         <div className="experiment-comment">({ann.experiment_comment})</div>
                                       )}
                                     </td>
+
                                     {/* Mutant Information */}
                                     <td>
                                       {ann.mutant_type ? (
                                         <>
                                           <span>Description: {ann.mutant_type}</span>
-                                          {ann.alleles && ann.alleles.length > 0 && (
+                                          {ann.alleles && ann.alleles.length > 0 &&
                                             ann.alleles.map((allele, aIdx) => (
                                               <div key={aIdx}>
                                                 Allele: {allele.property_value}
-                                                {allele.property_description && <span> ({allele.property_description})</span>}
+                                                {allele.property_description && (
+                                                  <span> ({allele.property_description})</span>
+                                                )}
                                               </div>
-                                            ))
-                                          )}
+                                            ))}
                                         </>
-                                      ) : '-'}
+                                      ) : (
+                                        '-'
+                                      )}
                                     </td>
+
                                     {/* Strain Background */}
                                     <td>{ann.strain || '-'}</td>
+
                                     {/* Phenotype */}
                                     <td>
                                       {ann.phenotype?.link ? (
-                                        <a href={ann.phenotype.link}>
-                                          {ann.phenotype?.display_name}
-                                        </a>
+                                        <a href={ann.phenotype.link}>{ann.phenotype?.display_name}</a>
                                       ) : (
                                         ann.phenotype?.display_name || '-'
                                       )}
                                       {ann.qualifier && `: ${ann.qualifier}`}
                                     </td>
+
                                     {/* Chemical */}
                                     <td>
                                       {ann.chemicals && ann.chemicals.length > 0 ? (
@@ -190,8 +202,11 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
                                             {chem.property_description && <div>({chem.property_description})</div>}
                                           </div>
                                         ))
-                                      ) : '-'}
+                                      ) : (
+                                        '-'
+                                      )}
                                     </td>
+
                                     {/* Details */}
                                     <td>
                                       {ann.details && ann.details.length > 0 ? (
@@ -201,8 +216,11 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
                                             {detail.property_description && <div>({detail.property_description})</div>}
                                           </div>
                                         ))
-                                      ) : '-'}
+                                      ) : (
+                                        '-'
+                                      )}
                                     </td>
+
                                     {/* References */}
                                     <td>
                                       {refs.length > 0 ? (
@@ -210,8 +228,16 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
                                           const isRefObject = typeof ref === 'object' && ref !== null;
                                           const citation = isRefObject ? ref.citation : null;
                                           const journal = isRefObject ? (ref.journal_name || ref.journal) : null;
-                                          const pubmedId = isRefObject ? ref.pubmed : (typeof ref === 'string' && ref.startsWith('PMID:') ? ref.replace('PMID:', '') : null);
-                                          const refId = isRefObject ? (ref.pubmed ? `PMID:${ref.pubmed}` : ref.reference_id || ref.dbxref_id) : ref;
+
+                                          const pubmedId = isRefObject
+                                            ? ref.pubmed
+                                            : (typeof ref === 'string' && ref.startsWith('PMID:')
+                                                ? ref.replace('PMID:', '')
+                                                : null);
+
+                                          const refId = isRefObject
+                                            ? (ref.pubmed ? `PMID:${ref.pubmed}` : ref.reference_id || ref.dbxref_id)
+                                            : ref;
 
                                           return (
                                             <div key={refIdx} className="go-reference-item">
@@ -238,7 +264,8 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
                                                   >
                                                     {refId}
                                                   </a>
-                                                ) : (typeof refId === 'string' && (refId.startsWith('CGD_REF:') || refId.startsWith('CA'))) ? (
+                                                ) : (typeof refId === 'string' &&
+                                                  (refId.startsWith('CGD_REF:') || refId.startsWith('CA'))) ? (
                                                   <Link to={`/reference/${refId}`}>{refId}</Link>
                                                 ) : (
                                                   refId
@@ -247,7 +274,9 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
                                             </div>
                                           );
                                         })
-                                      ) : '-'}
+                                      ) : (
+                                        '-'
+                                      )}
                                     </td>
                                   </tr>
                                 );
