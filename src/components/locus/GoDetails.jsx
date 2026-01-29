@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
 import { formatCitationString } from '../../utils/formatCitation.jsx';
@@ -51,8 +51,10 @@ const EVIDENCE_DESCRIPTIONS = {
 function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
   const [collapsedSections, setCollapsedSections] = useState({});
 
-  // Get available organisms from the data
-  const organisms = data?.results ? Object.keys(data.results) : [];
+  // Get available organisms from the data - memoize to prevent new array reference each render
+  const organisms = useMemo(() => {
+    return data?.results ? Object.keys(data.results) : [];
+  }, [data?.results]);
 
   // Set default organism if not already set and data is available
   useEffect(() => {

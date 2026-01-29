@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import locusApi from '../api/locusApi';
 
 export function useLocusData(locusName) {
@@ -28,6 +28,20 @@ export function useLocusData(locusName) {
   });
   const [errors, setErrors] = useState({});
 
+  // Use refs for state to keep loader identities stable
+  // This prevents unnecessary re-renders and infinite API call loops
+  const dataRef = useRef(data);
+  const loadingRef = useRef(loading);
+
+  // Keep refs in sync with state
+  useEffect(() => {
+    dataRef.current = data;
+  }, [data]);
+
+  useEffect(() => {
+    loadingRef.current = loading;
+  }, [loading]);
+
   const fetchData = useCallback(async (key, fetchFn) => {
     if (!locusName) return;
 
@@ -54,74 +68,75 @@ export function useLocusData(locusName) {
     }
   }, [locusName, fetchData]);
 
-  // Lazy loaders for tab data
+  // Lazy loaders for tab data - use refs for guards to keep stable identities
   const loadGoDetails = useCallback(() => {
-    if (!data.goDetails && !loading.goDetails) {
+    if (!dataRef.current.goDetails && !loadingRef.current.goDetails) {
       fetchData('goDetails', locusApi.getGoDetails);
     }
-  }, [data.goDetails, loading.goDetails, fetchData]);
+  }, [fetchData]);
 
   const loadPhenotypeDetails = useCallback(() => {
-    if (!data.phenotypeDetails && !loading.phenotypeDetails) {
+    if (!dataRef.current.phenotypeDetails && !loadingRef.current.phenotypeDetails) {
       fetchData('phenotypeDetails', locusApi.getPhenotypeDetails);
     }
-  }, [data.phenotypeDetails, loading.phenotypeDetails, fetchData]);
+  }, [fetchData]);
 
   // Load GO, Phenotype, and Sequence details for Summary tab
   const loadSummaryData = useCallback(() => {
-    if (!data.goDetails && !loading.goDetails) {
+    if (!dataRef.current.goDetails && !loadingRef.current.goDetails) {
       fetchData('goDetails', locusApi.getGoDetails);
     }
-    if (!data.phenotypeDetails && !loading.phenotypeDetails) {
+    if (!dataRef.current.phenotypeDetails && !loadingRef.current.phenotypeDetails) {
       fetchData('phenotypeDetails', locusApi.getPhenotypeDetails);
     }
-    if (!data.sequenceDetails && !loading.sequenceDetails) {
+    if (!dataRef.current.sequenceDetails && !loadingRef.current.sequenceDetails) {
       fetchData('sequenceDetails', locusApi.getSequenceDetails);
     }
-  }, [data.goDetails, data.phenotypeDetails, data.sequenceDetails, loading.goDetails, loading.phenotypeDetails, loading.sequenceDetails, fetchData]);
+  }, [fetchData]);
 
   const loadInteractionDetails = useCallback(() => {
-    if (!data.interactionDetails && !loading.interactionDetails) {
+    if (!dataRef.current.interactionDetails && !loadingRef.current.interactionDetails) {
       fetchData('interactionDetails', locusApi.getInteractionDetails);
     }
-  }, [data.interactionDetails, loading.interactionDetails, fetchData]);
+  }, [fetchData]);
 
   const loadProteinDetails = useCallback(() => {
-    if (!data.proteinDetails && !loading.proteinDetails) {
+    if (!dataRef.current.proteinDetails && !loadingRef.current.proteinDetails) {
       fetchData('proteinDetails', locusApi.getProteinDetails);
     }
-  }, [data.proteinDetails, loading.proteinDetails, fetchData]);
+  }, [fetchData]);
 
   const loadHomologyDetails = useCallback(() => {
-    if (!data.homologyDetails && !loading.homologyDetails) {
+    if (!dataRef.current.homologyDetails && !loadingRef.current.homologyDetails) {
       fetchData('homologyDetails', locusApi.getHomologyDetails);
     }
-  }, [data.homologyDetails, loading.homologyDetails, fetchData]);
+  }, [fetchData]);
 
   const loadSequenceDetails = useCallback(() => {
-    if (!data.sequenceDetails && !loading.sequenceDetails) {
+    if (!dataRef.current.sequenceDetails && !loadingRef.current.sequenceDetails) {
       fetchData('sequenceDetails', locusApi.getSequenceDetails);
     }
-  }, [data.sequenceDetails, loading.sequenceDetails, fetchData]);
+  }, [fetchData]);
 
   const loadReferences = useCallback(() => {
-    if (!data.references && !loading.references) {
+    if (!dataRef.current.references && !loadingRef.current.references) {
       fetchData('references', locusApi.getReferences);
     }
-  }, [data.references, loading.references, fetchData]);
+  }, [fetchData]);
 
   const loadSummaryNotes = useCallback(() => {
-    if (!data.summaryNotes && !loading.summaryNotes) {
+    if (!dataRef.current.summaryNotes && !loadingRef.current.summaryNotes) {
       fetchData('summaryNotes', locusApi.getSummaryNotes);
     }
-  }, [data.summaryNotes, loading.summaryNotes, fetchData]);
+  }, [fetchData]);
 
   const loadHistory = useCallback(() => {
-    if (!data.history && !loading.history) {
+    if (!dataRef.current.history && !loadingRef.current.history) {
       fetchData('history', locusApi.getHistory);
     }
-  }, [data.history, loading.history, fetchData]);
+  }, [fetchData]);
 
+  // Loaders object is now stable since all loader functions have stable identities
   const loaders = useMemo(() => ({
     loadGoDetails,
     loadPhenotypeDetails,
