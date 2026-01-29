@@ -20,17 +20,11 @@ export function useReferenceData(pubmedId) {
 
   // Use refs for state to keep loader identities stable
   // This prevents unnecessary re-renders and infinite API call loops
+  // Update refs synchronously during render (not in useEffect) to avoid stale values
   const dataRef = useRef(data);
   const loadingRef = useRef(loading);
-
-  // Keep refs in sync with state
-  useEffect(() => {
-    dataRef.current = data;
-  }, [data]);
-
-  useEffect(() => {
-    loadingRef.current = loading;
-  }, [loading]);
+  dataRef.current = data;
+  loadingRef.current = loading;
 
   const fetchData = useCallback(async (key, fetchFn) => {
     if (!pubmedId) return;
