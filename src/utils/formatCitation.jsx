@@ -263,14 +263,13 @@ export function formatShortCitation(ref) {
 }
 
 /**
- * Format citation for History tab nomenclature references
- * Uses the same display pattern as Gene Ontology tab:
- * - Full citation with PMID link when available
- * - Fallback to PMID link, CGD_REF/CA internal link, or plain text
+ * Format a single reference item (helper for formatHistoryReference)
+ * Uses the same display pattern as Gene Ontology tab
  * @param {Object|string} ref - Reference object or string
+ * @param {number} idx - Index for key generation
  * @returns {React.ReactNode} Formatted reference
  */
-export function formatHistoryReference(ref) {
+function formatSingleReference(ref, idx = 0) {
   if (!ref) return null;
 
   // Handle string references (like "PMID:12345" or "CGD_REF:CAL0000001")
@@ -279,30 +278,44 @@ export function formatHistoryReference(ref) {
     if (ref.startsWith('PMID:')) {
       const pmid = ref.replace('PMID:', '');
       return (
-        <a
-          href={`https://pubmed.ncbi.nlm.nih.gov/${pmid}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="pubmed-link-small"
-        >
-          {ref}
-        </a>
+        <div key={idx} className="go-reference-item">
+          <a
+            href={`https://pubmed.ncbi.nlm.nih.gov/${pmid}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="pubmed-link-small"
+          >
+            {ref}
+          </a>
+        </div>
       );
     }
     // Check if it's a CGD_REF or CA reference
     if (ref.startsWith('CGD_REF:') || ref.startsWith('CA')) {
-      return <Link to={`/reference/${ref}`}>{ref}</Link>;
+      return (
+        <div key={idx} className="go-reference-item">
+          <Link to={`/reference/${ref}`}>{ref}</Link>
+        </div>
+      );
     }
     // Otherwise format as citation string
-    return formatCitationString(ref);
+    return (
+      <div key={idx} className="go-reference-item">
+        {formatCitationString(ref)}
+      </div>
+    );
   }
 
   // If HTML is provided, use it (already formatted from backend)
   if (ref.html) {
-    return <span dangerouslySetInnerHTML={{ __html: ref.html }} />;
+    return (
+      <div key={idx} className="go-reference-item">
+        <span dangerouslySetInnerHTML={{ __html: ref.html }} />
+      </div>
+    );
   }
 
-  // Extract reference identifiers (similar to GO tab logic)
+  // Extract reference identifiers (same logic as GO tab)
   const refId = ref.pubmed ? `PMID:${ref.pubmed}` : ref.reference_id || ref.dbxref_id || null;
   const citation = ref.display_name || ref.formatted_citation || ref.citation;
   const journal = ref.journal_name || ref.journal;
@@ -311,7 +324,7 @@ export function formatHistoryReference(ref) {
   // Display full formatted citation when available (like GO tab)
   if (citation) {
     return (
-      <div className="go-reference-item">
+      <div key={idx} className="go-reference-item">
         {formatCitationString(citation, journal)}
         {pubmedId && (
           <a
@@ -329,25 +342,62 @@ export function formatHistoryReference(ref) {
 
   // Fallback to showing reference ID as link (like GO tab)
   if (refId) {
-    if (pubmedId) {
-      return (
-        <a
-          href={`https://pubmed.ncbi.nlm.nih.gov/${pubmedId}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {refId}
-        </a>
-      );
-    }
-    if (typeof refId === 'string' && (refId.startsWith('CGD_REF:') || refId.startsWith('CA'))) {
-      return <Link to={`/reference/${refId}`}>{refId}</Link>;
-    }
-    return refId;
+    return (
+      <div key={idx} className="go-reference-item">
+        {pubmedId ? (
+          <a
+            href={`https://pubmed.ncbi.nlm.nih.gov/${pubmedId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {refId}
+          </a>
+        ) : (typeof refId === 'string' && (refId.startsWith('CGD_REF:') || refId.startsWith('CA'))) ? (
+          <Link to={`/reference/${refId}`}>{refId}</Link>
+        ) : (
+          refId
+        )}
+      </div>
+    );
   }
 
   // Final fallback to title or text
-  return ref.title || ref.text || null;
+  const fallback = ref.title || ref.text;
+  if (fallback) {
+    return (
+      <div key={idx} className="go-reference-item">
+        {fallback}
+      </div>
+    );
+  }
+
+  return null;
+}
+
+/**
+ * Format citation for History tab nomenclature references
+ * Uses the same display pattern as Gene Ontology tab:
+ * - Full citation with PMID link when available
+ * - Fallback to PMID link, CGD_REF/CA internal link, or plain text
+ * - Supports both single references and arrays of references
+ * @param {Object|string|Array} ref - Reference object, string, or array of references
+ * @returns {React.ReactNode} Formatted reference(s)
+ */
+export function formatHistoryReference(ref) {
+  if (!ref) return null;
+
+  // Handle array of references (like GO tab)
+  if (Array.isArray(ref)) {
+    if (ref.length === 0) return null;
+    return (
+      <>
+        {ref.map((r, idx) => formatSingleReference(r, idx))}
+      </>
+    );
+  }
+
+  // Handle single reference
+  return formatSingleReference(ref, 0);
 }
 
 export default {

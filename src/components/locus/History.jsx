@@ -230,6 +230,7 @@ function History({ data, loading, error }) {
                   <tr>
                     <th className="history-col-date">Date</th>
                     <th>Note</th>
+                    <th>Reference(s)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -243,6 +244,7 @@ function History({ data, loading, error }) {
                           <span className="muted">-</span>
                         )}
                       </td>
+                      <td>{renderReference(ev?.reference || ev?.references) || <span className="muted">-</span>}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -265,6 +267,7 @@ function History({ data, loading, error }) {
                   <tr>
                     <th className="history-col-date">Date</th>
                     <th>Note</th>
+                    <th>Reference(s)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -278,6 +281,7 @@ function History({ data, loading, error }) {
                           <span className="muted">-</span>
                         )}
                       </td>
+                      <td>{renderReference(ev?.reference || ev?.references) || <span className="muted">-</span>}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -300,6 +304,7 @@ function History({ data, loading, error }) {
                   <tr>
                     <th className="history-col-date">Date</th>
                     <th>Note</th>
+                    <th>Reference(s)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -313,6 +318,7 @@ function History({ data, loading, error }) {
                           <span className="muted">-</span>
                         )}
                       </td>
+                      <td>{renderReference(ev?.reference || ev?.references) || <span className="muted">-</span>}</td>
                     </tr>
                   ))}
                 </tbody>
