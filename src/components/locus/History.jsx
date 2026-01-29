@@ -291,6 +291,45 @@ function History({ data, loading, error }) {
             )}
           </div>
 
+          {/* Note Categories (from backend) */}
+          {Array.isArray(orgData?.note_categories) && orgData.note_categories.map((cat, catIdx) => (
+            <div key={`cat-${catIdx}`} className="history-block">
+              <div className="history-block-title">
+                {cat.category}
+                <span className="count-badge">{Array.isArray(cat.notes) ? cat.notes.length : 0}</span>
+              </div>
+
+              {Array.isArray(cat.notes) && cat.notes.length > 0 ? (
+                <table className="history-table">
+                  <thead>
+                    <tr>
+                      <th className="history-col-date">Date</th>
+                      <th>Note</th>
+                      <th>Reference(s)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {cat.notes.map((noteItem, noteIdx) => (
+                      <tr key={`cat-${catIdx}-note-${noteIdx}`}>
+                        <td className="history-date">{formatDate(noteItem?.date)}</td>
+                        <td className="history-note">
+                          {noteItem?.note ? (
+                            <span dangerouslySetInnerHTML={{ __html: noteItem.note }} />
+                          ) : (
+                            <span className="muted">-</span>
+                          )}
+                        </td>
+                        <td>{renderReference(noteItem?.references) || <span className="muted">-</span>}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <div className="muted history-empty">No notes</div>
+              )}
+            </div>
+          ))}
+
           {/* Optional: Other History */}
           {Array.isArray(otherHistory) && otherHistory.length > 0 && (
             <div className="history-block history-block-subtle">
