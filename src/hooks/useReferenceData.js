@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import referenceApi from '../api/referenceApi';
 
 export function useReferenceData(pubmedId) {
@@ -18,8 +18,23 @@ export function useReferenceData(pubmedId) {
   });
   const [errors, setErrors] = useState({});
 
+  // Track which endpoints have been requested to prevent duplicate calls
+  // This is updated synchronously BEFORE any async operation
+  const requestedRef = useRef({});
+
+  // Reset requested state when pubmedId changes
+  useEffect(() => {
+    requestedRef.current = {};
+  }, [pubmedId]);
+
   const fetchData = useCallback(async (key, fetchFn) => {
     if (!pubmedId) return;
+
+    // Synchronous guard - check and set in same operation
+    if (requestedRef.current[key]) {
+      return;
+    }
+    requestedRef.current[key] = true;
 
     setLoading(prev => ({ ...prev, [key]: true }));
     setErrors(prev => ({ ...prev, [key]: null }));
@@ -32,6 +47,8 @@ export function useReferenceData(pubmedId) {
         ...prev,
         [key]: error.response?.data?.detail || error.message
       }));
+      // Allow retry on error
+      requestedRef.current[key] = false;
     } finally {
       setLoading(prev => ({ ...prev, [key]: false }));
     }
@@ -46,28 +63,20 @@ export function useReferenceData(pubmedId) {
 
   // Lazy loaders for tab data
   const loadLocusDetails = useCallback(() => {
-    if (!data.locusDetails && !loading.locusDetails) {
-      fetchData('locusDetails', referenceApi.getLocusDetails);
-    }
-  }, [data.locusDetails, loading.locusDetails, fetchData]);
+    fetchData('locusDetails', referenceApi.getLocusDetails);
+  }, [fetchData]);
 
   const loadGoDetails = useCallback(() => {
-    if (!data.goDetails && !loading.goDetails) {
-      fetchData('goDetails', referenceApi.getGoDetails);
-    }
-  }, [data.goDetails, loading.goDetails, fetchData]);
+    fetchData('goDetails', referenceApi.getGoDetails);
+  }, [fetchData]);
 
   const loadPhenotypeDetails = useCallback(() => {
-    if (!data.phenotypeDetails && !loading.phenotypeDetails) {
-      fetchData('phenotypeDetails', referenceApi.getPhenotypeDetails);
-    }
-  }, [data.phenotypeDetails, loading.phenotypeDetails, fetchData]);
+    fetchData('phenotypeDetails', referenceApi.getPhenotypeDetails);
+  }, [fetchData]);
 
   const loadInteractionDetails = useCallback(() => {
-    if (!data.interactionDetails && !loading.interactionDetails) {
-      fetchData('interactionDetails', referenceApi.getInteractionDetails);
-    }
-  }, [data.interactionDetails, loading.interactionDetails, fetchData]);
+    fetchData('interactionDetails', referenceApi.getInteractionDetails);
+  }, [fetchData]);
 
   const loaders = useMemo(() => ({
     loadLocusDetails,

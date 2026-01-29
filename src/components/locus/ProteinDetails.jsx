@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
 import './LocusComponents.css';
 
 function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
   const [showAllAA, setShowAllAA] = useState(false);
 
-  // Get available organisms from the data
-  const organisms = data?.results ? Object.keys(data.results) : [];
+  // Get available organisms from the data - memoize to prevent new array reference each render
+  const organisms = useMemo(() => {
+    return data?.results ? Object.keys(data.results) : [];
+  }, [data?.results]);
 
   // Set default organism if not already set and data is available
   useEffect(() => {

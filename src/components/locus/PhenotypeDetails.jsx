@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
+import { formatCitationString } from '../../utils/formatCitation.jsx';
 import './LocusComponents.css';
 
 function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
   const [collapsedSections, setCollapsedSections] = useState({});
 
-  // Get available organisms from the data
-  const organisms = data?.results ? Object.keys(data.results) : [];
+  // Get available organisms from the data - memoize to prevent new array reference each render
+  const organisms = useMemo(() => {
+    return data?.results ? Object.keys(data.results) : [];
+  }, [data?.results]);
 
   // Set default organism if not already set and data is available
   useEffect(() => {
@@ -128,24 +132,68 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
                                 <th>Phenotype</th>
                                 <th>Qualifier</th>
                                 <th>Strain</th>
+                                <th>Reference</th>
                               </tr>
                             </thead>
                             <tbody>
-                              {annotations.map((ann, idx) => (
-                                <tr key={idx}>
-                                  <td>
-                                    {ann.phenotype?.link ? (
-                                      <a href={ann.phenotype.link}>
-                                        {ann.phenotype?.display_name}
-                                      </a>
-                                    ) : (
-                                      ann.phenotype?.display_name
-                                    )}
-                                  </td>
-                                  <td>{ann.qualifier || '-'}</td>
-                                  <td>{ann.strain || '-'}</td>
-                                </tr>
-                              ))}
+                              {annotations.map((ann, idx) => {
+                                // Handle reference - can be string, object, or array
+                                const ref = ann.reference || ann.references?.[0];
+                                const isRefObject = typeof ref === 'object' && ref !== null;
+                                const citation = isRefObject ? ref.citation : null;
+                                const journal = isRefObject ? (ref.journal_name || ref.journal) : null;
+                                const pubmedId = isRefObject ? ref.pubmed : (typeof ref === 'string' && ref.startsWith('PMID:') ? ref.replace('PMID:', '') : null);
+                                const refId = isRefObject ? (ref.pubmed ? `PMID:${ref.pubmed}` : ref.reference_id || ref.dbxref_id) : ref;
+
+                                return (
+                                  <tr key={idx}>
+                                    <td>
+                                      {ann.phenotype?.link ? (
+                                        <a href={ann.phenotype.link}>
+                                          {ann.phenotype?.display_name}
+                                        </a>
+                                      ) : (
+                                        ann.phenotype?.display_name
+                                      )}
+                                    </td>
+                                    <td>{ann.qualifier || '-'}</td>
+                                    <td>{ann.strain || '-'}</td>
+                                    <td>
+                                      {citation ? (
+                                        <>
+                                          {formatCitationString(citation, journal)}
+                                          {pubmedId && (
+                                            <a
+                                              href={`https://pubmed.ncbi.nlm.nih.gov/${pubmedId}`}
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                              className="pubmed-link-small"
+                                            >
+                                              {' '}PMID: {pubmedId}
+                                            </a>
+                                          )}
+                                        </>
+                                      ) : refId ? (
+                                        pubmedId ? (
+                                          <a
+                                            href={`https://pubmed.ncbi.nlm.nih.gov/${pubmedId}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                          >
+                                            {refId}
+                                          </a>
+                                        ) : (typeof refId === 'string' && (refId.startsWith('CGD_REF:') || refId.startsWith('CA'))) ? (
+                                          <Link to={`/reference/${refId}`}>{refId}</Link>
+                                        ) : (
+                                          refId
+                                        )
+                                      ) : (
+                                        '-'
+                                      )}
+                                    </td>
+                                  </tr>
+                                );
+                              })}
                             </tbody>
                           </table>
                         )}

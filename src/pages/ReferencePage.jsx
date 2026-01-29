@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useSearchParams, Link } from 'react-router-dom';
 import useReferenceData from '../hooks/useReferenceData';
+import { formatAuthors, formatCitationString } from '../utils/formatCitation.jsx';
 import './ReferencePage.css';
 
 const TABS = [
@@ -18,6 +19,10 @@ function ReferencePage() {
 
   const { data, loading, errors, loaders } = useReferenceData(id);
 
+  // Store loaders in ref to avoid dependency in useEffect
+  const loadersRef = useRef(loaders);
+  loadersRef.current = loaders;
+
   // Update URL when tab changes
   useEffect(() => {
     if (activeTab !== 'summary') {
@@ -27,22 +32,16 @@ function ReferencePage() {
     }
   }, [activeTab, setSearchParams]);
 
-  // Load data when tab is selected
+  // Load data when tab is selected - only triggers on activeTab change
   useEffect(() => {
     const tab = TABS.find(t => t.id === activeTab);
-    if (tab && tab.loader && loaders[tab.loader]) {
-      loaders[tab.loader]();
+    if (tab && tab.loader && loadersRef.current[tab.loader]) {
+      loadersRef.current[tab.loader]();
     }
-  }, [activeTab, loaders]);
+  }, [activeTab]);
 
   const handleTabClick = (tabId) => {
     setActiveTab(tabId);
-  };
-
-  // Format authors for display
-  const formatAuthors = (authors) => {
-    if (!authors || authors.length === 0) return null;
-    return authors.map(a => a.author_name).join(', ');
   };
 
   const renderSummary = () => {
@@ -51,26 +50,27 @@ function ReferencePage() {
     if (!data.info || !data.info.result) return <div className="no-data">No reference data available</div>;
 
     const ref = data.info.result;
-    const authors = formatAuthors(ref.authors);
+
+    // Build formatted citation in standard format
+    const formattedCitation = ref.citation
+      ? formatCitationString(ref.citation, ref.journal_name)
+      : (
+        <>
+          <strong>{formatAuthors(ref.authors)} ({ref.year})</strong>
+          {ref.title && <> {ref.title}</>}
+          {ref.journal_name && <> <em>{ref.journal_name}</em></>}
+          {ref.volume && <> {ref.volume}</>}
+          {ref.issue && <>({ref.issue})</>}
+          {ref.page && <>:{ref.page}</>}
+        </>
+      );
 
     return (
       <div className="reference-summary">
         {/* Citation Card */}
         <div className="citation-card">
           <div className="citation-full">
-            {authors && (
-              <div className="authors-full">{authors}</div>
-            )}
-            {ref.title && (
-              <div className="ref-title-full">"{ref.title}"</div>
-            )}
-            <div className="journal-info">
-              {ref.journal_name && <em>{ref.journal_name}</em>}
-              {ref.volume && <span> {ref.volume}</span>}
-              {ref.issue && <span>({ref.issue})</span>}
-              {ref.page && <span>:{ref.page}</span>}
-              <span> ({ref.year})</span>
-            </div>
+            {formattedCitation}
           </div>
 
           {/* External Links */}

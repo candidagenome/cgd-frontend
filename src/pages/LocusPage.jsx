@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import useLocusData from '../hooks/useLocusData';
 import LocusSummary from '../components/locus/LocusSummary';
@@ -33,6 +33,10 @@ function LocusPage() {
 
   const { data, loading, errors, loaders } = useLocusData(name);
 
+  // Store loaders in ref to avoid dependency in useEffect
+  const loadersRef = useRef(loaders);
+  loadersRef.current = loaders;
+
   // Update URL when tab changes
   useEffect(() => {
     if (activeTab !== 'summary') {
@@ -42,13 +46,15 @@ function LocusPage() {
     }
   }, [activeTab, setSearchParams]);
 
-  // Load data when tab is selected
+  // Load data when tab is selected - only triggers on activeTab change
   useEffect(() => {
+    console.log('[LocusPage useEffect] activeTab changed to:', activeTab);
     const tab = TABS.find(t => t.id === activeTab);
-    if (tab && tab.loader && loaders[tab.loader]) {
-      loaders[tab.loader]();
+    if (tab && tab.loader && loadersRef.current[tab.loader]) {
+      console.log('[LocusPage useEffect] Calling loader:', tab.loader);
+      loadersRef.current[tab.loader]();
     }
-  }, [activeTab, loaders]);
+  }, [activeTab]);
 
   // Set default organism when data loads - prefer "Candida albicans SC5314" if available
   useEffect(() => {

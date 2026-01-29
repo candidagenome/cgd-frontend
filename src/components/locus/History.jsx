@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './LocusComponents.css';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
+import { formatHistoryReference } from '../../utils/formatCitation.jsx';
 
 /**
  * Goal layout:
@@ -89,30 +90,9 @@ function History({ data, loading, error }) {
     );
   };
 
-  // Reference rendering:
-  // - If backend gives HTML, render it.
-  // - Otherwise show display_name/formatted_citation (short "Author et al" format) or citation, optionally linked.
+  // Reference rendering using shared utility
   const renderReference = (ref) => {
-    if (!ref) return null;
-    if (typeof ref === 'string') return <span>{ref}</span>;
-
-    if (ref.html) {
-      return <span dangerouslySetInnerHTML={{ __html: ref.html }} />;
-    }
-
-    const label = ref.display_name || ref.formatted_citation || ref.citation || ref.title || ref.text;
-    const link = ref.link || ref.url;
-
-    if (link && label) {
-      return (
-        <a href={link} className="history-ref-link" target="_blank" rel="noopener noreferrer">
-          {label}
-        </a>
-      );
-    }
-
-    if (label) return <span>{label}</span>;
-    return null;
+    return formatHistoryReference(ref);
   };
 
   // Derive blocks from history as a fallback if explicit fields are absent.

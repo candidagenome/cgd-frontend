@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import locusApi from '../api/locusApi';
 
 export function useLocusData(locusName) {
@@ -28,8 +28,23 @@ export function useLocusData(locusName) {
   });
   const [errors, setErrors] = useState({});
 
+  // Track which endpoints have been requested to prevent duplicate calls
+  // This is updated synchronously BEFORE any async operation
+  const requestedRef = useRef({});
+
+  // Reset requested state when locusName changes
+  useEffect(() => {
+    requestedRef.current = {};
+  }, [locusName]);
+
   const fetchData = useCallback(async (key, fetchFn) => {
     if (!locusName) return;
+
+    // Synchronous guard - check and set in same operation
+    if (requestedRef.current[key]) {
+      return;
+    }
+    requestedRef.current[key] = true;
 
     setLoading(prev => ({ ...prev, [key]: true }));
     setErrors(prev => ({ ...prev, [key]: null }));
@@ -42,6 +57,8 @@ export function useLocusData(locusName) {
         ...prev,
         [key]: error.response?.data?.detail || error.message
       }));
+      // Allow retry on error
+      requestedRef.current[key] = false;
     } finally {
       setLoading(prev => ({ ...prev, [key]: false }));
     }
@@ -56,71 +73,46 @@ export function useLocusData(locusName) {
 
   // Lazy loaders for tab data
   const loadGoDetails = useCallback(() => {
-    if (!data.goDetails && !loading.goDetails) {
-      fetchData('goDetails', locusApi.getGoDetails);
-    }
-  }, [data.goDetails, loading.goDetails, fetchData]);
+    fetchData('goDetails', locusApi.getGoDetails);
+  }, [fetchData]);
 
   const loadPhenotypeDetails = useCallback(() => {
-    if (!data.phenotypeDetails && !loading.phenotypeDetails) {
-      fetchData('phenotypeDetails', locusApi.getPhenotypeDetails);
-    }
-  }, [data.phenotypeDetails, loading.phenotypeDetails, fetchData]);
+    fetchData('phenotypeDetails', locusApi.getPhenotypeDetails);
+  }, [fetchData]);
 
-  // Load GO, Phenotype, and Sequence details for Summary tab
   const loadSummaryData = useCallback(() => {
-    if (!data.goDetails && !loading.goDetails) {
-      fetchData('goDetails', locusApi.getGoDetails);
-    }
-    if (!data.phenotypeDetails && !loading.phenotypeDetails) {
-      fetchData('phenotypeDetails', locusApi.getPhenotypeDetails);
-    }
-    if (!data.sequenceDetails && !loading.sequenceDetails) {
-      fetchData('sequenceDetails', locusApi.getSequenceDetails);
-    }
-  }, [data.goDetails, data.phenotypeDetails, data.sequenceDetails, loading.goDetails, loading.phenotypeDetails, loading.sequenceDetails, fetchData]);
+    fetchData('goDetails', locusApi.getGoDetails);
+    fetchData('phenotypeDetails', locusApi.getPhenotypeDetails);
+    fetchData('sequenceDetails', locusApi.getSequenceDetails);
+  }, [fetchData]);
 
   const loadInteractionDetails = useCallback(() => {
-    if (!data.interactionDetails && !loading.interactionDetails) {
-      fetchData('interactionDetails', locusApi.getInteractionDetails);
-    }
-  }, [data.interactionDetails, loading.interactionDetails, fetchData]);
+    fetchData('interactionDetails', locusApi.getInteractionDetails);
+  }, [fetchData]);
 
   const loadProteinDetails = useCallback(() => {
-    if (!data.proteinDetails && !loading.proteinDetails) {
-      fetchData('proteinDetails', locusApi.getProteinDetails);
-    }
-  }, [data.proteinDetails, loading.proteinDetails, fetchData]);
+    fetchData('proteinDetails', locusApi.getProteinDetails);
+  }, [fetchData]);
 
   const loadHomologyDetails = useCallback(() => {
-    if (!data.homologyDetails && !loading.homologyDetails) {
-      fetchData('homologyDetails', locusApi.getHomologyDetails);
-    }
-  }, [data.homologyDetails, loading.homologyDetails, fetchData]);
+    fetchData('homologyDetails', locusApi.getHomologyDetails);
+  }, [fetchData]);
 
   const loadSequenceDetails = useCallback(() => {
-    if (!data.sequenceDetails && !loading.sequenceDetails) {
-      fetchData('sequenceDetails', locusApi.getSequenceDetails);
-    }
-  }, [data.sequenceDetails, loading.sequenceDetails, fetchData]);
+    fetchData('sequenceDetails', locusApi.getSequenceDetails);
+  }, [fetchData]);
 
   const loadReferences = useCallback(() => {
-    if (!data.references && !loading.references) {
-      fetchData('references', locusApi.getReferences);
-    }
-  }, [data.references, loading.references, fetchData]);
+    fetchData('references', locusApi.getReferences);
+  }, [fetchData]);
 
   const loadSummaryNotes = useCallback(() => {
-    if (!data.summaryNotes && !loading.summaryNotes) {
-      fetchData('summaryNotes', locusApi.getSummaryNotes);
-    }
-  }, [data.summaryNotes, loading.summaryNotes, fetchData]);
+    fetchData('summaryNotes', locusApi.getSummaryNotes);
+  }, [fetchData]);
 
   const loadHistory = useCallback(() => {
-    if (!data.history && !loading.history) {
-      fetchData('history', locusApi.getHistory);
-    }
-  }, [data.history, loading.history, fetchData]);
+    fetchData('history', locusApi.getHistory);
+  }, [fetchData]);
 
   const loaders = useMemo(() => ({
     loadGoDetails,
