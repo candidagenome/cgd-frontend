@@ -1,11 +1,9 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
 import './LocusComponents.css';
 
 function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
-  const [collapsedGroups, setCollapsedGroups] = useState({});
-
   // Get available organisms from the data - memoize to prevent new array reference each render
   const organisms = useMemo(() => {
     return data?.results ? Object.keys(data.results) : [];
@@ -32,50 +30,8 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
   // Get data for the selected organism
   const orgData = selectedOrganism ? data.results[selectedOrganism] : null;
 
-  const toggleGroup = (key) => {
-    setCollapsedGroups(prev => ({
-      ...prev,
-      [key]: !prev[key]
-    }));
-  };
-
-  // Group members by organism for better display
-  const groupMembersByOrganism = (members) => {
-    const groups = {};
-    members.forEach(member => {
-      const org = member.organism_name || 'Unknown';
-      if (!groups[org]) {
-        groups[org] = [];
-      }
-      groups[org].push(member);
-    });
-    return groups;
-  };
-
-  // Homology type icons and colors
-  const homologyTypeInfo = {
-    'Ortholog': { icon: '🔀', color: '#1976d2' },
-    'Paralog': { icon: '🔄', color: '#7b1fa2' },
-    'Best Hit': { icon: '🎯', color: '#388e3c' },
-    'Inparanoid': { icon: '🧬', color: '#f57c00' },
-  };
-
-  const getTypeInfo = (type) => {
-    for (const [key, info] of Object.entries(homologyTypeInfo)) {
-      if (type?.toLowerCase().includes(key.toLowerCase())) {
-        return info;
-      }
-    }
-    return { icon: '🔗', color: '#616161' };
-  };
-
-  // Calculate total homologs for the selected organism
-  const totalHomologs = orgData?.homology_groups?.reduce(
-    (sum, g) => sum + (g.members?.length || 0), 0
-  ) || 0;
-
   return (
-    <div className="homology-details">
+    <div className="homology-details locus-summary">
       {/* Organism Selector */}
       <OrganismSelector
         organisms={organisms}
@@ -86,89 +42,99 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
 
       {/* Display data for selected organism */}
       {selectedOrganism && orgData ? (
-        <div className="organism-section">
-          <h3 className="organism-name">{selectedOrganism}</h3>
-          <p className="locus-display">
-            Locus: {orgData.locus_display_name}
-            {totalHomologs > 0 && (
-              <span className="total-count"> ({totalHomologs} homologs in {orgData.homology_groups?.length || 0} groups)</span>
-            )}
-          </p>
-
-          {orgData.homology_groups && orgData.homology_groups.length > 0 ? (
-            <div className="homology-groups-container">
-              {orgData.homology_groups.map((group, gIdx) => {
-                const groupKey = `${selectedOrganism}-${gIdx}`;
-                const isCollapsed = collapsedGroups[groupKey];
-                const typeInfo = getTypeInfo(group.homology_group_type);
-                const membersByOrg = groupMembersByOrganism(group.members || []);
-
-                return (
-                  <div
-                    key={gIdx}
-                    className="homology-group-card"
-                    style={{ borderLeftColor: typeInfo.color }}
-                  >
-                    <div
-                      className="homology-group-header"
-                      onClick={() => toggleGroup(groupKey)}
+        <>
+          <table className="info-table">
+            <tbody>
+              {/* Ortholog Cluster Section */}
+              <tr className="section-with-divider section-grey-bg">
+                <th>Ortholog Cluster</th>
+                <td>
+                  {orgData.ortholog_cluster?.cluster_url ? (
+                    <a
+                      href={orgData.ortholog_cluster.cluster_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
-                      <div className="group-title">
-                        <span className="collapse-icon">{isCollapsed ? '▶' : '▼'}</span>
-                        <span className="group-icon">{typeInfo.icon}</span>
-                        <span className="group-type">{group.homology_group_type}</span>
-                        <span className="count-badge">{group.members?.length || 0}</span>
-                      </div>
-                      {group.method && (
-                        <span className="group-method">Method: {group.method}</span>
-                      )}
-                    </div>
+                      View ortholog cluster in CGOB
+                    </a>
+                  ) : (
+                    <span>CGOB Ortholog Cluster</span>
+                  )}
+                </td>
+              </tr>
 
-                    {!isCollapsed && group.members && group.members.length > 0 && (
-                      <div className="homology-members">
-                        {Object.entries(membersByOrg).map(([memberOrg, members]) => (
-                          <div key={memberOrg} className="organism-members-group">
-                            <div className="member-organism-header">
-                              <em>{memberOrg}</em>
-                              <span className="count-badge small">{members.length}</span>
-                            </div>
-                            <div className="member-list">
-                              {members.map((member, mIdx) => (
-                                <div key={mIdx} className="member-item">
-                                  <div className="member-name">
-                                    {member.organism_name === 'External' ? (
-                                      <span className="external-member">
-                                        {member.gene_name || member.feature_name}
-                                      </span>
-                                    ) : (
-                                      <Link
-                                        to={`/locus/${member.feature_name}`}
-                                        className="member-link"
-                                      >
-                                        {member.gene_name || member.feature_name}
-                                      </Link>
-                                    )}
-                                  </div>
-                                  {member.dbxref_id && (
-                                    <div className="member-id">
-                                      <code>{member.dbxref_id}</code>
-                                    </div>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
+              {/* Orthologs Table */}
+              {orgData.ortholog_cluster?.orthologs && orgData.ortholog_cluster.orthologs.length > 0 && (
+                <tr>
+                  <th style={{ paddingLeft: '20px', fontWeight: 'normal', verticalAlign: 'top' }}>
+                    Orthologs
+                  </th>
+                  <td>
+                    <table className="ortholog-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+                      <thead>
+                        <tr style={{ backgroundColor: '#f5f5f5', borderBottom: '2px solid #ddd' }}>
+                          <th style={{ padding: '8px', textAlign: 'left', fontWeight: '600' }}>Sequence ID</th>
+                          <th style={{ padding: '8px', textAlign: 'left', fontWeight: '600' }}>Organism</th>
+                          <th style={{ padding: '8px', textAlign: 'left', fontWeight: '600' }}>Source</th>
+                          <th style={{ padding: '8px', textAlign: 'left', fontWeight: '600' }}>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {orgData.ortholog_cluster.orthologs.map((orth, idx) => (
+                          <tr
+                            key={idx}
+                            style={{
+                              backgroundColor: orth.is_query ? '#fff3e0' : (idx % 2 === 0 ? '#fff' : '#fafafa'),
+                              borderBottom: '1px solid #eee'
+                            }}
+                          >
+                            <td style={{ padding: '8px' }}>
+                              {orth.source === 'CGD' ? (
+                                <Link to={`/locus/${orth.feature_name}`}>
+                                  {orth.sequence_id}
+                                </Link>
+                              ) : orth.url ? (
+                                <a href={orth.url} target="_blank" rel="noopener noreferrer">
+                                  {orth.sequence_id}
+                                </a>
+                              ) : (
+                                <span>{orth.sequence_id}</span>
+                              )}
+                              {orth.is_query && (
+                                <span style={{ marginLeft: '8px', fontSize: '11px', color: '#e65100', fontWeight: '500' }}>
+                                  (query)
+                                </span>
+                              )}
+                            </td>
+                            <td style={{ padding: '8px' }}>
+                              <em>{orth.organism_name}</em>
+                            </td>
+                            <td style={{ padding: '8px' }}>
+                              {orth.source}
+                            </td>
+                            <td style={{ padding: '8px' }}>
+                              {orth.status || '-'}
+                            </td>
+                          </tr>
                         ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            <p className="no-data">No homology groups for this organism</p>
-          )}
-        </div>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              )}
+
+              {/* Show message if no orthologs */}
+              {(!orgData.ortholog_cluster?.orthologs || orgData.ortholog_cluster.orthologs.length === 0) && (
+                <tr>
+                  <th style={{ paddingLeft: '20px', fontWeight: 'normal' }}>Orthologs</th>
+                  <td>
+                    <em style={{ color: '#666' }}>No orthologs found in CGOB cluster</em>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </>
       ) : (
         <p className="no-data">Select an organism to view homology information</p>
       )}
