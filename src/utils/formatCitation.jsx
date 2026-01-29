@@ -8,6 +8,7 @@
  */
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 /**
  * Format a citation string with proper styling (bold author/year, italic journal)
@@ -263,14 +264,36 @@ export function formatShortCitation(ref) {
 
 /**
  * Format citation for History tab nomenclature references
+ * Uses the same display pattern as Gene Ontology tab:
+ * - Full citation with PMID link when available
+ * - Fallback to PMID link, CGD_REF/CA internal link, or plain text
  * @param {Object|string} ref - Reference object or string
  * @returns {React.ReactNode} Formatted reference
  */
 export function formatHistoryReference(ref) {
   if (!ref) return null;
 
-  // If it's just a string, format it
+  // Handle string references (like "PMID:12345" or "CGD_REF:CAL0000001")
   if (typeof ref === 'string') {
+    // Check if it's a PMID string
+    if (ref.startsWith('PMID:')) {
+      const pmid = ref.replace('PMID:', '');
+      return (
+        <a
+          href={`https://pubmed.ncbi.nlm.nih.gov/${pmid}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="pubmed-link-small"
+        >
+          {ref}
+        </a>
+      );
+    }
+    // Check if it's a CGD_REF or CA reference
+    if (ref.startsWith('CGD_REF:') || ref.startsWith('CA')) {
+      return <Link to={`/reference/${ref}`}>{ref}</Link>;
+    }
+    // Otherwise format as citation string
     return formatCitationString(ref);
   }
 
@@ -279,26 +302,51 @@ export function formatHistoryReference(ref) {
     return <span dangerouslySetInnerHTML={{ __html: ref.html }} />;
   }
 
-  // Try to use display_name or formatted_citation first
+  // Extract reference identifiers (similar to GO tab logic)
+  const refId = ref.pubmed ? `PMID:${ref.pubmed}` : ref.reference_id || ref.dbxref_id || null;
   const citation = ref.display_name || ref.formatted_citation || ref.citation;
+  const journal = ref.journal_name || ref.journal;
+  const pubmedId = ref.pubmed || (ref.pubmed_id ? String(ref.pubmed_id) : null);
 
+  // Display full formatted citation when available (like GO tab)
   if (citation) {
-    const formatted = formatCitationString(citation, ref.journal_name || ref.journal);
+    return (
+      <div className="go-reference-item">
+        {formatCitationString(citation, journal)}
+        {pubmedId && (
+          <a
+            href={`https://pubmed.ncbi.nlm.nih.gov/${pubmedId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="pubmed-link-small"
+          >
+            {' '}PMID: {pubmedId}
+          </a>
+        )}
+      </div>
+    );
+  }
 
-    // If there's a link, wrap it
-    const link = ref.link || ref.url;
-    if (link) {
+  // Fallback to showing reference ID as link (like GO tab)
+  if (refId) {
+    if (pubmedId) {
       return (
-        <a href={link} target="_blank" rel="noopener noreferrer" className="history-ref-link">
-          {formatted}
+        <a
+          href={`https://pubmed.ncbi.nlm.nih.gov/${pubmedId}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {refId}
         </a>
       );
     }
-
-    return formatted;
+    if (typeof refId === 'string' && (refId.startsWith('CGD_REF:') || refId.startsWith('CA'))) {
+      return <Link to={`/reference/${refId}`}>{refId}</Link>;
+    }
+    return refId;
   }
 
-  // Fallback to title or text
+  // Final fallback to title or text
   return ref.title || ref.text || null;
 }
 
