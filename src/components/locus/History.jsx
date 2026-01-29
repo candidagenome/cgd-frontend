@@ -3,12 +3,12 @@ import './LocusComponents.css';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
 
 /**
- * Goal layout (like legacy CGD):
+ * Goal layout:
  * 1) Nomenclature History (Standard Name + Alias Name(s))
  * 2) Sequence Annotation Notes
  * 3) Curation Notes
  *
- * Data shape differences happen across endpoints. This component supports:
+ * Supports:
  * - orgData.nomenclature?.standard / orgData.nomenclature?.aliases   (preferred)
  * - orgData.history[] events fallback (classifies by keywords/event_type)
  *
@@ -38,11 +38,16 @@ function History({ data, loading, error }) {
 
   const safeLower = (s) => (s || '').toString().toLowerCase();
 
+  // yyyy-mm-dd
   const formatDate = (d) => {
     if (!d) return '';
     const dt = new Date(d);
     if (Number.isNaN(dt.getTime())) return String(d);
-    return dt.toLocaleDateString();
+
+    const y = dt.getFullYear();
+    const m = String(dt.getMonth() + 1).padStart(2, '0');
+    const day = String(dt.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
   };
 
   const looksLikeNomenclature = (event) => {
@@ -60,7 +65,6 @@ function History({ data, loading, error }) {
     const type = safeLower(event?.event_type);
     const note = safeLower(event?.note);
 
-    // tune keywords as you see more records
     return (
       type.includes('sequence') ||
       type.includes('annotation') ||
@@ -96,7 +100,6 @@ function History({ data, loading, error }) {
       return <span dangerouslySetInnerHTML={{ __html: ref.html }} />;
     }
 
-    // Prefer display_name or formatted_citation (short format) over full citation
     const label = ref.display_name || ref.formatted_citation || ref.citation || ref.title || ref.text;
     const link = ref.link || ref.url;
 
@@ -113,7 +116,6 @@ function History({ data, loading, error }) {
   };
 
   // Derive blocks from history as a fallback if explicit fields are absent.
-  // NOTE: This hook MUST run on every render (even before data loads).
   const derived = useMemo(() => {
     const history = Array.isArray(orgData?.history) ? orgData.history : [];
 
@@ -154,15 +156,8 @@ function History({ data, loading, error }) {
       (ev) => !looksLikeNomenclature(ev) && !looksLikeSequenceAnnotation(ev) && !looksLikeCurationNote(ev)
     );
 
-    return {
-      sortedHistory,
-      fallbackStandard,
-      fallbackAliases,
-      seqNotes,
-      curNotes,
-      other,
-    };
-  }, [orgData]); // helpers are stable inside component; orgData drives recompute
+    return { fallbackStandard, fallbackAliases, seqNotes, curNotes, other };
+  }, [orgData]);
 
   const nomenclatureStandard = orgData?.nomenclature?.standard || derived.fallbackStandard;
   const nomenclatureAliases = orgData?.nomenclature?.aliases || derived.fallbackAliases;
@@ -196,11 +191,11 @@ function History({ data, loading, error }) {
             <div className="history-block-title">Nomenclature History</div>
 
             {/* Standard Name */}
-            <div className="history-subtitle">Standard Name</div>
             {Array.isArray(nomenclatureStandard) && nomenclatureStandard.length > 0 ? (
               <table className="history-table">
                 <thead>
                   <tr>
+                    {/* ✅ remove duplicate "Standard Name" header row by not repeating the subtitle here */}
                     <th className="history-col-name">Standard Name</th>
                     <th>Reference</th>
                   </tr>
@@ -219,11 +214,11 @@ function History({ data, loading, error }) {
             )}
 
             {/* Alias Name(s) */}
-            <div className="history-subtitle">Alias Name(s)</div>
             {Array.isArray(nomenclatureAliases) && nomenclatureAliases.length > 0 ? (
               <table className="history-table">
                 <thead>
                   <tr>
+                    {/* ✅ remove duplicate "Alias Name(s)" header row by not repeating the subtitle here */}
                     <th className="history-col-name">Alias Name(s)</th>
                     <th>Reference</th>
                   </tr>
