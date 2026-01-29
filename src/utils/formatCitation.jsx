@@ -317,7 +317,8 @@ function formatSingleReference(ref, idx = 0) {
 
   // Extract reference identifiers (same logic as GO tab)
   const refId = ref.pubmed ? `PMID:${ref.pubmed}` : ref.reference_id || ref.dbxref_id || null;
-  const citation = ref.display_name || ref.formatted_citation || ref.citation;
+  // Prioritize full citation over display_name (which may be shortened)
+  const citation = ref.citation || ref.display_name || ref.formatted_citation;
   const journal = ref.journal_name || ref.journal;
   const pubmedId = ref.pubmed || (ref.pubmed_id ? String(ref.pubmed_id) : null);
 
