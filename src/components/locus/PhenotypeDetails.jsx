@@ -129,67 +129,101 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
                           <table className="data-table phenotype-table">
                             <thead>
                               <tr>
+                                <th>Experiment Type</th>
+                                <th>Mutant Information</th>
+                                <th>Strain Background</th>
                                 <th>Phenotype</th>
-                                <th>Qualifier</th>
-                                <th>Strain</th>
-                                <th>Reference</th>
+                                <th>References</th>
                               </tr>
                             </thead>
                             <tbody>
                               {annotations.map((ann, idx) => {
-                                // Handle reference - can be string, object, or array
-                                const ref = ann.reference || ann.references?.[0];
-                                const isRefObject = typeof ref === 'object' && ref !== null;
-                                const citation = isRefObject ? ref.citation : null;
-                                const journal = isRefObject ? (ref.journal_name || ref.journal) : null;
-                                const pubmedId = isRefObject ? ref.pubmed : (typeof ref === 'string' && ref.startsWith('PMID:') ? ref.replace('PMID:', '') : null);
-                                const refId = isRefObject ? (ref.pubmed ? `PMID:${ref.pubmed}` : ref.reference_id || ref.dbxref_id) : ref;
+                                // Handle references array
+                                const refs = ann.references || (ann.reference ? [ann.reference] : []);
 
                                 return (
                                   <tr key={idx}>
+                                    {/* Experiment Type */}
+                                    <td>
+                                      {ann.experiment_type || ann.experiment || '-'}
+                                      {ann.experiment_comment && (
+                                        <div className="experiment-comment">({ann.experiment_comment})</div>
+                                      )}
+                                    </td>
+                                    {/* Mutant Information */}
+                                    <td>
+                                      {ann.mutant_type ? (
+                                        <>
+                                          <span>Description: {ann.mutant_type}</span>
+                                          {ann.alleles && ann.alleles.length > 0 && (
+                                            ann.alleles.map((allele, aIdx) => (
+                                              <div key={aIdx}>
+                                                Allele: {allele.value || allele.property_value}
+                                                {allele.description && <span> ({allele.description})</span>}
+                                              </div>
+                                            ))
+                                          )}
+                                        </>
+                                      ) : '-'}
+                                    </td>
+                                    {/* Strain Background */}
+                                    <td>{ann.strain || '-'}</td>
+                                    {/* Phenotype */}
                                     <td>
                                       {ann.phenotype?.link ? (
                                         <a href={ann.phenotype.link}>
                                           {ann.phenotype?.display_name}
                                         </a>
                                       ) : (
-                                        ann.phenotype?.display_name
+                                        ann.phenotype?.display_name || '-'
                                       )}
+                                      {ann.qualifier && `: ${ann.qualifier}`}
                                     </td>
-                                    <td>{ann.qualifier || '-'}</td>
-                                    <td>{ann.strain || '-'}</td>
+                                    {/* References */}
                                     <td>
-                                      {citation ? (
-                                        <>
-                                          {formatCitationString(citation, journal)}
-                                          {pubmedId && (
-                                            <a
-                                              href={`https://pubmed.ncbi.nlm.nih.gov/${pubmedId}`}
-                                              target="_blank"
-                                              rel="noopener noreferrer"
-                                              className="pubmed-link-small"
-                                            >
-                                              {' '}PMID: {pubmedId}
-                                            </a>
-                                          )}
-                                        </>
-                                      ) : refId ? (
-                                        pubmedId ? (
-                                          <a
-                                            href={`https://pubmed.ncbi.nlm.nih.gov/${pubmedId}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                          >
-                                            {refId}
-                                          </a>
-                                        ) : (typeof refId === 'string' && (refId.startsWith('CGD_REF:') || refId.startsWith('CA'))) ? (
-                                          <Link to={`/reference/${refId}`}>{refId}</Link>
-                                        ) : (
-                                          refId
-                                        )
-                                      ) : (
-                                        '-'
-                                      )}
+                                      {refs.length > 0 ? (
+                                        refs.map((ref, refIdx) => {
+                                          const isRefObject = typeof ref === 'object' && ref !== null;
+                                          const citation = isRefObject ? ref.citation : null;
+                                          const journal = isRefObject ? (ref.journal_name || ref.journal) : null;
+                                          const pubmedId = isRefObject ? ref.pubmed : (typeof ref === 'string' && ref.startsWith('PMID:') ? ref.replace('PMID:', '') : null);
+                                          const refId = isRefObject ? (ref.pubmed ? `PMID:${ref.pubmed}` : ref.reference_id || ref.dbxref_id) : ref;
+
+                                          return (
+                                            <div key={refIdx} className="go-reference-item">
+                                              {citation ? (
+                                                <>
+                                                  {formatCitationString(citation, journal)}
+                                                  {pubmedId && (
+                                                    <a
+                                                      href={`https://pubmed.ncbi.nlm.nih.gov/${pubmedId}`}
+                                                      target="_blank"
+                                                      rel="noopener noreferrer"
+                                                      className="pubmed-link-small"
+                                                    >
+                                                      {' '}PMID: {pubmedId}
+                                                    </a>
+                                                  )}
+                                                </>
+                                              ) : refId ? (
+                                                pubmedId ? (
+                                                  <a
+                                                    href={`https://pubmed.ncbi.nlm.nih.gov/${pubmedId}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                  >
+                                                    {refId}
+                                                  </a>
+                                                ) : (typeof refId === 'string' && (refId.startsWith('CGD_REF:') || refId.startsWith('CA'))) ? (
+                                                  <Link to={`/reference/${refId}`}>{refId}</Link>
+                                                ) : (
+                                                  refId
+                                                )
+                                              ) : null}
+                                            </div>
+                                          );
+                                        })
+                                      ) : '-'}
                                     </td>
                                   </tr>
                                 );
