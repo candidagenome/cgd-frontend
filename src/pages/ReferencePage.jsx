@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useSearchParams, Link } from 'react-router-dom';
 import useReferenceData from '../hooks/useReferenceData';
+import { formatAuthors, formatCitationString } from '../utils/formatCitation.jsx';
 import './ReferencePage.css';
 
 const TABS = [
@@ -39,38 +40,33 @@ function ReferencePage() {
     setActiveTab(tabId);
   };
 
-  // Format authors for display
-  const formatAuthors = (authors) => {
-    if (!authors || authors.length === 0) return null;
-    return authors.map(a => a.author_name).join(', ');
-  };
-
   const renderSummary = () => {
     if (loading.info) return <div className="loading">Loading reference information...</div>;
     if (errors.info) return <div className="error">Error: {errors.info}</div>;
     if (!data.info || !data.info.result) return <div className="no-data">No reference data available</div>;
 
     const ref = data.info.result;
-    const authors = formatAuthors(ref.authors);
+
+    // Build formatted citation in standard format
+    const formattedCitation = ref.citation
+      ? formatCitationString(ref.citation, ref.journal_name)
+      : (
+        <>
+          <strong>{formatAuthors(ref.authors)} ({ref.year})</strong>
+          {ref.title && <> {ref.title}</>}
+          {ref.journal_name && <> <em>{ref.journal_name}</em></>}
+          {ref.volume && <> {ref.volume}</>}
+          {ref.issue && <>({ref.issue})</>}
+          {ref.page && <>:{ref.page}</>}
+        </>
+      );
 
     return (
       <div className="reference-summary">
         {/* Citation Card */}
         <div className="citation-card">
           <div className="citation-full">
-            {authors && (
-              <div className="authors-full">{authors}</div>
-            )}
-            {ref.title && (
-              <div className="ref-title-full">"{ref.title}"</div>
-            )}
-            <div className="journal-info">
-              {ref.journal_name && <em>{ref.journal_name}</em>}
-              {ref.volume && <span> {ref.volume}</span>}
-              {ref.issue && <span>({ref.issue})</span>}
-              {ref.page && <span>:{ref.page}</span>}
-              <span> ({ref.year})</span>
-            </div>
+            {formattedCitation}
           </div>
 
           {/* External Links */}

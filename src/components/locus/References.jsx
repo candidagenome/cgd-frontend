@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './LocusComponents.css';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
+import { formatCitationString } from '../../utils/formatCitation.jsx';
 
 function References({ data, loading, error }) {
   const [collapsedYears, setCollapsedYears] = useState({});
@@ -117,7 +118,7 @@ function References({ data, loading, error }) {
                                 <div key={idx} className="reference-card">
                                   <div className="ref-citation">
                                     <Link to={`/reference/${ref.pubmed || ref.reference_no}`}>
-                                      {ref.citation}
+                                      {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
                                     </Link>
                                   </div>
                                   {ref.title && (
@@ -162,7 +163,7 @@ function References({ data, loading, error }) {
                             <td className="year-cell">{ref.year || '-'}</td>
                             <td>
                               <Link to={`/reference/${ref.pubmed || ref.reference_no}`}>
-                                {ref.citation}
+                                {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
                               </Link>
                               {ref.title && <div className="ref-title">{ref.title}</div>}
                             </td>
