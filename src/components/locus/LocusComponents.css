@@ -1239,6 +1239,22 @@ a:hover {
   margin-top: 5px;
 }
 
+/* GO Reference Items */
+.go-reference-item {
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.go-reference-item:last-child {
+  margin-bottom: 0;
+}
+
+.pubmed-link-small {
+  font-size: 0.85em;
+  color: #1976d2;
+  margin-left: 5px;
+}
+
 /* =====================================================
    SEQUENCE TAB IMPROVEMENTS
    ===================================================== */

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
+import { formatCitationString } from '../../utils/formatCitation.jsx';
 import './LocusComponents.css';
 
 // Annotation type labels (matching Perl format)
@@ -161,24 +162,52 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
                     </a>
                   </td>
                   <td>
-                    {ann.references?.map((ref, refIdx) => (
-                      <span key={refIdx}>
-                        {ref.startsWith('PMID:') ? (
-                          <a
-                            href={`https://pubmed.ncbi.nlm.nih.gov/${ref.replace('PMID:', '')}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {ref}
-                          </a>
-                        ) : ref.startsWith('CGD_REF:') || ref.startsWith('CA') ? (
-                          <Link to={`/reference/${ref}`}>{ref}</Link>
-                        ) : (
-                          ref
-                        )}
-                        {refIdx < ann.references.length - 1 ? ', ' : ''}
-                      </span>
-                    ))}
+                    {ann.references?.map((ref, refIdx) => {
+                      // Handle both string refs and object refs with citation data
+                      const isObject = typeof ref === 'object' && ref !== null;
+                      const refId = isObject ? (ref.pubmed ? `PMID:${ref.pubmed}` : ref.reference_id || ref.dbxref_id) : ref;
+                      const citation = isObject ? ref.citation : null;
+                      const journal = isObject ? (ref.journal_name || ref.journal) : null;
+                      const pubmedId = isObject ? ref.pubmed : (typeof ref === 'string' && ref.startsWith('PMID:') ? ref.replace('PMID:', '') : null);
+
+                      return (
+                        <div key={refIdx} className="go-reference-item">
+                          {citation ? (
+                            // Display full formatted citation when available
+                            <>
+                              {formatCitationString(citation, journal)}
+                              {pubmedId && (
+                                <a
+                                  href={`https://pubmed.ncbi.nlm.nih.gov/${pubmedId}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="pubmed-link-small"
+                                >
+                                  {' '}PMID: {pubmedId}
+                                </a>
+                              )}
+                            </>
+                          ) : (
+                            // Fallback to showing reference ID as link
+                            <>
+                              {pubmedId ? (
+                                <a
+                                  href={`https://pubmed.ncbi.nlm.nih.gov/${pubmedId}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  {refId}
+                                </a>
+                              ) : (typeof refId === 'string' && (refId.startsWith('CGD_REF:') || refId.startsWith('CA'))) ? (
+                                <Link to={`/reference/${refId}`}>{refId}</Link>
+                              ) : (
+                                refId
+                              )}
+                            </>
+                          )}
+                        </div>
+                      );
+                    })}
                   </td>
                   <td>
                     <span title={EVIDENCE_DESCRIPTIONS[ann.evidence?.code] || ann.evidence?.code}>
