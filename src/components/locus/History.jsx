@@ -62,34 +62,6 @@ function History({ data, loading, error }) {
     );
   };
 
-  const looksLikeSequenceAnnotation = (event) => {
-    const type = safeLower(event?.event_type);
-    const note = safeLower(event?.note);
-
-    return (
-      type.includes('sequence') ||
-      type.includes('annotation') ||
-      note.includes('assembly') ||
-      note.includes('intron') ||
-      note.includes('coordinates') ||
-      note.includes('sequence annotation')
-    );
-  };
-
-  const looksLikeCurationNote = (event) => {
-    const type = safeLower(event?.event_type);
-    const note = safeLower(event?.note);
-
-    return (
-      type.includes('curation') ||
-      note.includes('annotation working group') ||
-      note.includes('/product') ||
-      note.includes('/remarks') ||
-      note.includes('please see the cgd sequence') ||
-      note.includes('no sequence changes')
-    );
-  };
-
   // Reference rendering using shared utility
   const renderReference = (ref) => {
     return formatHistoryReference(ref);
@@ -129,22 +101,11 @@ function History({ data, loading, error }) {
       }
     });
 
-    const seqNotes = sortedHistory.filter((ev) => looksLikeSequenceAnnotation(ev));
-    const curNotes = sortedHistory.filter((ev) => looksLikeCurationNote(ev));
-
-    const other = sortedHistory.filter(
-      (ev) => !looksLikeNomenclature(ev) && !looksLikeSequenceAnnotation(ev) && !looksLikeCurationNote(ev)
-    );
-
-    return { fallbackStandard, fallbackAliases, seqNotes, curNotes, other };
+    return { fallbackStandard, fallbackAliases };
   }, [orgData]);
 
   const nomenclatureStandard = orgData?.nomenclature?.standard || derived.fallbackStandard;
   const nomenclatureAliases = orgData?.nomenclature?.aliases || derived.fallbackAliases;
-
-  const sequenceNotes = orgData?.sequence_annotation_notes || derived.seqNotes;
-  const curationNotes = orgData?.curation_notes || derived.curNotes;
-  const otherHistory = derived.other;
 
   // ✅ Early returns AFTER all hooks
   if (loading) return <div className="loading">Loading history...</div>;
@@ -217,108 +178,45 @@ function History({ data, loading, error }) {
             )}
           </div>
 
-          {/* 2) Sequence Annotation Notes */}
-          <div className="history-block">
-            <div className="history-block-title">
-              Sequence Annotation Notes
-              <span className="count-badge">{Array.isArray(sequenceNotes) ? sequenceNotes.length : 0}</span>
-            </div>
-
-            {Array.isArray(sequenceNotes) && sequenceNotes.length > 0 ? (
-              <table className="history-table">
-                <thead>
-                  <tr>
-                    <th className="history-col-date">Date</th>
-                    <th>Note</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {sequenceNotes.map((ev, idx) => (
-                    <tr key={`seq-${idx}`}>
-                      <td className="history-date">{formatDate(ev?.date)}</td>
-                      <td className="history-note">
-                        {ev?.note ? (
-                          <span dangerouslySetInnerHTML={{ __html: ev.note }} />
-                        ) : (
-                          <span className="muted">-</span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <div className="muted history-empty">No sequence annotation notes</div>
-            )}
-          </div>
-
-          {/* 3) Curation Notes */}
-          <div className="history-block">
-            <div className="history-block-title">
-              Curation Notes
-              <span className="count-badge">{Array.isArray(curationNotes) ? curationNotes.length : 0}</span>
-            </div>
-
-            {Array.isArray(curationNotes) && curationNotes.length > 0 ? (
-              <table className="history-table">
-                <thead>
-                  <tr>
-                    <th className="history-col-date">Date</th>
-                    <th>Note</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {curationNotes.map((ev, idx) => (
-                    <tr key={`cur-${idx}`}>
-                      <td className="history-date">{formatDate(ev?.date)}</td>
-                      <td className="history-note">
-                        {ev?.note ? (
-                          <span dangerouslySetInnerHTML={{ __html: ev.note }} />
-                        ) : (
-                          <span className="muted">-</span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <div className="muted history-empty">No curation notes</div>
-            )}
-          </div>
-
-          {/* Optional: Other History */}
-          {Array.isArray(otherHistory) && otherHistory.length > 0 && (
-            <div className="history-block history-block-subtle">
+          {/* 2) Note Categories (from backend) */}
+          {Array.isArray(orgData?.note_categories) && orgData.note_categories.map((cat, catIdx) => (
+            <div key={`cat-${catIdx}`} className="history-block">
               <div className="history-block-title">
-                Other History
-                <span className="count-badge">{otherHistory.length}</span>
+                {cat.category}
+                <span className="count-badge">{Array.isArray(cat.notes) ? cat.notes.length : 0}</span>
               </div>
 
-              <table className="history-table">
-                <thead>
-                  <tr>
-                    <th className="history-col-date">Date</th>
-                    <th>Note</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {otherHistory.map((ev, idx) => (
-                    <tr key={`oth-${idx}`}>
-                      <td className="history-date">{formatDate(ev?.date)}</td>
-                      <td className="history-note">
-                        {ev?.note ? (
-                          <span dangerouslySetInnerHTML={{ __html: ev.note }} />
-                        ) : (
-                          <span className="muted">-</span>
-                        )}
-                      </td>
+              {Array.isArray(cat.notes) && cat.notes.length > 0 ? (
+                <table className="history-table">
+                  <thead>
+                    <tr>
+                      <th className="history-col-date">Date</th>
+                      <th>Note</th>
+                      <th>Reference(s)</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {cat.notes.map((noteItem, noteIdx) => (
+                      <tr key={`cat-${catIdx}-note-${noteIdx}`}>
+                        <td className="history-date">{formatDate(noteItem?.date)}</td>
+                        <td className="history-note">
+                          {noteItem?.note ? (
+                            <span dangerouslySetInnerHTML={{ __html: noteItem.note }} />
+                          ) : (
+                            <span className="muted">-</span>
+                          )}
+                        </td>
+                        <td>{renderReference(noteItem?.references) || <span className="muted">-</span>}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <div className="muted history-empty">No notes</div>
+              )}
             </div>
-          )}
+          ))}
+
         </div>
       ) : (
         <p className="no-data">Select an organism to view history</p>
