@@ -594,6 +594,119 @@
   line-height: 1.5;
 }
 
+/* Nomenclature History Section */
+.nomenclature-history {
+  margin-bottom: 30px;
+}
+
+.nomenclature-history h4 {
+  background-color: navajowhite;
+  padding: 10px 15px;
+  margin: 0 0 0 0;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.nomenclature-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 15px;
+  background-color: white;
+}
+
+.nomenclature-table th {
+  background-color: #cccccc;
+  padding: 8px 12px;
+  text-align: left;
+  font-weight: bold;
+  font-size: 0.9em;
+  border: 1px solid #ddd;
+}
+
+.nomenclature-table td {
+  padding: 8px 12px;
+  vertical-align: top;
+  border: 1px solid #ddd;
+}
+
+.nomenclature-table tr:nth-child(even) td {
+  background-color: whitesmoke;
+}
+
+.nomenclature-table tr:nth-child(odd) td {
+  background-color: white;
+}
+
+.reference-link {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.reference-link:hover {
+  text-decoration: underline;
+}
+
+/* Note Categories Section */
+.note-categories {
+  margin-top: 20px;
+}
+
+.note-category {
+  margin-bottom: 25px;
+}
+
+.note-category h4 {
+  background-color: navajowhite;
+  padding: 10px 15px;
+  margin: 0 0 0 0;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.notes-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.notes-table th {
+  background-color: #cccccc;
+  padding: 8px 12px;
+  text-align: left;
+  font-weight: bold;
+  font-size: 0.9em;
+  border: 1px solid #ddd;
+}
+
+.notes-table td {
+  padding: 8px 12px;
+  vertical-align: top;
+  border: 1px solid #ddd;
+}
+
+.notes-table tr:nth-child(even) td {
+  background-color: whitesmoke;
+}
+
+.notes-table tr:nth-child(odd) td {
+  background-color: white;
+}
+
+.notes-table .date-column {
+  width: 20%;
+  white-space: nowrap;
+}
+
+.note-text {
+  line-height: 1.5;
+}
+
+.note-references {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
 /* Links */
 a {
   color: #1976d2;
