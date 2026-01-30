@@ -125,6 +125,148 @@
   font-style: italic;
 }
 
+/* Loading Page */
+.loading-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #e0e0e0;
+  border-top: 4px solid #1976d2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-page p {
+  font-size: 16px;
+  color: #666;
+}
+
+/* Error Page - Locus Not Found */
+.error-page {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 40px;
+  text-align: center;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.error-icon {
+  font-size: 64px;
+  color: #f57c00;
+  margin-bottom: 20px;
+}
+
+.error-page h1 {
+  margin: 0 0 15px 0;
+  color: #d32f2f;
+  font-size: 28px;
+}
+
+.error-message {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 30px;
+}
+
+.error-message strong {
+  color: #1976d2;
+  font-family: monospace;
+  font-size: 18px;
+}
+
+.error-suggestions {
+  text-align: left;
+  background-color: #f5f5f5;
+  padding: 20px 25px;
+  border-radius: 6px;
+  margin-bottom: 30px;
+}
+
+.error-suggestions h3 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 16px;
+}
+
+.error-suggestions ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.error-suggestions li {
+  margin-bottom: 10px;
+  color: #555;
+  line-height: 1.5;
+}
+
+.error-suggestions a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.error-suggestions a:hover {
+  text-decoration: underline;
+}
+
+.error-suggestions em {
+  font-family: monospace;
+  background-color: #e3f2fd;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-style: normal;
+}
+
+.error-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.error-actions a {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.btn-home {
+  background-color: #1976d2;
+  color: #fff;
+}
+
+.btn-home:hover {
+  background-color: #1565c0;
+}
+
+.btn-search {
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.btn-search:hover {
+  background-color: #e0e0e0;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .locus-page {
