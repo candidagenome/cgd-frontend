@@ -52,6 +52,46 @@
   gap: 18px;
 }
 
+/* Header icons (email, facebook) */
+.header-icons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.icon-email {
+  font-size: 18px;
+  color: #555;
+}
+
+.icon-email:hover {
+  color: #1f77c9;
+}
+
+.icon-facebook {
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #3b5998;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+}
+
+.icon-facebook:hover {
+  background-color: #2d4373;
+}
+
 /* Utility links */
 .utility-links a {
   margin-right: 12px;

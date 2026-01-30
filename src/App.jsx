@@ -20,6 +20,21 @@ function App() {
             </div>
 
             <div className="header-right">
+              <div className="header-icons">
+                <a href="/cgi-bin/suggestion" className="icon-link" title="Contact CGD">
+                  <span className="icon-email">✉</span>
+                </a>
+                <a
+                  href="http://www.facebook.com/pages/Candida-Genome-Database/173482099381649"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="icon-link"
+                  title="CGD on Facebook"
+                >
+                  <span className="icon-facebook">f</span>
+                </a>
+              </div>
+
               <nav className="utility-links" aria-label="Utility">
                 <a href="/About.shtml">About</a>
                 <a href="/SiteMap.shtml">Site Map</a>
