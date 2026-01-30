@@ -19,7 +19,7 @@ const TABS = [
   { id: 'protein', label: 'Protein', component: 'protein', loader: 'loadProteinDetails' },
   { id: 'homology', label: 'Homologs', component: 'homology', loader: 'loadHomologyDetails' },
   { id: 'sequence', label: 'Sequence', component: 'sequence', loader: 'loadSequenceDetails' },
-  { id: 'references', label: 'References', component: 'references', loader: 'loadReferences' },
+  { id: 'literature', label: 'Literature', component: 'literature', loader: 'loadReferences' },
   { id: 'history', label: 'History', component: 'history', loader: 'loadHistory' },
 ];
 
@@ -163,7 +163,7 @@ function LocusPage() {
           />
         );
 
-      case 'references':
+      case 'literature':
         return (
           <References
             data={data.references}
