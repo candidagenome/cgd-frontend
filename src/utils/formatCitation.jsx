@@ -444,10 +444,8 @@ export function buildCitationLinks(ref) {
 
   const links = [];
 
-  // CGD Paper link (always present)
-  const cgdPaperUrl = ref.pubmed
-    ? `/reference/${ref.pubmed}`
-    : `/reference/${ref.dbxref_id || ref.reference_id}`;
+  // CGD Paper link (always present) - always use dbxref_id (CGDID)
+  const cgdPaperUrl = `/reference/${ref.dbxref_id || ref.reference_id || ref.pubmed}`;
   links.push({
     name: 'CGD Paper',
     url: cgdPaperUrl,
@@ -531,22 +529,22 @@ export function formatCompactCitationWithLinks(ref) {
   // Build minimal links (CGD Paper and PubMed only)
   const links = [];
 
-  if (ref.pubmed) {
+  // CGD Paper link - always use dbxref_id (CGDID) first
+  const cgdId = ref.dbxref_id || ref.reference_id || ref.pubmed;
+  if (cgdId) {
     links.push({
       name: 'CGD Paper',
-      url: `/reference/${ref.pubmed}`,
+      url: `/reference/${cgdId}`,
       link_type: 'internal'
     });
+  }
+
+  // PubMed link
+  if (ref.pubmed) {
     links.push({
       name: 'PubMed',
       url: `https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`,
       link_type: 'external'
-    });
-  } else if (ref.dbxref_id || ref.reference_id) {
-    links.push({
-      name: 'CGD Paper',
-      url: `/reference/${ref.dbxref_id || ref.reference_id}`,
-      link_type: 'internal'
     });
   }
 
