@@ -142,6 +142,35 @@ export function buildFormattedCitation(ref) {
   return <>{parts}</>;
 }
 
+// New: render citation links on a separate line, no surrounding [ ]
+export function CitationLinksBelow({ links, className = '' }) {
+  if (!links || links.length === 0) return null;
+
+  return (
+    <div className={`citation-links-below ${className}`}>
+      {links.map((link, idx) => (
+        <React.Fragment key={`${link.name}-${idx}`}>
+          {idx > 0 && <span className="citation-link-sep"> </span>}
+          {link.link_type === 'internal' ? (
+            <Link to={link.url} className="citation-link">
+              {link.name}
+            </Link>
+          ) : (
+            <a
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="citation-link"
+            >
+              {link.name}
+            </a>
+          )}
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}
+
 /**
  * Format authors array into string
  * @param {Array} authors - Array of author objects with author_name
@@ -322,32 +351,30 @@ function formatSingleReference(ref, idx = 0) {
   const journal = ref.journal_name || ref.journal;
   const links = ref.links;
 
-  // Display full formatted citation when available (like GO tab)
+  // Display full formatted citation when available (SGD-style: links on next line)
   if (citation) {
+    // Prefer backend-provided links; otherwise build the basic ones
+    const computedLinks =
+      links && links.length > 0
+        ? links
+        : buildCitationLinks({
+            dbxref_id: ref.dbxref_id,
+            reference_id: ref.reference_id,
+            pubmed: ref.pubmed,
+            urls: ref.urls,
+          });
+
     return (
       <div key={idx} className="go-reference-item">
-        {formatCitationString(citation, journal)}
-        {links && links.length > 0 ? (
-          <CitationLinks links={links} />
-        ) : refId && (
-          <span className="citation-links">
-            {' ['}
-            <Link to={`/reference/${refId}`}>CGD Paper</Link>
-            {ref.pubmed && (
-              <>
-                {' | '}
-                <a
-                  href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  PubMed
-                </a>
-              </>
-            )}
-            {']'}
-          </span>
-        )}
+        <div className="citation-line">
+          {formatCitationString(citation, journal)}
+          {ref.pubmed ? (
+            <span className="citation-pmid"> PMID: {ref.pubmed}</span>
+          ) : null}
+        </div>
+
+        {/* Links below citation (no brackets) */}
+        <CitationLinksBelow links={computedLinks} />
       </div>
     );
   }
@@ -579,6 +606,7 @@ export default {
   formatShortCitation,
   formatHistoryReference,
   CitationLinks,
+  CitationLinksBelow, 
   buildCitationLinks,
   formatCitationWithLinks,
   formatCompactCitationWithLinks,
