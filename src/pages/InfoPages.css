@@ -304,6 +304,275 @@
   text-decoration: underline;
 }
 
+/* Staff page styles */
+.staff-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  justify-items: center;
+  margin-top: 20px;
+}
+
+.staff-grid-single {
+  grid-template-columns: 1fr;
+}
+
+.staff-grid-four {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.staff-card {
+  text-align: center;
+  max-width: 200px;
+}
+
+.staff-image-container {
+  border: 3px solid #333;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.staff-image {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  display: block;
+}
+
+.staff-info {
+  font-size: 0.95em;
+  line-height: 1.4;
+  color: #444;
+}
+
+.staff-info a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.staff-info a:hover {
+  text-decoration: underline;
+}
+
+/* FAQ page styles */
+.faq-item {
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.faq-item:last-child {
+  border-bottom: none;
+}
+
+.faq-question {
+  color: #c62828;
+  font-size: 1.1em;
+  margin: 0 0 10px 0;
+}
+
+.faq-answer {
+  padding-left: 15px;
+}
+
+.faq-answer p {
+  margin-bottom: 10px;
+  line-height: 1.6;
+  color: #444;
+}
+
+.faq-answer a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.faq-answer a:hover {
+  text-decoration: underline;
+}
+
+/* Search page styles */
+.search-block {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.search-form-container {
+  margin-bottom: 15px;
+}
+
+.inline-search-form {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 10px;
+}
+
+.inline-search-form input[type="text"] {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.95em;
+}
+
+.inline-search-form input[type="text"]:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+}
+
+.inline-search-form button {
+  padding: 8px 16px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95em;
+}
+
+.inline-search-form button:hover {
+  background-color: #1565c0;
+}
+
+/* Topic Biblios and Citations styles */
+.topic-list {
+  column-count: 2;
+  column-gap: 30px;
+}
+
+.topic-list li {
+  break-inside: avoid;
+  margin-bottom: 6px;
+}
+
+.topic-section {
+  padding-top: 10px;
+}
+
+.topic-section h3 {
+  color: #1976d2;
+  font-size: 1.2em;
+  margin-bottom: 15px;
+}
+
+.citation-item {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+}
+
+.citation-item p {
+  margin: 0 0 5px 0;
+  line-height: 1.5;
+}
+
+.citation-links {
+  display: flex;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.citation-links img {
+  height: 16px;
+  vertical-align: middle;
+}
+
+.list-updated {
+  color: #666;
+  font-size: 0.9em;
+  margin-top: 20px;
+  padding-top: 10px;
+  border-top: 1px dashed #ccc;
+}
+
+.list-updated a {
+  margin-left: 15px;
+}
+
+.placeholder-note {
+  color: #666;
+  font-style: italic;
+  margin: 10px 0;
+}
+
+/* Strains page styles */
+.strain-species-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.strain-species-list li {
+  display: inline-block;
+  margin-right: 30px;
+  margin-bottom: 10px;
+}
+
+.strain-list {
+  column-count: 3;
+  column-gap: 20px;
+  list-style: disc;
+  padding-left: 20px;
+}
+
+.strain-list li {
+  break-inside: avoid;
+  margin-bottom: 5px;
+}
+
+.lineage-diagram {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.lineage-diagram img {
+  max-width: 100%;
+  height: auto;
+}
+
+.strain-section h2 {
+  color: #1976d2;
+  border-bottom: 2px solid #1976d2;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.strain-section h3 {
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.strain-entry {
+  margin-bottom: 25px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+.strain-entry h3 {
+  color: #1976d2;
+  margin: 0 0 10px 0;
+  font-size: 1.15em;
+}
+
+.strain-entry p {
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.strain-entry strong {
+  color: #333;
+}
+
+.back-to-top {
+  font-size: 0.9em;
+  margin-top: 15px;
+}
+
+.back-to-top a {
+  color: #1976d2;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .info-page {
@@ -321,5 +590,37 @@
   .sitemap-table th,
   .sitemap-table td {
     padding: 8px;
+  }
+
+  .staff-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .staff-grid-four {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .inline-search-form {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: 0;
+    margin-top: 10px;
+  }
+
+  .inline-search-form input[type="text"] {
+    width: 100%;
+  }
+
+  .topic-list {
+    column-count: 1;
+  }
+
+  .strain-list {
+    column-count: 1;
+  }
+
+  .strain-species-list li {
+    display: block;
+    margin-right: 0;
   }
 }

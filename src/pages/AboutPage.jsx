@@ -49,7 +49,7 @@ function AboutPage() {
 
         <section className="info-section">
           <h2>
-            <a href="/help/GettingStarted.shtml">Getting Started with CGD</a>
+            <Link to="/help/getting-started">Getting Started with CGD</Link>
           </h2>
           <p>Information for someone new to CGD</p>
         </section>
@@ -88,7 +88,7 @@ function AboutPage() {
 
         <section className="info-section">
           <h2>
-            <a href="/help/SequenceHelp.shtml">Sequence Documentation</a>
+            <Link to="/help/sequence">Sequence Documentation</Link>
           </h2>
           <p>
             Detailed information about the sequence data in CGD, including the sources from which
@@ -113,7 +113,7 @@ function AboutPage() {
 
         <section className="info-section">
           <h2>
-            <a href="/staff.shtml">Staff</a>
+            <Link to="/staff">Staff</Link>
           </h2>
           <p>CGD Staff Members</p>
         </section>

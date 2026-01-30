@@ -120,11 +120,11 @@ function GenomeSnapshotPage() {
               chromosomal features by various criteria
             </li>
             <li>
-              <a href="/DownloadContents.shtml">Download Data</a> - Download chromosomal feature
+              <Link to="/download">Download Data</Link> - Download chromosomal feature
               files, GO annotations, and sequence data
             </li>
             <li>
-              <a href="/help/genomeSnapshot.shtml">Genome Snapshot Help</a> - Documentation about
+              <Link to="/help/genome-snapshot">Genome Snapshot Help</Link> - Documentation about
               this resource
             </li>
           </ul>

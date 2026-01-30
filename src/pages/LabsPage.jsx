@@ -52,15 +52,15 @@ function LabsPage() {
           <h2>Related Resources</h2>
           <ul>
             <li>
-              <a href="/ComContents.shtml">Community Info</a> - Conferences, news, and community
+              <Link to="/community">Community Info</Link> - Conferences, news, and community
               resources
             </li>
             <li>
-              <a href="/JobPostings.shtml">Job Postings</a> - Employment opportunities in{' '}
+              <Link to="/job-postings">Job Postings</Link> - Employment opportunities in{' '}
               <em>Candida</em> research
             </li>
             <li>
-              <a href="/Meetings.shtml">Conferences & Courses</a> - Upcoming meetings and
+              <Link to="/meetings">Conferences & Courses</Link> - Upcoming meetings and
               educational opportunities
             </li>
           </ul>

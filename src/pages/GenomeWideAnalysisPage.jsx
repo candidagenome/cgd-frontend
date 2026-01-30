@@ -79,11 +79,11 @@ function GenomeWideAnalysisPage() {
               - Search the full text of <em>Candida</em> publications
             </li>
             <li>
-              <a href="/Download_Datasets.shtml">Datasets Archived at CGD</a> - Download published
+              <Link to="/download-datasets">Datasets Archived at CGD</Link> - Download published
               datasets
             </li>
             <li>
-              <a href="/help/Literature_Topics.shtml">Literature Guide</a> - Help documentation for
+              <Link to="/help/literature-topics">Literature Guide</Link> - Help documentation for
               literature resources
             </li>
             <li>
