@@ -1,0 +1,246 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import './InfoPages.css';
+
+function HelpPage() {
+  return (
+    <div className="info-page">
+      <div className="info-page-content">
+        <h1>Help Resources</h1>
+        <hr />
+
+        <div className="help-item">
+          <h3>
+            <Link to="/sitemap">Site Map</Link>
+          </h3>
+          <p>
+            A brief description of CGD resources & tools, organized by topic. Links to help
+            documentation. Compares and contrasts similar resources.
+          </p>
+        </div>
+
+        <div className="help-item">
+          <h3>
+            <a href="/help/GettingStarted.shtml">Getting Started with CGD</a>
+          </h3>
+          <p>Common uses of CGD</p>
+        </div>
+
+        <div className="help-item">
+          <h3>
+            <a href="/Nomenclature.shtml">Gene Nomenclature Guide</a>
+          </h3>
+          <p>
+            Information about the various types of gene names/identifiers that are in use.
+            Guidelines for registering a new gene name, as agreed upon by the members of the
+            research community.
+          </p>
+        </div>
+
+        <div className="help-item">
+          <h3>
+            <a href="/help/SequenceHelp.shtml">Sequence Documentation</a>
+          </h3>
+          <p>
+            Information about the DNA and protein sequences in CGD. How to access sequence
+            information. The source of these sequences and further explanation of some
+            sequence-related issues.
+          </p>
+        </div>
+
+        <div className="help-item">
+          <h3>
+            <a href="/help/searchform.shtml">Search Help</a>
+          </h3>
+          <p>Documentation about search tools in CGD. Additional tool-specific documentation:</p>
+          <div className="help-links">
+            <a href="/help/FeatureSearchHelp.shtml">Advanced Search</a>
+            <a href="/help/batch_download.shtml">Batch Download</a>
+            <a href="/help/GSResources.shtml">Get Sequence</a>
+            <a
+              href="http://textpresso.candidagenome.org/cgi-bin/textpresso/user_guide"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Full-text Literature Search (Textpresso)
+            </a>
+          </div>
+        </div>
+
+        <div className="help-item">
+          <h3>
+            <a href="/cgi-bin/gbrowse2/gbrowse/candida?help=general">GBrowse Help</a>
+          </h3>
+          <p>
+            Navigating the genome using the GBrowse Genome Browser. How to view nucleotide and
+            protein sequence in GBrowse.
+          </p>
+        </div>
+
+        <div className="help-item">
+          <h3>
+            <a href="/help/blast.shtml">BLAST Documentation</a>
+          </h3>
+          <p>
+            How to use the BLAST tool to query sequence similarity in CGD. A detailed description
+            of the search output is found on the{' '}
+            <a href="/help/blastresults.shtml">BLAST Results</a> help page.
+          </p>
+        </div>
+
+        <div className="help-item">
+          <h3>
+            <a href="/help/code_tables.shtml">
+              Non-standard Genetic Code Usage in <em>Candida</em>
+            </a>
+          </h3>
+          <p>
+            Information about translation tables used in CGD. <em>Candida albicans</em> and some
+            related species (often called the "CTG clade") use a non-standard genetic code,
+            "Translation table 12: Alternative Yeast Nuclear Code," to translate nuclear genes.
+          </p>
+        </div>
+
+        <div className="help-item">
+          <h3>
+            <a href="/help/nph-patmatch.shtml">Pattern Matching Tool Documentation</a>
+          </h3>
+          <p>How to use the Patmatch tool to locate DNA or protein sequence patterns in CGD.</p>
+        </div>
+
+        <div className="help-item">
+          <h3>
+            <a href="/help/webprimer-info.shtml">Primer Design Tool Documentation</a>
+          </h3>
+          <p>How to use the Webprimer tool to design primers for PCR or for sequencing.</p>
+        </div>
+
+        <div className="help-item">
+          <h3>
+            <a href="/help/restrictionmap.shtml">Restriction Analysis</a>
+          </h3>
+          <p>
+            How to use the Genome Restriction Analysis tool to compute a restriction map based on
+            DNA sequence.
+          </p>
+        </div>
+
+        <div className="help-item">
+          <h3>
+            <a href="/help/BiochemPathwaysHelp.shtml">Biochemical Pathways</a>
+          </h3>
+          <p>How to search and navigate metabolic pathway information in CGD.</p>
+        </div>
+
+        <div className="help-item">
+          <h3>Gene Ontology (GO) Documentation</h3>
+          <p>A guide to the Gene Ontology information and tools in CGD:</p>
+          <div className="help-links">
+            <a
+              href="http://www.yeastgenome.org/help/GO.html"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              What is GO?
+            </a>
+            <a
+              href="http://www.yeastgenome.org/help/gotutorial.html"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              SGD GO Tutorial
+            </a>
+            <a href="/help/goslimhelp.shtml">GO Slim Mapper Help</a>
+            <a href="/help/goTermFinder.shtml">GO Term Finder Help</a>
+          </div>
+        </div>
+
+        <div className="help-item">
+          <h3>CGD Web Page Help</h3>
+          <p>A guide to the types of information found on CGD web pages:</p>
+          <div className="help-links">
+            <a href="/help/Locus.shtml">Locus</a>
+            <a href="/help/Literature_Topics.shtml">Literature Guide</a>
+            <a href="/help/help_Curated.shtml">CGD Paper</a>
+            <a href="/help/PhenoHelp.shtml">Mutant Phenotype</a>
+          </div>
+        </div>
+
+        <div className="help-item">
+          <h3>Protein Pages</h3>
+          <p>
+            A guide to the resources available from the Protein tab on the Locus Summary page for
+            each ORF:
+          </p>
+          <div className="help-links">
+            <a href="/help/protein_page.shtml">Protein Information Page</a>
+            <a href="/help/Protein_Motifs.shtml">Domains/Motifs Page</a>
+            <a href="/help/Protein_Properties.shtml">Protein Physicochemical Properties</a>
+            <a href="/help/PDB_Homolog.shtml">PDB Homolog Page</a>
+          </div>
+        </div>
+
+        <div className="help-item">
+          <h3>CGD Download Help</h3>
+          <p>
+            README documents describing some of files available for download from CGD (full list on
+            the <a href="/DownloadContents.shtml">Download Index</a> page):
+          </p>
+          <div className="help-links">
+            <a href="/download/go/gene_association_README.txt">Gene Ontology (GO) Annotations File</a>
+            <a href="/download/chromosomal_feature_files/README">Chromosomal Feature File</a>
+            <a href="/download/sequence/README">Sequence Files</a>
+          </div>
+        </div>
+
+        <div className="help-item">
+          <h3>CGD Quick Resource Guide</h3>
+          <p>
+            A pamphlet (<a href="/help/CGDPamphlet2010.pdf">download pdf</a>) that describes the
+            content and usage of many resources available at CGD. The guide was developed a few
+            years ago and so it does not include the latest features added to CGD, but it provides
+            an overview of the basic functions and types of information available.
+          </p>
+        </div>
+
+        <div className="help-item">
+          <h3>
+            <a
+              href="http://www.yeastgenome.org/help/glossary.html"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Glossary
+            </a>
+          </h3>
+          <p>
+            Terms and definitions, provided by <em>Saccharomyces</em> Genome Database
+          </p>
+        </div>
+
+        <div className="help-item">
+          <h3>
+            <a href="/VL-FAQ.shtml">FAQ (Frequently Asked Questions)</a>
+          </h3>
+          <p>Answers to some of the most common questions asked by CGD users</p>
+        </div>
+
+        <div className="help-item">
+          <h3>
+            <Link to="/">What's New in CGD</Link>
+          </h3>
+          <p>Changes and additions to CGD services</p>
+        </div>
+
+        <div className="help-item">
+          <h3>
+            <a href="/cgi-bin/suggestion">Contact CGD</a>
+          </h3>
+          <p>Send suggestions or questions to CGD</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default HelpPage;
