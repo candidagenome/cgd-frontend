@@ -68,3 +68,26 @@
     justify-content: center;
   }
 }
+
+/* Citation Links */
+.citation-links {
+  font-size: 0.9em;
+  white-space: nowrap;
+}
+
+.citation-links a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.citation-links a:hover {
+  text-decoration: underline;
+}
+
+.citation-with-links {
+  display: inline;
+}
+
+.citation-compact {
+  display: inline;
+}

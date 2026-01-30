@@ -401,10 +401,171 @@ export function formatHistoryReference(ref) {
   return formatSingleReference(ref, 0);
 }
 
+/**
+ * Render citation links as plain text links separated by " | "
+ * Links: CGD Paper | PubMed | Access Full Text | Download Datasets | Web Supplement
+ * @param {Array} links - Array of link objects with name, url, link_type
+ * @returns {React.ReactNode} Formatted links
+ */
+export function CitationLinks({ links }) {
+  if (!links || links.length === 0) return null;
+
+  return (
+    <span className="citation-links">
+      {' ['}
+      {links.map((link, idx) => (
+        <React.Fragment key={link.name}>
+          {idx > 0 && ' | '}
+          {link.link_type === 'internal' ? (
+            <Link to={link.url}>{link.name}</Link>
+          ) : (
+            <a
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {link.name}
+            </a>
+          )}
+        </React.Fragment>
+      ))}
+      {']'}
+    </span>
+  );
+}
+
+/**
+ * Build citation links from reference data (when backend doesn't provide pre-built links)
+ * @param {Object} ref - Reference object with pubmed, dbxref_id, urls
+ * @returns {Array} Array of link objects
+ */
+export function buildCitationLinks(ref) {
+  if (!ref) return [];
+
+  const links = [];
+
+  // CGD Paper link (always present)
+  const cgdPaperUrl = ref.pubmed
+    ? `/reference/${ref.pubmed}`
+    : `/reference/${ref.dbxref_id || ref.reference_id}`;
+  links.push({
+    name: 'CGD Paper',
+    url: cgdPaperUrl,
+    link_type: 'internal'
+  });
+
+  // PubMed link
+  if (ref.pubmed) {
+    links.push({
+      name: 'PubMed',
+      url: `https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`,
+      link_type: 'external'
+    });
+  }
+
+  // Process URLs if available (check url_type for categorization)
+  if (ref.urls && Array.isArray(ref.urls)) {
+    ref.urls.forEach((urlItem) => {
+      // Handle both string URLs and URL objects
+      const url = typeof urlItem === 'string' ? urlItem : urlItem.url;
+      const urlType = (urlItem.url_type || '').toLowerCase();
+
+      if (urlType.includes('full') && urlType.includes('text')) {
+        links.push({
+          name: 'Access Full Text',
+          url: url,
+          link_type: 'external'
+        });
+      } else if (urlType.includes('reference data') || urlType.includes('download') || urlType.includes('dataset')) {
+        links.push({
+          name: 'Download Datasets',
+          url: url,
+          link_type: 'external'
+        });
+      } else if (urlType.includes('web') && urlType.includes('supplement')) {
+        links.push({
+          name: 'Web Supplement',
+          url: url,
+          link_type: 'external'
+        });
+      }
+    });
+  }
+
+  return links;
+}
+
+/**
+ * Format a complete citation with text and links
+ * Displays: "Author (Year) Title. Journal Volume:Pages [CGD Paper | PubMed | ...]"
+ * @param {Object} ref - Reference object with citation info and links
+ * @returns {React.ReactNode} Complete formatted citation with links
+ */
+export function formatCitationWithLinks(ref) {
+  if (!ref) return null;
+
+  // Use pre-built links from backend if available, otherwise build them
+  const links = ref.links && ref.links.length > 0
+    ? ref.links
+    : buildCitationLinks(ref);
+
+  return (
+    <span className="citation-with-links">
+      {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
+      <CitationLinks links={links} />
+    </span>
+  );
+}
+
+/**
+ * Render a simple inline citation with just CGD Paper and PubMed links
+ * For use in tables or compact displays
+ * @param {Object} ref - Reference object
+ * @returns {React.ReactNode} Compact citation with basic links
+ */
+export function formatCompactCitationWithLinks(ref) {
+  if (!ref) return null;
+
+  const shortCitation = formatShortCitation(ref);
+
+  // Build minimal links (CGD Paper and PubMed only)
+  const links = [];
+
+  if (ref.pubmed) {
+    links.push({
+      name: 'CGD Paper',
+      url: `/reference/${ref.pubmed}`,
+      link_type: 'internal'
+    });
+    links.push({
+      name: 'PubMed',
+      url: `https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`,
+      link_type: 'external'
+    });
+  } else if (ref.dbxref_id || ref.reference_id) {
+    links.push({
+      name: 'CGD Paper',
+      url: `/reference/${ref.dbxref_id || ref.reference_id}`,
+      link_type: 'internal'
+    });
+  }
+
+  return (
+    <span className="citation-compact">
+      {shortCitation}
+      {links.length > 0 && <CitationLinks links={links} />}
+    </span>
+  );
+}
+
 export default {
   formatCitationString,
   buildFormattedCitation,
   formatAuthors,
   formatShortCitation,
   formatHistoryReference,
+  CitationLinks,
+  buildCitationLinks,
+  formatCitationWithLinks,
+  formatCompactCitationWithLinks,
 };
