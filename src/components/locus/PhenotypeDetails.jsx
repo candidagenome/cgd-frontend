@@ -34,10 +34,9 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
   const orgData = selectedOrganism ? data.results[selectedOrganism] : null;
 
   // Map experiment types to root categories (like Perl does)
-  // IMPORTANT: Do NOT produce an "Other" category (it hid the whole table for records lacking experiment type).
+  // IMPORTANT: Do NOT produce an "Other" category.
   const getExperimentCategory = (experimentType) => {
     // Default missing/unknown experiment types into "Classical Genetics"
-    // so we avoid displaying an "Other" section header while still showing data.
     if (!experimentType) return 'Classical Genetics';
 
     const type = experimentType.toLowerCase();
@@ -55,12 +54,8 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
       const category = getExperimentCategory(ann.experiment);
       const expType = ann.experiment || 'Unspecified';
 
-      if (!groups[category]) {
-        groups[category] = {};
-      }
-      if (!groups[category][expType]) {
-        groups[category][expType] = [];
-      }
+      if (!groups[category]) groups[category] = {};
+      if (!groups[category][expType]) groups[category][expType] = [];
       groups[category][expType].push(ann);
     });
 
@@ -226,59 +221,70 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
                                       {refs.length > 0 ? (
                                         refs.map((ref, refIdx) => {
                                           const isRefObject = typeof ref === 'object' && ref !== null;
-                                          const citation = isRefObject ? ref.citation : null;
-                                          const journal = isRefObject ? (ref.journal_name || ref.journal) : null;
-                                          const links = isRefObject ? ref.links : null;
 
                                           const refId = isRefObject
                                             ? (ref.dbxref_id || ref.reference_id || (ref.pubmed ? `PMID:${ref.pubmed}` : null))
                                             : ref;
 
+                                          const citation = isRefObject ? ref.citation : null;
+                                          const journal = isRefObject ? (ref.journal_name || ref.journal) : null;
+                                          const links = isRefObject ? ref.links : null;
+
                                           return (
                                             <div key={refIdx} className="go-reference-item">
-                                              {citation ? (
-                                                <>
-                                                  {formatCitationString(citation, journal)}
-                                                  {links && links.length > 0 ? (
-                                                    <CitationLinksBelow links={ref.links && ref.links.length ? ref.links : buildCitationLinks(ref)} />
-                                                  ) : refId && (
-                                                    <span className="citation-links">
-                                                      {' ['}
-                                                      <Link to={`/reference/${refId}`}>CGD Paper</Link>
-                                                      {isRefObject && ref.pubmed && (
-                                                        <>
-                                                          {' | '}
-                                                          <a
-                                                            href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                          >
-                                                            PubMed
-                                                          </a>
-                                                        </>
-                                                      )}
-                                                      {']'}
-                                                    </span>
-                                                  )}
-                                                </>
-                                              ) : refId ? (
-                                                (typeof refId === 'string' &&
-                                                  (refId.startsWith('CGD_REF:') || refId.startsWith('CA') || refId.startsWith('PMID:'))) ? (
-                                                  refId.startsWith('PMID:') ? (
-                                                    <a
-                                                      href={`https://pubmed.ncbi.nlm.nih.gov/${refId.replace('PMID:', '')}`}
-                                                      target="_blank"
-                                                      rel="noopener noreferrer"
-                                                    >
-                                                      {refId}
-                                                    </a>
-                                                  ) : (
-                                                    <Link to={`/reference/${refId}`}>{refId}</Link>
-                                                  )
-                                                ) : (
-                                                  refId
-                                                )
-                                              ) : null}
+                                              {(() => {
+                                                // Object ref with a full citation: citation + links BELOW (no brackets)
+                                                if (isRefObject && citation) {
+                                                  const computedLinks = buildCitationLinks(ref);
+                                                  const displayLinks = (links && links.length > 0) ? links : computedLinks;
+
+                                                  return (
+                                                    <>
+                                                      <div className="citation-line">
+                                                        {formatCitationString(citation, journal)}
+                                                      </div>
+                                                      <CitationLinksBelow links={displayLinks} />
+                                                    </>
+                                                  );
+                                                }
+
+                                                // Fallback: reference ID string
+                                                if (typeof refId === 'string' && refId.startsWith('PMID:')) {
+                                                  const pmid = refId.replace('PMID:', '');
+                                                  return (
+                                                    <>
+                                                      <div className="citation-line">
+                                                        <a
+                                                          href={`https://pubmed.ncbi.nlm.nih.gov/${pmid}`}
+                                                          target="_blank"
+                                                          rel="noopener noreferrer"
+                                                        >
+                                                          {refId}
+                                                        </a>
+                                                      </div>
+                                                      <CitationLinksBelow
+                                                        links={[
+                                                          {
+                                                            name: 'PubMed',
+                                                            url: `https://pubmed.ncbi.nlm.nih.gov/${pmid}`,
+                                                            link_type: 'external',
+                                                          },
+                                                        ]}
+                                                      />
+                                                    </>
+                                                  );
+                                                }
+
+                                                if (typeof refId === 'string' && (refId.startsWith('CGD_REF:') || refId.startsWith('CA'))) {
+                                                  return (
+                                                    <div className="citation-line">
+                                                      <Link to={`/reference/${refId}`}>{refId}</Link>
+                                                    </div>
+                                                  );
+                                                }
+
+                                                return <div className="citation-line">{refId || '-'}</div>;
+                                              })()}
                                             </div>
                                           );
                                         })

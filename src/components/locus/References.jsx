@@ -33,26 +33,31 @@ function References({ data, loading, error }) {
   // Group references by year
   const groupByYear = (references) => {
     const groups = {};
-    references.forEach(ref => {
+    references.forEach((ref) => {
       const year = ref.year || 'Unknown';
-      if (!groups[year]) {
-        groups[year] = [];
-      }
+      if (!groups[year]) groups[year] = [];
       groups[year].push(ref);
     });
+
     // Sort years descending
     return Object.entries(groups).sort((a, b) => {
       if (a[0] === 'Unknown') return 1;
       if (b[0] === 'Unknown') return -1;
-      return parseInt(b[0]) - parseInt(a[0]);
+      return parseInt(b[0], 10) - parseInt(a[0], 10);
     });
   };
 
   const toggleYear = (key) => {
-    setCollapsedYears(prev => ({
+    setCollapsedYears((prev) => ({
       ...prev,
-      [key]: !prev[key]
+      [key]: !prev[key],
     }));
+  };
+
+  // Helper: always produce SGD-style links below (no brackets)
+  const renderLinksBelow = (ref) => {
+    const displayLinks = ref?.links && ref.links.length > 0 ? ref.links : buildCitationLinks(ref);
+    return <CitationLinksBelow links={displayLinks} />;
   };
 
   return (
@@ -63,6 +68,7 @@ function References({ data, loading, error }) {
         onOrganismChange={setSelectedOrganism}
         dataType="references"
       />
+
       {organisms.map(([orgName, orgData]) => {
         const refs = orgData.references || [];
         const groupedRefs = groupByYear(refs);
@@ -72,9 +78,7 @@ function References({ data, loading, error }) {
             <h3 className="organism-name">{orgName}</h3>
             <p className="locus-display">
               Locus: {orgData.locus_display_name}
-              {refs.length > 0 && (
-                <span className="total-count"> ({refs.length} references)</span>
-              )}
+              {refs.length > 0 && <span className="total-count"> ({refs.length} references)</span>}
             </p>
 
             {refs.length > 0 ? (
@@ -101,7 +105,6 @@ function References({ data, loading, error }) {
                       <tr>
                         <th>Year</th>
                         <th>Citation</th>
-                        <th>Links</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -111,31 +114,14 @@ function References({ data, loading, error }) {
                           <tr key={idx}>
                             <td className="year-cell">{ref.year || '-'}</td>
                             <td>
-                              {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
+                              <div className="ref-citation">
+                                {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
+                              </div>
+
+                              {/* Links BELOW citation (same cell) */}
+                              {renderLinksBelow(ref)}
+
                               {ref.title && <div className="ref-title">{ref.title}</div>}
-                            </td>
-                            <td>
-                              {ref.links && ref.links.length > 0 ? (
-                                <CitationLinksBelow links={ref.links && ref.links.length ? ref.links : buildCitationLinks(ref)} />
-                              ) : (
-                                <span className="citation-links">
-                                  {'['}
-                                  <Link to={`/reference/${ref.dbxref_id || ref.reference_no}`}>CGD Paper</Link>
-                                  {ref.pubmed && (
-                                    <>
-                                      {' | '}
-                                      <a
-                                        href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                      >
-                                        PubMed
-                                      </a>
-                                    </>
-                                  )}
-                                  {']'}
-                                </span>
-                              )}
                             </td>
                           </tr>
                         ))}
@@ -149,10 +135,7 @@ function References({ data, loading, error }) {
 
                       return (
                         <div key={year} className="year-group">
-                          <div
-                            className="year-header"
-                            onClick={() => toggleYear(yearKey)}
-                          >
+                          <div className="year-header" onClick={() => toggleYear(yearKey)}>
                             <span className="collapse-icon">{isCollapsed ? '▶' : '▼'}</span>
                             <span className="year-label">{year}</span>
                             <span className="count-badge">{yearRefs.length}</span>
@@ -165,34 +148,15 @@ function References({ data, loading, error }) {
                                   <div className="ref-citation">
                                     {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
                                   </div>
+
+                                  {/* Links BELOW citation */}
+                                  {renderLinksBelow(ref)}
+
                                   {ref.title && (
                                     <div className="ref-title-block">
                                       "{ref.title}"
                                     </div>
                                   )}
-                                  <div className="ref-links">
-                                    {ref.links && ref.links.length > 0 ? (
-                                      <CitationLinksBelow links={links && links.length ? links : buildCitationLinks(ref)} />
-                                    ) : (
-                                      <span className="citation-links">
-                                        {'['}
-                                        <Link to={`/reference/${ref.dbxref_id || ref.reference_no}`}>CGD Paper</Link>
-                                        {ref.pubmed && (
-                                          <>
-                                            {' | '}
-                                            <a
-                                              href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
-                                              target="_blank"
-                                              rel="noopener noreferrer"
-                                            >
-                                              PubMed
-                                            </a>
-                                          </>
-                                        )}
-                                        {']'}
-                                      </span>
-                                    )}
-                                  </div>
                                 </div>
                               ))}
                             </div>

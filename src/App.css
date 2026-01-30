@@ -118,10 +118,26 @@
   color: #444;
 }
 
-/* Links rendered below the citation */
 .citation-links-below {
-  margin-top: 2px;
+  margin-top: 4px;
   font-size: 0.9em;
+  line-height: 1.4;
+}
+
+/* Link appearance (lighter blue, not bold) */
+.citation-links-below .citation-link,
+.citation-links-below a {
+  color: #2a72c5;          /* lighter SGD-ish blue */
+  text-decoration: none;
+  font-weight: normal;
+  margin-right: 18px;      /* spacing between links */
+  white-space: nowrap;
+}
+
+/* Hover behavior (subtle underline) */
+.citation-links-below .citation-link:hover,
+.citation-links-below a:hover {
+  text-decoration: underline;
 }
 
 /* Individual link styling (reuse same blue as inline) */

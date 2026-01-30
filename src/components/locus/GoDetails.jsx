@@ -163,65 +163,79 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
                       {ann.term?.display_name}
                     </a>
                   </td>
+
                   <td>
                     {ann.references?.map((ref, refIdx) => {
-                      // Handle both string refs and object refs with citation data
                       const isObject = typeof ref === 'object' && ref !== null;
-                      const refId = isObject ? (ref.dbxref_id || ref.reference_id || (ref.pubmed ? `PMID:${ref.pubmed}` : null)) : ref;
+
+                      const refId = isObject
+                        ? (ref.dbxref_id || ref.reference_id || (ref.pubmed ? `PMID:${ref.pubmed}` : null))
+                        : ref;
+
                       const citation = isObject ? ref.citation : null;
                       const journal = isObject ? (ref.journal_name || ref.journal) : null;
                       const links = isObject ? ref.links : null;
 
                       return (
                         <div key={refIdx} className="go-reference-item">
-                          {citation ? (
-                            // Display full formatted citation when available
-                            <>
-                              {formatCitationString(citation, journal)}
-                              {links && links.length > 0 ? (
-                                <CitationLinksBelow links={ref.links && ref.links.length ? ref.links : buildCitationLinks(ref)} />
-                              ) : refId && (
-                                <span className="citation-links">
-                                  {' ['}
-                                  <Link to={`/reference/${refId}`}>CGD Paper</Link>
-                                  {isObject && ref.pubmed && (
-                                    <>
-                                      {' | '}
-                                      <a
-                                        href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                      >
-                                        PubMed
-                                      </a>
-                                    </>
-                                  )}
-                                  {']'}
-                                </span>
-                              )}
-                            </>
-                          ) : (
-                            // Fallback to showing reference ID as link
-                            <>
-                              {(typeof refId === 'string' && refId.startsWith('PMID:')) ? (
-                                <a
-                                  href={`https://pubmed.ncbi.nlm.nih.gov/${refId.replace('PMID:', '')}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  {refId}
-                                </a>
-                              ) : (typeof refId === 'string' && (refId.startsWith('CGD_REF:') || refId.startsWith('CA'))) ? (
-                                <Link to={`/reference/${refId}`}>{refId}</Link>
-                              ) : (
-                                refId
-                              )}
-                            </>
-                          )}
+                          {(() => {
+                            // Object ref with a full citation: show citation + links BELOW (no brackets)
+                            if (isObject && citation) {
+                              const computedLinks = buildCitationLinks(ref);
+                              const displayLinks = (links && links.length > 0) ? links : computedLinks;
+
+                              return (
+                                <>
+                                  <div className="citation-line">
+                                    {formatCitationString(citation, journal)}
+                                  </div>
+                                  <CitationLinksBelow links={displayLinks} />
+                                </>
+                              );
+                            }
+
+                            // Fallback: string or object without citation
+                            if (typeof refId === 'string' && refId.startsWith('PMID:')) {
+                              const pmid = refId.replace('PMID:', '');
+                              return (
+                                <>
+                                  <div className="citation-line">
+                                    <a
+                                      href={`https://pubmed.ncbi.nlm.nih.gov/${pmid}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                    >
+                                      {refId}
+                                    </a>
+                                  </div>
+                                  <CitationLinksBelow
+                                    links={[
+                                      {
+                                        name: 'PubMed',
+                                        url: `https://pubmed.ncbi.nlm.nih.gov/${pmid}`,
+                                        link_type: 'external',
+                                      },
+                                    ]}
+                                  />
+                                </>
+                              );
+                            }
+
+                            if (typeof refId === 'string' && (refId.startsWith('CGD_REF:') || refId.startsWith('CA'))) {
+                              return (
+                                <div className="citation-line">
+                                  <Link to={`/reference/${refId}`}>{refId}</Link>
+                                </div>
+                              );
+                            }
+
+                            return <div className="citation-line">{refId}</div>;
+                          })()}
                         </div>
                       );
                     })}
                   </td>
+
                   <td>
                     <span title={EVIDENCE_DESCRIPTIONS[ann.evidence?.code] || ann.evidence?.code}>
                       {ann.evidence?.code}
@@ -238,6 +252,7 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
                       <div className="assigned-date">Assigned on {ann.date_created}</div>
                     )}
                   </td>
+
                   <td>{ann.source || '-'}</td>
                 </tr>
               ))}
