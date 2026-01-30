@@ -81,15 +81,20 @@
 }
 
 .footer-copyright {
-  padding: 10px 20px;
+  padding: 15px 20px;
   background-color: #fff;
-  text-align: center;
+  text-align: left;
   font-size: 11px;
   color: #333;
+  line-height: 1.5;
 }
 
 .footer-copyright p {
-  margin: 0;
+  margin: 0 0 8px 0;
+}
+
+.footer-copyright p:last-child {
+  margin-bottom: 0;
 }
 
 .footer-copyright a {
@@ -100,6 +105,15 @@
 
 .footer-copyright a:hover {
   text-decoration: underline;
+}
+
+.footer-copyright .cite-label {
+  color: red;
+  font-size: 11px;
+}
+
+.footer-copyright .citation-text em {
+  font-style: italic;
 }
 
 /* Responsive */

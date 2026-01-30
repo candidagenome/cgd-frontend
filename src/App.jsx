@@ -40,8 +40,21 @@ function App() {
           </div>
           <div className="footer-copyright">
             <p>
-              &copy; 2004–{new Date().getFullYear()} The Board of Trustees of the Leland Stanford Junior University.
-              {' '}Please see <a href="/HowToCite.shtml">How to cite CGD</a>.
+              <strong>CGD Copyright</strong> &copy; 2004–{new Date().getFullYear()} The Board of Trustees, Leland Stanford Junior University.
+            </p>
+            <p>
+              Permission to use the information contained in this database was given by the researchers/institutes
+              who contributed or published the information. Users of the database are solely responsible for compliance
+              with any copyright restrictions, including those applying to the author abstracts. Documents from this
+              server are provided "AS-IS" without any warranty, expressed or implied.
+            </p>
+            <p className="citation-text">
+              <span className="cite-label">To cite CGD</span>, please use the following reference:{' '}
+              Skrzypek MS, Binkley J, Binkley G, Miyasato SR, Simison M, Sherlock G (2017).{' '}
+              The Candida Genome Database (CGD): incorporation of Assembly 22, systematic identifiers
+              and visualization of high throughput sequencing data.{' '}
+              <em>Nucleic Acids Res</em> <strong>45</strong> (D1); D592-D596;{' '}
+              see <a href="/HowToCite.shtml">How to cite CGD</a>.
             </p>
           </div>
         </footer>
