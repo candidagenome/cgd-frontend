@@ -1,44 +1,180 @@
-/* App-wide styles */
+/* =========================
+   App-wide styles
+   ========================= */
 
 .app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background-color: #ffffff;
 }
 
-/* Main Navigation */
-.main-nav {
+/* =========================
+   CGD Header (legacy-style)
+   ========================= */
+
+/* Remove extra space after the last utility link (Help) */
+.utility-links a:last-child {
+  margin-right: 0;
+}
+
+/* Tighten space specifically between Help and icons */
+.header-utils {
+  gap: 4px;   /* was 8px */
+}
+
+.site-header {
+  width: 100%;
+}
+
+/* Top white utility row */
+.header-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 30px;
-  background-color: #1f77c9;    /* #1976d2; */
-  color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px 18px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #ddd;
 }
 
-.nav-logo {
-  font-size: 1.5em;
-  font-weight: bold;
-  color: white;
-  text-decoration: none;
-}
-
-.nav-links {
+.header-left {
   display: flex;
-  gap: 20px;
+  align-items: center;
+  gap: 10px;
 }
 
-.nav-links a {
-  color: white;
+.site-logo {
+  font-size: 28px;
+  font-weight: bold;
+  color: #1f77c9;
   text-decoration: none;
-  padding: 5px 10px;
-  border-radius: 4px;
-  transition: background-color 0.2s;
 }
 
-.nav-links a:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+.site-title {
+  font-size: 20px;
+  color: #000;
+}
+
+/* Right side utilities */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 18px; /* space between (utils + search) */
+}
+
+/* Group utility links + icons tighter */
+.header-utils {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* reduced gap between Help and icons */
+}
+
+/* Utility links */
+.utility-links a {
+  margin-right: 10px;
+  color: #000;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.utility-links a:hover {
+  text-decoration: underline;
+}
+
+/* Header icons (email, facebook) */
+.header-icons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+/* Mail icon - lighter so it is visible */
+.icon-email {
+  font-size: 14px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #6b9fd6; /* lighter CGD-ish blue */
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+}
+
+.icon-email:hover {
+  background-color: #1f77c9;
+}
+
+.icon-facebook {
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #3b5998;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+}
+
+.icon-facebook:hover {
+  background-color: #2d4373;
+}
+
+/* Search box */
+.site-search {
+  display: flex;
+  align-items: center;
+}
+
+.site-search input {
+  padding: 4px 6px;
+  font-size: 14px;
+  border: 1px solid #999;
+  border-radius: 2px 0 0 2px;
+}
+
+.site-search button {
+  padding: 4px 10px;
+  font-size: 14px;
+  border: 1px solid #999;
+  border-left: none;
+  background-color: #1f77c9;
+  color: #ffffff;
+  cursor: pointer;
+  border-radius: 0 2px 2px 0;
+}
+
+.site-search button:hover {
+  background-color: #155fa0;
+}
+
+/* Main navigation bar (blue) */
+.header-nav {
+  display: flex;
+  gap: 28px;
+  padding: 10px 18px;
+  background-color: #1f77c9;
+  font-size: 18px;
+}
+
+.header-nav a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.header-nav a:hover {
+  text-decoration: underline;
 }
 
 /* =========================
@@ -57,7 +193,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 18px;
-  background-color: #e0e0e0;   /* lighter, softer gray */
+  background-color: #e0e0e0;
 }
 
 .footer-left a,
@@ -82,12 +218,12 @@
   font-size: 13px;
 }
 
-/* Yellow copyright block */
+/* Light blue copyright block */
 .footer-copyright {
   padding: 12px 18px;
-  background-color: #eaf3fb;   /* light CGD blue */
+  background-color: #eaf3fb;
   line-height: 1.45;
-  color: #243447;              /* slightly darker for readability */
+  color: #243447;
 }
 
 .footer-copyright p {
@@ -99,7 +235,7 @@
 }
 
 .footer-copyright a {
-  color: #1a5fb4; 
+  color: #1a5fb4;
   text-decoration: none;
 }
 
@@ -113,23 +249,8 @@
   font-weight: bold;
 }
 
-/* Citation styling */
 .footer-copyright em {
   font-style: italic;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .main-nav {
-    flex-direction: column;
-    gap: 15px;
-    padding: 15px;
-  }
-
-  .nav-links {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
 }
 
 /* =========================
@@ -150,10 +271,7 @@
   text-decoration: underline;
 }
 
-.citation-with-links {
-  display: inline;
-}
-
+.citation-with-links,
 .citation-compact {
   display: inline;
 }
@@ -162,23 +280,20 @@
    Citation Links (SGD-style: links below)
    ========================= */
 
-/* Stack citation + links vertically */
 .go-reference-item {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
-/* Main citation line */
 .citation-line {
   line-height: 1.35;
 }
 
-/* Optional PMID styling */
 .citation-pmid {
   margin-left: 6px;
-  font-size: 0.9em;
-  color: #444;
+  font-size: 0.8em;
+  color: #777;
 }
 
 .citation-links-below {
@@ -187,23 +302,20 @@
   line-height: 1.4;
 }
 
-/* Link appearance (lighter blue, not bold) */
 .citation-links-below .citation-link,
 .citation-links-below a {
-  color: #2a72c5;          /* lighter SGD-ish blue */
+  color: #2a72c5;
   text-decoration: none;
   font-weight: normal;
-  margin-right: 18px;      /* spacing between links */
+  margin-right: 18px;
   white-space: nowrap;
 }
 
-/* Hover behavior (subtle underline) */
 .citation-links-below .citation-link:hover,
 .citation-links-below a:hover {
   text-decoration: underline;
 }
 
-/* Individual link styling (reuse same blue as inline) */
 .citation-link {
   margin-right: 14px;
   color: #1976d2;
@@ -214,12 +326,29 @@
   text-decoration: underline;
 }
 
-/* Optional spacer span used in JSX */
 .citation-link-sep {
   display: inline;
 }
 
-.citation-pmid {
-  font-size: 0.8em;
-  color: #777;
+/* =========================
+   Responsive
+   ========================= */
+
+@media (max-width: 768px) {
+  .header-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .header-right {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .header-nav {
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 16px;
+  }
 }
