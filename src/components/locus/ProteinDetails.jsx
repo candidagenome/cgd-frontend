@@ -204,7 +204,8 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                   <div key={idx} id={`ref${idx + 1}`} className="reference-item">
                     <span className="reference-number">{idx + 1})</span>
                     <span className="reference-citation">
-                      {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
+		      {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
+		      {ref?.pubmed ? <span className="citation-pmid"> PMID: {ref.pubmed}</span> : null}	
                       {ref.links && ref.links.length > 0 && (
                         <CitationLinksBelow links={ref.links && ref.links.length ? ref.links : buildCitationLinks(ref)} />
                       )}

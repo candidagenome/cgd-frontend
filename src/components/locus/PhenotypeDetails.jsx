@@ -242,6 +242,7 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
                                                     <>
                                                       <div className="citation-line">
                                                         {formatCitationString(citation, journal)}
+                                                        {ref?.pubmed ? <span className="citation-pmid"> PMID: {ref.pubmed}</span> : null}
                                                       </div>
                                                       <CitationLinksBelow links={displayLinks} />
                                                     </>

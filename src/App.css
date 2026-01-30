@@ -156,3 +156,7 @@
   display: inline;
 }
 
+.citation-pmid {
+  font-size: 0.8em;
+  color: #777;
+}

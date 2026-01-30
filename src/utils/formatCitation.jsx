@@ -504,6 +504,11 @@ export function formatHistoryReference(ref) {
   return formatSingleReference(ref, 0);
 }
 
+export function renderPmidSuffix(pubmed) {
+  if (!pubmed) return null;
+  return <span className="citation-pmid"> PMID: {pubmed}</span>;
+}
+
 /**
  * Render citation links as plain text links separated by " | " (CGD-style inline)
  * Links: CGD Paper | PubMed | Access Full Text | Download Datasets | Web Supplement

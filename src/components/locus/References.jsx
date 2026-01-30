@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import './LocusComponents.css';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
-import { formatCitationString, CitationLinksBelow, buildCitationLinks } from '../../utils/formatCitation.jsx';
+import {
+  formatCitationString,
+  CitationLinksBelow,
+  buildCitationLinks,
+} from '../../utils/formatCitation.jsx';
 
 function References({ data, loading, error }) {
   const [collapsedYears, setCollapsedYears] = useState({});
@@ -33,8 +36,8 @@ function References({ data, loading, error }) {
   // Group references by year
   const groupByYear = (references) => {
     const groups = {};
-    references.forEach((ref) => {
-      const year = ref.year || 'Unknown';
+    (references || []).forEach((ref) => {
+      const year = ref?.year || 'Unknown';
       if (!groups[year]) groups[year] = [];
       groups[year].push(ref);
     });
@@ -54,10 +57,23 @@ function References({ data, loading, error }) {
     }));
   };
 
-  // Helper: always produce SGD-style links below (no brackets)
+  // Helper: links below (no brackets)
   const renderLinksBelow = (ref) => {
-    const displayLinks = ref?.links && ref.links.length > 0 ? ref.links : buildCitationLinks(ref);
+    const displayLinks =
+      ref?.links && ref.links.length > 0 ? ref.links : buildCitationLinks(ref);
     return <CitationLinksBelow links={displayLinks} />;
+  };
+
+  // Helper: citation line + optional PMID
+  const renderCitationLine = (ref) => {
+    const journal = ref?.journal_name || ref?.journal || null;
+
+    return (
+      <div className="citation-line">
+        {formatCitationString(ref?.citation, journal)}
+        {ref?.pubmed ? <span className="citation-pmid"> PMID: {ref.pubmed}</span> : null}
+      </div>
+    );
   };
 
   return (
@@ -70,15 +86,17 @@ function References({ data, loading, error }) {
       />
 
       {organisms.map(([orgName, orgData]) => {
-        const refs = orgData.references || [];
+        const refs = orgData?.references || [];
         const groupedRefs = groupByYear(refs);
 
         return (
           <div key={orgName} className="organism-section">
             <h3 className="organism-name">{orgName}</h3>
             <p className="locus-display">
-              Locus: {orgData.locus_display_name}
-              {refs.length > 0 && <span className="total-count"> ({refs.length} references)</span>}
+              Locus: {orgData?.locus_display_name}
+              {refs.length > 0 && (
+                <span className="total-count"> ({refs.length} references)</span>
+              )}
             </p>
 
             {refs.length > 0 ? (
@@ -109,19 +127,18 @@ function References({ data, loading, error }) {
                     </thead>
                     <tbody>
                       {refs
-                        .sort((a, b) => (b.year || 0) - (a.year || 0))
+                        .slice()
+                        .sort((a, b) => (b?.year || 0) - (a?.year || 0))
                         .map((ref, idx) => (
                           <tr key={idx}>
-                            <td className="year-cell">{ref.year || '-'}</td>
+                            <td className="year-cell">{ref?.year || '-'}</td>
                             <td>
-                              <div className="ref-citation">
-                                {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
-                              </div>
+                              <div className="ref-citation">{renderCitationLine(ref)}</div>
 
                               {/* Links BELOW citation (same cell) */}
                               {renderLinksBelow(ref)}
 
-                              {ref.title && <div className="ref-title">{ref.title}</div>}
+                              {ref?.title && <div className="ref-title">{ref.title}</div>}
                             </td>
                           </tr>
                         ))}
@@ -145,17 +162,13 @@ function References({ data, loading, error }) {
                             <div className="year-references">
                               {yearRefs.map((ref, idx) => (
                                 <div key={idx} className="reference-card">
-                                  <div className="ref-citation">
-                                    {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
-                                  </div>
+                                  <div className="ref-citation">{renderCitationLine(ref)}</div>
 
                                   {/* Links BELOW citation */}
                                   {renderLinksBelow(ref)}
 
-                                  {ref.title && (
-                                    <div className="ref-title-block">
-                                      "{ref.title}"
-                                    </div>
+                                  {ref?.title && (
+                                    <div className="ref-title-block">"{ref.title}"</div>
                                   )}
                                 </div>
                               ))}
