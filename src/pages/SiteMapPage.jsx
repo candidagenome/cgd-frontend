@@ -99,7 +99,7 @@ function SiteMapPage() {
               <td className="check-icon"><a href="/help/searchform.shtml#web">✓</a></td>
             </tr>
             <tr>
-              <td><a href="/cache/genome-wide-analysis.html">List of genome-wide analysis papers</a></td>
+              <td><Link to="/genome-wide-analysis">List of genome-wide analysis papers</Link></td>
               <td>Link to a list of genome-wide analysis papers (e.g., microarray analysis publications) curated at CGD.</td>
               <td>Find CGD curated papers that analyze the entire genome.</td>
               <td className="check-icon"><a href="/help/Literature_Topics.shtml">✓</a></td>
@@ -275,7 +275,7 @@ function SiteMapPage() {
               <td></td>
             </tr>
             <tr>
-              <td><a href="/cache/Labs.html"><em>Candida</em> Laboratories</a></td>
+              <td><Link to="/labs"><em>Candida</em> Laboratories</Link></td>
               <td>Links to laboratories who have submitted colleague information to CGD.</td>
               <td>Find a PI (principal investigator) of a <em>Candida</em> laboratory.</td>
               <td></td>
@@ -403,11 +403,11 @@ function SiteMapPage() {
             <tr>
               <td>
                 CGD Genome Snapshot<br />
-                <a href="/cache/C_albicans_SC5314_genomeSnapshot.html"><em>C. albicans</em></a> |{' '}
-                <a href="/cache/C_auris_B8441_genomeSnapshot.html"><em>C. auris</em></a> |{' '}
-                <a href="/cache/C_dubliniensis_CD36_genomeSnapshot.html"><em>C. dubliniensis</em></a> |{' '}
-                <a href="/cache/C_glabrata_CBS138_genomeSnapshot.html"><em>C. glabrata</em></a> |{' '}
-                <a href="/cache/C_parapsilosis_CDC317_genomeSnapshot.html"><em>C. parapsilosis</em></a>
+                <Link to="/genome-snapshot/C_albicans_SC5314"><em>C. albicans</em></Link> |{' '}
+                <Link to="/genome-snapshot/C_auris_B8441"><em>C. auris</em></Link> |{' '}
+                <Link to="/genome-snapshot/C_dubliniensis_CD36"><em>C. dubliniensis</em></Link> |{' '}
+                <Link to="/genome-snapshot/C_glabrata_CBS138"><em>C. glabrata</em></Link> |{' '}
+                <Link to="/genome-snapshot/C_parapsilosis_CDC317"><em>C. parapsilosis</em></Link>
               </td>
               <td>Annotation statistics, updated daily.</td>
               <td>Find information about the characterization of the genomes in CGD.</td>

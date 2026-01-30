@@ -59,29 +59,29 @@ function AboutPage() {
           <p>Daily inventory of genomic features and summary of GO annotations:</p>
           <ul>
             <li>
-              <a href="/cache/C_albicans_SC5314_genomeSnapshot.html">
+              <Link to="/genome-snapshot/C_albicans_SC5314">
                 <em>C. albicans</em> SC5314
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/cache/C_auris_B8441_genomeSnapshot.html">
+              <Link to="/genome-snapshot/C_auris_B8441">
                 <em>C. auris</em> B8441
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/cache/C_dubliniensis_CD36_genomeSnapshot.html">
+              <Link to="/genome-snapshot/C_dubliniensis_CD36">
                 <em>C. dubliniensis</em> CD36
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/cache/C_glabrata_CBS138_genomeSnapshot.html">
+              <Link to="/genome-snapshot/C_glabrata_CBS138">
                 <em>C. glabrata</em> CBS138
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/cache/C_parapsilosis_CDC317_genomeSnapshot.html">
+              <Link to="/genome-snapshot/C_parapsilosis_CDC317">
                 <em>C. parapsilosis</em> CDC317
-              </a>
+              </Link>
             </li>
           </ul>
         </section>

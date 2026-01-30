@@ -269,6 +269,41 @@
   color: #4caf50;
 }
 
+/* Placeholder notice for pages under development */
+.placeholder-notice {
+  background-color: #e3f2fd;
+  border: 1px solid #90caf9;
+  border-left: 4px solid #1976d2;
+  padding: 20px 25px;
+  border-radius: 0 4px 4px 0;
+  margin: 20px 0;
+}
+
+.placeholder-notice h3 {
+  margin: 0 0 10px 0;
+  color: #1565c0;
+  font-size: 1.1em;
+}
+
+.placeholder-notice p {
+  margin: 0 0 10px 0;
+  color: #333;
+  line-height: 1.6;
+}
+
+.placeholder-notice p:last-child {
+  margin-bottom: 0;
+}
+
+.placeholder-notice a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.placeholder-notice a:hover {
+  text-decoration: underline;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .info-page {

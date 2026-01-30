@@ -6,6 +6,9 @@ import AboutPage from './pages/AboutPage';
 import HelpPage from './pages/HelpPage';
 import HowToCitePage from './pages/HowToCitePage';
 import SiteMapPage from './pages/SiteMapPage';
+import GenomeSnapshotPage from './pages/GenomeSnapshotPage';
+import LabsPage from './pages/LabsPage';
+import GenomeWideAnalysisPage from './pages/GenomeWideAnalysisPage';
 import './App.css';
 
 function App() {
@@ -90,6 +93,9 @@ function App() {
           <Route path="/help" element={<HelpPage />} />
           <Route path="/how-to-cite" element={<HowToCitePage />} />
           <Route path="/sitemap" element={<SiteMapPage />} />
+          <Route path="/genome-snapshot/:organism" element={<GenomeSnapshotPage />} />
+          <Route path="/labs" element={<LabsPage />} />
+          <Route path="/genome-wide-analysis" element={<GenomeWideAnalysisPage />} />
         </Routes>
 
         {/* =========================
