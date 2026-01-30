@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './InfoPages.css';
 
 function HowToCitePage() {
@@ -286,7 +287,7 @@ function HowToCitePage() {
               <br />
               <em>FEMS Yeast Res.</em> 2006 Aug;<strong>6(5)</strong>:671-84.
               <span className="available-link">
-                <a href="/cgi-bin/suggestion">Available on request.</a>
+                <Link to="/contact">Available on request.</Link>
               </span>
             </li>
 

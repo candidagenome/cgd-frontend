@@ -21,14 +21,14 @@ function HelpPage() {
 
         <div className="help-item">
           <h3>
-            <a href="/help/GettingStarted.shtml">Getting Started with CGD</a>
+            <Link to="/help/getting-started">Getting Started with CGD</Link>
           </h3>
           <p>Common uses of CGD</p>
         </div>
 
         <div className="help-item">
           <h3>
-            <a href="/Nomenclature.shtml">Gene Nomenclature Guide</a>
+            <Link to="/nomenclature">Gene Nomenclature Guide</Link>
           </h3>
           <p>
             Information about the various types of gene names/identifiers that are in use.
@@ -39,7 +39,7 @@ function HelpPage() {
 
         <div className="help-item">
           <h3>
-            <a href="/help/SequenceHelp.shtml">Sequence Documentation</a>
+            <Link to="/help/sequence">Sequence Documentation</Link>
           </h3>
           <p>
             Information about the DNA and protein sequences in CGD. How to access sequence
@@ -50,13 +50,13 @@ function HelpPage() {
 
         <div className="help-item">
           <h3>
-            <a href="/help/searchform.shtml">Search Help</a>
+            <Link to="/help/search-form">Search Help</Link>
           </h3>
           <p>Documentation about search tools in CGD. Additional tool-specific documentation:</p>
           <div className="help-links">
-            <a href="/help/FeatureSearchHelp.shtml">Advanced Search</a>
-            <a href="/help/batch_download.shtml">Batch Download</a>
-            <a href="/help/GSResources.shtml">Get Sequence</a>
+            <Link to="/help/feature-search">Advanced Search</Link>
+            <Link to="/help/batch-download">Batch Download</Link>
+            <Link to="/help/gs-resources">Get Sequence</Link>
             <a
               href="http://textpresso.candidagenome.org/cgi-bin/textpresso/user_guide"
               target="_blank"
@@ -79,20 +79,20 @@ function HelpPage() {
 
         <div className="help-item">
           <h3>
-            <a href="/help/blast.shtml">BLAST Documentation</a>
+            <Link to="/help/blast">BLAST Documentation</Link>
           </h3>
           <p>
             How to use the BLAST tool to query sequence similarity in CGD. A detailed description
             of the search output is found on the{' '}
-            <a href="/help/blastresults.shtml">BLAST Results</a> help page.
+            <Link to="/help/blast-results">BLAST Results</Link> help page.
           </p>
         </div>
 
         <div className="help-item">
           <h3>
-            <a href="/help/code_tables.shtml">
+            <Link to="/help/code-tables">
               Non-standard Genetic Code Usage in <em>Candida</em>
-            </a>
+            </Link>
           </h3>
           <p>
             Information about translation tables used in CGD. <em>Candida albicans</em> and some
@@ -103,21 +103,21 @@ function HelpPage() {
 
         <div className="help-item">
           <h3>
-            <a href="/help/nph-patmatch.shtml">Pattern Matching Tool Documentation</a>
+            <Link to="/help/patmatch">Pattern Matching Tool Documentation</Link>
           </h3>
           <p>How to use the Patmatch tool to locate DNA or protein sequence patterns in CGD.</p>
         </div>
 
         <div className="help-item">
           <h3>
-            <a href="/help/webprimer-info.shtml">Primer Design Tool Documentation</a>
+            <Link to="/help/webprimer">Primer Design Tool Documentation</Link>
           </h3>
           <p>How to use the Webprimer tool to design primers for PCR or for sequencing.</p>
         </div>
 
         <div className="help-item">
           <h3>
-            <a href="/help/restrictionmap.shtml">Restriction Analysis</a>
+            <Link to="/help/restriction-map">Restriction Analysis</Link>
           </h3>
           <p>
             How to use the Genome Restriction Analysis tool to compute a restriction map based on
@@ -127,7 +127,7 @@ function HelpPage() {
 
         <div className="help-item">
           <h3>
-            <a href="/help/BiochemPathwaysHelp.shtml">Biochemical Pathways</a>
+            <Link to="/help/biochem-pathways">Biochemical Pathways</Link>
           </h3>
           <p>How to search and navigate metabolic pathway information in CGD.</p>
         </div>
@@ -150,8 +150,8 @@ function HelpPage() {
             >
               SGD GO Tutorial
             </a>
-            <a href="/help/goslimhelp.shtml">GO Slim Mapper Help</a>
-            <a href="/help/goTermFinder.shtml">GO Term Finder Help</a>
+            <Link to="/help/go-slim">GO Slim Mapper Help</Link>
+            <Link to="/help/go-term-finder">GO Term Finder Help</Link>
           </div>
         </div>
 
@@ -159,10 +159,10 @@ function HelpPage() {
           <h3>CGD Web Page Help</h3>
           <p>A guide to the types of information found on CGD web pages:</p>
           <div className="help-links">
-            <a href="/help/Locus.shtml">Locus</a>
-            <a href="/help/Literature_Topics.shtml">Literature Guide</a>
-            <a href="/help/help_Curated.shtml">CGD Paper</a>
-            <a href="/help/PhenoHelp.shtml">Mutant Phenotype</a>
+            <Link to="/help/locus">Locus</Link>
+            <Link to="/help/literature-topics">Literature Guide</Link>
+            <Link to="/help/curated-paper">CGD Paper</Link>
+            <Link to="/help/phenotype">Mutant Phenotype</Link>
           </div>
         </div>
 
@@ -173,10 +173,10 @@ function HelpPage() {
             each ORF:
           </p>
           <div className="help-links">
-            <a href="/help/protein_page.shtml">Protein Information Page</a>
-            <a href="/help/Protein_Motifs.shtml">Domains/Motifs Page</a>
-            <a href="/help/Protein_Properties.shtml">Protein Physicochemical Properties</a>
-            <a href="/help/PDB_Homolog.shtml">PDB Homolog Page</a>
+            <Link to="/help/protein-page">Protein Information Page</Link>
+            <Link to="/help/protein-motifs">Domains/Motifs Page</Link>
+            <Link to="/help/protein-properties">Protein Physicochemical Properties</Link>
+            <Link to="/help/pdb-homolog">PDB Homolog Page</Link>
           </div>
         </div>
 
@@ -184,7 +184,7 @@ function HelpPage() {
           <h3>CGD Download Help</h3>
           <p>
             README documents describing some of files available for download from CGD (full list on
-            the <a href="/DownloadContents.shtml">Download Index</a> page):
+            the <Link to="/download">Download Index</Link> page):
           </p>
           <div className="help-links">
             <a href="/download/go/gene_association_README.txt">Gene Ontology (GO) Annotations File</a>
@@ -220,7 +220,7 @@ function HelpPage() {
 
         <div className="help-item">
           <h3>
-            <a href="/VL-FAQ.shtml">FAQ (Frequently Asked Questions)</a>
+            <Link to="/faq">FAQ (Frequently Asked Questions)</Link>
           </h3>
           <p>Answers to some of the most common questions asked by CGD users</p>
         </div>
@@ -234,7 +234,7 @@ function HelpPage() {
 
         <div className="help-item">
           <h3>
-            <a href="/cgi-bin/suggestion">Contact CGD</a>
+            <Link to="/contact">Contact CGD</Link>
           </h3>
           <p>Send suggestions or questions to CGD</p>
         </div>

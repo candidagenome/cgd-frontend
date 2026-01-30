@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, Link } from 'react-router-dom';
 import useLocusData from '../hooks/useLocusData';
 import LocusSummary from '../components/locus/LocusSummary';
 import GoDetails from '../components/locus/GoDetails';
@@ -19,7 +19,7 @@ const TABS = [
   { id: 'protein', label: 'Protein', component: 'protein', loader: 'loadProteinDetails' },
   { id: 'homology', label: 'Homologs', component: 'homology', loader: 'loadHomologyDetails' },
   { id: 'sequence', label: 'Sequence', component: 'sequence', loader: 'loadSequenceDetails' },
-  { id: 'references', label: 'References', component: 'references', loader: 'loadReferences' },
+  { id: 'literature', label: 'Literature', component: 'literature', loader: 'loadReferences' },
   { id: 'history', label: 'History', component: 'history', loader: 'loadHistory' },
 ];
 
@@ -163,7 +163,7 @@ function LocusPage() {
           />
         );
 
-      case 'references':
+      case 'literature':
         return (
           <References
             data={data.references}
@@ -244,8 +244,8 @@ function LocusPage() {
             </ul>
           </div>
           <div className="error-actions">
-            <a href="/" className="btn-home">Return to Home</a>
-            <a href="/SearchContents.shtml" className="btn-search">Search CGD</a>
+            <Link to="/" className="btn-home">Return to Home</Link>
+            <Link to="/search" className="btn-search">Search CGD</Link>
           </div>
         </div>
       </div>

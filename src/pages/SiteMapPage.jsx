@@ -41,7 +41,7 @@ function SiteMapPage() {
           </p>
           <p>
             For more information on how to navigate around CGD, please read the{' '}
-            <a href="/help/GettingStarted.shtml">Getting Started</a> page.
+            <Link to="/help/getting-started">Getting Started</Link> page.
           </p>
         </section>
 
@@ -61,18 +61,18 @@ function SiteMapPage() {
             {/* Search Options */}
             <tr>
               <td className="category-header" rowSpan="7">
-                <a href="/SearchContents.shtml">Search Options</a>
+                <Link to="/search">Search Options</Link>
               </td>
-              <td><a href="/SearchContents.shtml">Quick Search and Text Search</a></td>
+              <td><Link to="/search">Quick Search and Text Search</Link></td>
               <td>Search the CGD relational database, including literature guide, colleague information, protein information, and text.</td>
               <td>Search CGD database using keywords.</td>
-              <td className="check-icon"><a href="/help/searchform.shtml#basic">✓</a></td>
+              <td className="check-icon"><Link to="/help/search-form">✓</Link></td>
             </tr>
             <tr>
               <td><a href="/cgi-bin/search/featureSearch">Advanced Search</a></td>
               <td>Find a chromosomal feature (e.g., gene, ORF, centromere) based on selected criteria (e.g., chromosome number, GO-Slim terms, etc.)</td>
               <td>Find chromosomal features that match specific properties or annotations.</td>
-              <td className="check-icon"><a href="/help/FeatureSearchHelp.shtml">✓</a></td>
+              <td className="check-icon"><Link to="/help/feature-search">✓</Link></td>
             </tr>
             <tr>
               <td><a href="http://textpresso.candidagenome.org/cgi-bin/textpresso/search" target="_blank" rel="noopener noreferrer">Full-text Literature Search</a></td>
@@ -84,25 +84,25 @@ function SiteMapPage() {
               <td><a href="http://pathway.stanford.edu/" target="_blank" rel="noopener noreferrer">Biochemical Pathway Search</a></td>
               <td>Search or browse pathway information in CGD, including pathways, reactions, enzymes, and chemical compounds.</td>
               <td>Find metabolic pathways and related information.</td>
-              <td className="check-icon"><a href="/help/BiochemPathwaysHelp.shtml">✓</a></td>
+              <td className="check-icon"><Link to="/help/biochem-pathways">✓</Link></td>
             </tr>
             <tr>
               <td><a href="/cgi-bin/phenotype/phenotype.pl">Expanded Phenotype Search</a></td>
               <td>Search the text of all phenotype information to find phenotypes of interest and view the genes associated with them.</td>
               <td>Enter keywords associated with a phenotype (e.g., 'hyphal', 'virulence') to search for features.</td>
-              <td className="check-icon"><a href="/help/PhenoSearchHelp.shtml">✓</a></td>
+              <td className="check-icon"><Link to="/help/pheno-search">✓</Link></td>
             </tr>
             <tr>
-              <td><a href="/SearchContents.shtml#web">Search CGD Web Pages</a></td>
+              <td><Link to="/search">Search CGD Web Pages</Link></td>
               <td>Search CGD HTML pages, excludes the relational database.</td>
               <td>Find CGD web pages using keywords located on the page.</td>
-              <td className="check-icon"><a href="/help/searchform.shtml#web">✓</a></td>
+              <td className="check-icon"><Link to="/help/search-form">✓</Link></td>
             </tr>
             <tr>
               <td><Link to="/genome-wide-analysis">List of genome-wide analysis papers</Link></td>
               <td>Link to a list of genome-wide analysis papers (e.g., microarray analysis publications) curated at CGD.</td>
               <td>Find CGD curated papers that analyze the entire genome.</td>
-              <td className="check-icon"><a href="/help/Literature_Topics.shtml">✓</a></td>
+              <td className="check-icon"><Link to="/help/literature-topics">✓</Link></td>
             </tr>
 
             {/* Help Resources */}
@@ -117,13 +117,13 @@ function SiteMapPage() {
               <td className="category-header" id="help" rowSpan="4">
                 <Link to="/help">Help Resources</Link>
               </td>
-              <td><a href="/help/GettingStarted.shtml">Getting Started</a></td>
+              <td><Link to="/help/getting-started">Getting Started</Link></td>
               <td>Common uses of CGD for the first time user.</td>
               <td>Get a brief overview of navigating around CGD.</td>
               <td></td>
             </tr>
             <tr>
-              <td><a href="/VL-FAQ.shtml">FAQ</a></td>
+              <td><Link to="/faq">FAQ</Link></td>
               <td>Answers to some of the most frequently asked questions about CGD.</td>
               <td>Get an answer to a commonly asked question.</td>
               <td></td>
@@ -151,18 +151,18 @@ function SiteMapPage() {
             </tr>
             <tr>
               <td className="category-header" id="tools" rowSpan="8">
-                <a href="/SearchContents.shtml">Analysis & Tools</a>
+                <Link to="/search">Analysis & Tools</Link>
               </td>
               <td><a href="/cgi-bin/compute/blast_clade.pl">BLAST</a></td>
               <td>Search <em>Candida</em> DNA and protein sequence datasets for similarities to a particular sequence.</td>
               <td>Find similarities between a sequence and <em>Candida</em> DNA or protein sequences.</td>
-              <td className="check-icon"><a href="/help/blast.shtml">✓</a></td>
+              <td className="check-icon"><Link to="/help/blast">✓</Link></td>
             </tr>
             <tr>
               <td><a href="/cgi-bin/seqTools">Gene/Sequence Resources</a></td>
               <td>Retrieve <em>Candida</em> genomic sequence from CGD or paste in a DNA or protein sequence to analyze.</td>
               <td>Display and analyze a <em>Candida</em> sequence in many ways.</td>
-              <td className="check-icon"><a href="/help/GSResources.shtml">✓</a></td>
+              <td className="check-icon"><Link to="/help/gs-resources">✓</Link></td>
             </tr>
             <tr>
               <td>
@@ -188,25 +188,25 @@ function SiteMapPage() {
               </td>
               <td>JBrowse allows viewing and navigation of genomic sequence and high-throughput genomics data.</td>
               <td>Viewing large-scale data sets, such as RNA-Seq, DNA-Seq, ChIP-Seq, etc.</td>
-              <td className="check-icon"><a href="/help/JBrowse_help.shtml">✓</a></td>
+              <td className="check-icon"><Link to="/help/jbrowse">✓</Link></td>
             </tr>
             <tr>
               <td><a href="/cgi-bin/PATMATCH/nph-patmatch">Pattern Matching</a></td>
               <td>A pattern matching program that allows ambiguous matches but not gaps.</td>
               <td>Find short DNA/protein sequence matches in <em>Candida</em> sequences.</td>
-              <td className="check-icon"><a href="/help/nph-patmatch.shtml">✓</a></td>
+              <td className="check-icon"><Link to="/help/patmatch">✓</Link></td>
             </tr>
             <tr>
               <td><a href="/cgi-bin/compute/web-primer">Design Primers</a></td>
               <td>Recommends primers appropriate for either PCR or sequencing of a given gene or DNA sequence.</td>
               <td>Design sequencing and PCR primers for <em>Candida</em> or other input sequences.</td>
-              <td className="check-icon"><a href="/help/webprimer-info.shtml">✓</a></td>
+              <td className="check-icon"><Link to="/help/webprimer">✓</Link></td>
             </tr>
             <tr>
               <td><a href="/cgi-bin/PATMATCH/RestrictionMapper">Genome Restriction Analysis</a></td>
               <td>Generates a restriction map of a specified DNA sequence.</td>
               <td>Display restriction maps for <em>Candida</em> or other input sequences.</td>
-              <td className="check-icon"><a href="/help/restrictionmap.shtml">✓</a></td>
+              <td className="check-icon"><Link to="/help/restriction-map">✓</Link></td>
             </tr>
             <tr>
               <td><a href="http://seq.yeastgenome.org/cgi-bin/blast-fungal.pl" target="_blank" rel="noopener noreferrer">SGD's Fungal BLAST</a></td>
@@ -225,7 +225,7 @@ function SiteMapPage() {
             </tr>
             <tr>
               <td className="category-header" id="go" rowSpan="4">
-                <a href="/GOContents.shtml">GO Resources</a>
+                <Link to="/go-resources">GO Resources</Link>
               </td>
               <td><a href="http://www.yeastgenome.org/help/GO.html" target="_blank" rel="noopener noreferrer">What is GO?</a></td>
               <td>SGD help page that explains the philosophy of GO.</td>
@@ -242,13 +242,13 @@ function SiteMapPage() {
               <td><a href="/cgi-bin/GO/goTermMapper">GO Slim Mapper</a></td>
               <td>GO Slim is a set of GO terms that represent major sections of the ontology. This tool traces specific annotations to broader GO Slim terms.</td>
               <td>Map a set of CGD genes to broad GO Slim categories.</td>
-              <td className="check-icon"><a href="/help/goslimhelp.shtml">✓</a></td>
+              <td className="check-icon"><Link to="/help/go-slim">✓</Link></td>
             </tr>
             <tr>
               <td><a href="/cgi-bin/GO/goTermFinder">GO Term Finder</a></td>
               <td>This tool determines the GO terms that a set of CGD genes shares in common and graphically displays the significant lineage.</td>
               <td>Find GO terms that are shared by a group of CGD genes.</td>
-              <td className="check-icon"><a href="/help/goTermFinder.shtml">✓</a></td>
+              <td className="check-icon"><Link to="/help/go-term-finder">✓</Link></td>
             </tr>
 
             {/* Community Info */}
@@ -261,15 +261,15 @@ function SiteMapPage() {
             </tr>
             <tr>
               <td className="category-header" id="community" rowSpan="5">
-                <a href="/ComContents.shtml">Community Info</a>
+                <Link to="/community">Community Info</Link>
               </td>
-              <td><a href="/Meetings.shtml">Conferences & Courses</a></td>
+              <td><Link to="/meetings">Conferences & Courses</Link></td>
               <td>Link to a list of conferences & courses.</td>
               <td>Find an upcoming conference.</td>
               <td></td>
             </tr>
             <tr>
-              <td><a href="/CommunityNews.shtml">Community News</a></td>
+              <td><Link to="/community-news">Community News</Link></td>
               <td>Links to <em>Candida</em> news postings.</td>
               <td>Find out about items of interest to the research community.</td>
               <td></td>
@@ -281,13 +281,13 @@ function SiteMapPage() {
               <td></td>
             </tr>
             <tr>
-              <td><a href="/JobPostings.shtml"><em>Candida</em> Community Job Postings</a></td>
+              <td><Link to="/job-postings"><em>Candida</em> Community Job Postings</Link></td>
               <td>Announcements of employment opportunities related to <em>Candida</em> biology.</td>
               <td>View job openings.</td>
               <td></td>
             </tr>
             <tr>
-              <td><a href="/ExternalResources.shtml">External Links</a></td>
+              <td><Link to="/external-resources">External Links</Link></td>
               <td>List of useful external sites.</td>
               <td>Find a web site for information not available at CGD.</td>
               <td></td>
@@ -303,7 +303,7 @@ function SiteMapPage() {
             </tr>
             <tr>
               <td className="category-header" id="submit" rowSpan="4">
-                <a href="/SubmitContents.shtml">Submit Data</a>
+                <Link to="/submit-data">Submit Data</Link>
               </td>
               <td><a href="/cgi-bin/registry/geneRegistry">Gene Registry</a></td>
               <td>Form to register a gene name.</td>
@@ -311,7 +311,7 @@ function SiteMapPage() {
               <td></td>
             </tr>
             <tr>
-              <td><a href="/Nomenclature.shtml">Gene Naming Guidelines</a></td>
+              <td><Link to="/nomenclature">Gene Naming Guidelines</Link></td>
               <td>Guidelines for choosing and registering a gene name as agreed upon by the members of the <em>C. albicans</em> community.</td>
               <td>Find information about registering a gene name.</td>
               <td></td>
@@ -320,10 +320,10 @@ function SiteMapPage() {
               <td><a href="/cgi-bin/colleague/colleagueSearch">Colleague Submission/Update Form</a></td>
               <td>Form to submit colleague information to CGD.</td>
               <td>Add or update your information in CGD.</td>
-              <td className="check-icon"><a href="/help/colleagueupdate.shtml">✓</a></td>
+              <td className="check-icon"><Link to="/help/colleague-update">✓</Link></td>
             </tr>
             <tr>
-              <td><a href="/cgi-bin/suggestion">Contact CGD</a></td>
+              <td><Link to="/contact">Contact CGD</Link></td>
               <td>Form to submit suggestions or questions to CGD.</td>
               <td>Send suggestions or questions to CGD.</td>
               <td></td>
@@ -339,12 +339,12 @@ function SiteMapPage() {
             </tr>
             <tr>
               <td className="category-header" id="download" rowSpan="7">
-                <a href="/DownloadContents.shtml">Download Data</a>
+                <Link to="/download">Download Data</Link>
               </td>
               <td><a href="/cgi-bin/batchDownload">Batch Download</a></td>
               <td>Tool that allows simultaneous retrieval of DNA sequences, protein sequences, and chromosomal coordinate information for a list of gene names.</td>
               <td>Download information for a list of genes from CGD.</td>
-              <td className="check-icon"><a href="/help/batch_download.shtml">✓</a></td>
+              <td className="check-icon"><Link to="/help/batch-download">✓</Link></td>
             </tr>
             <tr>
               <td><a href="/download/go/gene_association.cgd.gz">Gene Ontology (GO) Annotations File</a></td>
@@ -377,7 +377,7 @@ function SiteMapPage() {
               <td className="check-icon"><a href="/download/homology/README">✓</a></td>
             </tr>
             <tr>
-              <td><a href="/Download_Datasets.shtml">Datasets archived at CGD</a></td>
+              <td><Link to="/download">Datasets archived at CGD</Link></td>
               <td>Archive of published and freely available datasets.</td>
               <td>Download large-scale datasets.</td>
               <td></td>
@@ -411,7 +411,7 @@ function SiteMapPage() {
               </td>
               <td>Annotation statistics, updated daily.</td>
               <td>Find information about the characterization of the genomes in CGD.</td>
-              <td className="check-icon"><a href="/help/genomeSnapshot.shtml">✓</a></td>
+              <td className="check-icon"><Link to="/help/genome-snapshot">✓</Link></td>
             </tr>
             <tr>
               <td><Link to="/how-to-cite">Citing CGD</Link></td>
@@ -420,7 +420,7 @@ function SiteMapPage() {
               <td></td>
             </tr>
             <tr>
-              <td><a href="/staff.shtml">Staff</a></td>
+              <td><Link to="/staff">Staff</Link></td>
               <td>Names and addresses of CGD staff.</td>
               <td>Find out who works at CGD.</td>
               <td></td>
