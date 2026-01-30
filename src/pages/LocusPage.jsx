@@ -204,6 +204,54 @@ function LocusPage() {
     return name;
   };
 
+  // Check if the identifier was not found
+  const isNotFound = !loading.info && (
+    errors.info ||
+    !data.info ||
+    !data.info.results ||
+    Object.keys(data.info.results).length === 0
+  );
+
+  // Show loading state
+  if (loading.info) {
+    return (
+      <div className="locus-page">
+        <div className="loading-page">
+          <div className="loading-spinner"></div>
+          <p>Loading locus information for <strong>{name}</strong>...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error page for unknown identifier
+  if (isNotFound) {
+    return (
+      <div className="locus-page">
+        <div className="error-page">
+          <div className="error-icon">&#9888;</div>
+          <h1>Locus Not Found</h1>
+          <p className="error-message">
+            The identifier <strong>"{name}"</strong> was not found in the Candida Genome Database.
+          </p>
+          <div className="error-suggestions">
+            <h3>Suggestions:</h3>
+            <ul>
+              <li>Check the spelling of the gene name or identifier</li>
+              <li>Try using a standard gene name (e.g., <em>ACT1</em>, <em>CDC42</em>)</li>
+              <li>Try using a systematic name (e.g., <em>C1_01070C_A</em>)</li>
+              <li>Use the <a href="/cgi-bin/search/featureSearch">Advanced Search</a> to find genes</li>
+            </ul>
+          </div>
+          <div className="error-actions">
+            <a href="/" className="btn-home">Return to Home</a>
+            <a href="/SearchContents.shtml" className="btn-search">Search CGD</a>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="locus-page">
       <header className="locus-header">
