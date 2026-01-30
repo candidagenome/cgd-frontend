@@ -2,6 +2,10 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import LocusPage from './pages/LocusPage';
 import ReferencePage from './pages/ReferencePage';
+import AboutPage from './pages/AboutPage';
+import HelpPage from './pages/HelpPage';
+import HowToCitePage from './pages/HowToCitePage';
+import SiteMapPage from './pages/SiteMapPage';
 import './App.css';
 
 function App() {
@@ -23,10 +27,10 @@ function App() {
             <div className="header-right">
               <div className="header-utils">
                 <nav className="utility-links" aria-label="Utility">
-                  <a href="/About.shtml">About</a>
-                  <a href="/SiteMap.shtml">Site Map</a>
-                  <a href="/HowToCite.shtml">How to Cite</a>
-                  <a href="/Help.shtml">Help</a>
+                  <Link to="/about">About</Link>
+                  <Link to="/sitemap">Site Map</Link>
+                  <Link to="/how-to-cite">How to Cite</Link>
+                  <Link to="/help">Help</Link>
                 </nav>
 
                 <div className="header-icons">
@@ -82,6 +86,10 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/locus/:name" element={<LocusPage />} />
           <Route path="/reference/:id" element={<ReferencePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/help" element={<HelpPage />} />
+          <Route path="/how-to-cite" element={<HowToCitePage />} />
+          <Route path="/sitemap" element={<SiteMapPage />} />
         </Routes>
 
         {/* =========================
@@ -121,7 +129,7 @@ function App() {
               The Candida Genome Database (CGD): incorporation of Assembly 22, systematic identifiers
               and visualization of high throughput sequencing data.{' '}
               <em>Nucleic Acids Res</em> <strong>45</strong> (D1); D592–D596; see{' '}
-              <a href="/HowToCite.shtml">How to cite CGD</a>.
+              <Link to="/how-to-cite">How to cite CGD</Link>.
             </p>
           </div>
         </footer>
