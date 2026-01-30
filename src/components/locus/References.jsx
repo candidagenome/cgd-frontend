@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './LocusComponents.css';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
-import { formatCitationString } from '../../utils/formatCitation.jsx';
+import { formatCitationString, CitationLinks } from '../../utils/formatCitation.jsx';
 
 function References({ data, loading, error }) {
   const [collapsedYears, setCollapsedYears] = useState({});
@@ -101,7 +101,7 @@ function References({ data, loading, error }) {
                       <tr>
                         <th>Year</th>
                         <th>Citation</th>
-                        <th>PubMed</th>
+                        <th>Links</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -111,23 +111,30 @@ function References({ data, loading, error }) {
                           <tr key={idx}>
                             <td className="year-cell">{ref.year || '-'}</td>
                             <td>
-                              <Link to={`/reference/${ref.pubmed || ref.reference_no}`}>
-                                {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
-                              </Link>
+                              {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
                               {ref.title && <div className="ref-title">{ref.title}</div>}
                             </td>
                             <td>
-                              {ref.pubmed ? (
-                                <a
-                                  href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="pmid-link"
-                                >
-                                  {ref.pubmed}
-                                </a>
+                              {ref.links && ref.links.length > 0 ? (
+                                <CitationLinks links={ref.links} />
                               ) : (
-                                '-'
+                                <span className="citation-links">
+                                  {'['}
+                                  <Link to={`/reference/${ref.dbxref_id || ref.reference_no}`}>CGD Paper</Link>
+                                  {ref.pubmed && (
+                                    <>
+                                      {' | '}
+                                      <a
+                                        href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                      >
+                                        PubMed
+                                      </a>
+                                    </>
+                                  )}
+                                  {']'}
+                                </span>
                               )}
                             </td>
                           </tr>
@@ -156,9 +163,7 @@ function References({ data, loading, error }) {
                               {yearRefs.map((ref, idx) => (
                                 <div key={idx} className="reference-card">
                                   <div className="ref-citation">
-                                    <Link to={`/reference/${ref.pubmed || ref.reference_no}`}>
-                                      {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
-                                    </Link>
+                                    {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
                                   </div>
                                   {ref.title && (
                                     <div className="ref-title-block">
@@ -166,15 +171,26 @@ function References({ data, loading, error }) {
                                     </div>
                                   )}
                                   <div className="ref-links">
-                                    {ref.pubmed && (
-                                      <a
-                                        href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="pubmed-link"
-                                      >
-                                        PubMed: {ref.pubmed}
-                                      </a>
+                                    {ref.links && ref.links.length > 0 ? (
+                                      <CitationLinks links={ref.links} />
+                                    ) : (
+                                      <span className="citation-links">
+                                        {'['}
+                                        <Link to={`/reference/${ref.dbxref_id || ref.reference_no}`}>CGD Paper</Link>
+                                        {ref.pubmed && (
+                                          <>
+                                            {' | '}
+                                            <a
+                                              href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                            >
+                                              PubMed
+                                            </a>
+                                          </>
+                                        )}
+                                        {']'}
+                                      </span>
                                     )}
                                   </div>
                                 </div>

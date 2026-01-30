@@ -316,26 +316,37 @@ function formatSingleReference(ref, idx = 0) {
   }
 
   // Extract reference identifiers (same logic as GO tab)
-  const refId = ref.pubmed ? `PMID:${ref.pubmed}` : ref.reference_id || ref.dbxref_id || null;
+  const refId = ref.dbxref_id || ref.reference_id || (ref.pubmed ? `PMID:${ref.pubmed}` : null);
   // Prioritize full citation over display_name (which may be shortened)
   const citation = ref.citation || ref.display_name || ref.formatted_citation;
   const journal = ref.journal_name || ref.journal;
-  const pubmedId = ref.pubmed || (ref.pubmed_id ? String(ref.pubmed_id) : null);
+  const links = ref.links;
 
   // Display full formatted citation when available (like GO tab)
   if (citation) {
     return (
       <div key={idx} className="go-reference-item">
         {formatCitationString(citation, journal)}
-        {pubmedId && (
-          <a
-            href={`https://pubmed.ncbi.nlm.nih.gov/${pubmedId}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="pubmed-link-small"
-          >
-            {' '}PMID: {pubmedId}
-          </a>
+        {links && links.length > 0 ? (
+          <CitationLinks links={links} />
+        ) : refId && (
+          <span className="citation-links">
+            {' ['}
+            <Link to={`/reference/${refId}`}>CGD Paper</Link>
+            {ref.pubmed && (
+              <>
+                {' | '}
+                <a
+                  href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  PubMed
+                </a>
+              </>
+            )}
+            {']'}
+          </span>
         )}
       </div>
     );
@@ -345,16 +356,21 @@ function formatSingleReference(ref, idx = 0) {
   if (refId) {
     return (
       <div key={idx} className="go-reference-item">
-        {pubmedId ? (
+        {links && links.length > 0 ? (
+          <>
+            {refId}
+            <CitationLinks links={links} />
+          </>
+        ) : (typeof refId === 'string' && (refId.startsWith('CGD_REF:') || refId.startsWith('CA'))) ? (
+          <Link to={`/reference/${refId}`}>{refId}</Link>
+        ) : refId.startsWith('PMID:') ? (
           <a
-            href={`https://pubmed.ncbi.nlm.nih.gov/${pubmedId}`}
+            href={`https://pubmed.ncbi.nlm.nih.gov/${refId.replace('PMID:', '')}`}
             target="_blank"
             rel="noopener noreferrer"
           >
             {refId}
           </a>
-        ) : (typeof refId === 'string' && (refId.startsWith('CGD_REF:') || refId.startsWith('CA'))) ? (
-          <Link to={`/reference/${refId}`}>{refId}</Link>
         ) : (
           refId
         )}

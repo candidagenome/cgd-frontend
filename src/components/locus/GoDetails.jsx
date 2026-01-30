@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
-import { formatCitationString } from '../../utils/formatCitation.jsx';
+import { formatCitationString, CitationLinks } from '../../utils/formatCitation.jsx';
 import './LocusComponents.css';
 
 // Annotation type labels (matching Perl format)
@@ -167,10 +167,10 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
                     {ann.references?.map((ref, refIdx) => {
                       // Handle both string refs and object refs with citation data
                       const isObject = typeof ref === 'object' && ref !== null;
-                      const refId = isObject ? (ref.pubmed ? `PMID:${ref.pubmed}` : ref.reference_id || ref.dbxref_id) : ref;
+                      const refId = isObject ? (ref.dbxref_id || ref.reference_id || (ref.pubmed ? `PMID:${ref.pubmed}` : null)) : ref;
                       const citation = isObject ? ref.citation : null;
                       const journal = isObject ? (ref.journal_name || ref.journal) : null;
-                      const pubmedId = isObject ? ref.pubmed : (typeof ref === 'string' && ref.startsWith('PMID:') ? ref.replace('PMID:', '') : null);
+                      const links = isObject ? ref.links : null;
 
                       return (
                         <div key={refIdx} className="go-reference-item">
@@ -178,23 +178,34 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
                             // Display full formatted citation when available
                             <>
                               {formatCitationString(citation, journal)}
-                              {pubmedId && (
-                                <a
-                                  href={`https://pubmed.ncbi.nlm.nih.gov/${pubmedId}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="pubmed-link-small"
-                                >
-                                  {' '}PMID: {pubmedId}
-                                </a>
+                              {links && links.length > 0 ? (
+                                <CitationLinks links={links} />
+                              ) : refId && (
+                                <span className="citation-links">
+                                  {' ['}
+                                  <Link to={`/reference/${refId}`}>CGD Paper</Link>
+                                  {isObject && ref.pubmed && (
+                                    <>
+                                      {' | '}
+                                      <a
+                                        href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                      >
+                                        PubMed
+                                      </a>
+                                    </>
+                                  )}
+                                  {']'}
+                                </span>
                               )}
                             </>
                           ) : (
                             // Fallback to showing reference ID as link
                             <>
-                              {pubmedId ? (
+                              {(typeof refId === 'string' && refId.startsWith('PMID:')) ? (
                                 <a
-                                  href={`https://pubmed.ncbi.nlm.nih.gov/${pubmedId}`}
+                                  href={`https://pubmed.ncbi.nlm.nih.gov/${refId.replace('PMID:', '')}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                 >

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
-import { formatCitationString } from '../../utils/formatCitation.jsx';
+import { formatCitationString, CitationLinks } from '../../utils/formatCitation.jsx';
 import './LocusComponents.css';
 
 function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
@@ -228,15 +228,10 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
                                           const isRefObject = typeof ref === 'object' && ref !== null;
                                           const citation = isRefObject ? ref.citation : null;
                                           const journal = isRefObject ? (ref.journal_name || ref.journal) : null;
-
-                                          const pubmedId = isRefObject
-                                            ? ref.pubmed
-                                            : (typeof ref === 'string' && ref.startsWith('PMID:')
-                                                ? ref.replace('PMID:', '')
-                                                : null);
+                                          const links = isRefObject ? ref.links : null;
 
                                           const refId = isRefObject
-                                            ? (ref.pubmed ? `PMID:${ref.pubmed}` : ref.reference_id || ref.dbxref_id)
+                                            ? (ref.dbxref_id || ref.reference_id || (ref.pubmed ? `PMID:${ref.pubmed}` : null))
                                             : ref;
 
                                           return (
@@ -244,29 +239,42 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
                                               {citation ? (
                                                 <>
                                                   {formatCitationString(citation, journal)}
-                                                  {pubmedId && (
-                                                    <a
-                                                      href={`https://pubmed.ncbi.nlm.nih.gov/${pubmedId}`}
-                                                      target="_blank"
-                                                      rel="noopener noreferrer"
-                                                      className="pubmed-link-small"
-                                                    >
-                                                      {' '}PMID: {pubmedId}
-                                                    </a>
+                                                  {links && links.length > 0 ? (
+                                                    <CitationLinks links={links} />
+                                                  ) : refId && (
+                                                    <span className="citation-links">
+                                                      {' ['}
+                                                      <Link to={`/reference/${refId}`}>CGD Paper</Link>
+                                                      {isRefObject && ref.pubmed && (
+                                                        <>
+                                                          {' | '}
+                                                          <a
+                                                            href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                          >
+                                                            PubMed
+                                                          </a>
+                                                        </>
+                                                      )}
+                                                      {']'}
+                                                    </span>
                                                   )}
                                                 </>
                                               ) : refId ? (
-                                                pubmedId ? (
-                                                  <a
-                                                    href={`https://pubmed.ncbi.nlm.nih.gov/${pubmedId}`}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                  >
-                                                    {refId}
-                                                  </a>
-                                                ) : (typeof refId === 'string' &&
-                                                  (refId.startsWith('CGD_REF:') || refId.startsWith('CA'))) ? (
-                                                  <Link to={`/reference/${refId}`}>{refId}</Link>
+                                                (typeof refId === 'string' &&
+                                                  (refId.startsWith('CGD_REF:') || refId.startsWith('CA') || refId.startsWith('PMID:'))) ? (
+                                                  refId.startsWith('PMID:') ? (
+                                                    <a
+                                                      href={`https://pubmed.ncbi.nlm.nih.gov/${refId.replace('PMID:', '')}`}
+                                                      target="_blank"
+                                                      rel="noopener noreferrer"
+                                                    >
+                                                      {refId}
+                                                    </a>
+                                                  ) : (
+                                                    <Link to={`/reference/${refId}`}>{refId}</Link>
+                                                  )
                                                 ) : (
                                                   refId
                                                 )
