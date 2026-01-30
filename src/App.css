@@ -6,39 +6,209 @@
   flex-direction: column;
 }
 
-/* Main Navigation */
-.main-nav {
+/* =========================
+   CGD Header
+   ========================= */
+
+.cgd-header {
+  width: 100%;
+  background-color: #fff;
+}
+
+/* Top bar with logo, utility links, search */
+.header-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 30px;
-  background-color: #1f77c9;    /* #1976d2; */
-  color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px 20px;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
 }
 
-.nav-logo {
-  font-size: 1.5em;
-  font-weight: bold;
-  color: white;
+.header-logo {
+  flex-shrink: 0;
+}
+
+.logo-link {
   text-decoration: none;
 }
 
-.nav-links {
+.logo-text {
+  font-size: 28px;
+  font-weight: bold;
+  color: #1565c0;
+  letter-spacing: 2px;
+}
+
+.header-right {
   display: flex;
+  align-items: center;
   gap: 20px;
 }
 
-.nav-links a {
-  color: white;
+.header-links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
   text-decoration: none;
-  padding: 5px 10px;
-  border-radius: 4px;
+  border-radius: 3px;
+}
+
+.icon-email {
+  font-size: 16px;
+  color: #555;
+}
+
+.icon-facebook {
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #3b5998;
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+}
+
+.header-menu {
+  display: flex;
+  gap: 15px;
+  margin-left: 15px;
+  padding-left: 15px;
+  border-left: 1px solid #ccc;
+}
+
+.header-menu a {
+  color: #333;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.header-menu a:hover {
+  text-decoration: underline;
+  color: #1565c0;
+}
+
+.header-search {
+  display: flex;
+  align-items: center;
+}
+
+.header-search form {
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  width: 175px;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px 0 0 3px;
+  font-size: 13px;
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: #1565c0;
+}
+
+.search-button {
+  padding: 6px 12px;
+  background-color: #1565c0;
+  color: #fff;
+  border: 1px solid #1565c0;
+  border-radius: 0 3px 3px 0;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.search-button:hover {
+  background-color: #0d47a1;
+}
+
+/* Main Navigation Menu */
+.main-nav {
+  background-color: #1565c0;
+  padding: 0;
+}
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  justify-content: center;
+}
+
+.nav-item {
+  position: relative;
+}
+
+.nav-link {
+  display: block;
+  padding: 12px 18px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
   transition: background-color 0.2s;
 }
 
-.nav-links a:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.dropdown-arrow {
+  font-size: 8px;
+  margin-left: 5px;
+  vertical-align: middle;
+}
+
+/* Submenu (dropdown) */
+.submenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 220px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  z-index: 1000;
+}
+
+.submenu-item a {
+  display: block;
+  padding: 10px 15px;
+  color: #333;
+  text-decoration: none;
+  font-size: 13px;
+  border-bottom: 1px solid #eee;
+}
+
+.submenu-item:last-child a {
+  border-bottom: none;
+}
+
+.submenu-item a:hover {
+  background-color: #f5f5f5;
+  color: #1565c0;
+}
+
+.submenu-item a em {
+  font-style: italic;
 }
 
 /* =========================
@@ -119,16 +289,56 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
-  .main-nav {
+@media (max-width: 992px) {
+  .header-top {
     flex-direction: column;
     gap: 15px;
     padding: 15px;
   }
 
-  .nav-links {
+  .header-right {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .header-links {
     flex-wrap: wrap;
     justify-content: center;
+  }
+
+  .header-menu {
+    border-left: none;
+    margin-left: 0;
+    padding-left: 0;
+  }
+
+  .nav-menu {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .nav-link {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .submenu {
+    position: static;
+    box-shadow: none;
+    border: none;
+    background-color: #e3f2fd;
+  }
+}
+
+@media (max-width: 576px) {
+  .search-input {
+    width: 140px;
+  }
+
+  .footer-nav {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
   }
 }
 
