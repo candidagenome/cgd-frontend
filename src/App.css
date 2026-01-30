@@ -13,6 +13,16 @@
    CGD Header (legacy-style)
    ========================= */
 
+/* Remove extra space after the last utility link (Help) */
+.utility-links a:last-child {
+  margin-right: 0;
+}
+
+/* Tighten space specifically between Help and icons */
+.header-utils {
+  gap: 4px;   /* was 8px */
+}
+
 .site-header {
   width: 100%;
 }
@@ -49,7 +59,26 @@
 .header-right {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 18px; /* space between (utils + search) */
+}
+
+/* Group utility links + icons tighter */
+.header-utils {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* reduced gap between Help and icons */
+}
+
+/* Utility links */
+.utility-links a {
+  margin-right: 10px;
+  color: #000;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.utility-links a:hover {
+  text-decoration: underline;
 }
 
 /* Header icons (email, facebook) */
@@ -66,11 +95,12 @@
   text-decoration: none;
 }
 
+/* Mail icon - lighter so it is visible */
 .icon-email {
   font-size: 14px;
   font-weight: bold;
-  color: #fff;
-  background-color: #555;
+  color: #ffffff;
+  background-color: #6b9fd6; /* lighter CGD-ish blue */
   width: 22px;
   height: 22px;
   display: inline-flex;
@@ -98,18 +128,6 @@
 
 .icon-facebook:hover {
   background-color: #2d4373;
-}
-
-/* Utility links */
-.utility-links a {
-  margin-right: 12px;
-  color: #000;
-  text-decoration: none;
-  font-size: 14px;
-}
-
-.utility-links a:hover {
-  text-decoration: underline;
 }
 
 /* Search box */
@@ -140,17 +158,17 @@
   background-color: #155fa0;
 }
 
-/* Main navigation bar (yellow) */
+/* Main navigation bar (blue) */
 .header-nav {
   display: flex;
   gap: 28px;
   padding: 10px 18px;
-  background-color: #1f77c9;   /* CGD blue */
+  background-color: #1f77c9;
   font-size: 18px;
 }
 
 .header-nav a {
-  color:#ffffff;             /* white text on blue */
+  color: #ffffff;
   text-decoration: none;
   font-weight: bold;
 }

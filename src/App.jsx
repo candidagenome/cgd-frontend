@@ -20,26 +20,33 @@ function App() {
             </div>
 
             <div className="header-right">
-              <nav className="utility-links" aria-label="Utility">
-                <a href="/About.shtml">About</a>
-                <a href="/SiteMap.shtml">Site Map</a>
-                <a href="/HowToCite.shtml">How to Cite</a>
-                <a href="/Help.shtml">Help</a>
-              </nav>
+              <div className="header-utils">
+                <nav className="utility-links" aria-label="Utility">
+                  <a href="/About.shtml">About</a>
+                  <a href="/SiteMap.shtml">Site Map</a>
+                  <a href="/HowToCite.shtml">How to Cite</a>
+                  <a href="/Help.shtml">Help</a>
+                </nav>
 
-              <div className="header-icons">
-                <a
-                  href="http://www.facebook.com/pages/Candida-Genome-Database/173482099381649"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="icon-link"
-                  title="CGD on Facebook"
-                >
-                  <span className="icon-facebook">f</span>
-                </a>
-                <a href="/cgi-bin/suggestion" className="icon-link" title="Send a suggestion to CGD">
-                  <span className="icon-email">✉</span>
-                </a>
+                <div className="header-icons">
+                  <a
+                    href="http://www.facebook.com/pages/Candida-Genome-Database/173482099381649"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="icon-link"
+                    title="CGD on Facebook"
+                  >
+                    <span className="icon-facebook">f</span>
+                  </a>
+
+                  <a
+                    href="/cgi-bin/suggestion"
+                    className="icon-link"
+                    title="Send a suggestion to CGD"
+                  >
+                    <span className="icon-email">✉</span>
+                  </a>
+                </div>
               </div>
 
               <form className="site-search" role="search" onSubmit={(e) => e.preventDefault()}>
