@@ -1,214 +1,114 @@
-/* App-wide styles */
+/* =========================
+   App-wide styles
+   ========================= */
 
 .app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background-color: #ffffff;
 }
 
 /* =========================
-   CGD Header
+   CGD Header (legacy-style)
    ========================= */
 
-.cgd-header {
+.site-header {
   width: 100%;
-  background-color: #fff;
 }
 
-/* Top bar with logo, utility links, search */
+/* Top white utility row */
 .header-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
-  background-color: #fff;
+  padding: 10px 18px;
+  background-color: #ffffff;
   border-bottom: 1px solid #ddd;
 }
 
-.header-logo {
-  flex-shrink: 0;
-}
-
-.logo-link {
-  text-decoration: none;
-}
-
-.logo-text {
-  font-size: 28px;
-  font-weight: bold;
-  color: #1565c0;
-  letter-spacing: 2px;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.header-links {
+.header-left {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.icon-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  text-decoration: none;
-  border-radius: 3px;
-}
-
-.icon-email {
-  font-size: 16px;
-  color: #555;
-}
-
-.icon-facebook {
-  font-size: 14px;
+.site-logo {
+  font-size: 28px;
   font-weight: bold;
-  color: #fff;
-  background-color: #3b5998;
-  width: 20px;
-  height: 20px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 3px;
-}
-
-.header-menu {
-  display: flex;
-  gap: 15px;
-  margin-left: 15px;
-  padding-left: 15px;
-  border-left: 1px solid #ccc;
-}
-
-.header-menu a {
-  color: #333;
+  color: #1f77c9;
   text-decoration: none;
-  font-size: 13px;
 }
 
-.header-menu a:hover {
-  text-decoration: underline;
-  color: #1565c0;
+.site-title {
+  font-size: 20px;
+  color: #000;
 }
 
-.header-search {
+/* Right side utilities */
+.header-right {
   display: flex;
   align-items: center;
+  gap: 18px;
 }
 
-.header-search form {
-  display: flex;
-  align-items: center;
-}
-
-.search-input {
-  width: 175px;
-  padding: 6px 10px;
-  border: 1px solid #ccc;
-  border-radius: 3px 0 0 3px;
-  font-size: 13px;
-  outline: none;
-}
-
-.search-input:focus {
-  border-color: #1565c0;
-}
-
-.search-button {
-  padding: 6px 12px;
-  background-color: #1565c0;
-  color: #fff;
-  border: 1px solid #1565c0;
-  border-radius: 0 3px 3px 0;
-  cursor: pointer;
-  font-size: 13px;
-}
-
-.search-button:hover {
-  background-color: #0d47a1;
-}
-
-/* Main Navigation Menu */
-.main-nav {
-  background-color: #1565c0;
-  padding: 0;
-}
-
-.nav-menu {
-  display: flex;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  justify-content: center;
-}
-
-.nav-item {
-  position: relative;
-}
-
-.nav-link {
-  display: block;
-  padding: 12px 18px;
-  color: #fff;
+/* Utility links */
+.utility-links a {
+  margin-right: 12px;
+  color: #000;
   text-decoration: none;
   font-size: 14px;
-  font-weight: 500;
-  transition: background-color 0.2s;
 }
 
-.nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.15);
+.utility-links a:hover {
+  text-decoration: underline;
 }
 
-.dropdown-arrow {
-  font-size: 8px;
-  margin-left: 5px;
-  vertical-align: middle;
+/* Search box */
+.site-search {
+  display: flex;
+  align-items: center;
 }
 
-/* Submenu (dropdown) */
-.submenu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  min-width: 220px;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  z-index: 1000;
+.site-search input {
+  padding: 4px 6px;
+  font-size: 14px;
+  border: 1px solid #999;
+  border-radius: 2px 0 0 2px;
 }
 
-.submenu-item a {
-  display: block;
-  padding: 10px 15px;
-  color: #333;
+.site-search button {
+  padding: 4px 10px;
+  font-size: 14px;
+  border: 1px solid #999;
+  border-left: none;
+  background-color: #1f77c9;
+  color: #ffffff;
+  cursor: pointer;
+  border-radius: 0 2px 2px 0;
+}
+
+.site-search button:hover {
+  background-color: #155fa0;
+}
+
+/* Main navigation bar (yellow) */
+.header-nav {
+  display: flex;
+  gap: 28px;
+  padding: 10px 18px;
+  background-color: #1f77c9;   /* CGD blue */
+  font-size: 18px;
+}
+
+.header-nav a {
+  color:#ffffff;             /* white text on blue */
   text-decoration: none;
-  font-size: 13px;
-  border-bottom: 1px solid #eee;
+  font-weight: bold;
 }
 
-.submenu-item:last-child a {
-  border-bottom: none;
-}
-
-.submenu-item a:hover {
-  background-color: #f5f5f5;
-  color: #1565c0;
-}
-
-.submenu-item a em {
-  font-style: italic;
+.header-nav a:hover {
+  text-decoration: underline;
 }
 
 /* =========================
@@ -227,7 +127,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 18px;
-  background-color: #e0e0e0;   /* lighter, softer gray */
+  background-color: #e0e0e0;
 }
 
 .footer-left a,
@@ -252,12 +152,12 @@
   font-size: 13px;
 }
 
-/* Yellow copyright block */
+/* Light blue copyright block */
 .footer-copyright {
   padding: 12px 18px;
-  background-color: #eaf3fb;   /* light CGD blue */
+  background-color: #eaf3fb;
   line-height: 1.45;
-  color: #243447;              /* slightly darker for readability */
+  color: #243447;
 }
 
 .footer-copyright p {
@@ -269,7 +169,7 @@
 }
 
 .footer-copyright a {
-  color: #1a5fb4; 
+  color: #1a5fb4;
   text-decoration: none;
 }
 
@@ -283,63 +183,8 @@
   font-weight: bold;
 }
 
-/* Citation styling */
 .footer-copyright em {
   font-style: italic;
-}
-
-/* Responsive */
-@media (max-width: 992px) {
-  .header-top {
-    flex-direction: column;
-    gap: 15px;
-    padding: 15px;
-  }
-
-  .header-right {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .header-links {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .header-menu {
-    border-left: none;
-    margin-left: 0;
-    padding-left: 0;
-  }
-
-  .nav-menu {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .nav-link {
-    padding: 10px 12px;
-    font-size: 13px;
-  }
-
-  .submenu {
-    position: static;
-    box-shadow: none;
-    border: none;
-    background-color: #e3f2fd;
-  }
-}
-
-@media (max-width: 576px) {
-  .search-input {
-    width: 140px;
-  }
-
-  .footer-nav {
-    flex-direction: column;
-    gap: 10px;
-    text-align: center;
-  }
 }
 
 /* =========================
@@ -360,10 +205,7 @@
   text-decoration: underline;
 }
 
-.citation-with-links {
-  display: inline;
-}
-
+.citation-with-links,
 .citation-compact {
   display: inline;
 }
@@ -372,23 +214,20 @@
    Citation Links (SGD-style: links below)
    ========================= */
 
-/* Stack citation + links vertically */
 .go-reference-item {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
-/* Main citation line */
 .citation-line {
   line-height: 1.35;
 }
 
-/* Optional PMID styling */
 .citation-pmid {
   margin-left: 6px;
-  font-size: 0.9em;
-  color: #444;
+  font-size: 0.8em;
+  color: #777;
 }
 
 .citation-links-below {
@@ -397,23 +236,20 @@
   line-height: 1.4;
 }
 
-/* Link appearance (lighter blue, not bold) */
 .citation-links-below .citation-link,
 .citation-links-below a {
-  color: #2a72c5;          /* lighter SGD-ish blue */
+  color: #2a72c5;
   text-decoration: none;
   font-weight: normal;
-  margin-right: 18px;      /* spacing between links */
+  margin-right: 18px;
   white-space: nowrap;
 }
 
-/* Hover behavior (subtle underline) */
 .citation-links-below .citation-link:hover,
 .citation-links-below a:hover {
   text-decoration: underline;
 }
 
-/* Individual link styling (reuse same blue as inline) */
 .citation-link {
   margin-right: 14px;
   color: #1976d2;
@@ -424,12 +260,29 @@
   text-decoration: underline;
 }
 
-/* Optional spacer span used in JSX */
 .citation-link-sep {
   display: inline;
 }
 
-.citation-pmid {
-  font-size: 0.8em;
-  color: #777;
+/* =========================
+   Responsive
+   ========================= */
+
+@media (max-width: 768px) {
+  .header-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .header-right {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .header-nav {
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 16px;
+  }
 }
