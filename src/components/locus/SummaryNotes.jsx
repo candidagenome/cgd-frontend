@@ -2,6 +2,12 @@ import React, { useState, useEffect } from 'react';
 import './LocusComponents.css';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
 
+// Convert <feature:ID>NAME</feature> tags to hyperlinks
+const parseFeatureTags = (html) => {
+  if (!html) return '';
+  return html.replace(/<feature:([^>]+)>([^<]+)<\/feature>/g, '<a href="/locus/$1">$2</a>');
+};
+
 function SummaryNotes({ data, loading, error }) {
   const [selectedOrganism, setSelectedOrganism] = useState(null);
 
@@ -44,7 +50,7 @@ function SummaryNotes({ data, loading, error }) {
               {orgData.summary_notes.map((note, idx) => (
                 <div key={idx} className="note-block">
                   <div className="note-content">
-                    <p>{note.paragraph_text}</p>
+                    <p dangerouslySetInnerHTML={{ __html: parseFeatureTags(note.paragraph_text) }} />
                   </div>
                   <div className="note-meta">
                     Last edited: {new Date(note.date_edited).toLocaleDateString()}
