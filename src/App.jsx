@@ -15,8 +15,9 @@ function App() {
           {/* Top utility row */}
           <div className="header-top">
             <div className="header-left">
-              <Link to="/" className="site-logo">CGD</Link>
-              <span className="site-title">Candida Genome Database</span>
+              <Link to="/" className="site-logo">
+                <img src="/images/logo1.jpg" alt="Candida Genome Database" />
+              </Link>
             </div>
 
             <div className="header-right">
