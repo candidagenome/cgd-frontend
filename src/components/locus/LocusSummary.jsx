@@ -1,6 +1,6 @@
 import React from 'react';
 import './LocusComponents.css';
-import { formatCitationString } from '../../utils/formatCitation.jsx';
+import { formatCitationString, CitationLinksBelow, buildCitationLinks } from '../../utils/formatCitation.jsx';
 
 function LocusSummary({
   data,
@@ -887,16 +887,9 @@ function LocusSummary({
                 <span className="reference-number">{idx + 1})</span>
                 <span className="reference-citation">
                   {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
-                  {ref.pubmed && (
-                    <a
-                      href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}/`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="pubmed-link"
-                    >
-                      {' '}
-                      PMID: {ref.pubmed}
-                    </a>
+		  {ref?.pubmed ? <span className="citation-pmid"> PMID: {ref.pubmed}</span> : null}
+                  {ref.links && ref.links.length > 0 && (
+                    <CitationLinksBelow links={ref.links && ref.links.length ? ref.links : buildCitationLinks(ref)} />
                   )}
                 </span>
               </div>

@@ -68,3 +68,95 @@
     justify-content: center;
   }
 }
+
+/* =========================
+   Citation Links (inline / legacy)
+   ========================= */
+
+.citation-links {
+  font-size: 0.9em;
+  white-space: nowrap;
+}
+
+.citation-links a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.citation-links a:hover {
+  text-decoration: underline;
+}
+
+.citation-with-links {
+  display: inline;
+}
+
+.citation-compact {
+  display: inline;
+}
+
+/* =========================
+   Citation Links (SGD-style: links below)
+   ========================= */
+
+/* Stack citation + links vertically */
+.go-reference-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Main citation line */
+.citation-line {
+  line-height: 1.35;
+}
+
+/* Optional PMID styling */
+.citation-pmid {
+  margin-left: 6px;
+  font-size: 0.9em;
+  color: #444;
+}
+
+.citation-links-below {
+  margin-top: 4px;
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+/* Link appearance (lighter blue, not bold) */
+.citation-links-below .citation-link,
+.citation-links-below a {
+  color: #2a72c5;          /* lighter SGD-ish blue */
+  text-decoration: none;
+  font-weight: normal;
+  margin-right: 18px;      /* spacing between links */
+  white-space: nowrap;
+}
+
+/* Hover behavior (subtle underline) */
+.citation-links-below .citation-link:hover,
+.citation-links-below a:hover {
+  text-decoration: underline;
+}
+
+/* Individual link styling (reuse same blue as inline) */
+.citation-link {
+  margin-right: 14px;
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.citation-link:hover {
+  text-decoration: underline;
+}
+
+/* Optional spacer span used in JSX */
+.citation-link-sep {
+  display: inline;
+}
+
+.citation-pmid {
+  font-size: 0.8em;
+  color: #777;
+}

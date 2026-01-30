@@ -32,7 +32,7 @@ export function formatCitationString(citation, journal = null) {
   }
 
   const authorYear = authorYearMatch[1];
-  let rest = authorYearMatch[2] || '';
+  const rest = authorYearMatch[2] || '';
 
   // Italicize "et al." in author portion
   const formattedAuthorYear = formatAuthorYear(authorYear);
@@ -143,9 +143,41 @@ export function buildFormattedCitation(ref) {
 }
 
 /**
+ * New: render citation links on a separate line, no surrounding [ ]
+ * This matches SGD-ish layout (links below the citation, separated by spaces)
+ */
+export function CitationLinksBelow({ links, className = '' }) {
+  if (!links || links.length === 0) return null;
+
+  return (
+    <div className={`citation-links-below ${className}`.trim()}>
+      {links.map((link, idx) => (
+        <React.Fragment key={`${link.name}-${idx}`}>
+          {idx > 0 && <span className="citation-link-sep"> </span>}
+          {link.link_type === 'internal' ? (
+            <Link to={link.url} className="citation-link">
+              {link.name}
+            </Link>
+          ) : (
+            <a
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="citation-link"
+            >
+              {link.name}
+            </a>
+          )}
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}
+
+/**
  * Format authors array into string
  * @param {Array} authors - Array of author objects with author_name
- * @returns {string} Formatted author string
+ * @returns {string|React.ReactNode} Formatted author string
  */
 export function formatAuthors(authors) {
   if (!authors || authors.length === 0) return null;
@@ -153,7 +185,7 @@ export function formatAuthors(authors) {
   if (Array.isArray(authors)) {
     // If it's an array of objects with author_name
     if (authors[0]?.author_name) {
-      const names = authors.map(a => a.author_name);
+      const names = authors.map((a) => a.author_name);
       if (names.length === 1) return names[0];
       if (names.length === 2) return `${names[0]} and ${names[1]}`;
       // More than 2 authors: use "et al."
@@ -163,6 +195,7 @@ export function formatAuthors(authors) {
         </>
       );
     }
+
     // If it's an array of strings
     if (typeof authors[0] === 'string') {
       if (authors.length === 1) return authors[0];
@@ -228,29 +261,31 @@ export function formatShortCitation(ref) {
     return formatCitationString(ref.display_name);
   }
 
-  // Build from parts
   const parts = [];
 
   // Get first author's last name
   if (ref.authors && ref.authors.length > 0) {
     const firstAuthor = ref.authors[0];
     const name = firstAuthor.author_name || firstAuthor;
+
     // Extract last name (first word or before comma)
-    const lastName = typeof name === 'string'
-      ? name.split(/[,\s]/)[0]
-      : name;
+    const lastName = typeof name === 'string' ? name.split(/[,\s]/)[0] : name;
 
     parts.push(<strong key="author">{lastName}</strong>);
 
     if (ref.authors.length === 2) {
       const secondAuthor = ref.authors[1];
       const secondName = secondAuthor.author_name || secondAuthor;
-      const secondLastName = typeof secondName === 'string'
-        ? secondName.split(/[,\s]/)[0]
-        : secondName;
+      const secondLastName =
+        typeof secondName === 'string' ? secondName.split(/[,\s]/)[0] : secondName;
       parts.push(<strong key="and"> and {secondLastName}</strong>);
     } else if (ref.authors.length > 2) {
-      parts.push(<strong key="etal"> <em>et al.</em></strong>);
+      parts.push(
+        <strong key="etal">
+          {' '}
+          <em>et al.</em>
+        </strong>
+      );
     }
   }
 
@@ -290,6 +325,7 @@ function formatSingleReference(ref, idx = 0) {
         </div>
       );
     }
+
     // Check if it's a CGD_REF or CA reference
     if (ref.startsWith('CGD_REF:') || ref.startsWith('CA')) {
       return (
@@ -298,6 +334,7 @@ function formatSingleReference(ref, idx = 0) {
         </div>
       );
     }
+
     // Otherwise format as citation string
     return (
       <div key={idx} className="go-reference-item">
@@ -316,48 +353,118 @@ function formatSingleReference(ref, idx = 0) {
   }
 
   // Extract reference identifiers (same logic as GO tab)
-  const refId = ref.pubmed ? `PMID:${ref.pubmed}` : ref.reference_id || ref.dbxref_id || null;
+  const refId =
+    ref.dbxref_id || ref.reference_id || (ref.pubmed ? `PMID:${ref.pubmed}` : null);
+
   // Prioritize full citation over display_name (which may be shortened)
   const citation = ref.citation || ref.display_name || ref.formatted_citation;
   const journal = ref.journal_name || ref.journal;
-  const pubmedId = ref.pubmed || (ref.pubmed_id ? String(ref.pubmed_id) : null);
 
-  // Display full formatted citation when available (like GO tab)
+  // Prefer backend-provided links
+  const links = ref.links;
+
+  /**
+   * IMPORTANT: Your screenshot still showed "[CGD Paper | PubMed]" which comes from
+   * `CitationLinks`. That usually means some refs are coming through WITHOUT `ref.citation`
+   * (so they hit fallback branches), OR other call sites use formatCitationWithLinks().
+   *
+   * To make behavior consistent, we render "below" links whenever we have *any* link set.
+   */
+
+  // Display full formatted citation when available (links on next line)
   if (citation) {
+    const computedLinks =
+      links && links.length > 0
+        ? links
+        : buildCitationLinks({
+            dbxref_id: ref.dbxref_id,
+            reference_id: ref.reference_id,
+            pubmed: ref.pubmed,
+            urls: ref.urls,
+          });
+
     return (
       <div key={idx} className="go-reference-item">
-        {formatCitationString(citation, journal)}
-        {pubmedId && (
-          <a
-            href={`https://pubmed.ncbi.nlm.nih.gov/${pubmedId}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="pubmed-link-small"
-          >
-            {' '}PMID: {pubmedId}
-          </a>
-        )}
+        <div className="citation-line">
+          {formatCitationString(citation, journal)}
+          {ref.pubmed ? <span className="citation-pmid"> PMID: {ref.pubmed}</span> : null}
+        </div>
+
+        {/* Links below citation (no brackets) */}
+        <CitationLinksBelow links={computedLinks} />
       </div>
     );
   }
 
-  // Fallback to showing reference ID as link (like GO tab)
+  // Fallback to showing reference ID as link (links below, no brackets)
   if (refId) {
+    // If backend links exist, show them below the id
+    if (links && links.length > 0) {
+      return (
+        <div key={idx} className="go-reference-item">
+          <div className="citation-line">
+            {typeof refId === 'string' &&
+            (refId.startsWith('CGD_REF:') || refId.startsWith('CA')) ? (
+              <Link to={`/reference/${refId}`}>{refId}</Link>
+            ) : typeof refId === 'string' && refId.startsWith('PMID:') ? (
+              <a
+                href={`https://pubmed.ncbi.nlm.nih.gov/${refId.replace('PMID:', '')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {refId}
+              </a>
+            ) : (
+              refId
+            )}
+          </div>
+          <CitationLinksBelow links={links} />
+        </div>
+      );
+    }
+
+    // Otherwise build minimal links from the id if possible (CGD Paper + PubMed when pubmed exists)
+    if (typeof refId === 'string' && (refId.startsWith('CGD_REF:') || refId.startsWith('CA'))) {
+      return (
+        <div key={idx} className="go-reference-item">
+          <div className="citation-line">
+            <Link to={`/reference/${refId}`}>{refId}</Link>
+          </div>
+        </div>
+      );
+    }
+
+    if (typeof refId === 'string' && refId.startsWith('PMID:')) {
+      const pmid = refId.replace('PMID:', '');
+      return (
+        <div key={idx} className="go-reference-item">
+          <div className="citation-line">
+            <a
+              href={`https://pubmed.ncbi.nlm.nih.gov/${pmid}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {refId}
+            </a>
+          </div>
+          {/* If we only have a PMID, at least provide PubMed link below (matches SGD-ish behavior) */}
+          <CitationLinksBelow
+            links={[
+              {
+                name: 'PubMed',
+                url: `https://pubmed.ncbi.nlm.nih.gov/${pmid}`,
+                link_type: 'external',
+              },
+            ]}
+          />
+        </div>
+      );
+    }
+
+    // Final fallback: render the id as-is
     return (
       <div key={idx} className="go-reference-item">
-        {pubmedId ? (
-          <a
-            href={`https://pubmed.ncbi.nlm.nih.gov/${pubmedId}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {refId}
-          </a>
-        ) : (typeof refId === 'string' && (refId.startsWith('CGD_REF:') || refId.startsWith('CA'))) ? (
-          <Link to={`/reference/${refId}`}>{refId}</Link>
-        ) : (
-          refId
-        )}
+        {refId}
       </div>
     );
   }
@@ -390,15 +497,175 @@ export function formatHistoryReference(ref) {
   // Handle array of references (like GO tab)
   if (Array.isArray(ref)) {
     if (ref.length === 0) return null;
-    return (
-      <>
-        {ref.map((r, idx) => formatSingleReference(r, idx))}
-      </>
-    );
+    return <>{ref.map((r, idx) => formatSingleReference(r, idx))}</>;
   }
 
   // Handle single reference
   return formatSingleReference(ref, 0);
+}
+
+export function renderPmidSuffix(pubmed) {
+  if (!pubmed) return null;
+  return <span className="citation-pmid"> PMID: {pubmed}</span>;
+}
+
+/**
+ * Render citation links as plain text links separated by " | " (CGD-style inline)
+ * Links: CGD Paper | PubMed | Access Full Text | Download Datasets | Web Supplement
+ * @param {Array} links - Array of link objects with name, url, link_type
+ * @returns {React.ReactNode} Formatted links
+ */
+export function CitationLinks({ links }) {
+  if (!links || links.length === 0) return null;
+
+  return (
+    <span className="citation-links">
+      {' ['}
+      {links.map((link, idx) => (
+        <React.Fragment key={`${link.name}-${idx}`}>
+          {idx > 0 && ' | '}
+          {link.link_type === 'internal' ? (
+            <Link to={link.url}>{link.name}</Link>
+          ) : (
+            <a href={link.url} target="_blank" rel="noopener noreferrer">
+              {link.name}
+            </a>
+          )}
+        </React.Fragment>
+      ))}
+      {']'}
+    </span>
+  );
+}
+
+/**
+ * Build citation links from reference data (when backend doesn't provide pre-built links)
+ * @param {Object} ref - Reference object with pubmed, dbxref_id, urls
+ * @returns {Array} Array of link objects
+ */
+export function buildCitationLinks(ref) {
+  if (!ref) return [];
+
+  const links = [];
+
+  // CGD Paper link (always present) - always use dbxref_id (CGDID)
+  const cgdPaperUrl = `/reference/${ref.dbxref_id || ref.reference_id || ref.pubmed}`;
+  links.push({
+    name: 'CGD Paper',
+    url: cgdPaperUrl,
+    link_type: 'internal',
+  });
+
+  // PubMed link
+  if (ref.pubmed) {
+    links.push({
+      name: 'PubMed',
+      url: `https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`,
+      link_type: 'external',
+    });
+  }
+
+  // Process URLs if available (check url_type for categorization)
+  if (ref.urls && Array.isArray(ref.urls)) {
+    ref.urls.forEach((urlItem) => {
+      // Handle both string URLs and URL objects
+      const url = typeof urlItem === 'string' ? urlItem : urlItem.url;
+      const urlType = (urlItem.url_type || '').toLowerCase();
+
+      if (urlType.includes('full') && urlType.includes('text')) {
+        links.push({
+          name: 'Access Full Text',
+          url,
+          link_type: 'external',
+        });
+      } else if (
+        urlType.includes('reference data') ||
+        urlType.includes('download') ||
+        urlType.includes('dataset')
+      ) {
+        links.push({
+          name: 'Download Datasets',
+          url,
+          link_type: 'external',
+        });
+      } else if (urlType.includes('web') && urlType.includes('supplement')) {
+        links.push({
+          name: 'Web Supplement',
+          url,
+          link_type: 'external',
+        });
+      }
+    });
+  }
+
+  return links;
+}
+
+/**
+ * Format a complete citation with text and links
+ * OLD behavior: "Author... Journal... [CGD Paper | PubMed | ...]"
+ * NEW behavior: links on next line (SGD-ish), to match your screenshot target.
+ * @param {Object} ref - Reference object with citation info and links
+ * @returns {React.ReactNode} Complete formatted citation with links
+ */
+export function formatCitationWithLinks(ref) {
+  if (!ref) return null;
+
+  // Use pre-built links from backend if available, otherwise build them
+  const links =
+    ref.links && ref.links.length > 0 ? ref.links : buildCitationLinks(ref);
+
+  return (
+    <span className="citation-with-links">
+      <span className="citation-line">
+        {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
+        {ref.pubmed ? <span className="citation-pmid"> PMID: {ref.pubmed}</span> : null}
+      </span>
+      <CitationLinksBelow links={links} />
+    </span>
+  );
+}
+
+/**
+ * Render a simple inline citation with just CGD Paper and PubMed links
+ * For use in tables or compact displays
+ * (Kept inline/bracketed for compact areas)
+ * @param {Object} ref - Reference object
+ * @returns {React.ReactNode} Compact citation with basic links
+ */
+export function formatCompactCitationWithLinks(ref) {
+  if (!ref) return null;
+
+  const shortCitation = formatShortCitation(ref);
+
+  // Build minimal links (CGD Paper and PubMed only)
+  const links = [];
+
+  // CGD Paper link - always use dbxref_id (CGDID) first
+  const cgdId = ref.dbxref_id || ref.reference_id || ref.pubmed;
+  if (cgdId) {
+    links.push({
+      name: 'CGD Paper',
+      url: `/reference/${cgdId}`,
+      link_type: 'internal',
+    });
+  }
+
+  // PubMed link
+  if (ref.pubmed) {
+    links.push({
+      name: 'PubMed',
+      url: `https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`,
+      link_type: 'external',
+    });
+  }
+
+  return (
+    <span className="citation-compact">
+      {shortCitation}
+      {links.length > 0 && <CitationLinks links={links} />}
+    </span>
+  );
 }
 
 export default {
@@ -407,4 +674,9 @@ export default {
   formatAuthors,
   formatShortCitation,
   formatHistoryReference,
+  CitationLinks,
+  CitationLinksBelow,
+  buildCitationLinks,
+  formatCitationWithLinks,
+  formatCompactCitationWithLinks,
 };

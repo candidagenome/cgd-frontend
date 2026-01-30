@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import './LocusComponents.css';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
-import { formatCitationString } from '../../utils/formatCitation.jsx';
+import {
+  formatCitationString,
+  CitationLinksBelow,
+  buildCitationLinks,
+} from '../../utils/formatCitation.jsx';
 
 function References({ data, loading, error }) {
   const [collapsedYears, setCollapsedYears] = useState({});
@@ -33,26 +36,44 @@ function References({ data, loading, error }) {
   // Group references by year
   const groupByYear = (references) => {
     const groups = {};
-    references.forEach(ref => {
-      const year = ref.year || 'Unknown';
-      if (!groups[year]) {
-        groups[year] = [];
-      }
+    (references || []).forEach((ref) => {
+      const year = ref?.year || 'Unknown';
+      if (!groups[year]) groups[year] = [];
       groups[year].push(ref);
     });
+
     // Sort years descending
     return Object.entries(groups).sort((a, b) => {
       if (a[0] === 'Unknown') return 1;
       if (b[0] === 'Unknown') return -1;
-      return parseInt(b[0]) - parseInt(a[0]);
+      return parseInt(b[0], 10) - parseInt(a[0], 10);
     });
   };
 
   const toggleYear = (key) => {
-    setCollapsedYears(prev => ({
+    setCollapsedYears((prev) => ({
       ...prev,
-      [key]: !prev[key]
+      [key]: !prev[key],
     }));
+  };
+
+  // Helper: links below (no brackets)
+  const renderLinksBelow = (ref) => {
+    const displayLinks =
+      ref?.links && ref.links.length > 0 ? ref.links : buildCitationLinks(ref);
+    return <CitationLinksBelow links={displayLinks} />;
+  };
+
+  // Helper: citation line + optional PMID
+  const renderCitationLine = (ref) => {
+    const journal = ref?.journal_name || ref?.journal || null;
+
+    return (
+      <div className="citation-line">
+        {formatCitationString(ref?.citation, journal)}
+        {ref?.pubmed ? <span className="citation-pmid"> PMID: {ref.pubmed}</span> : null}
+      </div>
+    );
   };
 
   return (
@@ -63,15 +84,16 @@ function References({ data, loading, error }) {
         onOrganismChange={setSelectedOrganism}
         dataType="references"
       />
+
       {organisms.map(([orgName, orgData]) => {
-        const refs = orgData.references || [];
+        const refs = orgData?.references || [];
         const groupedRefs = groupByYear(refs);
 
         return (
           <div key={orgName} className="organism-section">
             <h3 className="organism-name">{orgName}</h3>
             <p className="locus-display">
-              Locus: {orgData.locus_display_name}
+              Locus: {orgData?.locus_display_name}
               {refs.length > 0 && (
                 <span className="total-count"> ({refs.length} references)</span>
               )}
@@ -101,34 +123,22 @@ function References({ data, loading, error }) {
                       <tr>
                         <th>Year</th>
                         <th>Citation</th>
-                        <th>PubMed</th>
                       </tr>
                     </thead>
                     <tbody>
                       {refs
-                        .sort((a, b) => (b.year || 0) - (a.year || 0))
+                        .slice()
+                        .sort((a, b) => (b?.year || 0) - (a?.year || 0))
                         .map((ref, idx) => (
                           <tr key={idx}>
-                            <td className="year-cell">{ref.year || '-'}</td>
+                            <td className="year-cell">{ref?.year || '-'}</td>
                             <td>
-                              <Link to={`/reference/${ref.pubmed || ref.reference_no}`}>
-                                {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
-                              </Link>
-                              {ref.title && <div className="ref-title">{ref.title}</div>}
-                            </td>
-                            <td>
-                              {ref.pubmed ? (
-                                <a
-                                  href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="pmid-link"
-                                >
-                                  {ref.pubmed}
-                                </a>
-                              ) : (
-                                '-'
-                              )}
+                              <div className="ref-citation">{renderCitationLine(ref)}</div>
+
+                              {/* Links BELOW citation (same cell) */}
+                              {renderLinksBelow(ref)}
+
+                              {ref?.title && <div className="ref-title">{ref.title}</div>}
                             </td>
                           </tr>
                         ))}
@@ -142,10 +152,7 @@ function References({ data, loading, error }) {
 
                       return (
                         <div key={year} className="year-group">
-                          <div
-                            className="year-header"
-                            onClick={() => toggleYear(yearKey)}
-                          >
+                          <div className="year-header" onClick={() => toggleYear(yearKey)}>
                             <span className="collapse-icon">{isCollapsed ? '▶' : '▼'}</span>
                             <span className="year-label">{year}</span>
                             <span className="count-badge">{yearRefs.length}</span>
@@ -155,28 +162,14 @@ function References({ data, loading, error }) {
                             <div className="year-references">
                               {yearRefs.map((ref, idx) => (
                                 <div key={idx} className="reference-card">
-                                  <div className="ref-citation">
-                                    <Link to={`/reference/${ref.pubmed || ref.reference_no}`}>
-                                      {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
-                                    </Link>
-                                  </div>
-                                  {ref.title && (
-                                    <div className="ref-title-block">
-                                      "{ref.title}"
-                                    </div>
+                                  <div className="ref-citation">{renderCitationLine(ref)}</div>
+
+                                  {/* Links BELOW citation */}
+                                  {renderLinksBelow(ref)}
+
+                                  {ref?.title && (
+                                    <div className="ref-title-block">"{ref.title}"</div>
                                   )}
-                                  <div className="ref-links">
-                                    {ref.pubmed && (
-                                      <a
-                                        href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="pubmed-link"
-                                      >
-                                        PubMed: {ref.pubmed}
-                                      </a>
-                                    )}
-                                  </div>
                                 </div>
                               ))}
                             </div>
