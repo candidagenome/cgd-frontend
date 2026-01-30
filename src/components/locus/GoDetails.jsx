@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
-import { formatCitationString, CitationLinks } from '../../utils/formatCitation.jsx';
+import { formatCitationString, CitationLinksBelow, buildCitationLinks } from '../../utils/formatCitation.jsx';
 import './LocusComponents.css';
 
 // Annotation type labels (matching Perl format)
@@ -179,7 +179,7 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
                             <>
                               {formatCitationString(citation, journal)}
                               {links && links.length > 0 ? (
-                                <CitationLinks links={links} />
+                                <CitationLinksBelow links={ref.links && ref.links.length ? ref.links : buildCitationLinks(ref)} />
                               ) : refId && (
                                 <span className="citation-links">
                                   {' ['}

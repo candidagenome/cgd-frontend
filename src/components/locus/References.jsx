@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './LocusComponents.css';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
-import { formatCitationString, CitationLinks } from '../../utils/formatCitation.jsx';
+import { formatCitationString, CitationLinksBelow, buildCitationLinks } from '../../utils/formatCitation.jsx';
 
 function References({ data, loading, error }) {
   const [collapsedYears, setCollapsedYears] = useState({});
@@ -116,7 +116,7 @@ function References({ data, loading, error }) {
                             </td>
                             <td>
                               {ref.links && ref.links.length > 0 ? (
-                                <CitationLinks links={ref.links} />
+                                <CitationLinksBelow links={ref.links && ref.links.length ? ref.links : buildCitationLinks(ref)} />
                               ) : (
                                 <span className="citation-links">
                                   {'['}
@@ -172,7 +172,7 @@ function References({ data, loading, error }) {
                                   )}
                                   <div className="ref-links">
                                     {ref.links && ref.links.length > 0 ? (
-                                      <CitationLinks links={ref.links} />
+                                      <CitationLinksBelow links={links && links.length ? links : buildCitationLinks(ref)} />
                                     ) : (
                                       <span className="citation-links">
                                         {'['}

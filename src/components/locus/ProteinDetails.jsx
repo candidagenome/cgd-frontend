@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
-import { formatCitationString, CitationLinks } from '../../utils/formatCitation.jsx';
+import { formatCitationString, CitationLinksBelow, buildCitationLinks } from '../../utils/formatCitation.jsx';
 import './LocusComponents.css';
 
 function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
@@ -206,7 +206,7 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                     <span className="reference-citation">
                       {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
                       {ref.links && ref.links.length > 0 && (
-                        <CitationLinks links={ref.links} />
+                        <CitationLinksBelow links={ref.links && ref.links.length ? ref.links : buildCitationLinks(ref)} />
                       )}
                     </span>
                   </div>
