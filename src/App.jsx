@@ -26,7 +26,24 @@ function App() {
         </Routes>
 
         <footer className="main-footer">
-          <p>&copy; 2024 Candida Genome Database. All rights reserved.</p>
+          <div className="footer-nav">
+            <div className="footer-left">
+              <Link to="/">
+                <span className="arrow-up">↑</span> Return to CGD
+              </Link>
+            </div>
+            <div className="footer-right">
+              <a href="/cgi-bin/suggestion">
+                Send a Message to the CGD Curators <span className="email-icon">✉</span>
+              </a>
+            </div>
+          </div>
+          <div className="footer-copyright">
+            <p>
+              &copy; 2004–{new Date().getFullYear()} The Board of Trustees of the Leland Stanford Junior University.
+              {' '}Please see <a href="/HowToCite.shtml">How to cite CGD</a>.
+            </p>
+          </div>
         </footer>
       </div>
     </Router>
