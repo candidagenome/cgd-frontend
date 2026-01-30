@@ -35,6 +35,13 @@ function LocusSummary({
     return strand === 'W' || strand === '+' ? 'Watson' : 'Crick';
   };
 
+  // Convert <feature:ID>NAME</feature> tags to hyperlinks
+  const parseFeatureTags = (html) => {
+    if (!html) return '';
+    // Match <feature:FEATURE_ID>GENE_NAME</feature> and convert to anchor tags
+    return html.replace(/<feature:([^>]+)>([^<]+)<\/feature>/g, '<a href="/locus/$1">$2</a>');
+  };
+
   // ---------- GO grouping ----------
   const groupGoByAspect = (annotations) => {
     if (!annotations || annotations.length === 0) return {};
@@ -858,7 +865,7 @@ function LocusSummary({
               <p
                 key={idx}
                 className="summary-note-paragraph"
-                dangerouslySetInnerHTML={{ __html: note.paragraph_text }}
+                dangerouslySetInnerHTML={{ __html: parseFeatureTags(note.paragraph_text) }}
               />
             ))}
           </div>

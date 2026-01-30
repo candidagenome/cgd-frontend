@@ -12,7 +12,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px 30px;
-  background-color: #1976d2;
+  background-color: #1f77c9;    /* #1976d2; */
   color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -41,18 +41,81 @@
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-/* Footer */
+/* =========================
+   Footer (CGD-style)
+   ========================= */
+
 .main-footer {
   margin-top: auto;
-  padding: 20px;
-  background-color: #f5f5f5;
-  text-align: center;
-  color: #666;
-  border-top: 1px solid #e0e0e0;
+  font-size: 12px;
+  color: #333;
 }
 
-.main-footer p {
-  margin: 0;
+/* Top gray navigation strip */
+.footer-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 18px;
+  background-color: #e0e0e0;   /* lighter, softer gray */
+}
+
+.footer-left a,
+.footer-right a {
+  color: #000;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.footer-left a:hover,
+.footer-right a:hover {
+  text-decoration: underline;
+}
+
+.arrow-up {
+  margin-right: 6px;
+  font-size: 12px;
+}
+
+.email-icon {
+  margin-left: 6px;
+  font-size: 13px;
+}
+
+/* Yellow copyright block */
+.footer-copyright {
+  padding: 12px 18px;
+  background-color: #eaf3fb;   /* light CGD blue */
+  line-height: 1.45;
+  color: #243447;              /* slightly darker for readability */
+}
+
+.footer-copyright p {
+  margin: 0 0 8px 0;
+}
+
+.footer-copyright p:last-child {
+  margin-bottom: 0;
+}
+
+.footer-copyright a {
+  color: #1a5fb4; 
+  text-decoration: none;
+}
+
+.footer-copyright a:hover {
+  text-decoration: underline;
+}
+
+/* "To cite CGD" emphasis */
+.footer-copyright .cite-label {
+  color: #c00000;
+  font-weight: bold;
+}
+
+/* Citation styling */
+.footer-copyright em {
+  font-style: italic;
 }
 
 /* Responsive */
