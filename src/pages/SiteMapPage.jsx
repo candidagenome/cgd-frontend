@@ -323,7 +323,7 @@ function SiteMapPage() {
               <td className="check-icon"><Link to="/help/colleague-update">✓</Link></td>
             </tr>
             <tr>
-              <td><a href="/cgi-bin/suggestion">Contact CGD</a></td>
+              <td><Link to="/contact">Contact CGD</Link></td>
               <td>Form to submit suggestions or questions to CGD.</td>
               <td>Send suggestions or questions to CGD.</td>
               <td></td>

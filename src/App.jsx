@@ -24,6 +24,7 @@ import DownloadPage from './pages/DownloadPage';
 import LiteraturePage from './pages/LiteraturePage';
 import TopicBibliosPage from './pages/TopicBibliosPage';
 import StrainsPage from './pages/StrainsPage';
+import ContactPage from './pages/ContactPage';
 
 // Help documentation pages
 import GettingStartedHelp from './pages/help/GettingStartedHelp';
@@ -92,13 +93,13 @@ function App() {
                     <span className="icon-facebook">f</span>
                   </a>
 
-                  <a
-                    href="/cgi-bin/suggestion"
+                  <Link
+                    to="/contact"
                     className="icon-link"
                     title="Send a suggestion to CGD"
                   >
                     <span className="icon-email">✉</span>
-                  </a>
+                  </Link>
                 </div>
               </div>
 
@@ -157,6 +158,7 @@ function App() {
           <Route path="/literature" element={<LiteraturePage />} />
           <Route path="/topic-biblios" element={<TopicBibliosPage />} />
           <Route path="/strains" element={<StrainsPage />} />
+          <Route path="/contact" element={<ContactPage />} />
 
           {/* Help documentation pages */}
           <Route path="/help/getting-started" element={<GettingStartedHelp />} />
@@ -199,9 +201,9 @@ function App() {
               </Link>
             </div>
             <div className="footer-right">
-              <a href="/cgi-bin/suggestion">
+              <Link to="/contact">
                 Send a Message to the CGD Curators <span className="email-icon">✉</span>
-              </a>
+              </Link>
             </div>
           </div>
 

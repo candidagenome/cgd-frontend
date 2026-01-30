@@ -22,7 +22,8 @@ const SubmitDataPage = () => {
     },
     {
       title: 'Contact CGD',
-      url: '/cgi-bin/suggestion',
+      url: '/contact',
+      isReactRoute: true,
       description: 'Send suggestions or questions to CGD'
     }
   ];

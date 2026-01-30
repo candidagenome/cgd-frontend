@@ -234,7 +234,7 @@ function HelpPage() {
 
         <div className="help-item">
           <h3>
-            <a href="/cgi-bin/suggestion">Contact CGD</a>
+            <Link to="/contact">Contact CGD</Link>
           </h3>
           <p>Send suggestions or questions to CGD</p>
         </div>

@@ -58,7 +58,7 @@ const FAQPage = () => {
                 databases), it's always a good idea to include the gene name, systematic name, and species name
                 (e.g., "<em>Candida albicans</em>" or "<em>C. albicans</em>") in the abstract. If you think we
                 might have missed your paper, please drop us an{' '}
-                <Link to="/cgi-bin/suggestion">email</Link> and we will be happy to add it.
+                <Link to="/contact">email</Link> and we will be happy to add it.
               </p>
             </div>
           </div>
@@ -73,13 +73,13 @@ const FAQPage = () => {
                 detailed list of <Link to="/nomenclature">guidelines</Link> for choosing and reserving
                 new gene names, and for the resolution of conflicts over gene names. Please submit a reservation
                 using our <Link to="/cgi-bin/registry/geneRegistry">registry form</Link> or send CGD an{' '}
-                <Link to="/cgi-bin/suggestion">email</Link> if you would like to reserve a gene name.
+                <Link to="/contact">email</Link> if you would like to reserve a gene name.
               </p>
               <p><strong>I'd like to change the name of a gene that already has a standard genetic name; is this possible?</strong></p>
               <p>
                 Occasionally, existing gene names are changed to more accurately reflect the function or role
                 of the gene product. Such changes are only made if there is consensus among all researchers
-                who have studied the gene. CGD <Link to="/cgi-bin/suggestion">curators</Link> can coordinate
+                who have studied the gene. CGD <Link to="/contact">curators</Link> can coordinate
                 the process of proposing and discussing gene name changes.
               </p>
             </div>
@@ -144,7 +144,7 @@ const FAQPage = () => {
               </p>
               <p>
                 CGD curators may be contacted <em>via</em>{' '}
-                <Link to="/cgi-bin/suggestion">our suggestion form</Link>. We welcome your comments and questions!
+                <Link to="/contact">our suggestion form</Link>. We welcome your comments and questions!
               </p>
             </div>
           </div>
@@ -229,7 +229,7 @@ const FAQPage = () => {
                 In assigning Gene Ontology (GO) terms, our aim is to annotate each function, process, and
                 location of the gene product with the full set of references that establish the classification.
                 If your paper has not been cited, feel free to send us an{' '}
-                <Link to="/cgi-bin/suggestion">email</Link>, and we will add the information as quickly as possible.
+                <Link to="/contact">email</Link>, and we will add the information as quickly as possible.
               </p>
             </div>
           </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './InfoPages.css';
 
 // Citation component for consistent display
@@ -67,7 +68,7 @@ function StrainsPage() {
           <em>Candida</em> species, rather than a comprehensive resource. The strain names on each
           species list below link to short summary descriptions, notes and citations. If you would
           like to suggest additions, corrections, or updates to this list, please{' '}
-          <a href="/cgi-bin/suggestion">send a message to CGD curators</a> with details.
+          <Link to="/contact">send a message to CGD curators</Link> with details.
         </p>
 
         <hr />
