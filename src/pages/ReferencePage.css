@@ -4,7 +4,7 @@
    =========================================== */
 
 .reference-page {
-  max-width: 1000px;
+  max-width: 1300px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -55,26 +55,28 @@
 .citation-text {
   font-size: 1.05rem;
   line-height: 1.6;
-  margin-bottom: 15px;
+  margin-bottom: 8px;
 }
 
-.citation-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
+.citation-pmid {
+  color: #666;
+  font-size: 0.95em;
 }
 
-.citation-link {
+/* Links below citation (matches other pages) */
+.citation-section .citation-links-below {
+  margin-top: 5px;
+}
+
+.citation-section .citation-links-below .citation-link {
   color: #1976d2;
   text-decoration: none;
-  padding: 4px 8px;
-  border: 1px solid #1976d2;
-  border-radius: 4px;
-  font-size: 0.9rem;
+  margin-right: 15px;
+  font-size: 0.95rem;
 }
 
-.citation-link:hover {
-  background: #e3f2fd;
+.citation-section .citation-links-below .citation-link:hover {
+  text-decoration: underline;
 }
 
 /* ===========================================

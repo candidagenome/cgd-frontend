@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import useReferenceData from '../hooks/useReferenceData';
-import { formatCitationString } from '../utils/formatCitation.jsx';
+import { formatCitationString, CitationLinksBelow, buildCitationLinks } from '../utils/formatCitation.jsx';
 import './ReferencePage.css';
 
 const GENES_PER_TABLE = 10;
@@ -80,6 +80,16 @@ function ReferencePage() {
 
     const ref = data.info.result;
 
+    // Build links for this reference
+    const links = buildCitationLinks({
+      dbxref_id: ref.dbxref_id,
+      pubmed: ref.pubmed,
+      urls: [
+        ...(ref.full_text_url ? [{ url: ref.full_text_url, url_type: 'full text' }] : []),
+        ...(ref.supplement_url ? [{ url: ref.supplement_url, url_type: 'web supplement' }] : []),
+      ],
+    });
+
     return (
       <div className="citation-section">
         <div className="citation-text">
@@ -96,40 +106,9 @@ function ReferencePage() {
               {ref.page && `:${ref.page}`}
             </>
           )}
+          {ref.pubmed && <span className="citation-pmid"> PMID: {ref.pubmed}</span>}
         </div>
-
-        <div className="citation-links">
-          {ref.pubmed && (
-            <a
-              href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="citation-link"
-            >
-              PubMed: {ref.pubmed}
-            </a>
-          )}
-          {ref.full_text_url && (
-            <a
-              href={ref.full_text_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="citation-link"
-            >
-              Full Text
-            </a>
-          )}
-          {ref.supplement_url && (
-            <a
-              href={ref.supplement_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="citation-link"
-            >
-              Supplemental Materials
-            </a>
-          )}
-        </div>
+        <CitationLinksBelow links={links} />
       </div>
     );
   };
