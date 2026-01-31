@@ -1161,6 +1161,58 @@ a:hover {
   gap: 10px;
 }
 
+/* GO intro section */
+.go-intro {
+  background-color: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+}
+
+.go-intro p {
+  margin: 0 0 10px 0;
+}
+
+.go-intro ul {
+  margin: 0;
+  padding-left: 25px;
+}
+
+.go-intro li {
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.go-intro a {
+  color: #1565c0;
+  text-decoration: none;
+}
+
+.go-intro a:hover {
+  text-decoration: underline;
+}
+
+/* Last reviewed date */
+.last-reviewed {
+  padding: 8px 15px;
+  margin: 0;
+  font-style: italic;
+  color: #666;
+  background-color: #f9f9f9;
+}
+
+/* Section note */
+.section-note {
+  padding: 10px 15px;
+  margin: 0;
+  font-size: 0.9em;
+  color: #555;
+  background-color: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  line-height: 1.5;
+}
+
 .go-aspect-section {
   border-top: 1px solid #e0e0e0;
 }
