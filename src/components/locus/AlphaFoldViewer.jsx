@@ -1,5 +1,60 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import './AlphaFoldViewer.css';
+
+// Track script loading state globally to avoid duplicate loads
+let scriptLoadingPromise = null;
+
+const loadMolstarScript = () => {
+  // If already loaded, return resolved promise
+  if (window.PDBeMolstarPlugin) {
+    return Promise.resolve();
+  }
+
+  // If currently loading, return existing promise
+  if (scriptLoadingPromise) {
+    return scriptLoadingPromise;
+  }
+
+  // Start loading
+  scriptLoadingPromise = new Promise((resolve, reject) => {
+    // Load CSS first
+    if (!document.querySelector('link[href*="pdbe-molstar"]')) {
+      const cssLink = document.createElement('link');
+      cssLink.rel = 'stylesheet';
+      cssLink.href = 'https://www.ebi.ac.uk/pdbe/pdb-component-library/css/pdbe-molstar-light-3.1.0.css';
+      document.head.appendChild(cssLink);
+    }
+
+    // Check if script already exists
+    if (document.querySelector('script[src*="pdbe-molstar"]')) {
+      // Script exists, wait for it to be ready
+      const checkReady = setInterval(() => {
+        if (window.PDBeMolstarPlugin) {
+          clearInterval(checkReady);
+          resolve();
+        }
+      }, 100);
+      setTimeout(() => {
+        clearInterval(checkReady);
+        reject(new Error('Timeout waiting for Molstar'));
+      }, 10000);
+      return;
+    }
+
+    // Load script
+    const script = document.createElement('script');
+    script.src = 'https://www.ebi.ac.uk/pdbe/pdb-component-library/js/pdbe-molstar-plugin-3.1.0.js';
+    script.async = true;
+    script.onload = () => {
+      // Small delay to ensure plugin is fully initialized
+      setTimeout(resolve, 100);
+    };
+    script.onerror = () => reject(new Error('Failed to load Molstar script'));
+    document.body.appendChild(script);
+  });
+
+  return scriptLoadingPromise;
+};
 
 /**
  * AlphaFold 3D Structure Viewer using PDBe Mol* (Molstar)
@@ -10,98 +65,10 @@ function AlphaFoldViewer({ uniprotId }) {
   const viewerInstanceRef = useRef(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!uniprotId) {
-      setLoading(false);
-      return;
-    }
-
-    // Load PDBe Molstar CSS
-    const cssLink = document.createElement('link');
-    cssLink.rel = 'stylesheet';
-    cssLink.href = 'https://www.ebi.ac.uk/pdbe/pdb-component-library/css/pdbe-molstar-light-3.1.0.css';
-    document.head.appendChild(cssLink);
-
-    // Load PDBe Molstar JS
-    const script = document.createElement('script');
-    script.src = 'https://www.ebi.ac.uk/pdbe/pdb-component-library/js/pdbe-molstar-plugin-3.1.0.js';
-    script.async = true;
-
-    script.onload = () => {
-      initViewer();
-    };
-
-    script.onerror = () => {
-      setError('Failed to load AlphaFold viewer script');
-      setLoading(false);
-    };
-
-    document.body.appendChild(script);
-
-    return () => {
-      // Cleanup
-      if (viewerInstanceRef.current) {
-        try {
-          viewerInstanceRef.current.clear();
-        } catch (e) {
-          console.warn('Error clearing viewer:', e);
-        }
-      }
-    };
-  }, [uniprotId]);
-
-  const initViewer = async () => {
-    if (!containerRef.current || !window.PDBeMolstarPlugin) {
-      setError('AlphaFold viewer unavailable');
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const picked = await resolveAlphaFoldUrl(uniprotId);
-      if (!picked) {
-        setError('AlphaFold structure not available');
-        setLoading(false);
-        return;
-      }
-
-      // Prefetch as blob for better performance
-      let blobUrl = null;
-      try {
-        blobUrl = await prefetchAsBlob(picked.url, picked.format);
-      } catch (e) {
-        console.warn('Prefetch failed, falling back to direct URL:', e);
-        blobUrl = picked.url;
-      }
-
-      // Initialize viewer
-      const instance = new window.PDBeMolstarPlugin();
-      viewerInstanceRef.current = instance;
-
-      instance.render(containerRef.current, {
-        customData: { url: blobUrl, format: picked.format, binary: picked.format === 'bcif' },
-        alphafoldView: true,
-        bgColor: { r: 255, g: 255, b: 255 },
-        hideControls: true,
-        hideCanvasControls: ['expand', 'animation', 'controlToggle', 'controlInfo']
-      });
-
-      setLoading(false);
-
-      // Clean up Blob URL later to free memory
-      if (blobUrl && blobUrl.startsWith('blob:')) {
-        setTimeout(() => URL.revokeObjectURL(blobUrl), 30000);
-      }
-    } catch (e) {
-      console.error('AlphaFold viewer error:', e);
-      setError(e.message || 'Failed to load AlphaFold structure');
-      setLoading(false);
-    }
-  };
+  const initAttemptedRef = useRef(false);
 
   // Resolve AlphaFold URL with caching
-  const resolveAlphaFoldUrl = async (id) => {
+  const resolveAlphaFoldUrl = useCallback(async (id) => {
     const CACHE_KEY = `af_url_${id}`;
     const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
@@ -183,10 +150,10 @@ function AlphaFoldViewer({ uniprotId }) {
     }
 
     throw new Error('No AlphaFold prediction found for this UniProt ID');
-  };
+  }, []);
 
   // Prefetch structure as Blob URL
-  const prefetchAsBlob = async (url, format) => {
+  const prefetchAsBlob = useCallback(async (url, format) => {
     const res = await fetch(url, { mode: 'cors', cache: 'force-cache' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const ab = await res.arrayBuffer();
@@ -194,7 +161,109 @@ function AlphaFoldViewer({ uniprotId }) {
       : format === 'cif' ? 'chemical/x-mmcif'
         : 'chemical/x-pdb';
     return URL.createObjectURL(new Blob([ab], { type: mime }));
-  };
+  }, []);
+
+  const initViewer = useCallback(async () => {
+    if (!containerRef.current || !window.PDBeMolstarPlugin || initAttemptedRef.current) {
+      return;
+    }
+
+    initAttemptedRef.current = true;
+
+    try {
+      const picked = await resolveAlphaFoldUrl(uniprotId);
+      if (!picked) {
+        setError('AlphaFold structure not available');
+        setLoading(false);
+        return;
+      }
+
+      // Prefetch as blob for better performance
+      let blobUrl = null;
+      try {
+        blobUrl = await prefetchAsBlob(picked.url, picked.format);
+      } catch (e) {
+        console.warn('Prefetch failed, falling back to direct URL:', e);
+        blobUrl = picked.url;
+      }
+
+      // Clear container before rendering
+      if (containerRef.current) {
+        containerRef.current.innerHTML = '';
+      }
+
+      // Initialize viewer
+      const instance = new window.PDBeMolstarPlugin();
+      viewerInstanceRef.current = instance;
+
+      instance.render(containerRef.current, {
+        customData: { url: blobUrl, format: picked.format, binary: picked.format === 'bcif' },
+        alphafoldView: true,
+        bgColor: { r: 255, g: 255, b: 255 },
+        hideControls: true,
+        hideCanvasControls: ['expand', 'animation', 'controlToggle', 'controlInfo']
+      });
+
+      setLoading(false);
+
+      // Clean up Blob URL later to free memory
+      if (blobUrl && blobUrl.startsWith('blob:')) {
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 30000);
+      }
+    } catch (e) {
+      console.error('AlphaFold viewer error:', e);
+      setError(e.message || 'Failed to load AlphaFold structure');
+      setLoading(false);
+    }
+  }, [uniprotId, resolveAlphaFoldUrl, prefetchAsBlob]);
+
+  useEffect(() => {
+    if (!uniprotId) {
+      setLoading(false);
+      return;
+    }
+
+    // Reset state for new uniprotId
+    initAttemptedRef.current = false;
+    setError(null);
+    setLoading(true);
+
+    // Clear any existing viewer
+    if (viewerInstanceRef.current) {
+      try {
+        viewerInstanceRef.current.clear();
+      } catch (e) {
+        console.warn('Error clearing viewer:', e);
+      }
+      viewerInstanceRef.current = null;
+    }
+
+    // Load script and initialize
+    loadMolstarScript()
+      .then(() => {
+        // Small delay to ensure container is properly rendered
+        setTimeout(() => {
+          initViewer();
+        }, 50);
+      })
+      .catch((e) => {
+        console.error('Failed to load Molstar:', e);
+        setError('Failed to load AlphaFold viewer');
+        setLoading(false);
+      });
+
+    return () => {
+      // Cleanup on unmount
+      if (viewerInstanceRef.current) {
+        try {
+          viewerInstanceRef.current.clear();
+        } catch (e) {
+          console.warn('Error clearing viewer:', e);
+        }
+        viewerInstanceRef.current = null;
+      }
+    };
+  }, [uniprotId, initViewer]);
 
   if (!uniprotId) {
     return <span className="no-value">No predicted structure available</span>;
