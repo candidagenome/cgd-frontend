@@ -155,7 +155,6 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                           <tr>
                             <th>Protein Coordinates</th>
                             <th>Accession ID</th>
-                            <th>Description</th>
                             <th>Source</th>
                           </tr>
                         </thead>
@@ -167,7 +166,6 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                                   ? `${domain.start_coord}-${domain.stop_coord}`
                                   : '-'}
                               </td>
-                              <td>{domain.member_db_id || domain.interpro_id || '-'}</td>
                               <td>{domain.domain_name || '-'}</td>
                               <td>{domain.domain_type || '-'}</td>
                             </tr>
