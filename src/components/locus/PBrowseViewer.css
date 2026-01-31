@@ -1,0 +1,61 @@
+/* PBrowse (Protein Browser) Viewer Styles */
+
+.pbrowse-wrapper {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.pbrowse-header h4 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.pbrowse-viewer-container {
+  position: relative;
+  width: 750px;
+  max-width: 100%;
+}
+
+.pbrowse-iframe {
+  width: 750px;
+  max-width: 100%;
+  height: 850px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.pbrowse-loading-overlay,
+.pbrowse-error-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 4px;
+  color: #666;
+  font-size: 14px;
+  z-index: 10;
+}
+
+.pbrowse-error-overlay {
+  color: #c00;
+}
+
+/* Responsive adjustments */
+@media (max-width: 800px) {
+  .pbrowse-viewer-container,
+  .pbrowse-iframe {
+    width: 100%;
+  }
+
+  .pbrowse-iframe {
+    height: 600px;
+  }
+}
