@@ -8,31 +8,19 @@ import {
   buildCitationLinks,
 } from '../../utils/formatCitation.jsx';
 
-// Literature topics grouped by category (matching CGD's literature_topic CV)
-const TOPIC_GROUPS = {
-  'Curated Literature': [
-    'Gene Ontology',
-    'Phenotype',
-    'Protein Information',
-    'Pathways',
-    'Regulation',
-    'Sequence',
-    'Other',
-  ],
-  'Large Scale Analysis': [
-    'Genomic expression study',
-    'Systematic deletion/mutation',
-    'Large-scale mutant phenotype analysis',
-    'Large-scale protein analysis',
-    'Systematic overexpression analysis',
-    'Comparative genomics',
-    'Other large-scale study',
-  ],
-  'Additional Information': [
-    'Review',
-    'Selected Review',
-    'Archived Literature',
-  ],
+// Helper to format date for display
+const formatDate = (dateStr) => {
+  if (!dateStr) return 'N/A';
+  try {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  } catch {
+    return dateStr;
+  }
 };
 
 function References({ data, loading, error, selectedOrganism, onOrganismChange, locusName }) {
@@ -189,8 +177,11 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
     );
   };
 
-  // Render topics sidebar
+  // Render topics sidebar using dynamic topic groups from API
   const renderTopicsSidebar = () => {
+    // Get topic groups from API response
+    const topicGroups = orgData?.topic_groups || [];
+
     return (
       <div className="literature-sidebar">
         <h4 className="sidebar-title">
@@ -198,65 +189,71 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
           <span className="sidebar-subtitle"> LITERATURE TOPICS</span>
         </h4>
 
-        {Object.entries(TOPIC_GROUPS).map(([groupName, topics]) => {
-          // Check if any topics in this group have references
-          const hasTopicsWithRefs = topics.some(topic => {
-            const topicRefs = getRefsByTopic(topic);
-            return topicRefs.length > 0;
-          });
-
-          // Special handling for Additional Information group
-          if (groupName === 'Additional Information') {
-            return (
-              <div key={groupName} className="topic-group">
-                <div className="topic-group-header">{groupName}</div>
-                {notYetCuratedRefs.length > 0 && renderTopicEntry('References Not Yet Curated', 'References Not Yet Curated', 'Not yet curated')}
-                {highPriorityRefs.length > 0 && renderTopicEntry('References for Curation', 'References for Curation', 'High Priority')}
-                {renderTopicEntry('Literature Curation Summary', 'Literature Curation Summary')}
-
-                {/* PubMed Search Links */}
-                <div className="pubmed-links">
-                  <a
-                    href={buildPubMedUrl(false)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="pubmed-link"
-                  >
-                    &#8226; PubMed Search
-                  </a>
-                  <a
-                    href={buildPubMedUrl(true)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="pubmed-link"
-                  >
-                    &#8226; Expanded PubMed Search
-                  </a>
-                </div>
+        {/* Render dynamic topic groups from API */}
+        {topicGroups.map((group) => (
+          <div key={group.group_name} className="topic-group">
+            <div className="topic-group-header">{group.group_name}</div>
+            {group.topics.map((topic) => (
+              <div
+                key={topic.topic_name}
+                className={`topic-entry ${selectedTopic === topic.topic_name ? 'active' : ''}`}
+                onClick={() => {
+                  setSelectedTopic(topic.topic_name);
+                  setViewMode('topic');
+                }}
+              >
+                {selectedTopic === topic.topic_name ? (
+                  <span className="topic-arrow">&#9658;</span>
+                ) : (
+                  <span className="topic-bullet">&#8226;</span>
+                )}
+                <span className={`topic-label ${selectedTopic === topic.topic_name ? 'active' : ''}`}>
+                  {topic.topic_name}
+                  <span className="topic-count">({topic.count})</span>
+                </span>
               </div>
-            );
-          }
+            ))}
+            {/* Add "List of all Curated References" link for Curated Literature group */}
+            {group.group_name === 'Curated Literature' && renderTopicEntry('All Curated References', 'List of all Curated References', 'curated')}
+          </div>
+        ))}
 
-          if (!hasTopicsWithRefs) {
-            return null;
-          }
+        {/* Additional Information section (always shown) */}
+        <div className="topic-group">
+          <div className="topic-group-header">Additional Information</div>
+          {notYetCuratedRefs.length > 0 && renderTopicEntry('References Not Yet Curated', 'References Not Yet Curated', 'Not yet curated')}
+          {highPriorityRefs.length > 0 && renderTopicEntry('References for Curation', 'References for Curation', 'High Priority')}
+          {renderTopicEntry('Literature Curation Summary', 'Literature Curation Summary')}
 
-          return (
-            <div key={groupName} className="topic-group">
-              <div className="topic-group-header">{groupName}</div>
-              {topics.map(topic => renderTopicEntry(topic, topic))}
-              {groupName === 'Curated Literature' && renderTopicEntry('All Curated References', 'List of all Curated References', 'curated')}
-            </div>
-          );
-        })}
+          {/* PubMed Search Links */}
+          <div className="pubmed-links">
+            <a
+              href={buildPubMedUrl(false)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="pubmed-link"
+            >
+              &#8226; PubMed Search
+            </a>
+            <a
+              href={buildPubMedUrl(true)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="pubmed-link"
+            >
+              &#8226; Expanded PubMed Search
+            </a>
+          </div>
+        </div>
       </div>
     );
   };
 
   // Render summary section
   const renderSummary = () => {
-    const lastCurated = data.last_curated_date || 'N/A';
-    const lastPubMedSearch = data.last_pubmed_search_date || 'N/A';
+    // Get dates from organism-specific data
+    const lastCurated = formatDate(orgData?.last_curated_date);
+    const lastPubMedSearch = formatDate(orgData?.last_pubmed_search_date);
 
     return (
       <div className="literature-summary">
