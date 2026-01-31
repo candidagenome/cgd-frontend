@@ -3,6 +3,16 @@ import { Link } from 'react-router-dom';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
 import './LocusComponents.css';
 
+// Helper to get status color styling
+const getStatusStyle = (status) => {
+  if (!status) return { color: '#666' };
+  const s = status.toUpperCase();
+  if (s.includes('VERIFIED')) return { color: '#2e7d32', fontWeight: 'bold' };
+  if (s.includes('UNCHARACTERIZED')) return { color: '#757575', fontWeight: 'bold' };
+  if (s.includes('DUBIOUS')) return { color: '#c62828', fontWeight: 'bold' };
+  return { color: '#666' };
+};
+
 function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
   // Get available organisms from the data - memoize to prevent new array reference each render
   const organisms = useMemo(() => {
@@ -46,30 +56,49 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
           <table className="info-table">
             <tbody>
               {/* Ortholog Cluster Section */}
-              <tr className="section-with-divider section-grey-bg">
-                <th>Ortholog Cluster</th>
-                <td>
-                  <strong>From CGOB</strong>
-                </td>
-              </tr>
+              {orgData.ortholog_cluster && (
+                <>
+                  <tr className="section-with-divider section-grey-bg">
+                    <th style={{ verticalAlign: 'top' }}>Ortholog Cluster</th>
+                    <td>
+                      <div style={{ marginBottom: '10px' }}>
+                        <strong>From{' '}
+                          <a href="http://cgob3.ucd.ie/" target="_blank" rel="noopener noreferrer">
+                            CGOB
+                          </a>
+                        </strong>
+                      </div>
+                      {orgData.ortholog_cluster.cluster_url && (
+                        <div style={{ marginBottom: '10px' }}>
+                          <a
+                            href={`http://cgob3.ucd.ie/cgi-bin/main.pl?gene_name=${orgData.locus_display_name}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            View CGOB cluster and synteny information
+                          </a>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
 
-              {/* Download Links */}
-              {orgData.ortholog_cluster?.download_links && orgData.ortholog_cluster.download_links.length > 0 && (
-                <tr>
-                  <th style={{ paddingLeft: '20px', fontWeight: 'normal', verticalAlign: 'top' }}>
-                    Download cluster sequence files:
-                  </th>
-                  <td>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                      {orgData.ortholog_cluster.download_links.map((link, idx) => (
-                        <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer">
-                          {link.label}
-                        </a>
-                      ))}
-                    </div>
-                  </td>
-                </tr>
-              )}
+                  {/* Download Links */}
+                  {orgData.ortholog_cluster.download_links && orgData.ortholog_cluster.download_links.length > 0 && (
+                    <tr>
+                      <th style={{ paddingLeft: '20px', fontWeight: 'normal', verticalAlign: 'top' }}>
+                        Download cluster sequence files:
+                      </th>
+                      <td>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          {orgData.ortholog_cluster.download_links.map((link, idx) => (
+                            <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer">
+                              {link.label}
+                            </a>
+                          ))}
+                        </div>
+                      </td>
+                    </tr>
+                  )}
 
               {/* Orthologs Table */}
               {orgData.ortholog_cluster?.orthologs && orgData.ortholog_cluster.orthologs.length > 0 && (
@@ -120,7 +149,7 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                             <td style={{ padding: '8px' }}>
                               {orth.source}
                             </td>
-                            <td style={{ padding: '8px' }}>
+                            <td style={{ padding: '8px', ...getStatusStyle(orth.status) }}>
                               {orth.status || '-'}
                             </td>
                           </tr>
@@ -131,12 +160,24 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                 </tr>
               )}
 
-              {/* Show message if no orthologs */}
-              {(!orgData.ortholog_cluster?.orthologs || orgData.ortholog_cluster.orthologs.length === 0) && (
+              {/* Show message if no orthologs in cluster */}
+              {orgData.ortholog_cluster && (!orgData.ortholog_cluster.orthologs || orgData.ortholog_cluster.orthologs.length === 0) && (
                 <tr>
                   <th style={{ paddingLeft: '20px', fontWeight: 'normal' }}>Orthologs</th>
                   <td>
                     <em style={{ color: '#666' }}>No orthologs found in CGOB cluster</em>
+                  </td>
+                </tr>
+              )}
+                </>
+              )}
+
+              {/* Show message if no ortholog cluster data */}
+              {!orgData.ortholog_cluster && (
+                <tr className="section-with-divider section-grey-bg">
+                  <th>Ortholog Cluster</th>
+                  <td>
+                    <em style={{ color: '#666' }}>No ortholog cluster information available</em>
                   </td>
                 </tr>
               )}
