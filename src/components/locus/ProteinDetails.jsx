@@ -116,11 +116,11 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                 </tr>
               )}
 
-              {/* Structural Information Section */}
-              {orgData.alphafold_info?.alphafold_url && (
-                <tr className="section-with-divider section-grey-bg">
-                  <th>Structural Information</th>
-                  <td>
+              {/* Structural Information Section - always show when protein data exists */}
+              <tr className="section-with-divider section-grey-bg">
+                <th>Structural Information</th>
+                <td>
+                  {orgData.alphafold_info?.alphafold_url ? (
                     <a
                       href={orgData.alphafold_info.alphafold_url}
                       target="_blank"
@@ -128,15 +128,25 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                     >
                       Predicted Structure from AlphaFold (Link-out)
                     </a>
-                  </td>
-                </tr>
-              )}
+                  ) : (
+                    <span className="no-value">No predicted structure available</span>
+                  )}
+                </td>
+              </tr>
 
-              {/* Conserved Domains Section - JBrowse link */}
-              {orgData.systematic_name && (
-                <tr className="section-with-divider section-grey-bg">
-                  <th>Conserved Domains</th>
-                  <td>
+              {/* Conserved Domains Section - always show when protein data exists */}
+              <tr className="section-with-divider section-grey-bg">
+                <th>Conserved Domains</th>
+                <td>
+                  {orgData.conserved_domains && orgData.conserved_domains.length > 0 ? (
+                    <a
+                      href={`/cgi-bin/protein/domainPage.pl?dbid=${orgData.stanford_name || orgData.systematic_name}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Domains/Motifs Page ({orgData.conserved_domains.length} domains)
+                    </a>
+                  ) : (
                     <a
                       href={`/cgi-bin/protein/domainPage.pl?dbid=${orgData.stanford_name || orgData.systematic_name}`}
                       target="_blank"
@@ -144,9 +154,9 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                     >
                       Domains/Motifs Page
                     </a>
-                  </td>
-                </tr>
-              )}
+                  )}
+                </td>
+              </tr>
 
               {/* Sequence Detail Section - show GCG sequence by default */}
               {(orgData.sequence_detail || orgData.protein_info) && (
