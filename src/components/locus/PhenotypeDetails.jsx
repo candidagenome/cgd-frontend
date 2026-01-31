@@ -51,8 +51,8 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
     const groups = {};
 
     (annotations || []).forEach((ann) => {
-      const category = getExperimentCategory(ann.experiment);
-      const expType = ann.experiment || 'Unspecified';
+      const category = getExperimentCategory(ann.experiment_type);
+      const expType = ann.experiment_type || 'Unspecified';
 
       if (!groups[category]) groups[category] = {};
       if (!groups[category][expType]) groups[category][expType] = [];
