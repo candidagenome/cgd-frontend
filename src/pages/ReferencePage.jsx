@@ -1,162 +1,142 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useSearchParams, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import useReferenceData from '../hooks/useReferenceData';
-import { formatAuthors, formatCitationString } from '../utils/formatCitation.jsx';
+import { formatCitationString } from '../utils/formatCitation.jsx';
 import './ReferencePage.css';
-
-const TABS = [
-  { id: 'summary', label: 'Summary', component: 'summary' },
-  { id: 'literature', label: 'Literature Topics', component: 'literature', loader: 'loadLiteratureTopics' },
-  { id: 'loci', label: 'Genes/Loci', component: 'loci', loader: 'loadLocusDetails' },
-  { id: 'go', label: 'GO Annotations', component: 'go', loader: 'loadGoDetails' },
-  { id: 'phenotype', label: 'Phenotypes', component: 'phenotype', loader: 'loadPhenotypeDetails' },
-  { id: 'interactions', label: 'Interactions', component: 'interactions', loader: 'loadInteractionDetails' },
-];
 
 function ReferencePage() {
   const { id } = useParams();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'summary');
-
   const { data, loading, errors, loaders } = useReferenceData(id);
+  const [selectedAuthor, setSelectedAuthor] = useState('');
+  const [searchType, setSearchType] = useState('CGD');
 
-  // Store loaders in ref to avoid dependency in useEffect
-  const loadersRef = useRef(loaders);
-  loadersRef.current = loaders;
-
-  // Update URL when tab changes
+  // Load literature topics data on mount
   useEffect(() => {
-    if (activeTab !== 'summary') {
-      setSearchParams({ tab: activeTab });
-    } else {
-      setSearchParams({});
+    if (loaders.loadLiteratureTopics) {
+      loaders.loadLiteratureTopics();
     }
-  }, [activeTab, setSearchParams]);
+  }, [loaders]);
 
-  // Load data when tab is selected - only triggers on activeTab change
-  useEffect(() => {
-    const tab = TABS.find(t => t.id === activeTab);
-    if (tab && tab.loader && loadersRef.current[tab.loader]) {
-      loadersRef.current[tab.loader]();
+  const handleAuthorSearch = (e) => {
+    e.preventDefault();
+    if (!selectedAuthor) return;
+
+    // Extract last name for search
+    const lastName = selectedAuthor.split(' ')[0];
+
+    switch (searchType) {
+      case 'CGD':
+        // Search within CGD - could link to a search page
+        window.open(`/search?type=reference&author=${encodeURIComponent(lastName)}`, '_blank');
+        break;
+      case 'PubMed':
+        window.open(`https://pubmed.ncbi.nlm.nih.gov/?term=${encodeURIComponent(selectedAuthor)}`, '_blank');
+        break;
+      case 'Google Scholar':
+        window.open(`https://scholar.google.com/scholar?q=author:${encodeURIComponent(lastName)}`, '_blank');
+        break;
+      default:
+        break;
     }
-  }, [activeTab]);
-
-  const handleTabClick = (tabId) => {
-    setActiveTab(tabId);
   };
 
-  const renderSummary = () => {
+  // Render citation section
+  const renderCitation = () => {
     if (loading.info) return <div className="loading">Loading reference information...</div>;
     if (errors.info) return <div className="error">Error: {errors.info}</div>;
     if (!data.info || !data.info.result) return <div className="no-data">No reference data available</div>;
 
     const ref = data.info.result;
 
-    // Build formatted citation in standard format
-    const formattedCitation = ref.citation
-      ? formatCitationString(ref.citation, ref.journal_name)
-      : (
-        <>
-          <strong>{formatAuthors(ref.authors)} ({ref.year})</strong>
-          {ref.title && <> {ref.title}</>}
-          {ref.journal_name && <> <em>{ref.journal_name}</em></>}
-          {ref.volume && <> {ref.volume}</>}
-          {ref.issue && <>({ref.issue})</>}
-          {ref.page && <>:{ref.page}</>}
-        </>
-      );
-
     return (
-      <div className="reference-summary">
-        {/* Citation Card */}
-        <div className="citation-card">
-          <div className="citation-full">
-            {formattedCitation}
-          </div>
-
-          {/* External Links */}
-          <div className="external-links">
-            {ref.pubmed && (
-              <a
-                href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="external-link pubmed"
-              >
-                PubMed: {ref.pubmed}
-              </a>
-            )}
-            {ref.urls && ref.urls.map((url, idx) => (
-              <a
-                key={idx}
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="external-link"
-              >
-                Full Text
-              </a>
-            ))}
-          </div>
+      <div className="citation-section">
+        <div className="citation-text">
+          {ref.citation ? (
+            formatCitationString(ref.citation, ref.journal_name)
+          ) : (
+            <>
+              <strong>{ref.authors?.map(a => a.author_name).join(', ')}</strong>
+              {ref.year && ` (${ref.year})`}
+              {ref.title && ` ${ref.title}`}
+              {ref.journal_name && <> <em>{ref.journal_name}</em></>}
+              {ref.volume && ` ${ref.volume}`}
+              {ref.issue && `(${ref.issue})`}
+              {ref.page && `:${ref.page}`}
+            </>
+          )}
         </div>
 
-        {/* Metadata Grid */}
-        <div className="ref-metadata">
-          <div className="metadata-item">
-            <span className="meta-label">CGD ID:</span>
-            <span className="meta-value">{ref.dbxref_id}</span>
-          </div>
-          <div className="metadata-item">
-            <span className="meta-label">Year:</span>
-            <span className="meta-value">{ref.year}</span>
-          </div>
-          <div className="metadata-item">
-            <span className="meta-label">Status:</span>
-            <span className="meta-value">{ref.status}</span>
-          </div>
-          <div className="metadata-item">
-            <span className="meta-label">Source:</span>
-            <span className="meta-value">{ref.source}</span>
-          </div>
+        <div className="citation-links">
+          {ref.pubmed && (
+            <a
+              href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="citation-link"
+            >
+              PubMed: {ref.pubmed}
+            </a>
+          )}
+          {ref.full_text_url && (
+            <a
+              href={ref.full_text_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="citation-link"
+            >
+              Full Text
+            </a>
+          )}
+          {ref.supplement_url && (
+            <a
+              href={ref.supplement_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="citation-link"
+            >
+              Supplemental Materials
+            </a>
+          )}
         </div>
-
-        {/* Abstract */}
-        {ref.abstract && (
-          <div className="abstract-section">
-            <h3>Abstract</h3>
-            <p className="abstract-text">{ref.abstract}</p>
-          </div>
-        )}
-
-        {/* Authors List */}
-        {ref.authors && ref.authors.length > 0 && (
-          <div className="authors-section">
-            <h3>Authors ({ref.authors.length})</h3>
-            <div className="authors-list">
-              {ref.authors.map((author, idx) => (
-                <span key={idx} className="author-item">
-                  {author.author_name}
-                  {author.author_type !== 'Author' && (
-                    <span className="author-type"> ({author.author_type})</span>
-                  )}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     );
   };
 
-  const renderLiteratureTopicsTab = () => {
-    if (loading.literatureTopics) return <div className="loading">Loading literature topics...</div>;
-    if (errors.literatureTopics) return <div className="error">Error: {errors.literatureTopics}</div>;
-    if (!data.literatureTopics) return <div className="no-data">No literature topics data available</div>;
+  // Render abstract section
+  const renderAbstract = () => {
+    if (!data.info?.result?.abstract) return null;
+
+    return (
+      <div className="section" id="abstract">
+        <h2 className="section-header">Abstract</h2>
+        <div className="section-content">
+          <p className="abstract-text">{data.info.result.abstract}</p>
+        </div>
+      </div>
+    );
+  };
+
+  // Render topics/gene matrix section
+  const renderTopicsSection = () => {
+    if (loading.literatureTopics) {
+      return (
+        <div className="section" id="summary">
+          <h2 className="section-header">Topics addressed in this paper</h2>
+          <div className="section-content">
+            <div className="loading">Loading topics...</div>
+          </div>
+        </div>
+      );
+    }
+
+    if (errors.literatureTopics || !data.literatureTopics) {
+      return null;
+    }
 
     const { topics, all_features } = data.literatureTopics;
 
-    if (topics.length === 0) {
-      return <div className="no-data">No literature topics for this paper</div>;
+    if (topics.length === 0 && all_features.length === 0) {
+      return null;
     }
 
     // Build a lookup for quick checking: topic -> Set of feature_nos
@@ -170,372 +150,174 @@ function ReferencePage() {
     const nonGeneTopics = topics.filter(t => t.features.length === 0);
 
     return (
-      <div className="literature-topics-tab">
-        <p className="tab-summary">
-          <strong>{topics.length}</strong> literature topic(s) addressed in this paper
-          {all_features.length > 0 && (
-            <> across <strong>{all_features.length}</strong> gene(s)</>
-          )}
-        </p>
-
-        {/* Non-gene topics */}
-        {nonGeneTopics.length > 0 && (
-          <div className="non-gene-topics">
-            <h4>General Topics (not linked to specific genes)</h4>
-            <ul className="topic-list">
-              {nonGeneTopics.map((topic, idx) => (
-                <li key={idx} className="topic-item">{topic.topic}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {/* Gene-linked topics matrix */}
-        {geneLinkedTopics.length > 0 && all_features.length > 0 && (
-          <div className="topic-matrix-section">
-            <h4>Topics linked to Genes</h4>
+      <div className="section" id="summary">
+        <h2 className="section-header">Topics addressed in this paper</h2>
+        <div className="section-content">
+          {/* Gene-topic matrix */}
+          {(geneLinkedTopics.length > 0 || nonGeneTopics.length > 0) && all_features.length > 0 && (
             <div className="topic-matrix-wrapper">
               <table className="topic-matrix">
                 <thead>
                   <tr>
                     <th className="topic-header">Topic</th>
+                    {nonGeneTopics.length > 0 && (
+                      <th className="non-gene-header">Not linked to Genes</th>
+                    )}
                     {all_features.map((feature, idx) => (
                       <th key={idx} className="gene-header">
                         <Link to={`/locus/${feature.feature_name}`}>
                           {feature.gene_name || feature.feature_name}
                         </Link>
-                        <div className="organism-name">
-                          <em>{feature.organism_name}</em>
-                        </div>
+                        <br />
+                        <span className="organism-label">
+                          (<em>{feature.organism_name}</em>)
+                        </span>
                       </th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {geneLinkedTopics.map((topic, tIdx) => (
-                    <tr key={tIdx}>
-                      <td className="topic-name">{topic.topic}</td>
-                      {all_features.map((feature, fIdx) => (
-                        <td key={fIdx} className="topic-cell">
-                          {topicFeatureMap[topic.topic]?.has(feature.feature_no) ? (
-                            <span className="topic-marker" title={`${topic.topic} - ${feature.gene_name || feature.feature_name}`}>
-                              ●
-                            </span>
-                          ) : (
-                            <span className="topic-empty"></span>
-                          )}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
+                  {/* Render all topics */}
+                  {[...geneLinkedTopics, ...nonGeneTopics].map((topic, tIdx) => {
+                    const isNonGene = topic.features.length === 0;
+                    return (
+                      <tr key={tIdx}>
+                        <td className="topic-name">{topic.topic}</td>
+                        {nonGeneTopics.length > 0 && (
+                          <td className="topic-cell">
+                            {isNonGene && (
+                              <span className="topic-marker" title={topic.topic}>●</span>
+                            )}
+                          </td>
+                        )}
+                        {all_features.map((feature, fIdx) => (
+                          <td key={fIdx} className="topic-cell">
+                            {topicFeatureMap[topic.topic]?.has(feature.feature_no) && (
+                              <span className="topic-marker" title={`${topic.topic} - ${feature.gene_name || feature.feature_name}`}>
+                                ●
+                              </span>
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Simple list view for topics with their genes */}
-        <div className="topics-list-section">
-          <h4>Topics Summary</h4>
-          {geneLinkedTopics.map((topic, idx) => (
-            <div key={idx} className="topic-detail">
-              <span className="topic-label">{topic.topic}:</span>
-              <span className="topic-genes">
-                {topic.features.map((f, fIdx) => (
-                  <span key={fIdx}>
-                    {fIdx > 0 && ', '}
-                    <Link to={`/locus/${f.feature_name}`}>
-                      {f.gene_name || f.feature_name}
-                    </Link>
-                  </span>
-                ))}
-              </span>
+          {/* If no features but has topics, just list them */}
+          {all_features.length === 0 && topics.length > 0 && (
+            <div className="topics-list">
+              <p>Topics: {topics.map(t => t.topic).join(', ')}</p>
             </div>
-          ))}
+          )}
+
+          {/* Gene count summary */}
+          {all_features.length > 0 && (
+            <p className="gene-count">
+              There {all_features.length === 1 ? 'is' : 'are'}{' '}
+              <strong>{all_features.length}</strong> gene{all_features.length !== 1 ? 's' : ''} addressed in this paper.
+            </p>
+          )}
         </div>
       </div>
     );
   };
 
-  const renderLociTab = () => {
-    if (loading.locusDetails) return <div className="loading">Loading genes/loci...</div>;
-    if (errors.locusDetails) return <div className="error">Error: {errors.locusDetails}</div>;
-    if (!data.locusDetails || !data.locusDetails.loci) return <div className="no-data">No genes/loci data available</div>;
-
-    const loci = data.locusDetails.loci;
-
-    if (loci.length === 0) {
-      return <div className="no-data">No genes addressed in this paper</div>;
+  // Render author search section
+  const renderAuthorSearch = () => {
+    if (!data.info?.result?.authors || data.info.result.authors.length === 0) {
+      return null;
     }
 
-    // Group by organism
-    const byOrganism = loci.reduce((acc, locus) => {
-      const org = locus.organism_name || 'Unknown';
-      if (!acc[org]) acc[org] = [];
-      acc[org].push(locus);
-      return acc;
-    }, {});
+    const authors = data.info.result.authors;
 
-    return (
-      <div className="loci-tab">
-        <p className="tab-summary">
-          This paper addresses <strong>{loci.length}</strong> gene(s)/loci.
-        </p>
-
-        {Object.entries(byOrganism).map(([orgName, orgLoci]) => (
-          <div key={orgName} className="organism-loci-section">
-            <h4 className="organism-header">
-              <em>{orgName}</em>
-              <span className="count-badge">{orgLoci.length}</span>
-            </h4>
-            <div className="loci-grid">
-              {orgLoci.map((locus, idx) => (
-                <div key={idx} className="locus-card">
-                  <Link to={`/locus/${locus.feature_name}`} className="locus-link">
-                    {locus.gene_name || locus.feature_name}
-                  </Link>
-                  {locus.gene_name && locus.gene_name !== locus.feature_name && (
-                    <span className="feature-name-small">({locus.feature_name})</span>
-                  )}
-                  {locus.headline && (
-                    <div className="locus-headline">{locus.headline}</div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  };
-
-  const renderGoTab = () => {
-    if (loading.goDetails) return <div className="loading">Loading GO annotations...</div>;
-    if (errors.goDetails) return <div className="error">Error: {errors.goDetails}</div>;
-    if (!data.goDetails || !data.goDetails.annotations) return <div className="no-data">No GO annotation data available</div>;
-
-    const annotations = data.goDetails.annotations;
-
-    if (annotations.length === 0) {
-      return <div className="no-data">No GO annotations citing this paper</div>;
+    // Set default author if not set
+    if (!selectedAuthor && authors.length > 0) {
+      setSelectedAuthor(authors[0].author_name);
     }
 
-    // Group by aspect
-    const aspectNames = {
-      P: 'Biological Process',
-      F: 'Molecular Function',
-      C: 'Cellular Component',
-    };
-
-    const byAspect = annotations.reduce((acc, ann) => {
-      const aspect = ann.go_aspect || 'Unknown';
-      if (!acc[aspect]) acc[aspect] = [];
-      acc[aspect].push(ann);
-      return acc;
-    }, {});
-
     return (
-      <div className="go-tab">
-        <p className="tab-summary">
-          <strong>{annotations.length}</strong> GO annotation(s) cite this paper.
-        </p>
-
-        {Object.entries(byAspect).map(([aspect, aspectAnns]) => (
-          <div key={aspect} className="aspect-section">
-            <h4 className="aspect-header">
-              {aspectNames[aspect] || aspect}
-              <span className="count-badge">{aspectAnns.length}</span>
-            </h4>
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Gene</th>
-                  <th>GO Term</th>
-                  <th>GO ID</th>
-                  <th>Evidence</th>
-                </tr>
-              </thead>
-              <tbody>
-                {aspectAnns.map((ann, idx) => (
-                  <tr key={idx}>
-                    <td>
-                      <Link to={`/locus/${ann.feature_name}`}>
-                        {ann.gene_name || ann.feature_name}
-                      </Link>
-                    </td>
-                    <td>{ann.go_term}</td>
-                    <td>
-                      <a
-                        href={`http://amigo.geneontology.org/amigo/term/${ann.goid}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="go-link"
-                      >
-                        {ann.goid}
-                      </a>
-                    </td>
-                    <td>
-                      <span className="evidence-code">{ann.evidence}</span>
-                    </td>
-                  </tr>
+      <div className="section" id="author">
+        <h2 className="section-header">Author Searches</h2>
+        <div className="section-content author-search-content">
+          <p>
+            To find contact information or other publications by the authors of this paper,
+            follow these three steps:
+          </p>
+          <form onSubmit={handleAuthorSearch} className="author-search-form">
+            <div className="search-step">
+              <label>(1) Choose an author:</label>
+              <select
+                value={selectedAuthor}
+                onChange={(e) => setSelectedAuthor(e.target.value)}
+                className="author-select"
+              >
+                {authors.map((author, idx) => (
+                  <option key={idx} value={author.author_name}>
+                    {author.author_name}
+                  </option>
                 ))}
-              </tbody>
-            </table>
-          </div>
-        ))}
-      </div>
-    );
-  };
-
-  const renderPhenotypeTab = () => {
-    if (loading.phenotypeDetails) return <div className="loading">Loading phenotype annotations...</div>;
-    if (errors.phenotypeDetails) return <div className="error">Error: {errors.phenotypeDetails}</div>;
-    if (!data.phenotypeDetails || !data.phenotypeDetails.annotations) return <div className="no-data">No phenotype annotation data available</div>;
-
-    const annotations = data.phenotypeDetails.annotations;
-
-    if (annotations.length === 0) {
-      return <div className="no-data">No phenotype annotations citing this paper</div>;
-    }
-
-    // Group by experiment type
-    const byExpType = annotations.reduce((acc, ann) => {
-      const expType = ann.experiment_type || 'Other';
-      if (!acc[expType]) acc[expType] = [];
-      acc[expType].push(ann);
-      return acc;
-    }, {});
-
-    return (
-      <div className="phenotype-tab">
-        <p className="tab-summary">
-          <strong>{annotations.length}</strong> phenotype annotation(s) cite this paper.
-        </p>
-
-        {Object.entries(byExpType).map(([expType, expAnns]) => (
-          <div key={expType} className="exp-type-section">
-            <h4 className="exp-type-header">
-              {expType}
-              <span className="count-badge">{expAnns.length}</span>
-            </h4>
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Gene</th>
-                  <th>Observable</th>
-                  <th>Qualifier</th>
-                  <th>Mutant Type</th>
-                </tr>
-              </thead>
-              <tbody>
-                {expAnns.map((ann, idx) => (
-                  <tr key={idx}>
-                    <td>
-                      <Link to={`/locus/${ann.feature_name}`}>
-                        {ann.gene_name || ann.feature_name}
-                      </Link>
-                    </td>
-                    <td>{ann.observable}</td>
-                    <td>{ann.qualifier || '-'}</td>
-                    <td>{ann.mutant_type}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ))}
-      </div>
-    );
-  };
-
-  const renderInteractionsTab = () => {
-    if (loading.interactionDetails) return <div className="loading">Loading interactions...</div>;
-    if (errors.interactionDetails) return <div className="error">Error: {errors.interactionDetails}</div>;
-    if (!data.interactionDetails || !data.interactionDetails.interactions) return <div className="no-data">No interaction data available</div>;
-
-    const interactions = data.interactionDetails.interactions;
-
-    if (interactions.length === 0) {
-      return <div className="no-data">No interactions citing this paper</div>;
-    }
-
-    // Group by experiment type
-    const byExpType = interactions.reduce((acc, interaction) => {
-      const expType = interaction.experiment_type || 'Other';
-      if (!acc[expType]) acc[expType] = [];
-      acc[expType].push(interaction);
-      return acc;
-    }, {});
-
-    return (
-      <div className="interactions-tab">
-        <p className="tab-summary">
-          <strong>{interactions.length}</strong> interaction(s) cite this paper.
-        </p>
-
-        {Object.entries(byExpType).map(([expType, expInteractions]) => (
-          <div key={expType} className="exp-type-section">
-            <h4 className="exp-type-header">
-              {expType}
-              <span className="count-badge">{expInteractions.length}</span>
-            </h4>
-            <div className="interaction-cards">
-              {expInteractions.map((interaction, idx) => (
-                <div key={idx} className="interaction-card">
-                  <div className="interactors">
-                    {interaction.interactors?.map((interactor, iIdx) => (
-                      <span key={iIdx} className="interactor-item">
-                        <Link to={`/locus/${interactor.feature_name}`}>
-                          {interactor.gene_name || interactor.feature_name}
-                        </Link>
-                        {interactor.action && (
-                          <span className="action-label">({interactor.action})</span>
-                        )}
-                        {iIdx < interaction.interactors.length - 1 && (
-                          <span className="separator"> - </span>
-                        )}
-                      </span>
-                    ))}
-                  </div>
-                  {interaction.description && (
-                    <div className="interaction-description">{interaction.description}</div>
-                  )}
-                </div>
-              ))}
+              </select>
             </div>
-          </div>
-        ))}
+            <div className="search-step">
+              <label>(2) Choose a search parameter:</label>
+              <select
+                value={searchType}
+                onChange={(e) => setSearchType(e.target.value)}
+                className="search-type-select"
+              >
+                <option value="CGD">Papers in CGD</option>
+                <option value="PubMed">PubMed</option>
+                <option value="Google Scholar">Google Scholar</option>
+              </select>
+            </div>
+            <div className="search-step">
+              <label>(3) Click to implement:</label>
+              <button type="submit" className="search-button">Search!</button>
+            </div>
+          </form>
+        </div>
       </div>
     );
   };
 
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'summary':
-        return renderSummary();
-      case 'literature':
-        return renderLiteratureTopicsTab();
-      case 'loci':
-        return renderLociTab();
-      case 'go':
-        return renderGoTab();
-      case 'phenotype':
-        return renderPhenotypeTab();
-      case 'interactions':
-        return renderInteractionsTab();
-      default:
-        return <div>Select a tab</div>;
+  // Page navigation links
+  const renderPageNav = () => {
+    const links = [];
+
+    if (data.info?.result?.abstract) {
+      links.push({ id: 'abstract', label: 'Abstract' });
     }
+
+    if (data.literatureTopics?.all_features?.length > 0 || data.literatureTopics?.topics?.length > 0) {
+      links.push({ id: 'summary', label: 'Summary Chart' });
+    }
+
+    if (data.info?.result?.authors?.length > 0) {
+      links.push({ id: 'author', label: 'Author Search' });
+    }
+
+    if (links.length === 0) return null;
+
+    return (
+      <nav className="page-nav">
+        {links.map((link, idx) => (
+          <span key={link.id}>
+            {idx > 0 && ' | '}
+            <a href={`#${link.id}`}>{link.label}</a>
+          </span>
+        ))}
+      </nav>
+    );
   };
 
   // Get display title for the page
   const getDisplayTitle = () => {
     if (data.info && data.info.result) {
-      const ref = data.info.result;
-      // Show first author + year as title
-      const firstAuthor = ref.authors?.[0]?.author_name?.split(' ')[0] || '';
-      const etAl = ref.authors?.length > 1 ? ' et al.' : '';
-      return `${firstAuthor}${etAl} (${ref.year})`;
+      return 'CGD Paper';
     }
     return `Reference: ${id}`;
   };
@@ -544,26 +326,23 @@ function ReferencePage() {
     <div className="reference-page">
       <header className="reference-header">
         <h1>{getDisplayTitle()}</h1>
-        {data.info?.result?.pubmed && (
-          <p className="subtitle">PubMed ID: {data.info.result.pubmed}</p>
-        )}
       </header>
 
-      <nav className="tab-navigation">
-        {TABS.map(tab => (
-          <button
-            key={tab.id}
-            className={`tab-button ${activeTab === tab.id ? 'active' : ''}`}
-            onClick={() => handleTabClick(tab.id)}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </nav>
+      {renderPageNav()}
 
-      <main className="tab-content">
-        {renderTabContent()}
-      </main>
+      <div className="divider" />
+
+      {renderCitation()}
+
+      {renderAbstract()}
+
+      {renderTopicsSection()}
+
+      {renderAuthorSearch()}
+
+      <div className="divider" />
+
+      {renderPageNav()}
     </div>
   );
 }
