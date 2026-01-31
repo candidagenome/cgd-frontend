@@ -18,6 +18,13 @@ const ASPECT_LABELS = {
   'C': 'Cellular Component',
 };
 
+// Section explanatory notes (matching Perl _section_note)
+const SECTION_NOTES = {
+  'manually curated': 'Manually Curated GO annotations reflect our best understanding of the basic molecular function, biological process, and cellular component for this gene product. Manually Curated annotations are assigned by CGD curators based on published, small-scale experiments. Curators periodically review all Manually Curated GO annotations for accuracy and completeness.',
+  'high-throughput': 'GO annotation from High-throughput Experiments are made based on a variety of large scale high-throughput experiments, including genome-wide experiments. Many of these annotations are made based on GO annotations (or mappings to GO annotations) assigned by the authors, rather than CGD curators. While CGD curators read these publications and often work closely with authors to incorporate the information, each individual annotation is not necessarily reviewed by a curator.',
+  'computational': 'Computational GO annotations are predictions based on computational methods (e.g., sequence similarity comparisons) and are not individually reviewed by a curator.',
+};
+
 // Evidence code descriptions
 const EVIDENCE_DESCRIPTIONS = {
   'EXP': 'Inferred from Experiment',
@@ -274,6 +281,16 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
         dataType="go"
       />
 
+      {/* Introductory text */}
+      <div className="go-intro">
+        <p>This page displays GO annotations in different sections according to the methods used in the reference from which the annotation was made:</p>
+        <ul>
+          <li><a href="#manually-curated"><strong>Manually Curated GO Annotations</strong></a>: includes annotations based on published experiments or analyses that focus on specific genes.</li>
+          <li><a href="#high-throughput"><strong>GO Annotations from High-throughput Experiments</strong></a>: includes annotations made from published experiments performed on a high-throughput or genome-wide basis.</li>
+          <li><a href="#computational"><strong>Computational GO Annotations</strong></a>: includes annotations that are predicted by computational methods (e.g., sequence similarity comparisons) and are not individually reviewed.</li>
+        </ul>
+      </div>
+
       {/* Display data for selected organism */}
       {selectedOrganism && orgData ? (
         <div className="organism-section">
@@ -287,9 +304,16 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
                 const typeData = grouped[typeKey];
                 const totalCount = countAnnotationsForType(typeData);
 
+                // Get last reviewed date for manually curated section
+                const lastReviewedDate = typeKey === 'manually curated' && orgData.last_reviewed_date
+                  ? new Date(orgData.last_reviewed_date).toLocaleDateString('en-US', {
+                      year: 'numeric', month: 'short', day: 'numeric'
+                    })
+                  : null;
+
                 if (totalCount === 0) {
                   return (
-                    <div key={typeKey} className="annotation-type-section">
+                    <div key={typeKey} id={typeKey.replace(/\s+/g, '-')} className="annotation-type-section">
                       <h4 className="annotation-type-header">{typeLabel} GO Annotations</h4>
                       <p className="no-data">No {typeLabel} GO Annotations for {orgData.locus_display_name}.</p>
                     </div>
@@ -297,11 +321,19 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
                 }
 
                 return (
-                  <div key={typeKey} className="annotation-type-section">
+                  <div key={typeKey} id={typeKey.replace(/\s+/g, '-')} className="annotation-type-section">
                     <h4 className="annotation-type-header">
                       {typeLabel} GO Annotations
                       <span className="count-badge">{totalCount}</span>
                     </h4>
+
+                    {/* Last reviewed date for manually curated */}
+                    {lastReviewedDate && (
+                      <p className="last-reviewed">Last Reviewed on: {lastReviewedDate}</p>
+                    )}
+
+                    {/* Section note */}
+                    <p className="section-note">{SECTION_NOTES[typeKey]}</p>
 
                     {/* Render each aspect (F, P, C) */}
                     {['F', 'P', 'C'].map(aspectKey =>
