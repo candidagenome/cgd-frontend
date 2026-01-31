@@ -6,6 +6,26 @@ import './ReferencePage.css';
 
 const GENES_PER_TABLE = 10;
 
+// Get display name for a gene - use gene_name if available, otherwise strip _A suffix from feature_name
+const getGeneDisplayName = (feature) => {
+  if (feature.gene_name) {
+    return feature.gene_name;
+  }
+  // Strip _A, _B etc. suffix from feature_name (e.g., "C3_06760W_A" -> "C3_06760W")
+  return feature.feature_name.replace(/_[A-Z]$/, '');
+};
+
+// Abbreviate organism name (e.g., "Candida albicans SC5314" -> "C. albicans")
+const getOrganismAbbrev = (organismName) => {
+  if (!organismName) return '';
+  // Split into words, take first letter of genus + species name
+  const parts = organismName.split(' ');
+  if (parts.length >= 2) {
+    return `${parts[0].charAt(0)}. ${parts[1]}`;
+  }
+  return organismName;
+};
+
 function ReferencePage() {
   const { id } = useParams();
   const { data, loading, errors, loaders } = useReferenceData(id);
@@ -135,8 +155,8 @@ function ReferencePage() {
       const endIdx = Math.min(i + GENES_PER_TABLE - 1, features.length - 1);
       const startNum = i + 1;
       const endNum = endIdx + 1;
-      const startGene = features[i].gene_name || features[i].feature_name;
-      const endGene = features[endIdx].gene_name || features[endIdx].feature_name;
+      const startGene = getGeneDisplayName(features[i]);
+      const endGene = getGeneDisplayName(features[endIdx]);
       const label = `#${startNum}-${endNum}(${startGene}-${endGene})`;
       labels.push({
         id: label,
@@ -169,11 +189,11 @@ function ReferencePage() {
                 {features.map((feature, idx) => (
                   <th key={idx} className="gene-header">
                     <Link to={`/locus/${feature.feature_name}`}>
-                      {feature.gene_name || feature.feature_name}
+                      {getGeneDisplayName(feature)}
                     </Link>
                     <br />
                     <span className="organism-label">
-                      (<em>{feature.organism_name}</em>)
+                      (<em>{getOrganismAbbrev(feature.organism_name)}</em>)
                     </span>
                   </th>
                 ))}
@@ -202,7 +222,7 @@ function ReferencePage() {
                     {features.map((feature, fIdx) => (
                       <td key={fIdx} className="topic-cell">
                         {topicFeatureMap[topic.topic]?.has(feature.feature_no) && (
-                          <span className="topic-marker gene-marker" title={`${topic.topic} - ${feature.gene_name || feature.feature_name}`}>
+                          <span className="topic-marker gene-marker" title={`${topic.topic} - ${getGeneDisplayName(feature)}`}>
                             ●
                           </span>
                         )}
