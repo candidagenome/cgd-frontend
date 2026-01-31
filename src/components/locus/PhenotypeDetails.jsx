@@ -88,6 +88,17 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
         dataType="phenotype"
       />
 
+      {/* Introductory text */}
+      {selectedOrganism && orgData && (
+        <div className="phenotype-intro">
+          <p>
+            This page lists all curated single mutant phenotypes associated with{' '}
+            <strong>{orgData.locus_display_name}</strong>. Click on a term in the Phenotype
+            column to see other genes associated with that term.
+          </p>
+        </div>
+      )}
+
       {/* Display data for selected organism */}
       {selectedOrganism && orgData ? (
         <div className="organism-section">
@@ -308,6 +319,15 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
           ) : (
             <p className="no-data">No phenotype annotations for this organism</p>
           )}
+
+          {/* Curation note */}
+          <div className="curation-note">
+            <p>
+              Curation of mutant phenotypes is an ongoing project at CGD. Please contact CGD
+              curators to let us know of additional phenotype information that should be
+              incorporated.
+            </p>
+          </div>
         </div>
       ) : (
         <p className="no-data">Select an organism to view phenotype annotations</p>
