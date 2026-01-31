@@ -121,30 +121,60 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
               <tr className="section-with-divider section-grey-bg">
                 <th style={{ verticalAlign: 'top' }}>Structural Information</th>
                 <td>
-                  <AlphaFoldViewer uniprotId={orgData.alphafold_info?.uniprot_id} />
+                  <div style={{ marginBottom: '10px', fontWeight: '600' }}>AlphaFold Protein Structure</div>
+                  <AlphaFoldViewer
+                    key={orgData.alphafold_info?.uniprot_id || selectedOrganism}
+                    uniprotId={orgData.alphafold_info?.uniprot_id}
+                  />
                 </td>
               </tr>
 
               {/* Conserved Domains Section - always show when protein data exists */}
               <tr className="section-with-divider section-grey-bg">
-                <th>Conserved Domains</th>
+                <th style={{ verticalAlign: 'top' }}>Conserved Domains</th>
                 <td>
+                  {orgData.pbrowse_url && (
+                    <div style={{ marginBottom: '8px' }}>
+                      <a
+                        href={orgData.pbrowse_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View Domains in JBrowse
+                      </a>
+                    </div>
+                  )}
                   {orgData.conserved_domains && orgData.conserved_domains.length > 0 ? (
-                    <a
-                      href={`/cgi-bin/protein/domainPage.pl?dbid=${orgData.stanford_name || orgData.systematic_name}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Domains/Motifs Page ({orgData.conserved_domains.length} domains)
-                    </a>
+                    <div className="domains-table-container">
+                      <p style={{ margin: '0 0 8px 0', fontSize: '13px', color: '#666' }}>
+                        Computationally identified domains and motifs as determined by InterProScan analysis.
+                        {' '}({orgData.conserved_domains.length} entries)
+                      </p>
+                      <table className="domains-table">
+                        <thead>
+                          <tr>
+                            <th>Protein Coordinates</th>
+                            <th>Accession ID</th>
+                            <th>Source</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {orgData.conserved_domains.map((domain, idx) => (
+                            <tr key={idx}>
+                              <td>
+                                {domain.start_coord && domain.stop_coord
+                                  ? `${domain.start_coord}-${domain.stop_coord}`
+                                  : '-'}
+                              </td>
+                              <td>{domain.domain_name || '-'}</td>
+                              <td>{domain.domain_type || '-'}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   ) : (
-                    <a
-                      href={`/cgi-bin/protein/domainPage.pl?dbid=${orgData.stanford_name || orgData.systematic_name}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Domains/Motifs Page
-                    </a>
+                    !orgData.pbrowse_url && <span className="no-value">No domain information available</span>
                   )}
                 </td>
               </tr>

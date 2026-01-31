@@ -3,6 +3,16 @@ import { Link } from 'react-router-dom';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
 import './LocusComponents.css';
 
+// Helper to get status color styling
+const getStatusStyle = (status) => {
+  if (!status) return { color: '#666' };
+  const s = status.toUpperCase();
+  if (s.includes('VERIFIED')) return { color: '#2e7d32', fontWeight: 'bold' };
+  if (s.includes('UNCHARACTERIZED')) return { color: '#757575', fontWeight: 'bold' };
+  if (s.includes('DUBIOUS')) return { color: '#c62828', fontWeight: 'bold' };
+  return { color: '#666' };
+};
+
 function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
   // Get available organisms from the data - memoize to prevent new array reference each render
   const organisms = useMemo(() => {
@@ -46,30 +56,49 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
           <table className="info-table">
             <tbody>
               {/* Ortholog Cluster Section */}
-              <tr className="section-with-divider section-grey-bg">
-                <th>Ortholog Cluster</th>
-                <td>
-                  <strong>From CGOB</strong>
-                </td>
-              </tr>
+              {orgData.ortholog_cluster && (
+                <>
+                  <tr className="section-with-divider section-grey-bg">
+                    <th style={{ verticalAlign: 'top' }}>Ortholog Cluster</th>
+                    <td>
+                      <div style={{ marginBottom: '10px' }}>
+                        <strong>From{' '}
+                          <a href="http://cgob3.ucd.ie/" target="_blank" rel="noopener noreferrer">
+                            CGOB
+                          </a>
+                        </strong>
+                      </div>
+                      {orgData.ortholog_cluster.cluster_url && (
+                        <div style={{ marginBottom: '10px' }}>
+                          <a
+                            href={orgData.ortholog_cluster.cluster_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            View CGOB cluster and synteny information
+                          </a>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
 
-              {/* Download Links */}
-              {orgData.ortholog_cluster?.download_links && orgData.ortholog_cluster.download_links.length > 0 && (
-                <tr>
-                  <th style={{ paddingLeft: '20px', fontWeight: 'normal', verticalAlign: 'top' }}>
-                    Download cluster sequence files:
-                  </th>
-                  <td>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                      {orgData.ortholog_cluster.download_links.map((link, idx) => (
-                        <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer">
-                          {link.label}
-                        </a>
-                      ))}
-                    </div>
-                  </td>
-                </tr>
-              )}
+                  {/* Download Links */}
+                  {orgData.ortholog_cluster.download_links && orgData.ortholog_cluster.download_links.length > 0 && (
+                    <tr>
+                      <th style={{ paddingLeft: '20px', fontWeight: 'normal', verticalAlign: 'top' }}>
+                        Download cluster sequence files:
+                      </th>
+                      <td>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          {orgData.ortholog_cluster.download_links.map((link, idx) => (
+                            <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer">
+                              {link.label}
+                            </a>
+                          ))}
+                        </div>
+                      </td>
+                    </tr>
+                  )}
 
               {/* Orthologs Table */}
               {orgData.ortholog_cluster?.orthologs && orgData.ortholog_cluster.orthologs.length > 0 && (
@@ -120,7 +149,7 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                             <td style={{ padding: '8px' }}>
                               {orth.source}
                             </td>
-                            <td style={{ padding: '8px' }}>
+                            <td style={{ padding: '8px', ...getStatusStyle(orth.status) }}>
                               {orth.status || '-'}
                             </td>
                           </tr>
@@ -131,12 +160,199 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                 </tr>
               )}
 
-              {/* Show message if no orthologs */}
-              {(!orgData.ortholog_cluster?.orthologs || orgData.ortholog_cluster.orthologs.length === 0) && (
+              {/* Show message if no orthologs in cluster */}
+              {orgData.ortholog_cluster && (!orgData.ortholog_cluster.orthologs || orgData.ortholog_cluster.orthologs.length === 0) && (
                 <tr>
                   <th style={{ paddingLeft: '20px', fontWeight: 'normal' }}>Orthologs</th>
                   <td>
                     <em style={{ color: '#666' }}>No orthologs found in CGOB cluster</em>
+                  </td>
+                </tr>
+              )}
+                </>
+              )}
+
+              {/* Show message if no ortholog cluster data */}
+              {!orgData.ortholog_cluster && (
+                <tr className="section-with-divider section-grey-bg">
+                  <th>Ortholog Cluster</th>
+                  <td>
+                    <em style={{ color: '#666' }}>No ortholog cluster information available</em>
+                  </td>
+                </tr>
+              )}
+
+              {/* Phylogenetic Tree Section */}
+              {orgData.phylogenetic_tree && (
+                <>
+                  <tr className="section-with-divider section-grey-bg">
+                    <th style={{ verticalAlign: 'top' }}>Phylogenetic Tree</th>
+                    <td>
+                      <div style={{ marginBottom: '8px' }}>
+                        Built with{' '}
+                        <a href="http://compbio.cs.huji.ac.il/semphy/" target="_blank" rel="noopener noreferrer">
+                          SEMPHY
+                        </a>
+                      </div>
+                      {orgData.phylogenetic_tree.tree_length && (
+                        <div style={{ marginBottom: '8px', color: '#666', fontSize: '13px' }}>
+                          Tree rooted by midpoint; total tree length = {orgData.phylogenetic_tree.tree_length.toFixed(2)} subs/site
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                  {/* Tree Visualization */}
+                  {orgData.phylogenetic_tree.newick_tree && (
+                    <tr>
+                      <th style={{ paddingLeft: '20px', fontWeight: 'normal', verticalAlign: 'top' }}>
+                        Tree Display
+                      </th>
+                      <td>
+                        <div style={{
+                          backgroundColor: '#f9f9f9',
+                          border: '1px solid #ddd',
+                          borderRadius: '4px',
+                          padding: '15px',
+                          maxHeight: '400px',
+                          overflowY: 'auto',
+                          fontFamily: 'monospace',
+                          fontSize: '12px',
+                          whiteSpace: 'pre-wrap',
+                          wordBreak: 'break-all'
+                        }}>
+                          {orgData.phylogenetic_tree.newick_tree}
+                        </div>
+                        <div style={{ marginTop: '8px', fontSize: '12px', color: '#666' }}>
+                          Newick format tree ({orgData.phylogenetic_tree.leaf_count} leaves)
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                  {/* Download Links */}
+                  {orgData.phylogenetic_tree.download_links && orgData.phylogenetic_tree.download_links.length > 0 && (
+                    <tr>
+                      <th style={{ paddingLeft: '20px', fontWeight: 'normal', verticalAlign: 'top' }}>
+                        Download tree files:
+                      </th>
+                      <td>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          {orgData.phylogenetic_tree.download_links.map((link, idx) => (
+                            <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer">
+                              {link.label}
+                            </a>
+                          ))}
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </>
+              )}
+
+              {/* Best Hits in CGD Species Section */}
+              {orgData.best_hits_cgd && Object.keys(orgData.best_hits_cgd.by_species || {}).length > 0 && (
+                <tr className="section-with-divider section-grey-bg">
+                  <th style={{ verticalAlign: 'top' }}>Best hits in CGD species</th>
+                  <td>
+                    {Object.entries(orgData.best_hits_cgd.by_species).map(([species, hits]) => (
+                      <div key={species} style={{ marginBottom: '4px' }}>
+                        <em>{species}</em> best hit:{' '}
+                        {hits.map((hit, idx) => (
+                          <span key={idx}>
+                            {idx > 0 && ', '}
+                            <Link to={`/locus/${hit.feature_name}`}>
+                              {hit.display_name}
+                            </Link>
+                          </span>
+                        ))}
+                      </div>
+                    ))}
+                  </td>
+                </tr>
+              )}
+
+              {/* Orthologs in Fungal Species Section */}
+              {orgData.orthologs_fungal && Object.keys(orgData.orthologs_fungal.by_source || {}).length > 0 && (
+                <tr className="section-with-divider section-grey-bg">
+                  <th style={{ verticalAlign: 'top' }}>Orthologs in fungal species</th>
+                  <td>
+                    {Object.entries(orgData.orthologs_fungal.by_source).map(([source, homologs], srcIdx) => (
+                      <span key={source}>
+                        {srcIdx > 0 && ' ; '}
+                        <em>{homologs[0]?.organism_name || source}</em>
+                        {' ('}
+                        {homologs.map((h, idx) => (
+                          <span key={idx}>
+                            {idx > 0 && ', '}
+                            {h.url ? (
+                              <a href={h.url} target="_blank" rel="noopener noreferrer">
+                                {h.display_name}
+                              </a>
+                            ) : (
+                              <span>{h.display_name}</span>
+                            )}
+                          </span>
+                        ))}
+                        {')'}
+                      </span>
+                    ))}
+                  </td>
+                </tr>
+              )}
+
+              {/* Best Hits in Fungal Species Section */}
+              {orgData.best_hits_fungal && Object.keys(orgData.best_hits_fungal.by_source || {}).length > 0 && (
+                <tr className="section-with-divider section-grey-bg">
+                  <th style={{ verticalAlign: 'top' }}>Best hits in fungal species</th>
+                  <td>
+                    {Object.entries(orgData.best_hits_fungal.by_source).map(([source, homologs], srcIdx) => (
+                      <span key={source}>
+                        {srcIdx > 0 && ' ; '}
+                        <em>{homologs[0]?.organism_name || source}</em>
+                        {' ('}
+                        {homologs.map((h, idx) => (
+                          <span key={idx}>
+                            {idx > 0 && ', '}
+                            {h.url ? (
+                              <a href={h.url} target="_blank" rel="noopener noreferrer">
+                                {h.display_name}
+                              </a>
+                            ) : (
+                              <span>{h.display_name}</span>
+                            )}
+                          </span>
+                        ))}
+                        {')'}
+                      </span>
+                    ))}
+                  </td>
+                </tr>
+              )}
+
+              {/* Reciprocal Best Hits in Other Species Section */}
+              {orgData.reciprocal_best_hits && Object.keys(orgData.reciprocal_best_hits.by_source || {}).length > 0 && (
+                <tr className="section-with-divider section-grey-bg">
+                  <th style={{ verticalAlign: 'top' }}>Reciprocal best hits in other species</th>
+                  <td>
+                    {Object.entries(orgData.reciprocal_best_hits.by_source).map(([source, homologs], srcIdx) => (
+                      <span key={source}>
+                        {srcIdx > 0 && ' ; '}
+                        <em>{homologs[0]?.organism_name || source}</em>
+                        {' ('}
+                        {homologs.map((h, idx) => (
+                          <span key={idx}>
+                            {idx > 0 && ', '}
+                            {h.url ? (
+                              <a href={h.url} target="_blank" rel="noopener noreferrer">
+                                {h.display_name}
+                              </a>
+                            ) : (
+                              <span>{h.display_name}</span>
+                            )}
+                          </span>
+                        ))}
+                        {')'}
+                      </span>
+                    ))}
                   </td>
                 </tr>
               )}
