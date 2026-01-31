@@ -182,6 +182,72 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                 </tr>
               )}
 
+              {/* Phylogenetic Tree Section */}
+              {orgData.phylogenetic_tree && (
+                <>
+                  <tr className="section-with-divider section-grey-bg">
+                    <th style={{ verticalAlign: 'top' }}>Phylogenetic Tree</th>
+                    <td>
+                      <div style={{ marginBottom: '8px' }}>
+                        Built with{' '}
+                        <a href="http://compbio.cs.huji.ac.il/semphy/" target="_blank" rel="noopener noreferrer">
+                          SEMPHY
+                        </a>
+                      </div>
+                      {orgData.phylogenetic_tree.tree_length && (
+                        <div style={{ marginBottom: '8px', color: '#666', fontSize: '13px' }}>
+                          Tree rooted by midpoint; total tree length = {orgData.phylogenetic_tree.tree_length.toFixed(2)} subs/site
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                  {/* Tree Visualization */}
+                  {orgData.phylogenetic_tree.newick_tree && (
+                    <tr>
+                      <th style={{ paddingLeft: '20px', fontWeight: 'normal', verticalAlign: 'top' }}>
+                        Tree Display
+                      </th>
+                      <td>
+                        <div style={{
+                          backgroundColor: '#f9f9f9',
+                          border: '1px solid #ddd',
+                          borderRadius: '4px',
+                          padding: '15px',
+                          maxHeight: '400px',
+                          overflowY: 'auto',
+                          fontFamily: 'monospace',
+                          fontSize: '12px',
+                          whiteSpace: 'pre-wrap',
+                          wordBreak: 'break-all'
+                        }}>
+                          {orgData.phylogenetic_tree.newick_tree}
+                        </div>
+                        <div style={{ marginTop: '8px', fontSize: '12px', color: '#666' }}>
+                          Newick format tree ({orgData.phylogenetic_tree.leaf_count} leaves)
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                  {/* Download Links */}
+                  {orgData.phylogenetic_tree.download_links && orgData.phylogenetic_tree.download_links.length > 0 && (
+                    <tr>
+                      <th style={{ paddingLeft: '20px', fontWeight: 'normal', verticalAlign: 'top' }}>
+                        Download tree files:
+                      </th>
+                      <td>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          {orgData.phylogenetic_tree.download_links.map((link, idx) => (
+                            <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer">
+                              {link.label}
+                            </a>
+                          ))}
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </>
+              )}
+
               {/* Best Hits in CGD Species Section */}
               {orgData.best_hits_cgd && Object.keys(orgData.best_hits_cgd.by_species || {}).length > 0 && (
                 <tr className="section-with-divider section-grey-bg">
