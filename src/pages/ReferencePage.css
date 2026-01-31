@@ -137,18 +137,18 @@
 }
 
 .topic-matrix th {
-  background: #e8e0d0;
+  background: #e0e0e0;
   font-weight: bold;
 }
 
 .topic-matrix th.topic-header {
   text-align: left;
   min-width: 150px;
-  background: #d4c4a8;
+  background: #e0e0e0;
 }
 
 .topic-matrix th.non-gene-header {
-  background: #e8e0d0;
+  background: #e0e0e0;
   min-width: 120px;
 }
 
@@ -273,7 +273,7 @@
 }
 
 .table-label {
-  background: #e0e0e0;
+  background: #ccccff;
   color: #333;
   padding: 8px 15px;
   margin: 0 0 1px 0;
