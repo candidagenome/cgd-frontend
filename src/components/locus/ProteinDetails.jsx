@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
+import AlphaFoldViewer from './AlphaFoldViewer';
 import { formatCitationString, CitationLinksBelow, buildCitationLinks } from '../../utils/formatCitation.jsx';
 import './LocusComponents.css';
 
@@ -119,18 +120,11 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
               {/* Structural Information Section - always show when protein data exists */}
               <tr className="section-with-divider section-grey-bg">
                 <th>Structural Information</th>
-                <td>
-                  {orgData.alphafold_info?.alphafold_url ? (
-                    <a
-                      href={orgData.alphafold_info.alphafold_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Predicted Structure from AlphaFold (Link-out)
-                    </a>
-                  ) : (
-                    <span className="no-value">No predicted structure available</span>
-                  )}
+                <td>AlphaFold Protein Structure</td>
+              </tr>
+              <tr>
+                <td colSpan="2" style={{ padding: '10px 20px' }}>
+                  <AlphaFoldViewer uniprotId={orgData.alphafold_info?.uniprot_id} />
                 </td>
               </tr>
 
