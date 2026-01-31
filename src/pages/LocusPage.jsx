@@ -169,6 +169,9 @@ function LocusPage() {
             data={data.references}
             loading={loading.references}
             error={errors.references}
+            selectedOrganism={selectedOrganism}
+            onOrganismChange={setSelectedOrganism}
+            locusName={name}
           />
         );
 

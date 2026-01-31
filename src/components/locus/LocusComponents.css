@@ -2241,3 +2241,336 @@ a:hover {
     min-width: 700px;
   }
 }
+
+/* =====================================================
+   LITERATURE GUIDE STYLES (matching Perl litGuide.pl)
+   ===================================================== */
+
+.literature-guide {
+  font-size: 0.95em;
+}
+
+.literature-intro {
+  margin-bottom: 20px;
+  padding: 12px 15px;
+  background-color: #f5f9ff;
+  border-radius: 6px;
+  color: #333;
+}
+
+.literature-intro p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.literature-intro em {
+  color: #1976d2;
+}
+
+/* Two-column layout: sidebar + main content */
+.literature-layout {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+/* Left sidebar with topics */
+.literature-sidebar {
+  flex: 0 0 260px;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.literature-sidebar .sidebar-title {
+  margin: 0;
+  padding: 12px 15px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 0.95em;
+}
+
+.literature-sidebar .sidebar-title a {
+  color: #1976d2;
+  font-weight: 600;
+}
+
+.literature-sidebar .sidebar-subtitle {
+  color: #333;
+  font-weight: normal;
+  font-size: 0.9em;
+}
+
+/* Topic groups */
+.topic-group {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.topic-group:last-child {
+  border-bottom: none;
+}
+
+.topic-group-header {
+  padding: 10px 15px;
+  background-color: #e3f2fd;
+  color: #1565c0;
+  font-weight: 600;
+  font-size: 0.85em;
+}
+
+/* Topic entries */
+.topic-entry {
+  padding: 6px 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.15s;
+}
+
+.topic-entry:hover {
+  background-color: #f5f5f5;
+}
+
+.topic-entry.active {
+  background-color: #fff8e1;
+}
+
+.topic-bullet {
+  color: #666;
+  font-size: 0.8em;
+}
+
+.topic-arrow {
+  color: #d32f2f;
+  font-size: 0.7em;
+}
+
+.topic-label {
+  color: #1976d2;
+  font-size: 0.85em;
+  text-decoration: none;
+}
+
+.topic-label:hover {
+  text-decoration: underline;
+}
+
+.topic-label.active {
+  color: #d32f2f;
+  font-weight: 500;
+}
+
+.topic-count {
+  color: #666;
+  font-size: 0.85em;
+  margin-left: 4px;
+}
+
+/* PubMed search links in sidebar */
+.pubmed-links {
+  padding: 8px 15px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pubmed-links .pubmed-link {
+  color: #1976d2;
+  font-size: 0.85em;
+  text-decoration: none;
+  display: block;
+  padding: 2px 0;
+}
+
+.pubmed-links .pubmed-link:hover {
+  text-decoration: underline;
+}
+
+/* Main content area */
+.literature-main {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Summary section */
+.literature-summary h4 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 1.1em;
+}
+
+.literature-summary h4 a {
+  color: #1976d2;
+}
+
+.summary-stats {
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.summary-stats p {
+  margin: 8px 0;
+  line-height: 1.5;
+}
+
+.summary-stats a {
+  color: #1976d2;
+  font-weight: 500;
+}
+
+/* Topic view */
+.literature-topic-view h4 {
+  margin: 0 0 15px 0;
+  color: #333;
+}
+
+.gene-name-highlight {
+  color: #d32f2f;
+  font-weight: 600;
+}
+
+/* Literature table */
+.literature-table {
+  font-size: 0.9em;
+}
+
+.literature-table th {
+  background-color: #e3f2fd;
+  color: #1565c0;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.literature-table td {
+  vertical-align: top;
+}
+
+.literature-table tr.alt-row {
+  background-color: #f9f9f9;
+}
+
+.species-cell {
+  font-style: italic;
+  color: #555;
+  font-size: 0.9em;
+}
+
+.other-genes-cell {
+  font-size: 0.9em;
+}
+
+.other-genes-list {
+  line-height: 1.6;
+}
+
+.other-genes-list a {
+  color: #1976d2;
+}
+
+.more-genes {
+  color: #666;
+  font-style: italic;
+}
+
+.no-other-genes {
+  color: #999;
+}
+
+/* Results count */
+.results-count {
+  color: #666;
+  font-size: 0.9em;
+  margin-bottom: 10px;
+}
+
+/* Citation formatting */
+.citation-line {
+  line-height: 1.5;
+}
+
+.citation-pmid {
+  color: #666;
+  font-size: 0.9em;
+}
+
+/* Citation links below the citation */
+.citation-links-below {
+  margin-top: 5px;
+  font-size: 0.85em;
+}
+
+.citation-links-below a {
+  color: #1976d2;
+  margin-right: 12px;
+}
+
+/* Pagination styles */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 12px 0;
+  flex-wrap: wrap;
+}
+
+.pagination-btn {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #333;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 13px;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.pagination-btn:disabled {
+  color: #999;
+  cursor: not-allowed;
+  background: #f5f5f5;
+}
+
+.pagination-info {
+  padding: 6px 12px;
+  font-size: 13px;
+  color: #666;
+}
+
+/* Responsive layout for Literature Guide */
+@media (max-width: 900px) {
+  .literature-layout {
+    flex-direction: column;
+  }
+
+  .literature-sidebar {
+    flex: none;
+    width: 100%;
+    max-width: none;
+  }
+
+  .literature-main {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .literature-table th,
+  .literature-table td {
+    padding: 8px 6px;
+  }
+
+  .literature-table th:nth-child(2),
+  .literature-table td:nth-child(2) {
+    display: none; /* Hide Species column on very small screens */
+  }
+}
