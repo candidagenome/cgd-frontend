@@ -190,9 +190,16 @@
 }
 
 .topic-marker {
-  color: #1976d2;
   font-size: 1.2rem;
   cursor: default;
+}
+
+.topic-marker.gene-marker {
+  color: #1976d2;
+}
+
+.topic-marker.non-gene-marker {
+  color: #4caf50;
 }
 
 .gene-count {
@@ -203,6 +210,95 @@
 
 .topics-list {
   padding: 10px;
+}
+
+/* Gene count header with jump navigation */
+.gene-count-header {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.gene-count-message {
+  margin: 0 0 10px 0;
+  font-weight: bold;
+}
+
+.gene-count-number {
+  color: #c00;
+  font-size: 1.1em;
+}
+
+/* Jump dropdown */
+.jump-dropdown-container {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.jump-select {
+  padding: 6px 10px;
+  font-size: 0.95rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  margin-left: 10px;
+}
+
+/* Jump links for 10-20 genes */
+.jump-links-container {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.jump-links-container a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.jump-links-container a:hover {
+  text-decoration: underline;
+}
+
+/* Jump footer */
+.jump-footer {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+}
+
+/* Gene table section */
+.gene-table-section {
+  margin-bottom: 20px;
+}
+
+.table-label {
+  background: #ccccff;
+  color: #333;
+  padding: 8px 15px;
+  margin: 0 0 1px 0;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+/* Topics note */
+.topics-note {
+  background: white;
+  border: 1px solid #ddd;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+}
+
+.topics-note ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.topics-note li {
+  margin-bottom: 5px;
+}
+
+.topics-note .topic-marker {
+  margin-right: 5px;
 }
 
 /* ===========================================
