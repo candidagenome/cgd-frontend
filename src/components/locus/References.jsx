@@ -144,12 +144,14 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
   };
 
   // Render topic entry in sidebar
-  const renderTopicEntry = (topic, displayText, linkTopic) => {
+  const renderTopicEntry = (topic, displayText, linkTopic, alwaysShow = false) => {
     const isActive = selectedTopic === (linkTopic || topic);
     const topicRefs = getRefsByTopic(linkTopic || topic);
     const count = topicRefs.length;
 
-    if (count === 0 && topic !== 'Literature Curation Summary') {
+    // Always show Literature Curation Summary and entries marked alwaysShow
+    const isAlwaysVisible = topic === 'Literature Curation Summary' || alwaysShow;
+    if (count === 0 && !isAlwaysVisible) {
       return null;
     }
 
@@ -226,8 +228,8 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
         {/* Additional Information section (always shown) */}
         <div className="topic-group">
           <div className="topic-group-header">Additional Information</div>
-          {notYetCuratedRefs.length > 0 && renderTopicEntry('References Not Yet Curated', 'References Not Yet Curated', 'Not yet curated')}
-          {highPriorityRefs.length > 0 && renderTopicEntry('References for Curation', 'References for Curation', 'High Priority')}
+          {renderTopicEntry('References Not Yet Curated', 'References Not Yet Curated', 'Not yet curated', true)}
+          {renderTopicEntry('References for Curation', 'References for Curation', 'High Priority', true)}
           {renderTopicEntry('Literature Curation Summary', 'Literature Curation Summary')}
 
           {/* PubMed Search Links */}
