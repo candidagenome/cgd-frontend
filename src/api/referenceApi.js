@@ -30,6 +30,12 @@ export const referenceApi = {
     const response = await api.get(`/api/reference/${encodeURIComponent(pubmedId)}/interaction_details`);
     return response.data;
   },
+
+  // Get literature topics for this reference
+  getLiteratureTopics: async (pubmedId) => {
+    const response = await api.get(`/api/reference/${encodeURIComponent(pubmedId)}/literature_topics`);
+    return response.data;
+  },
 };
 
 export default referenceApi;

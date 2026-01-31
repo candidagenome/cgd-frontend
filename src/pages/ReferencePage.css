@@ -232,6 +232,194 @@
 }
 
 /* ===========================================
+   LITERATURE TOPICS TAB
+   =========================================== */
+
+.literature-topics-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Non-gene topics section */
+.non-gene-topics {
+  background: #fff8e1;
+  border: 1px solid #ffecb3;
+  border-radius: 8px;
+  padding: 15px;
+}
+
+.non-gene-topics h4 {
+  margin: 0 0 10px 0;
+  color: #f57c00;
+  font-size: 1rem;
+}
+
+.topic-list {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.topic-item {
+  padding: 4px 0;
+  color: #555;
+}
+
+/* Topic Matrix Section */
+.topic-matrix-section {
+  background: #fafafa;
+  border-radius: 8px;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+}
+
+.topic-matrix-section h4 {
+  margin: 0 0 15px 0;
+  color: #1a237e;
+  font-size: 1.05rem;
+}
+
+.topic-matrix-wrapper {
+  overflow-x: auto;
+  margin-bottom: 10px;
+}
+
+.topic-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  min-width: max-content;
+}
+
+.topic-matrix th {
+  background: #e3f2fd;
+  padding: 10px 12px;
+  font-weight: 600;
+  color: #1565c0;
+  border-bottom: 2px solid #1976d2;
+  text-align: center;
+  vertical-align: bottom;
+  min-width: 80px;
+}
+
+.topic-matrix th.topic-header {
+  text-align: left;
+  min-width: 150px;
+  position: sticky;
+  left: 0;
+  background: #e3f2fd;
+  z-index: 1;
+}
+
+.topic-matrix .gene-header {
+  font-size: 0.85rem;
+}
+
+.topic-matrix .gene-header a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.topic-matrix .gene-header a:hover {
+  text-decoration: underline;
+}
+
+.topic-matrix .organism-name {
+  font-size: 0.75rem;
+  color: #666;
+  font-weight: normal;
+  margin-top: 4px;
+}
+
+.topic-matrix td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+}
+
+.topic-matrix td.topic-name {
+  text-align: left;
+  font-weight: 500;
+  color: #333;
+  position: sticky;
+  left: 0;
+  background: white;
+  z-index: 1;
+}
+
+.topic-matrix tr:hover td {
+  background: #f5f5f5;
+}
+
+.topic-matrix tr:hover td.topic-name {
+  background: #f0f0f0;
+}
+
+.topic-marker {
+  color: #1976d2;
+  font-size: 1.2rem;
+  cursor: default;
+}
+
+.topic-empty {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+}
+
+/* Topics Summary List */
+.topics-list-section {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+}
+
+.topics-list-section h4 {
+  margin: 0 0 15px 0;
+  color: #1a237e;
+  font-size: 1.05rem;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 8px;
+}
+
+.topic-detail {
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.topic-detail:last-child {
+  border-bottom: none;
+}
+
+.topic-label {
+  font-weight: 600;
+  color: #1a237e;
+  min-width: 150px;
+}
+
+.topic-genes {
+  flex: 1;
+  color: #555;
+}
+
+.topic-genes a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.topic-genes a:hover {
+  text-decoration: underline;
+}
+
+/* ===========================================
    LOCI TAB
    =========================================== */
 

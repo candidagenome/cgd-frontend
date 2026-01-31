@@ -6,6 +6,7 @@ import './ReferencePage.css';
 
 const TABS = [
   { id: 'summary', label: 'Summary', component: 'summary' },
+  { id: 'literature', label: 'Literature Topics', component: 'literature', loader: 'loadLiteratureTopics' },
   { id: 'loci', label: 'Genes/Loci', component: 'loci', loader: 'loadLocusDetails' },
   { id: 'go', label: 'GO Annotations', component: 'go', loader: 'loadGoDetails' },
   { id: 'phenotype', label: 'Phenotypes', component: 'phenotype', loader: 'loadPhenotypeDetails' },
@@ -143,6 +144,115 @@ function ReferencePage() {
             </div>
           </div>
         )}
+      </div>
+    );
+  };
+
+  const renderLiteratureTopicsTab = () => {
+    if (loading.literatureTopics) return <div className="loading">Loading literature topics...</div>;
+    if (errors.literatureTopics) return <div className="error">Error: {errors.literatureTopics}</div>;
+    if (!data.literatureTopics) return <div className="no-data">No literature topics data available</div>;
+
+    const { topics, all_features } = data.literatureTopics;
+
+    if (topics.length === 0) {
+      return <div className="no-data">No literature topics for this paper</div>;
+    }
+
+    // Build a lookup for quick checking: topic -> Set of feature_nos
+    const topicFeatureMap = {};
+    topics.forEach(t => {
+      topicFeatureMap[t.topic] = new Set(t.features.map(f => f.feature_no));
+    });
+
+    // Separate topics with features (gene-linked) from topics without (non-gene)
+    const geneLinkedTopics = topics.filter(t => t.features.length > 0);
+    const nonGeneTopics = topics.filter(t => t.features.length === 0);
+
+    return (
+      <div className="literature-topics-tab">
+        <p className="tab-summary">
+          <strong>{topics.length}</strong> literature topic(s) addressed in this paper
+          {all_features.length > 0 && (
+            <> across <strong>{all_features.length}</strong> gene(s)</>
+          )}
+        </p>
+
+        {/* Non-gene topics */}
+        {nonGeneTopics.length > 0 && (
+          <div className="non-gene-topics">
+            <h4>General Topics (not linked to specific genes)</h4>
+            <ul className="topic-list">
+              {nonGeneTopics.map((topic, idx) => (
+                <li key={idx} className="topic-item">{topic.topic}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Gene-linked topics matrix */}
+        {geneLinkedTopics.length > 0 && all_features.length > 0 && (
+          <div className="topic-matrix-section">
+            <h4>Topics linked to Genes</h4>
+            <div className="topic-matrix-wrapper">
+              <table className="topic-matrix">
+                <thead>
+                  <tr>
+                    <th className="topic-header">Topic</th>
+                    {all_features.map((feature, idx) => (
+                      <th key={idx} className="gene-header">
+                        <Link to={`/locus/${feature.feature_name}`}>
+                          {feature.gene_name || feature.feature_name}
+                        </Link>
+                        <div className="organism-name">
+                          <em>{feature.organism_name}</em>
+                        </div>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {geneLinkedTopics.map((topic, tIdx) => (
+                    <tr key={tIdx}>
+                      <td className="topic-name">{topic.topic}</td>
+                      {all_features.map((feature, fIdx) => (
+                        <td key={fIdx} className="topic-cell">
+                          {topicFeatureMap[topic.topic]?.has(feature.feature_no) ? (
+                            <span className="topic-marker" title={`${topic.topic} - ${feature.gene_name || feature.feature_name}`}>
+                              ●
+                            </span>
+                          ) : (
+                            <span className="topic-empty"></span>
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Simple list view for topics with their genes */}
+        <div className="topics-list-section">
+          <h4>Topics Summary</h4>
+          {geneLinkedTopics.map((topic, idx) => (
+            <div key={idx} className="topic-detail">
+              <span className="topic-label">{topic.topic}:</span>
+              <span className="topic-genes">
+                {topic.features.map((f, fIdx) => (
+                  <span key={fIdx}>
+                    {fIdx > 0 && ', '}
+                    <Link to={`/locus/${f.feature_name}`}>
+                      {f.gene_name || f.feature_name}
+                    </Link>
+                  </span>
+                ))}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
     );
   };
@@ -403,6 +513,8 @@ function ReferencePage() {
     switch (activeTab) {
       case 'summary':
         return renderSummary();
+      case 'literature':
+        return renderLiteratureTopicsTab();
       case 'loci':
         return renderLociTab();
       case 'go':
