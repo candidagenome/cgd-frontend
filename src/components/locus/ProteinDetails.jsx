@@ -121,7 +121,10 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
               <tr className="section-with-divider section-grey-bg">
                 <th style={{ verticalAlign: 'top' }}>Structural Information</th>
                 <td>
-                  <AlphaFoldViewer uniprotId={orgData.alphafold_info?.uniprot_id} />
+                  <AlphaFoldViewer
+                    key={orgData.alphafold_info?.uniprot_id || selectedOrganism}
+                    uniprotId={orgData.alphafold_info?.uniprot_id}
+                  />
                 </td>
               </tr>
 
