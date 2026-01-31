@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
 import AlphaFoldViewer from './AlphaFoldViewer';
-import PBrowseViewer from './PBrowseViewer';
 import { formatCitationString, CitationLinksBelow, buildCitationLinks } from '../../utils/formatCitation.jsx';
 import './LocusComponents.css';
 
@@ -128,32 +127,18 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
 
               {/* Conserved Domains Section - always show when protein data exists */}
               <tr className="section-with-divider section-grey-bg">
-                <th style={{ verticalAlign: 'top' }}>Conserved Domains</th>
+                <th>Conserved Domains</th>
                 <td>
-                  <div style={{ marginBottom: '10px' }}>
-                    {orgData.conserved_domains && orgData.conserved_domains.length > 0 ? (
-                      <a
-                        href={`/cgi-bin/protein/domainPage.pl?dbid=${orgData.stanford_name || orgData.systematic_name}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Domains/Motifs Page ({orgData.conserved_domains.length} domains)
-                      </a>
-                    ) : (
-                      <a
-                        href={`/cgi-bin/protein/domainPage.pl?dbid=${orgData.stanford_name || orgData.systematic_name}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Domains/Motifs Page
-                      </a>
-                    )}
-                  </div>
-                  {orgData.pbrowse_url && (
-                    <PBrowseViewer
-                      url={orgData.pbrowse_url}
-                      featureName={orgData.systematic_name}
-                    />
+                  {orgData.pbrowse_url ? (
+                    <a
+                      href={orgData.pbrowse_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View Domains in JBrowse
+                    </a>
+                  ) : (
+                    <span className="no-value">No domain information available</span>
                   )}
                 </td>
               </tr>
