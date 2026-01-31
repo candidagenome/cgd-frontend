@@ -71,7 +71,7 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                       {orgData.ortholog_cluster.cluster_url && (
                         <div style={{ marginBottom: '10px' }}>
                           <a
-                            href={`http://cgob3.ucd.ie/cgi-bin/main.pl?gene_name=${orgData.locus_display_name}`}
+                            href={orgData.ortholog_cluster.cluster_url}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
