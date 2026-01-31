@@ -134,7 +134,7 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                 <th style={{ verticalAlign: 'top' }}>Conserved Domains</th>
                 <td>
                   {orgData.pbrowse_url && (
-                    <div style={{ marginBottom: '15px' }}>
+                    <div style={{ marginBottom: '8px' }}>
                       <a
                         href={orgData.pbrowse_url}
                         target="_blank"
@@ -146,7 +146,7 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                   )}
                   {orgData.conserved_domains && orgData.conserved_domains.length > 0 ? (
                     <div className="domains-table-container">
-                      <p style={{ marginBottom: '10px', fontSize: '13px', color: '#666' }}>
+                      <p style={{ margin: '0 0 8px 0', fontSize: '13px', color: '#666' }}>
                         Computationally identified domains and motifs as determined by InterProScan analysis.
                         {' '}({orgData.conserved_domains.length} entries)
                       </p>
