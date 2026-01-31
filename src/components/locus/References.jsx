@@ -23,11 +23,14 @@ const formatDate = (dateStr) => {
   }
 };
 
+const REFS_PER_PAGE = 30;
+
 function References({ data, loading, error, selectedOrganism, onOrganismChange, locusName }) {
   const [collapsedYears, setCollapsedYears] = useState({});
   const [viewMode, setViewMode] = useState('summary'); // 'summary', 'list', 'grouped', 'topic'
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [localSelectedOrganism, setLocalSelectedOrganism] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Use either the prop or local state for organism selection
   const currentOrganism = selectedOrganism || localSelectedOrganism;
@@ -155,6 +158,7 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
         key={topic}
         className={`topic-entry ${isActive ? 'active' : ''}`}
         onClick={() => {
+          setCurrentPage(1);  // Reset to first page
           if (topic === 'Literature Curation Summary') {
             setSelectedTopic(null);
             setViewMode('summary');
@@ -198,6 +202,7 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
                 key={topic.topic_name}
                 className={`topic-entry ${selectedTopic === topic.topic_name ? 'active' : ''}`}
                 onClick={() => {
+                  setCurrentPage(1);  // Reset to first page
                   setSelectedTopic(topic.topic_name);
                   setViewMode('topic');
                 }}
@@ -325,7 +330,7 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
     );
   };
 
-  // Render references table
+  // Render references table with pagination
   const renderReferencesTable = (refsToShow) => {
     if (!refsToShow || refsToShow.length === 0) {
       return <p className="no-data">No references found</p>;
@@ -334,9 +339,58 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
     // Sort by year descending
     const sortedRefs = [...refsToShow].sort((a, b) => (b?.year || 0) - (a?.year || 0));
 
+    // Pagination
+    const totalPages = Math.ceil(sortedRefs.length / REFS_PER_PAGE);
+    const startIdx = (currentPage - 1) * REFS_PER_PAGE;
+    const endIdx = startIdx + REFS_PER_PAGE;
+    const paginatedRefs = sortedRefs.slice(startIdx, endIdx);
+
+    const renderPagination = () => {
+      if (totalPages <= 1) return null;
+
+      return (
+        <div className="pagination">
+          <button
+            className="pagination-btn"
+            onClick={() => setCurrentPage(1)}
+            disabled={currentPage === 1}
+          >
+            &laquo; First
+          </button>
+          <button
+            className="pagination-btn"
+            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+          >
+            &lsaquo; Prev
+          </button>
+          <span className="pagination-info">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            className="pagination-btn"
+            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages}
+          >
+            Next &rsaquo;
+          </button>
+          <button
+            className="pagination-btn"
+            onClick={() => setCurrentPage(totalPages)}
+            disabled={currentPage === totalPages}
+          >
+            Last &raquo;
+          </button>
+        </div>
+      );
+    };
+
     return (
       <div className="references-table-container">
-        <p className="results-count">Showing {sortedRefs.length} references</p>
+        <p className="results-count">
+          Showing {startIdx + 1}-{Math.min(endIdx, sortedRefs.length)} of {sortedRefs.length} references
+        </p>
+        {renderPagination()}
         <table className="data-table references-table literature-table">
           <thead>
             <tr>
@@ -346,7 +400,7 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
             </tr>
           </thead>
           <tbody>
-            {sortedRefs.map((ref, idx) => {
+            {paginatedRefs.map((ref, idx) => {
               const otherGenesInRef = ref.other_genes
                 ? ref.other_genes.filter(g => g !== displayName)
                 : [];
@@ -356,7 +410,6 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
                   <td>
                     <div className="ref-citation">{renderCitationLine(ref)}</div>
                     {renderLinksBelow(ref)}
-                    {ref?.title && <div className="ref-title">{ref.title}</div>}
                   </td>
                   <td className="species-cell">
                     {ref.species || currentOrganism?.split(' ').slice(0, 2).join(' ') || 'C. albicans'}
@@ -385,6 +438,7 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
             })}
           </tbody>
         </table>
+        {renderPagination()}
       </div>
     );
   };
