@@ -181,6 +181,115 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                   </td>
                 </tr>
               )}
+
+              {/* Best Hits in CGD Species Section */}
+              {orgData.best_hits_cgd && Object.keys(orgData.best_hits_cgd.by_species || {}).length > 0 && (
+                <tr className="section-with-divider section-grey-bg">
+                  <th style={{ verticalAlign: 'top' }}>Best hits in CGD species</th>
+                  <td>
+                    {Object.entries(orgData.best_hits_cgd.by_species).map(([species, hits]) => (
+                      <div key={species} style={{ marginBottom: '4px' }}>
+                        <em>{species}</em> best hit:{' '}
+                        {hits.map((hit, idx) => (
+                          <span key={idx}>
+                            {idx > 0 && ', '}
+                            <Link to={`/locus/${hit.feature_name}`}>
+                              {hit.display_name}
+                            </Link>
+                          </span>
+                        ))}
+                      </div>
+                    ))}
+                  </td>
+                </tr>
+              )}
+
+              {/* Orthologs in Fungal Species Section */}
+              {orgData.orthologs_fungal && Object.keys(orgData.orthologs_fungal.by_source || {}).length > 0 && (
+                <tr className="section-with-divider section-grey-bg">
+                  <th style={{ verticalAlign: 'top' }}>Orthologs in fungal species</th>
+                  <td>
+                    {Object.entries(orgData.orthologs_fungal.by_source).map(([source, homologs], srcIdx) => (
+                      <span key={source}>
+                        {srcIdx > 0 && ' ; '}
+                        <em>{homologs[0]?.organism_name || source}</em>
+                        {' ('}
+                        {homologs.map((h, idx) => (
+                          <span key={idx}>
+                            {idx > 0 && ', '}
+                            {h.url ? (
+                              <a href={h.url} target="_blank" rel="noopener noreferrer">
+                                {h.display_name}
+                              </a>
+                            ) : (
+                              <span>{h.display_name}</span>
+                            )}
+                          </span>
+                        ))}
+                        {')'}
+                      </span>
+                    ))}
+                  </td>
+                </tr>
+              )}
+
+              {/* Best Hits in Fungal Species Section */}
+              {orgData.best_hits_fungal && Object.keys(orgData.best_hits_fungal.by_source || {}).length > 0 && (
+                <tr className="section-with-divider section-grey-bg">
+                  <th style={{ verticalAlign: 'top' }}>Best hits in fungal species</th>
+                  <td>
+                    {Object.entries(orgData.best_hits_fungal.by_source).map(([source, homologs], srcIdx) => (
+                      <span key={source}>
+                        {srcIdx > 0 && ' ; '}
+                        <em>{homologs[0]?.organism_name || source}</em>
+                        {' ('}
+                        {homologs.map((h, idx) => (
+                          <span key={idx}>
+                            {idx > 0 && ', '}
+                            {h.url ? (
+                              <a href={h.url} target="_blank" rel="noopener noreferrer">
+                                {h.display_name}
+                              </a>
+                            ) : (
+                              <span>{h.display_name}</span>
+                            )}
+                          </span>
+                        ))}
+                        {')'}
+                      </span>
+                    ))}
+                  </td>
+                </tr>
+              )}
+
+              {/* Reciprocal Best Hits in Other Species Section */}
+              {orgData.reciprocal_best_hits && Object.keys(orgData.reciprocal_best_hits.by_source || {}).length > 0 && (
+                <tr className="section-with-divider section-grey-bg">
+                  <th style={{ verticalAlign: 'top' }}>Reciprocal best hits in other species</th>
+                  <td>
+                    {Object.entries(orgData.reciprocal_best_hits.by_source).map(([source, homologs], srcIdx) => (
+                      <span key={source}>
+                        {srcIdx > 0 && ' ; '}
+                        <em>{homologs[0]?.organism_name || source}</em>
+                        {' ('}
+                        {homologs.map((h, idx) => (
+                          <span key={idx}>
+                            {idx > 0 && ', '}
+                            {h.url ? (
+                              <a href={h.url} target="_blank" rel="noopener noreferrer">
+                                {h.display_name}
+                              </a>
+                            ) : (
+                              <span>{h.display_name}</span>
+                            )}
+                          </span>
+                        ))}
+                        {')'}
+                      </span>
+                    ))}
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </>
