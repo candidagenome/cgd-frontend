@@ -119,11 +119,8 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
 
               {/* Structural Information Section - always show when protein data exists */}
               <tr className="section-with-divider section-grey-bg">
-                <th>Structural Information</th>
-                <td>AlphaFold Protein Structure</td>
-              </tr>
-              <tr>
-                <td colSpan="2" style={{ padding: '10px 20px' }}>
+                <th style={{ verticalAlign: 'top' }}>Structural Information</th>
+                <td>
                   <AlphaFoldViewer uniprotId={orgData.alphafold_info?.uniprot_id} />
                 </td>
               </tr>
