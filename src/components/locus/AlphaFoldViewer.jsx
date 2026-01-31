@@ -272,12 +272,11 @@ function AlphaFoldViewer({ uniprotId }) {
   return (
     <div className="alphafold-wrapper">
       <div className="alphafold-viewer-container">
-        {loading && <div className="alphafold-loading">Loading AlphaFold structure...</div>}
-        {error && <div className="alphafold-error">{error}</div>}
+        {loading && <div className="alphafold-loading-overlay">Loading AlphaFold structure...</div>}
+        {error && <div className="alphafold-error-overlay">{error}</div>}
         <div
           ref={containerRef}
           className="alphafold-viewer"
-          style={{ display: loading || error ? 'none' : 'block' }}
         />
       </div>
 
