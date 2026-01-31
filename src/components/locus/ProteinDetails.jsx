@@ -102,37 +102,90 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                 </td>
               </tr>
 
-              {/* Structural Information Section - placeholder only */}
-              <tr className="section-with-divider section-grey-bg">
-                <th>Structural Information</th>
-                <td>
-                  <em style={{ color: '#666' }}>Will add AlphaFold soon</em>
-                </td>
-              </tr>
+              {/* Name Description */}
+              {orgData.name_description && (
+                <tr>
+                  <th>Name Description</th>
+                  <td>
+                    {orgData.name_description_with_refs ? (
+                      <span dangerouslySetInnerHTML={{ __html: orgData.name_description_with_refs }} />
+                    ) : (
+                      <span>{orgData.name_description}</span>
+                    )}
+                  </td>
+                </tr>
+              )}
 
-              {/* Conserved Domains Section - placeholder only */}
-              <tr className="section-with-divider section-grey-bg">
-                <th>Conserved Domains</th>
-                <td>
-                  <em style={{ color: '#666' }}>Will add domain graphic soon</em>
-                </td>
-              </tr>
+              {/* Structural Information Section */}
+              {orgData.alphafold_info?.alphafold_url && (
+                <tr className="section-with-divider section-grey-bg">
+                  <th>Structural Information</th>
+                  <td>
+                    <a
+                      href={orgData.alphafold_info.alphafold_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Predicted Structure from AlphaFold (Link-out)
+                    </a>
+                  </td>
+                </tr>
+              )}
+
+              {/* Conserved Domains Section - JBrowse link */}
+              {orgData.systematic_name && (
+                <tr className="section-with-divider section-grey-bg">
+                  <th>Conserved Domains</th>
+                  <td>
+                    <a
+                      href={`/cgi-bin/protein/domainPage.pl?dbid=${orgData.stanford_name || orgData.systematic_name}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Domains/Motifs Page
+                    </a>
+                  </td>
+                </tr>
+              )}
 
               {/* Sequence Detail Section - show GCG sequence by default */}
-              {orgData.sequence_detail && (orgData.sequence_detail.protein_sequence_gcg || orgData.sequence_detail.protein_length) && (
+              {(orgData.sequence_detail || orgData.protein_info) && (
                 <>
                   <tr className="section-with-divider section-grey-bg">
                     <th>Sequence Detail</th>
                     <td>
-                      {orgData.sequence_detail.protein_length && (
-                        <span>{orgData.sequence_detail.protein_length} aa</span>
+                      {/* Length */}
+                      {(orgData.sequence_detail?.protein_length || orgData.protein_info?.protein_length) && (
+                        <span>
+                          Length = {orgData.sequence_detail?.protein_length || orgData.protein_info?.protein_length} aa
+                        </span>
                       )}
-                      {orgData.sequence_detail.cds_length && (
-                        <span> | CDS: {orgData.sequence_detail.cds_length} bp</span>
+                      {/* Molecular Weight */}
+                      {orgData.protein_info?.molecular_weight && (
+                        <span>
+                          ; MW = {(orgData.protein_info.molecular_weight / 1000).toFixed(1)} kDa
+                        </span>
+                      )}
+                      {/* pI */}
+                      {orgData.protein_info?.pi && (
+                        <span>; pI = {orgData.protein_info.pi.toFixed(2)}</span>
+                      )}
+                      {/* Physicochemical Properties link */}
+                      {orgData.systematic_name && (
+                        <span>
+                          {' '}
+                          <a
+                            href={`/cgi-bin/protein/proteinProperty.pl?dbid=${orgData.stanford_name || orgData.systematic_name}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Physicochemical Properties Page
+                          </a>
+                        </span>
                       )}
                     </td>
                   </tr>
-                  {orgData.sequence_detail.protein_sequence_gcg && (
+                  {orgData.sequence_detail?.protein_sequence_gcg && (
                     <tr>
                       <th style={{ paddingLeft: '20px', fontWeight: 'normal' }}>Protein Sequence (GCG Format)</th>
                       <td>
