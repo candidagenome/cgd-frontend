@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import LocusPage from './pages/LocusPage';
@@ -64,6 +65,15 @@ import PDBHomologHelp from './pages/help/PDBHomologHelp';
 import './App.css';
 
 function App() {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      window.location.href = `/cgi-bin/search/quickSearch?query=${encodeURIComponent(searchQuery.trim())}`;
+    }
+  };
+
   return (
     <Router>
       <div className="app">
@@ -109,11 +119,13 @@ function App() {
                 </div>
               </div>
 
-              <form className="site-search" role="search" onSubmit={(e) => e.preventDefault()}>
+              <form className="site-search" role="search" onSubmit={handleSearch}>
                 <input
                   type="text"
                   placeholder="search our site"
                   aria-label="Search CGD"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
                 <button type="submit">Go</button>
               </form>
