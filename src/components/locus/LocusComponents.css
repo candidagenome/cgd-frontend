@@ -1132,6 +1132,16 @@ a:hover {
   padding-left: 40px;
 }
 
+.phenotype-link {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.phenotype-link:hover {
+  text-decoration: underline;
+}
+
 /* =====================================================
    GO TAB IMPROVEMENTS
    ===================================================== */
