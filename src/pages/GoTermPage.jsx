@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import goApi from '../api/goApi';
+import { formatCitationString, CitationLinksBelow, buildCitationLinks } from '../utils/formatCitation.jsx';
 import './GoTermPage.css';
 
 // Map GO aspect codes to full names
@@ -347,33 +348,27 @@ function GoTermPage() {
                     <em>{getOrganismAbbrev(gene.species)}</em>
                   </td>
                   <td className="references-cell">
-                    {gene.references && gene.references.map((ref, refIdx) => (
-                      <div key={refIdx} className="reference-item">
-                        {ref.qualifiers && ref.qualifiers.length > 0 && (
-                          <span className={`qualifier-badge ${ref.qualifiers.includes('NOT') ? 'not-qualifier' : ''}`}>
-                            {ref.qualifiers.join(', ')}
-                          </span>
-                        )}
-                        <div className="citation-full">{ref.citation}</div>
-                        <div className="citation-links">
-                          {ref.dbxref_id && (
-                            <Link to={`/reference/${ref.dbxref_id}`} className="citation-link">
-                              CGD Paper
-                            </Link>
+                    {gene.references && gene.references.map((ref, refIdx) => {
+                      // Build citation links using shared utility
+                      const citationLinks = buildCitationLinks({
+                        dbxref_id: ref.dbxref_id,
+                        pubmed: ref.pmid,
+                      });
+
+                      return (
+                        <div key={refIdx} className="reference-item">
+                          {ref.qualifiers && ref.qualifiers.length > 0 && (
+                            <span className={`qualifier-badge ${ref.qualifiers.includes('NOT') ? 'not-qualifier' : ''}`}>
+                              {ref.qualifiers.join(', ')}
+                            </span>
                           )}
-                          {ref.pmid && (
-                            <a
-                              href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pmid}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="citation-link"
-                            >
-                              PubMed
-                            </a>
-                          )}
+                          <div className="citation-full">
+                            {formatCitationString(ref.citation)}
+                          </div>
+                          <CitationLinksBelow links={citationLinks} />
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </td>
                   <td className="evidence-cell">
                     {gene.references && gene.references.map((ref, refIdx) => (
