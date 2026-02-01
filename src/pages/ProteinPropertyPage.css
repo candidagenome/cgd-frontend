@@ -1,0 +1,199 @@
+/* ===========================================
+   PROTEIN PROPERTY PAGE STYLES
+   =========================================== */
+
+.protein-property-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header */
+.protein-property-page .page-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.protein-property-page .page-header h1 {
+  font-size: 1.4rem;
+  color: #333;
+  margin: 0;
+}
+
+.protein-property-page .protein-name {
+  color: #1976d2;
+  font-weight: bold;
+}
+
+/* Organism Selector */
+.protein-property-page .organism-selector {
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 10px;
+  background: #e8f5e9;
+  border-radius: 6px;
+}
+
+.protein-property-page .organism-selector label {
+  font-weight: 500;
+  margin-right: 10px;
+}
+
+.protein-property-page .organism-selector select {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  min-width: 250px;
+}
+
+/* Description */
+.protein-property-page .description {
+  margin-bottom: 25px;
+  padding: 15px;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.protein-property-page .description p {
+  margin: 0 0 10px 0;
+  line-height: 1.6;
+}
+
+.protein-property-page .return-link {
+  margin-top: 15px;
+}
+
+.protein-property-page .return-link a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.protein-property-page .return-link a:hover {
+  text-decoration: underline;
+}
+
+/* Layout */
+.protein-property-page .properties-layout {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+.protein-property-page .left-column {
+  flex: 0 0 35%;
+}
+
+.protein-property-page .right-column {
+  flex: 1;
+}
+
+/* Section */
+.protein-property-page .property-section {
+  margin-bottom: 25px;
+}
+
+.protein-property-page .section-header {
+  background: #cfe4fb;
+  color: #333;
+  padding: 8px 15px;
+  margin: 0 0 1px 0;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+/* Tables */
+.protein-property-page .property-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  font-size: 0.9rem;
+}
+
+.protein-property-page .property-table th,
+.protein-property-page .property-table td {
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+}
+
+.protein-property-page .property-table th {
+  background: #e0e0e0;
+  font-weight: bold;
+  text-align: center;
+}
+
+.protein-property-page .property-table td.center {
+  text-align: center;
+}
+
+.protein-property-page .property-table tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+.protein-property-page .property-table tr.total-row {
+  background: #e8e8e8;
+}
+
+/* Amino acid table - narrower */
+.protein-property-page .aa-table {
+  width: 100%;
+}
+
+.protein-property-page .aa-table td:first-child {
+  width: 50%;
+}
+
+.protein-property-page .aa-table td:nth-child(2),
+.protein-property-page .aa-table td:nth-child(3) {
+  width: 25%;
+}
+
+/* Stability note */
+.protein-property-page .note {
+  color: #666;
+  font-style: italic;
+}
+
+/* Error message */
+.protein-property-page .error-message {
+  padding: 20px;
+  background: #fff3e0;
+  border: 1px solid #ffb74d;
+  border-radius: 4px;
+  color: #e65100;
+  margin-bottom: 20px;
+}
+
+/* Loading / Error / No-data States */
+.protein-property-page .loading {
+  padding: 40px;
+  text-align: center;
+  color: #666;
+}
+
+.protein-property-page .error {
+  padding: 20px;
+  background: #ffebee;
+  color: #c62828;
+  border-radius: 4px;
+}
+
+.protein-property-page .no-data {
+  padding: 40px;
+  text-align: center;
+  color: #888;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .protein-property-page .properties-layout {
+    flex-direction: column;
+  }
+
+  .protein-property-page .left-column,
+  .protein-property-page .right-column {
+    flex: 1;
+    width: 100%;
+  }
+}
