@@ -158,9 +158,16 @@ function GODiagram({ goid }) {
 
     cyRef.current = cy;
 
-    // Initial fit
+    // Center on focus node at readable zoom level (don't fit all nodes)
     setTimeout(() => {
-      cy.fit(undefined, 50);
+      const focusNode = cy.nodes().filter(n => n.data('isFocus'));
+      if (focusNode.length > 0) {
+        // Center on focus node at zoom level 1.0 (actual size)
+        cy.zoom(1.0);
+        cy.center(focusNode);
+      } else {
+        cy.fit(undefined, 50);
+      }
     }, 100);
 
     return () => {
@@ -197,8 +204,21 @@ function GODiagram({ goid }) {
     }
   };
 
-  // Handle "Reset View" button click
+  // Handle "Reset View" button click - center on focus node
   const handleResetView = () => {
+    if (cyRef.current) {
+      const focusNode = cyRef.current.nodes().filter(n => n.data('isFocus'));
+      if (focusNode.length > 0) {
+        cyRef.current.zoom(1.0);
+        cyRef.current.center(focusNode);
+      } else {
+        cyRef.current.fit(undefined, 50);
+      }
+    }
+  };
+
+  // Handle "Fit All" button click - zoom out to see entire graph
+  const handleFitAll = () => {
     if (cyRef.current) {
       cyRef.current.fit(undefined, 50);
     }
@@ -261,9 +281,16 @@ function GODiagram({ goid }) {
           <button
             className="go-diagram-btn"
             onClick={handleResetView}
-            title="Reset view to fit all nodes"
+            title="Center on current term"
           >
             Reset View
+          </button>
+          <button
+            className="go-diagram-btn"
+            onClick={handleFitAll}
+            title="Zoom out to see entire graph"
+          >
+            Fit All
           </button>
         </div>
         <div className="go-diagram-legend">
