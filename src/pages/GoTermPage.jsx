@@ -430,11 +430,6 @@ function GoTermPage() {
 
                       return (
                         <div key={refIdx} className="reference-item">
-                          {ref.qualifiers && ref.qualifiers.length > 0 && (
-                            <span className={`qualifier-badge ${ref.qualifiers.includes('NOT') ? 'not-qualifier' : ''}`}>
-                              {ref.qualifiers.join(', ')}
-                            </span>
-                          )}
                           <div className="citation-line">
                             {formatCitationString(ref.citation)}
                             {ref.pubmed && <span className="citation-pmid"> PMID: {ref.pubmed}</span>}
