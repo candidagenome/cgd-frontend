@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import goApi from '../api/goApi';
 import { formatCitationString, CitationLinksBelow, buildCitationLinks } from '../utils/formatCitation.jsx';
+import { GODiagram } from '../components/go';
 import './GoTermPage.css';
 
 // Map GO aspect codes to full names
@@ -107,6 +108,7 @@ function GoTermPage() {
 
     const links = [
       { id: 'definition', label: 'Definition' },
+      { id: 'graphical-display', label: 'Graphical Display' },
       { id: 'summary', label: 'Number of Genes Annotated' },
       { id: 'additional-links', label: 'Links to Additional Annotations' },
       { id: 'annotations', label: 'Genes Annotated with this Term' },
@@ -173,6 +175,23 @@ function GoTermPage() {
               )}
             </tbody>
           </table>
+        </div>
+      </div>
+    );
+  };
+
+  // Render the "Graphical Display" section with GO hierarchy diagram
+  const renderGraphicalDisplay = () => {
+    return (
+      <div className="section" id="graphical-display">
+        <h2 className="section-header">Graphical Display</h2>
+        <div className="section-content">
+          <p className="diagram-description">
+            This diagram shows the local area of the Gene Ontology hierarchy centered on
+            the term <strong>{data.term.go_term}</strong>. Parent terms (ancestors) are shown
+            above the current term. Click any node to navigate to that term.
+          </p>
+          <GODiagram goid={goid} />
         </div>
       </div>
     );
@@ -620,6 +639,8 @@ function GoTermPage() {
       <div className="divider" />
 
       {renderDefinition()}
+
+      {renderGraphicalDisplay()}
 
       {renderAnnotationSummarySection()}
 
