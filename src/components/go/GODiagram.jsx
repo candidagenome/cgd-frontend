@@ -84,8 +84,8 @@ function GODiagram({ goid }) {
           style: {
             'label': 'data(label)',
             'text-wrap': 'wrap',
-            'text-max-width': '240px',
-            'font-size': '14px',
+            'text-max-width': '320px',
+            'font-size': '16px',
             'text-valign': 'center',
             'text-halign': 'center',
             'background-color': (ele) => {
@@ -96,10 +96,10 @@ function GODiagram({ goid }) {
               if (ele.data('isFocus')) return COLORS.textLight;
               return ele.data('hasAnnotations') ? COLORS.textLight : COLORS.textDark;
             },
-            'width': '260px',
-            'height': '90px',
+            'width': '340px',
+            'height': '110px',
             'shape': 'roundrectangle',
-            'padding': '15px',
+            'padding': '18px',
             'border-width': (ele) => ele.data('isFocus') ? '3px' : '1px',
             'border-color': (ele) => ele.data('isFocus') ? '#1b5e20' : '#888888',
             'cursor': 'pointer',
