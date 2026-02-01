@@ -84,8 +84,8 @@ function GODiagram({ goid }) {
           style: {
             'label': 'data(label)',
             'text-wrap': 'wrap',
-            'text-max-width': '150px',
-            'font-size': '11px',
+            'text-max-width': '180px',
+            'font-size': '12px',
             'text-valign': 'center',
             'text-halign': 'center',
             'background-color': (ele) => {
@@ -96,10 +96,10 @@ function GODiagram({ goid }) {
               if (ele.data('isFocus')) return COLORS.textLight;
               return ele.data('hasAnnotations') ? COLORS.textLight : COLORS.textDark;
             },
-            'width': '160px',
-            'height': '60px',
+            'width': '200px',
+            'height': '70px',
             'shape': 'roundrectangle',
-            'padding': '10px',
+            'padding': '12px',
             'border-width': (ele) => ele.data('isFocus') ? '3px' : '1px',
             'border-color': (ele) => ele.data('isFocus') ? '#1b5e20' : '#888888',
             'cursor': 'pointer',
@@ -128,7 +128,7 @@ function GODiagram({ goid }) {
       layout: {
         name: 'breadthfirst',
         directed: true,
-        spacingFactor: 1.5,
+        spacingFactor: 1.0,
         avoidOverlap: true,
         roots: nodes
           .filter(n => n.data.level === Math.min(...nodes.map(x => x.data.level)))
@@ -180,6 +180,19 @@ function GODiagram({ goid }) {
       );
       if (parentEdge) {
         navigate(`/go/${parentEdge.source}`);
+      }
+    }
+  };
+
+  // Handle "Go Down" button click
+  const handleGoDown = () => {
+    if (hierarchyData?.can_go_down && hierarchyData?.focus_term) {
+      // Find the immediate child of the focus term
+      const childEdge = hierarchyData.edges.find(
+        edge => edge.source === hierarchyData.focus_term.goid
+      );
+      if (childEdge) {
+        navigate(`/go/${childEdge.target}`);
       }
     }
   };
@@ -236,6 +249,14 @@ function GODiagram({ goid }) {
             title="Navigate to parent term"
           >
             Go Up
+          </button>
+          <button
+            className="go-diagram-btn"
+            onClick={handleGoDown}
+            disabled={!hierarchyData?.can_go_down}
+            title="Navigate to child term"
+          >
+            Go Down
           </button>
           <button
             className="go-diagram-btn"
