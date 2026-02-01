@@ -358,6 +358,68 @@
   background: #1565c0;
 }
 
+.search-button:disabled {
+  background: #999;
+  cursor: not-allowed;
+}
+
+/* Author Search Results */
+.author-search-results {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+}
+
+.search-results-summary {
+  text-align: center;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+.search-results-summary .highlight-count {
+  color: #c00;
+  font-weight: bold;
+}
+
+.author-results-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  font-size: 0.9rem;
+}
+
+.author-results-table th,
+.author-results-table td {
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.author-results-table th {
+  background: #e0e0e0;
+  font-weight: bold;
+  text-align: center;
+}
+
+.author-results-table tr.alt-row {
+  background: #f9f9f9;
+}
+
+.author-results-table .authors-cell {
+  width: 35%;
+}
+
+.author-results-table .citation-cell {
+  width: 65%;
+}
+
+.author-highlight {
+  background-color: #ffff66;
+  color: black;
+  font-weight: bold;
+}
+
 /* ===========================================
    LOADING / ERROR / NO-DATA STATES
    =========================================== */

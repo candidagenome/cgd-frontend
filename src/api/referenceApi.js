@@ -36,6 +36,12 @@ export const referenceApi = {
     const response = await api.get(`/api/reference/${encodeURIComponent(pubmedId)}/literature_topics`);
     return response.data;
   },
+
+  // Search references by author name
+  searchByAuthor: async (authorName) => {
+    const response = await api.get(`/api/reference/search/author?author=${encodeURIComponent(authorName)}`);
+    return response.data;
+  },
 };
 
 export default referenceApi;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import useReferenceData from '../hooks/useReferenceData';
+import referenceApi from '../api/referenceApi';
 import { formatCitationString, CitationLinksBelow, buildCitationLinks } from '../utils/formatCitation.jsx';
 import './ReferencePage.css';
 
@@ -32,6 +33,9 @@ function ReferencePage() {
   const [selectedAuthor, setSelectedAuthor] = useState('');
   const [searchType, setSearchType] = useState('CGD');
   const [selectedJumpLabel, setSelectedJumpLabel] = useState('');
+  const [authorSearchResults, setAuthorSearchResults] = useState(null);
+  const [authorSearchLoading, setAuthorSearchLoading] = useState(false);
+  const [authorSearchError, setAuthorSearchError] = useState(null);
 
   // Load literature topics data on mount
   useEffect(() => {
@@ -40,7 +44,7 @@ function ReferencePage() {
     }
   }, [loaders]);
 
-  const handleAuthorSearch = (e) => {
+  const handleAuthorSearch = async (e) => {
     e.preventDefault();
     if (!selectedAuthor) return;
 
@@ -48,7 +52,18 @@ function ReferencePage() {
 
     switch (searchType) {
       case 'CGD':
-        window.open(`/search?type=reference&author=${encodeURIComponent(lastName)}`, '_blank');
+        // Search CGD database via API
+        setAuthorSearchLoading(true);
+        setAuthorSearchError(null);
+        try {
+          const results = await referenceApi.searchByAuthor(lastName);
+          setAuthorSearchResults(results);
+        } catch (error) {
+          setAuthorSearchError(error.response?.data?.detail || error.message);
+          setAuthorSearchResults(null);
+        } finally {
+          setAuthorSearchLoading(false);
+        }
         break;
       case 'PubMed':
         window.open(`https://pubmed.ncbi.nlm.nih.gov/?term=${encodeURIComponent(selectedAuthor)}`, '_blank');
@@ -376,6 +391,70 @@ function ReferencePage() {
   };
 
   // Render author search section
+  // Highlight author name in author list
+  const highlightAuthor = (authorList, searchQuery) => {
+    if (!searchQuery) return authorList;
+    const query = searchQuery.replace(/[*%]/g, '');
+    const regex = new RegExp(`(${query})`, 'gi');
+    const parts = authorList.split(regex);
+    return parts.map((part, idx) =>
+      regex.test(part) ? <mark key={idx} className="author-highlight">{part}</mark> : part
+    );
+  };
+
+  // Render author search results
+  const renderAuthorSearchResults = () => {
+    if (authorSearchLoading) {
+      return <div className="loading">Searching...</div>;
+    }
+
+    if (authorSearchError) {
+      return <div className="error">Error: {authorSearchError}</div>;
+    }
+
+    if (!authorSearchResults) {
+      return null;
+    }
+
+    const { author_query, author_count, reference_count, references } = authorSearchResults;
+
+    return (
+      <div className="author-search-results">
+        <p className="search-results-summary">
+          There are <span className="highlight-count">{author_count}</span> authors associated with{' '}
+          <span className="highlight-count">{reference_count}</span> papers found for author like{' '}
+          <span className="highlight-count">{author_query}</span> in database
+        </p>
+
+        {references.length > 0 && (
+          <table className="author-results-table">
+            <thead>
+              <tr>
+                <th>Author(s)</th>
+                <th>Citation</th>
+              </tr>
+            </thead>
+            <tbody>
+              {references.map((ref, idx) => (
+                <tr key={ref.reference_no} className={idx % 2 === 0 ? '' : 'alt-row'}>
+                  <td className="authors-cell">
+                    {highlightAuthor(ref.author_list, author_query)}
+                  </td>
+                  <td className="citation-cell">
+                    <div className="citation-line">
+                      {formatCitationString(ref.citation)}
+                    </div>
+                    <CitationLinksBelow links={ref.links} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    );
+  };
+
   const renderAuthorSearch = () => {
     if (!data.info?.result?.authors || data.info.result.authors.length === 0) {
       return null;
@@ -401,7 +480,10 @@ function ReferencePage() {
               <label>(1) Choose an author:</label>
               <select
                 value={selectedAuthor}
-                onChange={(e) => setSelectedAuthor(e.target.value)}
+                onChange={(e) => {
+                  setSelectedAuthor(e.target.value);
+                  setAuthorSearchResults(null); // Clear previous results
+                }}
                 className="author-select"
               >
                 {authors.map((author, idx) => (
@@ -415,7 +497,10 @@ function ReferencePage() {
               <label>(2) Choose a search parameter:</label>
               <select
                 value={searchType}
-                onChange={(e) => setSearchType(e.target.value)}
+                onChange={(e) => {
+                  setSearchType(e.target.value);
+                  setAuthorSearchResults(null); // Clear previous results
+                }}
                 className="search-type-select"
               >
                 <option value="CGD">Papers in CGD</option>
@@ -425,9 +510,13 @@ function ReferencePage() {
             </div>
             <div className="search-step">
               <label>(3) Click to implement:</label>
-              <button type="submit" className="search-button">Search!</button>
+              <button type="submit" className="search-button" disabled={authorSearchLoading}>
+                {authorSearchLoading ? 'Searching...' : 'Search!'}
+              </button>
             </div>
           </form>
+
+          {renderAuthorSearchResults()}
         </div>
       </div>
     );
