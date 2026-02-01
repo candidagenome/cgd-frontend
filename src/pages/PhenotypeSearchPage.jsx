@@ -210,7 +210,7 @@ function PhenotypeSearchPage() {
         <h2 className="section-header">Phenotype Search</h2>
         <div className="section-content">
           <form onSubmit={handleSubmit} className="search-form">
-            <div className="form-row">
+            <div className="form-row four-columns">
               <div className="form-group">
                 <label htmlFor="observable">Observable</label>
                 <input
@@ -235,9 +235,7 @@ function PhenotypeSearchPage() {
                   placeholder="e.g., abnormal"
                 />
               </div>
-            </div>
 
-            <div className="form-row">
               <div className="form-group">
                 <label htmlFor="experiment_type">Experiment Type</label>
                 <input

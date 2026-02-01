@@ -3,7 +3,7 @@
    =========================================== */
 
 .phenotype-search-page {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -85,6 +85,16 @@
   display: flex;
   gap: 20px;
   margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.form-row.four-columns {
+  flex-wrap: nowrap;
+}
+
+.form-row.four-columns .form-group {
+  flex: 1;
+  min-width: 200px;
 }
 
 .form-group {
@@ -473,6 +483,17 @@
    RESPONSIVE
    =========================================== */
 
+@media (max-width: 1024px) {
+  .form-row.four-columns {
+    flex-wrap: wrap;
+  }
+
+  .form-row.four-columns .form-group {
+    flex: 1 1 calc(50% - 10px);
+    min-width: 200px;
+  }
+}
+
 @media (max-width: 768px) {
   .phenotype-search-page {
     padding: 10px;
@@ -485,6 +506,14 @@
   .form-row {
     flex-direction: column;
     gap: 10px;
+  }
+
+  .form-row.four-columns {
+    flex-direction: column;
+  }
+
+  .form-row.four-columns .form-group {
+    flex: 1 1 100%;
   }
 
   .results-table {
