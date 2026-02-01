@@ -43,7 +43,6 @@ function PhenotypeSearchPage() {
   // Track if we've performed a search
   const [hasSearched, setHasSearched] = useState(false);
 
-  // Perform search when URL params change or on initial load with params
   useEffect(() => {
     const obs = searchParams.get('observable') || '';
     const qual = searchParams.get('qualifier') || '';
@@ -51,17 +50,16 @@ function PhenotypeSearchPage() {
     const mutType = searchParams.get('mutant_type') || '';
     const page = parseInt(searchParams.get('page'), 10) || 1;
 
-    // Update form state from URL
     setObservable(obs);
     setQualifier(qual);
     setExperimentType(expType);
     setMutantType(mutType);
     setCurrentPage(page);
 
-    // Only search if at least one parameter is provided
     if (obs || qual || expType || mutType) {
       performSearch({ observable: obs, qualifier: qual, experiment_type: expType, mutant_type: mutType, page });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
   const performSearch = async (params) => {
@@ -86,7 +84,6 @@ function PhenotypeSearchPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Build URL params
     const params = new URLSearchParams();
     if (observable.trim()) params.set('observable', observable.trim());
     if (qualifier.trim()) params.set('qualifier', qualifier.trim());
@@ -114,7 +111,6 @@ function PhenotypeSearchPage() {
     setSearchParams(params);
   };
 
-  // Render pagination controls
   const renderPagination = () => {
     if (!data || data.total_results <= RESULTS_PER_PAGE) return null;
 
@@ -129,23 +125,15 @@ function PhenotypeSearchPage() {
       startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
 
-    // First page and ellipsis
     if (startPage > 1) {
       pages.push(
-        <button
-          key={1}
-          onClick={() => handlePageChange(1)}
-          className="page-btn"
-        >
+        <button key={1} onClick={() => handlePageChange(1)} className="page-btn">
           1
         </button>
       );
-      if (startPage > 2) {
-        pages.push(<span key="ellipsis-start" className="ellipsis">...</span>);
-      }
+      if (startPage > 2) pages.push(<span key="ellipsis-start" className="ellipsis">...</span>);
     }
 
-    // Page numbers
     for (let i = startPage; i <= endPage; i++) {
       pages.push(
         <button
@@ -158,17 +146,10 @@ function PhenotypeSearchPage() {
       );
     }
 
-    // Last page and ellipsis
     if (endPage < totalPages) {
-      if (endPage < totalPages - 1) {
-        pages.push(<span key="ellipsis-end" className="ellipsis">...</span>);
-      }
+      if (endPage < totalPages - 1) pages.push(<span key="ellipsis-end" className="ellipsis">...</span>);
       pages.push(
-        <button
-          key={totalPages}
-          onClick={() => handlePageChange(totalPages)}
-          className="page-btn"
-        >
+        <button key={totalPages} onClick={() => handlePageChange(totalPages)} className="page-btn">
           {totalPages}
         </button>
       );
@@ -203,65 +184,69 @@ function PhenotypeSearchPage() {
     );
   };
 
-  // Render search form
   const renderSearchForm = () => {
     return (
       <div className="section" id="search-form">
         <h2 className="section-header">Phenotype Search</h2>
         <div className="section-content">
           <form onSubmit={handleSubmit} className="search-form">
-            <div className="form-row four-columns">
-              <div className="form-group">
-                <label htmlFor="observable">Observable</label>
-                <input
-                  type="text"
-                  id="observable"
-                  value={observable}
-                  onChange={(e) => setObservable(e.target.value)}
-                  placeholder="e.g., colony morphology"
-                />
-                <span className="form-hint">
+            <div className="search-form-card">
+              <div className="search-fields">
+                <div className="form-group">
+                  <label htmlFor="observable">Observable</label>
+                  <input
+                    type="text"
+                    id="observable"
+                    value={observable}
+                    onChange={(e) => setObservable(e.target.value)}
+                    placeholder="e.g., cc"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="qualifier">Qualifier</label>
+                  <input
+                    type="text"
+                    id="qualifier"
+                    value={qualifier}
+                    onChange={(e) => setQualifier(e.target.value)}
+                    placeholder="e.g., ab"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="experiment_type">Experiment Type</label>
+                  <input
+                    type="text"
+                    id="experiment_type"
+                    value={experimentType}
+                    onChange={(e) => setExperimentType(e.target.value)}
+                    placeholder="e.g., cl"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="mutant_type">Mutant Type</label>
+                  <input
+                    type="text"
+                    id="mutant_type"
+                    value={mutantType}
+                    onChange={(e) => setMutantType(e.target.value)}
+                    placeholder="e.g., de"
+                  />
+                </div>
+              </div>
+
+              <div className="search-bottom-row">
+                <div className="browse-link">
                   <Link to="/phenotype/terms">Browse observable terms</Link>
-                </span>
-              </div>
+                </div>
 
-              <div className="form-group">
-                <label htmlFor="qualifier">Qualifier</label>
-                <input
-                  type="text"
-                  id="qualifier"
-                  value={qualifier}
-                  onChange={(e) => setQualifier(e.target.value)}
-                  placeholder="e.g., abnormal"
-                />
+                <div className="form-actions">
+                  <button type="submit" className="btn-search">Search</button>
+                  <button type="button" className="btn-reset" onClick={handleReset}>Reset</button>
+                </div>
               </div>
-
-              <div className="form-group">
-                <label htmlFor="experiment_type">Experiment Type</label>
-                <input
-                  type="text"
-                  id="experiment_type"
-                  value={experimentType}
-                  onChange={(e) => setExperimentType(e.target.value)}
-                  placeholder="e.g., classical genetics"
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="mutant_type">Mutant Type</label>
-                <input
-                  type="text"
-                  id="mutant_type"
-                  value={mutantType}
-                  onChange={(e) => setMutantType(e.target.value)}
-                  placeholder="e.g., deletion"
-                />
-              </div>
-            </div>
-
-            <div className="form-actions">
-              <button type="submit" className="btn-search">Search</button>
-              <button type="button" className="btn-reset" onClick={handleReset}>Reset</button>
             </div>
           </form>
         </div>
@@ -269,7 +254,6 @@ function PhenotypeSearchPage() {
     );
   };
 
-  // Render results summary
   const renderResultsSummary = () => {
     if (!data) return null;
 
@@ -285,15 +269,12 @@ function PhenotypeSearchPage() {
           Found <strong>{data.total_results}</strong> phenotype annotation{data.total_results !== 1 ? 's' : ''}
         </div>
         {queryParts.length > 0 && (
-          <div className="query-summary">
-            Search criteria: {queryParts.join(', ')}
-          </div>
+          <div className="query-summary">Search criteria: {queryParts.join(', ')}</div>
         )}
       </div>
     );
   };
 
-  // Render results table
   const renderResultsTable = () => {
     if (!data || !data.results || data.results.length === 0) {
       return (
@@ -323,19 +304,16 @@ function PhenotypeSearchPage() {
             <tbody>
               {data.results.map((result, idx) => (
                 <tr key={idx} className={idx % 2 === 1 ? 'alt-row' : ''}>
-                  {/* Gene */}
                   <td className="gene-cell">
                     <Link to={`/locus/${result.feature_name}`} className="gene-link">
                       {formatLocusName(result)}
                     </Link>
                   </td>
 
-                  {/* Organism */}
                   <td className="organism-cell">
                     <em>{getOrganismAbbrev(result.organism)}</em>
                   </td>
 
-                  {/* Experiment Type */}
                   <td className="experiment-cell">
                     {result.experiment_type || '-'}
                     {result.experiment_comment && (
@@ -343,38 +321,29 @@ function PhenotypeSearchPage() {
                     )}
                   </td>
 
-                  {/* Mutant Info */}
                   <td className="mutant-cell">
                     {result.mutant_type ? (
                       <>
                         <span>Description: {result.mutant_type}</span>
-                        {result.strain && (
-                          <div className="strain-info">Strain: {result.strain}</div>
-                        )}
+                        {result.strain && <div className="strain-info">Strain: {result.strain}</div>}
                       </>
                     ) : (
                       '-'
                     )}
                   </td>
 
-                  {/* Phenotype */}
                   <td className="phenotype-cell">
                     <span className="observable-term">{result.observable}</span>
-                    {result.qualifier && (
-                      <span className="qualifier-info">: {result.qualifier}</span>
-                    )}
+                    {result.qualifier && <span className="qualifier-info">: {result.qualifier}</span>}
                   </td>
 
-                  {/* References */}
                   <td className="references-cell">
                     {result.references && result.references.length > 0 ? (
                       result.references.map((ref, refIdx) => {
-                        const citationLinks = ref.links && ref.links.length > 0
-                          ? ref.links
-                          : buildCitationLinks({
-                              dbxref_id: ref.dbxref_id,
-                              pubmed: ref.pubmed,
-                            });
+                        const citationLinks =
+                          ref.links && ref.links.length > 0
+                            ? ref.links
+                            : buildCitationLinks({ dbxref_id: ref.dbxref_id, pubmed: ref.pubmed });
 
                         return (
                           <div key={refIdx} className="reference-item">
@@ -405,9 +374,7 @@ function PhenotypeSearchPage() {
     <div className="phenotype-search-page">
       <header className="page-header">
         <h1>Phenotype Search</h1>
-        <p className="subtitle">
-          Search phenotype annotations across all genes in CGD
-        </p>
+        <p className="subtitle">Search phenotype annotations across all genes in CGD</p>
       </header>
 
       <nav className="page-nav">
@@ -448,13 +415,13 @@ function PhenotypeSearchPage() {
 
       <div className="page-footer">
         <p>
-          <strong>Note:</strong> To view phenotypes for a specific gene, visit the gene's
-          locus page and select the Phenotype tab.
+          <strong>Note:</strong> To view phenotypes for a specific gene, visit the gene's locus page and
+          select the Phenotype tab.
         </p>
         <p>
           Curation of mutant phenotypes is an ongoing project at CGD. Please{' '}
-          <Link to="/contact">contact CGD curators</Link> to let us know of additional
-          phenotype information that should be incorporated.
+          <Link to="/contact">contact CGD curators</Link> to let us know of additional phenotype
+          information that should be incorporated.
         </p>
       </div>
     </div>
