@@ -349,11 +349,13 @@ function GoTermPage() {
                   </td>
                   <td className="references-cell">
                     {gene.references && gene.references.map((ref, refIdx) => {
-                      // Build citation links using shared utility
-                      const citationLinks = buildCitationLinks({
-                        dbxref_id: ref.dbxref_id,
-                        pubmed: ref.pmid,
-                      });
+                      // Use backend-provided links if available, otherwise build from ref fields
+                      const citationLinks = ref.links && ref.links.length > 0
+                        ? ref.links
+                        : buildCitationLinks({
+                            dbxref_id: ref.dbxref_id,
+                            pubmed: ref.pubmed,
+                          });
 
                       return (
                         <div key={refIdx} className="reference-item">
@@ -362,8 +364,9 @@ function GoTermPage() {
                               {ref.qualifiers.join(', ')}
                             </span>
                           )}
-                          <div className="citation-full">
+                          <div className="citation-line">
                             {formatCitationString(ref.citation)}
+                            {ref.pubmed && <span className="citation-pmid"> PMID: {ref.pubmed}</span>}
                           </div>
                           <CitationLinksBelow links={citationLinks} />
                         </div>
