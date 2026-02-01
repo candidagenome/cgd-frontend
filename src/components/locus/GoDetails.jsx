@@ -162,13 +162,9 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
                       </span>
                     )}
                     {' '}
-                    <a
-                      href={`https://amigo.geneontology.org/amigo/term/${ann.term?.goid}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
+                    <Link to={`/go/${ann.term?.goid}`}>
                       {ann.term?.display_name}
-                    </a>
+                    </Link>
                   </td>
 
                   <td>

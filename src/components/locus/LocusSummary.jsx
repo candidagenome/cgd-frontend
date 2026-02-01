@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './LocusComponents.css';
 import { formatCitationString, CitationLinksBelow, buildCitationLinks } from '../../utils/formatCitation.jsx';
 
@@ -640,13 +641,9 @@ function LocusSummary({
                                     </em>
                                   )}
                                   {term.qualifier ? ' ' : ''}
-                                  <a
-                                    href={`https://amigo.geneontology.org/amigo/term/${term.goid}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
+                                  <Link to={`/go/${term.goid}`}>
                                     {term.name}
-                                  </a>
+                                  </Link>
 
                                   {term.evidenceEntries && term.evidenceEntries.length > 0 && (
                                     <span className="go-evidence-codes">
