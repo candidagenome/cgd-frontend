@@ -9,6 +9,14 @@ export const goApi = {
     const response = await api.get(`/api/go/${encodeURIComponent(goid)}`);
     return response.data;
   },
+
+  /**
+   * Get all GO evidence codes with definitions and examples
+   */
+  getEvidenceCodes: async () => {
+    const response = await api.get('/api/go/evidence');
+    return response.data;
+  },
 };
 
 export default goApi;

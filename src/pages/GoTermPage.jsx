@@ -442,7 +442,12 @@ function GoTermPage() {
                   <td className="evidence-cell">
                     {gene.references && gene.references.map((ref, refIdx) => (
                       <div key={refIdx} className="evidence-item">
-                        {ref.evidence_codes.join(', ')}
+                        {ref.evidence_codes.map((code, codeIdx) => (
+                          <span key={codeIdx}>
+                            {codeIdx > 0 && ', '}
+                            <Link to={`/go/evidence#${code}`}>{code}</Link>
+                          </span>
+                        ))}
                       </div>
                     ))}
                   </td>
