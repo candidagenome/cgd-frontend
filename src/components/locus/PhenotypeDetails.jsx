@@ -191,10 +191,15 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
 
                                     {/* Phenotype */}
                                     <td>
-                                      {ann.phenotype?.link ? (
-                                        <a href={ann.phenotype.link}>{ann.phenotype?.display_name}</a>
+                                      {ann.phenotype?.display_name ? (
+                                        <Link
+                                          to={`/phenotype/search?observable=${encodeURIComponent(ann.phenotype.display_name)}`}
+                                          className="phenotype-link"
+                                        >
+                                          {ann.phenotype.display_name}
+                                        </Link>
                                       ) : (
-                                        ann.phenotype?.display_name || '-'
+                                        '-'
                                       )}
                                       {ann.qualifier && `: ${ann.qualifier}`}
                                     </td>
