@@ -274,17 +274,28 @@
   text-decoration: underline;
 }
 
+.locus-cell {
+  white-space: nowrap;
+  width: 15%;
+}
+
 .species-cell {
   white-space: nowrap;
+  width: 10%;
 }
 
 .references-cell {
-  min-width: 200px;
+  width: 60%;
+}
+
+.evidence-cell {
+  width: 15%;
+  vertical-align: top;
 }
 
 .reference-item {
-  margin-bottom: 8px;
-  padding-bottom: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
   border-bottom: 1px dotted #ddd;
 }
 
@@ -292,6 +303,40 @@
   margin-bottom: 0;
   padding-bottom: 0;
   border-bottom: none;
+}
+
+.evidence-item {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px dotted #ddd;
+  font-weight: bold;
+}
+
+.evidence-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.citation-full {
+  line-height: 1.5;
+  margin-bottom: 5px;
+}
+
+.citation-links {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.citation-link {
+  color: #1976d2;
+  text-decoration: none;
+  font-size: 0.9em;
+}
+
+.citation-link:hover {
+  text-decoration: underline;
 }
 
 .evidence-codes {

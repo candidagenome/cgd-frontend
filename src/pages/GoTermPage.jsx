@@ -21,7 +21,26 @@ const ANNOTATION_TYPE_NAMES = {
 const ANNOTATION_TYPE_ORDER = ['manually_curated', 'high_throughput', 'computational'];
 
 // Pagination settings
-const GENES_PER_PAGE = 20;
+const GENES_PER_PAGE = 10;
+
+// Abbreviate organism name (e.g., "Candida albicans SC5314" -> "C. albicans")
+const getOrganismAbbrev = (organismName) => {
+  if (!organismName) return '';
+  // Split into words, take first letter of genus + species name
+  const parts = organismName.split(' ');
+  if (parts.length >= 2) {
+    return `${parts[0].charAt(0)}. ${parts[1]}`;
+  }
+  return organismName;
+};
+
+// Format locus display name like Perl: "AAF1/C3_06470W_A"
+const formatLocusName = (gene) => {
+  if (gene.locus_name && gene.locus_name !== gene.systematic_name) {
+    return `${gene.locus_name}/${gene.systematic_name}`;
+  }
+  return gene.systematic_name;
+};
 
 function GoTermPage() {
   const { goid } = useParams();
@@ -311,22 +330,21 @@ function GoTermPage() {
             <thead>
               <tr>
                 <th>Locus</th>
-                <th>Systematic Name</th>
                 <th>Species</th>
-                <th>Evidence / References</th>
+                <th>Reference(s)</th>
+                <th>Evidence</th>
               </tr>
             </thead>
             <tbody>
               {displayedGenes.map((gene, geneIdx) => (
                 <tr key={geneIdx} className={geneIdx % 2 === 1 ? 'alt-row' : ''}>
-                  <td>
+                  <td className="locus-cell">
                     <Link to={`/locus/${gene.systematic_name}`} className="gene-link">
-                      {gene.locus_name || gene.systematic_name}
+                      {formatLocusName(gene)}
                     </Link>
                   </td>
-                  <td>{gene.systematic_name}</td>
                   <td className="species-cell">
-                    <em>{gene.species}</em>
+                    <em>{getOrganismAbbrev(gene.species)}</em>
                   </td>
                   <td className="references-cell">
                     {gene.references && gene.references.map((ref, refIdx) => (
@@ -336,24 +354,31 @@ function GoTermPage() {
                             {ref.qualifiers.join(', ')}
                           </span>
                         )}
-                        <span className="evidence-codes">
-                          {ref.evidence_codes.join(', ')}
-                        </span>
-                        {ref.pmid ? (
-                          <a
-                            href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pmid}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="pmid-link"
-                            title={ref.citation}
-                          >
-                            PMID:{ref.pmid}
-                          </a>
-                        ) : ref.citation ? (
-                          <span className="citation-text" title={ref.citation}>
-                            {ref.citation.length > 50 ? ref.citation.substring(0, 50) + '...' : ref.citation}
-                          </span>
-                        ) : null}
+                        <div className="citation-full">{ref.citation}</div>
+                        <div className="citation-links">
+                          {ref.dbxref_id && (
+                            <Link to={`/reference/${ref.dbxref_id}`} className="citation-link">
+                              CGD Paper
+                            </Link>
+                          )}
+                          {ref.pmid && (
+                            <a
+                              href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pmid}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="citation-link"
+                            >
+                              PubMed
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </td>
+                  <td className="evidence-cell">
+                    {gene.references && gene.references.map((ref, refIdx) => (
+                      <div key={refIdx} className="evidence-item">
+                        {ref.evidence_codes.join(', ')}
                       </div>
                     ))}
                   </td>
