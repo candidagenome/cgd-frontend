@@ -1,0 +1,345 @@
+/* ===========================================
+   OBSERVABLE TERMS PAGE STYLES
+   =========================================== */
+
+.observable-terms-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header */
+.observable-terms-page .page-header {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.observable-terms-page .page-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.observable-terms-page .page-header .subtitle {
+  margin: 8px 0 0 0;
+  font-size: 1.1rem;
+  color: #555;
+}
+
+/* Page Navigation */
+.observable-terms-page .page-nav {
+  text-align: center;
+  padding: 10px 0;
+  font-size: 0.95rem;
+}
+
+.observable-terms-page .page-nav a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.observable-terms-page .page-nav a:hover {
+  text-decoration: underline;
+}
+
+/* Divider */
+.observable-terms-page .divider {
+  border-top: 1px solid #ccc;
+  margin: 15px 0;
+}
+
+/* ===========================================
+   SECTIONS
+   =========================================== */
+
+.observable-terms-page .section {
+  margin-bottom: 25px;
+}
+
+.observable-terms-page .section-header {
+  background: #cfe4fb;
+  color: #333;
+  padding: 8px 15px;
+  margin: 0 0 1px 0;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.observable-terms-page .section-content {
+  background: #f5f5f5;
+  padding: 15px;
+  border: 1px solid #ddd;
+}
+
+/* ===========================================
+   TREE INTRO
+   =========================================== */
+
+.tree-intro {
+  margin-bottom: 15px;
+  padding: 10px 15px;
+  background: white;
+  border-left: 3px solid #1976d2;
+}
+
+.tree-intro p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ===========================================
+   TREE CONTROLS
+   =========================================== */
+
+.tree-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.control-btn {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  background: white;
+  color: #333;
+  cursor: pointer;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.control-btn:hover {
+  background: #e3f2fd;
+  border-color: #1976d2;
+}
+
+/* ===========================================
+   TREE CONTAINER
+   =========================================== */
+
+.tree-container {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 15px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+/* ===========================================
+   TREE NODES
+   =========================================== */
+
+.tree-node {
+  margin: 2px 0;
+}
+
+.node-content {
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+  line-height: 1.4;
+}
+
+.expand-btn {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  margin-right: 6px;
+  border: none;
+  background: none;
+  color: #666;
+  cursor: pointer;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
+}
+
+.expand-btn:hover {
+  color: #1976d2;
+}
+
+.leaf-spacer {
+  width: 20px;
+  margin-right: 6px;
+  color: #999;
+  font-size: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.term-link {
+  color: #1976d2;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.term-link:hover {
+  text-decoration: underline;
+}
+
+.annotation-count {
+  margin-left: 8px;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.children {
+  margin-left: 8px;
+  border-left: 1px dashed #ccc;
+  padding-left: 4px;
+}
+
+/* ===========================================
+   LOADING / ERROR / NO-DATA STATES
+   =========================================== */
+
+.observable-terms-page .loading-page {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.observable-terms-page .loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e0e0e0;
+  border-top-color: #1976d2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.observable-terms-page .error-page {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.observable-terms-page .error-icon {
+  font-size: 3rem;
+  color: #f44336;
+  margin-bottom: 15px;
+}
+
+.observable-terms-page .error-page h1 {
+  margin: 0 0 15px 0;
+  color: #333;
+}
+
+.observable-terms-page .error-message {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 25px;
+}
+
+.observable-terms-page .error-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.observable-terms-page .btn-home,
+.observable-terms-page .btn-search {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.observable-terms-page .btn-home {
+  background: #1976d2;
+  color: white;
+}
+
+.observable-terms-page .btn-home:hover {
+  background: #1565c0;
+}
+
+.observable-terms-page .btn-search {
+  background: #4caf50;
+  color: white;
+}
+
+.observable-terms-page .btn-search:hover {
+  background: #43a047;
+}
+
+.observable-terms-page .no-data-page {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.observable-terms-page .no-data-page a {
+  color: #1976d2;
+}
+
+/* ===========================================
+   FOOTER
+   =========================================== */
+
+.page-footer {
+  padding: 15px;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+.page-footer p {
+  margin: 10px 0;
+}
+
+.page-footer p:first-child {
+  margin-top: 0;
+}
+
+.page-footer p:last-child {
+  margin-bottom: 0;
+}
+
+.page-footer a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.page-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ===========================================
+   RESPONSIVE
+   =========================================== */
+
+@media (max-width: 768px) {
+  .observable-terms-page {
+    padding: 10px;
+  }
+
+  .page-header h1 {
+    font-size: 1.3rem;
+  }
+
+  .tree-container {
+    max-height: 400px;
+    padding: 10px;
+  }
+
+  .tree-controls {
+    flex-wrap: wrap;
+  }
+
+  .error-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+}

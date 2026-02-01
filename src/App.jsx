@@ -6,6 +6,8 @@ import ProteinPropertyPage from './pages/ProteinPropertyPage';
 import DomainPage from './pages/DomainPage';
 import GoTermPage from './pages/GoTermPage';
 import GoEvidencePage from './pages/GoEvidencePage';
+import PhenotypeSearchPage from './pages/PhenotypeSearchPage';
+import ObservableTermsPage from './pages/ObservableTermsPage';
 import AboutPage from './pages/AboutPage';
 import HelpPage from './pages/HelpPage';
 import HowToCitePage from './pages/HowToCitePage';
@@ -144,6 +146,8 @@ function App() {
           <Route path="/protein/:name/domains" element={<DomainPage />} />
           <Route path="/go/evidence" element={<GoEvidencePage />} />
           <Route path="/go/:goid" element={<GoTermPage />} />
+          <Route path="/phenotype/search" element={<PhenotypeSearchPage />} />
+          <Route path="/phenotype/terms" element={<ObservableTermsPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/help" element={<HelpPage />} />
           <Route path="/how-to-cite" element={<HowToCitePage />} />
