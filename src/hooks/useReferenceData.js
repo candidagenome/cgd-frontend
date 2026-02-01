@@ -8,6 +8,7 @@ export function useReferenceData(pubmedId) {
     goDetails: null,
     phenotypeDetails: null,
     interactionDetails: null,
+    literatureTopics: null,
   });
   const [loading, setLoading] = useState({
     info: false,
@@ -15,6 +16,7 @@ export function useReferenceData(pubmedId) {
     goDetails: false,
     phenotypeDetails: false,
     interactionDetails: false,
+    literatureTopics: false,
   });
   const [errors, setErrors] = useState({});
 
@@ -78,16 +80,22 @@ export function useReferenceData(pubmedId) {
     fetchData('interactionDetails', referenceApi.getInteractionDetails);
   }, [fetchData]);
 
+  const loadLiteratureTopics = useCallback(() => {
+    fetchData('literatureTopics', referenceApi.getLiteratureTopics);
+  }, [fetchData]);
+
   const loaders = useMemo(() => ({
     loadLocusDetails,
     loadGoDetails,
     loadPhenotypeDetails,
     loadInteractionDetails,
+    loadLiteratureTopics,
   }), [
     loadLocusDetails,
     loadGoDetails,
     loadPhenotypeDetails,
     loadInteractionDetails,
+    loadLiteratureTopics,
   ]);
 
   return {

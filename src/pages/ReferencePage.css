@@ -1,5 +1,6 @@
 /* ===========================================
-   REFERENCE PAGE STYLES
+   REFERENCE PAGE STYLES - Single Page Layout
+   Matching Perl ReferencePage.pm style
    =========================================== */
 
 .reference-page {
@@ -10,548 +11,472 @@
 
 /* Header */
 .reference-header {
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 2px solid #e0e0e0;
-}
-
-.reference-header h1 {
-  margin: 0 0 5px 0;
-  font-size: 1.8rem;
-  color: #1a237e;
-}
-
-.reference-header .subtitle {
-  margin: 0;
-  color: #666;
-  font-size: 0.95rem;
-}
-
-/* Tab Navigation (same as LocusPage) */
-.reference-page .tab-navigation {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-bottom: 20px;
-  padding: 10px;
-  background: #f5f5f5;
-  border-radius: 8px;
-}
-
-.reference-page .tab-button {
-  padding: 8px 16px;
-  border: 1px solid #ddd;
-  background: white;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  transition: all 0.2s;
-}
-
-.reference-page .tab-button:hover {
-  background: #e3f2fd;
-  border-color: #1976d2;
-}
-
-.reference-page .tab-button.active {
-  background: #1976d2;
-  color: white;
-  border-color: #1976d2;
-}
-
-/* Tab Content Area */
-.reference-page .tab-content {
-  background: white;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-/* ===========================================
-   SUMMARY TAB
-   =========================================== */
-
-.reference-summary {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* Citation Card */
-.citation-card {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  border-left: 4px solid #1976d2;
-  padding: 20px;
-  border-radius: 0 8px 8px 0;
-}
-
-.citation-full {
+  text-align: center;
   margin-bottom: 15px;
 }
 
-.authors-full {
-  font-weight: 500;
+.reference-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
   color: #333;
-  margin-bottom: 8px;
-  line-height: 1.5;
 }
 
-.ref-title-full {
+/* Page Navigation */
+.page-nav {
+  text-align: center;
+  padding: 10px 0;
+  font-size: 0.95rem;
+}
+
+.page-nav a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.page-nav a:hover {
+  text-decoration: underline;
+}
+
+/* Divider */
+.divider {
+  border-top: 1px solid #ccc;
+  margin: 15px 0;
+}
+
+/* ===========================================
+   CITATION SECTION
+   =========================================== */
+
+.citation-section {
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.citation-text {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.citation-pmid {
+  color: #666;
+  font-size: 0.95em;
+}
+
+/* Links below citation (matches other pages) */
+.citation-section .citation-links-below {
+  margin-top: 5px;
+}
+
+.citation-section .citation-links-below .citation-link {
+  color: #1976d2;
+  text-decoration: none;
+  margin-right: 15px;
+  font-size: 0.95rem;
+}
+
+.citation-section .citation-links-below .citation-link:hover {
+  text-decoration: underline;
+}
+
+/* ===========================================
+   SECTIONS (Abstract, Topics, Author Search)
+   =========================================== */
+
+.section {
+  margin-bottom: 25px;
+}
+
+.section-header {
+  background: #cfe4fb;
+  color: #333;
+  padding: 8px 15px;
+  margin: 0 0 1px 0;
   font-size: 1.1rem;
-  color: #1a237e;
-  margin-bottom: 8px;
-  font-style: italic;
+  font-weight: bold;
 }
 
-.journal-info {
-  color: #555;
+.section-content {
+  background: #f5f5f5;
+  padding: 15px;
+  border: 1px solid #ddd;
 }
 
-.journal-info em {
+/* ===========================================
+   ABSTRACT SECTION
+   =========================================== */
+
+.abstract-text {
+  line-height: 1.7;
+  text-align: justify;
+  margin: 0;
   color: #333;
 }
 
-/* External Links */
-.external-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 15px;
+/* ===========================================
+   TOPICS / GENE MATRIX SECTION
+   =========================================== */
+
+.topic-matrix-wrapper {
+  overflow-x: auto;
+  margin-bottom: 15px;
+}
+
+.topic-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  font-size: 0.9rem;
+}
+
+.topic-matrix th,
+.topic-matrix td {
+  border: 1px solid #ccc;
+  padding: 8px 10px;
+  text-align: center;
+}
+
+.topic-matrix th {
+  background: #e0e0e0;
+  font-weight: bold;
+}
+
+.topic-matrix th.topic-header {
+  text-align: left;
+  min-width: 150px;
+  background: #e0e0e0;
+}
+
+.topic-matrix th.non-gene-header {
+  background: #e0e0e0;
+  min-width: 120px;
+}
+
+.topic-matrix th.gene-header {
+  min-width: 80px;
+  vertical-align: bottom;
+}
+
+.topic-matrix th.gene-header a {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.topic-matrix th.gene-header a:hover {
+  text-decoration: underline;
+}
+
+.organism-label {
+  font-size: 0.8rem;
+  font-weight: normal;
+  color: #666;
+}
+
+.topic-matrix td.topic-name {
+  text-align: left;
+  font-weight: 500;
+  background: #fafafa;
+}
+
+.topic-matrix td.topic-cell {
+  background: white;
+}
+
+.topic-matrix tr:hover td {
+  background: #f0f0f0;
+}
+
+.topic-matrix tr:hover td.topic-name {
+  background: #e8e8e8;
+}
+
+.topic-marker {
+  font-size: 1.2rem;
+  cursor: default;
+}
+
+.topic-marker.gene-marker {
+  color: #1976d2;
+}
+
+.topic-marker.non-gene-marker {
+  color: #4caf50;
+}
+
+.gene-count {
+  margin: 15px 0 0 0;
+  text-align: center;
+  color: #333;
+}
+
+.topics-list {
+  padding: 10px;
+}
+
+/* Gene count header with jump navigation */
+.gene-count-header {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.gene-count-message {
+  margin: 0 0 10px 0;
+  font-weight: bold;
+}
+
+.gene-count-number {
+  color: #c00;
+  font-size: 1.1em;
+}
+
+/* Jump dropdown */
+.jump-dropdown-container {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.jump-select {
+  padding: 6px 10px;
+  font-size: 0.95rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  margin-left: 10px;
+}
+
+/* Jump links for 10-20 genes */
+.jump-links-container {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.jump-links-container a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.jump-links-container a:hover {
+  text-decoration: underline;
+}
+
+/* Jump footer */
+.jump-footer {
+  margin-top: 20px;
   padding-top: 15px;
   border-top: 1px solid #ddd;
 }
 
-.external-link {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 12px;
-  background: #1976d2;
-  color: white;
-  text-decoration: none;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  transition: background 0.2s;
+/* Gene table section */
+.gene-table-section {
+  margin-bottom: 20px;
 }
 
-.external-link:hover {
+.table-label {
+  background: #ccccff;
+  color: #333;
+  padding: 8px 15px;
+  margin: 0 0 1px 0;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+/* Topics note */
+.topics-note {
+  background: white;
+  border: 1px solid #ddd;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+}
+
+.topics-note ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.topics-note li {
+  margin-bottom: 5px;
+}
+
+.topics-note .topic-marker {
+  margin-right: 5px;
+}
+
+/* ===========================================
+   AUTHOR SEARCH SECTION
+   =========================================== */
+
+.author-search-content {
+  background: whitesmoke;
+}
+
+.author-search-content > p {
+  margin: 0 0 15px 0;
+}
+
+.author-search-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 20px;
+}
+
+.search-step {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.search-step label {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.author-select,
+.search-type-select {
+  padding: 6px 10px;
+  font-size: 0.95rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  min-width: 180px;
+}
+
+.search-button {
+  padding: 8px 20px;
+  background: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.search-button:hover {
   background: #1565c0;
 }
 
-.external-link.pubmed {
-  background: #4caf50;
+.search-button:disabled {
+  background: #999;
+  cursor: not-allowed;
 }
 
-.external-link.pubmed:hover {
-  background: #388e3c;
+/* Author Search Results */
+.author-search-results {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
 }
 
-/* Metadata Grid */
-.ref-metadata {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 15px;
-  padding: 15px;
-  background: #fafafa;
-  border-radius: 8px;
-  border: 1px solid #eee;
-}
-
-.metadata-item {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.meta-label {
-  font-size: 0.8rem;
-  color: #666;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.meta-value {
-  font-weight: 500;
-  color: #333;
-}
-
-/* Abstract Section */
-.abstract-section {
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 20px;
-}
-
-.abstract-section h3 {
-  margin: 0 0 15px 0;
-  color: #1a237e;
-  font-size: 1.1rem;
-  border-bottom: 2px solid #e0e0e0;
-  padding-bottom: 8px;
-}
-
-.abstract-text {
-  line-height: 1.7;
-  color: #333;
-  text-align: justify;
-  margin: 0;
-}
-
-/* Authors Section */
-.authors-section {
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 20px;
-}
-
-.authors-section h3 {
-  margin: 0 0 15px 0;
-  color: #1a237e;
-  font-size: 1.1rem;
-  border-bottom: 2px solid #e0e0e0;
-  padding-bottom: 8px;
-}
-
-.authors-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.author-item {
-  background: #e3f2fd;
-  padding: 4px 10px;
-  border-radius: 4px;
-  font-size: 0.9rem;
-}
-
-.author-type {
-  color: #666;
-  font-size: 0.8rem;
-}
-
-/* ===========================================
-   LOCI TAB
-   =========================================== */
-
-.loci-tab {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.tab-summary {
-  color: #555;
-  margin: 0;
-  padding: 10px 15px;
-  background: #f5f5f5;
-  border-radius: 4px;
-}
-
-.organism-loci-section {
-  background: #fafafa;
-  border-radius: 8px;
-  padding: 15px;
-  border: 1px solid #e0e0e0;
-}
-
-.organism-header {
-  margin: 0 0 15px 0;
-  color: #1a237e;
-  font-size: 1.05rem;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.loci-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 12px;
-}
-
-.locus-card {
-  background: white;
-  padding: 12px;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-  transition: box-shadow 0.2s;
-}
-
-.locus-card:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.locus-link {
-  color: #1976d2;
-  font-weight: 500;
-  text-decoration: none;
-}
-
-.locus-link:hover {
-  text-decoration: underline;
-}
-
-.feature-name-small {
-  color: #888;
-  font-size: 0.85rem;
-  margin-left: 5px;
-}
-
-.locus-headline {
-  color: #666;
-  font-size: 0.85rem;
-  margin-top: 6px;
-  line-height: 1.4;
-}
-
-/* ===========================================
-   GO ANNOTATIONS TAB
-   =========================================== */
-
-.go-tab {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.aspect-section {
-  background: #fafafa;
-  border-radius: 8px;
-  padding: 15px;
-  border: 1px solid #e0e0e0;
-}
-
-.aspect-header {
-  margin: 0 0 15px 0;
-  color: #1a237e;
-  font-size: 1.05rem;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.go-link {
-  color: #1976d2;
-  text-decoration: none;
-  font-family: monospace;
-  font-size: 0.9rem;
-}
-
-.go-link:hover {
-  text-decoration: underline;
-}
-
-.evidence-code {
-  display: inline-block;
-  padding: 2px 8px;
-  background: #e8f5e9;
-  color: #2e7d32;
-  border-radius: 4px;
-  font-size: 0.85rem;
+.search-results-summary {
+  text-align: center;
+  margin-bottom: 15px;
   font-weight: 500;
 }
 
-/* ===========================================
-   PHENOTYPE TAB
-   =========================================== */
-
-.phenotype-tab {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.search-results-summary .highlight-count {
+  color: #c00;
+  font-weight: bold;
 }
 
-.exp-type-section {
-  background: #fafafa;
-  border-radius: 8px;
-  padding: 15px;
-  border: 1px solid #e0e0e0;
-}
-
-.exp-type-header {
-  margin: 0 0 15px 0;
-  color: #1a237e;
-  font-size: 1.05rem;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-/* ===========================================
-   INTERACTIONS TAB
-   =========================================== */
-
-.interactions-tab {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.interaction-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.reference-page .interaction-card {
-  background: white;
-  padding: 12px 15px;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-}
-
-.interactors {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.interactor-item a {
-  color: #1976d2;
-  font-weight: 500;
-  text-decoration: none;
-}
-
-.interactor-item a:hover {
-  text-decoration: underline;
-}
-
-.action-label {
-  color: #888;
-  font-size: 0.85rem;
-  margin-left: 4px;
-}
-
-.separator {
-  color: #999;
-  margin: 0 5px;
-}
-
-.interaction-description {
-  color: #666;
-  font-size: 0.9rem;
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px dashed #ddd;
-}
-
-/* ===========================================
-   COMMON ELEMENTS
-   =========================================== */
-
-.count-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 24px;
-  height: 24px;
-  padding: 0 8px;
-  background: #1976d2;
-  color: white;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  font-weight: 500;
-}
-
-/* Data Tables */
-.reference-page .data-table {
+.author-results-table {
   width: 100%;
   border-collapse: collapse;
   background: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  font-size: 0.9rem;
 }
 
-.reference-page .data-table th {
-  background: #e3f2fd;
-  padding: 12px 15px;
+.author-results-table th,
+.author-results-table td {
+  border: 1px solid #ccc;
+  padding: 8px 12px;
   text-align: left;
-  font-weight: 600;
-  color: #1565c0;
-  border-bottom: 2px solid #1976d2;
+  vertical-align: top;
 }
 
-.reference-page .data-table td {
-  padding: 10px 15px;
-  border-bottom: 1px solid #eee;
+.author-results-table th {
+  background: #e0e0e0;
+  font-weight: bold;
+  text-align: center;
 }
 
-.reference-page .data-table tr:hover {
-  background: #f5f5f5;
+.author-results-table tr.alt-row {
+  background: #f9f9f9;
 }
 
-.reference-page .data-table tr:last-child td {
-  border-bottom: none;
+.author-results-table .authors-cell {
+  width: 35%;
 }
 
-.reference-page .data-table a {
-  color: #1976d2;
-  text-decoration: none;
+.author-results-table .citation-cell {
+  width: 65%;
 }
 
-.reference-page .data-table a:hover {
-  text-decoration: underline;
+.author-highlight {
+  background-color: #ffff66;
+  color: black;
+  font-weight: bold;
 }
 
-/* Loading, Error, No Data States */
+/* ===========================================
+   LOADING / ERROR / NO-DATA STATES
+   =========================================== */
+
 .reference-page .loading {
-  padding: 40px;
+  padding: 20px;
   text-align: center;
   color: #666;
 }
 
 .reference-page .error {
-  padding: 20px;
+  padding: 15px;
   background: #ffebee;
   color: #c62828;
-  border-radius: 8px;
+  border-radius: 4px;
   border-left: 4px solid #c62828;
 }
 
 .reference-page .no-data {
-  padding: 40px;
+  padding: 20px;
   text-align: center;
   color: #888;
-  background: #fafafa;
-  border-radius: 8px;
 }
 
-/* Responsive */
+/* ===========================================
+   RESPONSIVE
+   =========================================== */
+
 @media (max-width: 768px) {
   .reference-page {
     padding: 10px;
   }
 
   .reference-header h1 {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
   }
 
-  .reference-page .tab-navigation {
-    justify-content: center;
+  .author-search-form {
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  .reference-page .tab-button {
-    padding: 6px 12px;
-    font-size: 0.85rem;
+  .search-step {
+    width: 100%;
   }
 
-  .ref-metadata {
-    grid-template-columns: 1fr 1fr;
+  .author-select,
+  .search-type-select {
+    width: 100%;
   }
 
-  .loci-grid {
-    grid-template-columns: 1fr;
+  .topic-matrix {
+    font-size: 0.8rem;
   }
 
-  .reference-page .data-table {
-    font-size: 0.85rem;
-  }
-
-  .reference-page .data-table th,
-  .reference-page .data-table td {
-    padding: 8px 10px;
+  .topic-matrix th,
+  .topic-matrix td {
+    padding: 5px 8px;
   }
 }
