@@ -189,6 +189,23 @@
   text-decoration: underline;
 }
 
+.summary-text {
+  margin-bottom: 15px;
+}
+
+.highlight-count {
+  color: #c00;
+  font-weight: bold;
+}
+
+.annotation-note {
+  margin: 15px 0;
+  padding: 10px 15px;
+  background: #fff;
+  border-left: 3px solid #1976d2;
+  font-size: 0.95rem;
+}
+
 /* ===========================================
    GENE TABLES
    =========================================== */
@@ -302,6 +319,90 @@
 .citation-text {
   font-size: 0.85em;
   color: #555;
+}
+
+/* Qualifier badges */
+.qualifier-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  margin-right: 6px;
+  font-size: 0.8em;
+  font-weight: bold;
+  border-radius: 3px;
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.qualifier-badge.not-qualifier {
+  background: #ffebee;
+  color: #c62828;
+}
+
+/* ===========================================
+   PAGINATION
+   =========================================== */
+
+.pagination {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
+  margin: 10px 0;
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  background: #fafafa;
+}
+
+.pagination-info {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.pagination-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+
+.page-btn {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  background: white;
+  color: #333;
+  cursor: pointer;
+  font-size: 0.9rem;
+  border-radius: 3px;
+  min-width: 36px;
+  transition: all 0.15s ease;
+}
+
+.page-btn:hover:not(:disabled) {
+  background: #e3f2fd;
+  border-color: #1976d2;
+}
+
+.page-btn.active {
+  background: #1976d2;
+  color: white;
+  border-color: #1976d2;
+}
+
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-btn.nav-btn {
+  padding: 6px 14px;
+  font-weight: 500;
+}
+
+.ellipsis {
+  padding: 0 8px;
+  color: #666;
 }
 
 /* ===========================================
