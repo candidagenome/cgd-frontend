@@ -113,7 +113,7 @@ function DomainPage() {
         {currentData.interpro_domains.map((ipr, idx) => (
           <div key={idx} className="interpro-group">
             <div className="interpro-header">
-              {ipr.interpro_id ? (
+              {ipr.interpro_id && ipr.interpro_id.startsWith('IPR') ? (
                 <>
                   <span className="interpro-label">InterPro</span>{' '}
                   <a href={ipr.interpro_url} target="_blank" rel="noopener noreferrer" className="interpro-id">
@@ -123,6 +123,8 @@ function DomainPage() {
                     <span className="interpro-desc"> - {ipr.interpro_description}</span>
                   )}
                 </>
+              ) : ipr.interpro_id && ipr.interpro_id !== 'unintegrated' ? (
+                <span className="interpro-label">Domain Group {idx + 1}</span>
               ) : (
                 <span className="interpro-label unintegrated">Unintegrated</span>
               )}
