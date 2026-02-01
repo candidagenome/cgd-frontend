@@ -1,0 +1,200 @@
+/* ===========================================
+   GO EVIDENCE PAGE STYLES
+   =========================================== */
+
+.go-evidence-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header */
+.go-evidence-page .page-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.go-evidence-page .page-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+/* Description Section */
+.go-evidence-page .description-section {
+  margin-bottom: 25px;
+  padding: 15px;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  line-height: 1.6;
+}
+
+.go-evidence-page .description-section a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.go-evidence-page .description-section a:hover {
+  text-decoration: underline;
+}
+
+/* Evidence Table */
+.go-evidence-page .table-wrapper {
+  overflow-x: auto;
+}
+
+.evidence-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  font-size: 0.95rem;
+}
+
+.evidence-table th,
+.evidence-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border: 1px solid #ccc;
+  vertical-align: top;
+}
+
+.evidence-table th {
+  background: #cfe4fb;
+  font-weight: bold;
+  color: #333;
+}
+
+.evidence-table tr:nth-child(even) td {
+  background: #f9f9f9;
+}
+
+.evidence-table tr:hover td {
+  background: #f0f7ff;
+}
+
+.code-cell {
+  width: 80px;
+  white-space: nowrap;
+  font-family: monospace;
+  font-size: 1rem;
+}
+
+.definition-cell {
+  width: 30%;
+}
+
+.examples-cell {
+  width: auto;
+}
+
+.examples-list {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.examples-list li {
+  margin-bottom: 6px;
+}
+
+.examples-list li:last-child {
+  margin-bottom: 0;
+}
+
+.no-examples {
+  color: #888;
+}
+
+/* ===========================================
+   LOADING / ERROR STATES
+   =========================================== */
+
+.go-evidence-page .loading-page {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.go-evidence-page .loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e0e0e0;
+  border-top-color: #1976d2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.go-evidence-page .error-page {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.go-evidence-page .error-icon {
+  font-size: 3rem;
+  color: #f44336;
+  margin-bottom: 15px;
+}
+
+.go-evidence-page .error-page h1 {
+  margin: 0 0 15px 0;
+  color: #333;
+}
+
+.go-evidence-page .error-message {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 25px;
+}
+
+.go-evidence-page .error-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.go-evidence-page .btn-home {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+  background: #1976d2;
+  color: white;
+}
+
+.go-evidence-page .btn-home:hover {
+  background: #1565c0;
+}
+
+/* ===========================================
+   RESPONSIVE
+   =========================================== */
+
+@media (max-width: 768px) {
+  .go-evidence-page {
+    padding: 10px;
+  }
+
+  .go-evidence-page .page-header h1 {
+    font-size: 1.3rem;
+  }
+
+  .evidence-table {
+    font-size: 0.85rem;
+  }
+
+  .evidence-table th,
+  .evidence-table td {
+    padding: 8px 10px;
+  }
+
+  .code-cell {
+    width: 60px;
+  }
+}

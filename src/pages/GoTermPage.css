@@ -1,0 +1,741 @@
+/* ===========================================
+   GO TERM PAGE STYLES
+   =========================================== */
+
+.go-term-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header */
+.go-term-header {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.go-term-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.go-term-header .subtitle {
+  margin: 8px 0 0 0;
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.go-term-header .subtitle a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.go-term-header .subtitle a:hover {
+  text-decoration: underline;
+}
+
+.go-term-header .aspect {
+  font-style: italic;
+  color: #666;
+}
+
+/* Page Navigation */
+.go-term-page .page-nav {
+  text-align: center;
+  padding: 10px 0;
+  font-size: 0.95rem;
+}
+
+.go-term-page .page-nav a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.go-term-page .page-nav a:hover {
+  text-decoration: underline;
+}
+
+/* Divider */
+.go-term-page .divider {
+  border-top: 1px solid #ccc;
+  margin: 15px 0;
+}
+
+/* ===========================================
+   SECTIONS
+   =========================================== */
+
+.go-term-page .section {
+  margin-bottom: 25px;
+}
+
+.go-term-page .section-header {
+  background: #cfe4fb;
+  color: #333;
+  padding: 8px 15px;
+  margin: 0 0 1px 0;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.go-term-page .section-content {
+  background: #f5f5f5;
+  padding: 15px;
+  border: 1px solid #ddd;
+}
+
+/* ===========================================
+   DEFINITION SECTION
+   =========================================== */
+
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.info-table th,
+.info-table td {
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.info-table th {
+  width: 150px;
+  font-weight: bold;
+  color: #333;
+  background: #f0f0f0;
+}
+
+.info-table td {
+  background: white;
+}
+
+.info-table tr:last-child th,
+.info-table tr:last-child td {
+  border-bottom: none;
+}
+
+.definition-text {
+  line-height: 1.6;
+}
+
+.synonyms-list {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.synonyms-list li {
+  margin-bottom: 4px;
+}
+
+/* ===========================================
+   ANNOTATION SUMMARY
+   =========================================== */
+
+.annotation-summary {
+  margin-bottom: 25px;
+  background: white;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.annotation-summary h3 {
+  margin: 0 0 15px 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.summary-table {
+  width: 100%;
+  max-width: 400px;
+  border-collapse: collapse;
+}
+
+.summary-table th,
+.summary-table td {
+  padding: 8px 12px;
+  text-align: left;
+  border: 1px solid #ccc;
+}
+
+.summary-table th {
+  background: #e0e0e0;
+  font-weight: bold;
+}
+
+.summary-table td {
+  background: white;
+}
+
+.summary-table .count-cell {
+  text-align: center;
+  width: 100px;
+}
+
+.summary-table .total-row td {
+  background: #f5f5f5;
+}
+
+.summary-table a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.summary-table a:hover {
+  text-decoration: underline;
+}
+
+.summary-text {
+  margin-bottom: 15px;
+}
+
+.highlight-count {
+  color: #c00;
+  font-weight: bold;
+}
+
+.annotation-note {
+  margin: 15px 0;
+  padding: 10px 15px;
+  background: #fff;
+  border-left: 3px solid #1976d2;
+  font-size: 0.95rem;
+}
+
+/* ===========================================
+   DETAILED SUMMARY TABLE (Perl format)
+   =========================================== */
+
+.summary-detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  margin-bottom: 15px;
+}
+
+.summary-detail-table th,
+.summary-detail-table td {
+  padding: 10px 12px;
+  text-align: left;
+  border: 1px solid #ccc;
+  vertical-align: top;
+}
+
+.summary-detail-table th {
+  background: #e0e0e0;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.summary-detail-table th a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.summary-detail-table th a:hover {
+  text-decoration: underline;
+}
+
+.summary-detail-table td {
+  background: white;
+}
+
+.summary-detail-table td a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.summary-detail-table td a:hover {
+  text-decoration: underline;
+}
+
+.species-count-cell {
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.species-count-cell em {
+  font-style: italic;
+}
+
+/* ===========================================
+   ANNOTATION TYPE SECTIONS
+   =========================================== */
+
+.annotation-type-section {
+  margin-top: 25px;
+  margin-bottom: 30px;
+}
+
+.qualifier-nav {
+  padding: 8px 15px;
+  background: #f0f0f0;
+  border: 1px solid #b8d4f0;
+  border-top: none;
+  font-size: 0.9rem;
+}
+
+.qualifier-nav a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.qualifier-nav a:hover {
+  text-decoration: underline;
+}
+
+/* ===========================================
+   QUALIFIER GROUP SECTIONS
+   =========================================== */
+
+.qualifier-group-section {
+  margin-top: 20px;
+  margin-bottom: 25px;
+}
+
+.qualifier-header {
+  background: #e8f4fc;
+  color: #333;
+  padding: 8px 15px;
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: bold;
+  border: 1px solid #c0d8e8;
+  border-bottom: none;
+}
+
+.qualifier-summary {
+  margin: 0;
+  padding: 8px 15px;
+  background: #f8f8f8;
+  border: 1px solid #c0d8e8;
+  border-top: none;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* ===========================================
+   GENE TABLES
+   =========================================== */
+
+.gene-table-section {
+  margin-top: 20px;
+}
+
+.table-header {
+  background: #d4e9fc;
+  color: #333;
+  padding: 10px 15px;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: bold;
+  border: 1px solid #b8d4f0;
+  border-bottom: none;
+}
+
+.gene-count-badge {
+  font-weight: normal;
+  margin-left: 10px;
+  color: #666;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.gene-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  font-size: 0.9rem;
+}
+
+.gene-table th,
+.gene-table td {
+  padding: 10px 12px;
+  text-align: left;
+  border: 1px solid #ccc;
+  vertical-align: top;
+}
+
+.gene-table th {
+  background: #e8e8e8;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.gene-table tr.alt-row td {
+  background: #f9f9f9;
+}
+
+.gene-table tr:hover td {
+  background: #f0f0f0;
+}
+
+.gene-link {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.gene-link:hover {
+  text-decoration: underline;
+}
+
+.locus-cell {
+  white-space: nowrap;
+  width: 15%;
+}
+
+.species-cell {
+  white-space: nowrap;
+  width: 10%;
+}
+
+.references-cell {
+  width: 60%;
+}
+
+.evidence-cell {
+  width: 15%;
+  vertical-align: top;
+}
+
+.reference-item {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px dotted #ddd;
+}
+
+.reference-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.evidence-item {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px dotted #ddd;
+  font-weight: bold;
+}
+
+.evidence-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.citation-full {
+  line-height: 1.5;
+  margin-bottom: 5px;
+}
+
+.citation-links {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.citation-link {
+  color: #1976d2;
+  text-decoration: none;
+  font-size: 0.9em;
+}
+
+.citation-link:hover {
+  text-decoration: underline;
+}
+
+.evidence-codes {
+  font-weight: bold;
+  color: #333;
+  margin-right: 8px;
+}
+
+.qualifiers {
+  font-style: italic;
+  color: #666;
+  margin-right: 8px;
+}
+
+.pmid-link {
+  color: #1976d2;
+  text-decoration: none;
+  font-size: 0.9em;
+}
+
+.pmid-link:hover {
+  text-decoration: underline;
+}
+
+.citation-text {
+  font-size: 0.85em;
+  color: #555;
+}
+
+/* Qualifier badges */
+.qualifier-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  margin-right: 6px;
+  font-size: 0.8em;
+  font-weight: bold;
+  border-radius: 3px;
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.qualifier-badge.not-qualifier {
+  background: #ffebee;
+  color: #c62828;
+}
+
+/* ===========================================
+   PAGINATION
+   =========================================== */
+
+.pagination {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
+  margin: 10px 0;
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  background: #fafafa;
+}
+
+.pagination-info {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.pagination-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+
+.page-btn {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  background: white;
+  color: #333;
+  cursor: pointer;
+  font-size: 0.9rem;
+  border-radius: 3px;
+  min-width: 36px;
+  transition: all 0.15s ease;
+}
+
+.page-btn:hover:not(:disabled) {
+  background: #e3f2fd;
+  border-color: #1976d2;
+}
+
+.page-btn.active {
+  background: #1976d2;
+  color: white;
+  border-color: #1976d2;
+}
+
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-btn.nav-btn {
+  padding: 6px 14px;
+  font-weight: 500;
+}
+
+.ellipsis {
+  padding: 0 8px;
+  color: #666;
+}
+
+/* ===========================================
+   EXTERNAL LINKS
+   =========================================== */
+
+.external-links-list {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.external-links-list li {
+  margin-bottom: 8px;
+}
+
+.external-links-list a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.external-links-list a:hover {
+  text-decoration: underline;
+}
+
+/* ===========================================
+   LOADING / ERROR / NO-DATA STATES
+   =========================================== */
+
+.go-term-page .loading-page {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.go-term-page .loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e0e0e0;
+  border-top-color: #1976d2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.go-term-page .error-page {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.go-term-page .error-icon {
+  font-size: 3rem;
+  color: #f44336;
+  margin-bottom: 15px;
+}
+
+.go-term-page .error-page h1 {
+  margin: 0 0 15px 0;
+  color: #333;
+}
+
+.go-term-page .error-message {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 25px;
+}
+
+.go-term-page .error-suggestions {
+  text-align: left;
+  max-width: 500px;
+  margin: 0 auto 25px;
+  background: #f5f5f5;
+  padding: 15px 20px;
+  border-radius: 4px;
+}
+
+.go-term-page .error-suggestions h3 {
+  margin: 0 0 10px 0;
+  font-size: 1rem;
+}
+
+.go-term-page .error-suggestions ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.go-term-page .error-suggestions li {
+  margin-bottom: 8px;
+}
+
+.go-term-page .error-suggestions a {
+  color: #1976d2;
+}
+
+.go-term-page .error-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.go-term-page .btn-home,
+.go-term-page .btn-go {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.go-term-page .btn-home {
+  background: #1976d2;
+  color: white;
+}
+
+.go-term-page .btn-home:hover {
+  background: #1565c0;
+}
+
+.go-term-page .btn-go {
+  background: #4caf50;
+  color: white;
+}
+
+.go-term-page .btn-go:hover {
+  background: #43a047;
+}
+
+.go-term-page .no-data {
+  text-align: center;
+  color: #888;
+  padding: 20px;
+}
+
+.go-term-page .no-data-page {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.go-term-page .no-data-page a {
+  color: #1976d2;
+}
+
+/* ===========================================
+   RESPONSIVE
+   =========================================== */
+
+@media (max-width: 768px) {
+  .go-term-page {
+    padding: 10px;
+  }
+
+  .go-term-header h1 {
+    font-size: 1.3rem;
+  }
+
+  .info-table th {
+    width: 100px;
+    font-size: 0.9rem;
+  }
+
+  .gene-table {
+    font-size: 0.85rem;
+  }
+
+  .gene-table th,
+  .gene-table td {
+    padding: 8px;
+  }
+
+  .error-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+}

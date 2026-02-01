@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
 import AlphaFoldViewer from './AlphaFoldViewer';
 import { formatCitationString, CitationLinksBelow, buildCitationLinks } from '../../utils/formatCitation.jsx';
@@ -205,13 +206,9 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                       {orgData.systematic_name && (
                         <span>
                           {' '}
-                          <a
-                            href={`/cgi-bin/protein/proteinProperty.pl?dbid=${orgData.stanford_name || orgData.systematic_name}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
+                          <Link to={`/protein/${orgData.stanford_name || orgData.systematic_name}/properties`}>
                             Physicochemical Properties Page
-                          </a>
+                          </Link>
                         </span>
                       )}
                     </td>
