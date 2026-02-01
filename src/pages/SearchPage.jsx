@@ -11,7 +11,7 @@ const SearchPage = () => {
   const handleQuickSearch = (e) => {
     e.preventDefault();
     if (quickSearchQuery.trim()) {
-      window.location.href = `/cgi-bin/search/quickSearch?query=${encodeURIComponent(quickSearchQuery)}`;
+      window.location.href = `/search/results?query=${encodeURIComponent(quickSearchQuery)}`;
     }
   };
 

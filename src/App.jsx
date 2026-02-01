@@ -22,6 +22,7 @@ import GOResourcesPage from './pages/GOResourcesPage';
 import CommunityPage from './pages/CommunityPage';
 import SubmitDataPage from './pages/SubmitDataPage';
 import SearchPage from './pages/SearchPage';
+import SearchResultsPage from './pages/SearchResultsPage';
 import MeetingsPage from './pages/MeetingsPage';
 import CommunityNewsPage from './pages/CommunityNewsPage';
 import JobPostingsPage from './pages/JobPostingsPage';
@@ -70,7 +71,7 @@ function App() {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      window.location.href = `/cgi-bin/search/quickSearch?query=${encodeURIComponent(searchQuery.trim())}`;
+      window.location.href = `/search/results?query=${encodeURIComponent(searchQuery.trim())}`;
     }
   };
 
@@ -173,6 +174,7 @@ function App() {
           <Route path="/community" element={<CommunityPage />} />
           <Route path="/submit-data" element={<SubmitDataPage />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/search/results" element={<SearchResultsPage />} />
           <Route path="/meetings" element={<MeetingsPage />} />
           <Route path="/community-news" element={<CommunityNewsPage />} />
           <Route path="/job-postings" element={<JobPostingsPage />} />

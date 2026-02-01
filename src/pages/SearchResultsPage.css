@@ -1,0 +1,152 @@
+/* Search Results Page Styles */
+
+.search-results-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.search-results-content {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 4px;
+}
+
+.search-results-page h1 {
+  color: #1976d2;
+  margin-bottom: 10px;
+}
+
+.search-results-page hr {
+  border: none;
+  border-top: 2px solid #1976d2;
+  margin-bottom: 25px;
+}
+
+.search-query-info {
+  font-size: 1.1em;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.search-query-info strong {
+  color: #333;
+}
+
+/* Loading and error states */
+.search-loading,
+.search-error,
+.search-no-results {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.search-error {
+  color: #d32f2f;
+}
+
+.search-no-results {
+  font-style: italic;
+}
+
+/* Category sections */
+.search-category {
+  margin-bottom: 30px;
+}
+
+.search-category h2 {
+  color: #333;
+  font-size: 1.3em;
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.search-category h2 .category-count {
+  font-size: 0.8em;
+  color: #666;
+  font-weight: normal;
+  margin-left: 8px;
+}
+
+/* Result items */
+.search-result-item {
+  padding: 12px 15px;
+  margin-bottom: 8px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  border-left: 3px solid #1976d2;
+}
+
+.search-result-item:hover {
+  background-color: #f0f7ff;
+}
+
+.search-result-name {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.search-result-name a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.search-result-name a:hover {
+  text-decoration: underline;
+}
+
+.search-result-id {
+  font-size: 0.85em;
+  color: #666;
+  margin-left: 10px;
+  font-weight: normal;
+}
+
+.search-result-description {
+  font-size: 0.9em;
+  color: #555;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.search-result-organism {
+  font-size: 0.85em;
+  color: #888;
+  font-style: italic;
+  margin-top: 4px;
+}
+
+/* Category-specific colors */
+.search-category.genes .search-result-item {
+  border-left-color: #4caf50;
+}
+
+.search-category.go_terms .search-result-item {
+  border-left-color: #2196f3;
+}
+
+.search-category.phenotypes .search-result-item {
+  border-left-color: #ff9800;
+}
+
+.search-category.references .search-result-item {
+  border-left-color: #9c27b0;
+}
+
+/* Back to search link */
+.back-to-search {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.back-to-search a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.back-to-search a:hover {
+  text-decoration: underline;
+}
