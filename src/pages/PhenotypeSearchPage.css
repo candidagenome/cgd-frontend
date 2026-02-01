@@ -1,11 +1,12 @@
 /* ===========================================
-   PHENOTYPE SEARCH PAGE STYLES
+   PAGE WRAPPER
    =========================================== */
 
 .phenotype-search-page {
   max-width: 1400px;
   margin: 0 auto;
   padding: 20px;
+  box-sizing: border-box;
 }
 
 /* Header */
@@ -71,6 +72,7 @@
   border: 1px solid #ddd;
   width: 100%;
   box-sizing: border-box;
+  max-width: none; /* important: don't constrain inner card */
 }
 
 /* ===========================================
@@ -78,94 +80,99 @@
    =========================================== */
 
 .search-form {
-  background: white;
-  padding: 20px;
-  border-radius: 4px;
-  overflow: hidden;
   width: 100%;
   box-sizing: border-box;
 }
 
-.form-row {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 15px;
-  flex-wrap: wrap;
+/* Inner white card */
+.search-form-card {
+  background: #fff;
+  border-radius: 4px;
+  padding: 22px 26px;
+  width: min(1100px, 100%); /* wide enough for 4 columns */
+  margin: 0 auto; /* centered */
+  box-sizing: border-box;
+  overflow-x: hidden; /* prevent spill */
 }
 
-.form-row.four-columns {
-  flex-wrap: nowrap;
+/* 4 columns, give Experiment Type more room so label never wraps */
+.search-fields {
+  display: grid;
+  grid-template-columns: 1.15fr 1.15fr 1.35fr 1.15fr;
+  gap: 18px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.form-row.four-columns .form-group {
-  flex: 1 1 0;
+/* allow grid items to shrink inside their cells */
+.search-fields > .form-group {
   min-width: 0;
-}
-
-.form-group {
-  flex: 1;
 }
 
 .form-group label {
   display: block;
   font-weight: bold;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
   color: #333;
+
+  /* FIX: stop "Experiment Type" wrapping */
+  white-space: nowrap;
 }
 
-.form-group input,
-.form-group select {
+.form-group input {
   width: 100%;
-  padding: 8px 12px;
+  padding: 10px 12px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 0.95rem;
   box-sizing: border-box;
 }
 
-.form-group input:focus,
-.form-group select:focus {
+.form-group input:focus {
   outline: none;
   border-color: #1976d2;
   box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
 }
 
-.form-hint {
-  display: block;
-  font-size: 0.85rem;
-  color: #666;
-  margin-top: 4px;
+/* bottom row: browse link on left, buttons on right */
+.search-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-top: 18px;
 }
 
-.form-hint a {
+.browse-link a {
   color: #1976d2;
   text-decoration: none;
+  font-size: 1.25rem; /* matches the look in your screenshots */
 }
 
-.form-hint a:hover {
+.browse-link a:hover {
   text-decoration: underline;
 }
 
 .form-actions {
   display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .btn-search,
 .btn-reset {
-  padding: 10px 24px;
+  padding: 12px 26px;
   border: none;
   border-radius: 4px;
-  font-size: 1rem;
+  font-size: 1.05rem;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
 
 .btn-search {
   background: #1976d2;
-  color: white;
+  color: #fff;
 }
 
 .btn-search:hover {
@@ -182,13 +189,13 @@
 }
 
 /* ===========================================
-   RESULTS
+   RESULTS SUMMARY / EMPTY
    =========================================== */
 
 .results-summary {
   margin-bottom: 15px;
   padding: 10px 15px;
-  background: white;
+  background: #fff;
   border-left: 3px solid #1976d2;
 }
 
@@ -236,7 +243,7 @@
 .results-table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
+  background: #fff;
   font-size: 0.9rem;
 }
 
@@ -372,7 +379,7 @@
 .page-btn {
   padding: 6px 12px;
   border: 1px solid #ccc;
-  background: white;
+  background: #fff;
   color: #333;
   cursor: pointer;
   font-size: 0.9rem;
@@ -388,7 +395,7 @@
 
 .page-btn.active {
   background: #1976d2;
-  color: white;
+  color: #fff;
   border-color: #1976d2;
 }
 
@@ -489,45 +496,29 @@
    RESPONSIVE
    =========================================== */
 
-@media (max-width: 1024px) {
-  .form-row.four-columns {
-    flex-wrap: wrap;
+@media (max-width: 1100px) {
+  /* 2 rows (2x2) on smaller screens */
+  .search-fields {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .form-row.four-columns .form-group {
-    flex: 1 1 calc(50% - 10px);
-    min-width: 150px;
+  .search-form-card {
+    width: min(900px, 100%);
   }
 }
 
-@media (max-width: 768px) {
-  .phenotype-search-page {
-    padding: 10px;
+@media (max-width: 600px) {
+  /* 1 column on phones */
+  .search-fields {
+    grid-template-columns: 1fr;
   }
 
-  .page-header h1 {
-    font-size: 1.3rem;
-  }
-
-  .form-row {
+  .search-bottom-row {
     flex-direction: column;
-    gap: 10px;
+    align-items: flex-start;
   }
 
-  .form-row.four-columns {
-    flex-direction: column;
-  }
-
-  .form-row.four-columns .form-group {
-    flex: 1 1 100%;
-  }
-
-  .results-table {
-    font-size: 0.85rem;
-  }
-
-  .results-table th,
-  .results-table td {
-    padding: 8px;
+  .form-actions {
+    width: 100%;
   }
 }
