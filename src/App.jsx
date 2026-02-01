@@ -3,6 +3,7 @@ import HomePage from './pages/HomePage';
 import LocusPage from './pages/LocusPage';
 import ReferencePage from './pages/ReferencePage';
 import ProteinPropertyPage from './pages/ProteinPropertyPage';
+import DomainPage from './pages/DomainPage';
 import AboutPage from './pages/AboutPage';
 import HelpPage from './pages/HelpPage';
 import HowToCitePage from './pages/HowToCitePage';
@@ -138,6 +139,7 @@ function App() {
           <Route path="/locus/:name" element={<LocusPage />} />
           <Route path="/reference/:id" element={<ReferencePage />} />
           <Route path="/protein/:name/properties" element={<ProteinPropertyPage />} />
+          <Route path="/protein/:name/domains" element={<DomainPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/help" element={<HelpPage />} />
           <Route path="/how-to-cite" element={<HowToCitePage />} />

@@ -1,0 +1,276 @@
+/* ===========================================
+   DOMAIN PAGE STYLES
+   =========================================== */
+
+.domain-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header */
+.domain-page .page-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.domain-page .page-header h1 {
+  font-size: 1.4rem;
+  color: #333;
+  margin: 0;
+}
+
+.domain-page .protein-name {
+  color: #1976d2;
+  font-weight: bold;
+}
+
+/* Organism Selector */
+.domain-page .organism-selector {
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 10px;
+  background: #e8f5e9;
+  border-radius: 6px;
+}
+
+.domain-page .organism-selector label {
+  font-weight: 500;
+  margin-right: 10px;
+}
+
+.domain-page .organism-selector select {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  min-width: 250px;
+}
+
+/* Description */
+.domain-page .description {
+  margin-bottom: 25px;
+  padding: 15px;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.domain-page .description p {
+  margin: 0 0 10px 0;
+  line-height: 1.6;
+}
+
+.domain-page .return-link {
+  margin-top: 15px;
+}
+
+.domain-page .return-link a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.domain-page .return-link a:hover {
+  text-decoration: underline;
+}
+
+/* Section */
+.domain-page .property-section {
+  margin-bottom: 25px;
+}
+
+.domain-page .section-header {
+  background: #cfe4fb;
+  color: #333;
+  padding: 8px 15px;
+  margin: 0 0 1px 0;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.domain-page .section-note {
+  font-style: italic;
+  color: #666;
+  margin: 10px 0;
+  padding: 0 5px;
+}
+
+/* InterPro Groups */
+.domain-page .interpro-group {
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.domain-page .interpro-header {
+  background: #f5f5f5;
+  padding: 10px 15px;
+  border-bottom: 1px solid #ddd;
+  font-weight: 500;
+}
+
+.domain-page .interpro-label {
+  font-weight: bold;
+  color: #333;
+}
+
+.domain-page .interpro-label.unintegrated {
+  color: #666;
+  font-style: italic;
+}
+
+.domain-page .interpro-id {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.domain-page .interpro-id:hover {
+  text-decoration: underline;
+}
+
+.domain-page .interpro-desc {
+  color: #555;
+}
+
+/* Domain Table */
+.domain-page .domain-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  font-size: 0.9rem;
+}
+
+.domain-page .domain-table th,
+.domain-page .domain-table td {
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.domain-page .domain-table th {
+  background: #e0e0e0;
+  font-weight: bold;
+}
+
+.domain-page .domain-table td a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.domain-page .domain-table td a:hover {
+  text-decoration: underline;
+}
+
+.domain-page .domain-table td.coords {
+  white-space: nowrap;
+}
+
+.domain-page .domain-table tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+/* Property Tables */
+.domain-page .property-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  font-size: 0.9rem;
+}
+
+.domain-page .property-table th,
+.domain-page .property-table td {
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+}
+
+.domain-page .property-table th {
+  background: #e0e0e0;
+  font-weight: bold;
+  text-align: center;
+}
+
+.domain-page .property-table td.center {
+  text-align: center;
+}
+
+.domain-page .property-table tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+/* No Data Message */
+.domain-page .no-data-message {
+  padding: 15px;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  color: #666;
+  font-style: italic;
+}
+
+/* External Links */
+.domain-page .external-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 15px;
+}
+
+.domain-page .external-link-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #1976d2;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.domain-page .external-link-button:hover {
+  background: #1565c0;
+}
+
+/* Loading / Error / No-data States */
+.domain-page .loading {
+  padding: 40px;
+  text-align: center;
+  color: #666;
+}
+
+.domain-page .error {
+  padding: 20px;
+  background: #ffebee;
+  color: #c62828;
+  border-radius: 4px;
+}
+
+.domain-page .no-data {
+  padding: 40px;
+  text-align: center;
+  color: #888;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .domain-page .domain-table,
+  .domain-page .property-table {
+    font-size: 0.8rem;
+  }
+
+  .domain-page .domain-table th,
+  .domain-page .domain-table td,
+  .domain-page .property-table th,
+  .domain-page .property-table td {
+    padding: 6px 8px;
+  }
+
+  .domain-page .external-links {
+    flex-direction: column;
+  }
+
+  .domain-page .external-link-button {
+    text-align: center;
+  }
+}

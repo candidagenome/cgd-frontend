@@ -66,6 +66,12 @@ export const locusApi = {
     const response = await api.get(`/api/locus/${encodeURIComponent(name)}/protein_properties`);
     return response.data;
   },
+
+  // Get protein domain/motif details
+  getDomainDetails: async (name) => {
+    const response = await api.get(`/api/locus/${encodeURIComponent(name)}/domain_details`);
+    return response.data;
+  },
 };
 
 export default locusApi;
