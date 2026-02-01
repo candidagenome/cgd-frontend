@@ -52,11 +52,11 @@ function ReferencePage() {
 
     switch (searchType) {
       case 'CGD':
-        // Search CGD database via API
+        // Search CGD database via API - use full author name
         setAuthorSearchLoading(true);
         setAuthorSearchError(null);
         try {
-          const results = await referenceApi.searchByAuthor(lastName);
+          const results = await referenceApi.searchByAuthor(selectedAuthor);
           setAuthorSearchResults(results);
         } catch (error) {
           setAuthorSearchError(error.response?.data?.detail || error.message);
