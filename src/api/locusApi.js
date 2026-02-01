@@ -60,6 +60,12 @@ export const locusApi = {
     const response = await api.get(`/api/locus/${encodeURIComponent(name)}/history`);
     return response.data;
   },
+
+  // Get protein physico-chemical properties
+  getProteinProperties: async (name) => {
+    const response = await api.get(`/api/locus/${encodeURIComponent(name)}/protein_properties`);
+    return response.data;
+  },
 };
 
 export default locusApi;
