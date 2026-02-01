@@ -27,7 +27,6 @@ const GENES_PER_PAGE = 10;
 // Abbreviate organism name (e.g., "Candida albicans SC5314" -> "C. albicans")
 const getOrganismAbbrev = (organismName) => {
   if (!organismName) return '';
-  // Split into words, take first letter of genus + species name
   const parts = organismName.split(' ');
   if (parts.length >= 2) {
     return `${parts[0].charAt(0)}. ${parts[1]}`;
@@ -48,7 +47,7 @@ function GoTermPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  // Track current page for each annotation type
+  // Track current page for each qualifier group (key: "annotation_type:qualifier")
   const [currentPages, setCurrentPages] = useState({});
 
   useEffect(() => {
@@ -58,11 +57,16 @@ function GoTermPage() {
       try {
         const result = await goApi.getGoTerm(goid);
         setData(result);
-        // Initialize pages for each annotation type
+        // Initialize pages for each qualifier group
         const pages = {};
         if (result.annotations) {
           result.annotations.forEach(ann => {
-            pages[ann.annotation_type] = 1;
+            if (ann.qualifier_groups) {
+              ann.qualifier_groups.forEach(group => {
+                const key = `${ann.annotation_type}:${group.qualifier || 'direct'}`;
+                pages[key] = 1;
+              });
+            }
           });
         }
         setCurrentPages(pages);
@@ -88,11 +92,12 @@ function GoTermPage() {
     return `GO:${goid.padStart(7, '0')}`;
   };
 
-  // Handle page change for an annotation type
-  const handlePageChange = (annotationType, newPage) => {
+  // Handle page change for a qualifier group
+  const handlePageChange = (annotationType, qualifier, newPage) => {
+    const key = `${annotationType}:${qualifier || 'direct'}`;
     setCurrentPages(prev => ({
       ...prev,
-      [annotationType]: newPage,
+      [key]: newPage,
     }));
   };
 
@@ -102,8 +107,9 @@ function GoTermPage() {
 
     const links = [
       { id: 'definition', label: 'Definition' },
-      { id: 'annotations', label: 'Annotated Genes' },
-      { id: 'external-links', label: 'External Links' },
+      { id: 'summary', label: 'Number of Genes Annotated' },
+      { id: 'additional-links', label: 'Links to Additional Annotations' },
+      { id: 'annotations', label: 'Genes Annotated with this Term' },
     ];
 
     return (
@@ -172,54 +178,111 @@ function GoTermPage() {
     );
   };
 
-  // Render annotation summary
-  const renderAnnotationSummary = () => {
+  // Render the "Number of Genes Annotated" section (matching Perl format)
+  const renderAnnotationSummarySection = () => {
     if (!data.annotations || data.annotations.length === 0) {
       return null;
     }
 
     return (
-      <div className="annotation-summary">
-        <h3>Annotation Summary</h3>
-        <p className="summary-text">
-          In total, <span className="highlight-count">{data.total_genes}</span> genes
-          have been directly annotated to the term <strong>{data.term.go_term}</strong>.
-        </p>
-        <table className="summary-table">
-          <thead>
-            <tr>
-              <th>Annotation Type</th>
-              <th>Gene Count</th>
-            </tr>
-          </thead>
-          <tbody>
-            {ANNOTATION_TYPE_ORDER.map((type) => {
-              const annotation = data.annotations.find(a => a.annotation_type === type);
-              if (!annotation || annotation.gene_count === 0) return null;
-              return (
-                <tr key={type}>
-                  <td>
-                    <a href={`#${type}`}>
-                      {ANNOTATION_TYPE_NAMES[type] || type}
-                    </a>
-                  </td>
-                  <td className="count-cell">{annotation.gene_count}</td>
-                </tr>
-              );
-            })}
-            <tr className="total-row">
-              <td><strong>Total</strong></td>
-              <td className="count-cell"><strong>{data.total_genes}</strong></td>
-            </tr>
-          </tbody>
-        </table>
+      <div className="section" id="summary">
+        <h2 className="section-header">Number of Genes Annotated</h2>
+        <div className="section-content">
+          <table className="summary-detail-table">
+            <thead>
+              <tr>
+                <th>GO Term</th>
+                {ANNOTATION_TYPE_ORDER.map(type => {
+                  const annotation = data.annotations.find(a => a.annotation_type === type);
+                  if (!annotation) return null;
+                  return (
+                    <th key={type}>
+                      <a href={`#${type}`}>{ANNOTATION_TYPE_NAMES[type]}</a>
+                    </th>
+                  );
+                })}
+              </tr>
+            </thead>
+            <tbody>
+              {/* Collect all unique qualifier display names across all annotation types */}
+              {(() => {
+                // Get all unique display names (qualifier groups)
+                const allDisplayNames = new Set();
+                data.annotations.forEach(ann => {
+                  if (ann.qualifier_groups) {
+                    ann.qualifier_groups.forEach(group => {
+                      allDisplayNames.add(group.display_name);
+                    });
+                  }
+                });
+
+                return Array.from(allDisplayNames).map(displayName => (
+                  <tr key={displayName}>
+                    <td>
+                      <a href={`#qualifier-${displayName.replace(/\s+/g, '-')}`}>
+                        {displayName}
+                      </a>
+                    </td>
+                    {ANNOTATION_TYPE_ORDER.map(type => {
+                      const annotation = data.annotations.find(a => a.annotation_type === type);
+                      if (!annotation) return null;
+
+                      const group = annotation.qualifier_groups?.find(g => g.display_name === displayName);
+                      if (!group || group.species_counts.length === 0) {
+                        return <td key={type} className="species-count-cell">none</td>;
+                      }
+
+                      return (
+                        <td key={type} className="species-count-cell">
+                          {group.species_counts.map((sc, idx) => (
+                            <div key={idx}>
+                              {sc.count} in <em>{sc.species}</em>
+                            </div>
+                          ))}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ));
+              })()}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   };
 
-  // Render pagination controls
-  const renderPagination = (annotation, currentPage) => {
-    const totalPages = Math.ceil(annotation.gene_count / GENES_PER_PAGE);
+  // Render "Links to Additional Annotations" section
+  const renderAdditionalLinksSection = () => {
+    const term = data.term;
+    return (
+      <div className="section" id="additional-links">
+        <h2 className="section-header">Links to Additional Annotations</h2>
+        <div className="section-content">
+          <ul className="external-links-list">
+            <li>
+              <a
+                href={getAmigoUrl(term.goid)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View annotations in multiple organisms using AmiGO
+              </a>
+            </li>
+            <li>
+              Search for Candida genes manually annotated to this term or to any
+              manually annotated terms that are descended from this term, i.e.,
+              child terms representing more specific biology than this term.
+            </li>
+          </ul>
+        </div>
+      </div>
+    );
+  };
+
+  // Render pagination controls for a qualifier group
+  const renderPagination = (annotationType, qualifier, totalGenes, currentPage) => {
+    const totalPages = Math.ceil(totalGenes / GENES_PER_PAGE);
     if (totalPages <= 1) return null;
 
     const pages = [];
@@ -237,7 +300,7 @@ function GoTermPage() {
       pages.push(
         <button
           key={1}
-          onClick={() => handlePageChange(annotation.annotation_type, 1)}
+          onClick={() => handlePageChange(annotationType, qualifier, 1)}
           className="page-btn"
         >
           1
@@ -253,7 +316,7 @@ function GoTermPage() {
       pages.push(
         <button
           key={i}
-          onClick={() => handlePageChange(annotation.annotation_type, i)}
+          onClick={() => handlePageChange(annotationType, qualifier, i)}
           className={`page-btn ${i === currentPage ? 'active' : ''}`}
         >
           {i}
@@ -269,7 +332,7 @@ function GoTermPage() {
       pages.push(
         <button
           key={totalPages}
-          onClick={() => handlePageChange(annotation.annotation_type, totalPages)}
+          onClick={() => handlePageChange(annotationType, qualifier, totalPages)}
           className="page-btn"
         >
           {totalPages}
@@ -278,16 +341,16 @@ function GoTermPage() {
     }
 
     const startIdx = (currentPage - 1) * GENES_PER_PAGE + 1;
-    const endIdx = Math.min(currentPage * GENES_PER_PAGE, annotation.gene_count);
+    const endIdx = Math.min(currentPage * GENES_PER_PAGE, totalGenes);
 
     return (
       <div className="pagination">
         <div className="pagination-info">
-          Showing {startIdx}-{endIdx} of {annotation.gene_count} genes
+          Showing {startIdx}-{endIdx} of {totalGenes} genes
         </div>
         <div className="pagination-controls">
           <button
-            onClick={() => handlePageChange(annotation.annotation_type, currentPage - 1)}
+            onClick={() => handlePageChange(annotationType, qualifier, currentPage - 1)}
             disabled={currentPage === 1}
             className="page-btn nav-btn"
           >
@@ -295,7 +358,7 @@ function GoTermPage() {
           </button>
           {pages}
           <button
-            onClick={() => handlePageChange(annotation.annotation_type, currentPage + 1)}
+            onClick={() => handlePageChange(annotationType, qualifier, currentPage + 1)}
             disabled={currentPage === totalPages}
             className="page-btn nav-btn"
           >
@@ -306,25 +369,34 @@ function GoTermPage() {
     );
   };
 
-  // Render a single gene table for an annotation type
-  const renderGeneTable = (annotation) => {
-    if (!annotation.genes || annotation.genes.length === 0) {
+  // Render a gene table for a qualifier group
+  const renderQualifierGroupTable = (annotationType, group) => {
+    if (!group.genes || group.genes.length === 0) {
       return null;
     }
 
-    const currentPage = currentPages[annotation.annotation_type] || 1;
+    const key = `${annotationType}:${group.qualifier || 'direct'}`;
+    const currentPage = currentPages[key] || 1;
     const startIdx = (currentPage - 1) * GENES_PER_PAGE;
-    const endIdx = Math.min(startIdx + GENES_PER_PAGE, annotation.genes.length);
-    const displayedGenes = annotation.genes.slice(startIdx, endIdx);
+    const endIdx = Math.min(startIdx + GENES_PER_PAGE, group.genes.length);
+    const displayedGenes = group.genes.slice(startIdx, endIdx);
+    const totalGenes = group.genes.length;
 
     return (
-      <div key={annotation.annotation_type} className="gene-table-section" id={annotation.annotation_type}>
-        <h3 className="table-header">
-          {ANNOTATION_TYPE_NAMES[annotation.annotation_type] || annotation.annotation_type}
-          <span className="gene-count-badge">({annotation.gene_count} genes)</span>
-        </h3>
+      <div
+        key={group.display_name}
+        className="qualifier-group-section"
+        id={`qualifier-${group.display_name.replace(/\s+/g, '-')}`}
+      >
+        <h4 className="qualifier-header">
+          {group.display_name}
+        </h4>
+        <p className="qualifier-summary">
+          {totalGenes} gene{totalGenes !== 1 ? 's have' : ' has'} been directly annotated to this term
+          in the {ANNOTATION_TYPE_NAMES[annotationType]?.replace(' GO Annotations', '') || annotationType} set
+        </p>
 
-        {renderPagination(annotation, currentPage)}
+        {renderPagination(annotationType, group.qualifier, totalGenes, currentPage)}
 
         <div className="table-wrapper">
           <table className="gene-table">
@@ -349,7 +421,6 @@ function GoTermPage() {
                   </td>
                   <td className="references-cell">
                     {gene.references && gene.references.map((ref, refIdx) => {
-                      // Use backend-provided links if available, otherwise build from ref fields
                       const citationLinks = ref.links && ref.links.length > 0
                         ? ref.links
                         : buildCitationLinks({
@@ -386,7 +457,53 @@ function GoTermPage() {
           </table>
         </div>
 
-        {renderPagination(annotation, currentPage)}
+        {renderPagination(annotationType, group.qualifier, totalGenes, currentPage)}
+      </div>
+    );
+  };
+
+  // Render gene tables for an annotation type
+  const renderAnnotationTypeSection = (annotation) => {
+    if (!annotation.qualifier_groups || annotation.qualifier_groups.length === 0) {
+      return (
+        <div key={annotation.annotation_type} className="annotation-type-section" id={annotation.annotation_type}>
+          <h3 className="table-header">
+            {ANNOTATION_TYPE_NAMES[annotation.annotation_type] || annotation.annotation_type}
+          </h3>
+          <p className="no-data">No annotations of this type.</p>
+        </div>
+      );
+    }
+
+    // Build qualifier group links for navigation within section
+    const qualifierLinks = annotation.qualifier_groups.map(group => ({
+      id: `qualifier-${group.display_name.replace(/\s+/g, '-')}`,
+      label: group.display_name,
+    }));
+
+    return (
+      <div key={annotation.annotation_type} className="annotation-type-section" id={annotation.annotation_type}>
+        <h3 className="table-header">
+          {ANNOTATION_TYPE_NAMES[annotation.annotation_type] || annotation.annotation_type}
+          <span className="gene-count-badge">({annotation.gene_count} genes)</span>
+        </h3>
+
+        {/* Qualifier group navigation links */}
+        {qualifierLinks.length > 1 && (
+          <nav className="qualifier-nav">
+            {qualifierLinks.map((link, idx) => (
+              <span key={link.id}>
+                {idx > 0 && ' | '}
+                <a href={`#${link.id}`}>{link.label}</a>
+              </span>
+            ))}
+          </nav>
+        )}
+
+        {/* Render each qualifier group */}
+        {annotation.qualifier_groups.map(group =>
+          renderQualifierGroupTable(annotation.annotation_type, group)
+        )}
       </div>
     );
   };
@@ -408,51 +525,19 @@ function GoTermPage() {
       <div className="section" id="annotations">
         <h2 className="section-header">Genes Annotated with this Term</h2>
         <div className="section-content">
-          {renderAnnotationSummary()}
-
           <p className="annotation-note">
             The tables below show the genes that have been directly annotated to the term{' '}
             <strong>{data.term.go_term}</strong> or its variants containing one or more
-            qualifiers (<em>NOT, contributes to, or colocalizes with</em>).
+            qualifiers (<em>NOT, contributes to, or colocalizes with</em>) in the manually
+            curated set and any annotations made from high-throughput experiments or
+            computational analysis.
           </p>
 
           {ANNOTATION_TYPE_ORDER.map((type) => {
             const annotation = data.annotations.find(a => a.annotation_type === type);
-            if (!annotation || annotation.gene_count === 0) return null;
-            return renderGeneTable(annotation);
+            if (!annotation) return null;
+            return renderAnnotationTypeSection(annotation);
           })}
-        </div>
-      </div>
-    );
-  };
-
-  // Render external links section
-  const renderExternalLinks = () => {
-    const term = data.term;
-    return (
-      <div className="section" id="external-links">
-        <h2 className="section-header">External Links</h2>
-        <div className="section-content">
-          <ul className="external-links-list">
-            <li>
-              <a
-                href={getAmigoUrl(term.goid)}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                View {term.goid} at AmiGO
-              </a>
-            </li>
-            <li>
-              <a
-                href={`http://www.ebi.ac.uk/QuickGO/term/${term.goid}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                View {term.goid} at QuickGO
-              </a>
-            </li>
-          </ul>
         </div>
       </div>
     );
@@ -536,9 +621,11 @@ function GoTermPage() {
 
       {renderDefinition()}
 
-      {renderAnnotations()}
+      {renderAnnotationSummarySection()}
 
-      {renderExternalLinks()}
+      {renderAdditionalLinksSection()}
+
+      {renderAnnotations()}
 
       <div className="divider" />
 

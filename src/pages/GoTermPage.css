@@ -207,6 +207,118 @@
 }
 
 /* ===========================================
+   DETAILED SUMMARY TABLE (Perl format)
+   =========================================== */
+
+.summary-detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  margin-bottom: 15px;
+}
+
+.summary-detail-table th,
+.summary-detail-table td {
+  padding: 10px 12px;
+  text-align: left;
+  border: 1px solid #ccc;
+  vertical-align: top;
+}
+
+.summary-detail-table th {
+  background: #e0e0e0;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.summary-detail-table th a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.summary-detail-table th a:hover {
+  text-decoration: underline;
+}
+
+.summary-detail-table td {
+  background: white;
+}
+
+.summary-detail-table td a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.summary-detail-table td a:hover {
+  text-decoration: underline;
+}
+
+.species-count-cell {
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.species-count-cell em {
+  font-style: italic;
+}
+
+/* ===========================================
+   ANNOTATION TYPE SECTIONS
+   =========================================== */
+
+.annotation-type-section {
+  margin-top: 25px;
+  margin-bottom: 30px;
+}
+
+.qualifier-nav {
+  padding: 8px 15px;
+  background: #f0f0f0;
+  border: 1px solid #b8d4f0;
+  border-top: none;
+  font-size: 0.9rem;
+}
+
+.qualifier-nav a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.qualifier-nav a:hover {
+  text-decoration: underline;
+}
+
+/* ===========================================
+   QUALIFIER GROUP SECTIONS
+   =========================================== */
+
+.qualifier-group-section {
+  margin-top: 20px;
+  margin-bottom: 25px;
+}
+
+.qualifier-header {
+  background: #e8f4fc;
+  color: #333;
+  padding: 8px 15px;
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: bold;
+  border: 1px solid #c0d8e8;
+  border-bottom: none;
+}
+
+.qualifier-summary {
+  margin: 0;
+  padding: 8px 15px;
+  background: #f8f8f8;
+  border: 1px solid #c0d8e8;
+  border-top: none;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* ===========================================
    GENE TABLES
    =========================================== */
 
