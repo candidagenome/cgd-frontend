@@ -38,6 +38,7 @@ import ContactPage from './pages/ContactPage';
 import SeqToolsPage from './pages/SeqToolsPage';
 import BlastSearchPage from './pages/BlastSearchPage';
 import BlastResultsPage from './pages/BlastResultsPage';
+import PatmatchSearchPage from './pages/PatmatchSearchPage';
 
 // Help documentation pages
 import GettingStartedHelp from './pages/help/GettingStartedHelp';
@@ -177,6 +178,7 @@ function App() {
           <Route path="/seq-tools" element={<SeqToolsPage />} />
           <Route path="/blast" element={<BlastSearchPage />} />
           <Route path="/blast/results" element={<BlastResultsPage />} />
+          <Route path="/patmatch" element={<PatmatchSearchPage />} />
 
           {/* Help documentation pages */}
           <Route path="/help/getting-started" element={<GettingStartedHelp />} />
