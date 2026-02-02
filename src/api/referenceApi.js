@@ -50,8 +50,10 @@ export const referenceApi = {
   },
 
   // Get genome-wide analysis papers
-  getGenomeWideAnalysisPapers: async () => {
-    const response = await api.get('/api/reference/genome-wide-analysis');
+  getGenomeWideAnalysisPapers: async (topic = null, page = 1, pageSize = 50) => {
+    const params = { page, page_size: pageSize };
+    if (topic) params.topic = topic;
+    const response = await api.get('/api/reference/genome-wide-analysis', { params });
     return response.data;
   },
 };

@@ -1,76 +1,217 @@
 /* Genome-wide Analysis Papers Page */
 
 .genome-wide-papers-page {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
 }
 
+/* Page Header */
 .genome-wide-papers-page .page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ccc;
 }
 
 .genome-wide-papers-page .page-header h1 {
   color: #1976d2;
-  margin: 0 0 10px 0;
+  margin: 0;
+  font-size: 1.5em;
 }
 
-.genome-wide-papers-page .page-description {
+.genome-wide-papers-page .header-links a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.genome-wide-papers-page .header-links a:hover {
+  text-decoration: underline;
+}
+
+/* Topic Filters */
+.genome-wide-papers-page .topic-filters {
+  background-color: #f5f5f5;
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.genome-wide-papers-page .filter-instruction {
+  margin: 0 0 12px 0;
+  color: #333;
+  font-weight: 500;
+}
+
+.genome-wide-papers-page .topic-columns {
+  display: flex;
+  gap: 20px;
+}
+
+.genome-wide-papers-page .topic-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.genome-wide-papers-page .topic-btn {
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 6px 12px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.9em;
+  border-radius: 3px;
+  transition: all 0.2s;
+}
+
+.genome-wide-papers-page .topic-btn:hover {
+  background-color: #e3f2fd;
+  border-color: #1976d2;
+}
+
+.genome-wide-papers-page .topic-btn.selected {
+  background-color: #1976d2;
+  color: #fff;
+  border-color: #1976d2;
+}
+
+.genome-wide-papers-page .clear-filter-btn {
+  margin-top: 12px;
+  background: #fff;
+  border: 1px solid #1976d2;
+  color: #1976d2;
+  padding: 6px 16px;
+  cursor: pointer;
+  font-size: 0.9em;
+  border-radius: 3px;
+}
+
+.genome-wide-papers-page .clear-filter-btn:hover {
+  background-color: #e3f2fd;
+}
+
+/* Pagination */
+.genome-wide-papers-page .pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 15px 0;
+  padding: 10px 0;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.genome-wide-papers-page .page-info {
   color: #666;
   font-size: 0.95em;
-  margin: 0;
+}
+
+.genome-wide-papers-page .page-controls {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.genome-wide-papers-page .page-btn {
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 0.9em;
+  border-radius: 3px;
+  min-width: 32px;
+}
+
+.genome-wide-papers-page .page-btn:hover {
+  background-color: #e3f2fd;
+  border-color: #1976d2;
+}
+
+.genome-wide-papers-page .page-btn.active {
+  background-color: #1976d2;
+  color: #fff;
+  border-color: #1976d2;
+}
+
+/* Papers Table */
+.genome-wide-papers-page .papers-table-wrapper {
+  overflow-x: auto;
+}
+
+.genome-wide-papers-page .papers-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+
+.genome-wide-papers-page .papers-table th,
+.genome-wide-papers-page .papers-table td {
+  padding: 10px 12px;
+  text-align: left;
+  border: 1px solid #ddd;
+  vertical-align: top;
+}
+
+.genome-wide-papers-page .papers-table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+}
+
+.genome-wide-papers-page .papers-table tbody tr:hover {
+  background-color: #fafafa;
+}
+
+.genome-wide-papers-page .papers-table .reference-cell {
+  max-width: 400px;
   line-height: 1.5;
 }
 
-.genome-wide-papers-page .results-summary {
-  background-color: #f5f5f5;
-  padding: 12px 15px;
-  border-left: 3px solid #1976d2;
-  margin-bottom: 20px;
-  font-size: 1.05em;
+.genome-wide-papers-page .papers-table .reference-cell .citation-line {
+  margin-bottom: 4px;
 }
 
-/* Paper list */
-.genome-wide-papers-page .papers-list {
-  margin-top: 20px;
-}
-
-.genome-wide-papers-page .paper-item {
-  padding: 15px;
-  margin-bottom: 12px;
-  background-color: #fafafa;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  border-left: 4px solid #4caf50;
-}
-
-.genome-wide-papers-page .paper-item:hover {
-  background-color: #f5f5f5;
-}
-
-.genome-wide-papers-page .paper-item .citation-line {
-  line-height: 1.6;
-  color: #333;
-}
-
-.genome-wide-papers-page .paper-item .citation-pmid {
-  color: #666;
-  font-size: 0.9em;
-}
-
-.genome-wide-papers-page .paper-item .citation-links-below {
+.genome-wide-papers-page .papers-table .reference-cell .citation-links-below {
   display: block;
-  margin-top: 8px;
+  margin-top: 4px;
   font-size: 0.9em;
 }
 
-.genome-wide-papers-page .paper-item .citation-links-below .citation-link {
+.genome-wide-papers-page .papers-table .topics-cell {
+  max-width: 200px;
+}
+
+.genome-wide-papers-page .papers-table .species-cell {
+  white-space: nowrap;
+}
+
+.genome-wide-papers-page .papers-table .genes-cell {
+  max-width: 250px;
+}
+
+.genome-wide-papers-page .papers-table .genes-cell a {
   color: #1976d2;
   text-decoration: none;
-  margin-right: 12px;
 }
 
-.genome-wide-papers-page .paper-item .citation-links-below .citation-link:hover {
+.genome-wide-papers-page .papers-table .genes-cell a:hover {
+  text-decoration: underline;
+}
+
+/* Citation link styling within table */
+.genome-wide-papers-page .papers-table .citation-link {
+  color: #1976d2;
+  text-decoration: none;
+  margin-right: 10px;
+}
+
+.genome-wide-papers-page .papers-table .citation-link:hover {
   text-decoration: underline;
 }
 
