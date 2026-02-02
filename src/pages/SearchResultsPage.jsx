@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { searchApi } from '../api/searchApi';
-import { formatCitationString, CitationLinksBelow, buildCitationLinks } from '../utils/formatCitation';
+import { formatCitationString, CitationLinksBelow } from '../utils/formatCitation';
 import './SearchResultsPage.css';
 
 const CATEGORY_LABELS = {
@@ -70,11 +70,8 @@ const SearchResultsPage = () => {
     const pmidMatch = result.name?.match(/PMID:(\d+)/);
     const pubmed = pmidMatch ? parseInt(pmidMatch[1], 10) : null;
 
-    // Build links for the reference
-    const links = buildCitationLinks({
-      dbxref_id: result.id,
-      pubmed: pubmed,
-    });
+    // Use links from API response
+    const links = result.links || [];
 
     return (
       <div key={`${result.category}-${result.id}`} className="search-result-item reference-item">

@@ -259,24 +259,33 @@
   font-weight: 500;
 }
 
-/* Citation links below */
+/* Citation links below - must be on a new line */
 .search-result-item.reference-item .citation-links-below {
+  display: block;
   margin-top: 8px;
+  padding-top: 6px;
   font-size: 0.9em;
+  border-top: 1px solid #eee;
 }
 
 .search-result-item.reference-item .citation-links-below .citation-link {
   color: #1976d2;
   text-decoration: none;
-  margin-right: 12px;
+  margin-right: 8px;
 }
 
 .search-result-item.reference-item .citation-links-below .citation-link:hover {
   text-decoration: underline;
 }
 
+/* Separator between links */
+.search-result-item.reference-item .citation-links-below .citation-link-sep {
+  color: #999;
+  margin: 0 4px;
+}
+
 .search-result-item.reference-item .citation-links-below .citation-link::before {
-  content: "| ";
+  content: "";
   color: #999;
   margin-right: 0;
 }
