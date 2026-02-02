@@ -1,0 +1,109 @@
+/* New Papers This Week Page */
+
+.new-papers-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.new-papers-page .page-header {
+  margin-bottom: 20px;
+}
+
+.new-papers-page .page-header h1 {
+  color: #1976d2;
+  margin: 0 0 10px 0;
+}
+
+.new-papers-page .date-range {
+  color: #666;
+  font-size: 0.95em;
+  margin: 0;
+}
+
+.new-papers-page .results-summary {
+  background-color: #f5f5f5;
+  padding: 12px 15px;
+  border-left: 3px solid #1976d2;
+  margin-bottom: 20px;
+  font-size: 1.05em;
+}
+
+/* Paper list */
+.papers-list {
+  margin-top: 20px;
+}
+
+.paper-item {
+  padding: 15px;
+  margin-bottom: 12px;
+  background-color: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  border-left: 4px solid #9c27b0;
+}
+
+.paper-item:hover {
+  background-color: #f5f5f5;
+}
+
+.paper-item .citation-line {
+  line-height: 1.6;
+  color: #333;
+}
+
+.paper-item .citation-pmid {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.paper-item .citation-links-below {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.9em;
+}
+
+.paper-item .citation-links-below .citation-link {
+  color: #1976d2;
+  text-decoration: none;
+  margin-right: 12px;
+}
+
+.paper-item .citation-links-below .citation-link:hover {
+  text-decoration: underline;
+}
+
+.paper-item .date-added {
+  margin-top: 8px;
+  font-size: 0.85em;
+  color: #888;
+}
+
+/* States */
+.loading,
+.error,
+.no-papers {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.error {
+  color: #d32f2f;
+}
+
+/* Back link */
+.back-link {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.back-link a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.back-link a:hover {
+  text-decoration: underline;
+}

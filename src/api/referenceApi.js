@@ -42,6 +42,12 @@ export const referenceApi = {
     const response = await api.get(`/api/reference/search/author?author=${encodeURIComponent(authorName)}`);
     return response.data;
   },
+
+  // Get new papers added this week
+  getNewPapersThisWeek: async (days = 7) => {
+    const response = await api.get(`/api/reference/new-papers-this-week?days=${days}`);
+    return response.data;
+  },
 };
 
 export default referenceApi;
