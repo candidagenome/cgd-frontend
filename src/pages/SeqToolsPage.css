@@ -143,8 +143,9 @@
   margin-bottom: 0;
 }
 
-.flanking-options input[type="number"] {
-  width: 100px;
+.flanking-options input[type="text"] {
+  width: 80px;
+  text-align: center;
 }
 
 /* Checkbox styling */
@@ -205,36 +206,37 @@
   border-bottom: 2px solid #1976d2;
 }
 
-/* Feature Info Card */
+/* Feature Info Card - Compact */
 .feature-info-card {
   background-color: #e3f2fd;
   border: 1px solid #90caf9;
   border-radius: 6px;
-  padding: 20px;
-  margin-bottom: 25px;
+  padding: 12px 16px;
+  margin-bottom: 15px;
 }
 
 .feature-info-card h3 {
   color: #1565c0;
-  margin: 0 0 15px 0;
-  font-size: 1.2em;
+  margin: 0 0 8px 0;
+  font-size: 1em;
 }
 
 .feature-info-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
 }
 
 .feature-info-item {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 6px;
 }
 
 .feature-info-item .label {
   font-size: 0.85em;
   color: #666;
-  margin-bottom: 2px;
 }
 
 .feature-info-item .value {
@@ -251,11 +253,11 @@
   text-decoration: underline;
 }
 
-/* Tool Categories */
+/* Tool Categories - Compact Grid */
 .tool-categories {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
 }
 
 .tool-category {
@@ -269,22 +271,21 @@
   background-color: #f5f5f5;
   color: #333;
   margin: 0;
-  padding: 12px 16px;
-  font-size: 1.1em;
+  padding: 8px 12px;
+  font-size: 0.95em;
   border-bottom: 1px solid #e0e0e0;
 }
 
 .tool-list {
-  padding: 15px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 12px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .tool-link {
-  display: flex;
-  flex-direction: column;
-  padding: 12px 15px;
+  display: block;
+  padding: 8px 10px;
   background-color: #fafafa;
   border: 1px solid #e8e8e8;
   border-radius: 4px;
@@ -300,13 +301,11 @@
 .tool-link .tool-name {
   color: #1976d2;
   font-weight: 500;
-  margin-bottom: 4px;
+  font-size: 0.9em;
 }
 
 .tool-link .tool-description {
-  font-size: 0.85em;
-  color: #666;
-  line-height: 1.4;
+  display: none;
 }
 
 .tool-link .external-icon {
@@ -354,18 +353,19 @@
   margin-bottom: 5px;
 }
 
-/* Sequence Info */
+/* Sequence Info - Compact */
 .sequence-info {
   background-color: #fff3e0;
   border: 1px solid #ffcc80;
-  border-radius: 6px;
-  padding: 15px 20px;
-  margin-bottom: 25px;
+  border-radius: 4px;
+  padding: 10px 15px;
+  margin-bottom: 15px;
 }
 
 .sequence-info p {
   margin: 0;
   color: #e65100;
+  font-size: 0.9em;
 }
 
 /* No Results */
@@ -416,15 +416,15 @@
     width: 100%;
   }
 
-  .flanking-options input[type="number"] {
+  .flanking-options input[type="text"] {
     width: 100%;
   }
 
-  .tool-list {
+  .tool-categories {
     grid-template-columns: 1fr;
   }
 
   .feature-info-grid {
-    grid-template-columns: 1fr;
+    flex-direction: column;
   }
 }

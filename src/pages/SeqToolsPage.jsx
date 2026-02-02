@@ -459,27 +459,27 @@ function SeqToolsPage() {
                 <div className="form-group">
                   <label htmlFor="flankLeft">Left Flanking (bp)</label>
                   <input
-                    type="number"
+                    type="text"
                     id="flankLeft"
                     value={flankLeft}
-                    onChange={(e) =>
-                      setFlankLeft(parseInt(e.target.value, 10) || 0)
-                    }
-                    min="0"
-                    max="10000"
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, '');
+                      setFlankLeft(parseInt(val, 10) || 0);
+                    }}
+                    placeholder="0"
                   />
                 </div>
                 <div className="form-group">
                   <label htmlFor="flankRight">Right Flanking (bp)</label>
                   <input
-                    type="number"
+                    type="text"
                     id="flankRight"
                     value={flankRight}
-                    onChange={(e) =>
-                      setFlankRight(parseInt(e.target.value, 10) || 0)
-                    }
-                    min="0"
-                    max="10000"
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, '');
+                      setFlankRight(parseInt(val, 10) || 0);
+                    }}
+                    placeholder="0"
                   />
                 </div>
                 <div className="checkbox-group">
