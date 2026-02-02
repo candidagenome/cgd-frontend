@@ -73,11 +73,14 @@ const SearchResultsPage = () => {
     // Use links from API response
     const links = result.links || [];
 
+    // Use highlighted description if available
+    const displayDescription = result.highlighted_description || result.description;
+
     return (
       <div key={`${result.category}-${result.id}`} className="search-result-item reference-item">
         <div className="citation-line">
-          {result.description ? (
-            formatCitationString(result.description)
+          {displayDescription ? (
+            <span dangerouslySetInnerHTML={{ __html: displayDescription }} />
           ) : (
             <Link to={result.link}>{result.name}</Link>
           )}
@@ -98,14 +101,21 @@ const SearchResultsPage = () => {
     // Don't show ID if it's the same as the name (e.g., phenotypes)
     const showId = result.id && result.id !== result.name;
 
+    // Use highlighted versions if available
+    const displayName = result.highlighted_name || result.name;
+    const displayDescription = result.highlighted_description || result.description;
+
     return (
       <div key={`${result.category}-${result.id}`} className="search-result-item">
         <div className="search-result-name">
-          <Link to={result.link}>{result.name}</Link>
+          <Link to={result.link} dangerouslySetInnerHTML={{ __html: displayName }} />
           {showId && <span className="search-result-id">({result.id})</span>}
         </div>
-        {result.description && (
-          <div className="search-result-description">{result.description}</div>
+        {displayDescription && (
+          <div
+            className="search-result-description"
+            dangerouslySetInnerHTML={{ __html: displayDescription }}
+          />
         )}
         {result.organism && (
           <div className="search-result-organism">{result.organism}</div>

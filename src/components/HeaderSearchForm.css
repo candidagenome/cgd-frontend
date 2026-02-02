@@ -91,6 +91,15 @@
   white-space: nowrap;
 }
 
+/* Search highlighting */
+.suggestion-text mark,
+.suggestion-description mark {
+  background-color: #fff59d;
+  color: inherit;
+  padding: 0 1px;
+  border-radius: 2px;
+}
+
 /* Loading indicator */
 .autocomplete-loading {
   position: absolute;

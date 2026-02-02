@@ -315,6 +315,20 @@
 }
 
 /* ===========================================
+   Search Result Highlighting
+   =========================================== */
+
+.search-result-item mark,
+.search-result-name mark,
+.search-result-description mark,
+.citation-line mark {
+  background-color: #fff59d;
+  color: inherit;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+/* ===========================================
    Responsive Design
    =========================================== */
 
