@@ -2,22 +2,78 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import './PatmatchSearchPage.css';
 
-// Dataset display info
+// Dataset display info - organized by organism/assembly
 const DATASET_GROUPS = {
   dna: {
     label: 'DNA Datasets',
-    datasets: [
-      { value: 'chromosomes', label: 'Chromosomes/Contigs', desc: 'Complete chromosome sequences' },
-      { value: 'orf_genomic', label: 'ORF Genomic DNA', desc: 'ORF sequences including introns' },
-      { value: 'orf_coding', label: 'ORF Coding DNA', desc: 'Coding sequences (exons only)' },
-      { value: 'intergenic', label: 'Intergenic Regions', desc: 'Sequences between genes' },
-      { value: 'noncoding', label: 'Non-coding Features', desc: 'ncRNA, tRNA, rRNA, etc.' },
+    groups: [
+      {
+        label: 'C. albicans Assembly 22',
+        datasets: [
+          { value: 'ca22_chromosomes', label: 'Chromosomes/Contigs', desc: 'Complete chromosome sequences' },
+          { value: 'ca22_orf_genomic', label: 'ORF Genomic DNA', desc: 'ORF sequences including introns' },
+          { value: 'ca22_orf_coding', label: 'ORF Coding DNA', desc: 'Coding sequences (exons only)' },
+          { value: 'ca22_orf_genomic_1kb', label: 'ORF Genomic +/- 1kb', desc: 'ORF with 1kb flanking regions' },
+          { value: 'ca22_intergenic', label: 'Intergenic Regions', desc: 'Sequences between genes' },
+          { value: 'ca22_noncoding', label: 'Non-coding Features', desc: 'ncRNA, tRNA, rRNA, etc.' },
+        ],
+      },
+      {
+        label: 'C. albicans Assembly 21',
+        datasets: [
+          { value: 'ca21_chromosomes', label: 'Chromosomes/Contigs', desc: 'Complete chromosome sequences' },
+          { value: 'ca21_orf_genomic', label: 'ORF Genomic DNA', desc: 'ORF sequences including introns' },
+          { value: 'ca21_orf_coding', label: 'ORF Coding DNA', desc: 'Coding sequences (exons only)' },
+          { value: 'ca21_orf_genomic_1kb', label: 'ORF Genomic +/- 1kb', desc: 'ORF with 1kb flanking regions' },
+          { value: 'ca21_intergenic', label: 'Intergenic Regions', desc: 'Sequences between genes' },
+          { value: 'ca21_noncoding', label: 'Non-coding Features', desc: 'ncRNA, tRNA, rRNA, etc.' },
+        ],
+      },
+      {
+        label: 'C. glabrata',
+        datasets: [
+          { value: 'cg_chromosomes', label: 'Chromosomes/Contigs', desc: 'Complete chromosome sequences' },
+          { value: 'cg_orf_genomic', label: 'ORF Genomic DNA', desc: 'ORF sequences including introns' },
+          { value: 'cg_orf_coding', label: 'ORF Coding DNA', desc: 'Coding sequences (exons only)' },
+        ],
+      },
+      {
+        label: 'All Organisms',
+        datasets: [
+          { value: 'all_chromosomes', label: 'All Chromosomes/Contigs', desc: 'All chromosome sequences' },
+          { value: 'all_orf_genomic', label: 'All ORF Genomic DNA', desc: 'All ORF sequences' },
+          { value: 'all_orf_coding', label: 'All ORF Coding DNA', desc: 'All coding sequences' },
+        ],
+      },
     ],
   },
   protein: {
     label: 'Protein Datasets',
-    datasets: [
-      { value: 'orf_protein', label: 'Protein Sequences', desc: 'Translated ORF proteins' },
+    groups: [
+      {
+        label: 'C. albicans Assembly 22',
+        datasets: [
+          { value: 'ca22_orf_protein', label: 'Protein Sequences', desc: 'Translated ORF proteins' },
+        ],
+      },
+      {
+        label: 'C. albicans Assembly 21',
+        datasets: [
+          { value: 'ca21_orf_protein', label: 'Protein Sequences', desc: 'Translated ORF proteins' },
+        ],
+      },
+      {
+        label: 'C. glabrata',
+        datasets: [
+          { value: 'cg_orf_protein', label: 'Protein Sequences', desc: 'Translated ORF proteins' },
+        ],
+      },
+      {
+        label: 'All Organisms',
+        datasets: [
+          { value: 'all_orf_protein', label: 'All Protein Sequences', desc: 'All translated proteins' },
+        ],
+      },
     ],
   },
 };
@@ -28,7 +84,7 @@ function PatmatchSearchPage() {
   // Form state
   const [pattern, setPattern] = useState(searchParams.get('pattern') || '');
   const [patternType, setPatternType] = useState(searchParams.get('type') || 'dna');
-  const [dataset, setDataset] = useState(searchParams.get('ds') || 'chromosomes');
+  const [dataset, setDataset] = useState(searchParams.get('ds') || 'ca22_chromosomes');
   const [strand, setStrand] = useState(searchParams.get('strand') || 'both');
   const [maxMismatches, setMaxMismatches] = useState(
     parseInt(searchParams.get('mm'), 10) || 0
@@ -50,9 +106,9 @@ function PatmatchSearchPage() {
   // Update dataset when pattern type changes
   useEffect(() => {
     if (patternType === 'protein' && !dataset.includes('protein')) {
-      setDataset('orf_protein');
+      setDataset('ca22_orf_protein');
     } else if (patternType === 'dna' && dataset.includes('protein')) {
-      setDataset('chromosomes');
+      setDataset('ca22_chromosomes');
     }
   }, [patternType, dataset]);
 
@@ -118,10 +174,13 @@ function PatmatchSearchPage() {
     window.open(resultsUrl, '_blank');
   };
 
-  // Get available datasets for current pattern type
-  const availableDatasets = patternType === 'protein'
-    ? DATASET_GROUPS.protein.datasets
-    : DATASET_GROUPS.dna.datasets;
+  // Get available dataset groups for current pattern type
+  const availableGroups = patternType === 'protein'
+    ? DATASET_GROUPS.protein.groups
+    : DATASET_GROUPS.dna.groups;
+
+  // Get flat list of all available datasets for description lookup
+  const allAvailableDatasets = availableGroups.flatMap((g) => g.datasets);
 
   return (
     <div className="patmatch-page">
@@ -194,14 +253,18 @@ function PatmatchSearchPage() {
                 value={dataset}
                 onChange={(e) => setDataset(e.target.value)}
               >
-                {availableDatasets.map((ds) => (
-                  <option key={ds.value} value={ds.value}>
-                    {ds.label}
-                  </option>
+                {availableGroups.map((group) => (
+                  <optgroup key={group.label} label={group.label}>
+                    {group.datasets.map((ds) => (
+                      <option key={ds.value} value={ds.value}>
+                        {ds.label}
+                      </option>
+                    ))}
+                  </optgroup>
                 ))}
               </select>
               <p className="help-text">
-                {availableDatasets.find((ds) => ds.value === dataset)?.desc}
+                {allAvailableDatasets.find((ds) => ds.value === dataset)?.desc}
               </p>
             </div>
           </div>
