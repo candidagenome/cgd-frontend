@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './InfoPages.css';
 
 const SearchPage = () => {
+  const navigate = useNavigate();
   const [quickSearchQuery, setQuickSearchQuery] = useState('');
   const [textSearchQuery, setTextSearchQuery] = useState('');
   const [orthologSearchQuery, setOrthologSearchQuery] = useState('');
@@ -11,7 +12,8 @@ const SearchPage = () => {
   const handleQuickSearch = (e) => {
     e.preventDefault();
     if (quickSearchQuery.trim()) {
-      window.location.href = `/cgi-bin/search/quickSearch?query=${encodeURIComponent(quickSearchQuery)}`;
+      // Use React Router navigation for proper browser history
+      navigate(`/search/results?query=${encodeURIComponent(quickSearchQuery)}`);
     }
   };
 

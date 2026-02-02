@@ -295,6 +295,7 @@
 }
 
 .citation-links-below {
+  display: block;
   margin-top: 4px;
   font-size: 0.9em;
   line-height: 1.4;

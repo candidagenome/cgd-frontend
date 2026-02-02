@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import HeaderSearchForm from './components/HeaderSearchForm';
 import HomePage from './pages/HomePage';
 import LocusPage from './pages/LocusPage';
 import ReferencePage from './pages/ReferencePage';
@@ -21,6 +22,7 @@ import GOResourcesPage from './pages/GOResourcesPage';
 import CommunityPage from './pages/CommunityPage';
 import SubmitDataPage from './pages/SubmitDataPage';
 import SearchPage from './pages/SearchPage';
+import SearchResultsPage from './pages/SearchResultsPage';
 import MeetingsPage from './pages/MeetingsPage';
 import CommunityNewsPage from './pages/CommunityNewsPage';
 import JobPostingsPage from './pages/JobPostingsPage';
@@ -109,14 +111,7 @@ function App() {
                 </div>
               </div>
 
-              <form className="site-search" role="search" onSubmit={(e) => e.preventDefault()}>
-                <input
-                  type="text"
-                  placeholder="search our site"
-                  aria-label="Search CGD"
-                />
-                <button type="submit">Go</button>
-              </form>
+              <HeaderSearchForm />
             </div>
           </div>
 
@@ -161,6 +156,7 @@ function App() {
           <Route path="/community" element={<CommunityPage />} />
           <Route path="/submit-data" element={<SubmitDataPage />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/search/results" element={<SearchResultsPage />} />
           <Route path="/meetings" element={<MeetingsPage />} />
           <Route path="/community-news" element={<CommunityNewsPage />} />
           <Route path="/job-postings" element={<JobPostingsPage />} />

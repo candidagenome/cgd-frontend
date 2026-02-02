@@ -327,6 +327,9 @@
 }
 
 .reference-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   margin-bottom: 10px;
   padding-bottom: 10px;
   border-bottom: 1px dotted #ddd;
@@ -339,12 +342,34 @@
 }
 
 .citation-line {
+  display: block;
+  width: 100%;
   line-height: 1.5;
 }
 
 .citation-pmid {
   color: #666;
   font-size: 0.9em;
+}
+
+/* Citation links below - must be on a new line */
+.references-cell .citation-links-below {
+  display: block !important;
+  width: 100%;
+  margin-top: 1px;
+  font-size: 0.9em;
+  line-height: 1.4;
+  clear: both;
+}
+
+.references-cell .citation-links-below .citation-link {
+  color: #1976d2;
+  text-decoration: none;
+  margin-right: 12px;
+}
+
+.references-cell .citation-links-below .citation-link:hover {
+  text-decoration: underline;
 }
 
 /* ===========================================

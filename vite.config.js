@@ -12,6 +12,11 @@ export default defineConfig({
         changeOrigin: true,
         secure: true,
       },
+      '/cgi-bin': {
+        target: 'https://www.candidagenome.org',
+        changeOrigin: true,
+        secure: true,
+      },
     },
   },
 })

@@ -1,0 +1,343 @@
+/* Search Results Page Styles */
+
+.search-results-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.search-results-content {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 4px;
+}
+
+.search-results-page h1 {
+  color: #1976d2;
+  margin-bottom: 10px;
+}
+
+.search-results-page hr {
+  border: none;
+  border-top: 2px solid #1976d2;
+  margin-bottom: 25px;
+}
+
+.search-query-info {
+  font-size: 1.1em;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.search-query-info strong {
+  color: #333;
+}
+
+/* Loading and error states */
+.search-loading,
+.search-error,
+.search-no-results,
+.search-no-selection {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.search-error {
+  color: #d32f2f;
+}
+
+.search-no-results,
+.search-no-selection {
+  font-style: italic;
+}
+
+/* ===========================================
+   Faceted Layout - Sidebar + Main Content
+   =========================================== */
+
+.search-layout {
+  display: flex;
+  gap: 30px;
+  min-height: 400px;
+}
+
+/* Sidebar with facets */
+.search-sidebar {
+  flex: 0 0 220px;
+  min-width: 220px;
+}
+
+/* Main results area - FIXED WIDTH */
+.search-main {
+  flex: 1 1 auto;
+  min-width: 600px; /* Minimum width to prevent shrinking */
+  max-width: 800px; /* Fixed max width for consistent display */
+  width: 100%;
+}
+
+.search-results-list {
+  min-height: 300px; /* Minimum height for consistency */
+}
+
+/* ===========================================
+   Facets (Category filters)
+   =========================================== */
+
+.search-facets {
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+}
+
+.search-facets h3 {
+  margin: 0 0 12px 0;
+  font-size: 1em;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.facet-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.facet-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  margin-bottom: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border-left: 3px solid transparent;
+}
+
+.facet-item:hover:not(.disabled) {
+  background-color: #e3f2fd;
+}
+
+.facet-item.selected {
+  background-color: #1976d2;
+  color: #fff;
+  border-left-color: #0d47a1;
+}
+
+.facet-item.selected .facet-count {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.facet-item.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.facet-label {
+  font-size: 0.95em;
+  font-weight: 500;
+}
+
+.facet-count {
+  font-size: 0.85em;
+  background-color: #e0e0e0;
+  color: #555;
+  padding: 2px 8px;
+  border-radius: 10px;
+  min-width: 24px;
+  text-align: center;
+}
+
+/* ===========================================
+   Results List
+   =========================================== */
+
+.search-results-list h2 {
+  color: #333;
+  font-size: 1.3em;
+  margin: 0 0 20px 0;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.search-results-list h2 .category-count {
+  font-size: 0.75em;
+  color: #666;
+  font-weight: normal;
+  margin-left: 10px;
+}
+
+/* Result items */
+.search-result-item {
+  padding: 15px 18px;
+  margin-bottom: 10px;
+  background-color: #fafafa;
+  border-radius: 6px;
+  border-left: 4px solid #1976d2;
+  transition: all 0.15s ease;
+}
+
+.search-result-item:hover {
+  background-color: #f0f7ff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.search-result-name {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.search-result-name a {
+  color: #1976d2;
+  text-decoration: none;
+  font-size: 1.05em;
+}
+
+.search-result-name a:hover {
+  text-decoration: underline;
+}
+
+.search-result-id {
+  font-size: 0.85em;
+  color: #888;
+  margin-left: 10px;
+  font-weight: normal;
+}
+
+.search-result-description {
+  font-size: 0.9em;
+  color: #555;
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+.search-result-organism {
+  font-size: 0.85em;
+  color: #666;
+  font-style: italic;
+  margin-top: 6px;
+}
+
+/* Category-specific border colors */
+.search-results-list.genes .search-result-item {
+  border-left-color: #4caf50;
+}
+
+.search-results-list.go_terms .search-result-item {
+  border-left-color: #2196f3;
+}
+
+.search-results-list.phenotypes .search-result-item {
+  border-left-color: #ff9800;
+}
+
+.search-results-list.references .search-result-item {
+  border-left-color: #9c27b0;
+}
+
+/* ===========================================
+   Reference Item Styling (Citation format)
+   =========================================== */
+
+.search-result-item.reference-item {
+  padding: 15px 18px;
+  display: block;
+}
+
+.search-result-item.reference-item .citation-line {
+  display: block;
+  width: 100%;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 0;
+}
+
+.search-result-item.reference-item .citation-pmid {
+  color: #666;
+  font-size: 0.9em;
+}
+
+/* Citation links below - must be on a new line */
+.search-result-item.reference-item .citation-links-below {
+  display: block !important;
+  width: 100%;
+  margin-top: 3px;
+  font-size: 0.9em;
+  clear: both;
+}
+
+.search-result-item.reference-item .citation-links-below .citation-link {
+  color: #1976d2;
+  text-decoration: none;
+  margin-right: 8px;
+}
+
+.search-result-item.reference-item .citation-links-below .citation-link:hover {
+  text-decoration: underline;
+}
+
+/* Separator between links */
+.search-result-item.reference-item .citation-links-below .citation-link-sep {
+  color: #999;
+  margin: 0 4px;
+}
+
+.search-result-item.reference-item .citation-links-below .citation-link::before {
+  content: "";
+  color: #999;
+  margin-right: 0;
+}
+
+.search-result-item.reference-item .citation-links-below .citation-link:first-child::before {
+  content: "";
+}
+
+/* Back to search link */
+.back-to-search {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.back-to-search a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.back-to-search a:hover {
+  text-decoration: underline;
+}
+
+/* ===========================================
+   Responsive Design
+   =========================================== */
+
+@media (max-width: 768px) {
+  .search-layout {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .search-sidebar {
+    flex: none;
+    width: 100%;
+  }
+
+  .facet-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .facet-item {
+    flex: 1 1 auto;
+    min-width: 140px;
+    margin-bottom: 0;
+  }
+}
