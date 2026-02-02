@@ -242,7 +242,8 @@ function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismCha
                               <a
                                 className="download-btn"
                                 href={`${API_BASE_URL}/api/sequence?locus=${encodeURIComponent(orgData.locus_display_name)}&seqtype=${getSeqTypeParam(seq.seq_type)}&format=fasta`}
-                                download
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 onClick={(e) => e.stopPropagation()}
                               >
                                 Download FASTA
