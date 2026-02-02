@@ -1,0 +1,104 @@
+/* Genome-wide Analysis Papers Page */
+
+.genome-wide-papers-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.genome-wide-papers-page .page-header {
+  margin-bottom: 20px;
+}
+
+.genome-wide-papers-page .page-header h1 {
+  color: #1976d2;
+  margin: 0 0 10px 0;
+}
+
+.genome-wide-papers-page .page-description {
+  color: #666;
+  font-size: 0.95em;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.genome-wide-papers-page .results-summary {
+  background-color: #f5f5f5;
+  padding: 12px 15px;
+  border-left: 3px solid #1976d2;
+  margin-bottom: 20px;
+  font-size: 1.05em;
+}
+
+/* Paper list */
+.genome-wide-papers-page .papers-list {
+  margin-top: 20px;
+}
+
+.genome-wide-papers-page .paper-item {
+  padding: 15px;
+  margin-bottom: 12px;
+  background-color: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  border-left: 4px solid #4caf50;
+}
+
+.genome-wide-papers-page .paper-item:hover {
+  background-color: #f5f5f5;
+}
+
+.genome-wide-papers-page .paper-item .citation-line {
+  line-height: 1.6;
+  color: #333;
+}
+
+.genome-wide-papers-page .paper-item .citation-pmid {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.genome-wide-papers-page .paper-item .citation-links-below {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.9em;
+}
+
+.genome-wide-papers-page .paper-item .citation-links-below .citation-link {
+  color: #1976d2;
+  text-decoration: none;
+  margin-right: 12px;
+}
+
+.genome-wide-papers-page .paper-item .citation-links-below .citation-link:hover {
+  text-decoration: underline;
+}
+
+/* States */
+.genome-wide-papers-page .loading,
+.genome-wide-papers-page .error,
+.genome-wide-papers-page .no-papers {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.genome-wide-papers-page .error {
+  color: #d32f2f;
+}
+
+/* Back link */
+.genome-wide-papers-page .back-link {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.genome-wide-papers-page .back-link a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.genome-wide-papers-page .back-link a:hover {
+  text-decoration: underline;
+}

@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage';
 import LocusPage from './pages/LocusPage';
 import ReferencePage from './pages/ReferencePage';
 import NewPapersThisWeekPage from './pages/NewPapersThisWeekPage';
+import GenomeWideAnalysisPapersPage from './pages/GenomeWideAnalysisPapersPage';
 import ProteinPropertyPage from './pages/ProteinPropertyPage';
 import DomainPage from './pages/DomainPage';
 import GoTermPage from './pages/GoTermPage';
@@ -138,6 +139,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/locus/:name" element={<LocusPage />} />
           <Route path="/reference/NewPapersThisWeek" element={<NewPapersThisWeekPage />} />
+          <Route path="/reference/GenomewideAnalysisPapers" element={<GenomeWideAnalysisPapersPage />} />
           <Route path="/reference/:id" element={<ReferencePage />} />
           <Route path="/protein/:name/properties" element={<ProteinPropertyPage />} />
           <Route path="/protein/:name/domains" element={<DomainPage />} />

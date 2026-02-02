@@ -48,6 +48,12 @@ export const referenceApi = {
     const response = await api.get(`/api/reference/new-papers-this-week?days=${days}`);
     return response.data;
   },
+
+  // Get genome-wide analysis papers
+  getGenomeWideAnalysisPapers: async () => {
+    const response = await api.get('/api/reference/genome-wide-analysis');
+    return response.data;
+  },
 };
 
 export default referenceApi;
