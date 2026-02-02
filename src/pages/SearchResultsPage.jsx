@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { searchApi } from '../api/searchApi';
 import './SearchResultsPage.css';
 
@@ -14,6 +14,7 @@ const CATEGORY_ORDER = ['genes', 'go_terms', 'phenotypes', 'references'];
 
 const SearchResultsPage = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const query = searchParams.get('query') || '';
 
   const [results, setResults] = useState(null);
@@ -31,6 +32,16 @@ const SearchResultsPage = () => {
       setError(null);
 
       try {
+        // First, try to resolve the query as an exact identifier
+        const resolveResult = await searchApi.resolve(query);
+
+        if (resolveResult.resolved && resolveResult.redirect_url) {
+          // Exact match found - redirect directly using React Router
+          navigate(resolveResult.redirect_url, { replace: true });
+          return;
+        }
+
+        // No exact match - perform full search
         const data = await searchApi.quickSearch(query);
         setResults(data);
       } catch (err) {
@@ -42,7 +53,7 @@ const SearchResultsPage = () => {
     };
 
     fetchResults();
-  }, [query]);
+  }, [query, navigate]);
 
   const renderResultItem = (result) => {
     return (
