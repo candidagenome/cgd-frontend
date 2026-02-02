@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import seqToolsApi from '../api/seqToolsApi';
 import './SeqToolsPage.css';
 
@@ -10,20 +10,28 @@ const INPUT_TYPES = {
 };
 
 function SeqToolsPage() {
-  // Input type selection
-  const [inputType, setInputType] = useState(INPUT_TYPES.GENE);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  // Form state
-  const [geneQuery, setGeneQuery] = useState('');
-  const [seqSource, setSeqSource] = useState('');
-  const [chromosome, setChromosome] = useState('');
-  const [startCoord, setStartCoord] = useState('');
-  const [endCoord, setEndCoord] = useState('');
-  const [rawSequence, setRawSequence] = useState('');
-  const [seqType, setSeqType] = useState('dna');
-  const [flankLeft, setFlankLeft] = useState(0);
-  const [flankRight, setFlankRight] = useState(0);
-  const [reverseComplement, setReverseComplement] = useState(false);
+  // Initialize state from URL params
+  const [inputType, setInputType] = useState(
+    searchParams.get('type') || INPUT_TYPES.GENE
+  );
+  const [geneQuery, setGeneQuery] = useState(searchParams.get('query') || '');
+  const [seqSource, setSeqSource] = useState(searchParams.get('source') || '');
+  const [chromosome, setChromosome] = useState(searchParams.get('chr') || '');
+  const [startCoord, setStartCoord] = useState(searchParams.get('start') || '');
+  const [endCoord, setEndCoord] = useState(searchParams.get('end') || '');
+  const [rawSequence, setRawSequence] = useState(searchParams.get('seq') || '');
+  const [seqType, setSeqType] = useState(searchParams.get('seqType') || 'dna');
+  const [flankLeft, setFlankLeft] = useState(
+    parseInt(searchParams.get('flankl'), 10) || 0
+  );
+  const [flankRight, setFlankRight] = useState(
+    parseInt(searchParams.get('flankr'), 10) || 0
+  );
+  const [reverseComplement, setReverseComplement] = useState(
+    searchParams.get('rev') === 'true'
+  );
 
   // Data state
   const [assemblies, setAssemblies] = useState([]);
@@ -32,16 +40,64 @@ function SeqToolsPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Update URL params when form state changes
+  const updateUrlParams = useCallback(() => {
+    const params = new URLSearchParams();
+
+    params.set('type', inputType);
+
+    if (inputType === INPUT_TYPES.GENE) {
+      if (geneQuery) params.set('query', geneQuery);
+      if (seqSource) params.set('source', seqSource);
+    } else if (inputType === INPUT_TYPES.COORDINATES) {
+      if (chromosome) params.set('chr', chromosome);
+      if (startCoord) params.set('start', startCoord);
+      if (endCoord) params.set('end', endCoord);
+    } else if (inputType === INPUT_TYPES.SEQUENCE) {
+      if (rawSequence) params.set('seq', rawSequence);
+      if (seqType) params.set('seqType', seqType);
+    }
+
+    if (inputType !== INPUT_TYPES.SEQUENCE) {
+      if (flankLeft > 0) params.set('flankl', flankLeft.toString());
+      if (flankRight > 0) params.set('flankr', flankRight.toString());
+      if (reverseComplement) params.set('rev', 'true');
+    }
+
+    setSearchParams(params, { replace: true });
+  }, [
+    inputType,
+    geneQuery,
+    seqSource,
+    chromosome,
+    startCoord,
+    endCoord,
+    rawSequence,
+    seqType,
+    flankLeft,
+    flankRight,
+    reverseComplement,
+    setSearchParams,
+  ]);
+
+  // Update URL when form fields change (debounced effect)
+  useEffect(() => {
+    const timeoutId = setTimeout(updateUrlParams, 300);
+    return () => clearTimeout(timeoutId);
+  }, [updateUrlParams]);
+
   // Fetch assemblies on mount
   useEffect(() => {
     const fetchAssemblies = async () => {
       try {
         const data = await seqToolsApi.getAssemblies();
         setAssemblies(data.assemblies || []);
-        // Set default if available
-        const defaultAssembly = data.assemblies?.find(a => a.is_default);
-        if (defaultAssembly) {
-          setSeqSource(defaultAssembly.name);
+        // Set default if available and not already set from URL
+        if (!seqSource) {
+          const defaultAssembly = data.assemblies?.find((a) => a.is_default);
+          if (defaultAssembly) {
+            setSeqSource(defaultAssembly.name);
+          }
         }
       } catch (err) {
         console.error('Failed to load assemblies:', err);
@@ -98,8 +154,12 @@ function SeqToolsPage() {
       case INPUT_TYPES.GENE:
         return geneQuery.trim().length > 0;
       case INPUT_TYPES.COORDINATES:
-        return chromosome && startCoord && endCoord &&
-          parseInt(startCoord, 10) <= parseInt(endCoord, 10);
+        return (
+          chromosome &&
+          startCoord &&
+          endCoord &&
+          parseInt(startCoord, 10) <= parseInt(endCoord, 10)
+        );
       case INPUT_TYPES.SEQUENCE:
         return rawSequence.trim().length > 0;
       default:
@@ -121,7 +181,9 @@ function SeqToolsPage() {
       const data = await seqToolsApi.resolve(params);
       setResults(data);
     } catch (err) {
-      setError(err.response?.data?.detail || err.message || 'An error occurred');
+      setError(
+        err.response?.data?.detail || err.message || 'An error occurred'
+      );
     } finally {
       setLoading(false);
     }
@@ -146,7 +208,9 @@ function SeqToolsPage() {
           <div className="feature-info-item">
             <span className="label">Feature Name</span>
             <span className="value">
-              <Link to={`/locus/${feature.feature_name}`}>{feature.feature_name}</Link>
+              <Link to={`/locus/${feature.feature_name}`}>
+                {feature.feature_name}
+              </Link>
             </span>
           </div>
           {feature.gene_name && (
@@ -168,7 +232,8 @@ function SeqToolsPage() {
               <span className="label">Location</span>
               <span className="value">
                 {feature.chromosome}:{feature.start}-{feature.end}
-                {feature.strand && ` (${feature.strand === 'W' ? '+' : '-'})`}
+                {feature.strand &&
+                  ` (${feature.strand === 'W' ? '+' : '-'})`}
               </span>
             </div>
           )}
@@ -179,7 +244,8 @@ function SeqToolsPage() {
 
   // Render sequence info
   const renderSequenceInfo = () => {
-    if (results?.input_type !== 'sequence' || !results?.sequence_length) return null;
+    if (results?.input_type !== 'sequence' || !results?.sequence_length)
+      return null;
 
     return (
       <div className="sequence-info">
@@ -216,7 +282,9 @@ function SeqToolsPage() {
                 >
                   <span className="tool-name">
                     {tool.name}
-                    {tool.external && <span className="external-icon">&#8599;</span>}
+                    {tool.external && (
+                      <span className="external-icon">&#8599;</span>
+                    )}
                   </span>
                   {tool.description && (
                     <span className="tool-description">{tool.description}</span>
@@ -276,7 +344,8 @@ function SeqToolsPage() {
                   placeholder="e.g., ACT1, orf19.5007, CAL0000191689"
                 />
                 <p className="help-text">
-                  Enter a standard gene name, systematic ORF name, or CGD identifier
+                  Enter a standard gene name, systematic ORF name, or CGD
+                  identifier
                 </p>
               </div>
 
@@ -345,7 +414,8 @@ function SeqToolsPage() {
                 </div>
               </div>
               <p className="help-text">
-                Coordinates are 1-based. End position must be greater than or equal to start.
+                Coordinates are 1-based. End position must be greater than or
+                equal to start.
               </p>
             </div>
           )}
@@ -362,7 +432,8 @@ function SeqToolsPage() {
                   placeholder="Enter DNA or protein sequence (FASTA format accepted)"
                 />
                 <p className="help-text">
-                  Enter raw sequence or paste in FASTA format. Non-sequence characters will be ignored.
+                  Enter raw sequence or paste in FASTA format. Non-sequence
+                  characters will be ignored.
                 </p>
               </div>
 
@@ -391,7 +462,9 @@ function SeqToolsPage() {
                     type="number"
                     id="flankLeft"
                     value={flankLeft}
-                    onChange={(e) => setFlankLeft(e.target.value)}
+                    onChange={(e) =>
+                      setFlankLeft(parseInt(e.target.value, 10) || 0)
+                    }
                     min="0"
                     max="10000"
                   />
@@ -402,7 +475,9 @@ function SeqToolsPage() {
                     type="number"
                     id="flankRight"
                     value={flankRight}
-                    onChange={(e) => setFlankRight(e.target.value)}
+                    onChange={(e) =>
+                      setFlankRight(parseInt(e.target.value, 10) || 0)
+                    }
                     min="0"
                     max="10000"
                   />
