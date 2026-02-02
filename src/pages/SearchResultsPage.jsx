@@ -20,11 +20,13 @@ const SearchResultsPage = () => {
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
     const fetchResults = async () => {
       if (!query.trim()) {
         setResults(null);
+        setSelectedCategory(null);
         return;
       }
 
@@ -44,6 +46,12 @@ const SearchResultsPage = () => {
         // No exact match - perform full search
         const data = await searchApi.quickSearch(query);
         setResults(data);
+
+        // Auto-select first category with results
+        const firstCategoryWithResults = CATEGORY_ORDER.find(
+          cat => data.results_by_category?.[cat]?.length > 0
+        );
+        setSelectedCategory(firstCategoryWithResults || null);
       } catch (err) {
         console.error('Search error:', err);
         setError('Failed to perform search. Please try again.');
@@ -54,6 +62,11 @@ const SearchResultsPage = () => {
 
     fetchResults();
   }, [query, navigate]);
+
+  // Get categories that have results
+  const categoriesWithResults = CATEGORY_ORDER.filter(
+    cat => results?.results_by_category?.[cat]?.length > 0
+  );
 
   const renderResultItem = (result) => {
     return (
@@ -72,17 +85,48 @@ const SearchResultsPage = () => {
     );
   };
 
-  const renderCategory = (categoryKey) => {
-    const categoryResults = results?.results_by_category?.[categoryKey];
-    if (!categoryResults || categoryResults.length === 0) {
-      return null;
+  const renderFacets = () => {
+    return (
+      <div className="search-facets">
+        <h3>Categories</h3>
+        <ul className="facet-list">
+          {CATEGORY_ORDER.map(categoryKey => {
+            const count = results?.results_by_category?.[categoryKey]?.length || 0;
+            const isSelected = selectedCategory === categoryKey;
+            const hasResults = count > 0;
+
+            return (
+              <li
+                key={categoryKey}
+                className={`facet-item ${isSelected ? 'selected' : ''} ${!hasResults ? 'disabled' : ''}`}
+                onClick={() => hasResults && setSelectedCategory(categoryKey)}
+              >
+                <span className="facet-label">{CATEGORY_LABELS[categoryKey]}</span>
+                <span className="facet-count">{count}</span>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    );
+  };
+
+  const renderResults = () => {
+    if (!selectedCategory) {
+      return (
+        <div className="search-no-selection">
+          Select a category to view results.
+        </div>
+      );
     }
 
+    const categoryResults = results?.results_by_category?.[selectedCategory] || [];
+
     return (
-      <div key={categoryKey} className={`search-category ${categoryKey}`}>
+      <div className={`search-results-list ${selectedCategory}`}>
         <h2>
-          {CATEGORY_LABELS[categoryKey] || categoryKey}
-          <span className="category-count">({categoryResults.length})</span>
+          {CATEGORY_LABELS[selectedCategory]}
+          <span className="category-count">({categoryResults.length} results)</span>
         </h2>
         {categoryResults.map(renderResultItem)}
       </div>
@@ -127,9 +171,14 @@ const SearchResultsPage = () => {
         )}
 
         {!loading && !error && results && results.total_results > 0 && (
-          <>
-            {CATEGORY_ORDER.map(renderCategory)}
-          </>
+          <div className="search-layout">
+            <aside className="search-sidebar">
+              {renderFacets()}
+            </aside>
+            <main className="search-main">
+              {renderResults()}
+            </main>
+          </div>
         )}
 
         <div className="back-to-search">
