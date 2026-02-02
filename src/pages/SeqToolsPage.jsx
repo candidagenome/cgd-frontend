@@ -277,8 +277,8 @@ function SeqToolsPage() {
                   key={toolIdx}
                   href={tool.url}
                   className="tool-link"
-                  target={tool.external ? '_blank' : undefined}
-                  rel={tool.external ? 'noopener noreferrer' : undefined}
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   <span className="tool-name">
                     {tool.name}
