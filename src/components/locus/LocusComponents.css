@@ -470,8 +470,9 @@
 
 .sequence-toolbar {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
+  gap: 10px;
   padding: 10px 15px;
   background-color: #f0f0f0;
   border-bottom: 1px solid #e0e0e0;
@@ -492,9 +493,27 @@
   background-color: #1565c0;
 }
 
+.download-btn {
+  background-color: #388e3c;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85em;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.download-btn:hover {
+  background-color: #2e7d32;
+  color: white;
+}
+
 .sequence-length-info {
   color: #666;
   font-size: 0.85em;
+  margin-left: auto;
 }
 
 .sequence-text {

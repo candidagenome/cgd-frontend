@@ -1,6 +1,15 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
+import { API_BASE_URL } from '../../api/config';
 import './LocusComponents.css';
+
+// Map sequence type from DB to API parameter
+const getSeqTypeParam = (seqType) => {
+  const type = seqType?.toLowerCase() || '';
+  if (type.includes('protein')) return 'protein';
+  if (type.includes('coding') || type === 'cds') return 'coding';
+  return 'genomic';
+};
 
 function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
   const [expandedSequences, setExpandedSequences] = useState({});
@@ -230,6 +239,14 @@ function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismCha
                               >
                                 Copy Sequence
                               </button>
+                              <a
+                                className="download-btn"
+                                href={`${API_BASE_URL}/api/sequence?locus=${encodeURIComponent(orgData.locus_display_name)}&seqtype=${getSeqTypeParam(seq.seq_type)}&format=fasta`}
+                                download
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                Download FASTA
+                              </a>
                               <span className="sequence-length-info">
                                 Showing {seq.residues.length.toLocaleString()} characters
                                 {seq.residues.endsWith('...') && ' (truncated)'}
