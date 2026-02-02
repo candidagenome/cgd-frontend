@@ -183,9 +183,19 @@ const HeaderSearchForm = () => {
               <span className={`suggestion-category category-${suggestion.category}`}>
                 {getCategoryLabel(suggestion.category)}
               </span>
-              <span className="suggestion-text">{suggestion.text}</span>
+              <span
+                className="suggestion-text"
+                dangerouslySetInnerHTML={{
+                  __html: suggestion.highlighted_text || suggestion.text
+                }}
+              />
               {suggestion.description && (
-                <span className="suggestion-description">{suggestion.description}</span>
+                <span
+                  className="suggestion-description"
+                  dangerouslySetInnerHTML={{
+                    __html: suggestion.highlighted_description || suggestion.description
+                  }}
+                />
               )}
             </li>
           ))}

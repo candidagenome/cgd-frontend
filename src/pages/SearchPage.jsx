@@ -165,7 +165,7 @@ const SearchPage = () => {
           <h2>Specialized Gene and Sequence Searches</h2>
 
           <div className="help-item">
-            <h3><Link to="/cgi-bin/seqTools">Gene/Sequence Resources (Get Sequence)</Link></h3>
+            <h3><Link to="/seq-tools">Gene/Sequence Resources (Get Sequence)</Link></h3>
             <p>Retrieve, display, and analyze a gene or sequence in many ways, such as protein translation and restriction mapping.</p>
           </div>
 

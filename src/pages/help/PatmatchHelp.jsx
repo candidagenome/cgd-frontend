@@ -24,7 +24,7 @@ function PatmatchHelp() {
         <div className="info-section">
           <h2 id="description">Description</h2>
           <p>
-            <a href="/cgi-bin/PATMATCH/nph-patmatch">PatMatch</a> permits the identification of patterns or motifs within
+            <Link to="/patmatch">PatMatch</Link> permits the identification of patterns or motifs within
             the collection of all CGD protein or DNA sequences. The pattern can be either a simple string or a regular
             expression. Standard substitutions are allowed in the string, such as using "R" for any purine base when
             performing a nucleotide search. Pattern matching offers an alternative to sequence alignment techniques such
@@ -126,7 +126,7 @@ function PatmatchHelp() {
           <h2 id="links">Other Relevant Links</h2>
           <ol>
             <li>
-              <a href="/cgi-bin/compute/blast_clade.pl">BLAST</a> Search Page
+              <Link to="/blast">BLAST</Link> Search Page
             </li>
             <li>
               <a
@@ -142,7 +142,7 @@ function PatmatchHelp() {
 
         <p>
           <strong>
-            Go to <a href="/cgi-bin/PATMATCH/nph-patmatch">PatMatch</a>
+            Go to <Link to="/patmatch">PatMatch</Link>
           </strong>
         </p>
       </div>
