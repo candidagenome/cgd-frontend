@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useSearchParams, useNavigate, Link } from 'react-router-dom';
-import patmatchApi from '../api/patmatchApi';
+import { useSearchParams } from 'react-router-dom';
 import './PatmatchSearchPage.css';
 
 // Dataset display info
@@ -25,7 +24,6 @@ const DATASET_GROUPS = {
 
 function PatmatchSearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
 
   // Form state
   const [pattern, setPattern] = useState(searchParams.get('pattern') || '');
@@ -47,9 +45,7 @@ function PatmatchSearchPage() {
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   // UI state
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [results, setResults] = useState(null);
 
   // Update dataset when pattern type changes
   useEffect(() => {
@@ -92,8 +88,22 @@ function PatmatchSearchPage() {
     return () => clearTimeout(timeoutId);
   }, [updateUrlParams]);
 
-  // Handle form submission
-  const handleSubmit = async (e) => {
+  // Build results URL
+  const buildResultsUrl = () => {
+    const params = new URLSearchParams();
+    params.set('pattern', pattern.trim());
+    params.set('type', patternType);
+    params.set('ds', dataset);
+    if (patternType === 'dna') params.set('strand', strand);
+    if (maxMismatches > 0) params.set('mm', maxMismatches.toString());
+    if (maxInsertions > 0) params.set('ins', maxInsertions.toString());
+    if (maxDeletions > 0) params.set('del', maxDeletions.toString());
+    if (maxResults !== 100) params.set('max', maxResults.toString());
+    return `/patmatch/results?${params.toString()}`;
+  };
+
+  // Handle form submission - open results in new tab
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!pattern.trim()) {
@@ -101,34 +111,11 @@ function PatmatchSearchPage() {
       return;
     }
 
-    setLoading(true);
     setError(null);
-    setResults(null);
 
-    try {
-      const params = {
-        pattern: pattern.trim(),
-        pattern_type: patternType,
-        dataset,
-        strand,
-        max_mismatches: maxMismatches,
-        max_insertions: maxInsertions,
-        max_deletions: maxDeletions,
-        max_results: maxResults,
-      };
-
-      const response = await patmatchApi.search(params);
-
-      if (response.success && response.result) {
-        setResults(response.result);
-      } else {
-        setError(response.error || 'Pattern match search failed');
-      }
-    } catch (err) {
-      setError(err.response?.data?.detail || err.message || 'Search failed');
-    } finally {
-      setLoading(false);
-    }
+    // Open results in new tab
+    const resultsUrl = buildResultsUrl();
+    window.open(resultsUrl, '_blank');
   };
 
   // Get available datasets for current pattern type
@@ -330,16 +317,9 @@ function PatmatchSearchPage() {
             <button
               type="submit"
               className="submit-button"
-              disabled={!pattern.trim() || loading}
+              disabled={!pattern.trim()}
             >
-              {loading ? (
-                <>
-                  <span className="loading-spinner"></span>
-                  Searching...
-                </>
-              ) : (
-                'Search'
-              )}
+              Search
             </button>
           </div>
         </form>
@@ -349,91 +329,6 @@ function PatmatchSearchPage() {
           <div className="error-state">
             <strong>Error</strong>
             <p>{error}</p>
-          </div>
-        )}
-
-        {/* Results */}
-        {results && !loading && (
-          <div className="results-section">
-            <h2>Search Results</h2>
-
-            <div className="results-summary">
-              <p>
-                <strong>Pattern:</strong> {results.pattern}
-                <span className="separator">|</span>
-                <strong>Dataset:</strong> {results.dataset}
-                <span className="separator">|</span>
-                <strong>Strand:</strong> {results.strand}
-              </p>
-              <p>
-                <strong>Found {results.total_hits} match{results.total_hits !== 1 ? 'es' : ''}</strong>
-                {' '}in {results.sequences_searched.toLocaleString()} sequences
-                ({results.total_residues_searched.toLocaleString()} residues searched)
-              </p>
-            </div>
-
-            {results.total_hits === 0 ? (
-              <div className="no-results">
-                <p>No matches found for your pattern.</p>
-                <p className="hint">
-                  Try using IUPAC ambiguity codes or allow mismatches in Advanced Options.
-                </p>
-              </div>
-            ) : (
-              <table className="results-table">
-                <thead>
-                  <tr>
-                    <th>Sequence</th>
-                    <th>Position</th>
-                    <th>Strand</th>
-                    <th>Match</th>
-                    <th>Context</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {results.hits.map((hit, idx) => (
-                    <tr key={idx}>
-                      <td>
-                        {hit.locus_link ? (
-                          <Link to={hit.locus_link}>{hit.sequence_name}</Link>
-                        ) : (
-                          hit.sequence_name
-                        )}
-                        {hit.sequence_description &&
-                          hit.sequence_description !== hit.sequence_name && (
-                            <span className="seq-desc"> ({hit.sequence_description})</span>
-                          )}
-                      </td>
-                      <td className="position-cell">
-                        {hit.match_start.toLocaleString()}-{hit.match_end.toLocaleString()}
-                        {hit.jbrowse_link && (
-                          <a
-                            href={hit.jbrowse_link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="jbrowse-link"
-                            title="View in JBrowse"
-                          >
-                            JB
-                          </a>
-                        )}
-                      </td>
-                      <td className="strand-cell">{hit.strand}</td>
-                      <td className="match-cell">
-                        <code>{hit.matched_sequence}</code>
-                      </td>
-                      <td className="context-cell">
-                        <code>
-                          <span className="context-before">{hit.context_before}</span>
-                          <span className="context-match">{hit.matched_sequence}</span>
-                          <span className="context-after">{hit.context_after}</span>
-                        </code>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
           </div>
         )}
       </div>
