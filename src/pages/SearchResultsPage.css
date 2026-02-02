@@ -71,9 +71,13 @@
 /* Main results area - FIXED WIDTH */
 .search-main {
   flex: 1 1 auto;
-  min-width: 0; /* Prevent flex item from overflowing */
+  min-width: 600px; /* Minimum width to prevent shrinking */
   max-width: 800px; /* Fixed max width for consistent display */
   width: 100%;
+}
+
+.search-results-list {
+  min-height: 300px; /* Minimum height for consistency */
 }
 
 /* ===========================================

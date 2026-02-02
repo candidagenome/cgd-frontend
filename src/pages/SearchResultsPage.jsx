@@ -98,11 +98,14 @@ const SearchResultsPage = () => {
       return renderReferenceItem(result);
     }
 
+    // Don't show ID if it's the same as the name (e.g., phenotypes)
+    const showId = result.id && result.id !== result.name;
+
     return (
       <div key={`${result.category}-${result.id}`} className="search-result-item">
         <div className="search-result-name">
           <Link to={result.link}>{result.name}</Link>
-          <span className="search-result-id">({result.id})</span>
+          {showId && <span className="search-result-id">({result.id})</span>}
         </div>
         {result.description && (
           <div className="search-result-description">{result.description}</div>
