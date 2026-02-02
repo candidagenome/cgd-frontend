@@ -16,16 +16,22 @@ const SLIDESHOW_IMAGES = [
 // Meetings data
 const MEETINGS = [
   {
-    title: 'Keystone Symposium on Fungal Pathogens',
-    url: 'https://www.keystonesymposia.org/conferences/conference-listing/meeting/A12026',
-    location: 'Breckenridge, Colorado',
-    date: 'January 12 - 15, 2026',
+    title: '33rd Fungal Genetics Conference',
+    url: 'https://genetics-gsa.org/fungal-2026/',
+    location: 'Asilomar Conference Grounds, Pacific Grove, CA',
+    date: 'March 17 - 22, 2026',
   },
   {
     title: 'Antimicrobial Resistance - Genomes, Big Data and Emerging Technologies',
     url: 'https://coursesandconferences.wellcomeconnectingscience.org/event/antimicrobial-resistance-genomes-big-data-and-emerging-technologies-20260323/',
     location: 'Wellcome Genome Campus, UK and Virtual',
     date: 'March 23 - 25, 2026',
+  },
+  {
+    title: 'Fungal Pathogen Genomics (Virtual Course)',
+    url: 'https://coursesandconferences.wellcomeconnectingscience.org/event/fungal-pathogen-genomics-virtual-20260601/',
+    location: null,
+    date: 'June 1 - 5, 2026',
   },
 ];
 
@@ -189,7 +195,7 @@ function HomePage() {
               sequence data and gene and protein information for <em>Candida albicans</em> and
               related species. CGD is based on the{' '}
               <a
-                href="http://genome-www.stanford.edu/Saccharomyces/"
+                href="https://www.yeastgenome.org/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -225,8 +231,12 @@ function HomePage() {
                     <strong>{meeting.title}</strong>
                   </a>
                   <div className="meeting-details">
-                    {meeting.location}
-                    <br />
+                    {meeting.location && (
+                      <>
+                        {meeting.location}
+                        <br />
+                      </>
+                    )}
                     {meeting.date}
                   </div>
                 </li>
