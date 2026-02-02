@@ -35,6 +35,7 @@ import LiteraturePage from './pages/LiteraturePage';
 import TopicBibliosPage from './pages/TopicBibliosPage';
 import StrainsPage from './pages/StrainsPage';
 import ContactPage from './pages/ContactPage';
+import SeqToolsPage from './pages/SeqToolsPage';
 
 // Help documentation pages
 import GettingStartedHelp from './pages/help/GettingStartedHelp';
@@ -122,7 +123,7 @@ function App() {
             <Link to="/">Home</Link>
             <Link to="/search">Search</Link>
             <a href="/jbrowse/index.html">JBrowse</a>
-            <a href="/cgi-bin/seqTools">Sequence</a>
+            <Link to="/seq-tools">Sequence</Link>
             <Link to="/go-resources">GO</Link>
             <a href="/cgi-bin/compute/blast_clade.pl">Tools</a>
             <Link to="/literature">Literature</Link>
@@ -171,6 +172,7 @@ function App() {
           <Route path="/topic-biblios" element={<TopicBibliosPage />} />
           <Route path="/strains" element={<StrainsPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/seq-tools" element={<SeqToolsPage />} />
 
           {/* Help documentation pages */}
           <Route path="/help/getting-started" element={<GettingStartedHelp />} />
