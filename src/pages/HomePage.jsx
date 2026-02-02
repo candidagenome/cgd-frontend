@@ -61,42 +61,36 @@ const NEWS_ITEMS = [
     content: (
       <ul>
         <li>
-          <a href="/cache/C_albicans_SC5314_genomeSnapshot.html" target="_blank">
+          <Link to="/genome-snapshot/C_albicans_SC5314">
             <em>C. albicans</em> Genome Snapshot
-          </a>
+          </Link>
         </li>
         <li>
-          <a href="/cache/C_glabrata_CBS138_genomeSnapshot.html" target="_blank">
+          <Link to="/genome-snapshot/C_glabrata_CBS138">
             <em>C. glabrata</em> Genome Snapshot
-          </a>
+          </Link>
         </li>
         <li>
-          <a href="/cache/C_parapsilosis_CDC317_genomeSnapshot.html" target="_blank">
+          <Link to="/genome-snapshot/C_parapsilosis_CDC317">
             <em>C. parapsilosis</em> Genome Snapshot
-          </a>
+          </Link>
         </li>
         <li>
-          <a href="/cache/C_dubliniensis_CD36_genomeSnapshot.html" target="_blank">
+          <Link to="/genome-snapshot/C_dubliniensis_CD36">
             <em>C. dubliniensis</em> Genome Snapshot
-          </a>
+          </Link>
         </li>
         <li>
-          <a href="/cache/C_auris_B8441_genomeSnapshot.html" target="_blank">
+          <Link to="/genome-snapshot/C_auris_B8441">
             <em>C. auris</em> Genome Snapshot
-          </a>
+          </Link>
         </li>
         <li>
-          <a href="/cache/NewPapersThisWeek.html" target="_blank">
-            New papers
-          </a>{' '}
-          added to CGD this week.
+          <Link to="/reference/NewPapersThisWeek">New papers</Link> added to CGD this week.
         </li>
         <li>
-          View{' '}
-          <a href="/cache/genome-wide-analysis.html" target="_blank">
-            Genome-wide Analysis papers
-          </a>{' '}
-          in CGD.
+          View <Link to="/reference/GenomewideAnalysisPapers">Genome-wide Analysis papers</Link> in
+          CGD.
         </li>
       </ul>
     ),
