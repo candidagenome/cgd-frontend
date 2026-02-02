@@ -259,8 +259,8 @@
 }
 
 .search-result-item.reference-item .citation-pmid {
-  color: #1976d2;
-  font-weight: 500;
+  color: #666;
+  font-size: 0.9em;
 }
 
 /* Citation links below - must be on a new line */
