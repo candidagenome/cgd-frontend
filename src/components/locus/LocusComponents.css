@@ -2589,9 +2589,12 @@ a:hover {
   margin-right: 12px;
 }
 
-/* Pagination styles */
-.pagination {
-  display: flex;
+/* Pagination styles - for Literature/References tab */
+.references-details .pagination,
+.literature-guide .pagination,
+.references-table-container .pagination {
+  display: flex !important;
+  flex-direction: row !important;
   align-items: center;
   justify-content: center;
   gap: 8px;
@@ -2599,7 +2602,10 @@ a:hover {
   flex-wrap: wrap;
 }
 
-.pagination-btn {
+.references-details .pagination-btn,
+.literature-guide .pagination-btn,
+.references-table-container .pagination-btn {
+  display: inline-block;
   padding: 6px 12px;
   border: 1px solid #ccc;
   background: #fff;
@@ -2610,18 +2616,25 @@ a:hover {
   transition: background-color 0.2s, border-color 0.2s;
 }
 
-.pagination-btn:hover:not(:disabled) {
+.references-details .pagination-btn:hover:not(:disabled),
+.literature-guide .pagination-btn:hover:not(:disabled),
+.references-table-container .pagination-btn:hover:not(:disabled) {
   background: #e9ecef;
   border-color: #adb5bd;
 }
 
-.pagination-btn:disabled {
+.references-details .pagination-btn:disabled,
+.literature-guide .pagination-btn:disabled,
+.references-table-container .pagination-btn:disabled {
   color: #999;
   cursor: not-allowed;
   background: #f5f5f5;
 }
 
-.pagination-info {
+.references-details .pagination-info,
+.literature-guide .pagination-info,
+.references-table-container .pagination-info {
+  display: inline-block;
   padding: 6px 12px;
   font-size: 13px;
   color: #666;
