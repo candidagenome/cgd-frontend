@@ -1,0 +1,124 @@
+/* Header Search Form with Autocomplete */
+
+.search-autocomplete-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Autocomplete suggestions dropdown */
+.autocomplete-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  min-width: 350px;
+  max-height: 400px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+
+.suggestion-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  gap: 8px;
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-item:hover,
+.suggestion-item.selected {
+  background-color: #e3f2fd;
+}
+
+/* Category badge */
+.suggestion-category {
+  flex-shrink: 0;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-radius: 3px;
+  color: #fff;
+}
+
+.category-gene {
+  background-color: #4caf50;
+}
+
+.category-go_term {
+  background-color: #2196f3;
+}
+
+.category-phenotype {
+  background-color: #ff9800;
+}
+
+.category-reference {
+  background-color: #9c27b0;
+}
+
+/* Suggestion text */
+.suggestion-text {
+  flex: 1;
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+  word-break: break-word;
+}
+
+/* Description text */
+.suggestion-description {
+  flex-shrink: 0;
+  max-width: 150px;
+  font-size: 11px;
+  color: #666;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Loading indicator */
+.autocomplete-loading {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  padding: 8px 12px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  color: #666;
+  font-size: 13px;
+  z-index: 1000;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .autocomplete-suggestions {
+    min-width: 280px;
+    max-height: 300px;
+  }
+
+  .suggestion-description {
+    display: none;
+  }
+
+  .suggestion-item {
+    padding: 10px 12px;
+  }
+}

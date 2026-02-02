@@ -25,6 +25,19 @@ export const searchApi = {
     });
     return response.data;
   },
+
+  /**
+   * Get autocomplete suggestions for search input
+   * @param {string} query - Search query for suggestions
+   * @param {number} limit - Max suggestions to return (default 10)
+   * @returns {Promise<Object>} Autocomplete response with flat list of suggestions
+   */
+  autocomplete: async (query, limit = 10) => {
+    const response = await api.get('/api/search/autocomplete', {
+      params: { query, limit },
+    });
+    return response.data;
+  },
 };
 
 export default searchApi;
