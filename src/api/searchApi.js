@@ -38,6 +38,21 @@ export const searchApi = {
     });
     return response.data;
   },
+
+  /**
+   * Search within a specific category with pagination
+   * @param {string} query - Search query string
+   * @param {string} category - Category to search (genes, go_terms, phenotypes, references)
+   * @param {number} page - Page number (1-indexed)
+   * @param {number} pageSize - Results per page (default 20)
+   * @returns {Promise<Object>} Paginated search response with results and pagination metadata
+   */
+  searchCategory: async (query, category, page = 1, pageSize = 20) => {
+    const response = await api.get('/api/search/category', {
+      params: { query, category, page, page_size: pageSize },
+    });
+    return response.data;
+  },
 };
 
 export default searchApi;
