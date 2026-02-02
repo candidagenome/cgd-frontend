@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { searchApi } from '../api/searchApi';
+import { formatCitationString, CitationLinksBelow, buildCitationLinks } from '../utils/formatCitation';
 import './SearchResultsPage.css';
 
 const CATEGORY_LABELS = {
@@ -63,12 +64,40 @@ const SearchResultsPage = () => {
     fetchResults();
   }, [query, navigate]);
 
-  // Get categories that have results
-  const categoriesWithResults = CATEGORY_ORDER.filter(
-    cat => results?.results_by_category?.[cat]?.length > 0
-  );
+  // Render a reference result with citation formatting
+  const renderReferenceItem = (result) => {
+    // Extract PMID from the name if it's in "PMID:xxxxx" format
+    const pmidMatch = result.name?.match(/PMID:(\d+)/);
+    const pubmed = pmidMatch ? parseInt(pmidMatch[1], 10) : null;
 
+    // Build links for the reference
+    const links = buildCitationLinks({
+      dbxref_id: result.id,
+      pubmed: pubmed,
+    });
+
+    return (
+      <div key={`${result.category}-${result.id}`} className="search-result-item reference-item">
+        <div className="citation-line">
+          {result.description ? (
+            formatCitationString(result.description)
+          ) : (
+            <Link to={result.link}>{result.name}</Link>
+          )}
+          {pubmed && <span className="citation-pmid"> PMID: {pubmed}</span>}
+        </div>
+        <CitationLinksBelow links={links} />
+      </div>
+    );
+  };
+
+  // Render a standard result item (genes, GO terms, phenotypes)
   const renderResultItem = (result) => {
+    // Use special rendering for references
+    if (result.category === 'reference') {
+      return renderReferenceItem(result);
+    }
+
     return (
       <div key={`${result.category}-${result.id}`} className="search-result-item">
         <div className="search-result-name">

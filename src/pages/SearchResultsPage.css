@@ -68,10 +68,12 @@
   min-width: 220px;
 }
 
-/* Main results area */
+/* Main results area - FIXED WIDTH */
 .search-main {
-  flex: 1;
+  flex: 1 1 auto;
   min-width: 0; /* Prevent flex item from overflowing */
+  max-width: 800px; /* Fixed max width for consistent display */
+  width: 100%;
 }
 
 /* ===========================================
@@ -233,6 +235,50 @@
 
 .search-results-list.references .search-result-item {
   border-left-color: #9c27b0;
+}
+
+/* ===========================================
+   Reference Item Styling (Citation format)
+   =========================================== */
+
+.search-result-item.reference-item {
+  padding: 15px 18px;
+}
+
+.search-result-item.reference-item .citation-line {
+  line-height: 1.6;
+  color: #333;
+}
+
+.search-result-item.reference-item .citation-pmid {
+  color: #1976d2;
+  font-weight: 500;
+}
+
+/* Citation links below */
+.search-result-item.reference-item .citation-links-below {
+  margin-top: 8px;
+  font-size: 0.9em;
+}
+
+.search-result-item.reference-item .citation-links-below .citation-link {
+  color: #1976d2;
+  text-decoration: none;
+  margin-right: 12px;
+}
+
+.search-result-item.reference-item .citation-links-below .citation-link:hover {
+  text-decoration: underline;
+}
+
+.search-result-item.reference-item .citation-links-below .citation-link::before {
+  content: "| ";
+  color: #999;
+  margin-right: 0;
+}
+
+.search-result-item.reference-item .citation-links-below .citation-link:first-child::before {
+  content: "";
 }
 
 /* Back to search link */
