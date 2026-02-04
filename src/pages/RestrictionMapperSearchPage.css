@@ -1,0 +1,208 @@
+/* Restriction Mapper Search Page Styles */
+
+.restriction-mapper-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.restriction-mapper-content {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 4px;
+}
+
+.restriction-mapper-page h1 {
+  color: #1976d2;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.restriction-mapper-page hr {
+  border: none;
+  border-top: 2px solid #1976d2;
+  margin-bottom: 25px;
+}
+
+.restriction-mapper-page .subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 25px;
+}
+
+/* Form Sections */
+.restriction-mapper-page .form-section {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.restriction-mapper-page .form-section h3 {
+  color: #333;
+  margin: 0 0 15px 0;
+  font-size: 1.1em;
+}
+
+.restriction-mapper-page .form-group {
+  margin-bottom: 15px;
+}
+
+.restriction-mapper-page .form-group:last-child {
+  margin-bottom: 0;
+}
+
+.restriction-mapper-page .form-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.restriction-mapper-page .form-group input[type="text"],
+.restriction-mapper-page .form-group select,
+.restriction-mapper-page .form-group textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.restriction-mapper-page .form-group textarea {
+  font-family: monospace;
+  resize: vertical;
+}
+
+.restriction-mapper-page .form-group input:focus,
+.restriction-mapper-page .form-group select:focus,
+.restriction-mapper-page .form-group textarea:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+}
+
+.restriction-mapper-page .form-group .help-text {
+  font-size: 0.85em;
+  color: #666;
+  margin-top: 5px;
+}
+
+/* Input Type Tabs */
+.input-type-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.tab-button {
+  padding: 10px 20px;
+  border: none;
+  background: none;
+  color: #666;
+  font-size: 14px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.tab-button:hover {
+  color: #1976d2;
+}
+
+.tab-button.active {
+  color: #1976d2;
+  border-bottom-color: #1976d2;
+  font-weight: 500;
+}
+
+/* Submit Button */
+.restriction-mapper-page .submit-section {
+  text-align: center;
+  margin-top: 25px;
+}
+
+.restriction-mapper-page .submit-button {
+  padding: 14px 40px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.restriction-mapper-page .submit-button:hover:not(:disabled) {
+  background-color: #1565c0;
+}
+
+.restriction-mapper-page .submit-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Loading Spinner */
+.restriction-mapper-page .loading-spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error State */
+.restriction-mapper-page .error-state {
+  background-color: #ffebee;
+  border: 1px solid #ef9a9a;
+  border-radius: 4px;
+  padding: 15px 20px;
+  color: #c62828;
+  margin-top: 20px;
+}
+
+.restriction-mapper-page .error-state strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .restriction-mapper-page {
+    padding: 10px;
+  }
+
+  .restriction-mapper-content {
+    padding: 20px;
+  }
+
+  .input-type-tabs {
+    flex-direction: column;
+  }
+
+  .tab-button {
+    border-bottom: none;
+    border-left: 2px solid transparent;
+    text-align: left;
+  }
+
+  .tab-button.active {
+    border-bottom: none;
+    border-left-color: #1976d2;
+  }
+}

@@ -41,6 +41,8 @@ import BlastResultsPage from './pages/BlastResultsPage';
 import PatmatchSearchPage from './pages/PatmatchSearchPage';
 import PatmatchResultsPage from './pages/PatmatchResultsPage';
 import BatchDownloadPage from './pages/BatchDownloadPage';
+import RestrictionMapperSearchPage from './pages/RestrictionMapperSearchPage';
+import RestrictionMapperResultsPage from './pages/RestrictionMapperResultsPage';
 
 // Help documentation pages
 import GettingStartedHelp from './pages/help/GettingStartedHelp';
@@ -182,6 +184,8 @@ function App() {
           <Route path="/blast/results" element={<BlastResultsPage />} />
           <Route path="/patmatch" element={<PatmatchSearchPage />} />
           <Route path="/patmatch/results" element={<PatmatchResultsPage />} />
+          <Route path="/restriction-mapper" element={<RestrictionMapperSearchPage />} />
+          <Route path="/restriction-mapper/results" element={<RestrictionMapperResultsPage />} />
           <Route path="/batch-download" element={<BatchDownloadPage />} />
 
           {/* Help documentation pages */}

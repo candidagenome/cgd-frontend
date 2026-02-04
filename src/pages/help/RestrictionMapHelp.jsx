@@ -25,7 +25,7 @@ function RestrictionMapHelp() {
         <div className="info-section">
           <h2 id="description">Description</h2>
           <p>
-            The <a href="/cgi-bin/PATMATCH/RestrictionMapper">CGD Restriction Analysis</a> software can be used to
+            The <Link to="/restriction-mapper">CGD Restriction Analysis</Link> software can be used to
             generate a restriction map of a given DNA sequence. Either the name of the sequence (gene name, ORF name)
             can be given or an actual DNA sequence. The user can choose whether the restriction map shows all enzymes,
             enzymes that generate 3' overhangs, 5' overhangs, or blunt ends, or enzymes that cut once or twice.
@@ -122,7 +122,7 @@ function RestrictionMapHelp() {
           <h2 id="links">Other Relevant Links</h2>
           <ol>
             <li>
-              <a href="/cgi-bin/seqTools">Gene/Sequence Resources</a> at CGD, where can be found alternative restriction
+              <Link to="/seq-tools">Gene/Sequence Resources</Link> at CGD, where can be found alternative restriction
               digest software provided by GCG.
             </li>
             <li>
@@ -136,7 +136,7 @@ function RestrictionMapHelp() {
 
         <p>
           <strong>
-            Go to <a href="/cgi-bin/PATMATCH/RestrictionMapper">Candida Genome Restriction Analysis</a>
+            Go to <Link to="/restriction-mapper">Candida Genome Restriction Analysis</Link>
           </strong>
         </p>
       </div>
