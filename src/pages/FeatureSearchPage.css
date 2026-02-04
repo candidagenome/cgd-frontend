@@ -1,0 +1,376 @@
+/* Feature Search (Advanced Search) Page Styles */
+
+.feature-search-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.feature-search-content {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 4px;
+}
+
+.feature-search-page h1 {
+  color: #1976d2;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.feature-search-page hr {
+  border: none;
+  border-top: 2px solid #1976d2;
+  margin-bottom: 25px;
+}
+
+.feature-search-page .subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 25px;
+}
+
+/* Form Sections */
+.feature-search-page .form-section {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.feature-search-page .form-section h3 {
+  color: #333;
+  margin: 0 0 15px 0;
+  font-size: 1.1em;
+}
+
+.feature-search-page .required {
+  color: #c62828;
+  font-weight: normal;
+  font-size: 0.85em;
+}
+
+.feature-search-page .optional {
+  color: #666;
+  font-weight: normal;
+  font-size: 0.85em;
+}
+
+.feature-search-page .help-text {
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.feature-search-page .hint {
+  font-size: 0.85em;
+  color: #888;
+  margin-top: 5px;
+}
+
+/* Form Groups */
+.feature-search-page .form-group {
+  margin-bottom: 15px;
+}
+
+.feature-search-page .form-group:last-child {
+  margin-bottom: 0;
+}
+
+.feature-search-page .form-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.feature-search-page .form-group select {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.feature-search-page .form-group select:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+}
+
+/* Checkbox Grid */
+.feature-search-page .checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.feature-search-page .checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: normal;
+  color: #333;
+}
+
+.feature-search-page .checkbox-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.feature-search-page .checkbox-label.select-all {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
+  font-weight: 500;
+}
+
+/* Checkbox List */
+.feature-search-page .checkbox-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.feature-search-page .checkbox-list.horizontal {
+  flex-direction: row;
+}
+
+/* Radio Group */
+.feature-search-page .radio-group {
+  display: flex;
+  gap: 20px;
+}
+
+/* Filter Subsections */
+.feature-search-page .filter-subsection {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.feature-search-page .filter-subsection h4 {
+  color: #1976d2;
+  margin: 0 0 15px 0;
+  font-size: 1em;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 10px;
+}
+
+.feature-search-page .filter-row {
+  margin-bottom: 15px;
+}
+
+.feature-search-page .filter-row:last-child {
+  margin-bottom: 0;
+}
+
+.feature-search-page .filter-row > label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+/* Multi-Select */
+.feature-search-page .multi-select {
+  width: 100%;
+  max-width: 300px;
+  min-height: 100px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.feature-search-page .multi-select:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+}
+
+/* GO Select Groups */
+.feature-search-page .go-selects {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.feature-search-page .go-select-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.feature-search-page .go-select-group label {
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.feature-search-page .go-select {
+  min-height: 150px;
+  max-width: none;
+}
+
+/* Advanced GO Options Toggle */
+.feature-search-page .toggle-advanced {
+  background: none;
+  border: none;
+  color: #1976d2;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 15px;
+}
+
+.feature-search-page .toggle-advanced:hover {
+  text-decoration: underline;
+}
+
+/* Advanced GO Options */
+.feature-search-page .advanced-go-options {
+  background-color: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 15px;
+  margin-top: 10px;
+}
+
+.feature-search-page .evidence-codes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  gap: 8px;
+}
+
+.feature-search-page .link-buttons {
+  font-weight: normal;
+  font-size: 0.9em;
+}
+
+.feature-search-page .link-buttons button {
+  background: none;
+  border: none;
+  color: #1976d2;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+}
+
+.feature-search-page .link-buttons button:hover {
+  text-decoration: underline;
+}
+
+/* Submit Section */
+.feature-search-page .submit-section {
+  text-align: center;
+  margin-top: 25px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.feature-search-page .submit-button {
+  padding: 14px 40px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.feature-search-page .submit-button:hover:not(:disabled) {
+  background-color: #1565c0;
+}
+
+.feature-search-page .submit-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.feature-search-page .clear-button {
+  padding: 14px 30px;
+  background-color: #fff;
+  color: #666;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.feature-search-page .clear-button:hover {
+  background-color: #f5f5f5;
+  border-color: #999;
+}
+
+/* Loading State */
+.feature-search-page .loading-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+/* Error State */
+.feature-search-page .error-state {
+  background-color: #ffebee;
+  border: 1px solid #ef9a9a;
+  border-radius: 4px;
+  padding: 15px 20px;
+  color: #c62828;
+  margin-top: 20px;
+}
+
+.feature-search-page .error-state strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.feature-search-page .error-state p {
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .feature-search-page {
+    padding: 10px;
+  }
+
+  .feature-search-content {
+    padding: 20px;
+  }
+
+  .feature-search-page .checkbox-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .feature-search-page .go-selects {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-search-page .checkbox-list {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .feature-search-page .submit-section {
+    flex-direction: column;
+  }
+
+  .feature-search-page .submit-button,
+  .feature-search-page .clear-button {
+    width: 100%;
+  }
+}

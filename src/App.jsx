@@ -43,6 +43,8 @@ import PatmatchResultsPage from './pages/PatmatchResultsPage';
 import BatchDownloadPage from './pages/BatchDownloadPage';
 import RestrictionMapperSearchPage from './pages/RestrictionMapperSearchPage';
 import RestrictionMapperResultsPage from './pages/RestrictionMapperResultsPage';
+import FeatureSearchPage from './pages/FeatureSearchPage';
+import FeatureSearchResultsPage from './pages/FeatureSearchResultsPage';
 
 // Help documentation pages
 import GettingStartedHelp from './pages/help/GettingStartedHelp';
@@ -187,6 +189,8 @@ function App() {
           <Route path="/restriction-mapper" element={<RestrictionMapperSearchPage />} />
           <Route path="/restriction-mapper/results" element={<RestrictionMapperResultsPage />} />
           <Route path="/batch-download" element={<BatchDownloadPage />} />
+          <Route path="/feature-search" element={<FeatureSearchPage />} />
+          <Route path="/feature-search/results" element={<FeatureSearchResultsPage />} />
 
           {/* Help documentation pages */}
           <Route path="/help/getting-started" element={<GettingStartedHelp />} />
