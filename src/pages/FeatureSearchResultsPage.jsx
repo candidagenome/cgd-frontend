@@ -57,7 +57,7 @@ function FeatureSearchResultsPage() {
       setResults(response);
     } catch (err) {
       console.error('Search error:', err);
-      setError(err.response?.data?.error || err.message || 'Search failed');
+      setError(err.response?.data?.detail || err.response?.data?.error || err.message || 'Search failed');
     } finally {
       setLoading(false);
     }
