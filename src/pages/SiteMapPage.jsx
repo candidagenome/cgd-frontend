@@ -341,7 +341,7 @@ function SiteMapPage() {
               <td className="category-header" id="download" rowSpan="7">
                 <Link to="/download">Download Data</Link>
               </td>
-              <td><a href="/cgi-bin/batchDownload">Batch Download</a></td>
+              <td><Link to="/batch-download">Batch Download</Link></td>
               <td>Tool that allows simultaneous retrieval of DNA sequences, protein sequences, and chromosomal coordinate information for a list of gene names.</td>
               <td>Download information for a list of genes from CGD.</td>
               <td className="check-icon"><Link to="/help/batch-download">✓</Link></td>
