@@ -196,9 +196,9 @@ function App() {
           <Route path="/feature-search" element={<FeatureSearchPage />} />
           <Route path="/feature-search/results" element={<FeatureSearchResultsPage />} />
           <Route path="/genome-version-history" element={<GenomeVersionHistoryPage />} />
-          <Route path="/colleague" element={<ColleagueSearchPage />} />
           <Route path="/colleague/search" element={<ColleagueSearchResultsPage />} />
           <Route path="/colleague/:colleagueNo" element={<ColleagueDetailPage />} />
+          <Route path="/colleague" element={<ColleagueSearchPage />} />
 
           {/* Help documentation pages */}
           <Route path="/help/getting-started" element={<GettingStartedHelp />} />
