@@ -45,6 +45,7 @@ import RestrictionMapperSearchPage from './pages/RestrictionMapperSearchPage';
 import RestrictionMapperResultsPage from './pages/RestrictionMapperResultsPage';
 import FeatureSearchPage from './pages/FeatureSearchPage';
 import FeatureSearchResultsPage from './pages/FeatureSearchResultsPage';
+import GenomeVersionHistoryPage from './pages/GenomeVersionHistoryPage';
 
 // Help documentation pages
 import GettingStartedHelp from './pages/help/GettingStartedHelp';
@@ -191,6 +192,7 @@ function App() {
           <Route path="/batch-download" element={<BatchDownloadPage />} />
           <Route path="/feature-search" element={<FeatureSearchPage />} />
           <Route path="/feature-search/results" element={<FeatureSearchResultsPage />} />
+          <Route path="/genome-version-history" element={<GenomeVersionHistoryPage />} />
 
           {/* Help documentation pages */}
           <Route path="/help/getting-started" element={<GettingStartedHelp />} />
