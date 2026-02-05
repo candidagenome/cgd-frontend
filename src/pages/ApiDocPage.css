@@ -186,6 +186,25 @@
   color: #e65100;
 }
 
+.endpoint-example {
+  padding-left: 70px;
+  font-size: 0.85em;
+  color: #666;
+  margin-top: 5px;
+}
+
+.example-link {
+  font-family: 'Consolas', 'Monaco', monospace;
+  color: #1976d2;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.example-link:hover {
+  text-decoration: underline;
+  color: #1565c0;
+}
+
 /* Notes Section */
 .api-note {
   margin-top: 30px;
