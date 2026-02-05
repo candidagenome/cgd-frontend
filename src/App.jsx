@@ -53,6 +53,8 @@ import ColleagueUpdatePage from './pages/ColleagueUpdatePage';
 import GeneRegistryPage from './pages/GeneRegistryPage';
 import ChromosomePage from './pages/ChromosomePage';
 import ChromosomeListPage from './pages/ChromosomeListPage';
+import WebPrimerSearchPage from './pages/WebPrimerSearchPage';
+import WebPrimerResultsPage from './pages/WebPrimerResultsPage';
 
 // Help documentation pages
 import GettingStartedHelp from './pages/help/GettingStartedHelp';
@@ -196,6 +198,8 @@ function App() {
           <Route path="/patmatch/results" element={<PatmatchResultsPage />} />
           <Route path="/restriction-mapper" element={<RestrictionMapperSearchPage />} />
           <Route path="/restriction-mapper/results" element={<RestrictionMapperResultsPage />} />
+          <Route path="/webprimer" element={<WebPrimerSearchPage />} />
+          <Route path="/webprimer/results" element={<WebPrimerResultsPage />} />
           <Route path="/batch-download" element={<BatchDownloadPage />} />
           <Route path="/feature-search" element={<FeatureSearchPage />} />
           <Route path="/feature-search/results" element={<FeatureSearchResultsPage />} />
