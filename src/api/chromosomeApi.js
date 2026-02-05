@@ -5,6 +5,16 @@ import api from './config';
 
 const chromosomeApi = {
   /**
+   * List all chromosomes grouped by organism
+   *
+   * @returns {Promise<Object>} List of organisms with their chromosomes
+   */
+  list: async () => {
+    const response = await api.get('/api/chromosome');
+    return response.data;
+  },
+
+  /**
    * Get basic chromosome/contig info
    *
    * @param {string} name - Chromosome/contig name
