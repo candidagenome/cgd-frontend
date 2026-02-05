@@ -95,7 +95,7 @@ function FeatureSearchResultsPage() {
       });
     } catch (err) {
       console.error('Download error:', err);
-      alert('Failed to download results');
+      alert(`Failed to download results: ${err.message || 'Unknown error'}`);
     } finally {
       setDownloading(false);
     }

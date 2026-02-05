@@ -50,20 +50,41 @@ const featureSearchApi = {
    * Download search results as TSV
    */
   downloadResults: async (params) => {
-    const response = await api.post('/api/feature-search/download', params, {
-      responseType: 'blob',
-    });
+    try {
+      const response = await api.post('/api/feature-search/download', params, {
+        responseType: 'blob',
+      });
 
-    // Create download link
-    const blob = new Blob([response.data], { type: 'text/tab-separated-values' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', 'feature_search_results.tsv');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
+      // Check if response is an error (JSON) instead of TSV
+      if (response.data.type === 'application/json') {
+        const text = await response.data.text();
+        const error = JSON.parse(text);
+        throw new Error(error.detail || 'Download failed');
+      }
+
+      // Create download link
+      const blob = new Blob([response.data], { type: 'text/tab-separated-values' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'feature_search_results.tsv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      // If the error response is a blob, try to parse it
+      if (error.response?.data instanceof Blob) {
+        const text = await error.response.data.text();
+        try {
+          const errorData = JSON.parse(text);
+          throw new Error(errorData.detail || 'Download failed');
+        } catch {
+          throw new Error(text || 'Download failed');
+        }
+      }
+      throw error;
+    }
   },
 };
 
