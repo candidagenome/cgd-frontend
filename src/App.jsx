@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import HeaderSearchForm from './components/HeaderSearchForm';
+import HeaderNav from './components/HeaderNav';
 import HomePage from './pages/HomePage';
 import LocusPage from './pages/LocusPage';
 import ReferencePage from './pages/ReferencePage';
@@ -142,18 +143,8 @@ function App() {
             </div>
           </div>
 
-          {/* Main navigation bar */}
-          <nav className="header-nav" aria-label="Main">
-            <Link to="/">Home</Link>
-            <Link to="/search">Search</Link>
-            <a href="/jbrowse/index.html">JBrowse</a>
-            <Link to="/seq-tools">Sequence</Link>
-            <Link to="/go-resources">GO</Link>
-            <Link to="/tools">Tools</Link>
-            <Link to="/literature">Literature</Link>
-            <Link to="/download">Download</Link>
-            <Link to="/community">Community</Link>
-          </nav>
+          {/* Main navigation bar with dropdowns */}
+          <HeaderNav />
         </header>
 
         {/* =========================
