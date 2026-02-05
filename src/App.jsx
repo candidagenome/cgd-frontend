@@ -200,6 +200,8 @@ function App() {
           <Route path="/colleague/search" element={<ColleagueSearchResultsPage />} />
           <Route path="/colleague/update/:colleagueNo" element={<ColleagueUpdatePage />} />
           <Route path="/colleague/update" element={<ColleagueUpdatePage />} />
+          <Route path="/colleague-update/:colleagueNo" element={<ColleagueUpdatePage />} />
+          <Route path="/colleague-update" element={<ColleagueUpdatePage />} />
           <Route path="/colleague/:colleagueNo" element={<ColleagueDetailPage />} />
           <Route path="/colleague" element={<ColleagueSearchPage />} />
 

@@ -382,62 +382,64 @@ function ColleagueUpdatePage() {
           <fieldset>
             <legend>Personal Information</legend>
 
-            <div className="form-row">
-              <label htmlFor="last_name">Last Name *</label>
-              <input
-                type="text"
-                id="last_name"
-                name="last_name"
-                value={formData.last_name}
-                onChange={handleInputChange}
-                maxLength={40}
-                required
-              />
+            <div className="form-row-inline">
+              <div className="form-row">
+                <label htmlFor="last_name">Last Name *</label>
+                <input
+                  type="text"
+                  id="last_name"
+                  name="last_name"
+                  value={formData.last_name}
+                  onChange={handleInputChange}
+                  maxLength={40}
+                  required
+                />
+              </div>
+              <div className="form-row">
+                <label htmlFor="first_name">First Name *</label>
+                <input
+                  type="text"
+                  id="first_name"
+                  name="first_name"
+                  value={formData.first_name}
+                  onChange={handleInputChange}
+                  maxLength={40}
+                  required
+                />
+              </div>
             </div>
 
-            <div className="form-row">
-              <label htmlFor="first_name">First Name *</label>
-              <input
-                type="text"
-                id="first_name"
-                name="first_name"
-                value={formData.first_name}
-                onChange={handleInputChange}
-                maxLength={40}
-                required
-              />
-            </div>
-
-            <div className="form-row">
-              <label htmlFor="other_last_name">Other Last Name</label>
-              <input
-                type="text"
-                id="other_last_name"
-                name="other_last_name"
-                value={formData.other_last_name}
-                onChange={handleInputChange}
-                maxLength={40}
-                placeholder="e.g., maiden name"
-              />
-            </div>
-
-            <div className="form-row">
-              <label htmlFor="suffix">Suffix</label>
-              <select
-                id="suffix"
-                name="suffix"
-                value={formData.suffix}
-                onChange={handleInputChange}
-              >
-                <option value="">-- Select --</option>
-                <option value="Jr.">Jr.</option>
-                <option value="Sr.">Sr.</option>
-                <option value="II">II</option>
-                <option value="III">III</option>
-                <option value="IV">IV</option>
-                <option value="Ph.D.">Ph.D.</option>
-                <option value="M.D.">M.D.</option>
-              </select>
+            <div className="form-row-inline">
+              <div className="form-row">
+                <label htmlFor="other_last_name">Other Last Name</label>
+                <input
+                  type="text"
+                  id="other_last_name"
+                  name="other_last_name"
+                  value={formData.other_last_name}
+                  onChange={handleInputChange}
+                  maxLength={40}
+                  placeholder="e.g., maiden name"
+                />
+              </div>
+              <div className="form-row">
+                <label htmlFor="suffix">Suffix</label>
+                <select
+                  id="suffix"
+                  name="suffix"
+                  value={formData.suffix}
+                  onChange={handleInputChange}
+                >
+                  <option value="">-- Select --</option>
+                  <option value="Jr.">Jr.</option>
+                  <option value="Sr.">Sr.</option>
+                  <option value="II">II</option>
+                  <option value="III">III</option>
+                  <option value="IV">IV</option>
+                  <option value="Ph.D.">Ph.D.</option>
+                  <option value="M.D.">M.D.</option>
+                </select>
+              </div>
             </div>
 
             <div className="form-row">
@@ -453,30 +455,31 @@ function ColleagueUpdatePage() {
               />
             </div>
 
-            <div className="form-row">
-              <label htmlFor="profession">Profession</label>
-              <input
-                type="text"
-                id="profession"
-                name="profession"
-                value={formData.profession}
-                onChange={handleInputChange}
-                maxLength={100}
-                placeholder="e.g., yeast molecular biologist"
-              />
-            </div>
-
-            <div className="form-row">
-              <label htmlFor="job_title">Position</label>
-              <input
-                type="text"
-                id="job_title"
-                name="job_title"
-                value={formData.job_title}
-                onChange={handleInputChange}
-                maxLength={100}
-                placeholder="e.g., Principal Investigator, Post-doc"
-              />
+            <div className="form-row-inline">
+              <div className="form-row">
+                <label htmlFor="profession">Profession</label>
+                <input
+                  type="text"
+                  id="profession"
+                  name="profession"
+                  value={formData.profession}
+                  onChange={handleInputChange}
+                  maxLength={100}
+                  placeholder="e.g., yeast molecular biologist"
+                />
+              </div>
+              <div className="form-row">
+                <label htmlFor="job_title">Position</label>
+                <input
+                  type="text"
+                  id="job_title"
+                  name="job_title"
+                  value={formData.job_title}
+                  onChange={handleInputChange}
+                  maxLength={100}
+                  placeholder="e.g., PI, Post-doc"
+                />
+              </div>
             </div>
           </fieldset>
 
@@ -497,117 +500,121 @@ function ColleagueUpdatePage() {
               />
             </div>
 
-            <div className="form-row">
-              <label htmlFor="address1">Address Line 1</label>
-              <input
-                type="text"
-                id="address1"
-                name="address1"
-                value={formData.address1}
-                onChange={handleInputChange}
-                maxLength={60}
-              />
-            </div>
-
-            <div className="form-row">
-              <label htmlFor="address2">Address Line 2</label>
-              <input
-                type="text"
-                id="address2"
-                name="address2"
-                value={formData.address2}
-                onChange={handleInputChange}
-                maxLength={60}
-              />
-            </div>
-
-            <div className="form-row">
-              <label htmlFor="city">City</label>
-              <input
-                type="text"
-                id="city"
-                name="city"
-                value={formData.city}
-                onChange={handleInputChange}
-                maxLength={100}
-              />
-            </div>
-
-            <div className="form-row">
-              <label htmlFor="country">Country</label>
-              <select
-                id="country"
-                name="country"
-                value={formData.country}
-                onChange={handleInputChange}
-              >
-                <option value="">-- Select --</option>
-                {config?.countries?.map(c => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
-            </div>
-
-            {formData.country === 'USA' && (
+            <div className="form-row-inline">
               <div className="form-row">
-                <label htmlFor="state">State *</label>
-                <select
-                  id="state"
-                  name="state"
-                  value={formData.state}
-                  onChange={handleInputChange}
-                  required
-                >
-                  <option value="">-- Select --</option>
-                  {config?.us_states?.map(s => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            {formData.country === 'Canada' && (
-              <div className="form-row">
-                <label htmlFor="state">Province *</label>
-                <select
-                  id="state"
-                  name="state"
-                  value={formData.state}
-                  onChange={handleInputChange}
-                  required
-                >
-                  <option value="">-- Select --</option>
-                  {config?.canadian_provinces?.map(p => (
-                    <option key={p} value={p}>{p}</option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            {formData.country && formData.country !== 'USA' && formData.country !== 'Canada' && (
-              <div className="form-row">
-                <label htmlFor="region">Region/Province</label>
+                <label htmlFor="address1">Address Line 1</label>
                 <input
                   type="text"
-                  id="region"
-                  name="region"
-                  value={formData.region}
+                  id="address1"
+                  name="address1"
+                  value={formData.address1}
+                  onChange={handleInputChange}
+                  maxLength={60}
+                />
+              </div>
+              <div className="form-row">
+                <label htmlFor="address2">Address Line 2</label>
+                <input
+                  type="text"
+                  id="address2"
+                  name="address2"
+                  value={formData.address2}
+                  onChange={handleInputChange}
+                  maxLength={60}
+                />
+              </div>
+            </div>
+
+            <div className="form-row-inline">
+              <div className="form-row">
+                <label htmlFor="city">City</label>
+                <input
+                  type="text"
+                  id="city"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleInputChange}
+                  maxLength={100}
+                />
+              </div>
+              <div className="form-row">
+                <label htmlFor="country">Country</label>
+                <select
+                  id="country"
+                  name="country"
+                  value={formData.country}
+                  onChange={handleInputChange}
+                >
+                  <option value="">-- Select --</option>
+                  {config?.countries?.map(c => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="form-row-inline">
+              {formData.country === 'USA' && (
+                <div className="form-row">
+                  <label htmlFor="state">State *</label>
+                  <select
+                    id="state"
+                    name="state"
+                    value={formData.state}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="">-- Select --</option>
+                    {config?.us_states?.map(s => (
+                      <option key={s} value={s}>{s}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {formData.country === 'Canada' && (
+                <div className="form-row">
+                  <label htmlFor="state">Province *</label>
+                  <select
+                    id="state"
+                    name="state"
+                    value={formData.state}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="">-- Select --</option>
+                    {config?.canadian_provinces?.map(p => (
+                      <option key={p} value={p}>{p}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {formData.country && formData.country !== 'USA' && formData.country !== 'Canada' && (
+                <div className="form-row">
+                  <label htmlFor="region">Region/Province</label>
+                  <input
+                    type="text"
+                    id="region"
+                    name="region"
+                    value={formData.region}
+                    onChange={handleInputChange}
+                    maxLength={40}
+                  />
+                </div>
+              )}
+
+              <div className="form-row">
+                <label htmlFor="postal_code">Postal Code</label>
+                <input
+                  type="text"
+                  id="postal_code"
+                  name="postal_code"
+                  value={formData.postal_code}
                   onChange={handleInputChange}
                   maxLength={40}
                 />
               </div>
-            )}
-
-            <div className="form-row">
-              <label htmlFor="postal_code">Postal Code</label>
-              <input
-                type="text"
-                id="postal_code"
-                name="postal_code"
-                value={formData.postal_code}
-                onChange={handleInputChange}
-                maxLength={40}
-              />
             </div>
           </fieldset>
 
@@ -615,40 +622,40 @@ function ColleagueUpdatePage() {
           <fieldset>
             <legend>Contact Information</legend>
 
-            <div className="form-row">
-              <label htmlFor="work_phone">Work Phone</label>
-              <input
-                type="text"
-                id="work_phone"
-                name="work_phone"
-                value={formData.work_phone}
-                onChange={handleInputChange}
-                maxLength={40}
-              />
-            </div>
-
-            <div className="form-row">
-              <label htmlFor="other_phone">Other Phone</label>
-              <input
-                type="text"
-                id="other_phone"
-                name="other_phone"
-                value={formData.other_phone}
-                onChange={handleInputChange}
-                maxLength={40}
-              />
-            </div>
-
-            <div className="form-row">
-              <label htmlFor="fax">Fax</label>
-              <input
-                type="text"
-                id="fax"
-                name="fax"
-                value={formData.fax}
-                onChange={handleInputChange}
-                maxLength={40}
-              />
+            <div className="form-row-inline">
+              <div className="form-row">
+                <label htmlFor="work_phone">Work Phone</label>
+                <input
+                  type="text"
+                  id="work_phone"
+                  name="work_phone"
+                  value={formData.work_phone}
+                  onChange={handleInputChange}
+                  maxLength={40}
+                />
+              </div>
+              <div className="form-row">
+                <label htmlFor="other_phone">Other Phone</label>
+                <input
+                  type="text"
+                  id="other_phone"
+                  name="other_phone"
+                  value={formData.other_phone}
+                  onChange={handleInputChange}
+                  maxLength={40}
+                />
+              </div>
+              <div className="form-row">
+                <label htmlFor="fax">Fax</label>
+                <input
+                  type="text"
+                  id="fax"
+                  name="fax"
+                  value={formData.fax}
+                  onChange={handleInputChange}
+                  maxLength={40}
+                />
+              </div>
             </div>
 
             <div className="url-section">
@@ -663,13 +670,13 @@ function ColleagueUpdatePage() {
                   />
                   <input
                     type="text"
-                    placeholder="Description (optional)"
+                    placeholder="Description"
                     value={url.url_type}
                     onChange={(e) => handleUrlChange(idx, 'url_type', e.target.value)}
                   />
                   {formData.urls.length > 1 && (
                     <button type="button" className="remove-btn" onClick={() => removeUrl(idx)}>
-                      Remove
+                      ×
                     </button>
                   )}
                 </div>
@@ -691,33 +698,34 @@ function ColleagueUpdatePage() {
                 name="research_interests"
                 value={formData.research_interests}
                 onChange={handleInputChange}
-                rows={4}
+                rows={3}
                 maxLength={1500}
               />
             </div>
 
-            <div className="form-row">
-              <label htmlFor="keywords">Keywords</label>
-              <input
-                type="text"
-                id="keywords"
-                name="keywords"
-                value={formData.keywords}
-                onChange={handleInputChange}
-                placeholder="comma-separated keywords"
-              />
-            </div>
-
-            <div className="form-row">
-              <label htmlFor="associated_genes">Associated Genes</label>
-              <input
-                type="text"
-                id="associated_genes"
-                name="associated_genes"
-                value={formData.associated_genes}
-                onChange={handleInputChange}
-                placeholder="comma-separated gene names"
-              />
+            <div className="form-row-inline">
+              <div className="form-row">
+                <label htmlFor="keywords">Keywords</label>
+                <input
+                  type="text"
+                  id="keywords"
+                  name="keywords"
+                  value={formData.keywords}
+                  onChange={handleInputChange}
+                  placeholder="comma-separated"
+                />
+              </div>
+              <div className="form-row">
+                <label htmlFor="associated_genes">Associated Genes</label>
+                <input
+                  type="text"
+                  id="associated_genes"
+                  name="associated_genes"
+                  value={formData.associated_genes}
+                  onChange={handleInputChange}
+                  placeholder="comma-separated"
+                />
+              </div>
             </div>
           </fieldset>
 
