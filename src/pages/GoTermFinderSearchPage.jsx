@@ -129,15 +129,21 @@ function GoTermFinderSearchPage() {
         throw new Error('Please enter at least one gene');
       }
 
+      if (!formData.organism_no) {
+        throw new Error('Please select an organism');
+      }
+
       // Build request
       const request = {
         genes: geneList,
-        organism_no: parseInt(formData.organism_no),
+        organism_no: parseInt(formData.organism_no, 10),
         ontology: formData.ontology,
         p_value_cutoff: parseFloat(formData.p_value_cutoff),
         correction_method: formData.correction_method,
-        min_genes_in_term: parseInt(formData.min_genes_in_term),
+        min_genes_in_term: parseInt(formData.min_genes_in_term, 10),
       };
+
+      console.log('Submitting request:', request);
 
       // Add custom background if enabled
       if (formData.use_custom_background && formData.background_genes.trim()) {
@@ -167,6 +173,7 @@ function GoTermFinderSearchPage() {
       sessionStorage.setItem('goTermFinderRequest', JSON.stringify(request));
       navigate('/go-term-finder/results');
     } catch (err) {
+      console.error('Analysis error:', err);
       setError(err.response?.data?.detail || err.message || 'Analysis failed');
     } finally {
       setLoading(false);
