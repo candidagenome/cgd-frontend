@@ -55,6 +55,8 @@ import ChromosomePage from './pages/ChromosomePage';
 import ChromosomeListPage from './pages/ChromosomeListPage';
 import WebPrimerSearchPage from './pages/WebPrimerSearchPage';
 import WebPrimerResultsPage from './pages/WebPrimerResultsPage';
+import GoTermFinderSearchPage from './pages/GoTermFinderSearchPage';
+import GoTermFinderResultsPage from './pages/GoTermFinderResultsPage';
 
 // Help documentation pages
 import GettingStartedHelp from './pages/help/GettingStartedHelp';
@@ -200,6 +202,8 @@ function App() {
           <Route path="/restriction-mapper/results" element={<RestrictionMapperResultsPage />} />
           <Route path="/webprimer" element={<WebPrimerSearchPage />} />
           <Route path="/webprimer/results" element={<WebPrimerResultsPage />} />
+          <Route path="/go-term-finder" element={<GoTermFinderSearchPage />} />
+          <Route path="/go-term-finder/results" element={<GoTermFinderResultsPage />} />
           <Route path="/batch-download" element={<BatchDownloadPage />} />
           <Route path="/feature-search" element={<FeatureSearchPage />} />
           <Route path="/feature-search/results" element={<FeatureSearchResultsPage />} />
