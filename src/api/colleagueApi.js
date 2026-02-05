@@ -33,6 +33,31 @@ const colleagueApi = {
     const response = await api.get(`/api/colleague/${colleagueNo}`);
     return response.data;
   },
+
+  /**
+   * Get form configuration for colleague registration/update
+   *
+   * @returns {Promise<Object>} Form configuration (countries, states, etc.)
+   */
+  getFormConfig: async () => {
+    const response = await api.get('/api/colleague/form-config');
+    return response.data;
+  },
+
+  /**
+   * Submit colleague registration or update
+   *
+   * @param {number|null} colleagueNo - Colleague ID for updates, null for new
+   * @param {Object} data - Colleague data
+   * @returns {Promise<Object>} Submission response
+   */
+  submit: async (colleagueNo, data) => {
+    const response = await api.post('/api/colleague/submit', {
+      colleague_no: colleagueNo,
+      data,
+    });
+    return response.data;
+  },
 };
 
 export default colleagueApi;
