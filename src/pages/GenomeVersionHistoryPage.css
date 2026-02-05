@@ -5,7 +5,7 @@
 }
 
 .genome-version-content {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -127,6 +127,7 @@
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  table-layout: auto;
 }
 
 .version-table th,
@@ -163,14 +164,17 @@
 .version-cell {
   font-family: monospace;
   font-size: 0.95rem;
+  white-space: nowrap;
 }
 
 .strain-cell {
   font-style: italic;
+  white-space: nowrap;
 }
 
 .current-cell {
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .date-cell {
@@ -179,7 +183,10 @@
 
 .description-cell {
   text-align: left;
+  white-space: normal;
   word-wrap: break-word;
+  overflow-wrap: break-word;
+  min-width: 200px;
 }
 
 /* Results Info */
@@ -193,11 +200,11 @@
 /* Pagination */
 .pagination {
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   gap: 10px;
   margin: 15px 0;
-  flex-wrap: wrap;
 }
 
 .pagination-btn {
