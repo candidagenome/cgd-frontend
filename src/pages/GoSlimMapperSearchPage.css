@@ -1,0 +1,328 @@
+.go-slim-mapper-search-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.go-slim-mapper-content h1 {
+  color: #003366;
+  margin-bottom: 10px;
+}
+
+.go-slim-mapper-content hr {
+  border: none;
+  border-top: 2px solid #003366;
+  margin-bottom: 20px;
+}
+
+.page-description {
+  margin-bottom: 20px;
+  color: #555;
+  line-height: 1.5;
+}
+
+.page-description a {
+  color: #0066cc;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.loading-inline {
+  padding: 15px;
+  color: #666;
+  font-style: italic;
+}
+
+.error-message {
+  background-color: #fee;
+  border: 1px solid #c00;
+  color: #900;
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+
+/* Form sections */
+.form-section {
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.form-section h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 15px 0;
+  color: #003366;
+  font-size: 1.1em;
+}
+
+.section-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: #003366;
+  color: white;
+  border-radius: 50%;
+  font-size: 0.9em;
+}
+
+/* Form rows */
+.form-row {
+  margin-bottom: 12px;
+}
+
+.form-row label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.form-row select,
+.form-row input[type="number"] {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  min-width: 300px;
+}
+
+/* Gene input */
+.gene-input-container label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.gene-input-container textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 14px;
+  resize: vertical;
+}
+
+.gene-input-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.gene-count {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.file-upload-label {
+  display: inline-block;
+  padding: 6px 12px;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.file-upload-label:hover {
+  background: #e0e0e0;
+}
+
+.file-upload-label input[type="file"] {
+  display: none;
+}
+
+/* Aspect options */
+.aspect-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 8px;
+}
+
+/* Radio and checkbox options */
+.annotation-type-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.radio-label,
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.radio-label span,
+.checkbox-label span {
+  color: #333;
+}
+
+/* Term selection */
+.filter-description {
+  color: #666;
+  font-size: 0.9em;
+  margin-bottom: 12px;
+}
+
+.term-selection-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.term-selection-actions button {
+  padding: 4px 10px;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85em;
+}
+
+.term-selection-actions button:hover {
+  background: #e0e0e0;
+}
+
+.selected-count {
+  color: #666;
+  font-size: 0.9em;
+  margin-left: auto;
+}
+
+.term-selection-list {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+  padding: 10px;
+}
+
+.term-label {
+  display: flex;
+  align-items: flex-start;
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.term-label:last-child {
+  border-bottom: none;
+}
+
+.term-label input {
+  margin-top: 3px;
+}
+
+.term-goid {
+  font-family: monospace;
+  color: #0066cc;
+  min-width: 100px;
+  font-size: 0.9em;
+}
+
+.term-name {
+  color: #333;
+  font-size: 0.9em;
+}
+
+.no-terms {
+  color: #666;
+  font-style: italic;
+}
+
+/* Form actions */
+.form-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.submit-btn {
+  padding: 12px 30px;
+  background: #006600;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1.1em;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: #005500;
+}
+
+.submit-btn:disabled {
+  background: #999;
+  cursor: not-allowed;
+}
+
+.reset-btn {
+  padding: 12px 20px;
+  background: #f0f0f0;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.reset-btn:hover {
+  background: #e0e0e0;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .go-slim-mapper-search-page {
+    padding: 10px;
+  }
+
+  .form-section {
+    padding: 15px;
+  }
+
+  .gene-input-actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .form-row select {
+    min-width: 100%;
+  }
+
+  .aspect-options,
+  .annotation-type-options {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .term-selection-actions {
+    flex-wrap: wrap;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .submit-btn,
+  .reset-btn {
+    width: 100%;
+  }
+}

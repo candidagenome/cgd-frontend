@@ -57,6 +57,8 @@ import WebPrimerSearchPage from './pages/WebPrimerSearchPage';
 import WebPrimerResultsPage from './pages/WebPrimerResultsPage';
 import GoTermFinderSearchPage from './pages/GoTermFinderSearchPage';
 import GoTermFinderResultsPage from './pages/GoTermFinderResultsPage';
+import GoSlimMapperSearchPage from './pages/GoSlimMapperSearchPage';
+import GoSlimMapperResultsPage from './pages/GoSlimMapperResultsPage';
 
 // Help documentation pages
 import GettingStartedHelp from './pages/help/GettingStartedHelp';
@@ -204,6 +206,8 @@ function App() {
           <Route path="/webprimer/results" element={<WebPrimerResultsPage />} />
           <Route path="/go-term-finder" element={<GoTermFinderSearchPage />} />
           <Route path="/go-term-finder/results" element={<GoTermFinderResultsPage />} />
+          <Route path="/go-slim-mapper" element={<GoSlimMapperSearchPage />} />
+          <Route path="/go-slim-mapper/results" element={<GoSlimMapperResultsPage />} />
           <Route path="/batch-download" element={<BatchDownloadPage />} />
           <Route path="/feature-search" element={<FeatureSearchPage />} />
           <Route path="/feature-search/results" element={<FeatureSearchResultsPage />} />
