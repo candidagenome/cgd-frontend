@@ -386,7 +386,7 @@ const BatchDownloadHelp = () => {
             <strong>Orthologs and Best hits</strong> - retrieves <em>Candida</em> and{' '}
             <em>S. cerevisiae</em> orthologs and best hits in a tab-delimited file format. See{' '}
             <a
-              href="/cgi-bin/reference/reference.pl?dbid=CAL0142012"
+              href="http://www.candidagenome.org/cgi-bin/reference/reference.pl?dbid=CAL0142012"
               target="_blank"
               rel="noopener noreferrer"
             >

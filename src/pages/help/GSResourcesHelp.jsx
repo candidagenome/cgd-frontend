@@ -232,7 +232,7 @@ Contig19-10216  200310  220546`}
             features of a region of chromosomal DNA around the selected gene or ORF, from which
             the entire chromosome or contig may be navigated.
             [<a
-              href="/cgi-bin/gbrowse2/gbrowse/candida/?help=general"
+              href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/candida/?help=general"
               target="_blank"
               rel="noopener noreferrer"
             >

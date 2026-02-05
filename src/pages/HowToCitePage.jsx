@@ -117,7 +117,7 @@ function HowToCitePage() {
 
             <li>
               Skrzypek MS, Binkley J, Binkley G, Miyasato SR, Simison M, Sherlock G.{' '}
-              <a href="/cgi-bin/reference/reference.pl?pubmed=27738138">
+              <a href="http://www.candidagenome.org/cgi-bin/reference/reference.pl?pubmed=27738138">
                 The <em>Candida</em> Genome Database (CGD): incorporation of Assembly 22, systematic
                 identifiers and visualization of high throughput sequencing data.
               </a>{' '}
@@ -136,7 +136,7 @@ function HowToCitePage() {
             <li>
               Binkley J, Arnaud MB, Inglis DO, Skrzypek MS, Shah P, Wymore F, Binkley G, Miyasato SR,
               Simison M, Sherlock G.{' '}
-              <a href="/cgi-bin/reference/reference.pl?pubmed=24185697">
+              <a href="http://www.candidagenome.org/cgi-bin/reference/reference.pl?pubmed=24185697">
                 The <em>Candida</em> Genome Database: the new homology information page highlights
                 protein similarity and phylogeny.
               </a>{' '}
@@ -156,7 +156,7 @@ function HowToCitePage() {
             <li>
               Inglis DO, Skrzypek MS, Arnaud MB, Binkley J, Shah P, Wymore F, Sherlock G.
               <br />
-              <a href="/cgi-bin/reference/reference.pl?pubmed=23143685">
+              <a href="http://www.candidagenome.org/cgi-bin/reference/reference.pl?pubmed=23143685">
                 Improved Gene Ontology annotation for biofilm formation, filamentous growth and
                 phenotypic switching in <em>Candida albicans</em>.
               </a>
@@ -177,7 +177,7 @@ function HowToCitePage() {
               Inglis DO, Arnaud MB, Binkley J, Shah P, Skrzypek MS, Wymore F, Binkley G, Miyasato SR,
               Simison M, Sherlock G.
               <br />
-              <a href="/cgi-bin/reference/reference.pl?pubmed=22064862">
+              <a href="http://www.candidagenome.org/cgi-bin/reference/reference.pl?pubmed=22064862">
                 The <em>Candida</em> genome database incorporates multiple <em>Candida</em> species:
                 multispecies search and analysis tools with curated gene and protein information for{' '}
                 <em>Candida albicans</em> and <em>Candida glabrata</em>.
@@ -199,7 +199,7 @@ function HowToCitePage() {
               Skrzypek MS, Arnaud MB, Costanzo MC, Inglis DO, Shah P, Binkley G, Miyasato SR,
               Sherlock G.
               <br />
-              <a href="/cgi-bin/reference/reference.pl?pubmed=19808938">
+              <a href="http://www.candidagenome.org/cgi-bin/reference/reference.pl?pubmed=19808938">
                 New tools at the <em>Candida</em> Genome Database: biochemical pathways and
                 full-text literature search.
               </a>
@@ -220,7 +220,7 @@ function HowToCitePage() {
             <li>
               Arnaud MB, Costanzo MC, Shah P, Skrzypek MS, Sherlock G.
               <br />
-              <a href="/cgi-bin/reference/reference.pl?pubmed=19577928">
+              <a href="http://www.candidagenome.org/cgi-bin/reference/reference.pl?pubmed=19577928">
                 Gene Ontology and the annotation of pathogen genomes: the case of{' '}
                 <em>Candida albicans</em>.
               </a>
@@ -240,7 +240,7 @@ function HowToCitePage() {
             <li>
               Butler G, Rasmussen MD, Lin MF, Santos MA, Sakthikumar S, Munro CA, et al.
               <br />
-              <a href="/cgi-bin/reference/reference.pl?pubmed=19465905">
+              <a href="http://www.candidagenome.org/cgi-bin/reference/reference.pl?pubmed=19465905">
                 Evolution of pathogenicity and sexual reproduction in eight <em>Candida</em>{' '}
                 genomes.
               </a>
@@ -261,7 +261,7 @@ function HowToCitePage() {
               Arnaud MB, Costanzo MC, Skrzypek MS, Shah P, Binkley G, Lane C, Miyasato SR, Sherlock
               G.
               <br />
-              <a href="/cgi-bin/reference/reference.pl?refNo=43840">
+              <a href="http://www.candidagenome.org/cgi-bin/reference/reference.pl?refNo=43840">
                 Sequence resources at the <em>Candida</em> Genome Database.
               </a>
               <br />
@@ -280,7 +280,7 @@ function HowToCitePage() {
             <li>
               Costanzo MC, Arnaud MB, Skrzypek MS, Binkley G, Lane C, Miyasato SR, Sherlock G.
               <br />
-              <a href="/cgi-bin/reference/reference.pl?refNo=41891">
+              <a href="http://www.candidagenome.org/cgi-bin/reference/reference.pl?refNo=41891">
                 The <em>Candida</em> Genome Database: Facilitating research on{' '}
                 <em>Candida albicans</em> molecular biology.
               </a>
@@ -294,7 +294,7 @@ function HowToCitePage() {
             <li>
               Arnaud MB, Costanzo MC, Skrzypek MS, Binkley G, Lane C, Miyasato SR, Sherlock G.
               <br />
-              <a href="/cgi-bin/reference/reference.pl?refNo=10947">
+              <a href="http://www.candidagenome.org/cgi-bin/reference/reference.pl?refNo=10947">
                 The <em>Candida</em> Genome Database (CGD), a community resource for{' '}
                 <em>Candida albicans</em> gene and protein information.
               </a>

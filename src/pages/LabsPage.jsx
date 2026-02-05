@@ -44,7 +44,7 @@ function LabsPage() {
           <p>
             If you are a <em>Candida</em> researcher and would like to be included in this
             directory, you can submit your colleague information using the{' '}
-            <a href="/cgi-bin/colleague/colleagueSearch">Colleague Submission Form</a>.
+            <a href="/colleague-update">Colleague Submission Form</a>.
           </p>
         </section>
 

@@ -103,7 +103,7 @@ const SearchPage = () => {
           <h2>CGD Advanced Searches</h2>
 
           <div className="help-item">
-            <h3><Link to="/cgi-bin/search/featureSearch">Advanced Search</Link></h3>
+            <h3><Link to="/feature-search">Advanced Search</Link></h3>
             <p>Find a chromosomal feature (e.g., gene, ORF, centromere) based on selected criteria (e.g., chromosome number, GO-Slim terms, etc.)</p>
           </div>
 
@@ -128,7 +128,7 @@ const SearchPage = () => {
           </div>
 
           <div className="help-item">
-            <h3><Link to="/cgi-bin/phenotype/phenotype.pl">Expanded Phenotype Search</Link></h3>
+            <h3><Link to="/phenotype/search">Expanded Phenotype Search</Link></h3>
             <p>
               Search the text of all phenotype information to find phenotypes of interest and view the genes
               associated with them, or <Link to="/cace/PhenotypeTree.html">browse the entire list</Link> of phenotype terms
@@ -136,12 +136,12 @@ const SearchPage = () => {
           </div>
 
           <div className="help-item">
-            <h3><Link to="/cgi-bin/GO/goTermMapper">GO Slim Mapper</Link></h3>
+            <h3><Link to="/go-slim-mapper">GO Slim Mapper</Link></h3>
             <p>This tool determines to which GO-slim terms a set of <em>Candida</em> genes is annotated</p>
           </div>
 
           <div className="help-item">
-            <h3><Link to="/cgi-bin/GO/goTermFinder">GO Term Finder</Link></h3>
+            <h3><Link to="/go-term-finder">GO Term Finder</Link></h3>
             <p>This tool determines the significant GO terms that a set of <em>Candida</em> genes shares in common</p>
           </div>
         </div>
@@ -170,20 +170,20 @@ const SearchPage = () => {
           </div>
 
           <div className="help-item">
-            <h3><Link to="/cgi-bin/compute/blast_clade.pl">BLAST</Link></h3>
+            <h3><Link to="/blast">BLAST</Link></h3>
             <p>Compare any query sequence against various <em>Candida</em> datasets</p>
           </div>
 
           <div className="help-item">
             <h3>GBrowse Genome Browser</h3>
             <p style={{ marginBottom: '5px' }}>
-              for <Link to="/cgi-bin/gbrowse2/gbrowse/candida_22/?ref=Ca22chrRA_C_albicans_SC5314;start=1729234;stop=1794843"><em>C. albicans</em> SC5314 Assembly 22</Link><br />
-              for <Link to="/cgi-bin/gbrowse2/gbrowse/candida_21/?ref=Ca21chrR_C_albicans_SC5314;start=1729234;stop=1794843"><em>C. albicans</em> SC5314 Assembly 21</Link><br />
-              for <Link to="/cgi-bin/gbrowse2/gbrowse/candida/?name=Contig19-10014%3A1..23104"><em>C. albicans</em> SC5314 Assembly 19</Link><br />
-              for <Link to="/cgi-bin/gbrowse2/gbrowse/cauris_b8441/?name=PEKT02000008_C_auris_B8441:785301..787300"><em>C. auris</em> B8441</Link><br />
-              for <Link to="/cgi-bin/gbrowse2/gbrowse/cdub_cd36/?name=Chr4_C_dubliniensis_CD36:143191..163190"><em>C. dubliniensis</em> CD36</Link><br />
-              for <Link to="/cgi-bin/gbrowse2/gbrowse/cglab_cbs138/?name=ChrM_C_glabrata_CBS138:193616..218115"><em>C. glabrata</em> CBS138</Link><br />
-              for <Link to="/cgi-bin/gbrowse2/gbrowse/cpar_cdc317/?name=ChrM_C_parapsilosis_CDC317:193616..218115"><em>C. parapsilosis</em> CDC317</Link>
+              for <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/candida_22/?ref=Ca22chrRA_C_albicans_SC5314;start=1729234;stop=1794843" target="_blank" rel="noopener noreferrer"><em>C. albicans</em> SC5314 Assembly 22</a><br />
+              for <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/candida_21/?ref=Ca21chrR_C_albicans_SC5314;start=1729234;stop=1794843" target="_blank" rel="noopener noreferrer"><em>C. albicans</em> SC5314 Assembly 21</a><br />
+              for <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/candida/?name=Contig19-10014%3A1..23104" target="_blank" rel="noopener noreferrer"><em>C. albicans</em> SC5314 Assembly 19</a><br />
+              for <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/cauris_b8441/?name=PEKT02000008_C_auris_B8441:785301..787300" target="_blank" rel="noopener noreferrer"><em>C. auris</em> B8441</a><br />
+              for <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/cdub_cd36/?name=Chr4_C_dubliniensis_CD36:143191..163190" target="_blank" rel="noopener noreferrer"><em>C. dubliniensis</em> CD36</a><br />
+              for <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/cglab_cbs138/?name=ChrM_C_glabrata_CBS138:193616..218115" target="_blank" rel="noopener noreferrer"><em>C. glabrata</em> CBS138</a><br />
+              for <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/cpar_cdc317/?name=ChrM_C_parapsilosis_CDC317:193616..218115" target="_blank" rel="noopener noreferrer"><em>C. parapsilosis</em> CDC317</a>
             </p>
             <p>View and navigate genomic sequence</p>
           </div>
@@ -201,27 +201,27 @@ const SearchPage = () => {
           </div>
 
           <div className="help-item">
-            <h3><Link to="/cgi-bin/chromosomeHistory.pl">Chromosome History Search</Link></h3>
+            <h3><a href="http://www.candidagenome.org/cgi-bin/chromosomeHistory.pl" target="_blank" rel="noopener noreferrer">Chromosome History Search</a></h3>
             <p>View the complete sequence and annotation history of each Assembly 22 chromosome</p>
           </div>
 
           <div className="help-item">
-            <h3><Link to="/cgi-bin/genomeVersionHistory.pl">Summary of Genome Versions</Link></h3>
+            <h3><Link to="/genome-version-history">Summary of Genome Versions</Link></h3>
             <p>View the complete history of sequence and annotation changes for each genome</p>
           </div>
 
           <div className="help-item">
-            <h3><Link to="/cgi-bin/PATMATCH/nph-patmatch">Pattern Matching</Link></h3>
+            <h3><Link to="/patmatch">Pattern Matching</Link></h3>
             <p>Locate DNA or protein sequence patterns</p>
           </div>
 
           <div className="help-item">
-            <h3><Link to="/cgi-bin/compute/web-primer">Design Primers</Link></h3>
+            <h3><Link to="/webprimer">Design Primers</Link></h3>
             <p>Design sequencing and PCR primers</p>
           </div>
 
           <div className="help-item">
-            <h3><Link to="/cgi-bin/PATMATCH/RestrictionMapper">Restriction Analysis</Link></h3>
+            <h3><Link to="/restriction-mapper">Restriction Analysis</Link></h3>
             <p>Display the restriction map for a sequence</p>
           </div>
         </div>
@@ -271,7 +271,7 @@ const SearchPage = () => {
           <h2>Search <em>Candida</em> Literature</h2>
 
           <div className="help-item">
-            <h3><Link to="/cgi-bin/reference/litGuide.pl">Search Literature in CGD</Link></h3>
+            <h3><a href="http://www.candidagenome.org/cgi-bin/reference/litGuide.pl" target="_blank" rel="noopener noreferrer">Search Literature in CGD</a></h3>
             <p>View CGD's annotated literature guide for any gene</p>
           </div>
 
@@ -286,12 +286,12 @@ const SearchPage = () => {
           <h2>Search Colleague Information</h2>
 
           <div className="help-item">
-            <h3><Link to="/cgi-bin/colleague/colleagueInfoSearch">Search CGD Colleagues</Link></h3>
+            <h3><Link to="/colleague">Search CGD Colleagues</Link></h3>
             <p>Search contact information submitted to CGD by <em>Candida</em> researchers</p>
           </div>
 
           <div className="help-item">
-            <h3><Link to="/cache/Labs.html"><em>Candida</em> Laboratories</Link></h3>
+            <h3><Link to="/labs"><em>Candida</em> Laboratories</Link></h3>
             <p>Links to PIs of laboratories that study <em>Candida</em></p>
           </div>
         </div>

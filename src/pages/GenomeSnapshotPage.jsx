@@ -151,7 +151,7 @@ function GenomeSnapshotPage() {
           Data on this page are updated periodically. All the data displayed on this page are available in one
           or more files (Chromosomal Feature File; GO Annotations File; Candida Go Slim Annotations File) on the
           CGD <Link to="/download">Download Data</Link> page. The{' '}
-          <a href="/cgi-bin/search/featureSearch">Advanced Search</a> tool can also be used to retrieve
+          <a href="/feature-search">Advanced Search</a> tool can also be used to retrieve
           chromosomal features that match specific criteria.
         </p>
 
@@ -216,7 +216,7 @@ function GenomeSnapshotPage() {
               </tr>
               <tr>
                 <td>
-                  <a href={`/cgi-bin/search/featureSearch?featuretype=Verified ORFs&organism=${organism}&qualifier=Verified`}>
+                  <a href={`/feature-search?featuretype=Verified ORFs&organism=${organism}&qualifier=Verified`}>
                     Verified ORFs
                   </a>
                 </td>
@@ -225,7 +225,7 @@ function GenomeSnapshotPage() {
               </tr>
               <tr>
                 <td>
-                  <a href={`/cgi-bin/search/featureSearch?featuretype=Uncharacterized ORFs&organism=${organism}&qualifier=Uncharacterized`}>
+                  <a href={`/feature-search?featuretype=Uncharacterized ORFs&organism=${organism}&qualifier=Uncharacterized`}>
                     Uncharacterized ORFs
                   </a>
                 </td>
@@ -234,7 +234,7 @@ function GenomeSnapshotPage() {
               </tr>
               <tr>
                 <td>
-                  <a href={`/cgi-bin/search/featureSearch?featuretype=Dubious ORFs&organism=${organism}&qualifier=Dubious`}>
+                  <a href={`/feature-search?featuretype=Dubious ORFs&organism=${organism}&qualifier=Dubious`}>
                     Dubious ORFs
                   </a>
                 </td>
@@ -243,7 +243,7 @@ function GenomeSnapshotPage() {
               </tr>
               <tr>
                 <td>
-                  <a href={`/cgi-bin/search/featureSearch?featuretype=tRNA&organism=${organism}`}>
+                  <a href={`/feature-search?featuretype=tRNA&organism=${organism}`}>
                     tRNA
                   </a>
                 </td>
@@ -324,7 +324,7 @@ function GenomeSnapshotPage() {
               documentation
             </a>.
             To obtain the GO data summarized in these graphs, you may use the{' '}
-            <a href="/cgi-bin/GO/goTermMapper">GO Slim Mapper</a>.
+            <a href="/go-slim-mapper">GO Slim Mapper</a>.
           </p>
 
           <div id="function" className="chart-section">
@@ -384,7 +384,7 @@ function GenomeSnapshotPage() {
           <h3>Related Resources</h3>
           <ul>
             <li>
-              <a href="/cgi-bin/search/featureSearch">Advanced Search Tool</a> - Search for chromosomal features
+              <a href="/feature-search">Advanced Search Tool</a> - Search for chromosomal features
             </li>
             <li>
               <Link to="/download">Download Data</Link> - Download feature files, GO annotations, and sequences

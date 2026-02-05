@@ -153,11 +153,11 @@ const GettingStartedHelp = () => {
             with something in common (e.g., transcriptional coregulation, similar null phenotypes, etc.)
             presents a special challenge in integrating what is known about each gene to find the
             significance of the trends observed. Two tools at CGD facilitate such analysis. The{' '}
-            <a href="/cgi-bin/GO/goTermMapper" target="_blank" rel="noopener noreferrer">GO Slim Term Mapper</a>{' '}
+            <a href="/go-slim-mapper" target="_blank" rel="noopener noreferrer">GO Slim Term Mapper</a>{' '}
             takes a list of genes and displays how many are annotated to each of the parent GO Slim terms,
             allowing visualization of the distribution of the input gene set over broad biological processes,
             biochemical functions, or subcellular localizations. The{' '}
-            <a href="/cgi-bin/GO/goTermFinder" target="_blank" rel="noopener noreferrer">GO Term Finder</a> tool
+            <a href="/go-term-finder" target="_blank" rel="noopener noreferrer">GO Term Finder</a> tool
             also takes a list of genes as input, and identifies GO terms shared among members of the group.
             The difference between the two tools is that the GO Slim Term Mapper maps genes to broad parent
             GO terms, while the Term Finder identifies specific, granular terms shared by the group. The SGD{' '}
@@ -171,7 +171,7 @@ const GettingStartedHelp = () => {
         <div className="info-section" id="VI">
           <h3><strong>How can CGD help me design experiments using <em>Candida</em> genes?</strong></h3>
           <p>
-            The <a href="/cgi-bin/seqTools" target="_blank" rel="noopener noreferrer">Gene/Sequence Resources</a>{' '}
+            The <a href="/seq-tools" target="_blank" rel="noopener noreferrer">Gene/Sequence Resources</a>{' '}
             page presents a versatile array of tools allowing retrieval and analysis of any portion of the
             genome, or analysis of your own input sequence. Sequences may be retrieved from a specific region
             of the genome, given a genetic or systematic name, and may include sequence upstream and/or
@@ -180,7 +180,7 @@ const GettingStartedHelp = () => {
             Once a sequence is retrieved or entered, tools allow its analysis in multiple different ways,
             including translation, restriction mapping, BLAST and FASTA analysis, and primer design. The user
             may select a desired format (GCG, FASTA, etc.) for the output of many of the tools. The{' '}
-            <a href="/cgi-bin/compute/web-primer/" target="_blank" rel="noopener noreferrer">
+            <a href="/webprimer/" target="_blank" rel="noopener noreferrer">
               oligonucleotide primer design
             </a>{' '}
             and <Link to="/blast">BLAST analysis</Link> tools are also available as direct links from the
@@ -190,7 +190,7 @@ const GettingStartedHelp = () => {
             Additional tools and resources that facilitate sequence analysis and cloning may be accessed from
             the <Link to="/search">Search Options</Link> index page. They include an assortment of search tools,
             including the{' '}
-            <a href="/cgi-bin/PATMATCH/nph-patmatch" target="_blank" rel="noopener noreferrer">Pattern Matching</a>{' '}
+            <a href="/patmatch" target="_blank" rel="noopener noreferrer">Pattern Matching</a>{' '}
             tool, which finds short sequences or sequence patterns in nucleotide or protein sequences.
           </p>
         </div>
@@ -200,7 +200,7 @@ const GettingStartedHelp = () => {
           <p>
             By consensus of the research community, CGD serves as the official arbiter of <em>C. albicans</em>{' '}
             genetic nomenclature and maintains a{' '}
-            <a href="/cgi-bin/registry/geneRegistry" target="_blank" rel="noopener noreferrer">gene name registry</a>{' '}
+            <a href="/gene-registry" target="_blank" rel="noopener noreferrer">gene name registry</a>{' '}
             for new proposed gene names. CGD also maintains a web site for{' '}
             <Link to="/community-news"><em>Candida</em> Community News</Link> and a list of upcoming{' '}
             <Link to="/meetings">conferences</Link>.
@@ -221,7 +221,7 @@ const GettingStartedHelp = () => {
           <p>
             Several different kinds of information for the <em>Candida</em> research community are available
             through CGD. You can{' '}
-            <a href="/cgi-bin/colleague/colleagueSearch" target="_blank" rel="noopener noreferrer">
+            <a href="/colleague-update" target="_blank" rel="noopener noreferrer">
               add your contact information
             </a>{' '}
             to CGD's directory of colleagues, which can be <Link to="/search">searched</Link> by last name.

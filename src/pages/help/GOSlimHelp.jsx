@@ -91,7 +91,7 @@ function GOSlimHelp() {
         <div className="info-section">
           <h2 id="query">Query Page</h2>
           <p>
-            The <a href="/cgi-bin/GO/goTermMapper">query page</a> allows you to enter the list of gene names and select
+            The <a href="/go-slim-mapper">query page</a> allows you to enter the list of gene names and select
             your GO Slim terms.
           </p>
           <ol>

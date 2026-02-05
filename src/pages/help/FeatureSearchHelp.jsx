@@ -196,9 +196,9 @@ const FeatureSearchHelp = () => {
           <p>
             You will also be given a table of options to <strong>"Manage your gene list"</strong>. This allows
             you to directly import the results into the{' '}
-            <a href="/cgi-bin/GO/goTermFinder" target="_blank" rel="noopener noreferrer">GO Term Finder</a> or
+            <a href="/go-term-finder" target="_blank" rel="noopener noreferrer">GO Term Finder</a> or
             the{' '}
-            <a href="/cgi-bin/GO/goTermMapper" target="_blank" rel="noopener noreferrer">GO Slim Mapper</a> to
+            <a href="/go-slim-mapper" target="_blank" rel="noopener noreferrer">GO Slim Mapper</a> to
             do further analysis, or to view a Summary of GO annotations. You will also be able to sort the
             list alphabetically by systematic name or by gene name. In addition, you will be able to download
             your results directly as a text file.

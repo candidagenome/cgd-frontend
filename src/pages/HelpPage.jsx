@@ -69,7 +69,7 @@ function HelpPage() {
 
         <div className="help-item">
           <h3>
-            <a href="/cgi-bin/gbrowse2/gbrowse/candida?help=general">GBrowse Help</a>
+            <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/candida?help=general">GBrowse Help</a>
           </h3>
           <p>
             Navigating the genome using the GBrowse Genome Browser. How to view nucleotide and

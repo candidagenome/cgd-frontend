@@ -186,14 +186,14 @@ const SequenceHelp = () => {
             Version designations appear in the following format:<br />
             sXX-mYY-rZZ<br />
             as described in detail{' '}
-            <a href="/cgi-bin/reference/reference.pl?dbid=CAL0000143461" target="_blank" rel="noopener noreferrer">
+            <a href="http://www.candidagenome.org/cgi-bin/reference/reference.pl?dbid=CAL0000143461" target="_blank" rel="noopener noreferrer">
               here
             </a>.
           </p>
           <p>
             A list of all of each of the versions of the sequence and annotation for each species, with
             release notes, is listed on the{' '}
-            <a href="http://candidagenome.org/cgi-bin/genomeVersionHistory.pl" target="_blank" rel="noopener noreferrer">
+            <a href="/genome-version-history">
               Summary of Genome Versions page
             </a>.
           </p>
@@ -201,7 +201,7 @@ const SequenceHelp = () => {
             Information about every update to the chromosome sequence and/or chromosomal location of any
             gene (or other annotated feature) is displayed on the CGD Locus History page for each of the
             relevant genes, and also on the appropriate{' '}
-            <a href="/cgi-bin/chromosomeHistory.pl" target="_blank" rel="noopener noreferrer">
+            <a href="http://www.candidagenome.org/cgi-bin/chromosomeHistory.pl" target="_blank" rel="noopener noreferrer">
               CGD Chromosome History
             </a>{' '}
             page.
@@ -222,7 +222,7 @@ const SequenceHelp = () => {
           <p>
             The paper describing the comparative genomic analysis that was the basis for the refinements
             to Assembly 21 performed in 2008 has now been published (
-            <a href="/cgi-bin/reference/reference.pl?pubmed=19465905" target="_blank" rel="noopener noreferrer">
+            <a href="http://www.candidagenome.org/cgi-bin/reference/reference.pl?pubmed=19465905" target="_blank" rel="noopener noreferrer">
               Butler, G., et al.
             </a>{' '}
             [2009] Nature).
@@ -269,7 +269,7 @@ const SequenceHelp = () => {
             presumed errors; see below) were removed from the sequence. The sequence and annotation changes
             made on each chromosome are listed on individual Chromosome History pages, which are linked from
             a{' '}
-            <a href="/cgi-bin/chromosomeHistory.pl" target="_blank" rel="noopener noreferrer">Summary Table</a>.
+            <a href="http://www.candidagenome.org/cgi-bin/chromosomeHistory.pl" target="_blank" rel="noopener noreferrer">Summary Table</a>.
             The detailed description of the methodology used in analysis and curation, as well as the summary
             of the results, is available in the{' '}
             <Link to="/help/refinements">Sequence Refinements, November 2008</Link> documentation.
@@ -352,7 +352,7 @@ const SequenceHelp = () => {
             <a href="http://nar.oupjournals.org/cgi/content/full/25/5/955" target="_blank" rel="noopener noreferrer">
               T. M. Lowe and S. R. Eddy
             </a>. The process used is described here,{' '}
-            <a href="/cgi-bin/reference/reference.pl?dbid=CAL0000142566" target="_blank" rel="noopener noreferrer">
+            <a href="http://www.candidagenome.org/cgi-bin/reference/reference.pl?dbid=CAL0000142566" target="_blank" rel="noopener noreferrer">
               Annotation of tRNAs in the <em>Candida</em> Genome Database
             </a>.
           </p>
@@ -476,13 +476,13 @@ const SequenceHelp = () => {
               supplementary material
             </a>{' '}
             associated with the paper and may be viewed using the SNP track in the CGD{' '}
-            <a href="/cgi-bin/gbrowse2/gbrowse/candida_21/?ref=Ca21chrR_C_albicans_SC5314;start=1729234;stop=1794843;label=All-SNP-DNA-Translation;width=800;keystyle=between;grid=on" target="_blank" rel="noopener noreferrer">
+            <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/candida_21/?ref=Ca21chrR_C_albicans_SC5314;start=1729234;stop=1794843;label=All-SNP-DNA-Translation;width=800;keystyle=between;grid=on" target="_blank" rel="noopener noreferrer">
               GBrowse genome browser
             </a>.
           </p>
           <p>
             SNP data are included among the data from{' '}
-            <a href="/cgi-bin/reference/reference.pl?dbid=CAL0123622" target="_blank" rel="noopener noreferrer">
+            <a href="http://www.candidagenome.org/cgi-bin/reference/reference.pl?dbid=CAL0123622" target="_blank" rel="noopener noreferrer">
               Butler et al. (2009)
             </a>{' '}
             for eight <em>Candida</em> genomes, and are available for download as{' '}
@@ -513,7 +513,7 @@ const SequenceHelp = () => {
           <p><strong>From the CGD Sequence Retrieval Tool:</strong></p>
           <p>
             To access the{' '}
-            <a href="/cgi-bin/seqTools" target="_blank" rel="noopener noreferrer">Sequence Retrieval Tool</a>{' '}
+            <a href="/seq-tools" target="_blank" rel="noopener noreferrer">Sequence Retrieval Tool</a>{' '}
             (also called Get Sequence, or Gene/Sequence Resources), use the link under Search Options on the
             left-hand sidebar of the <Link to="/">CGD Home Page</Link> or use the "Gene/ Sequence Resources"
             link under Specialized Gene and Sequence Searches on the{' '}
@@ -543,7 +543,7 @@ const SequenceHelp = () => {
             thumbnail views on each Locus page, or by using the "Genome Browser" links displayed on each{' '}
             <Link to="/help/blast-results">BLAST result</Link> page. Sequence download options are available
             from the Reports & Analysis pull-down menu in the interface. The{' '}
-            <a href="/cgi-bin/gbrowse2/gbrowse/candida?help=general" target="_blank" rel="noopener noreferrer">
+            <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/candida?help=general" target="_blank" rel="noopener noreferrer">
               GBrowse Help Documentation
             </a>{' '}
             page has additional instructions for use of the GBrowse interface.
@@ -561,7 +561,7 @@ const SequenceHelp = () => {
             in the neighborhood of the hit, to browse and download adjacent sequences, to view the 6-frame
             translation of the region, and to view restriction sites. (For a description of GBrowse
             features, please see our{' '}
-            <a href="/cgi-bin/gbrowse2/gbrowse/candida?help=general" target="_blank" rel="noopener noreferrer">
+            <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/candida?help=general" target="_blank" rel="noopener noreferrer">
               GBrowse documentation
             </a>). If applicable, links are provided to directly download/view the entire ORF or peptide
             sequence, or to navigate to the corresponding Locus page.

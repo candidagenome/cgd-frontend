@@ -243,7 +243,7 @@ function LocusPage() {
               <li>Check the spelling of the gene name or identifier</li>
               <li>Try using a standard gene name (e.g., <em>ACT1</em>, <em>CDC42</em>)</li>
               <li>Try using a systematic name (e.g., <em>C1_01070C_A</em>)</li>
-              <li>Use the <a href="/cgi-bin/search/featureSearch">Advanced Search</a> to find genes</li>
+              <li>Use the <a href="/feature-search">Advanced Search</a> to find genes</li>
             </ul>
           </div>
           <div className="error-actions">

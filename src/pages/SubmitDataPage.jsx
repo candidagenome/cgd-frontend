@@ -6,7 +6,7 @@ const SubmitDataPage = () => {
   const submissionOptions = [
     {
       title: 'Gene Registry Form',
-      url: '/cgi-bin/registry/geneRegistry',
+      url: '/gene-registry',
       description: 'Form to register a gene name'
     },
     {
@@ -17,7 +17,7 @@ const SubmitDataPage = () => {
     },
     {
       title: 'Colleague Submission/Update Form',
-      url: '/cgi-bin/colleague/colleagueSearch',
+      url: '/colleague-update',
       description: 'Add or update your information in CGD'
     },
     {

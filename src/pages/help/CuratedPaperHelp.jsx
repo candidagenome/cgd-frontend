@@ -107,7 +107,7 @@ function CuratedPaperHelp() {
                   <Link to="/help/locus">CGD Help: Locus Page</Link>
                 </li>
                 <li>
-                  <a href="/cgi-bin/search/search">Search CGD</a>
+                  <a href="/search">Search CGD</a>
                 </li>
               </ol>
             </li>
