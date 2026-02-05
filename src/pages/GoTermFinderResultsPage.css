@@ -254,26 +254,26 @@
 }
 
 .results-table th.th-term {
-  width: 25%;
+  width: 28%;
 }
 
 .results-table th.th-count {
-  width: 8%;
+  width: 7%;
   text-align: center;
 }
 
 .results-table th.th-fold {
-  width: 6%;
+  width: 5%;
   text-align: center;
 }
 
 .results-table th.th-pvalue {
-  width: 8%;
+  width: 7%;
   text-align: center;
 }
 
 .results-table th.th-genes {
-  width: auto;
+  width: 28%;
 }
 
 .results-table td {
