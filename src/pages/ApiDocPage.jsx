@@ -57,7 +57,6 @@ const ApiDocPage = () => {
         { method: 'GET', path: '/api/reference/{id}/locus_details', description: 'Get loci addressed in a paper', example: '/api/reference/40323423/locus_details' },
         { method: 'GET', path: '/api/reference/{id}/go_details', description: 'Get GO annotations citing this reference', example: '/api/reference/40323423/go_details' },
         { method: 'GET', path: '/api/reference/{id}/phenotype_details', description: 'Get phenotype annotations citing this reference', example: '/api/reference/40323423/phenotype_details' },
-        { method: 'GET', path: '/api/reference/{id}/interaction_details', description: 'Get interactions citing this reference', example: '/api/reference/40323423/interaction_details' },
         { method: 'GET', path: '/api/reference/{id}/literature_topics', description: 'Get literature topics for this reference', example: '/api/reference/40323423/literature_topics' },
         { method: 'GET', path: '/api/reference/search/author', description: 'Search references by author name', params: 'author', example: '/api/reference/search/author?author=Smith' },
         { method: 'GET', path: '/api/reference/new-papers-this-week', description: 'Get new papers added this week', params: 'days', example: '/api/reference/new-papers-this-week?days=7' },
