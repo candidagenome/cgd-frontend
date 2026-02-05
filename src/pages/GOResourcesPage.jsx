@@ -6,17 +6,17 @@ const GOResourcesPage = () => {
   const resources = [
     {
       title: 'What is GO?',
-      url: 'http://www.yeastgenome.org/help/GO.html',
+      url: 'https://geneontology.org/docs/ontology-documentation/',
       external: true,
       description: (
         <>
-          Help page that explains the philosophy of GO, provided by <em>Saccharomyces</em> Genome Database (SGD)
+          Documentation explaining the Gene Ontology and its structure, provided by the GO Consortium
         </>
       )
     },
     {
       title: 'GO Slim Mapper',
-      url: '/cgi-bin/GO/goTermMapper',
+      url: '/go-slim-mapper',
       external: false,
       description: (
         <>
@@ -26,7 +26,7 @@ const GOResourcesPage = () => {
     },
     {
       title: 'GO Term Finder',
-      url: '/cgi-bin/GO/goTermFinder',
+      url: '/go-term-finder',
       external: false,
       description: (
         <>

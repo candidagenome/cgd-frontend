@@ -69,7 +69,7 @@ function SiteMapPage() {
               <td className="check-icon"><Link to="/help/search-form">✓</Link></td>
             </tr>
             <tr>
-              <td><a href="/cgi-bin/search/featureSearch">Advanced Search</a></td>
+              <td><a href="/feature-search">Advanced Search</a></td>
               <td>Find a chromosomal feature (e.g., gene, ORF, centromere) based on selected criteria (e.g., chromosome number, GO-Slim terms, etc.)</td>
               <td>Find chromosomal features that match specific properties or annotations.</td>
               <td className="check-icon"><Link to="/help/feature-search">✓</Link></td>
@@ -87,7 +87,7 @@ function SiteMapPage() {
               <td className="check-icon"><Link to="/help/biochem-pathways">✓</Link></td>
             </tr>
             <tr>
-              <td><a href="/cgi-bin/phenotype/phenotype.pl">Expanded Phenotype Search</a></td>
+              <td><a href="/phenotype/search">Expanded Phenotype Search</a></td>
               <td>Search the text of all phenotype information to find phenotypes of interest and view the genes associated with them.</td>
               <td>Enter keywords associated with a phenotype (e.g., 'hyphal', 'virulence') to search for features.</td>
               <td className="check-icon"><Link to="/help/pheno-search">✓</Link></td>
@@ -153,13 +153,13 @@ function SiteMapPage() {
               <td className="category-header" id="tools" rowSpan="8">
                 <Link to="/search">Analysis & Tools</Link>
               </td>
-              <td><a href="/cgi-bin/compute/blast_clade.pl">BLAST</a></td>
+              <td><a href="/blast">BLAST</a></td>
               <td>Search <em>Candida</em> DNA and protein sequence datasets for similarities to a particular sequence.</td>
               <td>Find similarities between a sequence and <em>Candida</em> DNA or protein sequences.</td>
               <td className="check-icon"><Link to="/help/blast">✓</Link></td>
             </tr>
             <tr>
-              <td><a href="/cgi-bin/seqTools">Gene/Sequence Resources</a></td>
+              <td><a href="/seq-tools">Gene/Sequence Resources</a></td>
               <td>Retrieve <em>Candida</em> genomic sequence from CGD or paste in a DNA or protein sequence to analyze.</td>
               <td>Display and analyze a <em>Candida</em> sequence in many ways.</td>
               <td className="check-icon"><Link to="/help/gs-resources">✓</Link></td>
@@ -167,15 +167,15 @@ function SiteMapPage() {
             <tr>
               <td>
                 GBrowse Genome Browser<br />
-                <a href="/cgi-bin/gbrowse2/gbrowse/candida_22/"><em>C. albicans</em> A22</a> |{' '}
-                <a href="/cgi-bin/gbrowse2/gbrowse/cauris_b8441/"><em>C. auris</em></a> |{' '}
-                <a href="/cgi-bin/gbrowse2/gbrowse/cdub_cd36/"><em>C. dubliniensis</em></a> |{' '}
-                <a href="/cgi-bin/gbrowse2/gbrowse/cglab_cbs138/"><em>C. glabrata</em></a> |{' '}
-                <a href="/cgi-bin/gbrowse2/gbrowse/cpar_cdc317/"><em>C. parapsilosis</em></a>
+                <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/candida_22/"><em>C. albicans</em> A22</a> |{' '}
+                <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/cauris_b8441/"><em>C. auris</em></a> |{' '}
+                <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/cdub_cd36/"><em>C. dubliniensis</em></a> |{' '}
+                <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/cglab_cbs138/"><em>C. glabrata</em></a> |{' '}
+                <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/cpar_cdc317/"><em>C. parapsilosis</em></a>
               </td>
               <td>GBrowse allows viewing and navigation of genomic sequence.</td>
               <td>Navigate chromosomes of the <em>Candida</em> species. View annotated features.</td>
-              <td className="check-icon"><a href="/cgi-bin/gbrowse2/gbrowse/candida?help=general">✓</a></td>
+              <td className="check-icon"><a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/candida?help=general">✓</a></td>
             </tr>
             <tr>
               <td>
@@ -191,19 +191,19 @@ function SiteMapPage() {
               <td className="check-icon"><Link to="/help/jbrowse">✓</Link></td>
             </tr>
             <tr>
-              <td><a href="/cgi-bin/PATMATCH/nph-patmatch">Pattern Matching</a></td>
+              <td><a href="/patmatch">Pattern Matching</a></td>
               <td>A pattern matching program that allows ambiguous matches but not gaps.</td>
               <td>Find short DNA/protein sequence matches in <em>Candida</em> sequences.</td>
               <td className="check-icon"><Link to="/help/patmatch">✓</Link></td>
             </tr>
             <tr>
-              <td><a href="/cgi-bin/compute/web-primer">Design Primers</a></td>
+              <td><a href="/webprimer">Design Primers</a></td>
               <td>Recommends primers appropriate for either PCR or sequencing of a given gene or DNA sequence.</td>
               <td>Design sequencing and PCR primers for <em>Candida</em> or other input sequences.</td>
               <td className="check-icon"><Link to="/help/webprimer">✓</Link></td>
             </tr>
             <tr>
-              <td><a href="/cgi-bin/PATMATCH/RestrictionMapper">Genome Restriction Analysis</a></td>
+              <td><a href="/restriction-mapper">Genome Restriction Analysis</a></td>
               <td>Generates a restriction map of a specified DNA sequence.</td>
               <td>Display restriction maps for <em>Candida</em> or other input sequences.</td>
               <td className="check-icon"><Link to="/help/restriction-map">✓</Link></td>
@@ -239,13 +239,13 @@ function SiteMapPage() {
               <td></td>
             </tr>
             <tr>
-              <td><a href="/cgi-bin/GO/goTermMapper">GO Slim Mapper</a></td>
+              <td><a href="/go-slim-mapper">GO Slim Mapper</a></td>
               <td>GO Slim is a set of GO terms that represent major sections of the ontology. This tool traces specific annotations to broader GO Slim terms.</td>
               <td>Map a set of CGD genes to broad GO Slim categories.</td>
               <td className="check-icon"><Link to="/help/go-slim">✓</Link></td>
             </tr>
             <tr>
-              <td><a href="/cgi-bin/GO/goTermFinder">GO Term Finder</a></td>
+              <td><a href="/go-term-finder">GO Term Finder</a></td>
               <td>This tool determines the GO terms that a set of CGD genes shares in common and graphically displays the significant lineage.</td>
               <td>Find GO terms that are shared by a group of CGD genes.</td>
               <td className="check-icon"><Link to="/help/go-term-finder">✓</Link></td>
@@ -305,7 +305,7 @@ function SiteMapPage() {
               <td className="category-header" id="submit" rowSpan="4">
                 <Link to="/submit-data">Submit Data</Link>
               </td>
-              <td><a href="/cgi-bin/registry/geneRegistry">Gene Registry</a></td>
+              <td><a href="/gene-registry">Gene Registry</a></td>
               <td>Form to register a gene name.</td>
               <td>Register a gene name at CGD.</td>
               <td></td>
@@ -317,7 +317,7 @@ function SiteMapPage() {
               <td></td>
             </tr>
             <tr>
-              <td><a href="/cgi-bin/colleague/colleagueSearch">Colleague Submission/Update Form</a></td>
+              <td><a href="/colleague-update">Colleague Submission/Update Form</a></td>
               <td>Form to submit colleague information to CGD.</td>
               <td>Add or update your information in CGD.</td>
               <td className="check-icon"><Link to="/help/colleague-update">✓</Link></td>

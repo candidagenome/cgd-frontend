@@ -72,7 +72,7 @@ const FAQPage = () => {
                 do so through CGD. After publication the name becomes the standard gene name. CGD maintains a
                 detailed list of <Link to="/nomenclature">guidelines</Link> for choosing and reserving
                 new gene names, and for the resolution of conflicts over gene names. Please submit a reservation
-                using our <Link to="/cgi-bin/registry/geneRegistry">registry form</Link> or send CGD an{' '}
+                using our <Link to="/gene-registry">registry form</Link> or send CGD an{' '}
                 <Link to="/contact">email</Link> if you would like to reserve a gene name.
               </p>
               <p><strong>I'd like to change the name of a gene that already has a standard genetic name; is this possible?</strong></p>
@@ -94,7 +94,7 @@ const FAQPage = () => {
               </p>
               <p>
                 For help using the GBrowse Genome Browser, please see our{' '}
-                <Link to="/cgi-bin/gbrowse/candida?help=general">GBrowse Help Documentation</Link> page.
+                <a href="http://www.candidagenome.org/cgi-bin/gbrowse/candida?help=general" target="_blank" rel="noopener noreferrer">GBrowse Help Documentation</a> page.
               </p>
               <p>
                 Sequence issues pertaining to individual genes are described in the Locus History, which may
@@ -206,9 +206,9 @@ const FAQPage = () => {
             <div className="faq-answer">
               <p>
                 CGD has two tools for analysis of GO classifications of groups of genes. The{' '}
-                <Link to="/cgi-bin/GO/goTermMapper">GO Term Mapper</Link> tool takes a set of genes specified
+                <Link to="/go-slim-mapper">GO Term Mapper</Link> tool takes a set of genes specified
                 by the user and maps each to higher-level GO-Slim terms. The{' '}
-                <Link to="/cgi-bin/GO/goTermFinder">GO Term Finder</Link> tool takes the user's set of genes
+                <Link to="/go-term-finder">GO Term Finder</Link> tool takes the user's set of genes
                 of interest and finds GO terms that are shared within the set. Detailed documentation is
                 available on the{' '}
                 <a href="http://www.yeastgenome.org/help/goslimhelp.html" target="_blank" rel="noopener noreferrer">

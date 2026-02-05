@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import HeaderSearchForm from './components/HeaderSearchForm';
+import HeaderNav from './components/HeaderNav';
 import HomePage from './pages/HomePage';
 import LocusPage from './pages/LocusPage';
 import ReferencePage from './pages/ReferencePage';
@@ -59,6 +60,8 @@ import GoTermFinderSearchPage from './pages/GoTermFinderSearchPage';
 import GoTermFinderResultsPage from './pages/GoTermFinderResultsPage';
 import GoSlimMapperSearchPage from './pages/GoSlimMapperSearchPage';
 import GoSlimMapperResultsPage from './pages/GoSlimMapperResultsPage';
+import ToolsPage from './pages/ToolsPage';
+import ApiDocPage from './pages/ApiDocPage';
 
 // Help documentation pages
 import GettingStartedHelp from './pages/help/GettingStartedHelp';
@@ -141,18 +144,8 @@ function App() {
             </div>
           </div>
 
-          {/* Main navigation bar */}
-          <nav className="header-nav" aria-label="Main">
-            <Link to="/">Home</Link>
-            <Link to="/search">Search</Link>
-            <a href="/jbrowse/index.html">JBrowse</a>
-            <Link to="/seq-tools">Sequence</Link>
-            <Link to="/go-resources">GO</Link>
-            <Link to="/blast">Tools</Link>
-            <Link to="/literature">Literature</Link>
-            <Link to="/download">Download</Link>
-            <Link to="/community">Community</Link>
-          </nav>
+          {/* Main navigation bar with dropdowns */}
+          <HeaderNav />
         </header>
 
         {/* =========================
@@ -173,6 +166,7 @@ function App() {
           <Route path="/phenotype/terms" element={<ObservableTermsPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/help" element={<HelpPage />} />
+          <Route path="/developer/api" element={<ApiDocPage />} />
           <Route path="/how-to-cite" element={<HowToCitePage />} />
           <Route path="/sitemap" element={<SiteMapPage />} />
           <Route path="/genome-snapshot/:organism" element={<GenomeSnapshotPage />} />
@@ -196,6 +190,7 @@ function App() {
           <Route path="/strains" element={<StrainsPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/seq-tools" element={<SeqToolsPage />} />
+          <Route path="/tools" element={<ToolsPage />} />
           <Route path="/blast" element={<BlastSearchPage />} />
           <Route path="/blast/results" element={<BlastResultsPage />} />
           <Route path="/patmatch" element={<PatmatchSearchPage />} />

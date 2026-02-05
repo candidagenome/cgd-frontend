@@ -100,7 +100,7 @@ const SearchFormHelp = () => {
             This search allows one to find a chromosomal feature (e.g. gene, ORF, centromere) based on
             selected criteria (e.g. feature type, annotation/sequence properties, chromosome number, GO-Slim
             terms, etc.). For more information on the{' '}
-            <a href="/cgi-bin/search/featureSearch" target="_blank" rel="noopener noreferrer">Advanced Search</a>,
+            <a href="/feature-search" target="_blank" rel="noopener noreferrer">Advanced Search</a>,
             please see the <Link to="/help/feature-search">CGD Help: Advanced Search</Link>.
           </p>
 
@@ -140,7 +140,7 @@ const SearchFormHelp = () => {
 
           <h3>A. Gene/Sequence Resources (Get Sequence)</h3>
           <p>
-            <a href="/cgi-bin/seqTools" target="_blank" rel="noopener noreferrer">Gene/Sequence Resources</a>{' '}
+            <a href="/seq-tools" target="_blank" rel="noopener noreferrer">Gene/Sequence Resources</a>{' '}
             allows one to retrieve a list of options for accessing information available for 1) a named gene
             or sequence, 2) a specified chromosomal region, or 3) a raw DNA or protein sequence. This
             information includes biological information, table/map displays, and sequence analysis and
@@ -159,7 +159,7 @@ const SearchFormHelp = () => {
           <p>
             GBrowse is a genome visualization tool that allows one to view and navigate genomic sequence. For
             more specific help about GBrowse, please visit the{' '}
-            <a href="/cgi-bin/gbrowse2/gbrowse/candida/?help=general" target="_blank" rel="noopener noreferrer">
+            <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/candida/?help=general" target="_blank" rel="noopener noreferrer">
               GBrowse Help
             </a>.
           </p>
@@ -176,7 +176,7 @@ const SearchFormHelp = () => {
           <p>
             The tool helps in designing sequencing or PCR primers based on <em>Candida</em> sequences. More
             help on how to use{' '}
-            <a href="/cgi-bin/compute/web-primer" target="_blank" rel="noopener noreferrer">Web Primer</a> is
+            <a href="/webprimer" target="_blank" rel="noopener noreferrer">Web Primer</a> is
             available at the <Link to="/help/web-primer">Using Web Primer</Link> help pages.
           </p>
 
@@ -184,7 +184,7 @@ const SearchFormHelp = () => {
           <p>
             This tool can be used to generate a restriction map of a DNA sequence (either the gene name, or
             ORF name, or an actual DNA sequence, can be given as input). More information on the{' '}
-            <a href="/cgi-bin/PATMATCH/RestrictionMapper" target="_blank" rel="noopener noreferrer">
+            <a href="/restriction-mapper" target="_blank" rel="noopener noreferrer">
               CGD Restriction Analysis
             </a>{' '}
             tool is available at{' '}
@@ -204,7 +204,7 @@ const SearchFormHelp = () => {
           </p>
           <p>
             Orthologs among the <em>Candida</em> are computed as described{' '}
-            <a href="/cgi-bin/reference/reference.pl?dbid=CAL0142012" target="_blank" rel="noopener noreferrer">
+            <a href="http://www.candidagenome.org/cgi-bin/reference/reference.pl?dbid=CAL0142012" target="_blank" rel="noopener noreferrer">
               here
             </a>.
           </p>

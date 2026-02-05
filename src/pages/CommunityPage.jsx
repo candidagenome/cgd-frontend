@@ -6,7 +6,7 @@ const CommunityPage = () => {
   const communityResources = [
     {
       title: 'Search CGD Colleagues',
-      url: '/cgi-bin/colleague/colleagueInfoSearch',
+      url: '/colleague',
       description: 'Search CGD for colleague pages.'
     },
     {
@@ -20,7 +20,7 @@ const CommunityPage = () => {
     },
     {
       title: 'Colleague Submission/Update',
-      url: '/cgi-bin/colleague/colleagueSearch',
+      url: '/colleague-update',
       description: 'Add or update your information in CGD.'
     },
     {
@@ -58,7 +58,7 @@ const CommunityPage = () => {
     },
     {
       title: 'Gene Registry',
-      url: '/cgi-bin/registry/geneRegistry',
+      url: '/gene-registry',
       description: 'Register a gene.'
     },
     {

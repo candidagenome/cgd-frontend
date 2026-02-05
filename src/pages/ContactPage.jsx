@@ -34,7 +34,7 @@ function ContactPage() {
               <h3>Gene Registry</h3>
               <p>
                 To register a new gene name, please use the{' '}
-                <a href="/cgi-bin/registry/geneRegistry">Gene Registry Form</a>.
+                <a href="/gene-registry">Gene Registry Form</a>.
               </p>
             </div>
 
@@ -42,7 +42,7 @@ function ContactPage() {
               <h3>Colleague Information</h3>
               <p>
                 To add or update your information in CGD, use the{' '}
-                <a href="/cgi-bin/colleague/colleagueSearch">Colleague Submission/Update Form</a>.
+                <a href="/colleague-update">Colleague Submission/Update Form</a>.
               </p>
             </div>
 

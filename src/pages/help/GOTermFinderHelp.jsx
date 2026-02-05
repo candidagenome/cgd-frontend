@@ -80,7 +80,7 @@ function GOTermFinderHelp() {
         <div className="info-section">
           <h2 id="query">Query Page</h2>
           <p>
-            The <a href="/cgi-bin/GO/goTermFinder">query page</a> has several options as described below.
+            The <a href="/go-term-finder">query page</a> has several options as described below.
           </p>
           <ul>
             <li>
@@ -172,7 +172,7 @@ function GOTermFinderHelp() {
                 </li>
                 <li>
                   <p>
-                    <a href="/cgi-bin/GO/goEvidence.pl">
+                    <a href="/go/evidence">
                       <strong>Evidence Codes</strong>
                     </a>{' '}
                     denote the type of evidence that supports a GO annotation.
@@ -412,7 +412,7 @@ function GOTermFinderHelp() {
           <h2 id="links">Useful Links</h2>
           <ul>
             <li>
-              <a href="/cgi-bin/GO/goTermFinder">GO Term Finder:</a> the tool described on this page.
+              <a href="/go-term-finder">GO Term Finder:</a> the tool described on this page.
             </li>
             <li>
               <a href="http://search.cpan.org/dist/GO-TermFinder/" target="_blank" rel="noopener noreferrer">
@@ -428,7 +428,7 @@ function GOTermFinderHelp() {
               Among the many other features, this interface allows the user to set a p-value cut-off for the results.
             </li>
             <li>
-              <a href="/cgi-bin/GO/goTermMapper">GO Slim Mapper:</a> a tool that also searches up the GO tree given a
+              <a href="/go-slim-mapper">GO Slim Mapper:</a> a tool that also searches up the GO tree given a
               list of genes, but maps to the GO slim terms of your choice. See the{' '}
               <Link to="/help/goslimhelp">Help page</Link> for the GO Slim Mapper tool for more information.
             </li>

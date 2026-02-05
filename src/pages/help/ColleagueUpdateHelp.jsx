@@ -25,7 +25,7 @@ function ColleagueUpdateHelp() {
         <div className="info-section">
           <h2 id="description">Description</h2>
           <p>
-            <a href="/cgi-bin/colleague/colleagueSearch">The Colleague Submission/Update Search</a> page allows you to
+            <a href="/colleague-update">The Colleague Submission/Update Search</a> page allows you to
             edit your existing colleague entry or create a new one in CGD.
           </p>
         </div>
@@ -68,7 +68,7 @@ function ColleagueUpdateHelp() {
           <h4>Adding a new entry</h4>
           <p>
             If you cannot find your name in CGD and would like to add yourself as a colleague, click on{' '}
-            <a href="/cgi-bin/colleague/colleagueUpdate">Add New Colleague Form</a> at the bottom of the page. You will
+            <a href="/colleague-update">Add New Colleague Form</a> at the bottom of the page. You will
             be presented with a blank form to provide your contact information. After CGD curators process your form,
             this information will be available on-line.
           </p>
@@ -100,7 +100,7 @@ function ColleagueUpdateHelp() {
 
         <p>
           <strong>
-            Go to <a href="/cgi-bin/colleague/colleagueSearch">Colleague Submission/Update</a>
+            Go to <a href="/colleague-update">Colleague Submission/Update</a>
           </strong>
         </p>
       </div>

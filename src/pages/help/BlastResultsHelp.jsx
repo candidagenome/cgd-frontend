@@ -220,7 +220,7 @@ const BlastResultsHelp = () => {
           </p>
           <p>
             The database sequences that are similar to the query sequence can be retrieved by using the{' '}
-            <a href="/cgi-bin/seqTools" target="_blank" rel="noopener noreferrer">"Gene/Sequence Resources"</a>{' '}
+            <a href="/seq-tools" target="_blank" rel="noopener noreferrer">"Gene/Sequence Resources"</a>{' '}
             link.
           </p>
         </div>
@@ -266,7 +266,7 @@ const BlastResultsHelp = () => {
               <strong>Links within CGD</strong>
               <ol type="a">
                 <li>
-                  <a href="/cgi-bin/seqTools" target="_blank" rel="noopener noreferrer">Gene/Sequence Resources</a>
+                  <a href="/seq-tools" target="_blank" rel="noopener noreferrer">Gene/Sequence Resources</a>
                 </li>
                 <li>
                   <Link to="/help/blast">Help document for the BLAST input form</Link>

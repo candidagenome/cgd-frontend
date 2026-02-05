@@ -57,7 +57,7 @@ const JBrowseHelp = () => {
         <ul>
           <li>
             <a
-              href="/cgi-bin/reference/reference.pl?dbid=CAL0000214842"
+              href="http://www.candidagenome.org/cgi-bin/reference/reference.pl?dbid=CAL0000214842"
               target="_blank"
               rel="noopener noreferrer"
             >

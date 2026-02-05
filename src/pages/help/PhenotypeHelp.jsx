@@ -207,7 +207,7 @@ function PhenotypeHelp() {
             Additional options for searching phenotype data include a search of the major phenotype terms via
             the CGD Quick Search, which is accessed via a text entry box located at the top of most CGD
             pages; and a complete search of phenotypes and associated data via the{' '}
-            <a href="/cgi-bin/phenotype/phenotype.pl">Expanded Phenotype Search</a>, which may be accessed
+            <a href="/phenotype/search">Expanded Phenotype Search</a>, which may be accessed
             from a link on the <Link to="/search">Search Options</Link> page as well as from the table of
             Quick Search results. Please see the <Link to="/help/pheno-search">Phenotype Search Help</Link>{' '}
             page for more details on searching phenotype data.
@@ -224,7 +224,7 @@ function PhenotypeHelp() {
                   <Link to="/search">Search Options</Link> page
                 </li>
                 <li>
-                  <a href="/cgi-bin/phenotype/phenotype.pl">Expanded Phenotype Search</a>
+                  <a href="/phenotype/search">Expanded Phenotype Search</a>
                 </li>
                 <li>
                   <Link to="/help/pheno-search">Phenotype Search Help</Link> page

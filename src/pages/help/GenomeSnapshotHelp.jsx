@@ -31,7 +31,7 @@ function GenomeSnapshotHelp() {
             It includes information on the genomic features and GO annotations. All the data displayed on
             this page are available in one or more files (Chromosomal Feature File; GO Annotations File) on
             the CGD <Link to="/download">Download Data</Link> page. The{' '}
-            <a href="/cgi-bin/search/featureSearch">Advanced Search</a> tool can also be used to retrieve
+            <a href="/feature-search">Advanced Search</a> tool can also be used to retrieve
             chromosomal features that match specific criteria.
           </p>
         </div>
@@ -122,7 +122,7 @@ function GenomeSnapshotHelp() {
           <h2 id="links">Other Relevant Links</h2>
           <ol>
             <li>
-              <a href="/cgi-bin/search/featureSearch">Advanced Search Tool</a>
+              <a href="/feature-search">Advanced Search Tool</a>
             </li>
             <li>
               <Link to="/download">CGD's Download Data page</Link>
