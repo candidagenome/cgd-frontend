@@ -14,6 +14,9 @@ const COLORS = {
   textDark: '#333333',
 };
 
+const ITEMS_PER_PAGE = 20;
+const GENES_TO_SHOW = 5;
+
 function GoTermFinderResultsPage() {
   const navigate = useNavigate();
   const graphContainerRef = useRef(null);
@@ -26,6 +29,7 @@ function GoTermFinderResultsPage() {
   const [graphData, setGraphData] = useState(null);
   const [graphLoading, setGraphLoading] = useState(false);
   const [showGraph, setShowGraph] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Load results from session storage
   useEffect(() => {
@@ -55,6 +59,11 @@ function GoTermFinderResultsPage() {
       setRequest(JSON.parse(storedRequest));
     }
   }, [navigate]);
+
+  // Reset page when tab changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab]);
 
   // Load graph data
   const loadGraph = async () => {
@@ -217,6 +226,46 @@ function GoTermFinderResultsPage() {
     }
   };
 
+  // Render gene links with "more" functionality
+  const renderGeneLinks = (genes, goid) => {
+    const isExpanded = expandedTerms.has(goid);
+    const genesToShow = isExpanded ? genes : genes.slice(0, GENES_TO_SHOW);
+    const hasMore = genes.length > GENES_TO_SHOW;
+
+    return (
+      <div className="genes-inline">
+        {genesToShow.map((gene, idx) => (
+          <React.Fragment key={gene.feature_no}>
+            <Link
+              to={`/locus/${gene.systematic_name}`}
+              className="gene-link-inline"
+              title={`${gene.systematic_name}${gene.evidence_codes.length > 0 ? ` (${gene.evidence_codes.join(', ')})` : ''}`}
+            >
+              {gene.gene_name || gene.systematic_name}
+            </Link>
+            {idx < genesToShow.length - 1 && ', '}
+          </React.Fragment>
+        ))}
+        {hasMore && !isExpanded && (
+          <button
+            className="more-genes-btn"
+            onClick={() => toggleTermExpansion(goid)}
+          >
+            +{genes.length - GENES_TO_SHOW} more
+          </button>
+        )}
+        {hasMore && isExpanded && (
+          <button
+            className="more-genes-btn"
+            onClick={() => toggleTermExpansion(goid)}
+          >
+            show less
+          </button>
+        )}
+      </div>
+    );
+  };
+
   if (!results) {
     return (
       <div className="go-term-finder-results-page">
@@ -252,10 +301,15 @@ function GoTermFinderResultsPage() {
   };
 
   const currentTerms = termsByTab[activeTab];
+  const totalPages = Math.ceil(currentTerms.length / ITEMS_PER_PAGE);
+  const paginatedTerms = currentTerms.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   return (
     <div className="go-term-finder-results-page">
-      <div className="results-content">
+      <div className="results-content wide">
         <h1>GO Term Finder Results</h1>
         <hr />
 
@@ -332,11 +386,8 @@ function GoTermFinderResultsPage() {
           >
             {graphLoading ? 'Loading...' : showGraph ? 'Reload Graph' : 'Show Graph'}
           </button>
-          <button className="action-btn" onClick={() => handleDownload('tsv')}>
-            Download TSV
-          </button>
-          <button className="action-btn" onClick={() => handleDownload('csv')}>
-            Download CSV
+          <button className="action-btn download-btn" onClick={() => handleDownload('tsv')}>
+            Download Results (TSV)
           </button>
         </div>
 
@@ -394,34 +445,22 @@ function GoTermFinderResultsPage() {
               {currentTerms.length === 0 ? (
                 <p className="no-results">No enriched terms in this category.</p>
               ) : (
-                <table className="results-table">
-                  <thead>
-                    <tr>
-                      <th>GO Term</th>
-                      <th>
-                        Query
-                        <br />
-                        <span className="sub-header">(genes / %)</span>
-                      </th>
-                      <th>
-                        Background
-                        <br />
-                        <span className="sub-header">(genes / %)</span>
-                      </th>
-                      <th>
-                        Fold
-                        <br />
-                        Enrichment
-                      </th>
-                      <th>P-value</th>
-                      {result.correction_method !== 'none' && <th>FDR</th>}
-                      <th>Genes</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {currentTerms.map((term) => (
-                      <React.Fragment key={term.goid}>
-                        <tr>
+                <>
+                  <table className="results-table">
+                    <thead>
+                      <tr>
+                        <th className="th-term">GO Term</th>
+                        <th className="th-count">Query</th>
+                        <th className="th-count">Background</th>
+                        <th className="th-fold">Fold</th>
+                        <th className="th-pvalue">P-value</th>
+                        {result.correction_method !== 'none' && <th className="th-pvalue">FDR</th>}
+                        <th className="th-genes">Genes</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {paginatedTerms.map((term) => (
+                        <tr key={term.goid}>
                           <td className="term-cell">
                             <Link to={`/go/${term.goid}`} className="term-link">
                               {term.goid}
@@ -430,12 +469,12 @@ function GoTermFinderResultsPage() {
                             <span className="term-name">{term.go_term}</span>
                           </td>
                           <td className="count-cell">
-                            {term.query_count} / {term.query_total}
+                            {term.query_count}/{term.query_total}
                             <br />
                             <span className="percentage">{term.query_frequency}%</span>
                           </td>
                           <td className="count-cell">
-                            {term.background_count} / {term.background_total}
+                            {term.background_count}/{term.background_total}
                             <br />
                             <span className="percentage">{term.background_frequency}%</span>
                           </td>
@@ -447,37 +486,50 @@ function GoTermFinderResultsPage() {
                             </td>
                           )}
                           <td className="genes-cell">
-                            <button
-                              className="expand-btn"
-                              onClick={() => toggleTermExpansion(term.goid)}
-                            >
-                              {expandedTerms.has(term.goid) ? 'Hide' : 'Show'}{' '}
-                              {term.genes.length} genes
-                            </button>
+                            {renderGeneLinks(term.genes, term.goid)}
                           </td>
                         </tr>
-                        {expandedTerms.has(term.goid) && (
-                          <tr className="genes-row">
-                            <td colSpan={result.correction_method !== 'none' ? 7 : 6}>
-                              <div className="genes-list">
-                                {term.genes.map((gene) => (
-                                  <Link
-                                    key={gene.feature_no}
-                                    to={`/locus/${gene.systematic_name}`}
-                                    className="gene-link"
-                                    title={`Evidence: ${gene.evidence_codes.join(', ') || 'N/A'}`}
-                                  >
-                                    {gene.gene_name || gene.systematic_name}
-                                  </Link>
-                                ))}
-                              </div>
-                            </td>
-                          </tr>
-                        )}
-                      </React.Fragment>
-                    ))}
-                  </tbody>
-                </table>
+                      ))}
+                    </tbody>
+                  </table>
+
+                  {/* Pagination */}
+                  {totalPages > 1 && (
+                    <div className="pagination">
+                      <button
+                        className="page-btn"
+                        onClick={() => setCurrentPage(1)}
+                        disabled={currentPage === 1}
+                      >
+                        First
+                      </button>
+                      <button
+                        className="page-btn"
+                        onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                        disabled={currentPage === 1}
+                      >
+                        Prev
+                      </button>
+                      <span className="page-info">
+                        Page {currentPage} of {totalPages} ({currentTerms.length} terms)
+                      </span>
+                      <button
+                        className="page-btn"
+                        onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                        disabled={currentPage === totalPages}
+                      >
+                        Next
+                      </button>
+                      <button
+                        className="page-btn"
+                        onClick={() => setCurrentPage(totalPages)}
+                        disabled={currentPage === totalPages}
+                      >
+                        Last
+                      </button>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </>
