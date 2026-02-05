@@ -166,7 +166,7 @@ function App() {
           <Route path="/phenotype/terms" element={<ObservableTermsPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/help" element={<HelpPage />} />
-          <Route path="/api/docs" element={<ApiDocPage />} />
+          <Route path="/api-docs" element={<ApiDocPage />} />
           <Route path="/how-to-cite" element={<HowToCitePage />} />
           <Route path="/sitemap" element={<SiteMapPage />} />
           <Route path="/genome-snapshot/:organism" element={<GenomeSnapshotPage />} />
