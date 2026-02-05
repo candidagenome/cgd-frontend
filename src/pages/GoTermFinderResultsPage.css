@@ -229,6 +229,7 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 0.9em;
+  table-layout: auto;
 }
 
 .results-table th {
@@ -238,6 +239,11 @@
   border-bottom: 2px solid #ddd;
   font-weight: 600;
   color: #333;
+  white-space: nowrap;
+}
+
+.results-table th:first-child {
+  white-space: normal;
 }
 
 .results-table th .sub-header {
@@ -257,7 +263,8 @@
 }
 
 .term-cell {
-  min-width: 200px;
+  max-width: 300px;
+  word-wrap: break-word;
 }
 
 .term-link {
