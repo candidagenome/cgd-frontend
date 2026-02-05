@@ -17,10 +17,14 @@ const genomeVersionApi = {
    * Get genome version history for a specific strain/assembly
    *
    * @param {string} seqSource - Organism abbreviation (e.g., C_albicans_SC5314)
-   * @returns {Promise<Object>} Genome version history
+   * @param {number} page - Page number (1-indexed)
+   * @param {number} pageSize - Results per page
+   * @returns {Promise<Object>} Genome version history with pagination
    */
-  getHistory: async (seqSource) => {
-    const response = await api.get(`/api/genome-version/history/${encodeURIComponent(seqSource)}`);
+  getHistory: async (seqSource, page = 1, pageSize = 20) => {
+    const response = await api.get(`/api/genome-version/history/${encodeURIComponent(seqSource)}`, {
+      params: { page, page_size: pageSize },
+    });
     return response.data;
   },
 };

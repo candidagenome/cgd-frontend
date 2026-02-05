@@ -13,6 +13,10 @@ function GenomeVersionHistoryPage() {
   const [error, setError] = useState(null);
   const [selectedSeqSource, setSelectedSeqSource] = useState('');
 
+  // Pagination state
+  const [page, setPage] = useState(1);
+  const [pageSize] = useState(20);
+
   // Load config on mount
   useEffect(() => {
     const loadConfig = async () => {
@@ -36,7 +40,7 @@ function GenomeVersionHistoryPage() {
     loadConfig();
   }, [searchParams]);
 
-  // Load history when seq_source changes
+  // Load history when seq_source or page changes
   useEffect(() => {
     if (!selectedSeqSource) return;
 
@@ -45,7 +49,7 @@ function GenomeVersionHistoryPage() {
       setError(null);
 
       try {
-        const data = await genomeVersionApi.getHistory(selectedSeqSource);
+        const data = await genomeVersionApi.getHistory(selectedSeqSource, page, pageSize);
         if (data.success) {
           setHistory(data);
         } else {
@@ -60,13 +64,20 @@ function GenomeVersionHistoryPage() {
     };
 
     loadHistory();
-  }, [selectedSeqSource]);
+  }, [selectedSeqSource, page, pageSize]);
 
   // Handle seq_source change
   const handleSeqSourceChange = (e) => {
     const value = e.target.value;
     setSelectedSeqSource(value);
+    setPage(1); // Reset to first page
     setSearchParams({ seq_source: value });
+  };
+
+  // Pagination handlers
+  const goToPage = (newPage) => {
+    setPage(Math.max(1, Math.min(newPage, history?.total_pages || 1)));
+    window.scrollTo(0, 0);
   };
 
   // Format date for display
@@ -164,35 +175,118 @@ function GenomeVersionHistoryPage() {
 
         {/* Version History Table */}
         {history?.versions?.length > 0 ? (
-          <table className="version-table">
-            <thead>
-              <tr>
-                <th>Genome Version</th>
-                <th>Strain Name</th>
-                <th>Is current?</th>
-                <th>Date</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              {history.versions.map((version, idx) => (
-                <tr
-                  key={idx}
-                  className={version.is_major_version ? 'major-version' : 'minor-version'}
+          <>
+            {/* Results info */}
+            <div className="results-info">
+              Showing {((page - 1) * pageSize) + 1}-
+              {Math.min(page * pageSize, history?.total_count || 0)} of{' '}
+              {history?.total_count?.toLocaleString() || 0} versions
+            </div>
+
+            {/* Pagination - Top */}
+            {history?.total_pages > 1 && (
+              <div className="pagination">
+                <button
+                  className="pagination-btn"
+                  onClick={() => goToPage(1)}
+                  disabled={page === 1}
                 >
-                  <td className="version-cell">{version.genome_version}</td>
-                  <td className="strain-cell">
-                    <em>{version.strain_name}</em>
-                  </td>
-                  <td className="current-cell">
-                    {version.is_current ? 'Yes' : 'No'}
-                  </td>
-                  <td className="date-cell">{formatDate(version.date_created)}</td>
-                  <td className="description-cell">{version.description || '-'}</td>
+                  &laquo; First
+                </button>
+                <button
+                  className="pagination-btn"
+                  onClick={() => goToPage(page - 1)}
+                  disabled={page === 1}
+                >
+                  &lsaquo; Prev
+                </button>
+                <span className="pagination-info">
+                  Page {page} of {history.total_pages}
+                </span>
+                <button
+                  className="pagination-btn"
+                  onClick={() => goToPage(page + 1)}
+                  disabled={page === history.total_pages}
+                >
+                  Next &rsaquo;
+                </button>
+                <button
+                  className="pagination-btn"
+                  onClick={() => goToPage(history.total_pages)}
+                  disabled={page === history.total_pages}
+                >
+                  Last &raquo;
+                </button>
+              </div>
+            )}
+
+            <table className="version-table">
+              <thead>
+                <tr>
+                  <th>Genome Version</th>
+                  <th>Strain Name</th>
+                  <th>Is current?</th>
+                  <th>Date</th>
+                  <th>Description</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {history.versions.map((version, idx) => (
+                  <tr
+                    key={idx}
+                    className={version.is_major_version ? 'major-version' : 'minor-version'}
+                  >
+                    <td className="version-cell">{version.genome_version}</td>
+                    <td className="strain-cell">
+                      <em>{version.strain_name}</em>
+                    </td>
+                    <td className="current-cell">
+                      {version.is_current ? 'Yes' : 'No'}
+                    </td>
+                    <td className="date-cell">{formatDate(version.date_created)}</td>
+                    <td className="description-cell">{version.description || '-'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {/* Pagination - Bottom */}
+            {history?.total_pages > 1 && (
+              <div className="pagination">
+                <button
+                  className="pagination-btn"
+                  onClick={() => goToPage(1)}
+                  disabled={page === 1}
+                >
+                  &laquo; First
+                </button>
+                <button
+                  className="pagination-btn"
+                  onClick={() => goToPage(page - 1)}
+                  disabled={page === 1}
+                >
+                  &lsaquo; Prev
+                </button>
+                <span className="pagination-info">
+                  Page {page} of {history.total_pages}
+                </span>
+                <button
+                  className="pagination-btn"
+                  onClick={() => goToPage(page + 1)}
+                  disabled={page === history.total_pages}
+                >
+                  Next &rsaquo;
+                </button>
+                <button
+                  className="pagination-btn"
+                  onClick={() => goToPage(history.total_pages)}
+                  disabled={page === history.total_pages}
+                >
+                  Last &raquo;
+                </button>
+              </div>
+            )}
+          </>
         ) : (
           <div className="no-versions">
             <p>No genome versions found for this strain/assembly.</p>

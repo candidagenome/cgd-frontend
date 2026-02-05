@@ -179,7 +179,50 @@
 
 .description-cell {
   text-align: left;
-  max-width: 300px;
+  word-wrap: break-word;
+}
+
+/* Results Info */
+.results-info {
+  text-align: center;
+  color: #666;
+  margin-bottom: 15px;
+  font-size: 0.95rem;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 15px 0;
+  flex-wrap: wrap;
+}
+
+.pagination-btn {
+  padding: 6px 12px;
+  border: 1px solid #dee2e6;
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.15s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: #e9ecef;
+}
+
+.pagination-btn:disabled {
+  color: #adb5bd;
+  cursor: not-allowed;
+}
+
+.pagination-info {
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  color: #495057;
 }
 
 /* No Versions Message */
@@ -215,7 +258,5 @@
     padding: 8px;
   }
 
-  .description-cell {
-    max-width: none;
-  }
 }
+
