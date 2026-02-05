@@ -1,0 +1,315 @@
+.go-slim-mapper-results-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.results-content h1 {
+  color: #003366;
+  margin-bottom: 10px;
+}
+
+.results-content hr {
+  border: none;
+  border-top: 2px solid #003366;
+  margin-bottom: 20px;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.error-message {
+  background-color: #fee;
+  border: 1px solid #c00;
+  color: #900;
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+
+.back-link {
+  color: #0066cc;
+}
+
+/* Warnings */
+.warnings {
+  margin-bottom: 20px;
+}
+
+.warning-message {
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+  color: #856404;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+
+/* Summary panel */
+.summary-panel {
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.summary-panel h2 {
+  color: #003366;
+  margin: 0 0 15px 0;
+  font-size: 1.2em;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.summary-item .label {
+  font-weight: 500;
+  color: #555;
+  font-size: 0.9em;
+}
+
+.summary-item .value {
+  color: #333;
+}
+
+.summary-item .value.highlight {
+  color: #006600;
+  font-weight: 600;
+  font-size: 1.1em;
+}
+
+.not-found-genes {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+  font-size: 0.9em;
+  color: #666;
+}
+
+/* Action buttons */
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.action-btn {
+  padding: 10px 20px;
+  background: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.95em;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.action-btn:hover {
+  background: #0055aa;
+  color: white;
+}
+
+.action-btn.download-btn {
+  background: #006600;
+}
+
+.action-btn.download-btn:hover {
+  background: #005500;
+}
+
+/* Results table container */
+.results-table-container {
+  margin-bottom: 30px;
+}
+
+.results-table-container h2 {
+  color: #003366;
+  margin: 0 0 15px 0;
+  font-size: 1.2em;
+}
+
+.no-results {
+  color: #666;
+  font-style: italic;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+/* Results table */
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95em;
+  table-layout: fixed;
+}
+
+.results-table th,
+.results-table td {
+  border: 1px solid #ddd;
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.results-table th {
+  background: #f0f0f0;
+  font-weight: 600;
+  color: #333;
+}
+
+.results-table tr:nth-child(even) {
+  background: #fafafa;
+}
+
+.results-table tr:hover {
+  background: #f5f5f5;
+}
+
+/* Table columns */
+.th-term {
+  width: 30%;
+}
+
+.th-count {
+  width: 250px;
+}
+
+.th-genes {
+  width: auto;
+}
+
+.term-cell .term-link {
+  font-family: monospace;
+  color: #0066cc;
+  font-weight: 500;
+}
+
+.term-cell .term-name {
+  color: #333;
+  font-size: 0.9em;
+}
+
+.count-cell {
+  white-space: nowrap;
+}
+
+.count-cell .percentage {
+  font-weight: 500;
+  color: #006600;
+}
+
+.genes-cell {
+  line-height: 1.5;
+}
+
+.genes-inline {
+  display: inline;
+}
+
+.gene-link-inline {
+  color: #0066cc;
+}
+
+.gene-link-inline:hover {
+  text-decoration: underline;
+}
+
+.more-genes-btn {
+  background: none;
+  border: none;
+  color: #0066cc;
+  cursor: pointer;
+  font-size: 0.9em;
+  padding: 0 5px;
+}
+
+.more-genes-btn:hover {
+  text-decoration: underline;
+}
+
+/* Special sections */
+.special-section {
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.special-section h3 {
+  color: #003366;
+  margin: 0 0 10px 0;
+  font-size: 1.1em;
+}
+
+.section-description {
+  color: #666;
+  font-size: 0.9em;
+  margin-bottom: 10px;
+}
+
+.gene-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gene-list .gene-count {
+  color: #555;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .go-slim-mapper-results-page {
+    padding: 10px;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .action-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .results-table {
+    font-size: 0.85em;
+  }
+
+  .results-table th,
+  .results-table td {
+    padding: 8px;
+  }
+
+  .th-term {
+    width: 40%;
+  }
+
+  .th-count {
+    width: 25%;
+  }
+
+  .th-genes {
+    width: 35%;
+  }
+}

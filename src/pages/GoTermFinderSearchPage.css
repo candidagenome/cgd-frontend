@@ -1,0 +1,395 @@
+.go-term-finder-search-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.go-term-finder-content h1 {
+  color: #003366;
+  margin-bottom: 10px;
+}
+
+.go-term-finder-content hr {
+  border: none;
+  border-top: 2px solid #003366;
+  margin-bottom: 20px;
+}
+
+.page-description {
+  margin-bottom: 20px;
+  color: #555;
+  line-height: 1.5;
+}
+
+.page-description a {
+  color: #0066cc;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.error-message {
+  background-color: #fee;
+  border: 1px solid #c00;
+  color: #900;
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+
+/* Form sections */
+.form-section {
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.form-section h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 15px 0;
+  color: #003366;
+  font-size: 1.1em;
+}
+
+.section-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: #003366;
+  color: white;
+  border-radius: 50%;
+  font-size: 0.9em;
+}
+
+/* Form rows */
+.form-row {
+  margin-bottom: 12px;
+}
+
+.form-row label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.form-row select,
+.form-row input[type="number"] {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  min-width: 200px;
+}
+
+/* Gene input */
+.gene-input-container label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.gene-input-container textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 14px;
+  resize: vertical;
+}
+
+.gene-input-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.gene-count {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.file-upload-label {
+  display: inline-block;
+  padding: 6px 12px;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.file-upload-label:hover {
+  background: #e0e0e0;
+}
+
+.file-upload-label input[type="file"] {
+  display: none;
+}
+
+.validate-btn {
+  padding: 6px 12px;
+  background: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.validate-btn:hover:not(:disabled) {
+  background: #0055aa;
+}
+
+.validate-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Validation result */
+.validation-result {
+  margin-top: 15px;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.validation-summary {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 8px;
+}
+
+.validation-summary .found {
+  color: #006600;
+  font-weight: 500;
+}
+
+.validation-summary .with-go {
+  color: #666;
+}
+
+.validation-summary .not-found {
+  color: #cc0000;
+  font-weight: 500;
+}
+
+.not-found-list {
+  font-size: 0.9em;
+  color: #666;
+}
+
+/* Radio and checkbox options */
+.ontology-options,
+.background-options,
+.annotation-type-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.radio-label,
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.radio-label span,
+.checkbox-label span {
+  color: #333;
+}
+
+/* Custom background */
+.custom-background {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+}
+
+.custom-background label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.custom-background textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 14px;
+  resize: vertical;
+  margin-bottom: 10px;
+}
+
+/* Evidence codes (collapsible) */
+.form-section.collapsible {
+  padding: 0;
+}
+
+.form-section.collapsible summary {
+  padding: 20px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.form-section.collapsible summary::-webkit-details-marker {
+  display: none;
+}
+
+.form-section.collapsible summary h3 {
+  margin: 0;
+}
+
+.form-section.collapsible summary h3::after {
+  content: ' +';
+  font-weight: normal;
+  color: #666;
+}
+
+.form-section.collapsible[open] summary h3::after {
+  content: ' -';
+}
+
+.form-section.collapsible details > *:not(summary) {
+  padding: 0 20px 20px;
+}
+
+.filter-description {
+  color: #666;
+  font-size: 0.9em;
+  margin-bottom: 12px;
+}
+
+.evidence-code-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.evidence-code-options .checkbox-label {
+  font-size: 0.9em;
+}
+
+.evidence-code-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.evidence-code-actions button {
+  padding: 4px 10px;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85em;
+}
+
+.evidence-code-actions button:hover {
+  background: #e0e0e0;
+}
+
+/* Statistical parameters */
+.stat-params {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.stat-params .form-row {
+  margin-bottom: 0;
+}
+
+/* Form actions */
+.form-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.submit-btn {
+  padding: 12px 30px;
+  background: #006600;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1.1em;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: #005500;
+}
+
+.submit-btn:disabled {
+  background: #999;
+  cursor: not-allowed;
+}
+
+.reset-btn {
+  padding: 12px 20px;
+  background: #f0f0f0;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.reset-btn:hover {
+  background: #e0e0e0;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .go-term-finder-search-page {
+    padding: 10px;
+  }
+
+  .form-section {
+    padding: 15px;
+  }
+
+  .gene-input-actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ontology-options,
+  .background-options {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .stat-params {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .submit-btn,
+  .reset-btn {
+    width: 100%;
+  }
+}
