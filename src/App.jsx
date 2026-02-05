@@ -46,6 +46,13 @@ import RestrictionMapperResultsPage from './pages/RestrictionMapperResultsPage';
 import FeatureSearchPage from './pages/FeatureSearchPage';
 import FeatureSearchResultsPage from './pages/FeatureSearchResultsPage';
 import GenomeVersionHistoryPage from './pages/GenomeVersionHistoryPage';
+import ColleagueSearchPage from './pages/ColleagueSearchPage';
+import ColleagueSearchResultsPage from './pages/ColleagueSearchResultsPage';
+import ColleagueDetailPage from './pages/ColleagueDetailPage';
+import ColleagueUpdatePage from './pages/ColleagueUpdatePage';
+import GeneRegistryPage from './pages/GeneRegistryPage';
+import ChromosomePage from './pages/ChromosomePage';
+import ChromosomeListPage from './pages/ChromosomeListPage';
 
 // Help documentation pages
 import GettingStartedHelp from './pages/help/GettingStartedHelp';
@@ -193,6 +200,16 @@ function App() {
           <Route path="/feature-search" element={<FeatureSearchPage />} />
           <Route path="/feature-search/results" element={<FeatureSearchResultsPage />} />
           <Route path="/genome-version-history" element={<GenomeVersionHistoryPage />} />
+          <Route path="/colleague/search" element={<ColleagueSearchResultsPage />} />
+          <Route path="/colleague/update/:colleagueNo" element={<ColleagueUpdatePage />} />
+          <Route path="/colleague/update" element={<ColleagueUpdatePage />} />
+          <Route path="/colleague-update/:colleagueNo" element={<ColleagueUpdatePage />} />
+          <Route path="/colleague-update" element={<ColleagueUpdatePage />} />
+          <Route path="/gene-registry" element={<GeneRegistryPage />} />
+          <Route path="/chromosome" element={<ChromosomeListPage />} />
+          <Route path="/chromosome/:name" element={<ChromosomePage />} />
+          <Route path="/colleague/:colleagueNo" element={<ColleagueDetailPage />} />
+          <Route path="/colleague" element={<ColleagueSearchPage />} />
 
           {/* Help documentation pages */}
           <Route path="/help/getting-started" element={<GettingStartedHelp />} />

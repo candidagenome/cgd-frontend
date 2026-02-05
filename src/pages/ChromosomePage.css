@@ -1,0 +1,317 @@
+.chromosome-page {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.chromosome-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.chromosome-content h1 {
+  color: #333;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.chromosome-content hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin-bottom: 20px;
+}
+
+/* Loading and Error States */
+.loading-state,
+.error-state {
+  padding: 40px;
+  text-align: center;
+  color: #666;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ddd;
+  border-top-color: #007bff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error-state {
+  color: #721c24;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+}
+
+/* Header Table */
+.chromosome-header {
+  margin-bottom: 20px;
+}
+
+.header-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.header-table th {
+  text-align: left;
+  padding: 8px 12px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  width: 150px;
+  font-weight: 600;
+  color: #555;
+}
+
+.header-table td {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+}
+
+.alias-item {
+  margin-right: 5px;
+}
+
+.alias-type {
+  color: #888;
+  font-size: 0.85em;
+  margin-left: 3px;
+}
+
+/* History Summary */
+.history-summary {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+}
+
+.history-summary h3 {
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.summary-table {
+  width: 100%;
+}
+
+.summary-table td {
+  padding: 5px 0;
+}
+
+.last-date {
+  color: #888;
+  font-size: 0.9em;
+  margin-left: 8px;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  border-bottom: 2px solid #ddd;
+  margin-bottom: 20px;
+}
+
+.tab {
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #555;
+  transition: all 0.2s;
+}
+
+.tab:hover {
+  color: #007bff;
+  background-color: #f5f5f5;
+}
+
+.tab.active {
+  color: #007bff;
+  border-bottom-color: #007bff;
+  font-weight: 500;
+}
+
+/* Tab Content */
+.tab-content {
+  min-height: 200px;
+}
+
+.tab-content h3 {
+  color: #333;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.tab-content h4 {
+  color: #555;
+  font-size: 1rem;
+  margin: 20px 0 10px;
+}
+
+.loading-inline {
+  color: #666;
+  padding: 20px;
+  text-align: center;
+}
+
+.no-data {
+  color: #888;
+  font-style: italic;
+  padding: 10px 0;
+}
+
+/* Overview Tab */
+.overview-tab p {
+  color: #555;
+  line-height: 1.6;
+}
+
+.stats-section,
+.links-section {
+  margin-top: 20px;
+}
+
+.stats-section ul,
+.links-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+.stats-section li,
+.links-section li {
+  padding: 5px 0;
+}
+
+.links-section a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.links-section a:hover {
+  text-decoration: underline;
+}
+
+/* History Tab */
+.history-section {
+  margin-bottom: 25px;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.history-table th {
+  background-color: #f5f5f5;
+  text-align: left;
+  padding: 10px;
+  border: 1px solid #ddd;
+  font-weight: 600;
+  color: #555;
+}
+
+.history-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  vertical-align: top;
+}
+
+.history-table a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.history-table a:hover {
+  text-decoration: underline;
+}
+
+.notes-list {
+  list-style: disc;
+  padding-left: 20px;
+}
+
+.notes-list li {
+  padding: 8px 0;
+  line-height: 1.5;
+}
+
+.note-date {
+  font-weight: 600;
+  color: #555;
+}
+
+/* References Tab */
+.references-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.references-table th {
+  background-color: #f5f5f5;
+  text-align: left;
+  padding: 10px;
+  border: 1px solid #ddd;
+  font-weight: 600;
+  color: #555;
+}
+
+.references-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+.references-table a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.references-table a:hover {
+  text-decoration: underline;
+}
+
+/* Summary Tab */
+.summary-notes {
+  line-height: 1.7;
+}
+
+.summary-paragraph {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.summary-paragraph:last-child {
+  border-bottom: none;
+}
+
+.summary-paragraph p {
+  color: #333;
+  margin: 0 0 10px;
+}
+
+.paragraph-meta {
+  font-size: 0.85rem;
+  color: #888;
+}
