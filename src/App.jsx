@@ -61,6 +61,7 @@ import GoTermFinderResultsPage from './pages/GoTermFinderResultsPage';
 import GoSlimMapperSearchPage from './pages/GoSlimMapperSearchPage';
 import GoSlimMapperResultsPage from './pages/GoSlimMapperResultsPage';
 import ToolsPage from './pages/ToolsPage';
+import ApiDocPage from './pages/ApiDocPage';
 
 // Help documentation pages
 import GettingStartedHelp from './pages/help/GettingStartedHelp';
@@ -165,6 +166,7 @@ function App() {
           <Route path="/phenotype/terms" element={<ObservableTermsPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/help" element={<HelpPage />} />
+          <Route path="/api/docs" element={<ApiDocPage />} />
           <Route path="/how-to-cite" element={<HowToCitePage />} />
           <Route path="/sitemap" element={<SiteMapPage />} />
           <Route path="/genome-snapshot/:organism" element={<GenomeSnapshotPage />} />
