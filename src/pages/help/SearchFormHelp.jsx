@@ -122,7 +122,7 @@ const SearchFormHelp = () => {
           <p>
             The tool allows simultaneous retrieval of DNA and Protein sequences for a list of Standard gene
             names or Feature names. For more information on the{' '}
-            <a href="/cgi-bin/batchDownload" target="_blank" rel="noopener noreferrer">Batch Download Tool</a>,
+            <Link to="/batch-download">Batch Download Tool</Link>,
             please see the <Link to="/help/batch-download">CGD Help: Batch Data Download</Link>.
           </p>
 

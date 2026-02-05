@@ -123,7 +123,7 @@ const SearchPage = () => {
           </div>
 
           <div className="help-item">
-            <h3><Link to="/cgi-bin/batchDownload">Batch Download</Link></h3>
+            <h3><Link to="/batch-download">Batch Download</Link></h3>
             <p>Simultaneous retrieval of multiple types of data for a list of gene or feature names</p>
           </div>
 

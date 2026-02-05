@@ -1,0 +1,427 @@
+/* Restriction Mapper Results Page Styles */
+
+.restriction-results-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.restriction-content {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 4px;
+}
+
+.restriction-results-page h1 {
+  color: #1976d2;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.restriction-results-page hr {
+  border: none;
+  border-top: 2px solid #1976d2;
+  margin-bottom: 25px;
+}
+
+.restriction-results-page h2 {
+  color: #333;
+  font-size: 1.2em;
+  margin: 25px 0 15px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* Results Summary */
+.results-summary {
+  background-color: #e3f2fd;
+  border: 1px solid #90caf9;
+  border-radius: 4px;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+}
+
+.summary-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 8px;
+}
+
+.summary-row:last-of-type {
+  margin-bottom: 0;
+}
+
+.summary-row span {
+  color: #333;
+}
+
+.new-search-link {
+  display: inline-block;
+  margin-top: 10px;
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.new-search-link:hover {
+  text-decoration: underline;
+}
+
+/* Enzyme Legend */
+.enzyme-legend {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  padding: 10px 15px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+.legend-title {
+  font-weight: 500;
+  color: #333;
+}
+
+.legend-item {
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  border: 1px solid;
+}
+
+/* Restriction Map Visualization */
+.restriction-map-section {
+  margin-bottom: 25px;
+}
+
+.restriction-map-container {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+.map-scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8em;
+  color: #666;
+  margin-bottom: 8px;
+  padding: 0 2px;
+}
+
+.map-sequence-bar {
+  position: relative;
+  height: 20px;
+  background: linear-gradient(to right, #bbdefb, #64b5f6);
+  border-radius: 3px;
+  margin-bottom: 10px;
+}
+
+.cut-marker {
+  position: absolute;
+  top: -5px;
+  width: 2px;
+  height: 30px;
+  transform: translateX(-50%);
+  cursor: pointer;
+}
+
+.cut-marker:hover {
+  width: 4px;
+  z-index: 10;
+}
+
+.map-note {
+  font-size: 0.85em;
+  color: #666;
+  margin: 0;
+  text-align: center;
+}
+
+/* Download Section */
+.download-section {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.download-btn {
+  padding: 10px 20px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.download-btn:hover:not(:disabled) {
+  background-color: #1565c0;
+}
+
+.download-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.download-btn.secondary {
+  background-color: #757575;
+}
+
+.download-btn.secondary:hover:not(:disabled) {
+  background-color: #616161;
+}
+
+/* Enzymes Table */
+.enzymes-section {
+  margin-bottom: 25px;
+}
+
+.enzymes-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+
+.enzymes-table th,
+.enzymes-table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.enzymes-table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+}
+
+.enzymes-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.enzymes-table th.sortable:hover {
+  background-color: #eeeeee;
+}
+
+.enzymes-table tbody tr:hover {
+  filter: brightness(0.97);
+}
+
+.enzymes-table tbody tr.selected {
+  outline: 2px solid #1976d2;
+  outline-offset: -2px;
+}
+
+.enzyme-name {
+  font-weight: 500;
+}
+
+.recognition code {
+  font-family: 'Courier New', monospace;
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.type-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-size: 0.85em;
+  border: 1px solid;
+}
+
+.cuts {
+  text-align: center;
+  font-weight: 500;
+}
+
+.details-btn {
+  padding: 4px 10px;
+  background-color: #e3f2fd;
+  color: #1976d2;
+  border: 1px solid #90caf9;
+  border-radius: 3px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.details-btn:hover {
+  background-color: #bbdefb;
+}
+
+/* Enzyme Details Row */
+.enzyme-details-row td {
+  padding: 0 !important;
+  background-color: #fafafa !important;
+}
+
+.enzyme-details {
+  padding: 15px 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.details-section {
+  margin-bottom: 10px;
+}
+
+.details-section:last-child {
+  margin-bottom: 0;
+}
+
+.details-section strong {
+  display: inline-block;
+  min-width: 200px;
+  color: #555;
+}
+
+.positions, .fragments {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+  color: #333;
+}
+
+/* No Results */
+.no-results {
+  text-align: center;
+  padding: 40px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+.no-results p {
+  margin: 0 0 10px 0;
+  color: #666;
+}
+
+.no-results .hint {
+  font-size: 0.9em;
+  color: #999;
+}
+
+/* Non-Cutting Section */
+.non-cutting-section {
+  margin-top: 25px;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: #1976d2;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.toggle-btn:hover {
+  text-decoration: underline;
+}
+
+.non-cutting-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.non-cutting-enzyme {
+  padding: 4px 10px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.85em;
+  color: #666;
+}
+
+/* Loading State */
+.loading-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(25, 118, 210, 0.3);
+  border-top-color: #1976d2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error State */
+.error-state {
+  background-color: #ffebee;
+  border: 1px solid #ef9a9a;
+  border-radius: 4px;
+  padding: 15px 20px;
+  color: #c62828;
+  margin-bottom: 20px;
+}
+
+.error-state strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .restriction-results-page {
+    padding: 10px;
+  }
+
+  .restriction-content {
+    padding: 20px;
+  }
+
+  .summary-row {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .enzyme-legend {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .download-section {
+    flex-direction: column;
+  }
+
+  .enzymes-table {
+    font-size: 0.8em;
+  }
+
+  .enzymes-table th,
+  .enzymes-table td {
+    padding: 8px 6px;
+  }
+
+  .details-section strong {
+    display: block;
+    min-width: auto;
+    margin-bottom: 5px;
+  }
+}

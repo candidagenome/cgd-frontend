@@ -533,7 +533,7 @@ const SequenceHelp = () => {
           <p>
             You may also retrieve sequence information for any set of genes (either specified by a list of
             gene names, or by selecting a region of a chromosome or contig) using the{' '}
-            <a href="/cgi-bin/batchDownload" target="_blank" rel="noopener noreferrer">Batch Download Tool</a>.
+            <Link to="/batch-download">Batch Download Tool</Link>.
           </p>
 
           <p><strong>From the GBrowse Genome Browser:</strong></p>
