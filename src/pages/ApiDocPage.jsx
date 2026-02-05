@@ -143,7 +143,6 @@ const ApiDocPage = () => {
         { method: 'GET', path: '/api/colleague/search', description: 'Search colleagues by last name', params: 'last_name, page, page_size' },
         { method: 'GET', path: '/api/colleague/{colleagueNo}', description: 'Get detailed information for a colleague' },
         { method: 'GET', path: '/api/colleague/form-config', description: 'Get form configuration (countries, states, etc.)' },
-        { method: 'POST', path: '/api/colleague/submit', description: 'Submit colleague registration or update' },
       ]
     },
   ];
