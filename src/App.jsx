@@ -50,6 +50,7 @@ import ColleagueSearchPage from './pages/ColleagueSearchPage';
 import ColleagueSearchResultsPage from './pages/ColleagueSearchResultsPage';
 import ColleagueDetailPage from './pages/ColleagueDetailPage';
 import ColleagueUpdatePage from './pages/ColleagueUpdatePage';
+import GeneRegistryPage from './pages/GeneRegistryPage';
 
 // Help documentation pages
 import GettingStartedHelp from './pages/help/GettingStartedHelp';
@@ -202,6 +203,7 @@ function App() {
           <Route path="/colleague/update" element={<ColleagueUpdatePage />} />
           <Route path="/colleague-update/:colleagueNo" element={<ColleagueUpdatePage />} />
           <Route path="/colleague-update" element={<ColleagueUpdatePage />} />
+          <Route path="/gene-registry" element={<GeneRegistryPage />} />
           <Route path="/colleague/:colleagueNo" element={<ColleagueDetailPage />} />
           <Route path="/colleague" element={<ColleagueSearchPage />} />
 

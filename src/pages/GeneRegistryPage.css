@@ -1,0 +1,412 @@
+.gene-registry-page {
+  min-height: calc(100vh - 200px);
+  background: #fff;
+  padding: 20px;
+}
+
+.gene-registry-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.gene-registry-content h1 {
+  color: #333;
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+}
+
+.gene-registry-content hr {
+  border: none;
+  border-top: 2px solid #c00;
+  margin-bottom: 15px;
+}
+
+.step-indicator {
+  background: #1a4d5c;
+  color: #fff;
+  padding: 8px 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+/* Intro section */
+.intro-section {
+  margin-bottom: 20px;
+}
+
+.intro-section h2 {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.intro-section ol {
+  margin: 0 0 0 20px;
+  padding: 0;
+  line-height: 1.6;
+}
+
+.intro-section ol li {
+  margin-bottom: 5px;
+}
+
+/* Update section */
+.update-section {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #dee2e6;
+}
+
+.update-section h2 {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* Form */
+.search-form {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 15px;
+}
+
+.form-row-inline {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.form-row-inline .form-row {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.form-row label {
+  font-weight: 500;
+  margin-bottom: 3px;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.required {
+  color: #c00;
+  font-weight: normal;
+}
+
+.optional {
+  color: #666;
+  font-weight: normal;
+}
+
+.form-row input[type="text"],
+.form-row input[type="email"],
+.form-row select,
+.form-row textarea {
+  padding: 6px 10px;
+  font-size: 0.95rem;
+  border: 1px solid #ced4da;
+  border-radius: 3px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-row input:focus,
+.form-row select:focus,
+.form-row textarea:focus {
+  outline: none;
+  border-color: #1a4d5c;
+  box-shadow: 0 0 0 2px rgba(26, 77, 92, 0.1);
+}
+
+.form-row input:disabled {
+  background: #e9ecef;
+  cursor: not-allowed;
+}
+
+.form-row textarea {
+  resize: vertical;
+  font-family: inherit;
+}
+
+.search-note {
+  margin: 10px 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Fieldsets */
+fieldset {
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 12px 15px 15px;
+  margin-bottom: 15px;
+}
+
+fieldset legend {
+  font-weight: 600;
+  color: #333;
+  padding: 0 8px;
+  font-size: 1rem;
+}
+
+/* Buttons */
+.form-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.search-btn,
+.submit-btn,
+.primary-btn {
+  background: #1a4d5c;
+  color: #fff;
+  border: none;
+  padding: 8px 25px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background-color 0.15s ease;
+}
+
+.search-btn:hover,
+.submit-btn:hover,
+.primary-btn:hover {
+  background: #143d4a;
+}
+
+.search-btn:disabled,
+.submit-btn:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+.reset-btn,
+.back-btn {
+  background: #6c757d;
+  color: #fff;
+  border: none;
+  padding: 8px 25px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background-color 0.15s ease;
+}
+
+.reset-btn:hover,
+.back-btn:hover {
+  background: #5a6268;
+}
+
+.select-btn {
+  background: #28a745;
+  color: #fff;
+  border: none;
+  padding: 5px 15px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.select-btn:hover {
+  background: #218838;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: #1a4d5c;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  font-size: inherit;
+}
+
+.link-btn:hover {
+  color: #143d4a;
+}
+
+/* Messages */
+.loading-state {
+  padding: 30px;
+  text-align: center;
+}
+
+.error-message {
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  color: #721c24;
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.success-message {
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  color: #155724;
+  padding: 20px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.success-message h2 {
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+}
+
+.validation-errors {
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  color: #721c24;
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.validation-errors ul {
+  margin: 8px 0 0 20px;
+  padding: 0;
+}
+
+.validation-warnings {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  color: #856404;
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.validation-warnings ul {
+  margin: 8px 0 0 20px;
+  padding: 0;
+}
+
+.cannot-proceed {
+  text-align: center;
+  padding: 20px;
+}
+
+/* Gene summary */
+.gene-summary {
+  background: #e7f3ff;
+  border: 1px solid #b8daff;
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.wildcard-note {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+
+/* Colleague table */
+.colleague-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+}
+
+.colleague-table th,
+.colleague-table td {
+  border: 1px solid #dee2e6;
+  padding: 8px 10px;
+  text-align: left;
+}
+
+.colleague-table th {
+  background: #f8f9fa;
+  font-weight: 600;
+}
+
+.colleague-table tr:hover {
+  background: #f8f9fa;
+}
+
+.select-instruction {
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.no-colleagues {
+  text-align: center;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.new-colleague-note {
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
+/* Selected colleague */
+.selected-colleague {
+  background: #e7f3ff;
+  border: 1px solid #b8daff;
+  padding: 10px 15px;
+  border-radius: 4px;
+}
+
+.selected-colleague p {
+  margin: 5px 0;
+}
+
+/* Navigation */
+.nav-links {
+  margin-top: 15px;
+  padding-top: 12px;
+  border-top: 1px solid #dee2e6;
+}
+
+.nav-links a {
+  color: #1a4d5c;
+  text-decoration: none;
+}
+
+.nav-links a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .form-row-inline {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .form-buttons {
+    flex-direction: column;
+  }
+
+  .search-btn,
+  .submit-btn,
+  .reset-btn,
+  .back-btn,
+  .primary-btn {
+    width: 100%;
+  }
+
+  .colleague-table {
+    font-size: 0.8rem;
+  }
+
+  .colleague-table th,
+  .colleague-table td {
+    padding: 5px;
+  }
+}
