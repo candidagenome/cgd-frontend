@@ -16,23 +16,12 @@ const ApiDocPage = () => {
 
   const apiGroups = [
     {
-      name: 'Search',
-      description: 'Search across genes, GO terms, phenotypes, and references',
-      endpoints: [
-        { method: 'GET', path: '/api/search/resolve', description: 'Resolve an identifier to a direct URL', params: 'query', example: '/api/search/resolve?query=ACT1' },
-        { method: 'GET', path: '/api/search/quick', description: 'Quick search across all categories', params: 'query, limit', example: '/api/search/quick?query=ACT1&limit=20' },
-        { method: 'GET', path: '/api/search/autocomplete', description: 'Get autocomplete suggestions', params: 'query, limit', example: '/api/search/autocomplete?query=ACT&limit=10' },
-        { method: 'GET', path: '/api/search/category', description: 'Search within a specific category with pagination', params: 'query, category, page, page_size', example: '/api/search/category?query=kinase&category=genes&page=1&page_size=20' },
-      ]
-    },
-    {
       name: 'Locus',
       description: 'Gene/locus information and annotations',
       endpoints: [
         { method: 'GET', path: '/api/locus/{name}', description: 'Get basic locus info (aliases, external links)', example: '/api/locus/ACT1' },
         { method: 'GET', path: '/api/locus/{name}/go_details', description: 'Get GO annotations for a locus', example: '/api/locus/ACT1/go_details' },
         { method: 'GET', path: '/api/locus/{name}/phenotype_details', description: 'Get phenotype annotations', example: '/api/locus/ACT1/phenotype_details' },
-        { method: 'GET', path: '/api/locus/{name}/interaction_details', description: 'Get interaction data', example: '/api/locus/ACT1/interaction_details' },
         { method: 'GET', path: '/api/locus/{name}/protein_details', description: 'Get protein information', example: '/api/locus/ACT1/protein_details' },
         { method: 'GET', path: '/api/locus/{name}/homology_details', description: 'Get homology/orthologs', example: '/api/locus/ACT1/homology_details' },
         { method: 'GET', path: '/api/locus/{name}/sequence_details', description: 'Get sequence and location info', example: '/api/locus/ACT1/sequence_details' },
@@ -50,6 +39,48 @@ const ApiDocPage = () => {
         { method: 'GET', path: '/api/go/{goid}', description: 'Get GO term info and annotations by GOID', example: '/api/go/GO:0005634' },
         { method: 'GET', path: '/api/go/evidence', description: 'Get all GO evidence codes with definitions', example: '/api/go/evidence' },
         { method: 'GET', path: '/api/go/{goid}/hierarchy', description: 'Get GO term hierarchy for visualization', params: 'max_nodes', example: '/api/go/GO:0005634/hierarchy?max_nodes=30' },
+      ]
+    },
+    {
+      name: 'Phenotype',
+      description: 'Phenotype search and observable terms',
+      endpoints: [
+        { method: 'GET', path: '/api/phenotype/search', description: 'Search phenotypes by criteria', params: 'observable, qualifier, experiment_type, mutant_type, page, limit', example: '/api/phenotype/search?observable=hyphal%20growth&page=1&limit=25' },
+        { method: 'GET', path: '/api/phenotype/observables', description: 'Get hierarchical tree of observable CV terms', example: '/api/phenotype/observables' },
+      ]
+    },
+    {
+      name: 'Reference',
+      description: 'Literature and publication information',
+      endpoints: [
+        { method: 'GET', path: '/api/reference/{id}', description: 'Get basic reference info by PubMed ID or CGD ID', example: '/api/reference/40323423' },
+        { method: 'GET', path: '/api/reference/{id}/locus_details', description: 'Get loci addressed in a paper', example: '/api/reference/40323423/locus_details' },
+        { method: 'GET', path: '/api/reference/{id}/go_details', description: 'Get GO annotations citing this reference', example: '/api/reference/40323423/go_details' },
+        { method: 'GET', path: '/api/reference/{id}/phenotype_details', description: 'Get phenotype annotations citing this reference', example: '/api/reference/40323423/phenotype_details' },
+        { method: 'GET', path: '/api/reference/{id}/interaction_details', description: 'Get interactions citing this reference', example: '/api/reference/40323423/interaction_details' },
+        { method: 'GET', path: '/api/reference/{id}/literature_topics', description: 'Get literature topics for this reference', example: '/api/reference/40323423/literature_topics' },
+        { method: 'GET', path: '/api/reference/search/author', description: 'Search references by author name', params: 'author', example: '/api/reference/search/author?author=Smith' },
+        { method: 'GET', path: '/api/reference/new-papers-this-week', description: 'Get new papers added this week', params: 'days', example: '/api/reference/new-papers-this-week?days=7' },
+        { method: 'GET', path: '/api/reference/genome-wide-analysis', description: 'Get genome-wide analysis papers', params: 'topic, page, page_size', example: '/api/reference/genome-wide-analysis?page=1&page_size=50' },
+      ]
+    },
+    {
+      name: 'Search',
+      description: 'Search across genes, GO terms, phenotypes, and references',
+      endpoints: [
+        { method: 'GET', path: '/api/search/resolve', description: 'Resolve an identifier to a direct URL', params: 'query', example: '/api/search/resolve?query=ACT1' },
+        { method: 'GET', path: '/api/search/quick', description: 'Quick search across all categories', params: 'query, limit', example: '/api/search/quick?query=ACT1&limit=20' },
+        { method: 'GET', path: '/api/search/autocomplete', description: 'Get autocomplete suggestions', params: 'query, limit', example: '/api/search/autocomplete?query=ACT&limit=10' },
+        { method: 'GET', path: '/api/search/category', description: 'Search within a specific category with pagination', params: 'query, category, page, page_size', example: '/api/search/category?query=kinase&category=genes&page=1&page_size=20' },
+      ]
+    },
+    {
+      name: 'Sequence Tools',
+      description: 'Gene/sequence retrieval and analysis',
+      endpoints: [
+        { method: 'GET', path: '/api/seq-tools/assemblies', description: 'Get list of available assemblies', example: '/api/seq-tools/assemblies' },
+        { method: 'GET', path: '/api/seq-tools/chromosomes', description: 'Get list of chromosomes for an assembly', params: 'seq_source', example: '/api/seq-tools/chromosomes?seq_source=C_albicans_SC5314_A22' },
+        { method: 'POST', path: '/api/seq-tools/resolve', description: 'Resolve gene/coordinates/sequence and get available tools' },
       ]
     },
     {
@@ -72,49 +103,6 @@ const ApiDocPage = () => {
         { method: 'GET', path: '/api/go-slim-mapper/slim-terms/{setName}/{aspect}', description: 'Get GO Slim terms for a set and aspect', example: '/api/go-slim-mapper/slim-terms/Yeast%20GO-Slim/P' },
         { method: 'POST', path: '/api/go-slim-mapper/analyze', description: 'Run GO Slim Mapper analysis' },
         { method: 'POST', path: '/api/go-slim-mapper/download/{format}', description: 'Download results (tsv/csv)' },
-      ]
-    },
-    {
-      name: 'Phenotype',
-      description: 'Phenotype search and observable terms',
-      endpoints: [
-        { method: 'GET', path: '/api/phenotype/search', description: 'Search phenotypes by criteria', params: 'observable, qualifier, experiment_type, mutant_type, page, limit', example: '/api/phenotype/search?observable=hyphal%20growth&page=1&limit=25' },
-        { method: 'GET', path: '/api/phenotype/observables', description: 'Get hierarchical tree of observable CV terms', example: '/api/phenotype/observables' },
-      ]
-    },
-    {
-      name: 'Reference',
-      description: 'Literature and publication information',
-      endpoints: [
-        { method: 'GET', path: '/api/reference/{id}', description: 'Get basic reference info by PubMed ID or CGD ID', example: '/api/reference/12345678' },
-        { method: 'GET', path: '/api/reference/{id}/locus_details', description: 'Get loci addressed in a paper', example: '/api/reference/12345678/locus_details' },
-        { method: 'GET', path: '/api/reference/{id}/go_details', description: 'Get GO annotations citing this reference', example: '/api/reference/12345678/go_details' },
-        { method: 'GET', path: '/api/reference/{id}/phenotype_details', description: 'Get phenotype annotations citing this reference', example: '/api/reference/12345678/phenotype_details' },
-        { method: 'GET', path: '/api/reference/{id}/interaction_details', description: 'Get interactions citing this reference', example: '/api/reference/12345678/interaction_details' },
-        { method: 'GET', path: '/api/reference/{id}/literature_topics', description: 'Get literature topics for this reference', example: '/api/reference/12345678/literature_topics' },
-        { method: 'GET', path: '/api/reference/search/author', description: 'Search references by author name', params: 'author', example: '/api/reference/search/author?author=Smith' },
-        { method: 'GET', path: '/api/reference/new-papers-this-week', description: 'Get new papers added this week', params: 'days', example: '/api/reference/new-papers-this-week?days=7' },
-        { method: 'GET', path: '/api/reference/genome-wide-analysis', description: 'Get genome-wide analysis papers', params: 'topic, page, page_size', example: '/api/reference/genome-wide-analysis?page=1&page_size=50' },
-      ]
-    },
-    {
-      name: 'Chromosome',
-      description: 'Chromosome and contig information',
-      endpoints: [
-        { method: 'GET', path: '/api/chromosome', description: 'List all chromosomes grouped by organism', example: '/api/chromosome' },
-        { method: 'GET', path: '/api/chromosome/{name}', description: 'Get basic chromosome/contig info', example: '/api/chromosome/Ca22chr1A_C_albicans_SC5314' },
-        { method: 'GET', path: '/api/chromosome/{name}/history', description: 'Get chromosome history (sequence/annotation changes)', example: '/api/chromosome/Ca22chr1A_C_albicans_SC5314/history' },
-        { method: 'GET', path: '/api/chromosome/{name}/references', description: 'Get chromosome references', example: '/api/chromosome/Ca22chr1A_C_albicans_SC5314/references' },
-        { method: 'GET', path: '/api/chromosome/{name}/summary_notes', description: 'Get chromosome summary notes', example: '/api/chromosome/Ca22chr1A_C_albicans_SC5314/summary_notes' },
-      ]
-    },
-    {
-      name: 'Sequence Tools',
-      description: 'Gene/sequence retrieval and analysis',
-      endpoints: [
-        { method: 'GET', path: '/api/seq-tools/assemblies', description: 'Get list of available assemblies', example: '/api/seq-tools/assemblies' },
-        { method: 'GET', path: '/api/seq-tools/chromosomes', description: 'Get list of chromosomes for an assembly', params: 'seq_source', example: '/api/seq-tools/chromosomes?seq_source=C_albicans_SC5314_A22' },
-        { method: 'POST', path: '/api/seq-tools/resolve', description: 'Resolve gene/coordinates/sequence and get available tools' },
       ]
     },
     {
