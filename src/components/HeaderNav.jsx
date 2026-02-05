@@ -102,7 +102,8 @@ const HeaderNav = () => {
         { label: 'Meetings & Courses', to: '/meetings' },
         { label: 'Nomenclature Guide', to: '/nomenclature' },
         { label: 'External Resources', to: '/external-resources' },
-        { label: 'Gene Registry', to: '/gene-registry' }
+        { label: 'Gene Registry', to: '/gene-registry' },
+        { label: 'Developer API', to: '/developer/api' }
       ]
     }
   ];
