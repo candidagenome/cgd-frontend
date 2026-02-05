@@ -215,9 +215,9 @@ function GoSlimMapperResultsPage() {
           ) : (
             <table className="results-table">
               <colgroup>
-                <col style={{ width: '45%' }} />
-                <col style={{ width: '10%' }} />
-                <col style={{ width: '45%' }} />
+                <col style={{ width: '40%' }} />
+                <col style={{ width: '20%' }} />
+                <col style={{ width: '40%' }} />
               </colgroup>
               <thead>
                 <tr>
