@@ -57,7 +57,7 @@ const ToolsPage = () => {
     },
     {
       title: 'Phenotype Search',
-      url: '/phenotype-search',
+      url: '/phenotype/search',
       description: 'Search for genes by phenotype annotations'
     }
   ];

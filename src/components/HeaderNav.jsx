@@ -24,13 +24,13 @@ const HeaderNav = () => {
     },
     {
       label: 'JBrowse',
-      href: '/jbrowse/index.html',
+      href: 'http://www.candidagenome.org/jbrowse/index.html',
       submenu: [
-        { label: 'C. albicans', href: '/jbrowse/index.html?data=cgd_data%2FC_albicans_SC5314' },
-        { label: 'C. auris', href: '/jbrowse/index.html?data=cgd_data%2FC_auris_B8441' },
-        { label: 'C. dubliniensis', href: '/jbrowse/index.html?data=cgd_data%2FC_dubliniensis_CD36' },
-        { label: 'C. glabrata', href: '/jbrowse/index.html?data=cgd_data%2FC_glabrata_CBS138' },
-        { label: 'C. parapsilosis', href: '/jbrowse/index.html?data=cgd_data%2FC_parapsilosis_CDC317' }
+        { label: 'C. albicans', href: 'http://www.candidagenome.org/jbrowse/index.html?data=cgd_data%2FC_albicans_SC5314' },
+        { label: 'C. auris', href: 'http://www.candidagenome.org/jbrowse/index.html?data=cgd_data%2FC_auris_B8441' },
+        { label: 'C. dubliniensis', href: 'http://www.candidagenome.org/jbrowse/index.html?data=cgd_data%2FC_dubliniensis_CD36' },
+        { label: 'C. glabrata', href: 'http://www.candidagenome.org/jbrowse/index.html?data=cgd_data%2FC_glabrata_CBS138' },
+        { label: 'C. parapsilosis', href: 'http://www.candidagenome.org/jbrowse/index.html?data=cgd_data%2FC_parapsilosis_CDC317' }
       ]
     },
     {
@@ -49,7 +49,7 @@ const HeaderNav = () => {
       label: 'GO',
       to: '/go-resources',
       submenu: [
-        { label: 'What is GO?', href: 'http://www.geneontology.org/page/ontology-documentation', external: true },
+        { label: 'What is GO?', href: 'https://geneontology.org/docs/ontology-documentation/', external: true },
         { label: 'GO Slim Mapper', to: '/go-slim-mapper' },
         { label: 'GO Term Finder', to: '/go-term-finder' },
         { label: 'GO Consortium', href: 'http://www.geneontology.org/', external: true },
@@ -61,11 +61,13 @@ const HeaderNav = () => {
       to: '/tools',
       submenu: [
         { label: 'Batch Download', to: '/batch-download' },
-        { label: 'Phenotype Search', to: '/phenotype-search' },
+        { label: 'Phenotype Search', to: '/phenotype/search' },
         { label: 'BLAST', to: '/blast' },
         { label: 'C. albicans Genome Snapshot', to: '/genome-snapshot/C_albicans_SC5314' },
         { label: 'C. auris Genome Snapshot', to: '/genome-snapshot/C_auris_B8441' },
-        { label: 'C. glabrata Genome Snapshot', to: '/genome-snapshot/C_glabrata_CBS138' }
+        { label: 'C. dubliniensis Genome Snapshot', to: '/genome-snapshot/C_dubliniensis_CD36' },
+        { label: 'C. glabrata Genome Snapshot', to: '/genome-snapshot/C_glabrata_CBS138' },
+        { label: 'C. parapsilosis Genome Snapshot', to: '/genome-snapshot/C_parapsilosis_CDC317' }
       ]
     },
     {
@@ -82,9 +84,9 @@ const HeaderNav = () => {
       submenu: [
         { label: 'Batch Download', to: '/batch-download' },
         { label: 'GO Annotations', to: '/download' },
-        { label: 'Chromosomal Features', to: '/download' },
-        { label: 'Sequence', to: '/download' },
-        { label: 'Browse Downloads', to: '/download' }
+        { label: 'Chromosomal Features', href: 'http://www.candidagenome.org/download/chromosomal_feature_files/', external: true },
+        { label: 'Sequence', href: 'http://www.candidagenome.org/download/sequence/', external: true },
+        { label: 'Browse Downloads', href: 'http://www.candidagenome.org/download/', external: true }
       ]
     },
     {
