@@ -16,7 +16,7 @@ const GOResourcesPage = () => {
     },
     {
       title: 'GO Slim Mapper',
-      url: '/cgi-bin/GO/goTermMapper',
+      url: '/go-slim-mapper',
       external: false,
       description: (
         <>
@@ -26,7 +26,7 @@ const GOResourcesPage = () => {
     },
     {
       title: 'GO Term Finder',
-      url: '/cgi-bin/GO/goTermFinder',
+      url: '/go-term-finder',
       external: false,
       description: (
         <>
