@@ -209,6 +209,13 @@
   margin-bottom: 15px;
 }
 
+.checkbox-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 5px;
+}
+
 .checkbox-group {
   display: flex;
   align-items: center;

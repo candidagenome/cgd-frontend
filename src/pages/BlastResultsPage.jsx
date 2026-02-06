@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import blastApi from '../api/blastApi';
 import './BlastResultsPage.css';
 
 function BlastResultsPage() {
@@ -7,6 +8,7 @@ function BlastResultsPage() {
   const [results, setResults] = useState(null);
   const [params, setParams] = useState(null);
   const [expandedHits, setExpandedHits] = useState(new Set([0])); // First hit expanded by default
+  const [downloading, setDownloading] = useState(null);
 
   // Load results from session storage
   useEffect(() => {
@@ -52,6 +54,42 @@ function BlastResultsPage() {
   // Go back to search
   const goToSearch = () => {
     navigate('/blast');
+  };
+
+  // Download results in specified format
+  const handleDownload = async (format) => {
+    if (!params) return;
+
+    setDownloading(format);
+    try {
+      const response = await blastApi.download(format, params);
+      const blob = response.data;
+
+      // Get filename from Content-Disposition header or use default
+      const contentDisposition = response.headers['content-disposition'];
+      let filename = `blast_results.${format === 'tab' ? 'tsv' : format === 'raw' ? 'txt' : format}`;
+      if (contentDisposition) {
+        const match = contentDisposition.match(/filename=([^;]+)/);
+        if (match) {
+          filename = match[1].replace(/"/g, '');
+        }
+      }
+
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (err) {
+      console.error('Download failed:', err);
+      alert('Failed to download results. Please try again.');
+    } finally {
+      setDownloading(null);
+    }
   };
 
   if (!results) {
@@ -102,10 +140,42 @@ function BlastResultsPage() {
               </span>
             </div>
           </div>
-          <button onClick={goToSearch} className="new-search-button">
-            New Search
-          </button>
+          <div className="summary-actions">
+            <button onClick={goToSearch} className="new-search-button">
+              New Search
+            </button>
+          </div>
         </div>
+
+        {/* Download Options */}
+        {results.hits.length > 0 && (
+          <div className="download-section">
+            <span className="download-label">Download results:</span>
+            <div className="download-buttons">
+              <button
+                onClick={() => handleDownload('fasta')}
+                disabled={downloading !== null}
+                className="download-btn"
+              >
+                {downloading === 'fasta' ? 'Downloading...' : 'FASTA'}
+              </button>
+              <button
+                onClick={() => handleDownload('tab')}
+                disabled={downloading !== null}
+                className="download-btn"
+              >
+                {downloading === 'tab' ? 'Downloading...' : 'Tab-delimited'}
+              </button>
+              <button
+                onClick={() => handleDownload('raw')}
+                disabled={downloading !== null}
+                className="download-btn"
+              >
+                {downloading === 'raw' ? 'Downloading...' : 'Text'}
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Results Summary */}
         {results.hits.length === 0 ? (
@@ -203,7 +273,30 @@ function BlastResultsPage() {
                           <div className="hit-meta">
                             <span>Length: {hit.length.toLocaleString()}</span>
                             <span>Accession: {hit.accession}</span>
+                            {hit.organism_name && (
+                              <span>Organism: {hit.organism_name}</span>
+                            )}
+                            {hit.orf19_id && (
+                              <span>
+                                orf19 ID:{' '}
+                                <Link to={`/locus/${hit.orf19_id}`}>
+                                  {hit.orf19_id}
+                                </Link>
+                              </span>
+                            )}
                           </div>
+                          {hit.jbrowse_url && (
+                            <div className="hit-actions">
+                              <a
+                                href={hit.jbrowse_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="jbrowse-link"
+                              >
+                                View in JBrowse
+                              </a>
+                            </div>
+                          )}
                         </div>
 
                         {hit.hsps.map((hsp, hspIndex) => (
