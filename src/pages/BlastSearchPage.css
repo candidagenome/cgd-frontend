@@ -207,6 +207,107 @@
   font-style: italic;
 }
 
+/* Genome Selection */
+.genome-select-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.select-action-btn {
+  background: none;
+  border: 1px solid #1976d2;
+  color: #1976d2;
+  font-size: 0.75em;
+  padding: 3px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.select-action-btn:hover {
+  background-color: #e3f2fd;
+}
+
+.genome-list {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px;
+  background-color: #fff;
+}
+
+.genome-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background-color 0.15s;
+}
+
+.genome-item:hover {
+  background-color: #f5f5f5;
+}
+
+.genome-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.genome-name {
+  font-size: 0.9em;
+  color: #333;
+}
+
+/* Dataset Type Selection */
+.dataset-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dataset-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  transition: all 0.15s;
+}
+
+.dataset-item:hover {
+  background-color: #f5f5f5;
+  border-color: #bbb;
+}
+
+.dataset-item input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.dataset-item input[type="radio"]:checked + .dataset-name {
+  color: #1976d2;
+}
+
+.dataset-name {
+  font-size: 0.9em;
+  color: #333;
+}
+
+.dataset-name strong {
+  color: #1976d2;
+}
+
 /* Options Section */
 .options-section .section-header {
   margin-bottom: 10px;

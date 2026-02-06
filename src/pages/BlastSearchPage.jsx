@@ -46,6 +46,36 @@ const PROGRAM_INFO = {
   },
 };
 
+// Available genomes for selection (IDs match database file naming convention)
+const GENOME_OPTIONS = [
+  { id: 'C_albicans_SC5314_A19', name: 'Candida albicans SC5314 Assembly 19' },
+  { id: 'C_albicans_SC5314_A21', name: 'Candida albicans SC5314 Assembly 21' },
+  { id: 'C_albicans_SC5314_A22', name: 'Candida albicans SC5314 Assembly 22' },
+  { id: 'C_albicans_WO-1', name: 'Candida albicans WO-1' },
+  { id: 'C_auris_B11221', name: 'Candida auris B11221' },
+  { id: 'C_auris_B8441', name: 'Candida auris B8441' },
+  { id: 'C_dubliniensis_CD36', name: 'Candida dubliniensis CD36' },
+  { id: 'C_glabrata_CBS138', name: 'Candida glabrata CBS138' },
+  { id: 'C_guilliermondii_ATCC_6260', name: 'Candida guilliermondii ATCC 6260' },
+  { id: 'C_lusitaniae_ATCC_42720', name: 'Candida lusitaniae ATCC 42720' },
+  { id: 'C_lusitaniae_CBS6936', name: 'Candida lusitaniae CBS6936' },
+  { id: 'C_orthopsilosis_Co_90-125', name: 'Candida orthopsilosis Co 90-125' },
+  { id: 'C_parapsilosis_CDC317', name: 'Candida parapsilosis CDC317' },
+  { id: 'C_tropicalis_MYA-3404', name: 'Candida tropicalis MYA-3404' },
+  { id: 'D_hansenii_CBS767', name: 'Debaryomyces hansenii CBS767' },
+  { id: 'L_elongisporus_NRLL_YB-4239', name: 'Lodderomyces elongisporus NRRL YB-4239' },
+];
+
+// Dataset types for selection
+const DATASET_TYPES = [
+  { id: 'GENOME', name: 'GENOME', description: 'complete genome sequence', seqType: 'DNA' },
+  { id: 'GENES', name: 'GENES', description: 'gene models -- introns included', seqType: 'DNA' },
+  { id: 'CODING', name: 'CODING', description: 'gene models -- introns removed', seqType: 'DNA' },
+  { id: 'PROTEIN', name: 'PROTEIN', description: 'translation of coding sequence', seqType: 'PROTEIN' },
+  { id: 'OTHER', name: 'OTHER', description: 'non-coding features -- introns included', seqType: 'DNA' },
+  { id: 'OTHER_SPLICED', name: 'OTHER SPLICED', description: 'non-coding features -- introns removed', seqType: 'DNA' },
+];
+
 // E-value presets for dropdown
 const EVALUE_OPTIONS = [
   { value: '1e-20', label: '1e-20' },
@@ -99,6 +129,11 @@ function BlastSearchPage() {
   const [locus, setLocus] = useState(initialLocus);
   const [program, setProgram] = useState(searchParams.get('program') || 'blastn');
   const [database, setDatabase] = useState(searchParams.get('db') || '');
+  const [selectedGenomes, setSelectedGenomes] = useState(() => {
+    const genomes = searchParams.get('genomes');
+    return genomes ? genomes.split(',') : ['C_albicans_SC5314_A22']; // Default to latest C. albicans assembly
+  });
+  const [datasetType, setDatasetType] = useState(searchParams.get('dataset') || 'GENOME');
   const [evalue, setEvalue] = useState(searchParams.get('evalue') || '10');
   const [maxHits, setMaxHits] = useState(searchParams.get('hits') || '50');
   const [wordSize, setWordSize] = useState(searchParams.get('word') || '');
@@ -194,6 +229,62 @@ function BlastSearchPage() {
     }
   }, [program, config, database]);
 
+  // Filter dataset types based on program (PROTEIN only for protein programs)
+  const getCompatibleDatasetTypes = () => {
+    const programInfo = PROGRAM_INFO[program];
+    if (!programInfo) return DATASET_TYPES;
+
+    // blastp needs protein databases, blastn/tblastn/tblastx need nucleotide
+    const needsProtein = program === 'blastp' || program === 'blastx';
+
+    return DATASET_TYPES.filter((dt) => {
+      if (needsProtein) {
+        return dt.seqType === 'PROTEIN';
+      } else {
+        return dt.seqType === 'DNA';
+      }
+    });
+  };
+
+  // Update dataset type when program changes (ensure compatibility)
+  useEffect(() => {
+    const programInfo = PROGRAM_INFO[program];
+    if (!programInfo) return;
+
+    const needsProtein = program === 'blastp' || program === 'blastx';
+    const compatible = DATASET_TYPES.filter((dt) =>
+      needsProtein ? dt.seqType === 'PROTEIN' : dt.seqType === 'DNA'
+    );
+
+    const currentValid = compatible.find((dt) => dt.id === datasetType);
+    if (!currentValid && compatible.length > 0) {
+      setDatasetType(compatible[0].id);
+    }
+  }, [program, datasetType]);
+
+  // Toggle genome selection
+  const toggleGenome = (genomeId) => {
+    setSelectedGenomes((prev) => {
+      if (prev.includes(genomeId)) {
+        // Don't allow deselecting if it's the last one
+        if (prev.length === 1) return prev;
+        return prev.filter((id) => id !== genomeId);
+      } else {
+        return [...prev, genomeId];
+      }
+    });
+  };
+
+  // Select/deselect all genomes
+  const selectAllGenomes = () => {
+    setSelectedGenomes(GENOME_OPTIONS.map((g) => g.id));
+  };
+
+  const deselectAllGenomes = () => {
+    // Keep at least one selected
+    setSelectedGenomes([GENOME_OPTIONS[0].id]);
+  };
+
   // Update URL params
   const updateUrlParams = useCallback(() => {
     const params = new URLSearchParams();
@@ -208,6 +299,8 @@ function BlastSearchPage() {
     }
 
     if (database) params.set('db', database);
+    if (selectedGenomes.length > 0) params.set('genomes', selectedGenomes.join(','));
+    if (datasetType) params.set('dataset', datasetType);
     if (evalue !== '10') params.set('evalue', evalue);
     if (maxHits !== '50') params.set('hits', maxHits);
     if (wordSize) params.set('word', wordSize);
@@ -228,6 +321,8 @@ function BlastSearchPage() {
     locus,
     program,
     database,
+    selectedGenomes,
+    datasetType,
     evalue,
     maxHits,
     wordSize,
@@ -261,7 +356,8 @@ function BlastSearchPage() {
     try {
       const params = {
         program,
-        database,
+        genomes: selectedGenomes,
+        dataset_type: datasetType,
         evalue: parseFloat(evalue),
         max_hits: parseInt(maxHits, 10),
         low_complexity_filter: lowComplexityFilter,
@@ -321,11 +417,15 @@ function BlastSearchPage() {
 
   // Validate form
   const isFormValid = () => {
-    if (queryType === 'sequence') {
-      return sequence.trim().length >= 10;
-    } else {
-      return locus.trim().length > 0;
-    }
+    // Check query
+    const hasQuery = queryType === 'sequence'
+      ? sequence.trim().length >= 10
+      : locus.trim().length > 0;
+
+    // Check genome selection
+    const hasGenomes = selectedGenomes.length > 0;
+
+    return hasQuery && hasGenomes;
   };
 
   // Get current program info
@@ -410,56 +510,89 @@ function BlastSearchPage() {
             </div>
           </div>
 
-          {/* Program and Database Selection - Combined Row */}
+          {/* Program Selection */}
           <div className="form-section">
             <div className="section-header">
               <span className="section-number">2</span>
-              <h3>Select Program &amp; Database</h3>
+              <h3>Select BLAST Program</h3>
             </div>
 
-            <div className="program-db-row">
-              <div className="form-group compact">
-                <label htmlFor="program">BLAST Program</label>
-                <select
-                  id="program"
-                  value={program}
-                  onChange={(e) => setProgram(e.target.value)}
-                >
-                  {Object.entries(PROGRAM_INFO).map(([prog, info]) => (
-                    <option key={prog} value={prog}>
-                      {info.name} - {info.description}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            <div className="form-group compact">
+              <select
+                id="program"
+                value={program}
+                onChange={(e) => setProgram(e.target.value)}
+              >
+                {Object.entries(PROGRAM_INFO).map(([prog, info]) => (
+                  <option key={prog} value={prog}>
+                    {info.name} - {info.description}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
 
-              <div className="form-group compact">
-                <label htmlFor="database">Target Database</label>
-                <select
-                  id="database"
-                  value={database}
-                  onChange={(e) => setDatabase(e.target.value)}
-                >
-                  <option value="">-- Select Database --</option>
-                  {compatibleDatabases.map((db) => (
-                    <option key={db.name} value={db.name}>
-                      {db.display_name}
-                    </option>
-                  ))}
-                </select>
+          {/* Genome Selection */}
+          <div className="form-section">
+            <div className="section-header">
+              <span className="section-number">3</span>
+              <h3>Select Genome(s)</h3>
+              <div className="genome-select-actions">
+                <button type="button" className="select-action-btn" onClick={selectAllGenomes}>
+                  Select All
+                </button>
+                <button type="button" className="select-action-btn" onClick={deselectAllGenomes}>
+                  Clear
+                </button>
               </div>
             </div>
-            {database && (
-              <p className="help-text db-desc">
-                {compatibleDatabases.find((db) => db.name === database)?.description}
-              </p>
-            )}
+
+            <div className="genome-list">
+              {GENOME_OPTIONS.map((genome) => (
+                <label key={genome.id} className="genome-item">
+                  <input
+                    type="checkbox"
+                    checked={selectedGenomes.includes(genome.id)}
+                    onChange={() => toggleGenome(genome.id)}
+                  />
+                  <span className="genome-name">{genome.name}</span>
+                </label>
+              ))}
+            </div>
+            <p className="help-text">
+              {selectedGenomes.length} genome{selectedGenomes.length !== 1 ? 's' : ''} selected
+            </p>
+          </div>
+
+          {/* Dataset Type Selection */}
+          <div className="form-section">
+            <div className="section-header">
+              <span className="section-number">4</span>
+              <h3>Select Dataset Type</h3>
+            </div>
+
+            <div className="dataset-list">
+              {getCompatibleDatasetTypes().map((dt) => (
+                <label key={dt.id} className="dataset-item">
+                  <input
+                    type="radio"
+                    name="datasetType"
+                    value={dt.id}
+                    checked={datasetType === dt.id}
+                    onChange={(e) => setDatasetType(e.target.value)}
+                  />
+                  <span className="dataset-name">
+                    <strong>{dt.name}</strong> - {dt.description} ({dt.seqType})
+                  </span>
+                </label>
+              ))}
+            </div>
           </div>
 
           {/* BLAST Options */}
           <div className="form-section options-section">
             <div className="section-header">
-              <span className="section-number">3</span>
+              <span className="section-number">5</span>
               <h3>BLAST Options</h3>
               <button
                 type="button"
@@ -666,7 +799,7 @@ function BlastSearchPage() {
             <button
               type="submit"
               className="submit-button"
-              disabled={!isFormValid() || loading || !database}
+              disabled={!isFormValid() || loading}
             >
               {loading ? (
                 <>
