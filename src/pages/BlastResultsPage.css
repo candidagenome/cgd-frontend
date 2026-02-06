@@ -36,7 +36,32 @@
 .blast-results-page hr {
   border: none;
   border-top: 2px solid #1976d2;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
+}
+
+/* Navigation Links */
+.results-nav,
+.section-nav {
+  margin-bottom: 15px;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.results-nav a,
+.section-nav a {
+  color: #1976d2;
+  text-decoration: none;
+  margin: 0 5px;
+}
+
+.results-nav a:hover,
+.section-nav a:hover {
+  text-decoration: underline;
+}
+
+.nav-separator {
+  color: #999;
+  margin: 0 3px;
 }
 
 /* ===============================
@@ -507,9 +532,14 @@
    Alignments Section
    ========================= */
 
-.alignments-section {
+.alignments-title {
+  margin: 25px 0 10px 0;
+  padding-top: 15px;
   border-top: 2px solid #e0e0e0;
-  padding-top: 20px;
+}
+
+.alignments-section {
+  padding-top: 10px;
 }
 
 .hit-alignments {
@@ -559,8 +589,16 @@
   text-decoration: underline;
 }
 
+.hit-organism {
+  color: #666;
+  font-weight: normal;
+}
+
 .hit-actions {
   margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .jbrowse-link {
@@ -577,6 +615,39 @@
 .jbrowse-link:hover {
   background-color: #388e3c;
   text-decoration: none;
+}
+
+.display-seq-btn {
+  padding: 5px 12px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.display-seq-btn:hover {
+  background-color: #1565c0;
+}
+
+.sequence-display {
+  margin-top: 15px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 15px;
+  overflow-x: auto;
+}
+
+.sequence-fasta {
+  margin: 0;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 
 /* =========================

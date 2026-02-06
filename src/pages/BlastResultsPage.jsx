@@ -9,6 +9,35 @@ function BlastResultsPage() {
   const [params, setParams] = useState(null);
   const [expandedHits, setExpandedHits] = useState(new Set());
   const [downloading, setDownloading] = useState(null);
+  const [displayedSequences, setDisplayedSequences] = useState(new Set());
+
+  // Toggle sequence display for a hit
+  const toggleSequenceDisplay = (index) => {
+    setDisplayedSequences((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(index)) {
+        newSet.delete(index);
+      } else {
+        newSet.add(index);
+      }
+      return newSet;
+    });
+  };
+
+  // Format sequence for display (60 chars per line)
+  const formatSequence = (hit) => {
+    // Use the first HSP's hit sequence as an approximation
+    // In a real implementation, this would fetch the full sequence from the server
+    const hsp = hit.hsps[0];
+    if (!hsp) return '';
+
+    const seq = hsp.hit_seq.replace(/-/g, ''); // Remove gaps
+    const lines = [];
+    for (let i = 0; i < seq.length; i += 80) {
+      lines.push(seq.substring(i, i + 80));
+    }
+    return lines.join('\n');
+  };
 
   // Load results from session storage
   useEffect(() => {
@@ -125,10 +154,22 @@ function BlastResultsPage() {
   }
 
   return (
-    <div className="blast-results-page">
+    <div className="blast-results-page" id="top">
       <div className="blast-content">
         <h1>BLAST Results</h1>
         <hr />
+
+        {/* Navigation Links */}
+        {results.hits.length > 0 && (
+          <nav className="results-nav">
+            <span>Jump to:</span>
+            <a href="#hits-list">List of Hits</a>
+            <span className="nav-separator">|</span>
+            <a href="#download-section">Download Results</a>
+            <span className="nav-separator">|</span>
+            <a href="#alignments-section">Hit Alignments</a>
+          </nav>
+        )}
 
         {/* Search Summary */}
         <div className="search-summary">
@@ -166,7 +207,7 @@ function BlastResultsPage() {
 
         {/* Download Options */}
         {results.hits.length > 0 && (
-          <div className="download-section">
+          <div className="download-section" id="download-section">
             <span className="download-label">Download results:</span>
             <div className="download-buttons">
               <button
@@ -259,11 +300,10 @@ function BlastResultsPage() {
             </div>
 
             {/* Hits Table */}
-            <div className="results-section">
+            <div className="results-section" id="hits-list">
               <div className="section-header">
                 <h2>
-                  {results.hits.length} Sequence{results.hits.length !== 1 ? 's' : ''}{' '}
-                  Found
+                  List of {results.program.toUpperCase()} Hits
                 </h2>
                 <div className="expand-controls">
                   <button onClick={expandAll} className="expand-btn">
@@ -324,6 +364,17 @@ function BlastResultsPage() {
               </table>
 
               {/* Detailed Alignments */}
+              <h2 className="alignments-title" id="alignments-section">
+                Alignments of {results.program.toUpperCase()} Hits
+              </h2>
+              <nav className="section-nav">
+                <span>Jump to:</span>
+                <a href="#top">Top</a>
+                <span className="nav-separator">|</span>
+                <a href="#hits-list">List of Hits</a>
+                <span className="nav-separator">|</span>
+                <a href="#download-section">Download Results</a>
+              </nav>
               <div className="alignments-section">
                 {results.hits.map(
                   (hit, hitIndex) =>
@@ -331,37 +382,43 @@ function BlastResultsPage() {
                       <div key={hitIndex} className="hit-alignments" id={`hit-${hitIndex}`}>
                         <div className="hit-header">
                           <h3>
-                            {hit.locus_link ? (
-                              <Link to={hit.locus_link}>{hit.description}</Link>
-                            ) : (
-                              hit.description
-                            )}
+                            {hit.accession}{' '}
+                            {hit.organism_name && <span className="hit-organism">{hit.organism_name}</span>}
                           </h3>
                           <div className="hit-meta">
-                            <span>Length: {hit.length.toLocaleString()}</span>
-                            <span>Accession: {hit.accession}</span>
-                            {hit.organism_name && (
-                              <span>Organism: {hit.organism_name}</span>
-                            )}
-                            {hit.orf19_id && (
+                            <span>Length = {hit.length.toLocaleString()}</span>
+                            <span>Score = {hit.hsps[0]?.score} ({hit.best_bit_score.toFixed(0)} bits)</span>
+                            <span>Expect = {hit.best_evalue === 0 ? '0.0' : formatEvalue(hit.best_evalue)}</span>
+                            {hit.hsps[0]?.percent_identity && (
                               <span>
-                                orf19 ID:{' '}
-                                <Link to={`/locus/${hit.orf19_id}`}>
-                                  {hit.orf19_id}
-                                </Link>
+                                Identities = {hit.hsps[0].identity}/{hit.hsps[0].align_len} ({hit.hsps[0].percent_identity.toFixed(1)}%)
                               </span>
                             )}
                           </div>
-                          {hit.jbrowse_url && (
-                            <div className="hit-actions">
+                          <div className="hit-actions">
+                            {hit.jbrowse_url && (
                               <a
                                 href={hit.jbrowse_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="jbrowse-link"
                               >
-                                View in JBrowse
+                                CGD Genome Browser
                               </a>
+                            )}
+                            <button
+                              type="button"
+                              className="display-seq-btn"
+                              onClick={() => toggleSequenceDisplay(hitIndex)}
+                            >
+                              {displayedSequences.has(hitIndex) ? 'Hide Sequence' : 'Display Sequence'}
+                            </button>
+                          </div>
+                          {displayedSequences.has(hitIndex) && (
+                            <div className="sequence-display">
+                              <pre className="sequence-fasta">
+                                {`>${hit.accession}:${hit.hsps[0]?.hit_start}-${hit.hsps[0]?.hit_end} (${hit.length} nucleotides)\n${formatSequence(hit)}`}
+                              </pre>
                             </div>
                           )}
                         </div>
