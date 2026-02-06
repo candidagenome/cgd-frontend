@@ -42,6 +42,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px 25px;
+  flex: 1;
+  min-width: 0;
 }
 
 .summary-item {
@@ -57,6 +59,7 @@
 .summary-item .value {
   font-weight: 500;
   color: #333;
+  word-break: break-word;
 }
 
 .new-search-button {
@@ -166,17 +169,22 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .section-header h2 {
   color: #333;
   margin: 0;
   font-size: 1.2em;
+  flex-shrink: 1;
+  min-width: 0;
 }
 
 .expand-controls {
   display: flex;
   gap: 10px;
+  flex-shrink: 0;
 }
 
 .expand-btn {
