@@ -7,21 +7,21 @@ import './BlastSearchPage.css';
 const PROGRAM_INFO = {
   blastn: {
     name: 'BLASTN',
-    description: 'Search nucleotide database with nucleotide query',
+    description: 'DNA query → DNA database',
     queryType: 'nucleotide',
     hasTasks: true,
     hasScoring: true,
   },
   blastp: {
     name: 'BLASTP',
-    description: 'Search protein database with protein query',
+    description: 'Protein query → Protein database',
     queryType: 'protein',
     hasTasks: true,
     hasScoring: false,
   },
   blastx: {
     name: 'BLASTX',
-    description: 'Search protein database with translated nucleotide query',
+    description: 'Translated DNA query → Protein database',
     queryType: 'nucleotide',
     hasTasks: false,
     hasScoring: false,
@@ -29,7 +29,7 @@ const PROGRAM_INFO = {
   },
   tblastn: {
     name: 'TBLASTN',
-    description: 'Search translated nucleotide database with protein query',
+    description: 'Protein query → Translated DNA database',
     queryType: 'protein',
     hasTasks: false,
     hasScoring: false,
@@ -37,7 +37,7 @@ const PROGRAM_INFO = {
   },
   tblastx: {
     name: 'TBLASTX',
-    description: 'Search translated nucleotide database with translated nucleotide query',
+    description: 'Translated DNA query → Translated DNA database',
     queryType: 'nucleotide',
     hasTasks: false,
     hasScoring: false,
@@ -45,6 +45,34 @@ const PROGRAM_INFO = {
     usesDbGencode: true,
   },
 };
+
+// E-value presets for dropdown
+const EVALUE_OPTIONS = [
+  { value: '1e-20', label: '1e-20' },
+  { value: '1e-10', label: '1e-10' },
+  { value: '0.0001', label: '0.0001' },
+  { value: '0.01', label: '0.01' },
+  { value: '1', label: '1' },
+  { value: '10', label: '10 (default)' },
+  { value: '100', label: '100' },
+  { value: '1000', label: '1000' },
+];
+
+// Max alignments/hits options
+const MAX_HITS_OPTIONS = [
+  { value: '10', label: '10' },
+  { value: '25', label: '25' },
+  { value: '50', label: '50 (default)' },
+  { value: '100', label: '100' },
+  { value: '250', label: '250' },
+  { value: '500', label: '500' },
+];
+
+// Word size options for nucleotide searches
+const NT_WORD_SIZES = ['7', '9', '11', '13', '16', '20', '24', '28', '32', '48', '64', '128', '256'];
+
+// Word size options for protein searches
+const PROT_WORD_SIZES = ['2', '3', '4', '5', '6', '7'];
 
 // Nucleotide scoring presets
 const SCORING_PRESETS = [
@@ -304,11 +332,13 @@ function BlastSearchPage() {
   const currentProgramInfo = PROGRAM_INFO[program];
   const isProteinQuery = currentProgramInfo?.queryType === 'protein';
 
+  // Get word size options based on query type
+  const wordSizeOptions = isProteinQuery ? PROT_WORD_SIZES : NT_WORD_SIZES;
+
   return (
     <div className="blast-search-page">
       <div className="blast-content">
         <h1>CGD BLAST Search</h1>
-        <hr />
         <p className="subtitle">
           Search Candida genome and protein sequences using{' '}
           <a href="https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs"
@@ -319,50 +349,30 @@ function BlastSearchPage() {
         </p>
 
         <form onSubmit={handleSubmit}>
-          {/* Program Selection */}
+          {/* Query Input Section */}
           <div className="form-section">
-            <h3>1. Select BLAST Program</h3>
-            <div className="program-grid">
-              {Object.entries(PROGRAM_INFO).map(([prog, info]) => (
-                <label
-                  key={prog}
-                  className={`program-option ${program === prog ? 'selected' : ''}`}
-                >
-                  <input
-                    type="radio"
-                    name="program"
-                    value={prog}
-                    checked={program === prog}
-                    onChange={(e) => setProgram(e.target.value)}
-                  />
-                  <div className="program-info">
-                    <span className="program-name">{info.name}</span>
-                    <span className="program-desc">{info.description}</span>
-                  </div>
-                </label>
-              ))}
+            <div className="section-header">
+              <span className="section-number">1</span>
+              <h3>Enter Query Sequence</h3>
             </div>
-          </div>
 
-          {/* Query Input */}
-          <div className="form-section">
-            <h3>2. Enter Query</h3>
-
-            <div className="query-type-tabs">
-              <button
-                type="button"
-                className={`query-tab ${queryType === 'sequence' ? 'active' : ''}`}
-                onClick={() => setQueryType('sequence')}
-              >
-                Paste Sequence
-              </button>
-              <button
-                type="button"
-                className={`query-tab ${queryType === 'locus' ? 'active' : ''}`}
-                onClick={() => setQueryType('locus')}
-              >
-                Enter Locus Name
-              </button>
+            <div className="query-input-row">
+              <div className="query-type-toggle">
+                <button
+                  type="button"
+                  className={`toggle-btn ${queryType === 'sequence' ? 'active' : ''}`}
+                  onClick={() => setQueryType('sequence')}
+                >
+                  Paste Sequence
+                </button>
+                <button
+                  type="button"
+                  className={`toggle-btn ${queryType === 'locus' ? 'active' : ''}`}
+                  onClick={() => setQueryType('locus')}
+                >
+                  Locus Name
+                </button>
+              </div>
             </div>
 
             {queryType === 'sequence' ? (
@@ -370,13 +380,9 @@ function BlastSearchPage() {
                 <textarea
                   value={sequence}
                   onChange={(e) => setSequence(e.target.value)}
-                  placeholder={`Enter ${isProteinQuery ? 'protein' : 'nucleotide'} sequence (FASTA format accepted)`}
-                  rows={8}
+                  placeholder={`Enter ${isProteinQuery ? 'protein' : 'nucleotide'} sequence (FASTA or raw format)`}
+                  rows={5}
                 />
-                <p className="help-text">
-                  Paste your {isProteinQuery ? 'protein' : 'nucleotide'} sequence in
-                  FASTA format or as raw sequence. Minimum 10 residues.
-                </p>
               </div>
             ) : (
               <div className="form-group">
@@ -387,121 +393,165 @@ function BlastSearchPage() {
                   placeholder="e.g., ACT1, orf19.5007, CAL0000191689"
                 />
                 <p className="help-text">
-                  Enter a gene name, systematic ORF name, or CGDID. The{' '}
-                  {isProteinQuery ? 'protein' : 'genomic'} sequence will be used as
-                  the query.
+                  Gene name, ORF name, or CGDID
                 </p>
               </div>
             )}
 
-            <div className="form-group">
-              <label htmlFor="queryComment">Query name/comment (optional)</label>
+            <div className="inline-field">
+              <label htmlFor="queryComment">Query name (optional):</label>
               <input
                 type="text"
                 id="queryComment"
                 value={queryComment}
                 onChange={(e) => setQueryComment(e.target.value)}
-                placeholder="Enter a name or description for your query"
+                placeholder="Description for your query"
               />
-              <p className="help-text">
-                This will be displayed in the results to help identify your search.
-              </p>
             </div>
           </div>
 
-          {/* Database Selection */}
+          {/* Program and Database Selection - Combined Row */}
           <div className="form-section">
-            <h3>3. Select Database</h3>
-            <div className="form-group">
-              <select
-                value={database}
-                onChange={(e) => setDatabase(e.target.value)}
-              >
-                <option value="">-- Select Database --</option>
-                {compatibleDatabases.map((db) => (
-                  <option key={db.name} value={db.name}>
-                    {db.display_name}
-                  </option>
-                ))}
-              </select>
-              {database && (
-                <p className="help-text">
-                  {compatibleDatabases.find((db) => db.name === database)?.description}
-                </p>
-              )}
+            <div className="section-header">
+              <span className="section-number">2</span>
+              <h3>Select Program &amp; Database</h3>
             </div>
+
+            <div className="program-db-row">
+              <div className="form-group compact">
+                <label htmlFor="program">BLAST Program</label>
+                <select
+                  id="program"
+                  value={program}
+                  onChange={(e) => setProgram(e.target.value)}
+                >
+                  {Object.entries(PROGRAM_INFO).map(([prog, info]) => (
+                    <option key={prog} value={prog}>
+                      {info.name} - {info.description}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-group compact">
+                <label htmlFor="database">Target Database</label>
+                <select
+                  id="database"
+                  value={database}
+                  onChange={(e) => setDatabase(e.target.value)}
+                >
+                  <option value="">-- Select Database --</option>
+                  {compatibleDatabases.map((db) => (
+                    <option key={db.name} value={db.name}>
+                      {db.display_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            {database && (
+              <p className="help-text db-desc">
+                {compatibleDatabases.find((db) => db.name === database)?.description}
+              </p>
+            )}
           </div>
 
-          {/* Advanced Options */}
-          <div className="form-section advanced-section">
-            <button
-              type="button"
-              className="advanced-toggle"
-              onClick={() => setShowAdvanced(!showAdvanced)}
-            >
-              {showAdvanced ? '▼' : '▶'} Advanced Options
-            </button>
+          {/* BLAST Options */}
+          <div className="form-section options-section">
+            <div className="section-header">
+              <span className="section-number">3</span>
+              <h3>BLAST Options</h3>
+              <button
+                type="button"
+                className="options-toggle"
+                onClick={() => setShowAdvanced(!showAdvanced)}
+              >
+                {showAdvanced ? 'Hide advanced' : 'Show advanced'}
+              </button>
+            </div>
 
+            {/* Basic options - always visible */}
+            <div className="options-row">
+              <div className="form-group compact">
+                <label htmlFor="evalue">E-value</label>
+                <select
+                  id="evalue"
+                  value={evalue}
+                  onChange={(e) => setEvalue(e.target.value)}
+                >
+                  {EVALUE_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-group compact">
+                <label htmlFor="maxHits">Max alignments</label>
+                <select
+                  id="maxHits"
+                  value={maxHits}
+                  onChange={(e) => setMaxHits(e.target.value)}
+                >
+                  {MAX_HITS_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Task selection for BLASTN/BLASTP */}
+              {currentProgramInfo?.hasTasks && availableTasks.length > 0 && (
+                <div className="form-group compact">
+                  <label htmlFor="task">Search strategy</label>
+                  <select
+                    id="task"
+                    value={task}
+                    onChange={(e) => setTask(e.target.value)}
+                  >
+                    <option value="">Default for query</option>
+                    {availableTasks.map((t) => (
+                      <option key={t.name} value={t.name}>
+                        {t.display_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              <div className="checkbox-group inline">
+                <input
+                  type="checkbox"
+                  id="filter"
+                  checked={lowComplexityFilter}
+                  onChange={(e) => setLowComplexityFilter(e.target.checked)}
+                />
+                <label htmlFor="filter">Filter low complexity</label>
+              </div>
+            </div>
+
+            {/* Advanced options - collapsible */}
             {showAdvanced && (
               <div className="advanced-options">
-                <div className="options-grid">
-                  <div className="form-group">
-                    <label htmlFor="evalue">E-value threshold</label>
-                    <input
-                      type="text"
-                      id="evalue"
-                      value={evalue}
-                      onChange={(e) => setEvalue(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="maxHits">Max hits</label>
-                    <input
-                      type="text"
-                      id="maxHits"
-                      value={maxHits}
-                      onChange={(e) => setMaxHits(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="form-group">
+                <div className="options-row">
+                  <div className="form-group compact">
                     <label htmlFor="wordSize">Word size</label>
-                    <input
-                      type="text"
+                    <select
                       id="wordSize"
                       value={wordSize}
                       onChange={(e) => setWordSize(e.target.value)}
-                      placeholder="Default"
-                    />
+                    >
+                      <option value="">Default</option>
+                      {wordSizeOptions.map((w) => (
+                        <option key={w} value={w}>{w}</option>
+                      ))}
+                    </select>
                   </div>
 
-                  {/* Task selection for BLASTN/BLASTP */}
-                  {currentProgramInfo?.hasTasks && availableTasks.length > 0 && (
-                    <div className="form-group">
-                      <label htmlFor="task">Search type</label>
-                      <select
-                        id="task"
-                        value={task}
-                        onChange={(e) => setTask(e.target.value)}
-                      >
-                        <option value="">Auto-select</option>
-                        {availableTasks.map((t) => (
-                          <option key={t.name} value={t.name}>
-                            {t.display_name}
-                          </option>
-                        ))}
-                      </select>
-                      {task && (
-                        <p className="help-text">
-                          {availableTasks.find(t => t.name === task)?.description}
-                        </p>
-                      )}
-                    </div>
-                  )}
-
                   {isProteinQuery && (
-                    <div className="form-group">
+                    <div className="form-group compact">
                       <label htmlFor="matrix">Scoring matrix</label>
                       <select
                         id="matrix"
@@ -512,50 +562,50 @@ function BlastSearchPage() {
                         {config?.matrices
                           ?.filter((m) => m !== 'BLOSUM62')
                           .map((m) => (
-                            <option key={m} value={m}>
-                              {m}
-                            </option>
+                            <option key={m} value={m}>{m}</option>
                           ))}
                       </select>
                     </div>
                   )}
 
                   {!isProteinQuery && (
-                    <div className="form-group">
-                      <label htmlFor="strand">Query strand</label>
-                      <select
-                        id="strand"
-                        value={strand}
-                        onChange={(e) => setStrand(e.target.value)}
-                      >
-                        <option value="both">Both strands</option>
-                        <option value="plus">Plus strand only</option>
-                        <option value="minus">Minus strand only</option>
-                      </select>
-                    </div>
-                  )}
+                    <>
+                      <div className="form-group compact">
+                        <label htmlFor="strand">Query strand</label>
+                        <select
+                          id="strand"
+                          value={strand}
+                          onChange={(e) => setStrand(e.target.value)}
+                        >
+                          <option value="both">Both</option>
+                          <option value="plus">Plus only</option>
+                          <option value="minus">Minus only</option>
+                        </select>
+                      </div>
 
-                  {/* Nucleotide match/mismatch scoring for BLASTN */}
-                  {currentProgramInfo?.hasScoring && (
-                    <div className="form-group">
-                      <label htmlFor="scoring">Match/Mismatch scores</label>
-                      <select
-                        id="scoring"
-                        value={scoringPreset}
-                        onChange={(e) => setScoringPreset(e.target.value)}
-                      >
-                        {SCORING_PRESETS.map((preset) => (
-                          <option key={preset.value} value={preset.value}>
-                            {preset.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                      {/* Nucleotide match/mismatch scoring for BLASTN */}
+                      {currentProgramInfo?.hasScoring && (
+                        <div className="form-group compact">
+                          <label htmlFor="scoring">Match/Mismatch</label>
+                          <select
+                            id="scoring"
+                            value={scoringPreset}
+                            onChange={(e) => setScoringPreset(e.target.value)}
+                          >
+                            {SCORING_PRESETS.map((preset) => (
+                              <option key={preset.value} value={preset.value}>
+                                {preset.label}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
+                    </>
                   )}
 
                   {/* Genetic code for query translation (BLASTX, TBLASTX) */}
                   {currentProgramInfo?.usesQueryGencode && geneticCodes.length > 0 && (
-                    <div className="form-group">
+                    <div className="form-group compact">
                       <label htmlFor="queryGencode">Query genetic code</label>
                       <select
                         id="queryGencode"
@@ -565,20 +615,17 @@ function BlastSearchPage() {
                         <option value="">Standard (1)</option>
                         {geneticCodes.map((code) => (
                           <option key={code.code} value={code.code}>
-                            {code.name} ({code.code})
+                            {code.code}: {code.name}
                           </option>
                         ))}
                       </select>
-                      <p className="help-text">
-                        Use code 12 for CTG clade yeasts (C. albicans)
-                      </p>
                     </div>
                   )}
 
                   {/* Genetic code for database translation (TBLASTN, TBLASTX) */}
                   {currentProgramInfo?.usesDbGencode && geneticCodes.length > 0 && (
-                    <div className="form-group">
-                      <label htmlFor="dbGencode">Database genetic code</label>
+                    <div className="form-group compact">
+                      <label htmlFor="dbGencode">DB genetic code</label>
                       <select
                         id="dbGencode"
                         value={dbGencode}
@@ -587,38 +634,29 @@ function BlastSearchPage() {
                         <option value="">Standard (1)</option>
                         {geneticCodes.map((code) => (
                           <option key={code.code} value={code.code}>
-                            {code.name} ({code.code})
+                            {code.code}: {code.name}
                           </option>
                         ))}
                       </select>
-                      <p className="help-text">
-                        Use code 12 for CTG clade yeasts (C. albicans)
-                      </p>
                     </div>
                   )}
-                </div>
 
-                <div className="checkbox-options">
-                  <div className="checkbox-group">
-                    <input
-                      type="checkbox"
-                      id="filter"
-                      checked={lowComplexityFilter}
-                      onChange={(e) => setLowComplexityFilter(e.target.checked)}
-                    />
-                    <label htmlFor="filter">Filter low complexity regions</label>
-                  </div>
-
-                  <div className="checkbox-group">
+                  <div className="checkbox-group inline">
                     <input
                       type="checkbox"
                       id="ungapped"
                       checked={ungapped}
                       onChange={(e) => setUngapped(e.target.checked)}
                     />
-                    <label htmlFor="ungapped">Ungapped alignment only</label>
+                    <label htmlFor="ungapped">Ungapped only</label>
                   </div>
                 </div>
+
+                {(currentProgramInfo?.usesQueryGencode || currentProgramInfo?.usesDbGencode) && (
+                  <p className="help-text gencode-hint">
+                    Use code 12 (Alternative Yeast Nuclear) for CTG clade yeasts (C. albicans)
+                  </p>
+                )}
               </div>
             )}
           </div>
