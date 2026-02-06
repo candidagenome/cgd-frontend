@@ -125,7 +125,7 @@ function BlastResultsPage() {
             <div className="summary-item">
               <span className="label">Query:</span>
               <span className="value">
-                {results.query_def || results.query_id} ({results.query_length}{' '}
+                {params?.query_comment || results.query_def || results.query_id} ({results.query_length}{' '}
                 letters)
               </span>
             </div>

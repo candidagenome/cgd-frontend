@@ -87,6 +87,7 @@ function BlastSearchPage() {
   const [dbGencode, setDbGencode] = useState(searchParams.get('db_gencode') || '');
   const [scoringPreset, setScoringPreset] = useState(searchParams.get('scoring') || '');
   const [ungapped, setUngapped] = useState(searchParams.get('ungapped') === 'true');
+  const [queryComment, setQueryComment] = useState(searchParams.get('comment') || '');
 
   // Config state
   const [config, setConfig] = useState(null);
@@ -190,6 +191,7 @@ function BlastSearchPage() {
     if (dbGencode) params.set('db_gencode', dbGencode);
     if (scoringPreset) params.set('scoring', scoringPreset);
     if (ungapped) params.set('ungapped', 'true');
+    if (queryComment) params.set('comment', queryComment);
 
     setSearchParams(params, { replace: true });
   }, [
@@ -209,6 +211,7 @@ function BlastSearchPage() {
     dbGencode,
     scoringPreset,
     ungapped,
+    queryComment,
     setSearchParams,
   ]);
 
@@ -258,6 +261,7 @@ function BlastSearchPage() {
         }
       }
       if (ungapped) params.ungapped = true;
+      if (queryComment.trim()) params.query_comment = queryComment.trim();
 
       const response = await blastApi.search(params);
 
@@ -292,10 +296,15 @@ function BlastSearchPage() {
   return (
     <div className="blast-search-page">
       <div className="blast-content">
-        <h1>BLAST Search</h1>
+        <h1>CGD BLAST Search</h1>
         <hr />
         <p className="subtitle">
-          Search Candida genome sequences using BLAST
+          Search Candida genome and protein sequences using{' '}
+          <a href="https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs"
+             target="_blank"
+             rel="noopener noreferrer">
+            NCBI BLAST+
+          </a>
         </p>
 
         <form onSubmit={handleSubmit}>
@@ -373,6 +382,20 @@ function BlastSearchPage() {
                 </p>
               </div>
             )}
+
+            <div className="form-group">
+              <label htmlFor="queryComment">Query name/comment (optional)</label>
+              <input
+                type="text"
+                id="queryComment"
+                value={queryComment}
+                onChange={(e) => setQueryComment(e.target.value)}
+                placeholder="Enter a name or description for your query"
+              />
+              <p className="help-text">
+                This will be displayed in the results to help identify your search.
+              </p>
+            </div>
           </div>
 
           {/* Database Selection */}
