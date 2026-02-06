@@ -7,7 +7,7 @@ function BlastResultsPage() {
   const navigate = useNavigate();
   const [results, setResults] = useState(null);
   const [params, setParams] = useState(null);
-  const [expandedHits, setExpandedHits] = useState(new Set([0])); // First hit expanded by default
+  const [expandedHits, setExpandedHits] = useState(new Set());
   const [downloading, setDownloading] = useState(null);
 
   // Load results from session storage
@@ -16,7 +16,12 @@ function BlastResultsPage() {
     const storedParams = sessionStorage.getItem('blastParams');
 
     if (storedResults) {
-      setResults(JSON.parse(storedResults));
+      const parsed = JSON.parse(storedResults);
+      setResults(parsed);
+      // Expand all hits by default
+      if (parsed.hits) {
+        setExpandedHits(new Set(parsed.hits.map((_, i) => i)));
+      }
     }
     if (storedParams) {
       setParams(JSON.parse(storedParams));
