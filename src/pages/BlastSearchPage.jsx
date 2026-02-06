@@ -9,28 +9,53 @@ const PROGRAM_INFO = {
     name: 'BLASTN',
     description: 'Search nucleotide database with nucleotide query',
     queryType: 'nucleotide',
+    hasTasks: true,
+    hasScoring: true,
   },
   blastp: {
     name: 'BLASTP',
     description: 'Search protein database with protein query',
     queryType: 'protein',
+    hasTasks: true,
+    hasScoring: false,
   },
   blastx: {
     name: 'BLASTX',
     description: 'Search protein database with translated nucleotide query',
     queryType: 'nucleotide',
+    hasTasks: false,
+    hasScoring: false,
+    usesQueryGencode: true,
   },
   tblastn: {
     name: 'TBLASTN',
     description: 'Search translated nucleotide database with protein query',
     queryType: 'protein',
+    hasTasks: false,
+    hasScoring: false,
+    usesDbGencode: true,
   },
   tblastx: {
     name: 'TBLASTX',
     description: 'Search translated nucleotide database with translated nucleotide query',
     queryType: 'nucleotide',
+    hasTasks: false,
+    hasScoring: false,
+    usesQueryGencode: true,
+    usesDbGencode: true,
   },
 };
+
+// Nucleotide scoring presets
+const SCORING_PRESETS = [
+  { value: '', label: 'Default', reward: null, penalty: null },
+  { value: '1,-4', label: '1, -4 (megablast default)', reward: 1, penalty: -4 },
+  { value: '1,-3', label: '1, -3', reward: 1, penalty: -3 },
+  { value: '1,-2', label: '1, -2', reward: 1, penalty: -2 },
+  { value: '2,-3', label: '2, -3 (blastn default)', reward: 2, penalty: -3 },
+  { value: '4,-5', label: '4, -5', reward: 4, penalty: -5 },
+  { value: '1,-1', label: '1, -1', reward: 1, penalty: -1 },
+];
 
 function BlastSearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -56,15 +81,25 @@ function BlastSearchPage() {
   const [strand, setStrand] = useState(searchParams.get('strand') || 'both');
   const [showAdvanced, setShowAdvanced] = useState(false);
 
+  // New advanced options
+  const [task, setTask] = useState(searchParams.get('task') || '');
+  const [queryGencode, setQueryGencode] = useState(searchParams.get('query_gencode') || '');
+  const [dbGencode, setDbGencode] = useState(searchParams.get('db_gencode') || '');
+  const [scoringPreset, setScoringPreset] = useState(searchParams.get('scoring') || '');
+  const [ungapped, setUngapped] = useState(searchParams.get('ungapped') === 'true');
+  const [queryComment, setQueryComment] = useState(searchParams.get('comment') || '');
+
   // Config state
   const [config, setConfig] = useState(null);
   const [compatibleDatabases, setCompatibleDatabases] = useState([]);
+  const [availableTasks, setAvailableTasks] = useState([]);
+  const [geneticCodes, setGeneticCodes] = useState([]);
 
   // UI state
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch config on mount
+  // Fetch config and genetic codes on mount
   useEffect(() => {
     const fetchConfig = async () => {
       try {
@@ -75,8 +110,37 @@ function BlastSearchPage() {
         setError('Failed to load BLAST configuration');
       }
     };
+    const fetchGeneticCodes = async () => {
+      try {
+        const codes = await blastApi.getGeneticCodes();
+        setGeneticCodes(codes);
+      } catch (err) {
+        console.error('Failed to load genetic codes:', err);
+      }
+    };
     fetchConfig();
+    fetchGeneticCodes();
   }, []);
+
+  // Fetch available tasks when program changes
+  useEffect(() => {
+    const fetchTasks = async () => {
+      const programInfo = PROGRAM_INFO[program];
+      if (!programInfo?.hasTasks) {
+        setAvailableTasks([]);
+        setTask('');
+        return;
+      }
+      try {
+        const tasks = await blastApi.getTasks(program);
+        setAvailableTasks(tasks);
+      } catch (err) {
+        console.error('Failed to load tasks:', err);
+        setAvailableTasks([]);
+      }
+    };
+    fetchTasks();
+  }, [program]);
 
   // Update compatible databases when program changes
   useEffect(() => {
@@ -122,6 +186,12 @@ function BlastSearchPage() {
     if (!lowComplexityFilter) params.set('filter', 'false');
     if (matrix) params.set('matrix', matrix);
     if (strand !== 'both') params.set('strand', strand);
+    if (task) params.set('task', task);
+    if (queryGencode) params.set('query_gencode', queryGencode);
+    if (dbGencode) params.set('db_gencode', dbGencode);
+    if (scoringPreset) params.set('scoring', scoringPreset);
+    if (ungapped) params.set('ungapped', 'true');
+    if (queryComment) params.set('comment', queryComment);
 
     setSearchParams(params, { replace: true });
   }, [
@@ -136,6 +206,12 @@ function BlastSearchPage() {
     lowComplexityFilter,
     matrix,
     strand,
+    task,
+    queryGencode,
+    dbGencode,
+    scoringPreset,
+    ungapped,
+    queryComment,
     setSearchParams,
   ]);
 
@@ -173,6 +249,20 @@ function BlastSearchPage() {
       if (matrix) params.matrix = matrix;
       if (strand !== 'both') params.strand = strand;
 
+      // New parameters
+      if (task) params.task = task;
+      if (queryGencode) params.query_gencode = parseInt(queryGencode, 10);
+      if (dbGencode) params.db_gencode = parseInt(dbGencode, 10);
+      if (scoringPreset) {
+        const preset = SCORING_PRESETS.find(p => p.value === scoringPreset);
+        if (preset && preset.reward !== null) {
+          params.reward = preset.reward;
+          params.penalty = preset.penalty;
+        }
+      }
+      if (ungapped) params.ungapped = true;
+      if (queryComment.trim()) params.query_comment = queryComment.trim();
+
       const response = await blastApi.search(params);
 
       if (response.success && response.result) {
@@ -184,7 +274,18 @@ function BlastSearchPage() {
         setError(response.error || 'BLAST search failed');
       }
     } catch (err) {
-      setError(err.response?.data?.detail || err.message || 'BLAST search failed');
+      // Handle Pydantic validation errors (array of objects) or string errors
+      const detail = err.response?.data?.detail;
+      let errorMsg = 'BLAST search failed';
+      if (Array.isArray(detail)) {
+        // Pydantic validation error format
+        errorMsg = detail.map(e => e.msg || e.message || JSON.stringify(e)).join('; ');
+      } else if (typeof detail === 'string') {
+        errorMsg = detail;
+      } else if (err.message) {
+        errorMsg = err.message;
+      }
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -206,10 +307,15 @@ function BlastSearchPage() {
   return (
     <div className="blast-search-page">
       <div className="blast-content">
-        <h1>BLAST Search</h1>
+        <h1>CGD BLAST Search</h1>
         <hr />
         <p className="subtitle">
-          Search Candida genome sequences using BLAST
+          Search Candida genome and protein sequences using{' '}
+          <a href="https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs"
+             target="_blank"
+             rel="noopener noreferrer">
+            NCBI BLAST+
+          </a>
         </p>
 
         <form onSubmit={handleSubmit}>
@@ -287,6 +393,20 @@ function BlastSearchPage() {
                 </p>
               </div>
             )}
+
+            <div className="form-group">
+              <label htmlFor="queryComment">Query name/comment (optional)</label>
+              <input
+                type="text"
+                id="queryComment"
+                value={queryComment}
+                onChange={(e) => setQueryComment(e.target.value)}
+                placeholder="Enter a name or description for your query"
+              />
+              <p className="help-text">
+                This will be displayed in the results to help identify your search.
+              </p>
+            </div>
           </div>
 
           {/* Database Selection */}
@@ -356,6 +476,30 @@ function BlastSearchPage() {
                     />
                   </div>
 
+                  {/* Task selection for BLASTN/BLASTP */}
+                  {currentProgramInfo?.hasTasks && availableTasks.length > 0 && (
+                    <div className="form-group">
+                      <label htmlFor="task">Search type</label>
+                      <select
+                        id="task"
+                        value={task}
+                        onChange={(e) => setTask(e.target.value)}
+                      >
+                        <option value="">Auto-select</option>
+                        {availableTasks.map((t) => (
+                          <option key={t.name} value={t.name}>
+                            {t.display_name}
+                          </option>
+                        ))}
+                      </select>
+                      {task && (
+                        <p className="help-text">
+                          {availableTasks.find(t => t.name === task)?.description}
+                        </p>
+                      )}
+                    </div>
+                  )}
+
                   {isProteinQuery && (
                     <div className="form-group">
                       <label htmlFor="matrix">Scoring matrix</label>
@@ -390,16 +534,90 @@ function BlastSearchPage() {
                       </select>
                     </div>
                   )}
+
+                  {/* Nucleotide match/mismatch scoring for BLASTN */}
+                  {currentProgramInfo?.hasScoring && (
+                    <div className="form-group">
+                      <label htmlFor="scoring">Match/Mismatch scores</label>
+                      <select
+                        id="scoring"
+                        value={scoringPreset}
+                        onChange={(e) => setScoringPreset(e.target.value)}
+                      >
+                        {SCORING_PRESETS.map((preset) => (
+                          <option key={preset.value} value={preset.value}>
+                            {preset.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+
+                  {/* Genetic code for query translation (BLASTX, TBLASTX) */}
+                  {currentProgramInfo?.usesQueryGencode && geneticCodes.length > 0 && (
+                    <div className="form-group">
+                      <label htmlFor="queryGencode">Query genetic code</label>
+                      <select
+                        id="queryGencode"
+                        value={queryGencode}
+                        onChange={(e) => setQueryGencode(e.target.value)}
+                      >
+                        <option value="">Standard (1)</option>
+                        {geneticCodes.map((code) => (
+                          <option key={code.code} value={code.code}>
+                            {code.name} ({code.code})
+                          </option>
+                        ))}
+                      </select>
+                      <p className="help-text">
+                        Use code 12 for CTG clade yeasts (C. albicans)
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Genetic code for database translation (TBLASTN, TBLASTX) */}
+                  {currentProgramInfo?.usesDbGencode && geneticCodes.length > 0 && (
+                    <div className="form-group">
+                      <label htmlFor="dbGencode">Database genetic code</label>
+                      <select
+                        id="dbGencode"
+                        value={dbGencode}
+                        onChange={(e) => setDbGencode(e.target.value)}
+                      >
+                        <option value="">Standard (1)</option>
+                        {geneticCodes.map((code) => (
+                          <option key={code.code} value={code.code}>
+                            {code.name} ({code.code})
+                          </option>
+                        ))}
+                      </select>
+                      <p className="help-text">
+                        Use code 12 for CTG clade yeasts (C. albicans)
+                      </p>
+                    </div>
+                  )}
                 </div>
 
-                <div className="checkbox-group">
-                  <input
-                    type="checkbox"
-                    id="filter"
-                    checked={lowComplexityFilter}
-                    onChange={(e) => setLowComplexityFilter(e.target.checked)}
-                  />
-                  <label htmlFor="filter">Filter low complexity regions</label>
+                <div className="checkbox-options">
+                  <div className="checkbox-group">
+                    <input
+                      type="checkbox"
+                      id="filter"
+                      checked={lowComplexityFilter}
+                      onChange={(e) => setLowComplexityFilter(e.target.checked)}
+                    />
+                    <label htmlFor="filter">Filter low complexity regions</label>
+                  </div>
+
+                  <div className="checkbox-group">
+                    <input
+                      type="checkbox"
+                      id="ungapped"
+                      checked={ungapped}
+                      onChange={(e) => setUngapped(e.target.checked)}
+                    />
+                    <label htmlFor="ungapped">Ungapped alignment only</label>
+                  </div>
                 </div>
               </div>
             )}

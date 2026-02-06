@@ -74,6 +74,54 @@
   background-color: #1565c0;
 }
 
+.summary-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Download Section */
+.download-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 20px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.download-label {
+  font-weight: 500;
+  color: #333;
+}
+
+.download-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.download-btn {
+  padding: 6px 14px;
+  background-color: #fff;
+  border: 1px solid #1976d2;
+  color: #1976d2;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.download-btn:hover:not(:disabled) {
+  background-color: #1976d2;
+  color: white;
+}
+
+.download-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* No Results */
 .no-results,
 .no-hits {
@@ -239,9 +287,39 @@
 
 .hit-meta {
   display: flex;
-  gap: 20px;
+  flex-wrap: wrap;
+  gap: 8px 20px;
   font-size: 0.85em;
   color: #666;
+}
+
+.hit-meta a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.hit-meta a:hover {
+  text-decoration: underline;
+}
+
+.hit-actions {
+  margin-top: 10px;
+}
+
+.jbrowse-link {
+  display: inline-block;
+  padding: 5px 12px;
+  background-color: #4caf50;
+  color: white;
+  border-radius: 4px;
+  font-size: 0.85em;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.jbrowse-link:hover {
+  background-color: #388e3c;
+  text-decoration: none;
 }
 
 /* HSP Alignment */
@@ -303,6 +381,15 @@
     gap: 5px;
   }
 
+  .download-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .download-buttons {
+    flex-wrap: wrap;
+  }
+
   .section-header {
     flex-direction: column;
     align-items: flex-start;
@@ -316,6 +403,11 @@
   .hits-table th,
   .hits-table td {
     padding: 8px 6px;
+  }
+
+  .hit-meta {
+    flex-direction: column;
+    gap: 5px;
   }
 
   .hsp-stats {
