@@ -274,7 +274,18 @@ function BlastSearchPage() {
         setError(response.error || 'BLAST search failed');
       }
     } catch (err) {
-      setError(err.response?.data?.detail || err.message || 'BLAST search failed');
+      // Handle Pydantic validation errors (array of objects) or string errors
+      const detail = err.response?.data?.detail;
+      let errorMsg = 'BLAST search failed';
+      if (Array.isArray(detail)) {
+        // Pydantic validation error format
+        errorMsg = detail.map(e => e.msg || e.message || JSON.stringify(e)).join('; ');
+      } else if (typeof detail === 'string') {
+        errorMsg = detail;
+      } else if (err.message) {
+        errorMsg = err.message;
+      }
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }
