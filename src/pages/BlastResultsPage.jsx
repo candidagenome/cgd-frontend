@@ -270,16 +270,17 @@ function BlastResultsPage() {
                 </div>
               </div>
 
+              <p className="hits-instruction">
+                Click on the sequence ID to jump directly to the alignment.
+              </p>
+
               {/* Summary Table */}
               <table className="hits-table">
                 <thead>
                   <tr>
-                    <th>#</th>
-                    <th>Description</th>
-                    <th>Score</th>
-                    <th>E-value</th>
-                    <th>Identity</th>
-                    <th>Coverage</th>
+                    <th>Sequence Hits in Target Database</th>
+                    <th>Score (bits)</th>
+                    <th>E value</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -287,35 +288,31 @@ function BlastResultsPage() {
                     <tr
                       key={index}
                       className={expandedHits.has(index) ? 'expanded' : ''}
-                      onClick={() => toggleHit(index)}
                     >
-                      <td>{hit.num}</td>
                       <td className="description-cell">
-                        <span className="expand-icon">
-                          {expandedHits.has(index) ? '▼' : '▶'}
-                        </span>
-                        {hit.locus_link ? (
-                          <Link
-                            to={hit.locus_link}
-                            onClick={(e) => e.stopPropagation()}
-                            className="locus-link"
-                          >
-                            {hit.description.length > 60
-                              ? hit.description.substring(0, 57) + '...'
-                              : hit.description}
-                          </Link>
-                        ) : (
-                          <span title={hit.description}>
-                            {hit.description.length > 60
-                              ? hit.description.substring(0, 57) + '...'
-                              : hit.description}
-                          </span>
+                        <a
+                          href={`#hit-${index}`}
+                          className="sequence-link"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            // Expand this hit and scroll to it
+                            const newExpanded = new Set(expandedHits);
+                            newExpanded.add(index);
+                            setExpandedHits(newExpanded);
+                            // Scroll after a brief delay to allow expansion
+                            setTimeout(() => {
+                              document.getElementById(`hit-${index}`)?.scrollIntoView({ behavior: 'smooth' });
+                            }, 100);
+                          }}
+                        >
+                          {hit.accession}
+                        </a>
+                        {hit.organism_name && (
+                          <span className="organism-name"> {hit.organism_name}</span>
                         )}
                       </td>
-                      <td>{hit.best_bit_score.toFixed(1)}</td>
-                      <td>{formatEvalue(hit.best_evalue)}</td>
-                      <td>{hit.hsps[0]?.percent_identity?.toFixed(1)}%</td>
-                      <td>{hit.query_cover?.toFixed(1)}%</td>
+                      <td>{hit.best_bit_score.toFixed(0)}</td>
+                      <td>{hit.best_evalue === 0 ? '0.0e+00' : formatEvalue(hit.best_evalue)}</td>
                     </tr>
                   ))}
                 </tbody>

@@ -451,7 +451,6 @@
 }
 
 .hits-table tbody tr {
-  cursor: pointer;
   transition: background-color 0.2s;
 }
 
@@ -463,10 +462,30 @@
   background-color: #e3f2fd;
 }
 
+.hits-instruction {
+  margin: 0 0 15px 0;
+  font-size: 0.9em;
+  color: #666;
+  font-style: italic;
+}
+
 .description-cell {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  display: block;
+}
+
+.sequence-link {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.sequence-link:hover {
+  text-decoration: underline;
+}
+
+.organism-name {
+  color: #666;
+  margin-left: 8px;
 }
 
 .expand-icon {
