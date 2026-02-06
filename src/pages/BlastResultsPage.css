@@ -1,9 +1,15 @@
 /* BLAST Results Page Styles */
 
+/* Reset inherited legacy chrome typography */
 .blast-results-page {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  font-size: 14px;
+}
+
+.blast-results-page * {
+  font-size: inherit;
 }
 
 .blast-results-page .blast-content {
@@ -16,6 +22,15 @@
   color: #1976d2;
   margin-bottom: 10px;
   text-align: center;
+  font-size: 1.75em;
+}
+
+.blast-results-page h2 {
+  font-size: 1.25em;
+}
+
+.blast-results-page h3 {
+  font-size: 1.1em;
 }
 
 .blast-results-page hr {

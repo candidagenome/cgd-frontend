@@ -1,9 +1,15 @@
 /* BLAST Search Page Styles - Compact Layout */
 
+/* Reset inherited legacy chrome typography */
 .blast-search-page {
   max-width: 900px;
   margin: 0 auto;
   padding: 15px;
+  font-size: 14px;
+}
+
+.blast-search-page * {
+  font-size: inherit;
 }
 
 .blast-content {
@@ -15,7 +21,15 @@
 .blast-search-page h1 {
   color: #1976d2;
   margin: 0 0 8px 0;
-  font-size: 1.5em;
+  font-size: 1.75em;
+}
+
+.blast-search-page h2 {
+  font-size: 1.25em;
+}
+
+.blast-search-page h3 {
+  font-size: 1.1em;
 }
 
 .blast-search-page .subtitle {
