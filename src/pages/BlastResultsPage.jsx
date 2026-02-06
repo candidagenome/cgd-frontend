@@ -51,6 +51,16 @@ function BlastResultsPage() {
     return evalue.toFixed(3);
   };
 
+  // Get color for alignment score (NCBI-style color scheme)
+  const getScoreColor = (score, maxScore) => {
+    // Color ranges based on bit score (similar to NCBI BLAST)
+    if (score >= 200) return '#ff0000';      // Red - excellent
+    if (score >= 80) return '#ff66ff';       // Pink/magenta - good
+    if (score >= 50) return '#00ff00';       // Green - moderate
+    if (score >= 40) return '#0000ff';       // Blue - weak
+    return '#000000';                         // Black - very weak
+  };
+
   // Go back to search
   const goToSearch = () => {
     navigate('/blast');
@@ -190,6 +200,59 @@ function BlastResultsPage() {
           </div>
         ) : (
           <>
+            {/* Graphic Summary */}
+            <div className="graphic-summary">
+              <h3>Distribution of BLAST Hits on Query Sequence</h3>
+              <div className="color-legend">
+                <span className="legend-item"><span className="legend-color" style={{backgroundColor: '#ff0000'}}></span> &gt;=200</span>
+                <span className="legend-item"><span className="legend-color" style={{backgroundColor: '#ff66ff'}}></span> 80-200</span>
+                <span className="legend-item"><span className="legend-color" style={{backgroundColor: '#00ff00'}}></span> 50-80</span>
+                <span className="legend-item"><span className="legend-color" style={{backgroundColor: '#0000ff'}}></span> 40-50</span>
+                <span className="legend-item"><span className="legend-color" style={{backgroundColor: '#000000'}}></span> &lt;40</span>
+              </div>
+              <div className="query-ruler">
+                <div className="ruler-label">Query</div>
+                <div className="ruler-track">
+                  <div className="ruler-scale">
+                    {[0, 0.25, 0.5, 0.75, 1].map((fraction) => (
+                      <span key={fraction} className="scale-mark" style={{left: `${fraction * 100}%`}}>
+                        {Math.round(fraction * results.query_length)}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="ruler-bar"></div>
+                </div>
+              </div>
+              <div className="hits-graphic">
+                {results.hits.slice(0, 100).map((hit, index) => (
+                  <div key={index} className="hit-row" title={`${hit.description}\nScore: ${hit.best_bit_score.toFixed(1)}, E-value: ${formatEvalue(hit.best_evalue)}`}>
+                    <div className="hit-label">{index + 1}</div>
+                    <div className="hit-track">
+                      {hit.hsps.map((hsp, hspIndex) => {
+                        const left = ((hsp.query_start - 1) / results.query_length) * 100;
+                        const width = ((hsp.query_end - hsp.query_start + 1) / results.query_length) * 100;
+                        return (
+                          <div
+                            key={hspIndex}
+                            className="hsp-bar"
+                            style={{
+                              left: `${left}%`,
+                              width: `${Math.max(width, 0.5)}%`,
+                              backgroundColor: getScoreColor(hsp.bit_score),
+                            }}
+                            title={`HSP ${hspIndex + 1}: ${hsp.query_start}-${hsp.query_end}, Score: ${hsp.bit_score.toFixed(1)}`}
+                          />
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {results.hits.length > 100 && (
+                <p className="truncation-note">Showing first 100 of {results.hits.length} hits</p>
+              )}
+            </div>
+
             {/* Hits Table */}
             <div className="results-section">
               <div className="section-header">
