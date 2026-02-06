@@ -199,10 +199,10 @@ function BlastResultsPage() {
                 </h2>
                 <div className="expand-controls">
                   <button onClick={expandAll} className="expand-btn">
-                    Expand All
+                    Expand
                   </button>
                   <button onClick={collapseAll} className="expand-btn">
-                    Collapse All
+                    Collapse
                   </button>
                 </div>
               </div>

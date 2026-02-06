@@ -24,7 +24,10 @@
   margin-bottom: 25px;
 }
 
-/* Search Summary */
+/* ===============================
+   Search Summary (3-column grid)
+   =============================== */
+
 .search-summary {
   background-color: #e3f2fd;
   border: 1px solid #90caf9;
@@ -36,40 +39,55 @@
   gap: 10px;
 }
 
+/* Top row: left grid + right button */
 .summary-top-row {
   display: flex;
+  align-items: flex-start;
   justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
+  gap: 24px;
 }
 
+/* 3 columns for Program / Query / Sequences */
 .summary-grid {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 8px 25px;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  column-gap: 36px;
+  row-gap: 0;
+  flex: 1;
+  min-width: 0;
 }
 
-.summary-database {
-  width: 100%;
-}
-
-.summary-item {
+/* Each item stacked (label on top, value below) */
+.summary-grid .summary-item {
   display: flex;
+  flex-direction: column;
   gap: 6px;
-  white-space: nowrap;
+  white-space: normal;
 }
 
+/* IMPORTANT: kill the old separators */
+.summary-grid .summary-item::after {
+  content: none !important;
+}
+
+/* label/value */
 .summary-item .label {
   color: #666;
-  font-size: 0.9em;
+  font-size: 0.95em;
+  font-weight: 500;
 }
 
 .summary-item .value {
-  font-weight: 500;
+  font-weight: 600;
   color: #333;
   word-break: break-word;
+}
+
+/* Button */
+.summary-actions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
 }
 
 .new-search-button {
@@ -87,12 +105,30 @@
   background-color: #1565c0;
 }
 
-.summary-actions {
-  display: flex;
-  gap: 10px;
+/* Database row (own line) */
+.summary-item.summary-database {
+  width: 100%;
+  white-space: normal;
 }
 
-/* Download Section */
+/* Responsive: stack columns on small screens */
+@media (max-width: 768px) {
+  .summary-top-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+    row-gap: 12px;
+    width: 100%;
+  }
+}
+
+/* =========================
+   Download Section
+   ========================= */
+
 .download-section {
   display: flex;
   align-items: center;
@@ -135,7 +171,10 @@
   cursor: not-allowed;
 }
 
-/* No Results */
+/* =========================
+   No Results / No Hits
+   ========================= */
+
 .no-results,
 .no-hits {
   text-align: center;
@@ -169,18 +208,21 @@
   background-color: #1565c0;
 }
 
-/* Results Section */
+/* =========================
+   Results Section
+   ========================= */
+
 .results-section {
   margin-top: 20px;
 }
 
+/* Header: title left, expand/collapse right */
 .section-header {
   display: flex;
-  justify-content: flex-start;
   align-items: center;
+  justify-content: space-between; /* title left, controls right */
   margin-bottom: 15px;
-  flex-wrap: wrap;
-  gap: 15px 30px;
+  gap: 12px;
 }
 
 .section-header h2 {
@@ -191,28 +233,44 @@
   min-width: 0;
 }
 
+/* Expand/Collapse controls right aligned + spacing */
 .expand-controls {
   display: flex;
-  gap: 20px;
-  flex-shrink: 0;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;          /* spacing between buttons */
+  margin-left: auto;  /* push to right */
+  white-space: nowrap;
 }
 
+/* If you had any separator pseudo-elements before, kill them */
+.expand-controls::before,
+.expand-controls::after,
+.expand-btn::before,
+.expand-btn::after {
+  content: none !important;
+}
+		  
 .expand-btn {
-  padding: 5px 12px;
+  padding: 6px 12px;
   background-color: #f5f5f5;
   border: 1px solid #ddd;
-  border-radius: 4px;
-  white-space: nowrap;
+  border-radius: 6px;
   font-size: 12px;
   cursor: pointer;
   color: #666;
+  white-space: nowrap; /* keep "Expand All" on one line */
+  line-height: 1;      /* prevents weird vertical misalignment */
 }
 
 .expand-btn:hover {
-  background-color: #e0e0e0;
+  background-color: #eaeaea;
 }
 
-/* Hits Table */
+/* =========================
+   Hits Table
+   ========================= */
+
 .hits-table {
   width: 100%;
   border-collapse: collapse;
@@ -268,7 +326,10 @@
   text-decoration: underline;
 }
 
-/* Alignments Section */
+/* =========================
+   Alignments Section
+   ========================= */
+
 .alignments-section {
   border-top: 2px solid #e0e0e0;
   padding-top: 20px;
@@ -341,7 +402,10 @@
   text-decoration: none;
 }
 
-/* HSP Alignment */
+/* =========================
+   HSP Alignment
+   ========================= */
+
 .hsp-alignment {
   background-color: #f9f9f9;
   border: 1px solid #e0e0e0;
@@ -380,7 +444,10 @@
   margin: 0;
 }
 
-/* Responsive */
+/* =========================
+   Responsive
+   ========================= */
+
 @media (max-width: 768px) {
   .blast-results-page {
     padding: 10px;
@@ -390,14 +457,20 @@
     padding: 20px;
   }
 
-  .search-summary {
+  .summary-top-row {
     flex-direction: column;
     align-items: flex-start;
+    gap: 10px;
   }
 
   .summary-grid {
     flex-direction: column;
-    gap: 5px;
+    align-items: flex-start;
+  }
+
+  .summary-grid .summary-item:not(:last-child)::after {
+    content: ""; /* no separators when stacked */
+    margin: 0;
   }
 
   .download-section {
