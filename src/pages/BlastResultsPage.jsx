@@ -50,6 +50,13 @@ function BlastResultsPage() {
       // Expand all hits by default
       if (parsed.hits) {
         setExpandedHits(new Set(parsed.hits.map((_, i) => i)));
+        // Debug: log hit data to see jbrowse_url
+        console.log('BLAST hits data:', parsed.hits.map(h => ({
+          id: h.id,
+          jbrowse_url: h.jbrowse_url,
+          organism_tag: h.organism_tag,
+          organism_name: h.organism_name
+        })));
       }
     }
     if (storedParams) {
@@ -396,7 +403,7 @@ function BlastResultsPage() {
                             )}
                           </div>
                           <div className="hit-actions">
-                            {hit.jbrowse_url && (
+                            {hit.jbrowse_url ? (
                               <a
                                 href={hit.jbrowse_url}
                                 target="_blank"
@@ -405,6 +412,10 @@ function BlastResultsPage() {
                               >
                                 CGD Genome Browser
                               </a>
+                            ) : (
+                              <span style={{ color: '#999', fontSize: '0.85em' }}>
+                                (No JBrowse link - tag: {hit.organism_tag || 'none'})
+                              </span>
                             )}
                             <button
                               type="button"
