@@ -117,33 +117,35 @@ function BlastResultsPage() {
 
         {/* Search Summary */}
         <div className="search-summary">
-          <div className="summary-grid">
-            <div className="summary-item">
-              <span className="label">Program:</span>
-              <span className="value">{results.program}</span>
+          <div className="summary-top-row">
+            <div className="summary-grid">
+              <div className="summary-item">
+                <span className="label">Program:</span>
+                <span className="value">{results.program}</span>
+              </div>
+              <div className="summary-item">
+                <span className="label">Query:</span>
+                <span className="value">
+                  {params?.query_comment || results.query_def || results.query_id} ({results.query_length}{' '}
+                  letters)
+                </span>
+              </div>
+              <div className="summary-item">
+                <span className="label">Sequences:</span>
+                <span className="value">
+                  {results.database_sequences?.toLocaleString() || 'N/A'}
+                </span>
+              </div>
             </div>
-            <div className="summary-item">
-              <span className="label">Query:</span>
-              <span className="value">
-                {params?.query_comment || results.query_def || results.query_id} ({results.query_length}{' '}
-                letters)
-              </span>
-            </div>
-            <div className="summary-item">
-              <span className="label">Database:</span>
-              <span className="value">{results.database}</span>
-            </div>
-            <div className="summary-item">
-              <span className="label">Sequences:</span>
-              <span className="value">
-                {results.database_sequences?.toLocaleString() || 'N/A'}
-              </span>
+            <div className="summary-actions">
+              <button onClick={goToSearch} className="new-search-button">
+                New Search
+              </button>
             </div>
           </div>
-          <div className="summary-actions">
-            <button onClick={goToSearch} className="new-search-button">
-              New Search
-            </button>
+          <div className="summary-item summary-database">
+            <span className="label">Database:</span>
+            <span className="value">{results.database}</span>
           </div>
         </div>
 
@@ -197,10 +199,10 @@ function BlastResultsPage() {
                 </h2>
                 <div className="expand-controls">
                   <button onClick={expandAll} className="expand-btn">
-                    Expand All
+                    Expand
                   </button>
                   <button onClick={collapseAll} className="expand-btn">
-                    Collapse All
+                    Collapse
                   </button>
                 </div>
               </div>
