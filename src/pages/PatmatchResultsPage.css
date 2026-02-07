@@ -288,17 +288,19 @@
 }
 
 .match-cell code {
-  background-color: #fff3e0;
+  background-color: #e3f2fd;
   padding: 2px 6px;
   border-radius: 3px;
   font-family: 'Courier New', monospace;
   font-size: 0.95em;
   cursor: pointer;
   word-break: break-all;
+  color: #1565c0;
 }
 
 .match-cell code:hover {
-  background-color: #ffe0b2;
+  background-color: #bbdefb;
+  text-decoration: underline;
 }
 
 .context-cell {
@@ -314,10 +316,13 @@
   overflow: hidden;
   text-overflow: ellipsis;
   cursor: pointer;
+  background-color: #e3f2fd;
+  padding: 4px 6px;
+  border-radius: 3px;
 }
 
 .context-cell code:hover {
-  background-color: #f5f5f5;
+  background-color: #bbdefb;
 }
 
 .context-before,
