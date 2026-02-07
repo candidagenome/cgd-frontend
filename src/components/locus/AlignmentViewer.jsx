@@ -21,6 +21,9 @@ const AA_COLORS = {
 const BLOCK_SIZE = 50;
 const IDENTITY_THRESHOLD = 0.8; // 80% identity for coloring
 
+// Prefixes for C. albicans SC5314 sequences (should be reference)
+const CALBICANS_PREFIXES = ['C1_', 'orf19.', 'Ca21chr', 'C1-'];
+
 /**
  * Calculate coverage and percent identity relative to reference
  */
@@ -137,16 +140,26 @@ function PositionRuler({ start, end, blockSize }) {
  */
 function AlignmentViewer({ sequences, alignmentType, referenceId }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [refIndex, setRefIndex] = useState(0);
 
-  // Find reference sequence index
+  // Find reference sequence index - prefer C. albicans SC5314 sequence
   const actualRefIndex = useMemo(() => {
+    // If explicit referenceId provided, use it
     if (referenceId) {
       const idx = sequences.findIndex(s => s.sequence_id === referenceId);
-      return idx >= 0 ? idx : 0;
+      if (idx >= 0) return idx;
     }
-    return refIndex;
-  }, [sequences, referenceId, refIndex]);
+
+    // Look for C. albicans SC5314 sequence by prefix
+    for (let i = 0; i < sequences.length; i++) {
+      const seqId = sequences[i].sequence_id;
+      if (CALBICANS_PREFIXES.some(prefix => seqId.startsWith(prefix))) {
+        return i;
+      }
+    }
+
+    // Fallback to first sequence
+    return 0;
+  }, [sequences, referenceId]);
 
   // Calculate stats for all sequences relative to reference
   const sequenceStats = useMemo(() => {
