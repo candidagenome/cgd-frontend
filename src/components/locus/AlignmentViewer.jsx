@@ -104,6 +104,11 @@ function pad(str, width, alignRight = false) {
 /**
  * Build position ruler string
  * Format: "  1 [        .         .         .         .         : 50"
+ * - [ only at position 1
+ * - ] only at the final position
+ * - : at positions 50, 150, 250, 350 (every 50 not divisible by 100)
+ * - digit at positions 100, 200, 300 (hundreds marker)
+ * - . at every 10th position
  */
 function buildRuler(start, end, totalLength) {
   const blockLen = end - start;
@@ -111,21 +116,31 @@ function buildRuler(start, end, totalLength) {
 
   for (let i = 0; i < blockLen; i++) {
     const pos = start + i + 1; // 1-based position
-    if (pos === totalLength) {
+
+    if (pos === 1) {
+      // Opening bracket only at position 1
+      ruler += '[';
+    } else if (pos === totalLength) {
+      // Closing bracket at final position
       ruler += ']';
+    } else if (pos % 100 === 0) {
+      // Hundreds marker (1, 2, 3, etc.)
+      ruler += String(pos / 100);
     } else if (pos % 50 === 0) {
+      // Colon at 50, 150, 250, etc.
       ruler += ':';
     } else if (pos % 10 === 0) {
+      // Dot at every 10th position
       ruler += '.';
     } else {
       ruler += ' ';
     }
   }
 
-  // Start position with opening bracket
-  const startStr = pad(String(start + 1), 3, true) + ' [';
+  // Start position (right-aligned, 3 chars) followed by space
+  const startStr = pad(String(start + 1), 3, true) + ' ';
   // End position
-  const endStr = ' ' + (end);
+  const endStr = ' ' + end;
 
   return startStr + ruler + endStr;
 }
