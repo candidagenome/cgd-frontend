@@ -247,7 +247,8 @@
 .row-num {
   color: #999;
   font-size: 0.85em;
-  width: 40px;
+  width: 50px;
+  min-width: 50px;
 }
 
 .seq-desc {
@@ -278,6 +279,12 @@
   text-align: center;
   font-weight: 500;
   width: 60px;
+  min-width: 60px;
+}
+
+.match-cell {
+  min-width: 150px;
+  max-width: 300px;
 }
 
 .match-cell code {
@@ -286,10 +293,17 @@
   border-radius: 3px;
   font-family: 'Courier New', monospace;
   font-size: 0.95em;
+  cursor: pointer;
+  word-break: break-all;
+}
+
+.match-cell code:hover {
+  background-color: #ffe0b2;
 }
 
 .context-cell {
-  max-width: 350px;
+  min-width: 200px;
+  max-width: 400px;
 }
 
 .context-cell code {
@@ -299,6 +313,11 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.context-cell code:hover {
+  background-color: #f5f5f5;
 }
 
 .context-before,
@@ -310,6 +329,96 @@
   background-color: #ffeb3b;
   color: #333;
   font-weight: 500;
+}
+
+/* Sequence Modal */
+.sequence-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.sequence-modal {
+  background: white;
+  border-radius: 8px;
+  max-width: 800px;
+  width: 90%;
+  max-height: 80vh;
+  overflow: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.sequence-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #f5f5f5;
+}
+
+.sequence-modal-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.1em;
+}
+
+.sequence-modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  padding: 0 5px;
+  line-height: 1;
+}
+
+.sequence-modal-close:hover {
+  color: #333;
+}
+
+.sequence-modal-content {
+  padding: 20px;
+}
+
+.sequence-modal-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px 30px;
+  margin-bottom: 15px;
+  font-size: 0.9em;
+  color: #555;
+}
+
+.sequence-modal-sequence {
+  background-color: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 15px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.8;
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+.sequence-modal-sequence .seq-before,
+.sequence-modal-sequence .seq-after {
+  color: #666;
+}
+
+.sequence-modal-sequence .seq-match {
+  background-color: #ffeb3b;
+  color: #333;
+  font-weight: 600;
+  padding: 2px 0;
 }
 
 /* Responsive */

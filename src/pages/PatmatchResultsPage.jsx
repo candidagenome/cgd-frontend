@@ -12,6 +12,7 @@ function PatmatchResultsPage() {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [downloading, setDownloading] = useState(false);
+  const [selectedHit, setSelectedHit] = useState(null);
 
   // Extract search parameters from URL
   const pattern = searchParams.get('pattern') || '';
@@ -116,6 +117,47 @@ function PatmatchResultsPage() {
     } finally {
       setDownloading(false);
     }
+  };
+
+  // Handle sequence click to show modal
+  const handleSequenceClick = (hit) => {
+    setSelectedHit(hit);
+  };
+
+  // Close modal
+  const closeModal = () => {
+    setSelectedHit(null);
+  };
+
+  // Render sequence modal
+  const renderSequenceModal = () => {
+    if (!selectedHit) return null;
+
+    return (
+      <div className="sequence-modal-overlay" onClick={closeModal}>
+        <div className="sequence-modal" onClick={(e) => e.stopPropagation()}>
+          <div className="sequence-modal-header">
+            <h3>Sequence Match Details</h3>
+            <button className="sequence-modal-close" onClick={closeModal}>×</button>
+          </div>
+          <div className="sequence-modal-content">
+            <div className="sequence-modal-info">
+              <span><strong>Sequence:</strong> {selectedHit.sequence_name}</span>
+              <span><strong>Position:</strong> {selectedHit.match_start.toLocaleString()}-{selectedHit.match_end.toLocaleString()}</span>
+              <span><strong>Strand:</strong> {selectedHit.strand}</span>
+              {selectedHit.sequence_description && selectedHit.sequence_description !== selectedHit.sequence_name && (
+                <span><strong>Description:</strong> {selectedHit.sequence_description}</span>
+              )}
+            </div>
+            <div className="sequence-modal-sequence">
+              <span className="seq-before">{selectedHit.context_before}</span>
+              <span className="seq-match">{selectedHit.matched_sequence}</span>
+              <span className="seq-after">{selectedHit.context_after}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   // Render pagination controls
@@ -288,10 +330,18 @@ function PatmatchResultsPage() {
                     </td>
                     <td className="strand-cell">{hit.strand}</td>
                     <td className="match-cell">
-                      <code>{hit.matched_sequence}</code>
+                      <code
+                        onClick={() => handleSequenceClick(hit)}
+                        title="Click to view full sequence"
+                      >
+                        {hit.matched_sequence}
+                      </code>
                     </td>
                     <td className="context-cell">
-                      <code>
+                      <code
+                        onClick={() => handleSequenceClick(hit)}
+                        title="Click to view full sequence"
+                      >
                         <span className="context-before">{hit.context_before}</span>
                         <span className="context-match">{hit.matched_sequence}</span>
                         <span className="context-after">{hit.context_after}</span>
@@ -305,6 +355,8 @@ function PatmatchResultsPage() {
             {renderPagination()}
           </>
         )}
+
+        {renderSequenceModal()}
       </div>
     </div>
   );
