@@ -98,10 +98,12 @@ function PatmatchResultsPage() {
     return `/patmatch?${params.toString()}`;
   };
 
-  // Handle download
+  // Handle download - request all results up to 50000
   const handleDownload = async () => {
     setDownloading(true);
     try {
+      // Request the actual total (capped at 50000 by API)
+      const downloadMax = Math.min(results?.total_hits || 10000, 50000);
       await patmatchApi.downloadResults({
         pattern,
         pattern_type: patternType,
@@ -110,7 +112,7 @@ function PatmatchResultsPage() {
         max_mismatches: maxMismatches,
         max_insertions: maxInsertions,
         max_deletions: maxDeletions,
-        max_results: 1000, // Maximum allowed by API
+        max_results: downloadMax,
       });
     } catch (err) {
       console.error('Download failed:', err);
@@ -268,7 +270,9 @@ function PatmatchResultsPage() {
                 onClick={handleDownload}
                 disabled={downloading}
               >
-                {downloading ? 'Downloading...' : 'Download Full Results (TSV)'}
+                {downloading
+                  ? 'Downloading...'
+                  : `Download All ${Math.min(results.total_hits, 50000).toLocaleString()} Results (TSV)`}
               </button>
             )}
           </div>
