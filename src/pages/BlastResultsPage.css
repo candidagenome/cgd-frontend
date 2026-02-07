@@ -112,14 +112,14 @@
 
 /* label/value */
 .summary-item .label {
-  color: #666;
+  color: #333;
   font-size: 0.95em;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .summary-item .value {
-  font-weight: 600;
-  color: #333;
+  font-weight: normal;
+  color: #555;
   word-break: break-word;
 }
 
