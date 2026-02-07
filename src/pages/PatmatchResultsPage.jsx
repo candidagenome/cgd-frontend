@@ -11,6 +11,7 @@ function PatmatchResultsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [downloading, setDownloading] = useState(false);
 
   // Extract search parameters from URL
   const pattern = searchParams.get('pattern') || '';
@@ -94,6 +95,27 @@ function PatmatchResultsPage() {
     if (maxInsertions > 0) params.set('ins', maxInsertions.toString());
     if (maxDeletions > 0) params.set('del', maxDeletions.toString());
     return `/patmatch?${params.toString()}`;
+  };
+
+  // Handle download
+  const handleDownload = async () => {
+    setDownloading(true);
+    try {
+      await patmatchApi.downloadResults({
+        pattern,
+        pattern_type: patternType,
+        dataset,
+        strand,
+        max_mismatches: maxMismatches,
+        max_insertions: maxInsertions,
+        max_deletions: maxDeletions,
+        max_results: 10000, // Download all results, not just paginated
+      });
+    } catch (err) {
+      console.error('Download failed:', err);
+    } finally {
+      setDownloading(false);
+    }
   };
 
   // Render pagination controls
@@ -191,9 +213,20 @@ function PatmatchResultsPage() {
               ({results.total_residues_searched.toLocaleString()} residues)
             </span>
           </div>
-          <Link to={buildNewSearchUrl()} className="new-search-link">
-            ← New Search
-          </Link>
+          <div className="action-links">
+            <Link to={buildNewSearchUrl()} className="new-search-link">
+              ← New Search
+            </Link>
+            {results.total_hits > 0 && (
+              <button
+                className="download-btn"
+                onClick={handleDownload}
+                disabled={downloading}
+              >
+                {downloading ? 'Downloading...' : 'Download Full Results (TSV)'}
+              </button>
+            )}
+          </div>
         </div>
 
         {results.total_hits === 0 ? (
