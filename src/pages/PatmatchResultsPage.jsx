@@ -51,7 +51,18 @@ function PatmatchResultsPage() {
           setError(response.error || 'Pattern match search failed');
         }
       } catch (err) {
-        setError(err.response?.data?.detail || err.message || 'Search failed');
+        // Handle Pydantic validation errors (array of error objects)
+        const detail = err.response?.data?.detail;
+        let errorMsg = 'Search failed';
+        if (Array.isArray(detail)) {
+          // Extract messages from validation errors
+          errorMsg = detail.map((e) => e.msg || e.message || JSON.stringify(e)).join('; ');
+        } else if (typeof detail === 'string') {
+          errorMsg = detail;
+        } else if (err.message) {
+          errorMsg = err.message;
+        }
+        setError(errorMsg);
       } finally {
         setLoading(false);
       }
