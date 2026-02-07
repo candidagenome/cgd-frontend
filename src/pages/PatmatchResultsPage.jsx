@@ -250,7 +250,10 @@ function PatmatchResultsPage() {
           </div>
           <div className="summary-row">
             <span>
-              <strong>Found {results.total_hits} match{results.total_hits !== 1 ? 'es' : ''}</strong>
+              <strong>Found {results.total_hits.toLocaleString()} match{results.total_hits !== 1 ? 'es' : ''}</strong>
+              {results.hits.length < results.total_hits && (
+                <span className="truncated-notice"> (showing first {results.hits.length})</span>
+              )}
               {' '}in {results.sequences_searched.toLocaleString()} sequences
               ({results.total_residues_searched.toLocaleString()} residues)
             </span>

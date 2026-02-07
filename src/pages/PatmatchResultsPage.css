@@ -101,6 +101,11 @@
   color: #333;
 }
 
+.truncated-notice {
+  color: #e65100;
+  font-weight: normal;
+}
+
 .summary-row code {
   background-color: #fff;
   padding: 2px 6px;
