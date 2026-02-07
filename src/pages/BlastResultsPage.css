@@ -1,9 +1,15 @@
 /* BLAST Results Page Styles */
 
+/* Reset inherited legacy chrome typography */
 .blast-results-page {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  font-size: 14px;
+}
+
+.blast-results-page * {
+  font-size: inherit;
 }
 
 .blast-results-page .blast-content {
@@ -16,12 +22,46 @@
   color: #1976d2;
   margin-bottom: 10px;
   text-align: center;
+  font-size: 1.75em;
+}
+
+.blast-results-page h2 {
+  font-size: 1.25em;
+}
+
+.blast-results-page h3 {
+  font-size: 1.1em;
 }
 
 .blast-results-page hr {
   border: none;
   border-top: 2px solid #1976d2;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
+}
+
+/* Navigation Links */
+.results-nav,
+.section-nav {
+  margin-bottom: 15px;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.results-nav a,
+.section-nav a {
+  color: #1976d2;
+  text-decoration: none;
+  margin: 0 5px;
+}
+
+.results-nav a:hover,
+.section-nav a:hover {
+  text-decoration: underline;
+}
+
+.nav-separator {
+  color: #999;
+  margin: 0 3px;
 }
 
 /* ===============================
@@ -172,6 +212,153 @@
 }
 
 /* =========================
+   Graphic Summary
+   ========================= */
+
+.graphic-summary {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+}
+
+.graphic-summary h3 {
+  margin: 0 0 10px 0;
+  font-size: 1em;
+  color: #333;
+}
+
+.legend-header {
+  margin-bottom: 8px;
+  font-size: 0.85em;
+}
+
+.legend-title {
+  font-weight: 600;
+  color: #333;
+}
+
+.legend-explanation {
+  color: #666;
+  font-style: italic;
+  margin-left: 5px;
+}
+
+.color-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 15px;
+  font-size: 0.8em;
+  color: #666;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.legend-color {
+  display: inline-block;
+  width: 20px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.query-ruler {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #eee;
+}
+
+.ruler-label {
+  width: 40px;
+  font-size: 0.75em;
+  color: #666;
+  flex-shrink: 0;
+  padding-top: 12px;
+}
+
+.ruler-track {
+  flex: 1;
+  position: relative;
+  height: 30px;
+}
+
+.ruler-scale {
+  position: relative;
+  height: 15px;
+  font-size: 0.7em;
+  color: #999;
+}
+
+.scale-mark {
+  position: absolute;
+  transform: translateX(-50%);
+}
+
+.ruler-bar {
+  height: 8px;
+  background: linear-gradient(to right, #e0e0e0, #bdbdbd);
+  border-radius: 2px;
+  margin-top: 2px;
+}
+
+.hits-graphic {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.hit-row {
+  display: flex;
+  align-items: center;
+  height: 12px;
+  margin-bottom: 2px;
+}
+
+.hit-label {
+  width: 40px;
+  font-size: 0.7em;
+  color: #999;
+  flex-shrink: 0;
+  text-align: right;
+  padding-right: 8px;
+}
+
+.hit-track {
+  flex: 1;
+  position: relative;
+  height: 8px;
+  background-color: #f5f5f5;
+  border-radius: 1px;
+}
+
+.hsp-bar {
+  position: absolute;
+  height: 100%;
+  min-width: 2px;
+  border-radius: 1px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.hsp-bar:hover {
+  opacity: 0.8;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+}
+
+.truncation-note {
+  margin: 10px 0 0 0;
+  font-size: 0.8em;
+  color: #999;
+  text-align: center;
+}
+
+/* =========================
    No Results / No Hits
    ========================= */
 
@@ -225,6 +412,20 @@
   gap: 12px;
 }
 
+/* force spacing even if flex-gap isn't applied */
+.section-header .expand-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* add space between siblings no matter what */
+.section-header .expand-controls .expand-btn + .expand-btn {
+  margin-left: 16px;   /* <-- adjust */
+}
+
 .section-header h2 {
   color: #333;
   margin: 0;
@@ -238,33 +439,32 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 12px;          /* spacing between buttons */
-  margin-left: auto;  /* push to right */
+  gap: 18px;          /* <-- more space between Expand and Collapse */
+  margin-left: auto;
   white-space: nowrap;
 }
 
-/* If you had any separator pseudo-elements before, kill them */
+/* Remove any separator pseudo-elements */
 .expand-controls::before,
 .expand-controls::after,
 .expand-btn::before,
 .expand-btn::after {
   content: none !important;
 }
-		  
+
+/* Option A (recommended): make them simple text links (no white boxes) */
 .expand-btn {
-  padding: 6px 12px;
-  background-color: #f5f5f5;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 12px;
+  background: none;       /* remove white box */
+  border: none;           /* remove border */
+  padding: 0;             /* remove box spacing */
+  font-size: 14px;
+  color: #1976d2;
   cursor: pointer;
-  color: #666;
-  white-space: nowrap; /* keep "Expand All" on one line */
-  line-height: 1;      /* prevents weird vertical misalignment */
+  line-height: 1;
 }
 
 .expand-btn:hover {
-  background-color: #eaeaea;
+ text-decoration: underline;
 }
 
 /* =========================
@@ -293,7 +493,6 @@
 }
 
 .hits-table tbody tr {
-  cursor: pointer;
   transition: background-color 0.2s;
 }
 
@@ -305,10 +504,30 @@
   background-color: #e3f2fd;
 }
 
+.hits-instruction {
+  margin: 0 0 15px 0;
+  font-size: 0.9em;
+  color: #666;
+  font-style: italic;
+}
+
 .description-cell {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  display: block;
+}
+
+.sequence-link {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.sequence-link:hover {
+  text-decoration: underline;
+}
+
+.organism-name {
+  color: #666;
+  margin-left: 8px;
 }
 
 .expand-icon {
@@ -330,9 +549,14 @@
    Alignments Section
    ========================= */
 
-.alignments-section {
+.alignments-title {
+  margin: 25px 0 10px 0;
+  padding-top: 15px;
   border-top: 2px solid #e0e0e0;
-  padding-top: 20px;
+}
+
+.alignments-section {
+  padding-top: 10px;
 }
 
 .hit-alignments {
@@ -382,8 +606,33 @@
   text-decoration: underline;
 }
 
+.hit-organism {
+  color: #666;
+  font-weight: normal;
+}
+
 .hit-actions {
   margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.locus-action-link {
+  display: inline-block;
+  padding: 5px 12px;
+  background-color: #1976d2;
+  color: white;
+  border-radius: 4px;
+  font-size: 0.85em;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.locus-action-link:hover {
+  background-color: #1565c0;
+  color: white;
+  text-decoration: none;
 }
 
 .jbrowse-link {
@@ -400,6 +649,39 @@
 .jbrowse-link:hover {
   background-color: #388e3c;
   text-decoration: none;
+}
+
+.display-seq-btn {
+  padding: 5px 12px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.display-seq-btn:hover {
+  background-color: #1565c0;
+}
+
+.sequence-display {
+  margin-top: 15px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 15px;
+  overflow-x: auto;
+}
+
+.sequence-fasta {
+  margin: 0;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 
 /* =========================

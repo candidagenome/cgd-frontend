@@ -7,8 +7,37 @@ function BlastResultsPage() {
   const navigate = useNavigate();
   const [results, setResults] = useState(null);
   const [params, setParams] = useState(null);
-  const [expandedHits, setExpandedHits] = useState(new Set([0])); // First hit expanded by default
+  const [expandedHits, setExpandedHits] = useState(new Set());
   const [downloading, setDownloading] = useState(null);
+  const [displayedSequences, setDisplayedSequences] = useState(new Set());
+
+  // Toggle sequence display for a hit
+  const toggleSequenceDisplay = (index) => {
+    setDisplayedSequences((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(index)) {
+        newSet.delete(index);
+      } else {
+        newSet.add(index);
+      }
+      return newSet;
+    });
+  };
+
+  // Format sequence for display (60 chars per line)
+  const formatSequence = (hit) => {
+    // Use the first HSP's hit sequence as an approximation
+    // In a real implementation, this would fetch the full sequence from the server
+    const hsp = hit.hsps[0];
+    if (!hsp) return '';
+
+    const seq = hsp.hit_seq.replace(/-/g, ''); // Remove gaps
+    const lines = [];
+    for (let i = 0; i < seq.length; i += 80) {
+      lines.push(seq.substring(i, i + 80));
+    }
+    return lines.join('\n');
+  };
 
   // Load results from session storage
   useEffect(() => {
@@ -16,7 +45,12 @@ function BlastResultsPage() {
     const storedParams = sessionStorage.getItem('blastParams');
 
     if (storedResults) {
-      setResults(JSON.parse(storedResults));
+      const parsed = JSON.parse(storedResults);
+      setResults(parsed);
+      // Expand all hits by default
+      if (parsed.hits) {
+        setExpandedHits(new Set(parsed.hits.map((_, i) => i)));
+      }
     }
     if (storedParams) {
       setParams(JSON.parse(storedParams));
@@ -49,6 +83,16 @@ function BlastResultsPage() {
       return evalue.toExponential(2);
     }
     return evalue.toFixed(3);
+  };
+
+  // Get color for alignment score (NCBI-style color scheme)
+  const getScoreColor = (score, maxScore) => {
+    // Color ranges based on bit score (similar to NCBI BLAST)
+    if (score >= 200) return '#ff0000';      // Red - excellent
+    if (score >= 80) return '#ff66ff';       // Pink/magenta - good
+    if (score >= 50) return '#00ff00';       // Green - moderate
+    if (score >= 40) return '#0000ff';       // Blue - weak
+    return '#000000';                         // Black - very weak
   };
 
   // Go back to search
@@ -110,10 +154,22 @@ function BlastResultsPage() {
   }
 
   return (
-    <div className="blast-results-page">
+    <div className="blast-results-page" id="top">
       <div className="blast-content">
         <h1>BLAST Results</h1>
         <hr />
+
+        {/* Navigation Links */}
+        {results.hits.length > 0 && (
+          <nav className="results-nav">
+            <span>Jump to:</span>
+            <a href="#hits-list">List of Hits</a>
+            <span className="nav-separator">|</span>
+            <a href="#download-section">Download Results</a>
+            <span className="nav-separator">|</span>
+            <a href="#alignments-section">Hit Alignments</a>
+          </nav>
+        )}
 
         {/* Search Summary */}
         <div className="search-summary">
@@ -151,7 +207,7 @@ function BlastResultsPage() {
 
         {/* Download Options */}
         {results.hits.length > 0 && (
-          <div className="download-section">
+          <div className="download-section" id="download-section">
             <span className="download-label">Download results:</span>
             <div className="download-buttons">
               <button
@@ -190,12 +246,68 @@ function BlastResultsPage() {
           </div>
         ) : (
           <>
+            {/* Graphic Summary */}
+            <div className="graphic-summary">
+              <h3>Distribution of BLAST Hits on Query Sequence</h3>
+              <div className="legend-header">
+                <span className="legend-title">Bit Score:</span>
+                <span className="legend-explanation">(higher = better alignment quality)</span>
+              </div>
+              <div className="color-legend">
+                <span className="legend-item"><span className="legend-color" style={{backgroundColor: '#ff0000'}}></span> &gt;=200 (excellent)</span>
+                <span className="legend-item"><span className="legend-color" style={{backgroundColor: '#ff66ff'}}></span> 80-200 (good)</span>
+                <span className="legend-item"><span className="legend-color" style={{backgroundColor: '#00ff00'}}></span> 50-80 (moderate)</span>
+                <span className="legend-item"><span className="legend-color" style={{backgroundColor: '#0000ff'}}></span> 40-50 (weak)</span>
+                <span className="legend-item"><span className="legend-color" style={{backgroundColor: '#000000'}}></span> &lt;40 (minimal)</span>
+              </div>
+              <div className="query-ruler">
+                <div className="ruler-label">Query</div>
+                <div className="ruler-track">
+                  <div className="ruler-scale">
+                    {[0, 0.25, 0.5, 0.75, 1].map((fraction) => (
+                      <span key={fraction} className="scale-mark" style={{left: `${fraction * 100}%`}}>
+                        {Math.round(fraction * results.query_length)}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="ruler-bar"></div>
+                </div>
+              </div>
+              <div className="hits-graphic">
+                {results.hits.slice(0, 100).map((hit, index) => (
+                  <div key={index} className="hit-row" title={`${hit.description}\nScore: ${hit.best_bit_score.toFixed(1)}, E-value: ${formatEvalue(hit.best_evalue)}`}>
+                    <div className="hit-label">{index + 1}</div>
+                    <div className="hit-track">
+                      {hit.hsps.map((hsp, hspIndex) => {
+                        const left = ((hsp.query_start - 1) / results.query_length) * 100;
+                        const width = ((hsp.query_end - hsp.query_start + 1) / results.query_length) * 100;
+                        return (
+                          <div
+                            key={hspIndex}
+                            className="hsp-bar"
+                            style={{
+                              left: `${left}%`,
+                              width: `${Math.max(width, 0.5)}%`,
+                              backgroundColor: getScoreColor(hsp.bit_score),
+                            }}
+                            title={`HSP ${hspIndex + 1}: ${hsp.query_start}-${hsp.query_end}, Score: ${hsp.bit_score.toFixed(1)}`}
+                          />
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {results.hits.length > 100 && (
+                <p className="truncation-note">Showing first 100 of {results.hits.length} hits</p>
+              )}
+            </div>
+
             {/* Hits Table */}
-            <div className="results-section">
+            <div className="results-section" id="hits-list">
               <div className="section-header">
                 <h2>
-                  {results.hits.length} Sequence{results.hits.length !== 1 ? 's' : ''}{' '}
-                  Found
+                  List of {results.program.toUpperCase()} Hits
                 </h2>
                 <div className="expand-controls">
                   <button onClick={expandAll} className="expand-btn">
@@ -207,16 +319,17 @@ function BlastResultsPage() {
                 </div>
               </div>
 
+              <p className="hits-instruction">
+                Click on the sequence ID to jump directly to the alignment.
+              </p>
+
               {/* Summary Table */}
               <table className="hits-table">
                 <thead>
                   <tr>
-                    <th>#</th>
-                    <th>Description</th>
-                    <th>Score</th>
-                    <th>E-value</th>
-                    <th>Identity</th>
-                    <th>Coverage</th>
+                    <th>Sequence Hits in Target Database</th>
+                    <th>Score (bits)</th>
+                    <th>E value</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -224,41 +337,48 @@ function BlastResultsPage() {
                     <tr
                       key={index}
                       className={expandedHits.has(index) ? 'expanded' : ''}
-                      onClick={() => toggleHit(index)}
                     >
-                      <td>{hit.num}</td>
                       <td className="description-cell">
-                        <span className="expand-icon">
-                          {expandedHits.has(index) ? '▼' : '▶'}
-                        </span>
-                        {hit.locus_link ? (
-                          <Link
-                            to={hit.locus_link}
-                            onClick={(e) => e.stopPropagation()}
-                            className="locus-link"
-                          >
-                            {hit.description.length > 60
-                              ? hit.description.substring(0, 57) + '...'
-                              : hit.description}
-                          </Link>
-                        ) : (
-                          <span title={hit.description}>
-                            {hit.description.length > 60
-                              ? hit.description.substring(0, 57) + '...'
-                              : hit.description}
-                          </span>
+                        <a
+                          href={`#hit-${index}`}
+                          className="sequence-link"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            // Expand this hit and scroll to it
+                            const newExpanded = new Set(expandedHits);
+                            newExpanded.add(index);
+                            setExpandedHits(newExpanded);
+                            // Scroll after a brief delay to allow expansion
+                            setTimeout(() => {
+                              document.getElementById(`hit-${index}`)?.scrollIntoView({ behavior: 'smooth' });
+                            }, 100);
+                          }}
+                        >
+                          {hit.accession}
+                        </a>
+                        {hit.organism_name && (
+                          <span className="organism-name"> {hit.organism_name}</span>
                         )}
                       </td>
-                      <td>{hit.best_bit_score.toFixed(1)}</td>
-                      <td>{formatEvalue(hit.best_evalue)}</td>
-                      <td>{hit.hsps[0]?.percent_identity?.toFixed(1)}%</td>
-                      <td>{hit.query_cover?.toFixed(1)}%</td>
+                      <td>{hit.best_bit_score.toFixed(0)}</td>
+                      <td>{hit.best_evalue === 0 ? '0.0e+00' : formatEvalue(hit.best_evalue)}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
 
               {/* Detailed Alignments */}
+              <h2 className="alignments-title" id="alignments-section">
+                Alignments of {results.program.toUpperCase()} Hits
+              </h2>
+              <nav className="section-nav">
+                <span>Jump to:</span>
+                <a href="#top">Top</a>
+                <span className="nav-separator">|</span>
+                <a href="#hits-list">List of Hits</a>
+                <span className="nav-separator">|</span>
+                <a href="#download-section">Download Results</a>
+              </nav>
               <div className="alignments-section">
                 {results.hits.map(
                   (hit, hitIndex) =>
@@ -266,37 +386,63 @@ function BlastResultsPage() {
                       <div key={hitIndex} className="hit-alignments" id={`hit-${hitIndex}`}>
                         <div className="hit-header">
                           <h3>
-                            {hit.locus_link ? (
-                              <Link to={hit.locus_link}>{hit.description}</Link>
-                            ) : (
-                              hit.description
-                            )}
+                            {hit.accession}{' '}
+                            {hit.organism_name && <span className="hit-organism">{hit.organism_name}</span>}
                           </h3>
                           <div className="hit-meta">
-                            <span>Length: {hit.length.toLocaleString()}</span>
-                            <span>Accession: {hit.accession}</span>
-                            {hit.organism_name && (
-                              <span>Organism: {hit.organism_name}</span>
-                            )}
-                            {hit.orf19_id && (
+                            <span>Length = {hit.length.toLocaleString()}</span>
+                            <span>Score = {hit.hsps[0]?.score} ({hit.best_bit_score.toFixed(0)} bits)</span>
+                            <span>Expect = {hit.best_evalue === 0 ? '0.0' : formatEvalue(hit.best_evalue)}</span>
+                            {hit.hsps[0]?.percent_identity && (
                               <span>
-                                orf19 ID:{' '}
-                                <Link to={`/locus/${hit.orf19_id}`}>
-                                  {hit.orf19_id}
-                                </Link>
+                                Identities = {hit.hsps[0].identity}/{hit.hsps[0].align_len} ({hit.hsps[0].percent_identity.toFixed(1)}%)
                               </span>
                             )}
                           </div>
-                          {hit.jbrowse_url && (
-                            <div className="hit-actions">
+                          <div className="hit-actions">
+                            {hit.locus_link && (
+                              <a
+                                href={hit.locus_link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="locus-action-link"
+                              >
+                                Locus Summary
+                              </a>
+                            )}
+                            {hit.literature_link && (
+                              <a
+                                href={hit.literature_link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="locus-action-link"
+                              >
+                                Literature
+                              </a>
+                            )}
+                            {hit.jbrowse_url && (
                               <a
                                 href={hit.jbrowse_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="jbrowse-link"
                               >
-                                View in JBrowse
+                                CGD Genome Browser
                               </a>
+                            )}
+                            <button
+                              type="button"
+                              className="display-seq-btn"
+                              onClick={() => toggleSequenceDisplay(hitIndex)}
+                            >
+                              {displayedSequences.has(hitIndex) ? 'Hide Sequence' : 'Display Sequence'}
+                            </button>
+                          </div>
+                          {displayedSequences.has(hitIndex) && (
+                            <div className="sequence-display">
+                              <pre className="sequence-fasta">
+                                {`>${hit.accession}:${hit.hsps[0]?.hit_start}-${hit.hsps[0]?.hit_end} (${hit.length} nucleotides)\n${formatSequence(hit)}`}
+                              </pre>
                             </div>
                           )}
                         </div>
