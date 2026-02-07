@@ -126,10 +126,11 @@ function PositionRuler({ start, end, blockSize }) {
   }
 
   return (
-    <div style={{ fontFamily: 'monospace', fontSize: '13px', color: '#666' }}>
-      <span style={{ display: 'inline-block', width: '170px' }}></span>
-      <span style={{ display: 'inline-block', width: '65px' }}></span>
-      <span style={{ display: 'inline-block', width: '60px' }}></span>
+    <div style={{ fontFamily: 'monospace', fontSize: '13px', color: '#666', display: 'flex' }}>
+      <span style={{ width: '25px', marginRight: '5px', flexShrink: 0 }}></span>
+      <span style={{ width: '135px', flexShrink: 0 }}></span>
+      <span style={{ width: '65px', marginRight: '5px', flexShrink: 0 }}></span>
+      <span style={{ width: '55px', marginRight: '10px', flexShrink: 0 }}></span>
       <span>{start} [{ruler}] {Math.min(start + blockSize - 1, end)}</span>
     </div>
   );
@@ -284,45 +285,47 @@ function AlignmentViewer({ sequences, alignmentType, referenceId }) {
                       fontSize: '13px',
                       lineHeight: '1.5',
                       whiteSpace: 'pre',
+                      display: 'flex',
+                      alignItems: 'baseline',
                     }}
                   >
                     {/* Row number and ID */}
                     <span style={{
-                      display: 'inline-block',
                       width: '25px',
                       textAlign: 'right',
                       marginRight: '5px',
-                      color: '#666'
+                      color: '#666',
+                      flexShrink: 0,
                     }}>
                       {seqIdx + 1}
                     </span>
                     <span style={{
-                      display: 'inline-block',
                       width: '135px',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
+                      flexShrink: 0,
                     }}>
                       {seq.sequence_id}
                     </span>
 
                     {/* Coverage */}
                     <span style={{
-                      display: 'inline-block',
                       width: '65px',
                       textAlign: 'right',
                       color: '#666',
-                      marginRight: '5px'
+                      marginRight: '5px',
+                      flexShrink: 0,
                     }}>
                       {seq.stats.coverage.toFixed(1)}%
                     </span>
 
                     {/* Identity */}
                     <span style={{
-                      display: 'inline-block',
                       width: '55px',
                       textAlign: 'right',
                       color: '#666',
-                      marginRight: '10px'
+                      marginRight: '10px',
+                      flexShrink: 0,
                     }}>
                       {seq.stats.identity.toFixed(1)}%
                     </span>
