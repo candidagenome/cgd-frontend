@@ -18,6 +18,14 @@ const AA_COLORS = {
   'C': '#F8F4C4',
 };
 
+// Nucleotide color categories for coding sequences
+const NT_COLORS = {
+  // Purine (A, G) - light blue
+  'A': '#B8D4E8', 'G': '#B8D4E8',
+  // Pyrimidine (C, T) - light green
+  'C': '#C8E8C8', 'T': '#C8E8C8',
+};
+
 const BLOCK_SIZE = 50;
 const IDENTITY_THRESHOLD = 0.8;
 
@@ -146,22 +154,24 @@ function buildRuler(start, end, totalLength) {
 }
 
 /**
- * Render amino acid with optional coloring
+ * Render residue (amino acid or nucleotide) with optional coloring
  */
-function AminoAcid({ aa, shouldColor }) {
-  if (aa === '-') {
+function Residue({ char, shouldColor, isProtein }) {
+  if (char === '-') {
     return <span style={{ color: '#999' }}>-</span>;
   }
 
-  if (shouldColor && AA_COLORS[aa]) {
+  const colors = isProtein ? AA_COLORS : NT_COLORS;
+
+  if (shouldColor && colors[char]) {
     return (
-      <span style={{ backgroundColor: AA_COLORS[aa], color: '#000' }}>
-        {aa}
+      <span style={{ backgroundColor: colors[char], color: '#000' }}>
+        {char}
       </span>
     );
   }
 
-  return <span>{aa}</span>;
+  return <span>{char}</span>;
 }
 
 /**
@@ -285,15 +295,22 @@ function AlignmentViewer({ sequences, alignmentType, referenceId }) {
             <div style={{ marginBottom: '5px', color: '#666' }}>
               Colored by: identity &gt;= 80%
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', fontSize: '12px', marginLeft: '20px' }}>
-              <span><span style={{ backgroundColor: '#B8D4E8', padding: '0 4px' }}>&nbsp;</span> Hydrophobic (A, I, L, M, V)</span>
-              <span><span style={{ backgroundColor: '#D4C4E8', padding: '0 4px' }}>&nbsp;</span> Aromatic (F, W, Y)</span>
-              <span><span style={{ backgroundColor: '#C8E8C8', padding: '0 4px' }}>&nbsp;</span> Polar (N, Q, S, T)</span>
-              <span><span style={{ backgroundColor: '#F8C4C4', padding: '0 4px' }}>&nbsp;</span> Negative charge (D, E)</span>
-              <span><span style={{ backgroundColor: '#C4E8E8', padding: '0 4px' }}>&nbsp;</span> Positive charge (H, K, R)</span>
-              <span><span style={{ backgroundColor: '#F8DCC4', padding: '0 4px' }}>&nbsp;</span> Backbone change (G, P)</span>
-              <span><span style={{ backgroundColor: '#F8F4C4', padding: '0 4px' }}>&nbsp;</span> Cysteine (C)</span>
-            </div>
+            {alignmentType === 'protein' ? (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', fontSize: '12px', marginLeft: '20px' }}>
+                <span><span style={{ backgroundColor: '#B8D4E8', padding: '0 4px' }}>&nbsp;</span> Hydrophobic (A, I, L, M, V)</span>
+                <span><span style={{ backgroundColor: '#D4C4E8', padding: '0 4px' }}>&nbsp;</span> Aromatic (F, W, Y)</span>
+                <span><span style={{ backgroundColor: '#C8E8C8', padding: '0 4px' }}>&nbsp;</span> Polar (N, Q, S, T)</span>
+                <span><span style={{ backgroundColor: '#F8C4C4', padding: '0 4px' }}>&nbsp;</span> Negative charge (D, E)</span>
+                <span><span style={{ backgroundColor: '#C4E8E8', padding: '0 4px' }}>&nbsp;</span> Positive charge (H, K, R)</span>
+                <span><span style={{ backgroundColor: '#F8DCC4', padding: '0 4px' }}>&nbsp;</span> Backbone change (G, P)</span>
+                <span><span style={{ backgroundColor: '#F8F4C4', padding: '0 4px' }}>&nbsp;</span> Cysteine (C)</span>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', fontSize: '12px', marginLeft: '20px' }}>
+                <span><span style={{ backgroundColor: '#B8D4E8', padding: '0 4px' }}>&nbsp;</span> Purine (A, G)</span>
+                <span><span style={{ backgroundColor: '#C8E8C8', padding: '0 4px' }}>&nbsp;</span> Pyrimidine (C, T)</span>
+              </div>
+            )}
           </div>
 
           {/* Alignment blocks */}
@@ -323,14 +340,15 @@ function AlignmentViewer({ sequences, alignmentType, referenceId }) {
                       <span style={{ color: '#666' }}>{pid}</span>
                       <span>{gap}</span>
                       <span>
-                        {seqSlice.split('').map((aa, aaIdx) => {
-                          const globalPos = start + aaIdx;
+                        {seqSlice.split('').map((char, charIdx) => {
+                          const globalPos = start + charIdx;
                           const shouldColor = conservation[globalPos] >= IDENTITY_THRESHOLD;
                           return (
-                            <AminoAcid
-                              key={aaIdx}
-                              aa={aa}
-                              shouldColor={shouldColor && alignmentType === 'protein'}
+                            <Residue
+                              key={charIdx}
+                              char={char}
+                              shouldColor={shouldColor}
+                              isProtein={alignmentType === 'protein'}
                             />
                           );
                         })}
