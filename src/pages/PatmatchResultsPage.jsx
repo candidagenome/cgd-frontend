@@ -109,7 +109,7 @@ function PatmatchResultsPage() {
         max_mismatches: maxMismatches,
         max_insertions: maxInsertions,
         max_deletions: maxDeletions,
-        max_results: 10000, // Download all results, not just paginated
+        max_results: 1000, // Maximum allowed by API
       });
     } catch (err) {
       console.error('Download failed:', err);
