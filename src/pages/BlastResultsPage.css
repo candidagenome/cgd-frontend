@@ -638,7 +638,7 @@
 .jbrowse-link {
   display: inline-block;
   padding: 5px 12px;
-  background-color: #4caf50;
+  background-color: #1976d2;
   color: white;
   border-radius: 4px;
   font-size: 0.85em;
@@ -647,7 +647,7 @@
 }
 
 .jbrowse-link:hover {
-  background-color: #388e3c;
+  background-color: #1565c0;
   text-decoration: none;
 }
 
