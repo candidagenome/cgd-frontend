@@ -229,8 +229,25 @@
   color: #333;
 }
 
+.legend-header {
+  margin-bottom: 8px;
+  font-size: 0.85em;
+}
+
+.legend-title {
+  font-weight: 600;
+  color: #333;
+}
+
+.legend-explanation {
+  color: #666;
+  font-style: italic;
+  margin-left: 5px;
+}
+
 .color-legend {
   display: flex;
+  flex-wrap: wrap;
   gap: 15px;
   margin-bottom: 15px;
   font-size: 0.8em;

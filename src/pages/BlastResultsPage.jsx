@@ -249,12 +249,16 @@ function BlastResultsPage() {
             {/* Graphic Summary */}
             <div className="graphic-summary">
               <h3>Distribution of BLAST Hits on Query Sequence</h3>
+              <div className="legend-header">
+                <span className="legend-title">Bit Score:</span>
+                <span className="legend-explanation">(higher = better alignment quality)</span>
+              </div>
               <div className="color-legend">
-                <span className="legend-item"><span className="legend-color" style={{backgroundColor: '#ff0000'}}></span> &gt;=200</span>
-                <span className="legend-item"><span className="legend-color" style={{backgroundColor: '#ff66ff'}}></span> 80-200</span>
-                <span className="legend-item"><span className="legend-color" style={{backgroundColor: '#00ff00'}}></span> 50-80</span>
-                <span className="legend-item"><span className="legend-color" style={{backgroundColor: '#0000ff'}}></span> 40-50</span>
-                <span className="legend-item"><span className="legend-color" style={{backgroundColor: '#000000'}}></span> &lt;40</span>
+                <span className="legend-item"><span className="legend-color" style={{backgroundColor: '#ff0000'}}></span> &gt;=200 (excellent)</span>
+                <span className="legend-item"><span className="legend-color" style={{backgroundColor: '#ff66ff'}}></span> 80-200 (good)</span>
+                <span className="legend-item"><span className="legend-color" style={{backgroundColor: '#00ff00'}}></span> 50-80 (moderate)</span>
+                <span className="legend-item"><span className="legend-color" style={{backgroundColor: '#0000ff'}}></span> 40-50 (weak)</span>
+                <span className="legend-item"><span className="legend-color" style={{backgroundColor: '#000000'}}></span> &lt;40 (minimal)</span>
               </div>
               <div className="query-ruler">
                 <div className="ruler-label">Query</div>
