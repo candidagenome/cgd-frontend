@@ -510,62 +510,69 @@ function BlastSearchPage() {
             </div>
           </div>
 
-          {/* Program Selection */}
-          <div className="form-section">
-            <div className="section-header">
-              <span className="section-number">2</span>
-              <h3>Select BLAST Program</h3>
-            </div>
+          {/* Two-column layout for Program/Genomes and Dataset/Options */}
+          <div className="form-columns">
+            {/* Left Column: Program + Genomes */}
+            <div className="form-column">
+              {/* Program Selection */}
+              <div className="form-section">
+                <div className="section-header">
+                  <span className="section-number">2</span>
+                  <h3>Select BLAST Program</h3>
+                </div>
 
-            <div className="form-group compact">
-              <select
-                id="program"
-                value={program}
-                onChange={(e) => setProgram(e.target.value)}
-              >
-                {Object.entries(PROGRAM_INFO).map(([prog, info]) => (
-                  <option key={prog} value={prog}>
-                    {info.name} - {info.description}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
+                <div className="form-group compact">
+                  <select
+                    id="program"
+                    value={program}
+                    onChange={(e) => setProgram(e.target.value)}
+                  >
+                    {Object.entries(PROGRAM_INFO).map(([prog, info]) => (
+                      <option key={prog} value={prog}>
+                        {info.name} - {info.description}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
 
-          {/* Genome Selection */}
-          <div className="form-section">
-            <div className="section-header">
-              <span className="section-number">3</span>
-              <h3>Select Genome(s)</h3>
-              <div className="genome-select-actions">
-                <button type="button" className="select-action-btn" onClick={selectAllGenomes}>
-                  Select All
-                </button>
-                <button type="button" className="select-action-btn" onClick={deselectAllGenomes}>
-                  Clear
-                </button>
+              {/* Genome Selection */}
+              <div className="form-section">
+                <div className="section-header">
+                  <span className="section-number">3</span>
+                  <h3>Select Genome(s)</h3>
+                  <div className="genome-select-actions">
+                    <button type="button" className="select-action-btn" onClick={selectAllGenomes}>
+                      Select All
+                    </button>
+                    <button type="button" className="select-action-btn" onClick={deselectAllGenomes}>
+                      Clear
+                    </button>
+                  </div>
+                </div>
+
+                <div className="genome-list">
+                  {GENOME_OPTIONS.map((genome) => (
+                    <label key={genome.id} className="genome-item">
+                      <input
+                        type="checkbox"
+                        checked={selectedGenomes.includes(genome.id)}
+                        onChange={() => toggleGenome(genome.id)}
+                      />
+                      <span className="genome-name">{genome.name}</span>
+                    </label>
+                  ))}
+                </div>
+                <p className="help-text">
+                  {selectedGenomes.length} genome{selectedGenomes.length !== 1 ? 's' : ''} selected
+                </p>
               </div>
             </div>
 
-            <div className="genome-list">
-              {GENOME_OPTIONS.map((genome) => (
-                <label key={genome.id} className="genome-item">
-                  <input
-                    type="checkbox"
-                    checked={selectedGenomes.includes(genome.id)}
-                    onChange={() => toggleGenome(genome.id)}
-                  />
-                  <span className="genome-name">{genome.name}</span>
-                </label>
-              ))}
-            </div>
-            <p className="help-text">
-              {selectedGenomes.length} genome{selectedGenomes.length !== 1 ? 's' : ''} selected
-            </p>
-          </div>
-
-          {/* Dataset Type Selection */}
-          <div className="form-section">
+            {/* Right Column: Dataset + Options */}
+            <div className="form-column">
+              {/* Dataset Type Selection */}
+              <div className="form-section">
             <div className="section-header">
               <span className="section-number">4</span>
               <h3>Select Dataset Type</h3>
@@ -793,6 +800,10 @@ function BlastSearchPage() {
               </div>
             )}
           </div>
+            </div>
+            {/* End Right Column */}
+          </div>
+          {/* End Two-column layout */}
 
           {/* Submit Button */}
           <div className="submit-section">
