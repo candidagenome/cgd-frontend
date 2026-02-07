@@ -242,8 +242,9 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
 
               {/* Protein Sequence Alignment Section */}
               {orgData.protein_alignment && orgData.protein_alignment.sequences && orgData.protein_alignment.sequences.length > 0 && (
-                <tr>
-                  <td colSpan="2" style={{ padding: '15px 0' }}>
+                <tr className="section-with-divider">
+                  <th style={{ verticalAlign: 'top' }}></th>
+                  <td style={{ padding: '15px 0' }}>
                     <AlignmentViewer
                       sequences={orgData.protein_alignment.sequences}
                       alignmentType="protein"
@@ -265,8 +266,9 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
 
               {/* Coding Sequence Alignment Section */}
               {orgData.coding_alignment && orgData.coding_alignment.sequences && orgData.coding_alignment.sequences.length > 0 && (
-                <tr>
-                  <td colSpan="2" style={{ padding: '15px 0' }}>
+                <tr className="section-with-divider">
+                  <th style={{ verticalAlign: 'top' }}></th>
+                  <td style={{ padding: '15px 0' }}>
                     <AlignmentViewer
                       sequences={orgData.coding_alignment.sequences}
                       alignmentType="coding"

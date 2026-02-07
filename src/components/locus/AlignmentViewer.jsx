@@ -1,21 +1,21 @@
 import React, { useState, useMemo } from 'react';
 
-// Amino acid color categories
+// Amino acid color categories - lighter/pastel colors
 const AA_COLORS = {
-  // Hydrophobic (A, I, L, M, V) - blue
-  'A': '#6495ED', 'I': '#6495ED', 'L': '#6495ED', 'M': '#6495ED', 'V': '#6495ED',
-  // Aromatic (F, W, Y) - purple
-  'F': '#9370DB', 'W': '#9370DB', 'Y': '#9370DB',
-  // Polar (N, Q, S, T) - green
-  'N': '#90EE90', 'Q': '#90EE90', 'S': '#90EE90', 'T': '#90EE90',
-  // Negative charge (D, E) - red
-  'D': '#FF6B6B', 'E': '#FF6B6B',
-  // Positive charge (H, K, R) - cyan
-  'H': '#40E0D0', 'K': '#40E0D0', 'R': '#40E0D0',
-  // Backbone change (G, P) - orange
-  'G': '#FFA500', 'P': '#FFA500',
-  // Cysteine (C) - yellow
-  'C': '#FFD700',
+  // Hydrophobic (A, I, L, M, V) - light blue
+  'A': '#B8D4E8', 'I': '#B8D4E8', 'L': '#B8D4E8', 'M': '#B8D4E8', 'V': '#B8D4E8',
+  // Aromatic (F, W, Y) - light purple
+  'F': '#D4C4E8', 'W': '#D4C4E8', 'Y': '#D4C4E8',
+  // Polar (N, Q, S, T) - light green
+  'N': '#C8E8C8', 'Q': '#C8E8C8', 'S': '#C8E8C8', 'T': '#C8E8C8',
+  // Negative charge (D, E) - light red/pink
+  'D': '#F8C4C4', 'E': '#F8C4C4',
+  // Positive charge (H, K, R) - light cyan
+  'H': '#C4E8E8', 'K': '#C4E8E8', 'R': '#C4E8E8',
+  // Backbone change (G, P) - light orange
+  'G': '#F8DCC4', 'P': '#F8DCC4',
+  // Cysteine (C) - light yellow
+  'C': '#F8F4C4',
 };
 
 const BLOCK_SIZE = 50;
@@ -123,9 +123,9 @@ function PositionRuler({ start, end, blockSize }) {
   }
 
   return (
-    <div style={{ fontFamily: 'monospace', fontSize: '11px', color: '#666' }}>
-      <span style={{ display: 'inline-block', width: '160px' }}></span>
-      <span style={{ display: 'inline-block', width: '60px' }}></span>
+    <div style={{ fontFamily: 'monospace', fontSize: '13px', color: '#666' }}>
+      <span style={{ display: 'inline-block', width: '170px' }}></span>
+      <span style={{ display: 'inline-block', width: '65px' }}></span>
       <span style={{ display: 'inline-block', width: '60px' }}></span>
       <span>{start} [{ruler}] {Math.min(start + blockSize - 1, end)}</span>
     </div>
@@ -241,14 +241,14 @@ function AlignmentViewer({ sequences, alignmentType, referenceId }) {
             <div style={{ marginBottom: '5px', color: '#666' }}>
               Identities normalized by aligned length. Colored by: identity ≥ 80%
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', fontSize: '11px' }}>
-              <span><span style={{ backgroundColor: '#6495ED', padding: '1px 4px' }}>■</span> Hydrophobic (A, I, L, M, V)</span>
-              <span><span style={{ backgroundColor: '#9370DB', padding: '1px 4px' }}>■</span> Aromatic (F, W, Y)</span>
-              <span><span style={{ backgroundColor: '#90EE90', padding: '1px 4px' }}>■</span> Polar (N, Q, S, T)</span>
-              <span><span style={{ backgroundColor: '#FF6B6B', padding: '1px 4px' }}>■</span> Negative charge (D, E)</span>
-              <span><span style={{ backgroundColor: '#40E0D0', padding: '1px 4px' }}>■</span> Positive charge (H, K, R)</span>
-              <span><span style={{ backgroundColor: '#FFA500', padding: '1px 4px' }}>■</span> Backbone change (G, P)</span>
-              <span><span style={{ backgroundColor: '#FFD700', padding: '1px 4px' }}>■</span> Cysteine (C)</span>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', fontSize: '12px' }}>
+              <span><span style={{ backgroundColor: '#B8D4E8', padding: '1px 4px' }}>■</span> Hydrophobic (A, I, L, M, V)</span>
+              <span><span style={{ backgroundColor: '#D4C4E8', padding: '1px 4px' }}>■</span> Aromatic (F, W, Y)</span>
+              <span><span style={{ backgroundColor: '#C8E8C8', padding: '1px 4px' }}>■</span> Polar (N, Q, S, T)</span>
+              <span><span style={{ backgroundColor: '#F8C4C4', padding: '1px 4px' }}>■</span> Negative charge (D, E)</span>
+              <span><span style={{ backgroundColor: '#C4E8E8', padding: '1px 4px' }}>■</span> Positive charge (H, K, R)</span>
+              <span><span style={{ backgroundColor: '#F8DCC4', padding: '1px 4px' }}>■</span> Backbone change (G, P)</span>
+              <span><span style={{ backgroundColor: '#F8F4C4', padding: '1px 4px' }}>■</span> Cysteine (C)</span>
             </div>
           </div>
 
@@ -268,15 +268,15 @@ function AlignmentViewer({ sequences, alignmentType, referenceId }) {
                     key={seq.sequence_id}
                     style={{
                       fontFamily: 'monospace',
-                      fontSize: '11px',
-                      lineHeight: '1.4',
+                      fontSize: '13px',
+                      lineHeight: '1.5',
                       whiteSpace: 'pre',
                     }}
                   >
                     {/* Row number and ID */}
                     <span style={{
                       display: 'inline-block',
-                      width: '20px',
+                      width: '25px',
                       textAlign: 'right',
                       marginRight: '5px',
                       color: '#666'
@@ -285,7 +285,7 @@ function AlignmentViewer({ sequences, alignmentType, referenceId }) {
                     </span>
                     <span style={{
                       display: 'inline-block',
-                      width: '130px',
+                      width: '135px',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
                     }}>
@@ -295,7 +295,7 @@ function AlignmentViewer({ sequences, alignmentType, referenceId }) {
                     {/* Coverage */}
                     <span style={{
                       display: 'inline-block',
-                      width: '60px',
+                      width: '65px',
                       textAlign: 'right',
                       color: '#666',
                       marginRight: '5px'
