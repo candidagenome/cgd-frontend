@@ -1,82 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import patmatchApi from '../api/patmatchApi';
 import './PatmatchSearchPage.css';
-
-// Dataset display info - organized by organism/assembly
-const DATASET_GROUPS = {
-  dna: {
-    label: 'DNA Datasets',
-    groups: [
-      {
-        label: 'C. albicans Assembly 22',
-        datasets: [
-          { value: 'ca22_chromosomes', label: 'Chromosomes/Contigs', desc: 'Complete chromosome sequences' },
-          { value: 'ca22_orf_genomic', label: 'ORF Genomic DNA', desc: 'ORF sequences including introns' },
-          { value: 'ca22_orf_coding', label: 'ORF Coding DNA', desc: 'Coding sequences (exons only)' },
-          { value: 'ca22_orf_genomic_1kb', label: 'ORF Genomic +/- 1kb', desc: 'ORF with 1kb flanking regions' },
-          { value: 'ca22_intergenic', label: 'Intergenic Regions', desc: 'Sequences between genes' },
-          { value: 'ca22_noncoding', label: 'Non-coding Features', desc: 'ncRNA, tRNA, rRNA, etc.' },
-        ],
-      },
-      {
-        label: 'C. albicans Assembly 21',
-        datasets: [
-          { value: 'ca21_chromosomes', label: 'Chromosomes/Contigs', desc: 'Complete chromosome sequences' },
-          { value: 'ca21_orf_genomic', label: 'ORF Genomic DNA', desc: 'ORF sequences including introns' },
-          { value: 'ca21_orf_coding', label: 'ORF Coding DNA', desc: 'Coding sequences (exons only)' },
-          { value: 'ca21_orf_genomic_1kb', label: 'ORF Genomic +/- 1kb', desc: 'ORF with 1kb flanking regions' },
-          { value: 'ca21_intergenic', label: 'Intergenic Regions', desc: 'Sequences between genes' },
-          { value: 'ca21_noncoding', label: 'Non-coding Features', desc: 'ncRNA, tRNA, rRNA, etc.' },
-        ],
-      },
-      {
-        label: 'C. glabrata',
-        datasets: [
-          { value: 'cg_chromosomes', label: 'Chromosomes/Contigs', desc: 'Complete chromosome sequences' },
-          { value: 'cg_orf_genomic', label: 'ORF Genomic DNA', desc: 'ORF sequences including introns' },
-          { value: 'cg_orf_coding', label: 'ORF Coding DNA', desc: 'Coding sequences (exons only)' },
-        ],
-      },
-      {
-        label: 'All Organisms',
-        datasets: [
-          { value: 'all_chromosomes', label: 'All Chromosomes/Contigs', desc: 'All chromosome sequences' },
-          { value: 'all_orf_genomic', label: 'All ORF Genomic DNA', desc: 'All ORF sequences' },
-          { value: 'all_orf_coding', label: 'All ORF Coding DNA', desc: 'All coding sequences' },
-        ],
-      },
-    ],
-  },
-  protein: {
-    label: 'Protein Datasets',
-    groups: [
-      {
-        label: 'C. albicans Assembly 22',
-        datasets: [
-          { value: 'ca22_orf_protein', label: 'Protein Sequences', desc: 'Translated ORF proteins' },
-        ],
-      },
-      {
-        label: 'C. albicans Assembly 21',
-        datasets: [
-          { value: 'ca21_orf_protein', label: 'Protein Sequences', desc: 'Translated ORF proteins' },
-        ],
-      },
-      {
-        label: 'C. glabrata',
-        datasets: [
-          { value: 'cg_orf_protein', label: 'Protein Sequences', desc: 'Translated ORF proteins' },
-        ],
-      },
-      {
-        label: 'All Organisms',
-        datasets: [
-          { value: 'all_orf_protein', label: 'All Protein Sequences', desc: 'All translated proteins' },
-        ],
-      },
-    ],
-  },
-};
 
 function PatmatchSearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -84,7 +9,7 @@ function PatmatchSearchPage() {
   // Form state
   const [pattern, setPattern] = useState(searchParams.get('pattern') || '');
   const [patternType, setPatternType] = useState(searchParams.get('type') || 'dna');
-  const [dataset, setDataset] = useState(searchParams.get('ds') || 'ca22_chromosomes');
+  const [dataset, setDataset] = useState(searchParams.get('ds') || '');
   const [strand, setStrand] = useState(searchParams.get('strand') || 'both');
   const [maxMismatches, setMaxMismatches] = useState(
     parseInt(searchParams.get('mm'), 10) || 0
@@ -102,15 +27,76 @@ function PatmatchSearchPage() {
 
   // UI state
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [allDatasets, setAllDatasets] = useState([]);
+
+  // Fetch datasets from API on mount
+  useEffect(() => {
+    const fetchDatasets = async () => {
+      try {
+        const config = await patmatchApi.getConfig();
+        setAllDatasets(config.datasets || []);
+
+        // Set default dataset if none selected
+        if (!dataset && config.datasets?.length > 0) {
+          // Find first DNA dataset as default
+          const defaultDs = config.datasets.find((ds) => ds.pattern_type === 'dna');
+          if (defaultDs) {
+            setDataset(defaultDs.name);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch datasets:', err);
+        setError('Failed to load datasets. Please refresh the page.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDatasets();
+  }, [dataset]);
+
+  // Group datasets by organism
+  const datasetGroups = useMemo(() => {
+    const dnaDatasets = allDatasets.filter((ds) => ds.pattern_type === 'dna');
+    const proteinDatasets = allDatasets.filter((ds) => ds.pattern_type === 'protein');
+
+    // Group by organism (extract from display_name)
+    const groupByOrganism = (datasets) => {
+      const groups = {};
+      datasets.forEach((ds) => {
+        // Extract organism from display_name (e.g., "C. albicans SC5314 A22 - Chromosomes/Contigs")
+        const parts = ds.display_name.split(' - ');
+        const organism = parts[0] || 'Other';
+        if (!groups[organism]) {
+          groups[organism] = [];
+        }
+        groups[organism].push(ds);
+      });
+      return Object.entries(groups).map(([label, datasets]) => ({
+        label,
+        datasets,
+      }));
+    };
+
+    return {
+      dna: groupByOrganism(dnaDatasets),
+      protein: groupByOrganism(proteinDatasets),
+    };
+  }, [allDatasets]);
 
   // Update dataset when pattern type changes
   useEffect(() => {
-    if (patternType === 'protein' && !dataset.includes('protein')) {
-      setDataset('ca22_orf_protein');
-    } else if (patternType === 'dna' && dataset.includes('protein')) {
-      setDataset('ca22_chromosomes');
+    if (allDatasets.length === 0) return;
+
+    const currentDs = allDatasets.find((ds) => ds.name === dataset);
+    if (currentDs && currentDs.pattern_type !== patternType) {
+      // Need to switch to a dataset of the correct type
+      const newDs = allDatasets.find((ds) => ds.pattern_type === patternType);
+      if (newDs) {
+        setDataset(newDs.name);
+      }
     }
-  }, [patternType, dataset]);
+  }, [patternType, dataset, allDatasets]);
 
   // Update URL params
   const updateUrlParams = useCallback(() => {
@@ -118,7 +104,7 @@ function PatmatchSearchPage() {
 
     if (pattern) params.set('pattern', pattern);
     params.set('type', patternType);
-    params.set('ds', dataset);
+    if (dataset) params.set('ds', dataset);
     if (patternType === 'dna') params.set('strand', strand);
     if (maxMismatches > 0) params.set('mm', maxMismatches.toString());
     if (maxInsertions > 0) params.set('ins', maxInsertions.toString());
@@ -167,6 +153,11 @@ function PatmatchSearchPage() {
       return;
     }
 
+    if (!dataset) {
+      setError('Please select a dataset');
+      return;
+    }
+
     setError(null);
 
     // Open results in new tab
@@ -176,11 +167,26 @@ function PatmatchSearchPage() {
 
   // Get available dataset groups for current pattern type
   const availableGroups = patternType === 'protein'
-    ? DATASET_GROUPS.protein.groups
-    : DATASET_GROUPS.dna.groups;
+    ? datasetGroups.protein
+    : datasetGroups.dna;
 
-  // Get flat list of all available datasets for description lookup
-  const allAvailableDatasets = availableGroups.flatMap((g) => g.datasets);
+  // Get description for current dataset
+  const currentDatasetInfo = allDatasets.find((ds) => ds.name === dataset);
+
+  if (loading) {
+    return (
+      <div className="patmatch-page">
+        <div className="patmatch-content">
+          <h1>Pattern Match</h1>
+          <hr />
+          <div className="loading-state">
+            <span className="loading-spinner"></span>
+            Loading datasets...
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="patmatch-page">
@@ -253,18 +259,27 @@ function PatmatchSearchPage() {
                 value={dataset}
                 onChange={(e) => setDataset(e.target.value)}
               >
-                {availableGroups.map((group) => (
-                  <optgroup key={group.label} label={group.label}>
-                    {group.datasets.map((ds) => (
-                      <option key={ds.value} value={ds.value}>
-                        {ds.label}
-                      </option>
-                    ))}
-                  </optgroup>
-                ))}
+                {availableGroups.length === 0 ? (
+                  <option value="">No datasets available</option>
+                ) : (
+                  availableGroups.map((group) => (
+                    <optgroup key={group.label} label={group.label}>
+                      {group.datasets.map((ds) => {
+                        // Extract just the type part from display_name
+                        const parts = ds.display_name.split(' - ');
+                        const typeLabel = parts[1] || ds.display_name;
+                        return (
+                          <option key={ds.name} value={ds.name}>
+                            {typeLabel}
+                          </option>
+                        );
+                      })}
+                    </optgroup>
+                  ))
+                )}
               </select>
               <p className="help-text">
-                {allAvailableDatasets.find((ds) => ds.value === dataset)?.desc}
+                {currentDatasetInfo?.description || 'Select a sequence dataset to search'}
               </p>
             </div>
           </div>
@@ -380,7 +395,7 @@ function PatmatchSearchPage() {
             <button
               type="submit"
               className="submit-button"
-              disabled={!pattern.trim()}
+              disabled={!pattern.trim() || !dataset}
             >
               Search
             </button>
