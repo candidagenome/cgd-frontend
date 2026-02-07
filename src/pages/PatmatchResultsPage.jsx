@@ -11,6 +11,8 @@ function PatmatchResultsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [downloading, setDownloading] = useState(false);
+  const [selectedHit, setSelectedHit] = useState(null);
 
   // Extract search parameters from URL
   const pattern = searchParams.get('pattern') || '';
@@ -51,7 +53,18 @@ function PatmatchResultsPage() {
           setError(response.error || 'Pattern match search failed');
         }
       } catch (err) {
-        setError(err.response?.data?.detail || err.message || 'Search failed');
+        // Handle Pydantic validation errors (array of error objects)
+        const detail = err.response?.data?.detail;
+        let errorMsg = 'Search failed';
+        if (Array.isArray(detail)) {
+          // Extract messages from validation errors
+          errorMsg = detail.map((e) => e.msg || e.message || JSON.stringify(e)).join('; ');
+        } else if (typeof detail === 'string') {
+          errorMsg = detail;
+        } else if (err.message) {
+          errorMsg = err.message;
+        }
+        setError(errorMsg);
       } finally {
         setLoading(false);
       }
@@ -83,6 +96,70 @@ function PatmatchResultsPage() {
     if (maxInsertions > 0) params.set('ins', maxInsertions.toString());
     if (maxDeletions > 0) params.set('del', maxDeletions.toString());
     return `/patmatch?${params.toString()}`;
+  };
+
+  // Handle download - request all results up to 50000
+  const handleDownload = async () => {
+    setDownloading(true);
+    try {
+      // Request the actual total (capped at 50000 by API)
+      const downloadMax = Math.min(results?.total_hits || 10000, 50000);
+      await patmatchApi.downloadResults({
+        pattern,
+        pattern_type: patternType,
+        dataset,
+        strand,
+        max_mismatches: maxMismatches,
+        max_insertions: maxInsertions,
+        max_deletions: maxDeletions,
+        max_results: downloadMax,
+      });
+    } catch (err) {
+      console.error('Download failed:', err);
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  // Handle sequence click to show modal
+  const handleSequenceClick = (hit) => {
+    setSelectedHit(hit);
+  };
+
+  // Close modal
+  const closeModal = () => {
+    setSelectedHit(null);
+  };
+
+  // Render sequence modal
+  const renderSequenceModal = () => {
+    if (!selectedHit) return null;
+
+    return (
+      <div className="sequence-modal-overlay" onClick={closeModal}>
+        <div className="sequence-modal" onClick={(e) => e.stopPropagation()}>
+          <div className="sequence-modal-header">
+            <h3>Sequence Match Details</h3>
+            <button className="sequence-modal-close" onClick={closeModal}>×</button>
+          </div>
+          <div className="sequence-modal-content">
+            <div className="sequence-modal-info">
+              <span><strong>Sequence:</strong> {selectedHit.sequence_name}</span>
+              <span><strong>Position:</strong> {selectedHit.match_start.toLocaleString()}-{selectedHit.match_end.toLocaleString()}</span>
+              <span><strong>Strand:</strong> {selectedHit.strand}</span>
+              {selectedHit.sequence_description && selectedHit.sequence_description !== selectedHit.sequence_name && (
+                <span><strong>Description:</strong> {selectedHit.sequence_description}</span>
+              )}
+            </div>
+            <div className="sequence-modal-sequence">
+              <span className="seq-before">{selectedHit.context_before}</span>
+              <span className="seq-match">{selectedHit.matched_sequence}</span>
+              <span className="seq-after">{selectedHit.context_after}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   // Render pagination controls
@@ -175,14 +252,30 @@ function PatmatchResultsPage() {
           </div>
           <div className="summary-row">
             <span>
-              <strong>Found {results.total_hits} match{results.total_hits !== 1 ? 'es' : ''}</strong>
+              <strong>Found {results.total_hits.toLocaleString()} match{results.total_hits !== 1 ? 'es' : ''}</strong>
+              {results.hits.length < results.total_hits && (
+                <span className="truncated-notice"> (showing first {results.hits.length})</span>
+              )}
               {' '}in {results.sequences_searched.toLocaleString()} sequences
               ({results.total_residues_searched.toLocaleString()} residues)
             </span>
           </div>
-          <Link to={buildNewSearchUrl()} className="new-search-link">
-            ← New Search
-          </Link>
+          <div className="action-links">
+            <Link to={buildNewSearchUrl()} className="new-search-link">
+              ← New Search
+            </Link>
+            {results.total_hits > 0 && (
+              <button
+                className="download-btn"
+                onClick={handleDownload}
+                disabled={downloading}
+              >
+                {downloading
+                  ? 'Downloading...'
+                  : `Download All ${Math.min(results.total_hits, 50000).toLocaleString()} Results (TSV)`}
+              </button>
+            )}
+          </div>
         </div>
 
         {results.total_hits === 0 ? (
@@ -244,10 +337,18 @@ function PatmatchResultsPage() {
                     </td>
                     <td className="strand-cell">{hit.strand}</td>
                     <td className="match-cell">
-                      <code>{hit.matched_sequence}</code>
+                      <code
+                        onClick={() => handleSequenceClick(hit)}
+                        title="Click to view full sequence"
+                      >
+                        {hit.matched_sequence}
+                      </code>
                     </td>
                     <td className="context-cell">
-                      <code>
+                      <code
+                        onClick={() => handleSequenceClick(hit)}
+                        title="Click to view full sequence"
+                      >
                         <span className="context-before">{hit.context_before}</span>
                         <span className="context-match">{hit.matched_sequence}</span>
                         <span className="context-after">{hit.context_after}</span>
@@ -261,6 +362,8 @@ function PatmatchResultsPage() {
             {renderPagination()}
           </>
         )}
+
+        {renderSequenceModal()}
       </div>
     </div>
   );

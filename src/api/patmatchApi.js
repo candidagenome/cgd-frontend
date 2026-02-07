@@ -5,6 +5,39 @@ import api from './config';
 
 const patmatchApi = {
   /**
+   * Download pattern match results as TSV
+   *
+   * @param {Object} params - Same as search params
+   */
+  downloadResults: async (params) => {
+    const response = await api.post('/api/patmatch/download', params, {
+      responseType: 'blob',
+    });
+
+    // Create download link
+    const blob = new Blob([response.data], { type: 'text/tab-separated-values' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+
+    // Get filename from Content-Disposition header or use default
+    const contentDisposition = response.headers['content-disposition'];
+    let filename = 'patmatch_results.tsv';
+    if (contentDisposition) {
+      const match = contentDisposition.match(/filename=([^;]+)/);
+      if (match) {
+        filename = match[1].replace(/"/g, '');
+      }
+    }
+
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  },
+
+  /**
    * Get pattern match configuration (datasets, limits)
    */
   getConfig: async () => {

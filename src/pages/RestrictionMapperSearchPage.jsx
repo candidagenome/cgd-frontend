@@ -3,18 +3,6 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import restrictionMapperApi from '../api/restrictionMapperApi';
 import './RestrictionMapperSearchPage.css';
 
-// Enzyme filter options
-const ENZYME_FILTERS = [
-  { value: 'all', label: 'All Enzymes', desc: 'Show all cutting enzymes' },
-  { value: '5_overhang', label: "5' Overhang", desc: "Enzymes producing 5' overhangs (sticky ends)" },
-  { value: '3_overhang', label: "3' Overhang", desc: "Enzymes producing 3' overhangs (sticky ends)" },
-  { value: 'blunt', label: 'Blunt End', desc: 'Enzymes producing blunt ends' },
-  { value: 'cut_once', label: 'Cut Once', desc: 'Enzymes that cut exactly once' },
-  { value: 'cut_twice', label: 'Cut Twice', desc: 'Enzymes that cut exactly twice' },
-  { value: 'six_base', label: 'Six-Base Cutters', desc: 'Enzymes with 6-base recognition sequences' },
-  { value: 'no_cut', label: 'Non-Cutting', desc: 'Show enzymes that do not cut' },
-];
-
 function RestrictionMapperSearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -28,8 +16,10 @@ function RestrictionMapperSearchPage() {
 
   // UI state
   const [loading, setLoading] = useState(false);
+  const [configLoading, setConfigLoading] = useState(true);
   const [error, setError] = useState(null);
   const [totalEnzymes, setTotalEnzymes] = useState(null);
+  const [enzymeFilters, setEnzymeFilters] = useState([]);
 
   // Fetch config on mount
   useEffect(() => {
@@ -37,8 +27,22 @@ function RestrictionMapperSearchPage() {
       try {
         const config = await restrictionMapperApi.getConfig();
         setTotalEnzymes(config.total_enzymes);
+        setEnzymeFilters(config.enzyme_filters || []);
       } catch (err) {
         console.error('Failed to fetch config:', err);
+        // Use default filters if API fails
+        setEnzymeFilters([
+          { value: 'all', display_name: 'All Enzymes', description: 'Show all cutting enzymes' },
+          { value: '5_overhang', display_name: "5' Overhang", description: "Enzymes producing 5' overhangs (sticky ends)" },
+          { value: '3_overhang', display_name: "3' Overhang", description: "Enzymes producing 3' overhangs (sticky ends)" },
+          { value: 'blunt', display_name: 'Blunt End', description: 'Enzymes producing blunt ends' },
+          { value: 'cut_once', display_name: 'Cut Once', description: 'Enzymes that cut exactly once' },
+          { value: 'cut_twice', display_name: 'Cut Twice', description: 'Enzymes that cut exactly twice' },
+          { value: 'six_base', display_name: 'Six-Base Cutters', description: 'Enzymes with 6-base recognition sequences' },
+          { value: 'no_cut', display_name: 'Non-Cutting', description: 'Show enzymes that do not cut' },
+        ]);
+      } finally {
+        setConfigLoading(false);
       }
     };
     fetchConfig();
@@ -119,7 +123,23 @@ function RestrictionMapperSearchPage() {
   };
 
   // Get current filter description
-  const currentFilterDesc = ENZYME_FILTERS.find((f) => f.value === enzymeFilter)?.desc;
+  const currentFilterInfo = enzymeFilters.find((f) => f.value === enzymeFilter);
+  const currentFilterDesc = currentFilterInfo?.description;
+
+  if (configLoading) {
+    return (
+      <div className="restriction-mapper-page">
+        <div className="restriction-mapper-content">
+          <h1>Restriction Mapper</h1>
+          <hr />
+          <div className="loading-state">
+            <span className="loading-spinner"></span>
+            Loading configuration...
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="restriction-mapper-page">
@@ -205,9 +225,9 @@ function RestrictionMapperSearchPage() {
                 value={enzymeFilter}
                 onChange={(e) => setEnzymeFilter(e.target.value)}
               >
-                {ENZYME_FILTERS.map((filter) => (
+                {enzymeFilters.map((filter) => (
                   <option key={filter.value} value={filter.value}>
-                    {filter.label}
+                    {filter.display_name}
                   </option>
                 ))}
               </select>
