@@ -10,6 +10,8 @@ const ENZYME_TYPE_COLORS = {
   'blunt': { bg: '#e8f5e9', border: '#388e3c', label: 'Blunt End' },
 };
 
+const ITEMS_PER_PAGE_OPTIONS = [25, 50, 100];
+
 function RestrictionMapperResultsPage() {
   const navigate = useNavigate();
   const [results, setResults] = useState(null);
@@ -19,6 +21,8 @@ function RestrictionMapperResultsPage() {
   const [sortOrder, setSortOrder] = useState('asc');
   const [showNonCutting, setShowNonCutting] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(25);
 
   // Load results from sessionStorage
   useEffect(() => {
@@ -63,6 +67,18 @@ function RestrictionMapperResultsPage() {
     return sorted;
   }, [results?.cutting_enzymes, sortBy, sortOrder]);
 
+  // Paginated enzymes
+  const paginatedEnzymes = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return sortedEnzymes.slice(startIndex, endIndex);
+  }, [sortedEnzymes, currentPage, itemsPerPage]);
+
+  // Total pages
+  const totalPages = useMemo(() => {
+    return Math.ceil(sortedEnzymes.length / itemsPerPage);
+  }, [sortedEnzymes.length, itemsPerPage]);
+
   // Handle sort change
   const handleSort = (field) => {
     if (sortBy === field) {
@@ -71,6 +87,19 @@ function RestrictionMapperResultsPage() {
       setSortBy(field);
       setSortOrder('asc');
     }
+    setCurrentPage(1); // Reset to first page on sort change
+  };
+
+  // Handle page change
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    setSelectedEnzyme(null); // Close any open details
+  };
+
+  // Handle items per page change
+  const handleItemsPerPageChange = (e) => {
+    setItemsPerPage(Number(e.target.value));
+    setCurrentPage(1);
   };
 
   // Get sort indicator
@@ -274,7 +303,7 @@ function RestrictionMapperResultsPage() {
                 </tr>
               </thead>
               <tbody>
-                {sortedEnzymes.map((enzyme) => {
+                {paginatedEnzymes.map((enzyme) => {
                   const typeColors = ENZYME_TYPE_COLORS[enzyme.enzyme_type] || {};
                   const isSelected = selectedEnzyme?.enzyme_name === enzyme.enzyme_name;
 
@@ -346,6 +375,81 @@ function RestrictionMapperResultsPage() {
                 })}
               </tbody>
             </table>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="pagination-controls">
+                <div className="pagination-info">
+                  Showing {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, sortedEnzymes.length)} of {sortedEnzymes.length} enzymes
+                </div>
+                <div className="pagination-buttons">
+                  <button
+                    className="pagination-btn"
+                    onClick={() => handlePageChange(1)}
+                    disabled={currentPage === 1}
+                  >
+                    First
+                  </button>
+                  <button
+                    className="pagination-btn"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </button>
+                  <span className="pagination-pages">
+                    {/* Show page numbers */}
+                    {Array.from({ length: totalPages }, (_, i) => i + 1)
+                      .filter(page => {
+                        // Show first, last, and pages around current
+                        return page === 1 ||
+                          page === totalPages ||
+                          Math.abs(page - currentPage) <= 2;
+                      })
+                      .reduce((acc, page, idx, arr) => {
+                        // Add ellipsis between non-consecutive pages
+                        if (idx > 0 && page - arr[idx - 1] > 1) {
+                          acc.push(<span key={`ellipsis-${page}`} className="pagination-ellipsis">...</span>);
+                        }
+                        acc.push(
+                          <button
+                            key={page}
+                            className={`pagination-btn page-number ${currentPage === page ? 'active' : ''}`}
+                            onClick={() => handlePageChange(page)}
+                          >
+                            {page}
+                          </button>
+                        );
+                        return acc;
+                      }, [])}
+                  </span>
+                  <button
+                    className="pagination-btn"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                  </button>
+                  <button
+                    className="pagination-btn"
+                    onClick={() => handlePageChange(totalPages)}
+                    disabled={currentPage === totalPages}
+                  >
+                    Last
+                  </button>
+                </div>
+                <div className="pagination-per-page">
+                  <label>
+                    Per page:
+                    <select value={itemsPerPage} onChange={handleItemsPerPageChange}>
+                      {ITEMS_PER_PAGE_OPTIONS.map(option => (
+                        <option key={option} value={option}>{option}</option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
+              </div>
+            )}
           </div>
         ) : (
           <div className="no-results">
