@@ -111,14 +111,14 @@
 }
 
 /* label/value */
-.summary-item .label {
+.blast-results-page .summary-item .label {
   color: #333;
   font-size: 0.95em;
-  font-weight: 600;
+  font-weight: 700;
 }
 
-.summary-item .value {
-  font-weight: normal;
+.blast-results-page .summary-item .value {
+  font-weight: 400;
   color: #555;
   word-break: break-word;
 }
