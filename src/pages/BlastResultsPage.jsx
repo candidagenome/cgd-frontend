@@ -309,14 +309,6 @@ function BlastResultsPage() {
                 <h2>
                   List of {results.program.toUpperCase()} Hits
                 </h2>
-                <div className="expand-controls">
-                  <button onClick={expandAll} className="expand-btn">
-                    Expand
-                  </button>
-                  <button onClick={collapseAll} className="expand-btn">
-                    Collapse
-                  </button>
-                </div>
               </div>
 
               <p className="hits-instruction">
