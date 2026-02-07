@@ -396,6 +396,16 @@ function BlastResultsPage() {
                             )}
                           </div>
                           <div className="hit-actions">
+                            {hit.locus_link && (
+                              <Link to={hit.locus_link} className="locus-action-link">
+                                Locus Summary
+                              </Link>
+                            )}
+                            {hit.literature_link && (
+                              <Link to={hit.literature_link} className="locus-action-link">
+                                Literature
+                              </Link>
+                            )}
                             {hit.jbrowse_url && (
                               <a
                                 href={hit.jbrowse_url}
