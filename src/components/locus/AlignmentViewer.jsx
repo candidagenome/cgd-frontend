@@ -126,12 +126,12 @@ function PositionRuler({ start, end, blockSize }) {
   }
 
   return (
-    <div style={{ fontFamily: 'monospace', fontSize: '13px', color: '#666', display: 'flex' }}>
+    <div style={{ fontFamily: 'monospace', fontSize: '13px', color: '#666', display: 'flex', flexWrap: 'nowrap' }}>
       <span style={{ width: '25px', marginRight: '5px', flexShrink: 0 }}></span>
       <span style={{ width: '135px', flexShrink: 0 }}></span>
       <span style={{ width: '65px', marginRight: '5px', flexShrink: 0 }}></span>
       <span style={{ width: '55px', marginRight: '10px', flexShrink: 0 }}></span>
-      <span>{start} [{ruler}] {Math.min(start + blockSize - 1, end)}</span>
+      <span style={{ whiteSpace: 'pre' }}>{start} [{ruler}] {Math.min(start + blockSize - 1, end)}</span>
     </div>
   );
 }
@@ -287,6 +287,7 @@ function AlignmentViewer({ sequences, alignmentType, referenceId }) {
                       whiteSpace: 'pre',
                       display: 'flex',
                       alignItems: 'baseline',
+                      flexWrap: 'nowrap',
                     }}
                   >
                     {/* Row number and ID */}
