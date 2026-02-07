@@ -635,19 +635,20 @@
   text-decoration: none;
 }
 
-.jbrowse-link {
+.blast-results-page .jbrowse-link {
   display: inline-block;
   padding: 5px 12px;
   background-color: #1976d2;
-  color: white;
+  color: white !important;
   border-radius: 4px;
   font-size: 0.85em;
   text-decoration: none;
   transition: background-color 0.2s;
 }
 
-.jbrowse-link:hover {
+.blast-results-page .jbrowse-link:hover {
   background-color: #1565c0;
+  color: white !important;
   text-decoration: none;
 }
 
