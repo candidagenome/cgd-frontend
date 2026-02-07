@@ -19,10 +19,17 @@ const AA_COLORS = {
 };
 
 const BLOCK_SIZE = 50;
-const IDENTITY_THRESHOLD = 0.8; // 80% identity for coloring
+const IDENTITY_THRESHOLD = 0.8;
 
 // Prefixes for C. albicans SC5314 sequences (should be reference)
 const CALBICANS_PREFIXES = ['C1_', 'orf19.', 'Ca21chr', 'C1-'];
+
+// Column widths (in characters)
+const COL_NUM = 2;      // Row number
+const COL_ID = 13;      // Sequence ID
+const COL_COV = 7;      // Coverage
+const COL_PID = 7;      // Percent identity
+const COL_GAP = 5;      // Gap before sequence
 
 /**
  * Calculate coverage and percent identity relative to reference
@@ -54,7 +61,7 @@ function calculateStats(refSeq, targetSeq) {
 }
 
 /**
- * Calculate column conservation (identity at each position)
+ * Calculate column conservation
  */
 function calculateColumnConservation(sequences, refIndex) {
   if (!sequences.length) return [];
@@ -85,7 +92,46 @@ function calculateColumnConservation(sequences, refIndex) {
 }
 
 /**
- * Render a single amino acid with optional coloring
+ * Pad string to width (left or right aligned)
+ */
+function pad(str, width, alignRight = false) {
+  const s = String(str);
+  if (s.length >= width) return s.substring(0, width);
+  const padding = ' '.repeat(width - s.length);
+  return alignRight ? padding + s : s + padding;
+}
+
+/**
+ * Build position ruler string
+ * Format: "  1 [        .         .         .         .         : 50"
+ */
+function buildRuler(start, end, totalLength) {
+  const blockLen = end - start;
+  let ruler = '';
+
+  for (let i = 0; i < blockLen; i++) {
+    const pos = start + i + 1; // 1-based position
+    if (pos === totalLength) {
+      ruler += ']';
+    } else if (pos % 50 === 0) {
+      ruler += ':';
+    } else if (pos % 10 === 0) {
+      ruler += '.';
+    } else {
+      ruler += ' ';
+    }
+  }
+
+  // Start position with opening bracket
+  const startStr = pad(String(start + 1), 3, true) + ' [';
+  // End position
+  const endStr = ' ' + (end);
+
+  return startStr + ruler + endStr;
+}
+
+/**
+ * Render amino acid with optional coloring
  */
 function AminoAcid({ aa, shouldColor }) {
   if (aa === '-') {
@@ -104,39 +150,6 @@ function AminoAcid({ aa, shouldColor }) {
 }
 
 /**
- * Render position ruler
- */
-function PositionRuler({ start, end, blockSize }) {
-  const positions = [];
-  for (let i = start; i <= end; i += 10) {
-    positions.push(i);
-  }
-
-  // Create ruler string
-  let ruler = '';
-  for (let i = 0; i < blockSize && (start + i) <= end; i++) {
-    const pos = start + i;
-    if (pos % 50 === 0) {
-      ruler += ':';
-    } else if (pos % 10 === 0) {
-      ruler += '.';
-    } else {
-      ruler += ' ';
-    }
-  }
-
-  return (
-    <div style={{ fontFamily: 'monospace', fontSize: '13px', color: '#666', display: 'flex', flexWrap: 'nowrap' }}>
-      <span style={{ width: '25px', marginRight: '5px', flexShrink: 0 }}></span>
-      <span style={{ width: '135px', flexShrink: 0 }}></span>
-      <span style={{ width: '65px', marginRight: '5px', flexShrink: 0 }}></span>
-      <span style={{ width: '55px', marginRight: '10px', flexShrink: 0 }}></span>
-      <span style={{ whiteSpace: 'pre' }}>{start} [{ruler}] {Math.min(start + blockSize - 1, end)}</span>
-    </div>
-  );
-}
-
-/**
  * Main alignment viewer component
  */
 function AlignmentViewer({ sequences, alignmentType, referenceId }) {
@@ -144,13 +157,11 @@ function AlignmentViewer({ sequences, alignmentType, referenceId }) {
 
   // Find reference sequence index - prefer C. albicans SC5314 sequence
   const actualRefIndex = useMemo(() => {
-    // If explicit referenceId provided, use it
     if (referenceId) {
       const idx = sequences.findIndex(s => s.sequence_id === referenceId);
       if (idx >= 0) return idx;
     }
 
-    // Look for C. albicans SC5314 sequence by prefix
     for (let i = 0; i < sequences.length; i++) {
       const seqId = sequences[i].sequence_id;
       if (CALBICANS_PREFIXES.some(prefix => seqId.startsWith(prefix))) {
@@ -158,7 +169,6 @@ function AlignmentViewer({ sequences, alignmentType, referenceId }) {
       }
     }
 
-    // Fallback to first sequence
     return 0;
   }, [sequences, referenceId]);
 
@@ -188,7 +198,6 @@ function AlignmentViewer({ sequences, alignmentType, referenceId }) {
       stats: sequenceStats[idx] || { coverage: 0, identity: 0 },
     }));
 
-    // Put reference first, then sort by identity
     return withStats.sort((a, b) => {
       if (a.originalIndex === actualRefIndex) return -1;
       if (b.originalIndex === actualRefIndex) return 1;
@@ -212,6 +221,9 @@ function AlignmentViewer({ sequences, alignmentType, referenceId }) {
   }
 
   const title = alignmentType === 'protein' ? 'Protein Sequence Alignment' : 'Coding Sequence Alignment';
+
+  // Header prefix for ruler line
+  const headerPrefix = ' '.repeat(COL_NUM + 1) + pad('cov', COL_ID, true) + pad('pid', COL_COV, true) + ' '.repeat(COL_PID);
 
   return (
     <div style={{ marginBottom: '20px' }}>
@@ -248,108 +260,72 @@ function AlignmentViewer({ sequences, alignmentType, referenceId }) {
           }}
         >
           {/* Legend */}
-          <div style={{ marginBottom: '15px', fontSize: '12px' }}>
+          <div style={{ marginBottom: '15px', fontSize: '13px' }}>
             <div style={{ marginBottom: '5px' }}>
               <strong>Reference sequence (1):</strong> {sortedSequences[0]?.sequence_id}
             </div>
             <div style={{ marginBottom: '5px', color: '#666' }}>
-              Identities normalized by aligned length. Colored by: identity ≥ 80%
+              Identities normalized by aligned length.
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', fontSize: '12px' }}>
-              <span><span style={{ backgroundColor: '#B8D4E8', padding: '1px 4px' }}>■</span> Hydrophobic (A, I, L, M, V)</span>
-              <span><span style={{ backgroundColor: '#D4C4E8', padding: '1px 4px' }}>■</span> Aromatic (F, W, Y)</span>
-              <span><span style={{ backgroundColor: '#C8E8C8', padding: '1px 4px' }}>■</span> Polar (N, Q, S, T)</span>
-              <span><span style={{ backgroundColor: '#F8C4C4', padding: '1px 4px' }}>■</span> Negative charge (D, E)</span>
-              <span><span style={{ backgroundColor: '#C4E8E8', padding: '1px 4px' }}>■</span> Positive charge (H, K, R)</span>
-              <span><span style={{ backgroundColor: '#F8DCC4', padding: '1px 4px' }}>■</span> Backbone change (G, P)</span>
-              <span><span style={{ backgroundColor: '#F8F4C4', padding: '1px 4px' }}>■</span> Cysteine (C)</span>
+            <div style={{ marginBottom: '5px', color: '#666' }}>
+              Colored by: identity &gt;= 80%
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', fontSize: '12px', marginLeft: '20px' }}>
+              <span><span style={{ backgroundColor: '#B8D4E8', padding: '0 4px' }}>&nbsp;</span> Hydrophobic (A, I, L, M, V)</span>
+              <span><span style={{ backgroundColor: '#D4C4E8', padding: '0 4px' }}>&nbsp;</span> Aromatic (F, W, Y)</span>
+              <span><span style={{ backgroundColor: '#C8E8C8', padding: '0 4px' }}>&nbsp;</span> Polar (N, Q, S, T)</span>
+              <span><span style={{ backgroundColor: '#F8C4C4', padding: '0 4px' }}>&nbsp;</span> Negative charge (D, E)</span>
+              <span><span style={{ backgroundColor: '#C4E8E8', padding: '0 4px' }}>&nbsp;</span> Positive charge (H, K, R)</span>
+              <span><span style={{ backgroundColor: '#F8DCC4', padding: '0 4px' }}>&nbsp;</span> Backbone change (G, P)</span>
+              <span><span style={{ backgroundColor: '#F8F4C4', padding: '0 4px' }}>&nbsp;</span> Cysteine (C)</span>
             </div>
           </div>
 
           {/* Alignment blocks */}
-          {blocks.map(({ start, end, blockIdx }) => (
-            <div key={blockIdx} style={{ marginBottom: '20px' }}>
-              {/* Position ruler */}
-              <PositionRuler start={start + 1} end={alignmentLength} blockSize={end - start} />
+          <div style={{ fontFamily: 'monospace', fontSize: '13px', lineHeight: '1.4' }}>
+            {blocks.map(({ start, end, blockIdx }) => (
+              <div key={blockIdx} style={{ marginBottom: '15px' }}>
+                {/* Position ruler */}
+                <div style={{ color: '#666', whiteSpace: 'pre' }}>
+                  {headerPrefix}{buildRuler(start, end, alignmentLength)}
+                </div>
 
-              {/* Sequences */}
-              {sortedSequences.map((seq, seqIdx) => {
-                const seqSlice = seq.sequence.slice(start, end);
-                const isRef = seqIdx === 0;
+                {/* Sequences */}
+                {sortedSequences.map((seq, seqIdx) => {
+                  const seqSlice = seq.sequence.slice(start, end);
+                  const rowNum = pad(String(seqIdx + 1), COL_NUM, true);
+                  const seqId = pad(seq.sequence_id, COL_ID);
+                  const cov = pad(seq.stats.coverage.toFixed(1) + '%', COL_COV, true);
+                  const pid = pad(seq.stats.identity.toFixed(1) + '%', COL_PID, true);
+                  const gap = ' '.repeat(COL_GAP);
 
-                return (
-                  <div
-                    key={seq.sequence_id}
-                    style={{
-                      fontFamily: 'monospace',
-                      fontSize: '13px',
-                      lineHeight: '1.5',
-                      whiteSpace: 'pre',
-                      display: 'flex',
-                      alignItems: 'baseline',
-                      flexWrap: 'nowrap',
-                    }}
-                  >
-                    {/* Row number and ID */}
-                    <span style={{
-                      width: '25px',
-                      textAlign: 'right',
-                      marginRight: '5px',
-                      color: '#666',
-                      flexShrink: 0,
-                    }}>
-                      {seqIdx + 1}
-                    </span>
-                    <span style={{
-                      width: '135px',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      flexShrink: 0,
-                    }}>
-                      {seq.sequence_id}
-                    </span>
-
-                    {/* Coverage */}
-                    <span style={{
-                      width: '65px',
-                      textAlign: 'right',
-                      color: '#666',
-                      marginRight: '5px',
-                      flexShrink: 0,
-                    }}>
-                      {seq.stats.coverage.toFixed(1)}%
-                    </span>
-
-                    {/* Identity */}
-                    <span style={{
-                      width: '55px',
-                      textAlign: 'right',
-                      color: '#666',
-                      marginRight: '10px',
-                      flexShrink: 0,
-                    }}>
-                      {seq.stats.identity.toFixed(1)}%
-                    </span>
-
-                    {/* Sequence with coloring */}
-                    <span>
-                      {seqSlice.split('').map((aa, aaIdx) => {
-                        const globalPos = start + aaIdx;
-                        const shouldColor = conservation[globalPos] >= IDENTITY_THRESHOLD;
-                        return (
-                          <AminoAcid
-                            key={aaIdx}
-                            aa={aa}
-                            shouldColor={shouldColor && alignmentType === 'protein'}
-                          />
-                        );
-                      })}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          ))}
+                  return (
+                    <div key={seq.sequence_id} style={{ whiteSpace: 'pre' }}>
+                      <span style={{ color: '#666' }}>{rowNum}</span>
+                      <span> </span>
+                      <span>{seqId}</span>
+                      <span style={{ color: '#666' }}>{cov}</span>
+                      <span style={{ color: '#666' }}>{pid}</span>
+                      <span>{gap}</span>
+                      <span>
+                        {seqSlice.split('').map((aa, aaIdx) => {
+                          const globalPos = start + aaIdx;
+                          const shouldColor = conservation[globalPos] >= IDENTITY_THRESHOLD;
+                          return (
+                            <AminoAcid
+                              key={aaIdx}
+                              aa={aa}
+                              shouldColor={shouldColor && alignmentType === 'protein'}
+                            />
+                          );
+                        })}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
 
           {/* Summary */}
           <div style={{
