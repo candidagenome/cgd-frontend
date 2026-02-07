@@ -1,125 +1,196 @@
-import React, { useEffect, useRef, useState, useId } from 'react';
-import { phylotree } from 'phylotree';
+import React, { useState, useMemo } from 'react';
+import Tree from 'react-d3-tree';
 
 /**
- * Phylogenetic tree visualization component using phylotree.js
+ * Parse Newick format string into hierarchical tree structure
+ * for react-d3-tree
+ */
+function parseNewick(newickStr) {
+  let idx = 0;
+  const str = newickStr.trim();
+
+  function parseNode() {
+    const node = { name: '', children: [], branchLength: 0 };
+
+    if (str[idx] === '(') {
+      // Internal node with children
+      idx++; // skip '('
+      node.children = [];
+
+      // Parse first child
+      node.children.push(parseNode());
+
+      // Parse remaining children
+      while (str[idx] === ',') {
+        idx++; // skip ','
+        node.children.push(parseNode());
+      }
+
+      if (str[idx] === ')') {
+        idx++; // skip ')'
+      }
+    }
+
+    // Parse node name and branch length
+    let nameAndLength = '';
+    while (idx < str.length && str[idx] !== ',' && str[idx] !== ')' && str[idx] !== ';') {
+      nameAndLength += str[idx];
+      idx++;
+    }
+
+    // Split name and branch length
+    const colonIdx = nameAndLength.indexOf(':');
+    if (colonIdx !== -1) {
+      node.name = nameAndLength.substring(0, colonIdx);
+      node.branchLength = parseFloat(nameAndLength.substring(colonIdx + 1)) || 0;
+    } else {
+      node.name = nameAndLength;
+    }
+
+    // Clean up name
+    node.name = node.name.trim();
+
+    // If no children, it's a leaf
+    if (node.children && node.children.length === 0) {
+      delete node.children;
+    }
+
+    return node;
+  }
+
+  try {
+    const tree = parseNode();
+    return tree;
+  } catch (e) {
+    console.error('Error parsing Newick:', e);
+    return null;
+  }
+}
+
+/**
+ * Custom node renderer for the tree
+ */
+const renderCustomNode = ({ nodeDatum }) => {
+  const isLeaf = !nodeDatum.children;
+
+  return (
+    <g>
+      <circle
+        r={isLeaf ? 4 : 3}
+        fill={isLeaf ? "#2e7d32" : "#666"}
+      />
+      {nodeDatum.name && (
+        <text
+          x={isLeaf ? 8 : -8}
+          y={4}
+          textAnchor={isLeaf ? "start" : "end"}
+          style={{
+            fontSize: '11px',
+            fontFamily: 'monospace',
+            fill: '#333',
+          }}
+        >
+          {nodeDatum.name}
+        </text>
+      )}
+    </g>
+  );
+};
+
+/**
+ * Phylogenetic tree visualization component
  */
 function PhylogeneticTreeViewer({ newickTree, leafCount }) {
-  const containerId = useId().replace(/:/g, '_');
-  const containerRef = useRef(null);
-  const [error, setError] = useState(null);
   const [showRaw, setShowRaw] = useState(false);
-  const [rendered, setRendered] = useState(false);
 
-  useEffect(() => {
-    if (!newickTree || !containerRef.current) return;
+  // Parse the Newick tree into hierarchical format
+  const treeData = useMemo(() => {
+    if (!newickTree) return null;
+    const parsed = parseNewick(newickTree);
+    return parsed;
+  }, [newickTree]);
 
-    // Clear previous content
-    containerRef.current.innerHTML = '';
-    setError(null);
-    setRendered(false);
-
-    try {
-      // Parse the tree
-      const tree = new phylotree(newickTree);
-
-      // Calculate dimensions based on leaf count
-      const numLeaves = leafCount || tree.getTips().length;
-      const height = Math.max(300, numLeaves * 25);
-      const width = Math.min(800, containerRef.current.clientWidth || 700);
-
-      // Render the tree using CSS selector
-      tree.render({
-        container: `#${containerId}`,
-        width: width,
-        height: height,
-        'left-offset': 10,
-        'show-scale': true,
-        'align-tips': true,
-        'selectable': false,
-        'collapsible': false,
-        'reroot': false,
-        'hide': false,
-        'brush': false,
-      });
-
-      setRendered(true);
-
-    } catch (e) {
-      console.error('Error rendering phylogenetic tree:', e);
-      setError(`Unable to render tree: ${e.message}`);
-    }
-  }, [newickTree, leafCount, containerId]);
+  // Calculate tree dimensions
+  const numLeaves = leafCount || 10;
+  const treeHeight = Math.max(400, numLeaves * 30);
 
   if (!newickTree) {
     return <div style={{ color: '#666', fontStyle: 'italic' }}>No tree data available</div>;
   }
 
+  if (!treeData) {
+    return (
+      <div>
+        <div style={{ color: '#c62828', marginBottom: '10px' }}>
+          Unable to parse tree data
+        </div>
+        <div
+          style={{
+            backgroundColor: '#f9f9f9',
+            border: '1px solid #ddd',
+            borderRadius: '4px',
+            padding: '10px',
+            fontFamily: 'monospace',
+            fontSize: '11px',
+            wordBreak: 'break-all',
+            whiteSpace: 'pre-wrap',
+            maxHeight: '200px',
+            overflowY: 'auto',
+          }}
+        >
+          {newickTree}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
-      {error ? (
-        <div style={{ color: '#c62828', marginBottom: '10px' }}>
-          {error}
-          <div style={{ marginTop: '10px' }}>
-            <strong>Raw Newick format:</strong>
-            <div
-              style={{
-                marginTop: '8px',
-                backgroundColor: '#f9f9f9',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                padding: '10px',
-                fontFamily: 'monospace',
-                fontSize: '11px',
-                wordBreak: 'break-all',
-                whiteSpace: 'pre-wrap',
-                maxHeight: '200px',
-                overflowY: 'auto',
-              }}
-            >
-              {newickTree}
-            </div>
-          </div>
-        </div>
-      ) : null}
-
       {/* Tree visualization container */}
       <div
-        id={containerId}
-        ref={containerRef}
         style={{
           backgroundColor: '#fff',
           border: '1px solid #ddd',
           borderRadius: '4px',
-          padding: '10px',
-          overflowX: 'auto',
-          minHeight: '200px',
-          display: error ? 'none' : 'block',
+          width: '100%',
+          height: `${treeHeight}px`,
+          overflow: 'hidden',
         }}
-      />
+      >
+        <Tree
+          data={treeData}
+          orientation="horizontal"
+          pathFunc="elbow"
+          translate={{ x: 50, y: treeHeight / 2 }}
+          nodeSize={{ x: 150, y: 25 }}
+          renderCustomNodeElement={renderCustomNode}
+          separation={{ siblings: 1, nonSiblings: 1.5 }}
+          zoom={0.8}
+          enableLegacyTransitions={false}
+          pathClassFunc={() => 'tree-branch'}
+        />
+      </div>
 
-      {/* Toggle for raw Newick display - only show if tree rendered successfully */}
-      {rendered && !error && (
-        <div style={{ marginTop: '10px' }}>
-          <button
-            onClick={() => setShowRaw(!showRaw)}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: '#0066cc',
-              cursor: 'pointer',
-              fontSize: '12px',
-              textDecoration: 'underline',
-              padding: 0,
-            }}
-          >
-            {showRaw ? 'Hide' : 'Show'} Newick format
-          </button>
-        </div>
-      )}
+      {/* Toggle for raw Newick display */}
+      <div style={{ marginTop: '10px' }}>
+        <button
+          onClick={() => setShowRaw(!showRaw)}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: '#0066cc',
+            cursor: 'pointer',
+            fontSize: '12px',
+            textDecoration: 'underline',
+            padding: 0,
+          }}
+        >
+          {showRaw ? 'Hide' : 'Show'} Newick format
+        </button>
+      </div>
 
       {/* Raw Newick string (collapsible) */}
-      {showRaw && !error && (
+      {showRaw && (
         <div
           style={{
             marginTop: '8px',
@@ -138,6 +209,15 @@ function PhylogeneticTreeViewer({ newickTree, leafCount }) {
           {newickTree}
         </div>
       )}
+
+      {/* CSS for tree branches */}
+      <style>{`
+        .tree-branch {
+          stroke: #666;
+          stroke-width: 1.5px;
+          fill: none;
+        }
+      `}</style>
     </div>
   );
 }
