@@ -248,6 +248,148 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                 </>
               )}
 
+              {/* Protein Sequence Alignment Section */}
+              {orgData.protein_alignment && orgData.protein_alignment.sequences && orgData.protein_alignment.sequences.length > 0 && (
+                <>
+                  <tr className="section-with-divider section-grey-bg">
+                    <th style={{ verticalAlign: 'top' }}>Protein Sequence Alignment</th>
+                    <td>
+                      <div style={{ marginBottom: '8px' }}>
+                        Aligned with{' '}
+                        <a href="https://www.ebi.ac.uk/jdispatcher/msa/muscle" target="_blank" rel="noopener noreferrer">
+                          MUSCLE
+                        </a>
+                      </div>
+                      {orgData.protein_alignment.alignment_length && (
+                        <div style={{ marginBottom: '8px', color: '#666', fontSize: '13px' }}>
+                          Alignment length: {orgData.protein_alignment.alignment_length} residues
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                  {/* Alignment Display */}
+                  <tr>
+                    <th style={{ paddingLeft: '20px', fontWeight: 'normal', verticalAlign: 'top' }}>
+                      Alignment
+                    </th>
+                    <td>
+                      <div style={{
+                        backgroundColor: '#f9f9f9',
+                        border: '1px solid #ddd',
+                        borderRadius: '4px',
+                        padding: '15px',
+                        maxHeight: '400px',
+                        overflowY: 'auto',
+                        overflowX: 'auto',
+                        fontFamily: 'monospace',
+                        fontSize: '12px',
+                        whiteSpace: 'pre'
+                      }}>
+                        {orgData.protein_alignment.sequences.map((seq, idx) => (
+                          <div key={idx} style={{ marginBottom: '2px' }}>
+                            <span style={{ color: '#0066cc', minWidth: '200px', display: 'inline-block' }}>
+                              {seq.sequence_id.padEnd(20)}
+                            </span>
+                            <span>{seq.sequence}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div style={{ marginTop: '8px', fontSize: '12px', color: '#666' }}>
+                        {orgData.protein_alignment.sequences.length} sequences
+                      </div>
+                    </td>
+                  </tr>
+                  {/* Download Links */}
+                  {orgData.protein_alignment.download_links && orgData.protein_alignment.download_links.length > 0 && (
+                    <tr>
+                      <th style={{ paddingLeft: '20px', fontWeight: 'normal', verticalAlign: 'top' }}>
+                        Download alignment:
+                      </th>
+                      <td>
+                        <div style={{ display: 'flex', gap: '15px' }}>
+                          {orgData.protein_alignment.download_links.map((link, idx) => (
+                            <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer">
+                              {link.label}
+                            </a>
+                          ))}
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </>
+              )}
+
+              {/* Coding Sequence Alignment Section */}
+              {orgData.coding_alignment && orgData.coding_alignment.sequences && orgData.coding_alignment.sequences.length > 0 && (
+                <>
+                  <tr className="section-with-divider section-grey-bg">
+                    <th style={{ verticalAlign: 'top' }}>Coding Sequence Alignment</th>
+                    <td>
+                      <div style={{ marginBottom: '8px' }}>
+                        Aligned with{' '}
+                        <a href="https://www.ebi.ac.uk/jdispatcher/msa/muscle" target="_blank" rel="noopener noreferrer">
+                          MUSCLE
+                        </a>
+                      </div>
+                      {orgData.coding_alignment.alignment_length && (
+                        <div style={{ marginBottom: '8px', color: '#666', fontSize: '13px' }}>
+                          Alignment length: {orgData.coding_alignment.alignment_length} nucleotides
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                  {/* Alignment Display */}
+                  <tr>
+                    <th style={{ paddingLeft: '20px', fontWeight: 'normal', verticalAlign: 'top' }}>
+                      Alignment
+                    </th>
+                    <td>
+                      <div style={{
+                        backgroundColor: '#f9f9f9',
+                        border: '1px solid #ddd',
+                        borderRadius: '4px',
+                        padding: '15px',
+                        maxHeight: '400px',
+                        overflowY: 'auto',
+                        overflowX: 'auto',
+                        fontFamily: 'monospace',
+                        fontSize: '12px',
+                        whiteSpace: 'pre'
+                      }}>
+                        {orgData.coding_alignment.sequences.map((seq, idx) => (
+                          <div key={idx} style={{ marginBottom: '2px' }}>
+                            <span style={{ color: '#0066cc', minWidth: '200px', display: 'inline-block' }}>
+                              {seq.sequence_id.padEnd(20)}
+                            </span>
+                            <span>{seq.sequence}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div style={{ marginTop: '8px', fontSize: '12px', color: '#666' }}>
+                        {orgData.coding_alignment.sequences.length} sequences
+                      </div>
+                    </td>
+                  </tr>
+                  {/* Download Links */}
+                  {orgData.coding_alignment.download_links && orgData.coding_alignment.download_links.length > 0 && (
+                    <tr>
+                      <th style={{ paddingLeft: '20px', fontWeight: 'normal', verticalAlign: 'top' }}>
+                        Download alignment:
+                      </th>
+                      <td>
+                        <div style={{ display: 'flex', gap: '15px' }}>
+                          {orgData.coding_alignment.download_links.map((link, idx) => (
+                            <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer">
+                              {link.label}
+                            </a>
+                          ))}
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </>
+              )}
+
               {/* Best Hits in CGD Species Section */}
               {orgData.best_hits_cgd && Object.keys(orgData.best_hits_cgd.by_species || {}).length > 0 && (
                 <tr className="section-with-divider section-grey-bg">
