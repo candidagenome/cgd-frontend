@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
+import PhylogeneticTreeViewer from './PhylogeneticTreeViewer';
 import './LocusComponents.css';
 
 // Helper to get status color styling
@@ -208,22 +209,12 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                         Tree Display
                       </th>
                       <td>
-                        <div style={{
-                          backgroundColor: '#f9f9f9',
-                          border: '1px solid #ddd',
-                          borderRadius: '4px',
-                          padding: '15px',
-                          maxHeight: '400px',
-                          overflowY: 'auto',
-                          fontFamily: 'monospace',
-                          fontSize: '12px',
-                          whiteSpace: 'pre-wrap',
-                          wordBreak: 'break-all'
-                        }}>
-                          {orgData.phylogenetic_tree.newick_tree}
-                        </div>
+                        <PhylogeneticTreeViewer
+                          newickTree={orgData.phylogenetic_tree.newick_tree}
+                          leafCount={orgData.phylogenetic_tree.leaf_count}
+                        />
                         <div style={{ marginTop: '8px', fontSize: '12px', color: '#666' }}>
-                          Newick format tree ({orgData.phylogenetic_tree.leaf_count} leaves)
+                          {orgData.phylogenetic_tree.leaf_count} leaves
                         </div>
                       </td>
                     </tr>
