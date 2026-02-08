@@ -140,7 +140,7 @@ function PhylogeneticTreeViewer({ newickTree, leafCount, orthologs }) {
 
   // Calculate tree dimensions - larger for better readability
   const numLeaves = leafCount || 10;
-  const treeHeight = Math.max(500, numLeaves * 45);
+  const treeHeight = Math.max(600, numLeaves * 55);
 
   if (!newickTree) {
     return <div style={{ color: '#666', fontStyle: 'italic' }}>No tree data available</div>;
@@ -190,9 +190,9 @@ function PhylogeneticTreeViewer({ newickTree, leafCount, orthologs }) {
           orientation="horizontal"
           pathFunc="elbow"
           translate={{ x: 80, y: treeHeight / 2 }}
-          nodeSize={{ x: 100, y: 35 }}
+          nodeSize={{ x: 100, y: 50 }}
           renderCustomNodeElement={renderCustomNode}
-          separation={{ siblings: 1, nonSiblings: 1.2 }}
+          separation={{ siblings: 1.2, nonSiblings: 1.5 }}
           zoom={1.0}
           enableLegacyTransitions={false}
           pathClassFunc={() => 'tree-branch'}
