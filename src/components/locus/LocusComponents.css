@@ -13,6 +13,8 @@
   border: 1px solid #c8e6c9;
   border-radius: 6px;
   margin-bottom: 20px;
+  width: 1000px;
+  box-sizing: border-box;
 }
 
 .organism-selector label {
@@ -44,8 +46,8 @@
 }
 
 .organism-selector.single-organism {
-  background-color: #f5f5f5;
-  border-color: #e0e0e0;
+  background-color: #e8f5e9;
+  border-color: #c8e6c9;
 }
 
 .organism-selector .organism-info {
@@ -122,11 +124,19 @@
 }
 
 /* Locus-specific overrides to ensure light blue bg and fixed width */
+.locus-summary .info-table {
+  width: auto;
+}
+
 .locus-summary .info-table th {
   background-color: #e3f2fd !important;
   width: 200px !important;
   min-width: 200px !important;
   max-width: 200px !important;
+}
+
+.locus-summary .info-table td {
+  width: 800px;
 }
 
 .info-table td {
