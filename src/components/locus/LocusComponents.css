@@ -123,7 +123,8 @@
 
 /* Locus-specific overrides to ensure light blue bg and fixed width */
 .locus-summary .info-table {
-  width: auto;
+  width: 100%;
+  max-width: 100%;
 }
 
 .locus-summary .info-table th {
@@ -131,12 +132,6 @@
   width: 200px !important;
   min-width: 200px !important;
   max-width: 200px !important;
-}
-
-.locus-summary .info-table td {
-  width: 800px;
-  min-width: 800px;
-  max-width: 800px;
 }
 
 .info-table td {
