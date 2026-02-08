@@ -2052,18 +2052,22 @@ a:hover {
 }
 
 .summary-notes-section .section-header {
+  display: block !important;
   margin: 0 0 15px 0;
   font-size: 1.1em;
   color: #333;
   font-weight: bold;
   white-space: normal;
   word-spacing: normal;
+  gap: 0 !important;
+  justify-content: normal !important;
 }
 
 .summary-notes-section .section-header em {
   font-style: italic;
   margin: 0;
   padding: 0;
+  display: inline;
 }
 
 .summary-notes-section .last-updated {
@@ -2071,6 +2075,7 @@ a:hover {
   font-size: 0.9em;
   color: #666;
   margin-left: 0;
+  display: inline;
 }
 
 .summary-notes-content {
@@ -2116,10 +2121,13 @@ a:hover {
 }
 
 .cited-references-section .section-header {
+  display: block !important;
   margin: 0 0 15px 0;
   font-size: 1.1em;
   color: #333;
   font-weight: bold;
+  gap: 0 !important;
+  justify-content: normal !important;
 }
 
 .cited-references-section .literature-guide-link {
