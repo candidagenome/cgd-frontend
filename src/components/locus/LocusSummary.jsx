@@ -327,7 +327,7 @@ function LocusSummary({
 
   // ---------- Render ----------
   return (
-    <div className="locus-summary">
+    <>
       <table className="info-table">
         <tbody>
           {/* Standard Name */}
@@ -901,7 +901,7 @@ function LocusSummary({
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
 

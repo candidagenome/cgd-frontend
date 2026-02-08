@@ -122,22 +122,11 @@
 }
 
 /* Locus-specific overrides to ensure light blue bg and fixed width */
-.locus-summary .info-table {
-  width: 100%;
-  max-width: 1000px;
-  table-layout: fixed;
-}
-
 .locus-summary .info-table th {
   background-color: #e3f2fd !important;
   width: 200px !important;
   min-width: 200px !important;
   max-width: 200px !important;
-}
-
-.locus-summary .info-table td {
-  width: auto;
-  word-wrap: break-word;
 }
 
 .info-table td {
