@@ -889,13 +889,15 @@ function LocusSummary({
             {feature.cited_references.map((ref, idx) => (
               <div key={ref.reference_no} id={`ref${idx + 1}`} className="reference-item">
                 <span className="reference-number">{idx + 1})</span>
-                <span className="reference-citation">
-                  {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
-		  {ref?.pubmed ? <span className="citation-pmid"> PMID: {ref.pubmed}</span> : null}
+                <div className="reference-citation">
+                  <span className="reference-text">
+                    {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
+                    {ref?.pubmed ? <span className="citation-pmid"> PMID: {ref.pubmed}</span> : null}
+                  </span>
                   {ref.links && ref.links.length > 0 && (
                     <CitationLinksBelow links={ref.links && ref.links.length ? ref.links : buildCitationLinks(ref)} />
                   )}
-                </span>
+                </div>
               </div>
             ))}
           </div>

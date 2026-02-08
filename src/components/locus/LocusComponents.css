@@ -2165,6 +2165,10 @@ a:hover {
   line-height: 1.5;
 }
 
+.reference-text {
+  display: inline;
+}
+
 .pubmed-link {
   color: #1565c0;
   text-decoration: none;
