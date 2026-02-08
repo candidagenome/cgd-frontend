@@ -213,6 +213,7 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                         <PhylogeneticTreeViewer
                           newickTree={orgData.phylogenetic_tree.newick_tree}
                           leafCount={orgData.phylogenetic_tree.leaf_count}
+                          orthologs={orgData.ortholog_cluster?.orthologs}
                         />
                         <div style={{ marginTop: '8px', fontSize: '12px', color: '#666' }}>
                           {orgData.phylogenetic_tree.leaf_count} leaves
