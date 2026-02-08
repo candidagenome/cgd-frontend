@@ -189,11 +189,11 @@ function PhylogeneticTreeViewer({ newickTree, leafCount, orthologs }) {
           data={treeData}
           orientation="horizontal"
           pathFunc="elbow"
-          translate={{ x: 80, y: treeHeight / 2 }}
+          translate={{ x: 30, y: treeHeight / 2 }}
           nodeSize={{ x: 100, y: 50 }}
           renderCustomNodeElement={renderCustomNode}
           separation={{ siblings: 1.2, nonSiblings: 1.5 }}
-          zoom={1.0}
+          zoom={0.9}
           enableLegacyTransitions={false}
           pathClassFunc={() => 'tree-branch'}
         />
