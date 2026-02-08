@@ -327,7 +327,7 @@ function LocusSummary({
 
   // ---------- Render ----------
   return (
-    <div className="locus-summary">
+    <>
       <table className="info-table">
         <tbody>
           {/* Standard Name */}
@@ -852,10 +852,7 @@ function LocusSummary({
       {feature.summary_notes && feature.summary_notes.length > 0 && (
         <div className="summary-notes-section">
           <h3 className="section-header">
-            LOCUS SUMMARY NOTES for <em>{feature.gene_name || feature.feature_name}</em>
-            {feature.summary_notes_last_updated && (
-              <span className="last-updated"> (Last Updated: {fmtDate(feature.summary_notes_last_updated)})</span>
-            )}
+            LOCUS SUMMARY NOTES for <em>{(feature.gene_name || feature.feature_name || '').trim()}</em>{feature.summary_notes_last_updated && (<span className="last-updated"> (Last Updated: {fmtDate(feature.summary_notes_last_updated)})</span>)}
           </h3>
           <div className="summary-notes-content">
             {feature.summary_notes.map((note, idx) => (
@@ -878,9 +875,9 @@ function LocusSummary({
               <span className="literature-guide-link">
                 {' '}
                 [
-                <a href={feature.literature_guide_url} target="_blank" rel="noopener noreferrer">
+                <Link to={`/locus/${feature.gene_name || feature.feature_name}?tab=literature`}>
                   View Complete Literature Guide for <em>{feature.gene_name || feature.feature_name}</em>
-                </a>
+                </Link>
                 ]
               </span>
             )}
@@ -889,19 +886,21 @@ function LocusSummary({
             {feature.cited_references.map((ref, idx) => (
               <div key={ref.reference_no} id={`ref${idx + 1}`} className="reference-item">
                 <span className="reference-number">{idx + 1})</span>
-                <span className="reference-citation">
-                  {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
-		  {ref?.pubmed ? <span className="citation-pmid"> PMID: {ref.pubmed}</span> : null}
+                <div className="reference-citation">
+                  <span className="reference-text">
+                    {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
+                    {ref?.pubmed ? <span className="citation-pmid"> PMID: {ref.pubmed}</span> : null}
+                  </span>
                   {ref.links && ref.links.length > 0 && (
                     <CitationLinksBelow links={ref.links && ref.links.length ? ref.links : buildCitationLinks(ref)} />
                   )}
-                </span>
+                </div>
               </div>
             ))}
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
 

@@ -9,7 +9,7 @@ import HomologyDetails from '../components/locus/HomologyDetails';
 import SequenceDetails from '../components/locus/SequenceDetails';
 import References from '../components/locus/References';
 import History from '../components/locus/History';
-import { getDefaultOrganism } from '../components/locus/OrganismSelector';
+import OrganismSelector, { getDefaultOrganism } from '../components/locus/OrganismSelector';
 import './LocusPage.css';
 
 const TABS = [
@@ -79,20 +79,13 @@ function LocusPage() {
         if (!data.info) return <div className="no-data">No data available</div>;
 
         return (
-          <div className="summary-tab">
-            {organisms.length > 1 && (
-              <div className="organism-selector">
-                <label>Select Organism: </label>
-                <select
-                  value={selectedOrganism || ''}
-                  onChange={(e) => setSelectedOrganism(e.target.value)}
-                >
-                  {organisms.map(org => (
-                    <option key={org} value={org}>{org}</option>
-                  ))}
-                </select>
-              </div>
-            )}
+          <div className="summary-details locus-summary">
+            <OrganismSelector
+              organisms={organisms}
+              selectedOrganism={selectedOrganism}
+              onOrganismChange={setSelectedOrganism}
+              dataType="summary"
+            />
             {selectedOrganism && data.info.results[selectedOrganism] && (
               <LocusSummary
                 data={data.info.results[selectedOrganism]}

@@ -2,10 +2,27 @@ import React, { useState, useMemo } from 'react';
 import Tree from 'react-d3-tree';
 
 /**
+ * Build a mapping from feature_name to display name (sequence_id which includes gene name)
+ * e.g., "C1_13700W_A" -> "ACT1/C1_13700W_A"
+ */
+function buildNameMapping(orthologs) {
+  const mapping = {};
+  if (!orthologs) return mapping;
+
+  for (const orth of orthologs) {
+    if (orth.feature_name && orth.sequence_id) {
+      // sequence_id is like "ACT1/C1_13700W_A" or just "C1_13700W_A"
+      mapping[orth.feature_name] = orth.sequence_id;
+    }
+  }
+  return mapping;
+}
+
+/**
  * Parse Newick format string into hierarchical tree structure
  * for react-d3-tree
  */
-function parseNewick(newickStr) {
+function parseNewick(newickStr, nameMapping = {}) {
   let idx = 0;
   const str = newickStr.trim();
 
@@ -49,6 +66,11 @@ function parseNewick(newickStr) {
 
     // Clean up name
     node.name = node.name.trim();
+
+    // Apply name mapping (e.g., C1_13700W_A -> ACT1/C1_13700W_A)
+    if (node.name && nameMapping[node.name]) {
+      node.name = nameMapping[node.name];
+    }
 
     // If no children, it's a leaf
     if (node.children && node.children.length === 0) {
@@ -101,19 +123,24 @@ const renderCustomNode = ({ nodeDatum }) => {
 /**
  * Phylogenetic tree visualization component
  */
-function PhylogeneticTreeViewer({ newickTree, leafCount }) {
+function PhylogeneticTreeViewer({ newickTree, leafCount, orthologs }) {
   const [showRaw, setShowRaw] = useState(false);
+
+  // Build name mapping from orthologs (feature_name -> sequence_id with gene name)
+  const nameMapping = useMemo(() => {
+    return buildNameMapping(orthologs);
+  }, [orthologs]);
 
   // Parse the Newick tree into hierarchical format
   const treeData = useMemo(() => {
     if (!newickTree) return null;
-    const parsed = parseNewick(newickTree);
+    const parsed = parseNewick(newickTree, nameMapping);
     return parsed;
-  }, [newickTree]);
+  }, [newickTree, nameMapping]);
 
   // Calculate tree dimensions - larger for better readability
   const numLeaves = leafCount || 10;
-  const treeHeight = Math.max(500, numLeaves * 45);
+  const treeHeight = Math.max(600, numLeaves * 55);
 
   if (!newickTree) {
     return <div style={{ color: '#666', fontStyle: 'italic' }}>No tree data available</div>;
@@ -162,11 +189,11 @@ function PhylogeneticTreeViewer({ newickTree, leafCount }) {
           data={treeData}
           orientation="horizontal"
           pathFunc="elbow"
-          translate={{ x: 80, y: treeHeight / 2 }}
-          nodeSize={{ x: 100, y: 35 }}
+          translate={{ x: 30, y: treeHeight / 2 }}
+          nodeSize={{ x: 100, y: 50 }}
           renderCustomNodeElement={renderCustomNode}
-          separation={{ siblings: 1, nonSiblings: 1.2 }}
-          zoom={1.0}
+          separation={{ siblings: 1.2, nonSiblings: 1.5 }}
+          zoom={0.9}
           enableLegacyTransitions={false}
           pathClassFunc={() => 'tree-branch'}
         />

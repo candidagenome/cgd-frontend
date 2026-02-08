@@ -61,8 +61,8 @@
   border-radius: 4px;
 }
 
-/* Organism Selector */
-.organism-selector {
+/* Organism Selector - scoped to this page */
+.chromosome-list-page .organism-selector {
   margin-bottom: 25px;
   padding: 15px;
   background-color: #f9f9f9;
@@ -70,14 +70,14 @@
   border: 1px solid #e0e0e0;
 }
 
-.organism-selector label {
+.chromosome-list-page .organism-selector label {
   display: block;
   font-weight: 600;
   margin-bottom: 8px;
   color: #333;
 }
 
-.organism-selector select {
+.chromosome-list-page .organism-selector select {
   width: 100%;
   max-width: 500px;
   padding: 10px;
@@ -88,7 +88,7 @@
   cursor: pointer;
 }
 
-.organism-selector select:focus {
+.chromosome-list-page .organism-selector select:focus {
   outline: none;
   border-color: #007bff;
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);

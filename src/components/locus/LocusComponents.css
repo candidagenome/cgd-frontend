@@ -13,6 +13,8 @@
   border: 1px solid #c8e6c9;
   border-radius: 6px;
   margin-bottom: 20px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .organism-selector label {
@@ -44,8 +46,8 @@
 }
 
 .organism-selector.single-organism {
-  background-color: #f5f5f5;
-  border-color: #e0e0e0;
+  background-color: #e8f5e9;
+  border-color: #c8e6c9;
 }
 
 .organism-selector .organism-info {
@@ -115,8 +117,28 @@
   padding: 10px;
   background-color: #e3f2fd;
   width: 200px;
+  min-width: 200px;
+  max-width: 200px;
   vertical-align: top;
   border: 1px solid #bbdefb;
+}
+
+/* Locus-specific overrides to ensure light blue bg and fixed width */
+.locus-summary .info-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.locus-summary .info-table th {
+  background-color: #e3f2fd !important;
+  width: 200px !important;
+  min-width: 200px !important;
+  max-width: 200px !important;
+}
+
+.locus-summary .info-table td {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .info-table td {
@@ -2030,20 +2052,30 @@ a:hover {
 }
 
 .summary-notes-section .section-header {
+  display: block !important;
   margin: 0 0 15px 0;
   font-size: 1.1em;
   color: #333;
   font-weight: bold;
+  white-space: normal;
+  word-spacing: normal;
+  gap: 0 !important;
+  justify-content: normal !important;
 }
 
 .summary-notes-section .section-header em {
   font-style: italic;
+  margin: 0;
+  padding: 0;
+  display: inline;
 }
 
 .summary-notes-section .last-updated {
   font-weight: normal;
   font-size: 0.9em;
   color: #666;
+  margin-left: 0;
+  display: inline;
 }
 
 .summary-notes-content {
@@ -2089,10 +2121,13 @@ a:hover {
 }
 
 .cited-references-section .section-header {
+  display: block !important;
   margin: 0 0 15px 0;
   font-size: 1.1em;
   color: #333;
   font-weight: bold;
+  gap: 0 !important;
+  justify-content: normal !important;
 }
 
 .cited-references-section .literature-guide-link {
@@ -2136,9 +2171,38 @@ a:hover {
   font-weight: bold;
   color: #666;
   min-width: 30px;
+  flex-shrink: 0;
 }
 
 .reference-citation {
+  flex: 1;
+  line-height: 1.5;
+}
+
+.reference-text {
+  display: inline;
+}
+
+/* Scoped styles for cited-references-section to override other page styles */
+.cited-references-section .reference-item {
+  display: flex;
+  flex-direction: row !important;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px;
+  background-color: #fff;
+  border-radius: 4px;
+}
+
+.cited-references-section .reference-number {
+  font-weight: bold;
+  color: #666;
+  min-width: 30px;
+  flex-shrink: 0;
+  line-height: 1.5;
+}
+
+.cited-references-section .reference-citation {
   flex: 1;
   line-height: 1.5;
 }
@@ -2195,9 +2259,10 @@ a:hover {
   border-top: 3px solid white;
 }
 
-/* Light grey background for section headers - only on left category bar (th) */
+/* Light blue background for section headers - only on left category bar (th) */
+/* Note: inherits #e3f2fd from .info-table th, so no override needed */
 .info-table tr.section-grey-bg > th {
-  background-color: #f0f0f0;
+  /* background-color: #e3f2fd; - already inherited */
 }
 
 /* =========================
