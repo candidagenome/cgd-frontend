@@ -145,10 +145,10 @@ function buildRuler(start, end, totalLength) {
     }
   }
 
-  // Start position (right-aligned, 3 chars) followed by space
-  const startStr = pad(String(start + 1), 3, true) + ' ';
-  // End position
-  const endStr = ' ' + end;
+  // Start position (right-aligned, 4 chars) followed by space - shifted right by 1
+  const startStr = pad(String(start + 1), 4, true) + ' ';
+  // End position - add extra space to shift right by 1
+  const endStr = '  ' + end;
 
   return startStr + ruler + endStr;
 }

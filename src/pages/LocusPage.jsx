@@ -35,6 +35,11 @@ function LocusPage() {
   const loadersRef = useRef(loaders);
   loadersRef.current = loaders;
 
+  // Reset selected organism when locus name changes
+  useEffect(() => {
+    setSelectedOrganism(null);
+  }, [name]);
+
   // Update URL when tab changes
   useEffect(() => {
     if (activeTab !== 'summary') {
@@ -44,15 +49,15 @@ function LocusPage() {
     }
   }, [activeTab, setSearchParams]);
 
-  // Load data when tab is selected - only triggers on activeTab change
+  // Load data when tab is selected or locus name changes
   useEffect(() => {
-    console.log('[LocusPage useEffect] activeTab changed to:', activeTab);
+    console.log('[LocusPage useEffect] activeTab or name changed:', activeTab, name);
     const tab = TABS.find(t => t.id === activeTab);
     if (tab && tab.loader && loadersRef.current[tab.loader]) {
       console.log('[LocusPage useEffect] Calling loader:', tab.loader);
       loadersRef.current[tab.loader]();
     }
-  }, [activeTab]);
+  }, [activeTab, name]);
 
   // Set default organism when data loads - prefer "Candida albicans SC5314" if available
   useEffect(() => {
