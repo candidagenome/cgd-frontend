@@ -76,18 +76,19 @@ const renderCustomNode = ({ nodeDatum }) => {
   return (
     <g>
       <circle
-        r={isLeaf ? 4 : 3}
+        r={isLeaf ? 5 : 4}
         fill={isLeaf ? "#2e7d32" : "#666"}
       />
       {nodeDatum.name && (
         <text
-          x={isLeaf ? 8 : -8}
-          y={4}
+          x={isLeaf ? 10 : -10}
+          y={5}
           textAnchor={isLeaf ? "start" : "end"}
           style={{
-            fontSize: '11px',
+            fontSize: '14px',
             fontFamily: 'monospace',
-            fill: '#333',
+            fontWeight: '500',
+            fill: '#222',
           }}
         >
           {nodeDatum.name}
@@ -110,9 +111,9 @@ function PhylogeneticTreeViewer({ newickTree, leafCount }) {
     return parsed;
   }, [newickTree]);
 
-  // Calculate tree dimensions
+  // Calculate tree dimensions - larger for better readability
   const numLeaves = leafCount || 10;
-  const treeHeight = Math.max(400, numLeaves * 30);
+  const treeHeight = Math.max(500, numLeaves * 45);
 
   if (!newickTree) {
     return <div style={{ color: '#666', fontStyle: 'italic' }}>No tree data available</div>;
@@ -161,11 +162,11 @@ function PhylogeneticTreeViewer({ newickTree, leafCount }) {
           data={treeData}
           orientation="horizontal"
           pathFunc="elbow"
-          translate={{ x: 50, y: treeHeight / 2 }}
-          nodeSize={{ x: 150, y: 25 }}
+          translate={{ x: 80, y: treeHeight / 2 }}
+          nodeSize={{ x: 100, y: 35 }}
           renderCustomNodeElement={renderCustomNode}
-          separation={{ siblings: 1, nonSiblings: 1.5 }}
-          zoom={0.8}
+          separation={{ siblings: 1, nonSiblings: 1.2 }}
+          zoom={1.0}
           enableLegacyTransitions={false}
           pathClassFunc={() => 'tree-branch'}
         />
@@ -213,8 +214,8 @@ function PhylogeneticTreeViewer({ newickTree, leafCount }) {
       {/* CSS for tree branches */}
       <style>{`
         .tree-branch {
-          stroke: #666;
-          stroke-width: 1.5px;
+          stroke: #444;
+          stroke-width: 2px;
           fill: none;
         }
       `}</style>
