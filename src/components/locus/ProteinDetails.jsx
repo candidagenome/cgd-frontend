@@ -1,11 +1,13 @@
 import React, { useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
 import AlphaFoldViewer from './AlphaFoldViewer';
 import { formatCitationString, CitationLinksBelow, buildCitationLinks } from '../../utils/formatCitation.jsx';
 import './LocusComponents.css';
 
 function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
+  const { name: locusName } = useParams();
+
   // Get available organisms from the data - memoize to prevent new array reference each render
   const organisms = useMemo(() => {
     return data?.results ? Object.keys(data.results) : [];
@@ -273,9 +275,9 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                 {orgData.literature_guide_url && (
                   <span className="literature-guide-link">
                     {' '}[
-                    <a href={orgData.literature_guide_url}>
+                    <Link to={`/locus/${locusName}?tab=literature`}>
                       View Complete Literature Guide for <em>{orgData.protein_standard_name || orgData.locus_display_name}</em>
-                    </a>
+                    </Link>
                     ]
                   </span>
                 )}
@@ -284,13 +286,15 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                 {orgData.cited_references.map((ref, idx) => (
                   <div key={idx} id={`ref${idx + 1}`} className="reference-item">
                     <span className="reference-number">{idx + 1})</span>
-                    <span className="reference-citation">
-		      {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
-		      {ref?.pubmed ? <span className="citation-pmid"> PMID: {ref.pubmed}</span> : null}	
+                    <div className="reference-citation">
+                      <span className="reference-text">
+                        {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
+                        {ref?.pubmed ? <span className="citation-pmid"> PMID: {ref.pubmed}</span> : null}
+                      </span>
                       {ref.links && ref.links.length > 0 && (
                         <CitationLinksBelow links={ref.links && ref.links.length ? ref.links : buildCitationLinks(ref)} />
                       )}
-                    </span>
+                    </div>
                   </div>
                 ))}
               </div>
