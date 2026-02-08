@@ -132,8 +132,8 @@ function buildRuler(start, end, totalLength) {
       // Closing bracket at final position
       ruler += ']';
     } else if (pos % 100 === 0) {
-      // Hundreds marker (1, 2, 3, etc.)
-      ruler += String(pos / 100);
+      // Hundreds marker - ones digit only (1, 2, 3, ... 9, 0, 1, ...)
+      ruler += String((pos / 100) % 10);
     } else if (pos % 50 === 0) {
       // Colon at 50, 150, 250, etc.
       ruler += ':';
