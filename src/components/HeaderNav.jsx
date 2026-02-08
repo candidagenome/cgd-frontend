@@ -24,13 +24,13 @@ const HeaderNav = () => {
     },
     {
       label: 'JBrowse',
-      href: 'http://www.candidagenome.org/jbrowse/index.html',
+      href: '/jbrowse/index.html',
       submenu: [
-        { label: 'C. albicans', href: 'http://www.candidagenome.org/jbrowse/index.html?data=cgd_data%2FC_albicans_SC5314' },
-        { label: 'C. auris', href: 'http://www.candidagenome.org/jbrowse/index.html?data=cgd_data%2FC_auris_B8441' },
-        { label: 'C. dubliniensis', href: 'http://www.candidagenome.org/jbrowse/index.html?data=cgd_data%2FC_dubliniensis_CD36' },
-        { label: 'C. glabrata', href: 'http://www.candidagenome.org/jbrowse/index.html?data=cgd_data%2FC_glabrata_CBS138' },
-        { label: 'C. parapsilosis', href: 'http://www.candidagenome.org/jbrowse/index.html?data=cgd_data%2FC_parapsilosis_CDC317' }
+        { label: 'C. albicans', href: '/jbrowse/index.html?data=cgd_data%2FC_albicans_SC5314' },
+        { label: 'C. auris', href: '/jbrowse/index.html?data=cgd_data%2FC_auris_B8441' },
+        { label: 'C. dubliniensis', href: '/jbrowse/index.html?data=cgd_data%2FC_dubliniensis_CD36' },
+        { label: 'C. glabrata', href: '/jbrowse/index.html?data=cgd_data%2FC_glabrata_CBS138' },
+        { label: 'C. parapsilosis', href: '/jbrowse/index.html?data=cgd_data%2FC_parapsilosis_CDC317' }
       ]
     },
     {

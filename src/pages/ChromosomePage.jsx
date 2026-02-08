@@ -290,7 +290,7 @@ function ChromosomePage() {
                 <ul>
                   <li>
                     <a
-                      href={`/jbrowse/index.html?data=C_albicans_SC5314&loc=${chromosome.feature_name}`}
+                      href={`/jbrowse/index.html?data=cgd_data%2FC_albicans_SC5314&loc=${chromosome.feature_name}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
