@@ -122,6 +122,10 @@
 }
 
 /* Locus-specific overrides to ensure light blue bg and fixed width */
+.locus-summary .info-table {
+  max-width: 1000px;
+}
+
 .locus-summary .info-table th {
   background-color: #e3f2fd !important;
   width: 200px !important;
