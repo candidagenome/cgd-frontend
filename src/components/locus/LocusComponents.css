@@ -121,6 +121,14 @@
   border: 1px solid #bbdefb;
 }
 
+/* Locus-specific overrides to ensure light blue bg and fixed width */
+.locus-summary .info-table th {
+  background-color: #e3f2fd !important;
+  width: 200px !important;
+  min-width: 200px !important;
+  max-width: 200px !important;
+}
+
 .info-table td {
   padding: 10px;
   border: 1px solid #e0e0e0;
