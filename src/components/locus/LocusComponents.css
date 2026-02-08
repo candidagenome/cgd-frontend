@@ -115,6 +115,8 @@
   padding: 10px;
   background-color: #e3f2fd;
   width: 200px;
+  min-width: 200px;
+  max-width: 200px;
   vertical-align: top;
   border: 1px solid #bbdefb;
 }
@@ -2195,9 +2197,10 @@ a:hover {
   border-top: 3px solid white;
 }
 
-/* Light grey background for section headers - only on left category bar (th) */
+/* Light blue background for section headers - only on left category bar (th) */
+/* Note: inherits #e3f2fd from .info-table th, so no override needed */
 .info-table tr.section-grey-bg > th {
-  background-color: #f0f0f0;
+  /* background-color: #e3f2fd; - already inherited */
 }
 
 /* =========================
