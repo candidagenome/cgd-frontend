@@ -32,9 +32,23 @@ export function useLocusData(locusName) {
   // This is updated synchronously BEFORE any async operation
   const requestedRef = useRef({});
 
-  // Reset requested state when locusName changes
+  // Reset requested state and clear data when locusName changes
   useEffect(() => {
     requestedRef.current = {};
+    // Clear all data when switching to a new locus
+    setData({
+      info: null,
+      goDetails: null,
+      phenotypeDetails: null,
+      interactionDetails: null,
+      proteinDetails: null,
+      homologyDetails: null,
+      sequenceDetails: null,
+      references: null,
+      summaryNotes: null,
+      history: null,
+    });
+    setErrors({});
   }, [locusName]);
 
   const fetchData = useCallback(async (key, fetchFn) => {
