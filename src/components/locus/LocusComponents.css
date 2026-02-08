@@ -2056,16 +2056,21 @@ a:hover {
   font-size: 1.1em;
   color: #333;
   font-weight: bold;
+  white-space: normal;
+  word-spacing: normal;
 }
 
 .summary-notes-section .section-header em {
   font-style: italic;
+  margin: 0;
+  padding: 0;
 }
 
 .summary-notes-section .last-updated {
   font-weight: normal;
   font-size: 0.9em;
   color: #666;
+  margin-left: 0;
 }
 
 .summary-notes-content {
@@ -2168,6 +2173,30 @@ a:hover {
 
 .reference-text {
   display: inline;
+}
+
+/* Scoped styles for cited-references-section to override other page styles */
+.cited-references-section .reference-item {
+  display: flex;
+  flex-direction: row !important;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px;
+  background-color: #fff;
+  border-radius: 4px;
+}
+
+.cited-references-section .reference-number {
+  font-weight: bold;
+  color: #666;
+  min-width: 30px;
+  flex-shrink: 0;
+  line-height: 1.5;
+}
+
+.cited-references-section .reference-citation {
+  flex: 1;
+  line-height: 1.5;
 }
 
 .pubmed-link {

@@ -852,7 +852,7 @@ function LocusSummary({
       {feature.summary_notes && feature.summary_notes.length > 0 && (
         <div className="summary-notes-section">
           <h3 className="section-header">
-            LOCUS SUMMARY NOTES for <em>{feature.gene_name || feature.feature_name}</em>{feature.summary_notes_last_updated && (<span className="last-updated"> (Last Updated: {fmtDate(feature.summary_notes_last_updated)})</span>)}
+            LOCUS SUMMARY NOTES for <em>{(feature.gene_name || feature.feature_name || '').trim()}</em>{feature.summary_notes_last_updated && (<span className="last-updated"> (Last Updated: {fmtDate(feature.summary_notes_last_updated)})</span>)}
           </h3>
           <div className="summary-notes-content">
             {feature.summary_notes.map((note, idx) => (
