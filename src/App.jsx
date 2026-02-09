@@ -86,6 +86,7 @@ import LitReviewPage from './pages/curation/LitReviewPage';
 import ReferenceSearchPage from './pages/curation/ReferenceSearchPage';
 import RefAnnotationCurationPage from './pages/curation/RefAnnotationCurationPage';
 import DbSearchPage from './pages/curation/DbSearchPage';
+import SequenceCurationPage from './pages/curation/SequenceCurationPage';
 
 // Help documentation pages
 import GettingStartedHelp from './pages/help/GettingStartedHelp';
@@ -452,6 +453,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <DbSearchPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/sequence"
+            element={
+              <ProtectedRoute>
+                <SequenceCurationPage />
               </ProtectedRoute>
             }
           />
