@@ -50,7 +50,17 @@ export function AuthProvider({ children }) {
   }, [clearRefreshTimer]);
 
   /**
-   * Check authentication status on mount.
+   * Handle session expiry event from API interceptor.
+   */
+  const handleSessionExpired = useCallback(() => {
+    console.warn('Session expired - logging out');
+    setUser(null);
+    setError('Your session has expired. Please log in again.');
+    clearRefreshTimer();
+  }, [clearRefreshTimer]);
+
+  /**
+   * Check authentication status on mount and listen for session expiry.
    */
   useEffect(() => {
     const checkAuth = async () => {
@@ -68,10 +78,14 @@ export function AuthProvider({ children }) {
 
     checkAuth();
 
+    // Listen for session expiry events from the API interceptor
+    window.addEventListener('auth:session-expired', handleSessionExpired);
+
     return () => {
       clearRefreshTimer();
+      window.removeEventListener('auth:session-expired', handleSessionExpired);
     };
-  }, [setupRefreshTimer, clearRefreshTimer]);
+  }, [setupRefreshTimer, clearRefreshTimer, handleSessionExpired]);
 
   /**
    * Login with credentials.
