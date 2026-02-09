@@ -149,6 +149,9 @@ function CuratorCentralPage() {
               <li>
                 <Link to="/curation/db-search">Database Search (Phenotypes)</Link>
               </li>
+              <li>
+                <Link to="/curation/seq-alignment">Sequence Alignment Tool</Link>
+              </li>
             </ul>
           </section>
 

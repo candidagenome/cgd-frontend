@@ -88,6 +88,7 @@ import RefAnnotationCurationPage from './pages/curation/RefAnnotationCurationPag
 import DbSearchPage from './pages/curation/DbSearchPage';
 import SequenceCurationPage from './pages/curation/SequenceCurationPage';
 import CoordinateCurationPage from './pages/curation/CoordinateCurationPage';
+import SeqAlignmentPage from './pages/curation/SeqAlignmentPage';
 
 // Help documentation pages
 import GettingStartedHelp from './pages/help/GettingStartedHelp';
@@ -470,6 +471,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <CoordinateCurationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/seq-alignment"
+            element={
+              <ProtectedRoute>
+                <SeqAlignmentPage />
               </ProtectedRoute>
             }
           />
