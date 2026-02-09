@@ -1,7 +1,10 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import HeaderSearchForm from './components/HeaderSearchForm';
 import HeaderNav from './components/HeaderNav';
+import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
 import LocusPage from './pages/LocusPage';
 import ReferencePage from './pages/ReferencePage';
 import NewPapersThisWeekPage from './pages/NewPapersThisWeekPage';
@@ -63,6 +66,18 @@ import GoSlimMapperResultsPage from './pages/GoSlimMapperResultsPage';
 import ToolsPage from './pages/ToolsPage';
 import ApiDocPage from './pages/ApiDocPage';
 
+// Curation pages (protected)
+import CuratorCentralPage from './pages/curation/CuratorCentralPage';
+import GoTodoListPage from './pages/curation/GoTodoListPage';
+import LitGuideTodoListPage from './pages/curation/LitGuideTodoListPage';
+import GoCurationPage from './pages/curation/GoCurationPage';
+import ReferenceCurationPage from './pages/curation/ReferenceCurationPage';
+import PhenotypeCurationPage from './pages/curation/PhenotypeCurationPage';
+import ColleagueCurationPage from './pages/curation/ColleagueCurationPage';
+import LocusCurationPage from './pages/curation/LocusCurationPage';
+import LitGuideCurationPage from './pages/curation/LitGuideCurationPage';
+import NoteCurationPage from './pages/curation/NoteCurationPage';
+
 // Help documentation pages
 import GettingStartedHelp from './pages/help/GettingStartedHelp';
 import SequenceHelp from './pages/help/SequenceHelp';
@@ -96,6 +111,7 @@ import './App.css';
 
 function App() {
   return (
+    <AuthProvider>
     <Router>
       <div className="app">
         {/* =========================
@@ -218,6 +234,147 @@ function App() {
           <Route path="/colleague/:colleagueNo" element={<ColleagueDetailPage />} />
           <Route path="/colleague" element={<ColleagueSearchPage />} />
 
+          {/* Auth routes */}
+          <Route path="/login" element={<LoginPage />} />
+
+          {/* Curation routes (protected) */}
+          <Route
+            path="/curation"
+            element={
+              <ProtectedRoute>
+                <CuratorCentralPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/go/todo"
+            element={
+              <ProtectedRoute>
+                <GoTodoListPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/go/:featureName"
+            element={
+              <ProtectedRoute>
+                <GoCurationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/litguide/todo"
+            element={
+              <ProtectedRoute>
+                <LitGuideTodoListPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/reference/create"
+            element={
+              <ProtectedRoute>
+                <ReferenceCurationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/reference/:referenceNo"
+            element={
+              <ProtectedRoute>
+                <ReferenceCurationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/phenotype"
+            element={
+              <ProtectedRoute>
+                <PhenotypeCurationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/phenotype/:featureName"
+            element={
+              <ProtectedRoute>
+                <PhenotypeCurationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/colleague/list"
+            element={
+              <ProtectedRoute>
+                <ColleagueCurationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/colleague/:colleagueNo"
+            element={
+              <ProtectedRoute>
+                <ColleagueCurationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/locus-guide"
+            element={
+              <ProtectedRoute>
+                <LocusCurationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/locus/:featureName"
+            element={
+              <ProtectedRoute>
+                <LocusCurationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/litguide"
+            element={
+              <ProtectedRoute>
+                <LitGuideCurationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/litguide/:featureName"
+            element={
+              <ProtectedRoute>
+                <LitGuideCurationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/note/new"
+            element={
+              <ProtectedRoute>
+                <NoteCurationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/note/edit"
+            element={
+              <ProtectedRoute>
+                <NoteCurationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/note/:noteNo"
+            element={
+              <ProtectedRoute>
+                <NoteCurationPage />
+              </ProtectedRoute>
+            }
+          />
+
           {/* Help documentation pages */}
           <Route path="/help/getting-started" element={<GettingStartedHelp />} />
           <Route path="/help/sequence" element={<SequenceHelp />} />
@@ -291,6 +448,7 @@ function App() {
         </footer>
       </div>
     </Router>
+    </AuthProvider>
   );
 }
 
