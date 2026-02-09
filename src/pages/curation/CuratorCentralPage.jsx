@@ -146,6 +146,9 @@ function CuratorCentralPage() {
               <li>
                 <Link to="/curation/note/edit">Edit an existing curator note</Link>
               </li>
+              <li>
+                <Link to="/curation/db-search">Database Search (Phenotypes)</Link>
+              </li>
             </ul>
           </section>
 
