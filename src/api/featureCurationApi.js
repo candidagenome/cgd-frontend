@@ -93,6 +93,35 @@ export const deleteFeature = async (featureNo) => {
   return response.data;
 };
 
+/**
+ * Get info about an existing feature for the add location form.
+ * @param {string} organismAbbrev - Organism abbreviation
+ * @param {string} featureName - Feature name to look up
+ * @returns {Promise<{found: boolean, feature_no?: number, feature_name?: string, gene_name?: string, feature_type?: string, locations?: Array}>}
+ */
+export const getFeatureInfo = async (organismAbbrev, featureName) => {
+  const response = await api.get(
+    `${BASE_URL}/info/${encodeURIComponent(organismAbbrev)}/${encodeURIComponent(featureName)}`
+  );
+  return response.data;
+};
+
+/**
+ * Add a new location to an existing feature.
+ * @param {Object} data - Location data
+ * @param {string} data.feature_name - Existing feature name
+ * @param {string} data.organism_abbrev - Organism abbreviation
+ * @param {string} data.chromosome_name - Chromosome name
+ * @param {number} data.start_coord - Start coordinate
+ * @param {number} data.stop_coord - Stop coordinate
+ * @param {string} [data.strand] - Strand: W (Watson) or C (Crick)
+ * @returns {Promise<{feature_no: number, feature_name: string, feat_location_no: number, message: string}>}
+ */
+export const addLocation = async (data) => {
+  const response = await api.post(`${BASE_URL}/location`, data);
+  return response.data;
+};
+
 export default {
   getOrganisms,
   getChromosomes,
@@ -102,4 +131,6 @@ export default {
   checkFeatureExists,
   createFeature,
   deleteFeature,
+  getFeatureInfo,
+  addLocation,
 };

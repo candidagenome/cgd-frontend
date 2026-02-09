@@ -78,6 +78,7 @@ import LocusCurationPage from './pages/curation/LocusCurationPage';
 import LitGuideCurationPage from './pages/curation/LitGuideCurationPage';
 import NoteCurationPage from './pages/curation/NoteCurationPage';
 import NewFeaturePage from './pages/curation/NewFeaturePage';
+import NewLocationPage from './pages/curation/NewLocationPage';
 
 // Help documentation pages
 import GettingStartedHelp from './pages/help/GettingStartedHelp';
@@ -252,6 +253,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <NewFeaturePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/location/new"
+            element={
+              <ProtectedRoute>
+                <NewLocationPage />
               </ProtectedRoute>
             }
           />
