@@ -52,10 +52,6 @@ function LoginPage() {
       <div className="login-container" style={styles.container}>
         <h1 style={styles.title}>Curator Login</h1>
 
-        <p style={styles.subtitle}>
-          Enter your Oracle user name and password to access curation tools.
-        </p>
-
         {error && (
           <div style={styles.errorBox}>
             {error}
@@ -127,13 +123,8 @@ const styles = {
   },
   title: {
     marginTop: 0,
-    marginBottom: '0.5rem',
+    marginBottom: '1rem',
     color: '#333',
-    textAlign: 'center',
-  },
-  subtitle: {
-    marginBottom: '1.5rem',
-    color: '#666',
     textAlign: 'center',
   },
   errorBox: {
