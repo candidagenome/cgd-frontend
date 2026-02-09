@@ -24,6 +24,26 @@ export const referenceCurationApi = {
   },
 
   /**
+   * Create a new reference manually (without PubMed ID).
+   *
+   * @param {Object} data - Reference data
+   * @param {string} data.title - Reference title
+   * @param {number} data.year - Publication year
+   * @param {string} [data.status='Published'] - Reference status
+   * @param {string[]} [data.authors] - Author names
+   * @param {string} [data.journal_abbrev] - Journal abbreviation
+   * @param {string} [data.volume] - Volume number
+   * @param {string} [data.pages] - Page range
+   * @param {string} [data.abstract] - Abstract text
+   * @param {string[]} [data.publication_types] - Publication types
+   * @returns {Promise<{reference_no: number, message: string}>}
+   */
+  createManual: async (data) => {
+    const response = await api.post('/api/curation/reference/manual', data);
+    return response.data;
+  },
+
+  /**
    * Get full curation details for a reference.
    *
    * @param {number} referenceNo - Reference number

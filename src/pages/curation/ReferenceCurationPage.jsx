@@ -32,11 +32,24 @@ function ReferenceCurationPage() {
   const [selectedStatus, setSelectedStatus] = useState('');
   const [statusUpdating, setStatusUpdating] = useState(false);
 
+  // Create mode state
+  const [createMode, setCreateMode] = useState('pubmed'); // 'pubmed' or 'manual'
+
   // Create from PubMed state
   const [pubmedId, setPubmedId] = useState('');
   const [refStatus, setRefStatus] = useState('Published');
   const [refStatuses, setRefStatuses] = useState([]);
   const [creating, setCreating] = useState(false);
+
+  // Create manual reference state
+  const [manualTitle, setManualTitle] = useState('');
+  const [manualYear, setManualYear] = useState(new Date().getFullYear());
+  const [manualAuthors, setManualAuthors] = useState(['', '', '', '']);
+  const [manualJournal, setManualJournal] = useState('');
+  const [manualVolume, setManualVolume] = useState('');
+  const [manualPages, setManualPages] = useState('');
+  const [manualAbstract, setManualAbstract] = useState('');
+  const [manualStatus, setManualStatus] = useState('Published');
 
   // Literature guide linking state
   const [litguideFeatures, setLitguideFeatures] = useState('');
@@ -143,6 +156,62 @@ function ReferenceCurationPage() {
     }
   };
 
+  // Handle create manual reference
+  const handleCreateManual = async (e) => {
+    e.preventDefault();
+
+    if (!manualTitle.trim()) {
+      setError('Title is required');
+      return;
+    }
+
+    if (!manualYear) {
+      setError('Year is required');
+      return;
+    }
+
+    setCreating(true);
+    setError(null);
+
+    try {
+      // Filter out empty authors
+      const authors = manualAuthors.filter((a) => a.trim());
+
+      const result = await referenceCurationApi.createManual({
+        title: manualTitle.trim(),
+        year: parseInt(manualYear, 10),
+        status: manualStatus,
+        authors: authors.length > 0 ? authors : null,
+        journal_abbrev: manualJournal.trim() || null,
+        volume: manualVolume.trim() || null,
+        pages: manualPages.trim() || null,
+        abstract: manualAbstract.trim() || null,
+      });
+
+      setSuccessMessage(`Reference ${result.reference_no} created successfully`);
+      // Navigate to the new reference
+      setTimeout(() => {
+        navigate(`/curation/reference/${result.reference_no}`);
+      }, 1500);
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to create reference');
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  // Update author at index
+  const updateAuthor = (index, value) => {
+    const newAuthors = [...manualAuthors];
+    newAuthors[index] = value;
+    setManualAuthors(newAuthors);
+  };
+
+  // Add more author fields
+  const addAuthorFields = () => {
+    setManualAuthors([...manualAuthors, '', '', '', '']);
+  };
+
   // Handle literature guide linking
   const handleLinkToLitGuide = async (e) => {
     e.preventDefault();
@@ -184,56 +253,220 @@ function ReferenceCurationPage() {
     return (
       <div style={styles.container}>
         <div style={styles.header}>
-          <h1>Create Reference from PubMed</h1>
+          <h1>Create Reference</h1>
           <Link to="/curation">Back to Curator Central</Link>
         </div>
 
         {error && <div style={styles.error}>{error}</div>}
         {successMessage && <div style={styles.success}>{successMessage}</div>}
 
+        {/* Tab buttons */}
+        <div style={styles.tabContainer}>
+          <button
+            onClick={() => setCreateMode('pubmed')}
+            style={{
+              ...styles.tabButton,
+              ...(createMode === 'pubmed' ? styles.tabButtonActive : {}),
+            }}
+          >
+            From PubMed
+          </button>
+          <button
+            onClick={() => setCreateMode('manual')}
+            style={{
+              ...styles.tabButton,
+              ...(createMode === 'manual' ? styles.tabButtonActive : {}),
+            }}
+          >
+            Manual Entry (Non-PubMed)
+          </button>
+        </div>
+
         <div style={styles.formContainer}>
-          <form onSubmit={handleCreateFromPubmed} style={styles.form}>
-            <div style={styles.formRow}>
-              <label style={styles.formLabel}>
-                PubMed ID: <span style={styles.required}>*</span>
-              </label>
-              <input
-                type="number"
-                value={pubmedId}
-                onChange={(e) => setPubmedId(e.target.value)}
-                placeholder="e.g., 12345678"
-                style={styles.formInput}
-                required
-              />
-            </div>
+          {createMode === 'pubmed' ? (
+            /* PubMed form */
+            <form onSubmit={handleCreateFromPubmed} style={styles.form}>
+              <p style={styles.formDescription}>
+                Enter a PubMed ID to fetch reference metadata from NCBI.
+              </p>
+              <div style={styles.formRow}>
+                <label style={styles.formLabel}>
+                  PubMed ID: <span style={styles.required}>*</span>
+                </label>
+                <input
+                  type="number"
+                  value={pubmedId}
+                  onChange={(e) => setPubmedId(e.target.value)}
+                  placeholder="e.g., 12345678"
+                  style={styles.formInput}
+                  required
+                />
+              </div>
 
-            <div style={styles.formRow}>
-              <label style={styles.formLabel}>
-                Status: <span style={styles.required}>*</span>
-              </label>
-              <select
-                value={refStatus}
-                onChange={(e) => setRefStatus(e.target.value)}
-                style={styles.formSelect}
-              >
-                {refStatuses.map((status) => (
-                  <option key={status} value={status}>
-                    {status}
-                  </option>
-                ))}
-              </select>
-            </div>
+              <div style={styles.formRow}>
+                <label style={styles.formLabel}>
+                  Status: <span style={styles.required}>*</span>
+                </label>
+                <select
+                  value={refStatus}
+                  onChange={(e) => setRefStatus(e.target.value)}
+                  style={styles.formSelect}
+                >
+                  {refStatuses.map((status) => (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-            <div style={styles.formButtons}>
-              <button
-                type="submit"
-                disabled={creating}
-                style={styles.submitButton}
-              >
-                {creating ? 'Creating...' : 'Create Reference'}
-              </button>
-            </div>
-          </form>
+              <div style={styles.formButtons}>
+                <button
+                  type="submit"
+                  disabled={creating}
+                  style={styles.submitButton}
+                >
+                  {creating ? 'Creating...' : 'Create Reference'}
+                </button>
+              </div>
+            </form>
+          ) : (
+            /* Manual entry form */
+            <form onSubmit={handleCreateManual} style={styles.form}>
+              <p style={styles.formDescription}>
+                Manually enter reference information for papers without a PubMed ID.
+              </p>
+
+              {/* Authors */}
+              <div style={styles.formSection}>
+                <h3 style={styles.formSectionTitle}>Authors</h3>
+                <p style={styles.formHint}>
+                  Format: Last name followed by initials (e.g., &quot;Smith JA&quot;)
+                </p>
+                <div style={styles.authorGrid}>
+                  {manualAuthors.map((author, idx) => (
+                    <input
+                      key={idx}
+                      type="text"
+                      value={author}
+                      onChange={(e) => updateAuthor(idx, e.target.value)}
+                      placeholder={`Author ${idx + 1}`}
+                      style={styles.authorInput}
+                    />
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={addAuthorFields}
+                  style={styles.addButton}
+                >
+                  + Add more authors
+                </button>
+              </div>
+
+              {/* Title */}
+              <div style={styles.formRow}>
+                <label style={styles.formLabel}>
+                  Title: <span style={styles.required}>*</span>
+                </label>
+                <textarea
+                  value={manualTitle}
+                  onChange={(e) => setManualTitle(e.target.value)}
+                  placeholder="Reference title"
+                  style={styles.formTextareaWide}
+                  rows={2}
+                  required
+                />
+              </div>
+
+              {/* Journal, Volume, Pages, Year */}
+              <div style={styles.formGrid}>
+                <div style={styles.formGridItem}>
+                  <label style={styles.formLabelSmall}>Journal Abbrev:</label>
+                  <input
+                    type="text"
+                    value={manualJournal}
+                    onChange={(e) => setManualJournal(e.target.value)}
+                    placeholder="e.g., J Biol Chem"
+                    style={styles.formInputSmall}
+                  />
+                </div>
+                <div style={styles.formGridItem}>
+                  <label style={styles.formLabelSmall}>Volume:</label>
+                  <input
+                    type="text"
+                    value={manualVolume}
+                    onChange={(e) => setManualVolume(e.target.value)}
+                    placeholder="e.g., 45"
+                    style={styles.formInputSmall}
+                  />
+                </div>
+                <div style={styles.formGridItem}>
+                  <label style={styles.formLabelSmall}>Pages:</label>
+                  <input
+                    type="text"
+                    value={manualPages}
+                    onChange={(e) => setManualPages(e.target.value)}
+                    placeholder="e.g., 123-130"
+                    style={styles.formInputSmall}
+                  />
+                </div>
+                <div style={styles.formGridItem}>
+                  <label style={styles.formLabelSmall}>
+                    Year: <span style={styles.required}>*</span>
+                  </label>
+                  <input
+                    type="number"
+                    value={manualYear}
+                    onChange={(e) => setManualYear(e.target.value)}
+                    placeholder="Year"
+                    style={styles.formInputSmall}
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Abstract */}
+              <div style={styles.formRow}>
+                <label style={styles.formLabel}>Abstract:</label>
+                <textarea
+                  value={manualAbstract}
+                  onChange={(e) => setManualAbstract(e.target.value)}
+                  placeholder="Optional abstract text"
+                  style={styles.formTextareaWide}
+                  rows={4}
+                />
+              </div>
+
+              {/* Status */}
+              <div style={styles.formRow}>
+                <label style={styles.formLabel}>
+                  Status: <span style={styles.required}>*</span>
+                </label>
+                <select
+                  value={manualStatus}
+                  onChange={(e) => setManualStatus(e.target.value)}
+                  style={styles.formSelect}
+                >
+                  {refStatuses.map((status) => (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div style={styles.formButtons}>
+                <button
+                  type="submit"
+                  disabled={creating}
+                  style={styles.submitButton}
+                >
+                  {creating ? 'Creating...' : 'Create Reference'}
+                </button>
+              </div>
+            </form>
+          )}
         </div>
       </div>
     );
@@ -428,6 +661,97 @@ const styles = {
     maxWidth: '1000px',
     margin: '1rem auto',
     padding: '1rem',
+  },
+  tabContainer: {
+    display: 'flex',
+    gap: '0',
+    marginBottom: '1rem',
+    borderBottom: '2px solid #ddd',
+  },
+  tabButton: {
+    padding: '0.75rem 1.5rem',
+    border: 'none',
+    borderBottom: '2px solid transparent',
+    background: 'none',
+    cursor: 'pointer',
+    fontSize: '1rem',
+    color: '#666',
+    marginBottom: '-2px',
+  },
+  tabButtonActive: {
+    borderBottomColor: '#337ab7',
+    color: '#337ab7',
+    fontWeight: 'bold',
+  },
+  formDescription: {
+    marginBottom: '1rem',
+    color: '#666',
+  },
+  formSection: {
+    marginBottom: '1.5rem',
+    padding: '1rem',
+    backgroundColor: '#f5f5f5',
+    borderRadius: '4px',
+  },
+  formSectionTitle: {
+    margin: '0 0 0.5rem 0',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+  },
+  formHint: {
+    fontSize: '0.85rem',
+    color: '#666',
+    marginBottom: '0.5rem',
+  },
+  authorGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(4, 1fr)',
+    gap: '0.5rem',
+    marginBottom: '0.5rem',
+  },
+  authorInput: {
+    padding: '0.5rem',
+    fontSize: '0.9rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+  },
+  addButton: {
+    padding: '0.25rem 0.75rem',
+    fontSize: '0.85rem',
+    backgroundColor: '#f0f0f0',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  },
+  formGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(4, 1fr)',
+    gap: '1rem',
+    marginBottom: '1rem',
+  },
+  formGridItem: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  formLabelSmall: {
+    fontSize: '0.85rem',
+    fontWeight: 'bold',
+    marginBottom: '0.25rem',
+  },
+  formInputSmall: {
+    padding: '0.5rem',
+    fontSize: '1rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+  },
+  formTextareaWide: {
+    flex: 1,
+    padding: '0.5rem',
+    fontSize: '1rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    fontFamily: 'inherit',
+    minWidth: '400px',
   },
   header: {
     display: 'flex',
