@@ -65,11 +65,11 @@ export const locusCurationApi = {
   /**
    * Remove alias from feature.
    *
-   * @param {number} featureAliasNo - Feature alias number
+   * @param {number} featAliasNo - Feature alias link number
    * @returns {Promise<{success: boolean, message: string}>}
    */
-  removeAlias: async (featureAliasNo) => {
-    const response = await api.delete(`/api/curation/locus/alias/${featureAliasNo}`);
+  removeAlias: async (featAliasNo) => {
+    const response = await api.delete(`/api/curation/locus/alias/${featAliasNo}`);
     return response.data;
   },
 
@@ -79,14 +79,12 @@ export const locusCurationApi = {
    * @param {number} featureNo - Feature number
    * @param {string} noteType - Note type
    * @param {string} noteText - Note text
-   * @param {string} [noteClass] - Optional note class
    * @returns {Promise<{id: number, message: string}>}
    */
-  addNote: async (featureNo, noteType, noteText, noteClass = null) => {
+  addNote: async (featureNo, noteType, noteText) => {
     const response = await api.post(`/api/curation/locus/${featureNo}/note`, {
       note_type: noteType,
       note_text: noteText,
-      note_class: noteClass,
     });
     return response.data;
   },
@@ -94,11 +92,11 @@ export const locusCurationApi = {
   /**
    * Remove note from feature.
    *
-   * @param {number} featureNoteNo - Feature note number
+   * @param {number} noteLinkNo - Note link number
    * @returns {Promise<{success: boolean, message: string}>}
    */
-  removeNote: async (featureNoteNo) => {
-    const response = await api.delete(`/api/curation/locus/note/${featureNoteNo}`);
+  removeNote: async (noteLinkNo) => {
+    const response = await api.delete(`/api/curation/locus/note/${noteLinkNo}`);
     return response.data;
   },
 

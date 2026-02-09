@@ -40,7 +40,7 @@ function LocusCurationPage() {
   const [showAddUrl, setShowAddUrl] = useState(false);
 
   const [newAlias, setNewAlias] = useState({ alias_name: '', alias_type: 'Uniform', reference_no: '' });
-  const [newNote, setNewNote] = useState({ note_type: '', note_text: '', note_class: '' });
+  const [newNote, setNewNote] = useState({ note_type: '', note_text: '' });
   const [newUrl, setNewUrl] = useState({ url_type: '', link: '' });
 
   // Load feature details
@@ -57,10 +57,7 @@ function LocusCurationPage() {
         gene_name: data.gene_name || '',
         name_description: data.name_description || '',
         headline: data.headline || '',
-        description: data.description || '',
-        gene_product: data.gene_product || '',
         feature_type: data.feature_type || '',
-        qualifier: data.qualifier || '',
       });
     } catch (err) {
       if (err.response?.status === 404) {
@@ -173,12 +170,11 @@ function LocusCurationPage() {
       await locusCurationApi.addNote(
         featureData.feature_no,
         newNote.note_type,
-        newNote.note_text,
-        newNote.note_class || null
+        newNote.note_text
       );
       setSuccessMessage('Note added');
       setShowAddNote(false);
-      setNewNote({ note_type: '', note_text: '', note_class: '' });
+      setNewNote({ note_type: '', note_text: '' });
       loadFeature(featureData.feature_no);
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
@@ -362,38 +358,11 @@ function LocusCurationPage() {
                   />
                 </div>
                 <div style={styles.formRow}>
-                  <label style={styles.formLabel}>Description:</label>
-                  <textarea
-                    value={editForm.description}
-                    onChange={(e) => handleEditChange('description', e.target.value)}
-                    style={styles.formTextarea}
-                    rows={4}
-                  />
-                </div>
-                <div style={styles.formRow}>
-                  <label style={styles.formLabel}>Gene Product:</label>
-                  <input
-                    type="text"
-                    value={editForm.gene_product}
-                    onChange={(e) => handleEditChange('gene_product', e.target.value)}
-                    style={styles.formInputWide}
-                  />
-                </div>
-                <div style={styles.formRow}>
                   <label style={styles.formLabel}>Feature Type:</label>
                   <input
                     type="text"
                     value={editForm.feature_type}
                     onChange={(e) => handleEditChange('feature_type', e.target.value)}
-                    style={styles.formInput}
-                  />
-                </div>
-                <div style={styles.formRow}>
-                  <label style={styles.formLabel}>Qualifier:</label>
-                  <input
-                    type="text"
-                    value={editForm.qualifier}
-                    onChange={(e) => handleEditChange('qualifier', e.target.value)}
                     style={styles.formInput}
                   />
                 </div>
@@ -412,10 +381,7 @@ function LocusCurationPage() {
                         gene_name: featureData.gene_name || '',
                         name_description: featureData.name_description || '',
                         headline: featureData.headline || '',
-                        description: featureData.description || '',
-                        gene_product: featureData.gene_product || '',
                         feature_type: featureData.feature_type || '',
-                        qualifier: featureData.qualifier || '',
                       });
                     }}
                     style={styles.cancelButton}
@@ -448,20 +414,8 @@ function LocusCurationPage() {
                     <td style={styles.infoTd}>{featureData.feature_type}</td>
                   </tr>
                   <tr>
-                    <th style={styles.infoTh}>Qualifier:</th>
-                    <td style={styles.infoTd}>{featureData.qualifier || '-'}</td>
-                  </tr>
-                  <tr>
                     <th style={styles.infoTh}>Headline:</th>
                     <td style={styles.infoTd}>{featureData.headline || '-'}</td>
-                  </tr>
-                  <tr>
-                    <th style={styles.infoTh}>Description:</th>
-                    <td style={styles.infoTd}>{featureData.description || '-'}</td>
-                  </tr>
-                  <tr>
-                    <th style={styles.infoTh}>Gene Product:</th>
-                    <td style={styles.infoTd}>{featureData.gene_product || '-'}</td>
                   </tr>
                   <tr>
                     <th style={styles.infoTh}>Source:</th>
@@ -534,17 +488,15 @@ function LocusCurationPage() {
                   <tr>
                     <th style={styles.th}>Alias</th>
                     <th style={styles.th}>Type</th>
-                    <th style={styles.th}>Source</th>
                     <th style={styles.th}>References</th>
                     <th style={styles.th}>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   {featureData.aliases.map((alias) => (
-                    <tr key={alias.feature_alias_no}>
+                    <tr key={alias.feat_alias_no}>
                       <td style={styles.td}>{alias.alias_name}</td>
                       <td style={styles.td}>{alias.alias_type}</td>
-                      <td style={styles.td}>{alias.source}</td>
                       <td style={styles.td}>
                         {alias.references?.map((ref) => (
                           <Link key={ref.reference_no} to={`/reference/${ref.reference_no}`}>
@@ -554,7 +506,7 @@ function LocusCurationPage() {
                       </td>
                       <td style={styles.td}>
                         <button
-                          onClick={() => handleRemoveAlias(alias.feature_alias_no)}
+                          onClick={() => handleRemoveAlias(alias.feat_alias_no)}
                           style={styles.deleteButton}
                         >
                           Remove
@@ -599,16 +551,6 @@ function LocusCurationPage() {
                   </select>
                 </div>
                 <div style={styles.formRow}>
-                  <label style={styles.formLabelSmall}>Note Class:</label>
-                  <input
-                    type="text"
-                    value={newNote.note_class}
-                    onChange={(e) => setNewNote({ ...newNote, note_class: e.target.value })}
-                    style={styles.formInput}
-                    placeholder="Optional"
-                  />
-                </div>
-                <div style={styles.formRow}>
                   <label style={styles.formLabelSmall}>Note Text:</label>
                   <textarea
                     value={newNote.note_text}
@@ -627,7 +569,6 @@ function LocusCurationPage() {
                 <thead>
                   <tr>
                     <th style={styles.th}>Type</th>
-                    <th style={styles.th}>Class</th>
                     <th style={styles.th}>Text</th>
                     <th style={styles.th}>Date</th>
                     <th style={styles.th}>Action</th>
@@ -635,14 +576,13 @@ function LocusCurationPage() {
                 </thead>
                 <tbody>
                   {featureData.notes.map((note) => (
-                    <tr key={note.feature_note_no}>
+                    <tr key={note.note_link_no}>
                       <td style={styles.td}>{note.note_type}</td>
-                      <td style={styles.td}>{note.note_class || '-'}</td>
                       <td style={styles.td}>{note.note_text}</td>
                       <td style={styles.td}>{note.date_created?.split('T')[0] || '-'}</td>
                       <td style={styles.td}>
                         <button
-                          onClick={() => handleRemoveNote(note.feature_note_no)}
+                          onClick={() => handleRemoveNote(note.note_link_no)}
                           style={styles.deleteButton}
                         >
                           Remove
