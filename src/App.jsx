@@ -291,6 +291,14 @@ function App() {
             }
           />
           <Route
+            path="/curation/go"
+            element={
+              <ProtectedRoute>
+                <GoCurationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/curation/go/:featureName"
             element={
               <ProtectedRoute>
