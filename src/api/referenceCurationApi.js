@@ -131,6 +131,64 @@ export const referenceCurationApi = {
     const response = await api.get('/api/curation/reference/statuses/curation');
     return response.data;
   },
+
+  /**
+   * Search for references by various criteria.
+   *
+   * @param {Object} params - Search parameters
+   * @param {number} [params.pubmed] - PubMed ID
+   * @param {number} [params.reference_no] - Reference number
+   * @param {string} [params.dbxref_id] - CGDID
+   * @param {string} [params.volume] - Journal volume
+   * @param {string} [params.page] - Page number/range
+   * @param {string} [params.author] - Author name (partial)
+   * @param {string} [params.keyword] - Keyword in title/abstract
+   * @param {number} [params.min_year] - Minimum year
+   * @param {number} [params.max_year] - Maximum year
+   * @param {number} [params.limit=100] - Max results
+   * @returns {Promise<{results: Array, count: number}>}
+   */
+  searchReferences: async (params) => {
+    const response = await api.post('/api/curation/reference/search', params);
+    return response.data;
+  },
+
+  /**
+   * Get year range for publications in database.
+   *
+   * @returns {Promise<{min_year: number, max_year: number}>}
+   */
+  getYearRange: async () => {
+    const response = await api.get('/api/curation/reference/year-range');
+    return response.data;
+  },
+
+  /**
+   * Check if a reference has linked data.
+   *
+   * @param {number} referenceNo - Reference number
+   * @returns {Promise<Object>} Usage counts
+   */
+  getReferenceUsage: async (referenceNo) => {
+    const response = await api.get(`/api/curation/reference/${referenceNo}/usage`);
+    return response.data;
+  },
+
+  /**
+   * Delete a reference with full cleanup.
+   *
+   * @param {number} referenceNo - Reference number
+   * @param {Object} [options] - Delete options
+   * @param {string} [options.delete_log_comment] - Comment for delete log
+   * @param {number} [options.make_secondary_for] - Make CGDID secondary for this reference
+   * @returns {Promise<{success: boolean, messages: string[], dbxref_id: string}>}
+   */
+  deleteWithCleanup: async (referenceNo, options = {}) => {
+    const response = await api.delete(`/api/curation/reference/${referenceNo}/full`, {
+      data: options,
+    });
+    return response.data;
+  },
 };
 
 export default referenceCurationApi;
