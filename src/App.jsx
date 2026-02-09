@@ -82,6 +82,7 @@ import NewLocationPage from './pages/curation/NewLocationPage';
 import LinkCurationPage from './pages/curation/LinkCurationPage';
 import GeneRegistryCurationPage from './pages/curation/GeneRegistryCurationPage';
 import ParagraphCurationPage from './pages/curation/ParagraphCurationPage';
+import LitReviewPage from './pages/curation/LitReviewPage';
 
 // Help documentation pages
 import GettingStartedHelp from './pages/help/GettingStartedHelp';
@@ -416,6 +417,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ParagraphCurationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/literature/review"
+            element={
+              <ProtectedRoute>
+                <LitReviewPage />
               </ProtectedRoute>
             }
           />
