@@ -80,6 +80,7 @@ import NoteCurationPage from './pages/curation/NoteCurationPage';
 import NewFeaturePage from './pages/curation/NewFeaturePage';
 import NewLocationPage from './pages/curation/NewLocationPage';
 import LinkCurationPage from './pages/curation/LinkCurationPage';
+import GeneRegistryCurationPage from './pages/curation/GeneRegistryCurationPage';
 
 // Help documentation pages
 import GettingStartedHelp from './pages/help/GettingStartedHelp';
@@ -398,6 +399,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <NoteCurationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/gene-registry/list"
+            element={
+              <ProtectedRoute>
+                <GeneRegistryCurationPage />
               </ProtectedRoute>
             }
           />
