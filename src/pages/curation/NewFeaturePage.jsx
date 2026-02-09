@@ -15,7 +15,7 @@ import {
   checkFeatureExists,
   createFeature,
 } from '../../api/featureCurationApi';
-import { searchReferences } from '../../api/referenceCurationApi';
+import litguideCurationApi from '../../api/litguideCurationApi';
 
 export default function NewFeaturePage() {
   // State for dropdowns
@@ -130,7 +130,7 @@ export default function NewFeaturePage() {
 
     setSearchingRefs(true);
     try {
-      const data = await searchReferences(refSearchQuery, 1, 10);
+      const data = await litguideCurationApi.searchReferences(refSearchQuery, 1, 10);
       setRefSearchResults(data.references);
     } catch (err) {
       console.error('Reference search failed:', err);
