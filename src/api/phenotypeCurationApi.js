@@ -1,0 +1,72 @@
+/**
+ * Phenotype Curation API module for phenotype annotation CRUD operations.
+ *
+ * Requires curator authentication.
+ */
+import api from './config';
+
+export const phenotypeCurationApi = {
+  /**
+   * Get all phenotype annotations for a feature.
+   *
+   * @param {string} featureName - Feature name or gene name
+   * @returns {Promise<{feature_no: number, feature_name: string, gene_name: string, annotations: Array}>}
+   */
+  getAnnotations: async (featureName) => {
+    const response = await api.get(`/api/curation/phenotype/${encodeURIComponent(featureName)}`);
+    return response.data;
+  },
+
+  /**
+   * Create a new phenotype annotation.
+   *
+   * @param {string} featureName - Feature name
+   * @param {Object} data - Annotation data
+   * @param {string} data.experiment_type - Experiment type (CV term)
+   * @param {string} data.mutant_type - Mutant type (CV term)
+   * @param {string} data.observable - Observable (CV term)
+   * @param {string} [data.qualifier] - Qualifier (CV term)
+   * @param {number} data.reference_no - Reference number
+   * @param {string} [data.experiment_comment] - Experiment comment
+   * @param {Array<{property_type: string, property_value: string, property_description?: string}>} [data.properties] - Properties
+   * @returns {Promise<{pheno_annotation_no: number, message: string}>}
+   */
+  createAnnotation: async (featureName, data) => {
+    const response = await api.post(`/api/curation/phenotype/${encodeURIComponent(featureName)}`, data);
+    return response.data;
+  },
+
+  /**
+   * Delete a phenotype annotation.
+   *
+   * @param {number} annotationNo - Phenotype annotation number
+   * @returns {Promise<{success: boolean, message: string}>}
+   */
+  deleteAnnotation: async (annotationNo) => {
+    const response = await api.delete(`/api/curation/phenotype/${annotationNo}`);
+    return response.data;
+  },
+
+  /**
+   * Get CV terms for dropdowns.
+   *
+   * @param {string} cvName - CV name (experiment_type, mutant_type, qualifier)
+   * @returns {Promise<{cv_name: string, terms: string[]}>}
+   */
+  getCVTerms: async (cvName) => {
+    const response = await api.get(`/api/curation/phenotype/cv/${encodeURIComponent(cvName)}`);
+    return response.data;
+  },
+
+  /**
+   * Get valid property types for experiment properties.
+   *
+   * @returns {Promise<{property_types: string[]}>}
+   */
+  getPropertyTypes: async () => {
+    const response = await api.get('/api/curation/phenotype/property-types');
+    return response.data;
+  },
+};
+
+export default phenotypeCurationApi;
