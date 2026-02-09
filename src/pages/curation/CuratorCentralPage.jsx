@@ -129,6 +129,9 @@ function CuratorCentralPage() {
                 <Link to="/curation/reference/search">Edit or delete an existing reference</Link>
               </li>
               <li>
+                <Link to="/curation/reference/annotation">Edit Reference Annotations</Link>
+              </li>
+              <li>
                 <Link to="/curation/reference/search" target="_blank">Reference Search</Link>
               </li>
             </ul>

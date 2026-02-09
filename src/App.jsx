@@ -84,6 +84,7 @@ import GeneRegistryCurationPage from './pages/curation/GeneRegistryCurationPage'
 import ParagraphCurationPage from './pages/curation/ParagraphCurationPage';
 import LitReviewPage from './pages/curation/LitReviewPage';
 import ReferenceSearchPage from './pages/curation/ReferenceSearchPage';
+import RefAnnotationCurationPage from './pages/curation/RefAnnotationCurationPage';
 
 // Help documentation pages
 import GettingStartedHelp from './pages/help/GettingStartedHelp';
@@ -434,6 +435,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ReferenceSearchPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/reference/annotation"
+            element={
+              <ProtectedRoute>
+                <RefAnnotationCurationPage />
               </ProtectedRoute>
             }
           />
