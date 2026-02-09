@@ -76,6 +76,8 @@ function CuratorCentralPage() {
               </li>
               <li>
                 <Link to="/curation/paragraph">Paragraphs</Link>
+                {' | '}
+                <a href="https://wiki.candidagenome.org/index.php/Help:paragraph" target="_blank" rel="noopener noreferrer">Help</a>
               </li>
               <li>
                 <Link to="/curation/location/new">Add New Location for existing Feature</Link>

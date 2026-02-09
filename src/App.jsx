@@ -81,6 +81,7 @@ import NewFeaturePage from './pages/curation/NewFeaturePage';
 import NewLocationPage from './pages/curation/NewLocationPage';
 import LinkCurationPage from './pages/curation/LinkCurationPage';
 import GeneRegistryCurationPage from './pages/curation/GeneRegistryCurationPage';
+import ParagraphCurationPage from './pages/curation/ParagraphCurationPage';
 
 // Help documentation pages
 import GettingStartedHelp from './pages/help/GettingStartedHelp';
@@ -407,6 +408,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <GeneRegistryCurationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/paragraph"
+            element={
+              <ProtectedRoute>
+                <ParagraphCurationPage />
               </ProtectedRoute>
             }
           />
