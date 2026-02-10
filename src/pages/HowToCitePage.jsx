@@ -54,13 +54,9 @@ function HowToCitePage() {
           <ul className="reference-list">
             <li>
               Lew-Smith J, Binkley J, Sherlock G.{' '}
-              <a
-                href="https://pubmed.ncbi.nlm.nih.gov/39776186/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link to="/reference/39776186">
                 The <em>Candida</em> Genome Database: annotation and visualization updates.
-              </a>{' '}
+              </Link>{' '}
               <em>Genetics.</em> 2025 Mar 17; 229(3). doi: 10.1093/genetics/iyaf001.
               <span className="available-link">
                 <a
@@ -75,13 +71,9 @@ function HowToCitePage() {
 
             <li>
               Skrzypek MS, Binkley J, Sherlock G.{' '}
-              <a
-                href="https://pubmed.ncbi.nlm.nih.gov/36008656/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link to="/reference/36008656">
                 How to use the <em>Candida</em> Genome Database.
-              </a>{' '}
+              </Link>{' '}
               <em>Methods Mol Biol.</em> 2022. 2542:55-69. doi: 10.1007/978-1-0716-2549-1_4.
               <span className="available-link">
                 <a
@@ -96,13 +88,9 @@ function HowToCitePage() {
 
             <li>
               Skrzypek MS, Binkley J, Sherlock G.{' '}
-              <a
-                href="https://pubmed.ncbi.nlm.nih.gov/29761455/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link to="/reference/29761455">
                 Using the <em>Candida</em> Genome Database.
-              </a>{' '}
+              </Link>{' '}
               <em>Methods Mol Biol.</em> 2018. 1757:31-47. doi:10.1007/978-1-4939-7737-6_3.
               <span className="available-link">
                 <a
