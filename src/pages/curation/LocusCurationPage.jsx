@@ -62,8 +62,11 @@ function LocusCurationPage() {
     } catch (err) {
       if (err.response?.status === 404) {
         setError(`Feature '${identifier}' not found`);
+      } else if (err.response?.status === 401) {
+        // Auth error - handled by interceptor, don't show duplicate error
+        return;
       } else {
-        setError('Failed to load feature details');
+        setError(err.response?.data?.detail || 'Failed to load feature details');
       }
     } finally {
       setLoading(false);

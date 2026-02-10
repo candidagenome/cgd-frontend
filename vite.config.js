@@ -11,6 +11,10 @@ export default defineConfig({
         target: 'https://backend.dev.candidagenome.org',
         changeOrigin: true,
         secure: true,
+        // Ensure cookies are properly forwarded
+        cookieDomainRewrite: {
+          'backend.dev.candidagenome.org': 'frontend.dev.candidagenome.org',
+        },
       },
       '/cgi-bin': {
         target: 'https://www.candidagenome.org',
