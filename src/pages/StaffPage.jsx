@@ -70,30 +70,54 @@ const StaffPage = () => {
     ]
   };
 
-  const StaffCard = ({ member }) => (
-    <div className="staff-card">
-      <div className="staff-image-container">
-        <img src={member.image} alt={member.name} className="staff-image" />
-      </div>
-      <div className="staff-info">
-        {member.link ? (
-          <a href={member.link} target="_blank" rel="noopener noreferrer">
+  const getInitials = (name) => {
+    return name
+      .split(' ')
+      .map(part => part[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
+  const StaffCard = ({ member }) => {
+    const [imageError, setImageError] = React.useState(false);
+
+    return (
+      <div className="staff-card">
+        <div className="staff-image-container">
+          {imageError ? (
+            <div className="staff-image-placeholder">
+              {getInitials(member.name)}
+            </div>
+          ) : (
+            <img
+              src={member.image}
+              alt={member.name}
+              className="staff-image"
+              onError={() => setImageError(true)}
+            />
+          )}
+        </div>
+        <div className="staff-info">
+          {member.link ? (
+            <a href={member.link} target="_blank" rel="noopener noreferrer">
+              <strong>{member.name}</strong>
+            </a>
+          ) : (
             <strong>{member.name}</strong>
-          </a>
-        ) : (
-          <strong>{member.name}</strong>
-        )}
-        <br />
-        {member.title}
-        {member.phone && (
-          <>
-            <br />
-            Voice: {member.phone}
-          </>
-        )}
+          )}
+          <br />
+          {member.title}
+          {member.phone && (
+            <>
+              <br />
+              Voice: {member.phone}
+            </>
+          )}
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="info-page">

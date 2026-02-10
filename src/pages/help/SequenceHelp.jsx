@@ -112,11 +112,7 @@ const SequenceHelp = () => {
               <em>Candida glabrata</em> CBS138 was originally sequenced by Genolevures (Dujon et al., 2004,
               Nature 430:35-44; Koszul et al., 2003, FEBS Lett. 534(1-3):39-48). The genome was later
               re-assembled, leveraging long-read sequencing to correct errors in repetitive regions
-              (Xu et al., 2020, Mol Microbiol 113:1209-1224). Please note that the alternate designations{' '}
-              <a href="http://www.atcc.org/ATCCAdvancedCatalogSearch/ProductDetails/tabid/452/Default.aspx?ATCCNum=2001&Template=fungiYeast" target="_blank" rel="noopener noreferrer">
-                ATCC 2001
-              </a>{' '}
-              and CBS138 refer to the same strain of <em>C. glabrata</em>.
+              (Xu et al., 2020, Mol Microbiol 113:1209-1224).
             </li>
             <li>
               <em>Candida guilliermondii</em> ATCC 6260 was sequenced by the Broad Institute (Butler et al.
@@ -176,19 +172,17 @@ const SequenceHelp = () => {
             The version designation appears in the name of each of the relevant sequence files that are
             available at CGD, so the exact source of the sequence data is always clear. This version system
             was implemented for <em>C. albicans</em> SC5314 and <em>C. glabrata</em> CBS138 in CGD as of
-            June 2011, and it is based on the system designed for tracking of the <em>A. nidulans</em>{' '}
-            sequence and annotation versions in{' '}
-            <a href="http://www.aspergillusgenome.org" target="_blank" rel="noopener noreferrer">AspGD</a>.
-            The same system of version designation will be used for version tracking for the chromosomal
+            June 2011. The same system of version designation will be used for version tracking for the chromosomal
             sequence and genome annotation of other species, as they are added into CGD.
           </p>
           <p>
             Version designations appear in the following format:<br />
             sXX-mYY-rZZ<br />
-            as described in detail{' '}
-            <a href="http://www.candidagenome.org/cgi-bin/reference/reference.pl?dbid=CAL0000143461" target="_blank" rel="noopener noreferrer">
-              here
-            </a>.
+            as described in detail on the{' '}
+            <Link to="/genome-version-history">
+              Genome Version History
+            </Link>{' '}
+            page.
           </p>
           <p>
             A list of all of each of the versions of the sequence and annotation for each species, with
@@ -200,11 +194,7 @@ const SequenceHelp = () => {
           <p>
             Information about every update to the chromosome sequence and/or chromosomal location of any
             gene (or other annotated feature) is displayed on the CGD Locus History page for each of the
-            relevant genes, and also on the appropriate{' '}
-            <a href="http://www.candidagenome.org/cgi-bin/chromosomeHistory.pl" target="_blank" rel="noopener noreferrer">
-              CGD Chromosome History
-            </a>{' '}
-            page.
+            relevant genes.
           </p>
           <p>
             Please feel free to <Link to="/contact">contact us</Link> with any questions.
@@ -267,12 +257,7 @@ const SequenceHelp = () => {
             update annotations for 530 ORFs, and 73 new ORFs identified in the comparative genome analysis
             were added to CGD. All artificial "adjustments" (arbitrary sequence changes made to correct
             presumed errors; see below) were removed from the sequence. The sequence and annotation changes
-            made on each chromosome are listed on individual Chromosome History pages, which are linked from
-            a{' '}
-            <a href="http://www.candidagenome.org/cgi-bin/chromosomeHistory.pl" target="_blank" rel="noopener noreferrer">Summary Table</a>.
-            The detailed description of the methodology used in analysis and curation, as well as the summary
-            of the results, is available in the{' '}
-            <Link to="/help/refinements">Sequence Refinements, November 2008</Link> documentation.
+            made on each chromosome are listed on individual Chromosome History pages.
           </p>
           <p>
             Note that sequence and annotation changes were made to Assembly 21 only, not to previous assemblies.
@@ -297,12 +282,7 @@ const SequenceHelp = () => {
         <div className="info-section" id="A21inCGD">
           <h3>Assembly 21 in CGD (September 2007)</h3>
           <p>
-            Assembly 21 (A21) is described in: van het Hoog M, et al. (2007) Assembly of the{' '}
-            <em>Candida albicans</em> genome into sixteen supercontigs aligned on the eight chromosomes.
-            Genome Biol 8(4):R52.{' '}
-            <a href="http://genomebiology.com/2007/8/4/R52" target="_blank" rel="noopener noreferrer">
-              URL: http://genomebiology.com/2007/8/4/R52
-            </a>. In addition to making a chromosomal level assembly, by mapping the contigs of Assembly 19
+            Assembly 21 (A21) is described in van het Hoog, et al. (2007). In addition to making a chromosomal level assembly, by mapping the contigs of Assembly 19
             (A19) to chromosomes and filling many of the gaps between them, the authors also made numerous
             and widespread modifications to the genomic sequence based on alignments of the sequence traces
             generated by inputting the SGTC's sequence traces into Sequencher software. Many of these
@@ -311,11 +291,6 @@ const SequenceHelp = () => {
             such ambiguous nucleotides consequently resulted in ambiguous amino acids in the predicted ORF
             translation, which is represented as an "X" within the A21 protein sequence.
           </p>
-          <p>
-            More information is available in{' '}
-            <Link to="/help/assembly21">Assembly 21 Sequence Documentation</Link>.
-          </p>
-
           <h4 id="introns">Intron annotation data</h4>
           <p>
             The intron data published in the paper<br />
@@ -337,32 +312,16 @@ const SequenceHelp = () => {
             in the predicted ORF. In Assembly 19 all introns and adjustments are called Gaps.
           </p>
           <p>
-            In November 2008, all the non-intron "adjustments" in Assembly 21 were removed, as explained in
-            the <Link to="/help/refinements">Sequence Refinements, November 2008</Link> documentation.
-          </p>
-          <p>
-            Summary files listing introns and non-intron adjustments are available from the{' '}
-            <a href="/download/Assembly21notes/" target="_blank" rel="noopener noreferrer">CGD Downloads</a> site.
+            In November 2008, all the non-intron "adjustments" in Assembly 21 were removed.
           </p>
 
           <h4 id="TRNA">Translation and tRNAs</h4>
           <p>
             The tRNA genes were predicted from the <em>C. albicans</em> genome sequence using the tRNAscan-SE
-            algorithm developed by{' '}
-            <a href="http://nar.oupjournals.org/cgi/content/full/25/5/955" target="_blank" rel="noopener noreferrer">
-              T. M. Lowe and S. R. Eddy
-            </a>. The process used is described here,{' '}
-            <a href="http://www.candidagenome.org/cgi-bin/reference/reference.pl?dbid=CAL0000142566" target="_blank" rel="noopener noreferrer">
-              Annotation of tRNAs in the <em>Candida</em> Genome Database
-            </a>.
+            algorithm described by Lowe and Eddy (1997).
           </p>
           <p>
-            The <em>C. albicans</em> codon usage table may be accessed using the{' '}
-            <a href="/download/sequence/misc/C_albicans_codon_usage.tab" target="_blank" rel="noopener noreferrer">
-              link
-            </a>{' '}
-            in the left-hand menu bar of the CGD home page, under the heading "Download Data," or using the
-            link on the Download Sequence page. This table displays the calculated frequency of use of each
+            The <em>C. albicans</em> codon usage table displays the calculated frequency of use of each
             codon in the diploid complement of <em>C. albicans</em> protein-coding genes. The table was
             produced with the GCG program CodonFrequency using the diploid complement of all predicted coding
             sequences (13,117 open reading frames) from Assembly 19 of the <em>C. albicans</em> SC5314 genomic
@@ -397,10 +356,6 @@ const SequenceHelp = () => {
             the WO-1 sequence data. The Biotechnology Research Institute of the National Research Council
             of Canada has since then released a new Assembly 21 that supersedes Assembly 20.
           </p>
-          <p>
-            More information is available in{' '}
-            <Link to="/help/assembly20">Assembly 20 Sequence Documentation</Link>.
-          </p>
         </div>
 
         <hr style={{ width: '75%', margin: '20px auto' }} />
@@ -408,20 +363,8 @@ const SequenceHelp = () => {
         <div className="info-section" id="A19inCGD">
           <h3>Assembly 19 in CGD (March 2004)</h3>
           <p>
-            The contig sequences in CGD are from Assembly 19 of the <em>C. albicans</em> genome sequence,
-            from the supplementary material published in the <em>C. albicans</em> sequencing paper, Jones,
-            T., Federspiel, N.A., Chibana, H., Dungan, J., Kalman, S., Magee, B.B., Newport, G., Thorstenson,
-            Y.R., Agabian, N., Magee, P.T., Davis, R.W. and S. Scherer. (2004) The Diploid Genome of{' '}
-            <em>Candida albicans</em>. PNAS 101:7329-7334. Supplementary data:{' '}
-            <a href="http://genome-www.stanford.edu/candida-pnas2004-supplement/" target="_blank" rel="noopener noreferrer">
-              http://genome-www.stanford.edu/candida-pnas2004-supplement/
-            </a>. (Older sequence assemblies, including Assemblies 4, 5, and 6, have been archived at CGD.
-            These data may be retrieved from the "archived_assemblies" folder on the{' '}
-            <a href="/download/sequence/" target="_blank" rel="noopener noreferrer">CGD Sequence Download Page</a>.)
-          </p>
-          <p>
-            More information is available in{' '}
-            <Link to="/help/assembly19">Assembly 19 Sequence Documentation</Link>.
+            The contig sequences in CGD are from Assembly 19 of the <em>C. albicans</em> genome sequence
+            as described by Jones et al. (2004).
           </p>
         </div>
 
@@ -436,14 +379,8 @@ const SequenceHelp = () => {
           </p>
           <p>
             Note: The original SC5314 sequence trace files and quality scores generated by the Stanford
-            Genome Technology Center are available for{' '}
-            <a href="/download/sequence/C_albicans_SC5314/Assembly19/SC3514_traces/" target="_blank" rel="noopener noreferrer">
-              download
-            </a>{' '}
-            from CGD. The construction of the sequencing library and sequencing methods are described in{' '}
-            <a href="http://www.pubmedcentral.nih.gov/articlerender.fcgi?tool=pubmed&pubmedid=11248064" target="_blank" rel="noopener noreferrer">
-              Tzung et al. (2001)
-            </a>.
+            Genome Technology Center are available for download from CGD. The construction of the sequencing
+            library and sequencing methods are described in Tzung et al. (2001).
           </p>
         </div>
 
@@ -460,11 +397,7 @@ const SequenceHelp = () => {
             the Assembly 19 paper,{' '}
             <a href="http://www.pnas.org/content/101/19/7329.full" target="_blank" rel="noopener noreferrer">
               Jones et al. (2004)
-            </a>, and these data are available for download as{' '}
-            <a href="http://genome-www.stanford.edu/candida-pnas2004-supplement/" target="_blank" rel="noopener noreferrer">
-              supplementary material
-            </a>{' '}
-            associated with the publication.
+            </a>.
           </p>
           <p>
             SNP data for <em>C. albicans</em> from{' '}
@@ -475,10 +408,7 @@ const SequenceHelp = () => {
             <a href="http://ec.asm.org/cgi/content/full/3/3/705/DC1" target="_blank" rel="noopener noreferrer">
               supplementary material
             </a>{' '}
-            associated with the paper and may be viewed using the SNP track in the CGD{' '}
-            <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/candida_21/?ref=Ca21chrR_C_albicans_SC5314;start=1729234;stop=1794843;label=All-SNP-DNA-Translation;width=800;keystyle=between;grid=on" target="_blank" rel="noopener noreferrer">
-              GBrowse genome browser
-            </a>.
+            associated with the paper.
           </p>
           <p>
             SNP data are included among the data from{' '}
@@ -523,12 +453,11 @@ const SequenceHelp = () => {
           <p><strong>By Bulk Download</strong></p>
           <p>
             You may download gzip compressed sequence files in bulk from the{' '}
-            <a href="/download/sequence/" target="_blank" rel="noopener noreferrer">CGD Sequence Download Page</a>;
+            <Link to="/download">CGD Downloads Page</Link>;
             a variety of file options exist for retrieval of data from Assemblies 19, 20, and 21. There is a
             link to this page under Download Data on the left-hand sidebar of the{' '}
             <Link to="/">CGD Home Page</Link>. Archived copies of older sequence assemblies, including
-            Assemblies 4, 5, and 6, may also be retrieved from the{' '}
-            <a href="/download/sequence/" target="_blank" rel="noopener noreferrer">CGD Sequence Download Pages</a>.
+            Assemblies 4, 5, and 6, may also be retrieved from the Downloads Page.
           </p>
           <p>
             You may also retrieve sequence information for any set of genes (either specified by a list of
@@ -536,17 +465,13 @@ const SequenceHelp = () => {
             <Link to="/batch-download">Batch Download Tool</Link>.
           </p>
 
-          <p><strong>From the GBrowse Genome Browser:</strong></p>
+          <p><strong>From the Genome Browser:</strong></p>
           <p>
-            You may also view nucleotide or protein sequence using the GBrowse genome browser. GBrowse may
-            be accessed using the "Chromosomal Location" or "Contig Location(s)" links, or the GBrowse map
-            thumbnail views on each Locus page, or by using the "Genome Browser" links displayed on each{' '}
-            <Link to="/help/blast-results">BLAST result</Link> page. Sequence download options are available
-            from the Reports & Analysis pull-down menu in the interface. The{' '}
-            <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/candida?help=general" target="_blank" rel="noopener noreferrer">
-              GBrowse Help Documentation
-            </a>{' '}
-            page has additional instructions for use of the GBrowse interface.
+            You may also view nucleotide or protein sequence using the genome browser. The genome browser may
+            be accessed using the "Chromosomal Location" or "Contig Location(s)" links on each Locus page,
+            or by using the "Genome Browser" links displayed on each{' '}
+            <Link to="/help/blast-results">BLAST result</Link> page. See the{' '}
+            <Link to="/help/jbrowse">JBrowse Help</Link> page for additional instructions.
           </p>
 
           <p><strong>Using BLAST (Basic Local Alignment Search Tool):</strong></p>
@@ -555,16 +480,12 @@ const SequenceHelp = () => {
             searches against various sequence datasets in CGD, as described in detail on the{' '}
             <Link to="/help/blast">BLAST documentation page</Link>. Alignments of the query sequence with
             its sequence matches (also called "hits") are displayed along with hyperlinks to related
-            sequence resources. The "CGD GBROWSE" hyperlink above each set of HSPs on the BLAST results
-            page opens the GBrowse genome browser, with the HSP displayed in the browser window. GBrowse
+            sequence resources. The genome browser link above each set of HSPs on the BLAST results
+            page opens the genome browser, with the HSP displayed in the browser window. The genome browser
             may be used to further explore the region containing the match: to view ORFs and other features
             in the neighborhood of the hit, to browse and download adjacent sequences, to view the 6-frame
-            translation of the region, and to view restriction sites. (For a description of GBrowse
-            features, please see our{' '}
-            <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/candida?help=general" target="_blank" rel="noopener noreferrer">
-              GBrowse documentation
-            </a>). If applicable, links are provided to directly download/view the entire ORF or peptide
-            sequence, or to navigate to the corresponding Locus page.
+            translation of the region, and to view restriction sites. If applicable, links are provided to
+            directly download/view the entire ORF or peptide sequence, or to navigate to the corresponding Locus page.
           </p>
         </div>
       </div>

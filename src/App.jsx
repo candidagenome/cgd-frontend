@@ -119,12 +119,14 @@ import ProteinMotifsHelp from './pages/help/ProteinMotifsHelp';
 import ProteinPropertiesHelp from './pages/help/ProteinPropertiesHelp';
 import PDBHomologHelp from './pages/help/PDBHomologHelp';
 
+import ScrollToTop from './components/ScrollToTop';
 import './App.css';
 
 function App() {
   return (
     <AuthProvider>
     <Router>
+      <ScrollToTop />
       <div className="app">
         {/* =========================
             CGD-style Header (legacy-like)
