@@ -104,21 +104,7 @@ const SearchFormHelp = () => {
             please see the <Link to="/help/feature-search">CGD Help: Advanced Search</Link>.
           </p>
 
-          <h3>B. Full-text Search (Textpresso)</h3>
-          <p>
-            This search allows customizable keyword searching of the full-text of over 16,500{' '}
-            <em>Candida</em> journal articles with{' '}
-            <a href="http://biology.plosjournals.org/perlserv/?request=get-document&doi=10.1371/journal.pbio.0020309" target="_blank" rel="noopener noreferrer">
-              Textpresso
-            </a>, a tool developed at{' '}
-            <a href="http://wormbase.org/" target="_blank" rel="noopener noreferrer">Wormbase</a>. For more
-            information, please see the{' '}
-            <a href="http://textpresso.candidagenome.org/cgi-bin/textpresso/user_guide" target="_blank" rel="noopener noreferrer">
-              User Guide
-            </a>.
-          </p>
-
-          <h3>C. Batch Download</h3>
+          <h3>B. Batch Download</h3>
           <p>
             The tool allows simultaneous retrieval of DNA and Protein sequences for a list of Standard gene
             names or Feature names. For more information on the{' '}
@@ -126,7 +112,7 @@ const SearchFormHelp = () => {
             please see the <Link to="/help/batch-download">CGD Help: Batch Data Download</Link>.
           </p>
 
-          <h3>D. Expanded Phenotype Search</h3>
+          <h3>C. Expanded Phenotype Search</h3>
           <p>
             The tool searches the text of all of the information associated with the phenotype curation,
             including alleles, experimental conditions, and notes, in addition to the basic description of
@@ -159,9 +145,7 @@ const SearchFormHelp = () => {
           <p>
             GBrowse is a genome visualization tool that allows one to view and navigate genomic sequence. For
             more specific help about GBrowse, please visit the{' '}
-            <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/candida/?help=general" target="_blank" rel="noopener noreferrer">
-              GBrowse Help
-            </a>.
+            <Link to="/help/jbrowse">JBrowse Help</Link>.
           </p>
 
           <h3>D. Pattern Matching</h3>
@@ -204,9 +188,7 @@ const SearchFormHelp = () => {
           </p>
           <p>
             Orthologs among the <em>Candida</em> are computed as described{' '}
-            <a href="http://www.candidagenome.org/cgi-bin/reference/reference.pl?dbid=CAL0142012" target="_blank" rel="noopener noreferrer">
-              here
-            </a>.
+            <Link to="/reference/CAL0142012">here</Link>.
           </p>
           <p>
             The Search results return two columns. The first column contains the name of the gene that: 1.

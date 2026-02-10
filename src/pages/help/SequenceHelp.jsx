@@ -212,7 +212,7 @@ const SequenceHelp = () => {
           <p>
             The paper describing the comparative genomic analysis that was the basis for the refinements
             to Assembly 21 performed in 2008 has now been published (
-            <a href="http://www.candidagenome.org/cgi-bin/reference/reference.pl?pubmed=19465905" target="_blank" rel="noopener noreferrer">
+            <a href="/reference/19465905" target="_blank" rel="noopener noreferrer">
               Butler, G., et al.
             </a>{' '}
             [2009] Nature).
@@ -412,7 +412,7 @@ const SequenceHelp = () => {
           </p>
           <p>
             SNP data are included among the data from{' '}
-            <a href="http://www.candidagenome.org/cgi-bin/reference/reference.pl?dbid=CAL0123622" target="_blank" rel="noopener noreferrer">
+            <a href="/reference/CAL0123622" target="_blank" rel="noopener noreferrer">
               Butler et al. (2009)
             </a>{' '}
             for eight <em>Candida</em> genomes, and are available for download as{' '}

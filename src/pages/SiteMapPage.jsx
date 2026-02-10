@@ -75,12 +75,6 @@ function SiteMapPage() {
               <td className="check-icon"><Link to="/help/feature-search">✓</Link></td>
             </tr>
             <tr>
-              <td><a href="http://textpresso.candidagenome.org/cgi-bin/textpresso/search" target="_blank" rel="noopener noreferrer">Full-text Literature Search</a></td>
-              <td>Customizable keyword searching of the full-text of over 16,500 <em>Candida</em> journal articles with Textpresso.</td>
-              <td>Search full-text of published papers about <em>Candida</em>.</td>
-              <td className="check-icon"><a href="http://textpresso.candidagenome.org/cgi-bin/textpresso/user_guide" target="_blank" rel="noopener noreferrer">✓</a></td>
-            </tr>
-            <tr>
               <td><a href="http://pathway.stanford.edu/" target="_blank" rel="noopener noreferrer">Biochemical Pathway Search</a></td>
               <td>Search or browse pathway information in CGD, including pathways, reactions, enzymes, and chemical compounds.</td>
               <td>Find metabolic pathways and related information.</td>
@@ -163,19 +157,6 @@ function SiteMapPage() {
               <td>Retrieve <em>Candida</em> genomic sequence from CGD or paste in a DNA or protein sequence to analyze.</td>
               <td>Display and analyze a <em>Candida</em> sequence in many ways.</td>
               <td className="check-icon"><Link to="/help/gs-resources">✓</Link></td>
-            </tr>
-            <tr>
-              <td>
-                GBrowse Genome Browser<br />
-                <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/candida_22/"><em>C. albicans</em> A22</a> |{' '}
-                <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/cauris_b8441/"><em>C. auris</em></a> |{' '}
-                <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/cdub_cd36/"><em>C. dubliniensis</em></a> |{' '}
-                <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/cglab_cbs138/"><em>C. glabrata</em></a> |{' '}
-                <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/cpar_cdc317/"><em>C. parapsilosis</em></a>
-              </td>
-              <td>GBrowse allows viewing and navigation of genomic sequence.</td>
-              <td>Navigate chromosomes of the <em>Candida</em> species. View annotated features.</td>
-              <td className="check-icon"><a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/candida?help=general">✓</a></td>
             </tr>
             <tr>
               <td>

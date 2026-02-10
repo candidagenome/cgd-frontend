@@ -57,23 +57,16 @@ function HelpPage() {
             <Link to="/help/feature-search">Advanced Search</Link>
             <Link to="/help/batch-download">Batch Download</Link>
             <Link to="/help/gs-resources">Get Sequence</Link>
-            <a
-              href="http://textpresso.candidagenome.org/cgi-bin/textpresso/user_guide"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Full-text Literature Search (Textpresso)
-            </a>
           </div>
         </div>
 
         <div className="help-item">
           <h3>
-            <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/candida?help=general">GBrowse Help</a>
+            <Link to="/help/jbrowse">JBrowse Help</Link>
           </h3>
           <p>
-            Navigating the genome using the GBrowse Genome Browser. How to view nucleotide and
-            protein sequence in GBrowse.
+            Navigating the genome using the JBrowse Genome Browser. How to view nucleotide and
+            protein sequence in JBrowse.
           </p>
         </div>
 

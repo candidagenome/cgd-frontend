@@ -120,13 +120,7 @@ const GSResourcesHelp = () => {
             <p>
               Note that the entire sequences of the chromosomes and contigs are also available for
               download from CGD's{' '}
-              <a
-                href="http://www.candidagenome.org/download/sequence/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Sequence Download
-              </a>{' '}
+              <Link to="/download">Sequence Download</Link>{' '}
               directory.
             </p>
           </li>
@@ -228,16 +222,10 @@ Contig19-10216  200310  220546`}
         <h4>b. Display Maps/Tables</h4>
         <ul>
           <li>
-            <strong>GBrowse</strong>: This links to a graphical representation of the genetic
+            <strong>Genome Browser</strong>: This links to a graphical representation of the genetic
             features of a region of chromosomal DNA around the selected gene or ORF, from which
             the entire chromosome or contig may be navigated.
-            [<a
-              href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/candida/?help=general"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              CGD Help: GBrowse
-            </a>]
+            [<Link to="/help/jbrowse">CGD Help: JBrowse</Link>]
             <br />
             <em>Availability</em>: This option is available when a gene, ORF, or chromosomal
             region is entered.

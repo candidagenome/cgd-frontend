@@ -93,8 +93,8 @@ const FAQPage = () => {
                 for information about the genomic sequence.
               </p>
               <p>
-                For help using the GBrowse Genome Browser, please see our{' '}
-                <a href="http://www.candidagenome.org/cgi-bin/gbrowse/candida?help=general" target="_blank" rel="noopener noreferrer">GBrowse Help Documentation</a> page.
+                For help using the Genome Browser, please see our{' '}
+                <Link to="/help/jbrowse">JBrowse Help Documentation</Link> page.
               </p>
               <p>
                 Sequence issues pertaining to individual genes are described in the Locus History, which may
