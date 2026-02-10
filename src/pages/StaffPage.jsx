@@ -15,14 +15,14 @@ const StaffPage = () => {
         name: 'Jodi Lew-Smith, Ph.D.',
         title: 'Senior Biocuration Scientist',
         image: '/images/staff/jodi_lewsmith.jpg'
-      },
+      }
+    ],
+    programming: [
       {
         name: 'Shuai Weng, Ph.D.',
         title: 'Senior Scientific Programmer',
         image: '/images/staff/weng_shuai.jpeg'
-      }
-    ],
-    programming: [
+      },
       {
         name: 'Stuart Miyasato',
         title: 'Senior Systems Administrator',
