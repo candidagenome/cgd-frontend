@@ -6,7 +6,7 @@ const StaffPage = () => {
   const staffMembers = {
     principalInvestigator: {
       name: 'Gavin Sherlock, Ph.D.',
-      title: 'Associate Professor',
+      title: 'Professor of Genetics',
       image: '/images/staff/gavin_sherlock.jpg',
       link: 'http://genetics.stanford.edu/~sherlock/'
     },
@@ -17,18 +17,12 @@ const StaffPage = () => {
         image: '/images/staff/jodi_lewsmith.jpg'
       },
       {
-        name: 'Jon Binkley',
+        name: 'Shuai Weng, Ph.D.',
         title: 'Senior Scientific Programmer',
-        image: '/images/staff/jon_binkley.jpg'
+        image: '/images/staff/weng_shuai.jpeg'
       }
     ],
     programming: [
-      {
-        name: 'Gail Binkley',
-        title: 'Principal Database Administrator',
-        phone: '650-498-7145',
-        image: '/images/staff/gail_binkley_tn.jpg'
-      },
       {
         name: 'Stuart Miyasato',
         title: 'Senior Systems Administrator',
@@ -37,6 +31,16 @@ const StaffPage = () => {
       }
     ],
     pastContributors: [
+      {
+        name: 'Jon Binkley',
+        title: 'Senior Scientific Programmer',
+        image: '/images/staff/jon_binkley.jpg'
+      },
+      {
+        name: 'Gail Binkley',
+        title: 'Principal Database Administrator',
+        image: '/images/staff/gail_binkley_tn.jpg'
+      },
       {
         name: 'Marek Skrzypek, Ph.D.',
         title: 'Senior Scientific Curator',
