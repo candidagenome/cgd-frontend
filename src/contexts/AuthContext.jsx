@@ -12,8 +12,8 @@ import authApi from '../api/authApi';
 
 const AuthContext = createContext(null);
 
-// Token refresh interval (5 minutes before expiry, assuming 15 min access token)
-const REFRESH_INTERVAL_MS = 10 * 60 * 1000;
+// Token refresh interval (30 minutes before expiry, assuming 4 hour access token)
+const REFRESH_INTERVAL_MS = 210 * 60 * 1000; // 3.5 hours
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -39,11 +39,14 @@ export function AuthProvider({ children }) {
 
     refreshTimerRef.current = setInterval(async () => {
       try {
+        console.log('Attempting token refresh...');
         await authApi.refresh();
+        console.log('Token refresh successful');
       } catch (err) {
-        console.error('Token refresh failed:', err);
+        console.error('Token refresh failed:', err.response?.status, err.response?.data);
         // If refresh fails, user needs to re-login
         setUser(null);
+        setError('Your session has expired. Please log in again.');
         clearRefreshTimer();
       }
     }, REFRESH_INTERVAL_MS);
