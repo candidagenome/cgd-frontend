@@ -461,6 +461,7 @@ function GoCurationPage() {
                       </td>
                       <td style={styles.td}>
                         <button
+                          type="button"
                           onClick={() => handleMarkReviewed(ann.go_annotation_no)}
                           style={styles.actionButton}
                           title="Mark as reviewed (update date)"
@@ -468,6 +469,7 @@ function GoCurationPage() {
                           Review
                         </button>
                         <button
+                          type="button"
                           onClick={() => handleDelete(ann.go_annotation_no)}
                           style={styles.deleteButton}
                           title="Delete annotation"
