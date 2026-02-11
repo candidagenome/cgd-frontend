@@ -16,6 +16,8 @@ const api = axios.create({
 // Track refresh state to prevent multiple simultaneous refresh attempts
 let isRefreshing = false;
 let refreshSubscribers = [];
+let lastRefreshTime = 0;
+const REFRESH_COOLDOWN_MS = 5000; // Don't refresh again within 5 seconds of a successful refresh
 
 /**
  * Subscribe to token refresh completion.
@@ -32,6 +34,14 @@ const subscribeTokenRefresh = (callback) => {
 const onRefreshComplete = (error) => {
   refreshSubscribers.forEach((callback) => callback(error));
   refreshSubscribers = [];
+};
+
+/**
+ * Check if we recently refreshed successfully (within cooldown period).
+ * If so, just retry the request without refreshing again.
+ */
+const recentlyRefreshed = () => {
+  return Date.now() - lastRefreshTime < REFRESH_COOLDOWN_MS;
 };
 
 /**
@@ -75,6 +85,14 @@ api.interceptors.response.use(
 
       console.log('Got 401 for:', originalRequest.url, '- attempting token refresh');
 
+      // If we just refreshed successfully, just retry the request without refreshing again
+      // This handles the case where a request was in-flight during refresh
+      if (recentlyRefreshed()) {
+        console.log('Recently refreshed, retrying request without refresh:', originalRequest.url);
+        originalRequest._retry = true;
+        return api(originalRequest);
+      }
+
       // If already refreshing, wait for the refresh to complete
       if (isRefreshing) {
         console.log('Refresh already in progress, queuing request:', originalRequest.url);
@@ -100,6 +118,7 @@ api.interceptors.response.use(
         await api.post('/api/auth/refresh');
         console.log('Token refresh successful');
 
+        lastRefreshTime = Date.now();
         isRefreshing = false;
         onRefreshComplete(null);
 
