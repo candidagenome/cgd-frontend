@@ -12,14 +12,16 @@ import authApi from '../api/authApi';
 
 const AuthContext = createContext(null);
 
-// Token refresh interval (30 minutes before expiry, assuming 4 hour access token)
-const REFRESH_INTERVAL_MS = 210 * 60 * 1000; // 3.5 hours
+// Default refresh interval: 10 minutes (safe default if backend doesn't specify)
+// Will be overridden by actual expires_in from backend if provided
+const DEFAULT_REFRESH_INTERVAL_MS = 10 * 60 * 1000;
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const refreshTimerRef = useRef(null);
+  const isMountedRef = useRef(true);
 
   /**
    * Clear the refresh timer.
@@ -33,49 +35,80 @@ export function AuthProvider({ children }) {
 
   /**
    * Set up automatic token refresh.
+   * @param {number} [intervalMs] - Optional interval in milliseconds. If not provided, uses default.
    */
-  const setupRefreshTimer = useCallback(() => {
-    clearRefreshTimer();
+  const setupRefreshTimer = useCallback((intervalMs) => {
+    // Clear any existing timer first
+    if (refreshTimerRef.current) {
+      clearInterval(refreshTimerRef.current);
+      refreshTimerRef.current = null;
+    }
+
+    const interval = intervalMs || DEFAULT_REFRESH_INTERVAL_MS;
+    console.log(`Setting up token refresh every ${Math.round(interval / 60000)} minutes`);
 
     refreshTimerRef.current = setInterval(async () => {
+      if (!isMountedRef.current) return;
+
       try {
         console.log('Attempting token refresh...');
-        await authApi.refresh();
+        const result = await authApi.refresh();
         console.log('Token refresh successful');
+
+        // If backend returns new expires_in, adjust the timer
+        if (result?.expires_in && result.expires_in > 0) {
+          const newInterval = Math.max((result.expires_in - 60) * 1000, 60000); // Refresh 1 min before expiry, min 1 min
+          if (Math.abs(newInterval - interval) > 60000) {
+            // Only reschedule if significantly different
+            setupRefreshTimer(newInterval);
+          }
+        }
       } catch (err) {
         console.error('Token refresh failed:', err.response?.status, err.response?.data);
+        if (!isMountedRef.current) return;
         // If refresh fails, user needs to re-login
         setUser(null);
         setError('Your session has expired. Please log in again.');
-        clearRefreshTimer();
+        if (refreshTimerRef.current) {
+          clearInterval(refreshTimerRef.current);
+          refreshTimerRef.current = null;
+        }
       }
-    }, REFRESH_INTERVAL_MS);
-  }, [clearRefreshTimer]);
-
-  /**
-   * Handle session expiry event from API interceptor.
-   */
-  const handleSessionExpired = useCallback(() => {
-    console.warn('Session expired - logging out');
-    setUser(null);
-    setError('Your session has expired. Please log in again.');
-    clearRefreshTimer();
-  }, [clearRefreshTimer]);
+    }, interval);
+  }, []);
 
   /**
    * Check authentication status on mount and listen for session expiry.
+   * Uses empty dependency array to run only once on mount.
    */
   useEffect(() => {
+    isMountedRef.current = true;
+
     const checkAuth = async () => {
       try {
         const userData = await authApi.getMe();
+        if (!isMountedRef.current) return;
         setUser(userData);
         setupRefreshTimer();
       } catch {
         // Not authenticated or token expired
+        if (!isMountedRef.current) return;
         setUser(null);
       } finally {
-        setLoading(false);
+        if (isMountedRef.current) {
+          setLoading(false);
+        }
+      }
+    };
+
+    const handleSessionExpired = () => {
+      console.warn('Session expired - logging out');
+      if (!isMountedRef.current) return;
+      setUser(null);
+      setError('Your session has expired. Please log in again.');
+      if (refreshTimerRef.current) {
+        clearInterval(refreshTimerRef.current);
+        refreshTimerRef.current = null;
       }
     };
 
@@ -85,10 +118,14 @@ export function AuthProvider({ children }) {
     window.addEventListener('auth:session-expired', handleSessionExpired);
 
     return () => {
-      clearRefreshTimer();
+      isMountedRef.current = false;
+      if (refreshTimerRef.current) {
+        clearInterval(refreshTimerRef.current);
+        refreshTimerRef.current = null;
+      }
       window.removeEventListener('auth:session-expired', handleSessionExpired);
     };
-  }, [setupRefreshTimer, clearRefreshTimer, handleSessionExpired]);
+  }, [setupRefreshTimer]);
 
   /**
    * Login with credentials.
@@ -103,12 +140,20 @@ export function AuthProvider({ children }) {
 
     try {
       // Call login endpoint
-      await authApi.login(username, password);
+      const loginResult = await authApi.login(username, password);
 
       // Fetch user info
       const userData = await authApi.getMe();
       setUser(userData);
-      setupRefreshTimer();
+
+      // Set up refresh timer based on backend's expires_in, or use default
+      // Refresh 1 minute before expiry, with a minimum of 1 minute
+      let refreshInterval = DEFAULT_REFRESH_INTERVAL_MS;
+      if (loginResult?.expires_in && loginResult.expires_in > 0) {
+        refreshInterval = Math.max((loginResult.expires_in - 60) * 1000, 60000);
+        console.log(`Token expires in ${loginResult.expires_in}s, will refresh in ${Math.round(refreshInterval / 1000)}s`);
+      }
+      setupRefreshTimer(refreshInterval);
 
       return userData;
     } catch (err) {
