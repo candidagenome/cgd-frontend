@@ -628,10 +628,13 @@ function LocusCurationPage() {
                     required
                   >
                     <option value="">Select type...</option>
-                    <option value="External">External</option>
-                    <option value="Documentation">Documentation</option>
-                    <option value="Database">Database</option>
-                    <option value="Expression">Expression</option>
+                    <option value="Reference Data">Reference Data</option>
+                    <option value="Reference LINKOUT">Reference LINKOUT</option>
+                    <option value="Reference supplement">Reference supplement</option>
+                    <option value="Reference full text">Reference full text</option>
+                    <option value="Phenotype Viewer">Phenotype Viewer</option>
+                    <option value="Research summary">Research summary</option>
+                    <option value="Other">Other</option>
                   </select>
                 </div>
                 <div style={styles.formRow}>
