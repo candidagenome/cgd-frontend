@@ -135,10 +135,6 @@ function LocusHelp() {
                   about a gene by various topics.
                 </li>
                 <li>
-                  <strong>Full-text lit. search, gene name(s):</strong> links to the Textpresso tool with the
-                  search box pre-filled with the standard and systematic name of the gene.
-                </li>
-                <li>
                   <strong>PubMed Search:</strong> searches PubMed for papers that mention a locus (or its
                   aliases) as well as <em>Candida albicans</em>.
                 </li>

@@ -108,21 +108,6 @@ const SearchPage = () => {
           </div>
 
           <div className="help-item">
-            <h3>
-              <a href="http://textpresso.candidagenome.org/cgi-bin/textpresso/search/" target="_blank" rel="noopener noreferrer">
-                Full-text Literature Search
-              </a>
-            </h3>
-            <p>
-              Customizable keyword searching of the full-text of over 16,500 <em>Candida</em> journal articles with{' '}
-              <a href="http://biology.plosjournals.org/perlserv/?request=get-document&doi=10.1371/journal.pbio.0020309" target="_blank" rel="noopener noreferrer">
-                Textpresso
-              </a>, a tool developed at{' '}
-              <a href="http://wormbase.org/" target="_blank" rel="noopener noreferrer">Wormbase</a>
-            </p>
-          </div>
-
-          <div className="help-item">
             <h3><Link to="/batch-download">Batch Download</Link></h3>
             <p>Simultaneous retrieval of multiple types of data for a list of gene or feature names</p>
           </div>
@@ -175,20 +160,6 @@ const SearchPage = () => {
           </div>
 
           <div className="help-item">
-            <h3>GBrowse Genome Browser</h3>
-            <p style={{ marginBottom: '5px' }}>
-              for <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/candida_22/?ref=Ca22chrRA_C_albicans_SC5314;start=1729234;stop=1794843" target="_blank" rel="noopener noreferrer"><em>C. albicans</em> SC5314 Assembly 22</a><br />
-              for <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/candida_21/?ref=Ca21chrR_C_albicans_SC5314;start=1729234;stop=1794843" target="_blank" rel="noopener noreferrer"><em>C. albicans</em> SC5314 Assembly 21</a><br />
-              for <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/candida/?name=Contig19-10014%3A1..23104" target="_blank" rel="noopener noreferrer"><em>C. albicans</em> SC5314 Assembly 19</a><br />
-              for <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/cauris_b8441/?name=PEKT02000008_C_auris_B8441:785301..787300" target="_blank" rel="noopener noreferrer"><em>C. auris</em> B8441</a><br />
-              for <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/cdub_cd36/?name=Chr4_C_dubliniensis_CD36:143191..163190" target="_blank" rel="noopener noreferrer"><em>C. dubliniensis</em> CD36</a><br />
-              for <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/cglab_cbs138/?name=ChrM_C_glabrata_CBS138:193616..218115" target="_blank" rel="noopener noreferrer"><em>C. glabrata</em> CBS138</a><br />
-              for <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/cpar_cdc317/?name=ChrM_C_parapsilosis_CDC317:193616..218115" target="_blank" rel="noopener noreferrer"><em>C. parapsilosis</em> CDC317</a>
-            </p>
-            <p>View and navigate genomic sequence</p>
-          </div>
-
-          <div className="help-item">
             <h3>JBrowse Genome Browser</h3>
             <p style={{ marginBottom: '5px' }}>
               for <Link to="/jbrowse/index.html?data=cgd_data%2FC_albicans_SC5314"><em>C. albicans</em> SC5314 Assembly 22</Link><br />
@@ -200,10 +171,6 @@ const SearchPage = () => {
             <p>View high-throughput genomics data</p>
           </div>
 
-          <div className="help-item">
-            <h3><a href="http://www.candidagenome.org/cgi-bin/chromosomeHistory.pl" target="_blank" rel="noopener noreferrer">Chromosome History Search</a></h3>
-            <p>View the complete sequence and annotation history of each Assembly 22 chromosome</p>
-          </div>
 
           <div className="help-item">
             <h3><Link to="/genome-version-history">Summary of Genome Versions</Link></h3>
@@ -271,7 +238,7 @@ const SearchPage = () => {
           <h2>Search <em>Candida</em> Literature</h2>
 
           <div className="help-item">
-            <h3><a href="http://www.candidagenome.org/cgi-bin/reference/litGuide.pl" target="_blank" rel="noopener noreferrer">Search Literature in CGD</a></h3>
+            <h3><Link to="/literature">Search Literature in CGD</Link></h3>
             <p>View CGD's annotated literature guide for any gene</p>
           </div>
 

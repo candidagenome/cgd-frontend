@@ -10,17 +10,21 @@
  * Mirrors legacy goCuration CGI functionality.
  */
 import { useState, useEffect, useCallback } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import goCurationApi from '../../api/goCurationApi';
 
 function GoCurationPage() {
   const { featureName } = useParams();
   const { user } = useAuth();
+  const navigate = useNavigate();
+
+  // Search form state (when no feature specified)
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Feature and annotations state
   const [featureData, setFeatureData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!!featureName); // Only loading if we have a feature
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
 
@@ -182,6 +186,54 @@ function GoCurationPage() {
     process: 'Biological Process (P)',
     component: 'Cellular Component (C)',
   };
+
+  // Handle search form submission
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/curation/go/${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
+  // Show search form when no feature is specified
+  if (!featureName) {
+    return (
+      <div style={styles.container}>
+        <div style={styles.header}>
+          <h1>GO Curation</h1>
+          <div style={styles.headerRight}>
+            <span>Curator: {user?.first_name} {user?.last_name}</span>
+            <Link to="/curation/go/todo" style={styles.headerLink}>
+              GO Todo List
+            </Link>
+            <Link to="/curation" style={styles.headerLink}>
+              Curator Central
+            </Link>
+          </div>
+        </div>
+
+        <div style={styles.searchContainer}>
+          <h2>Search for a Feature</h2>
+          <p style={styles.searchHint}>
+            Enter a feature name (systematic name or gene name) to view and edit its GO annotations.
+          </p>
+          <form onSubmit={handleSearch} style={styles.searchForm}>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="e.g., orf19.123 or ACT1"
+              style={styles.searchInput}
+              autoFocus
+            />
+            <button type="submit" style={styles.searchButton}>
+              Search
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -409,6 +461,7 @@ function GoCurationPage() {
                       </td>
                       <td style={styles.td}>
                         <button
+                          type="button"
                           onClick={() => handleMarkReviewed(ann.go_annotation_no)}
                           style={styles.actionButton}
                           title="Mark as reviewed (update date)"
@@ -416,6 +469,7 @@ function GoCurationPage() {
                           Review
                         </button>
                         <button
+                          type="button"
                           onClick={() => handleDelete(ann.go_annotation_no)}
                           style={styles.deleteButton}
                           title="Delete annotation"
@@ -638,6 +692,40 @@ const styles = {
     borderRadius: '3px',
     cursor: 'pointer',
     fontSize: '0.85rem',
+  },
+  searchContainer: {
+    maxWidth: '600px',
+    margin: '2rem auto',
+    padding: '2rem',
+    backgroundColor: '#f9f9f9',
+    border: '1px solid #ddd',
+    borderRadius: '8px',
+    textAlign: 'center',
+  },
+  searchHint: {
+    color: '#666',
+    marginBottom: '1.5rem',
+  },
+  searchForm: {
+    display: 'flex',
+    gap: '0.5rem',
+    justifyContent: 'center',
+  },
+  searchInput: {
+    padding: '0.75rem 1rem',
+    fontSize: '1rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    width: '300px',
+  },
+  searchButton: {
+    padding: '0.75rem 1.5rem',
+    backgroundColor: '#337ab7',
+    color: 'white',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontSize: '1rem',
   },
 };
 

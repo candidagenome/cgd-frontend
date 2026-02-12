@@ -5,7 +5,7 @@
  * Redirects to the originally requested page (or Curator Central) after login.
  */
 import { useState } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 function LoginPage() {
@@ -20,10 +20,9 @@ function LoginPage() {
   // Get the page user was trying to access, default to curator central
   const from = location.state?.from?.pathname || '/curation';
 
-  // If already authenticated, redirect
+  // If already authenticated, redirect (use Navigate component, not navigate() during render)
   if (isAuthenticated) {
-    navigate(from, { replace: true });
-    return null;
+    return <Navigate to={from} replace />;
   }
 
   const handleSubmit = async (e) => {

@@ -7,6 +7,7 @@ const ORGANISMS = {
     name: 'Candida albicans',
     strain: 'SC5314',
     description: 'The most commonly isolated human fungal pathogen and the best-studied Candida species.',
+    lastUpdated: 'January 22, 2026',
     totalORFs: 12405,
     haploidORFs: 6198,
     verifiedORFs: 4032,
@@ -29,6 +30,7 @@ const ORGANISMS = {
     name: 'Candida auris',
     strain: 'B8441',
     description: 'An emerging multidrug-resistant pathogen causing healthcare-associated infections worldwide.',
+    lastUpdated: 'January 22, 2026',
     totalORFs: 5397,
     haploidORFs: 5397,
     verifiedORFs: 773,
@@ -48,6 +50,7 @@ const ORGANISMS = {
     name: 'Candida dubliniensis',
     strain: 'CD36',
     description: 'A closely related species to C. albicans, often associated with oral candidiasis in immunocompromised patients.',
+    lastUpdated: 'January 22, 2026',
     totalORFs: 5983,
     haploidORFs: 5983,
     verifiedORFs: 816,
@@ -67,6 +70,7 @@ const ORGANISMS = {
     name: 'Candida glabrata',
     strain: 'CBS138',
     description: 'The second most common cause of candidiasis, more closely related to Saccharomyces cerevisiae than to C. albicans.',
+    lastUpdated: 'January 22, 2026',
     totalORFs: 5283,
     haploidORFs: 5283,
     verifiedORFs: 3283,
@@ -86,6 +90,7 @@ const ORGANISMS = {
     name: 'Candida parapsilosis',
     strain: 'CDC317',
     description: 'A significant cause of bloodstream infections, particularly in neonates and patients with indwelling catheters.',
+    lastUpdated: 'January 22, 2026',
     totalORFs: 5836,
     haploidORFs: 5836,
     verifiedORFs: 828,
@@ -106,7 +111,6 @@ const ORGANISMS = {
 function GenomeSnapshotPage() {
   const { organism } = useParams();
   const orgData = ORGANISMS[organism];
-  const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
   if (!orgData) {
     return (
@@ -145,6 +149,10 @@ function GenomeSnapshotPage() {
           </Link>
         </div>
         <hr />
+
+        <p style={{ textAlign: 'right', color: '#666', fontSize: '0.9em', marginBottom: '15px' }}>
+          <strong>Last updated:</strong> {orgData.lastUpdated}
+        </p>
 
         <p>
           This page provides information on the status of the <em>{orgData.name} {orgData.strain}</em> genome.

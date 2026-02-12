@@ -339,6 +339,18 @@
   display: block;
 }
 
+.staff-image-placeholder {
+  width: 90px;
+  height: 90px;
+  background-color: #1976d2;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
 .staff-info {
   font-size: 0.95em;
   line-height: 1.4;
@@ -739,6 +751,33 @@
   margin-bottom: 15px;
 }
 
+/* Glabrata changes 2022 two-column layout */
+.glabrata-changes-container {
+  display: flex;
+  gap: 40px;
+}
+
+.glabrata-changes-column {
+  flex: 1;
+  min-width: 0;
+}
+
+.glabrata-changes-column h3 {
+  color: #1976d2;
+  font-size: 1.1em;
+  margin-bottom: 10px;
+  margin-top: 0;
+}
+
+.glabrata-changes-column ul {
+  margin: 0 0 20px 0;
+  padding-left: 20px;
+}
+
+.glabrata-changes-column li {
+  margin-bottom: 4px;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .info-page {
@@ -788,5 +827,10 @@
   .strain-species-list li {
     display: block;
     margin-right: 0;
+  }
+
+  .glabrata-changes-container {
+    flex-direction: column;
+    gap: 20px;
   }
 }

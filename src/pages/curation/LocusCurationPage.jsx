@@ -547,10 +547,15 @@ function LocusCurationPage() {
                     required
                   >
                     <option value="">Select type...</option>
-                    <option value="Curator">Curator</option>
-                    <option value="History">History</option>
-                    <option value="Nomenclature">Nomenclature</option>
-                    <option value="Sequence">Sequence</option>
+                    <option value="Curation note">Curation note</option>
+                    <option value="Annotation change">Annotation change</option>
+                    <option value="Sequence change">Sequence change</option>
+                    <option value="Nomenclature history">Nomenclature history</option>
+                    <option value="Nomenclature conflict">Nomenclature conflict</option>
+                    <option value="Literature history">Literature history</option>
+                    <option value="Proposed annotation change">Proposed annotation change</option>
+                    <option value="Proposed sequence change">Proposed sequence change</option>
+                    <option value="Other">Other</option>
                   </select>
                 </div>
                 <div style={styles.formRow}>
@@ -623,10 +628,13 @@ function LocusCurationPage() {
                     required
                   >
                     <option value="">Select type...</option>
-                    <option value="External">External</option>
-                    <option value="Documentation">Documentation</option>
-                    <option value="Database">Database</option>
-                    <option value="Expression">Expression</option>
+                    <option value="Reference Data">Reference Data</option>
+                    <option value="Reference LINKOUT">Reference LINKOUT</option>
+                    <option value="Reference supplement">Reference supplement</option>
+                    <option value="Reference full text">Reference full text</option>
+                    <option value="Phenotype Viewer">Phenotype Viewer</option>
+                    <option value="Research summary">Research summary</option>
+                    <option value="Other">Other</option>
                   </select>
                 </div>
                 <div style={styles.formRow}>

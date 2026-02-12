@@ -57,23 +57,16 @@ function HelpPage() {
             <Link to="/help/feature-search">Advanced Search</Link>
             <Link to="/help/batch-download">Batch Download</Link>
             <Link to="/help/gs-resources">Get Sequence</Link>
-            <a
-              href="http://textpresso.candidagenome.org/cgi-bin/textpresso/user_guide"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Full-text Literature Search (Textpresso)
-            </a>
           </div>
         </div>
 
         <div className="help-item">
           <h3>
-            <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/candida?help=general">GBrowse Help</a>
+            <Link to="/help/jbrowse">JBrowse Help</Link>
           </h3>
           <p>
-            Navigating the genome using the GBrowse Genome Browser. How to view nucleotide and
-            protein sequence in GBrowse.
+            Navigating the genome using the JBrowse Genome Browser. How to view nucleotide and
+            protein sequence in JBrowse.
           </p>
         </div>
 
@@ -137,14 +130,14 @@ function HelpPage() {
           <p>A guide to the Gene Ontology information and tools in CGD:</p>
           <div className="help-links">
             <a
-              href="http://www.yeastgenome.org/help/GO.html"
+              href="https://geneontology.org/docs/introduction-to-go"
               target="_blank"
               rel="noopener noreferrer"
             >
               What is GO?
             </a>
             <a
-              href="http://www.yeastgenome.org/help/gotutorial.html"
+              href="https://sites.google.com/view/yeastgenome-help/function-help/gene-ontology-go"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -187,9 +180,9 @@ function HelpPage() {
             the <Link to="/download">Download Index</Link> page):
           </p>
           <div className="help-links">
-            <a href="/download/go/gene_association_README.txt">Gene Ontology (GO) Annotations File</a>
-            <a href="/download/chromosomal_feature_files/README">Chromosomal Feature File</a>
-            <a href="/download/sequence/README">Sequence Files</a>
+            <a href="http://www.candidagenome.org/download/go/gene_association_README.txt">Gene Ontology (GO) Annotations File</a>
+            <a href="http://www.candidagenome.org/download/chromosomal_feature_files/README">Chromosomal Feature File</a>
+            <a href="http://www.candidagenome.org/download/sequence/README">Sequence Files</a>
           </div>
         </div>
 
@@ -206,7 +199,7 @@ function HelpPage() {
         <div className="help-item">
           <h3>
             <a
-              href="http://www.yeastgenome.org/help/glossary.html"
+              href="https://sites.google.com/view/yeastgenome-help/sgd-general-help/glossary"
               target="_blank"
               rel="noopener noreferrer"
             >

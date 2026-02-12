@@ -84,9 +84,9 @@ const HeaderNav = () => {
       submenu: [
         { label: 'Batch Download', to: '/batch-download' },
         { label: 'GO Annotations', to: '/download' },
-        { label: 'Chromosomal Features', href: 'http://www.candidagenome.org/download/chromosomal_feature_files/', external: true },
-        { label: 'Sequence', href: 'http://www.candidagenome.org/download/sequence/', external: true },
-        { label: 'Browse Downloads', href: 'http://www.candidagenome.org/download/', external: true }
+        { label: 'Chromosomal Features', to: '/download' },
+        { label: 'Sequence', to: '/download' },
+        { label: 'Browse Downloads', to: '/download' }
       ]
     },
     {

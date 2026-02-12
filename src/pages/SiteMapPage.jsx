@@ -60,7 +60,7 @@ function SiteMapPage() {
           <tbody>
             {/* Search Options */}
             <tr>
-              <td className="category-header" rowSpan="7">
+              <td className="category-header" rowSpan="5">
                 <Link to="/search">Search Options</Link>
               </td>
               <td><Link to="/search">Quick Search and Text Search</Link></td>
@@ -75,28 +75,10 @@ function SiteMapPage() {
               <td className="check-icon"><Link to="/help/feature-search">✓</Link></td>
             </tr>
             <tr>
-              <td><a href="http://textpresso.candidagenome.org/cgi-bin/textpresso/search" target="_blank" rel="noopener noreferrer">Full-text Literature Search</a></td>
-              <td>Customizable keyword searching of the full-text of over 16,500 <em>Candida</em> journal articles with Textpresso.</td>
-              <td>Search full-text of published papers about <em>Candida</em>.</td>
-              <td className="check-icon"><a href="http://textpresso.candidagenome.org/cgi-bin/textpresso/user_guide" target="_blank" rel="noopener noreferrer">✓</a></td>
-            </tr>
-            <tr>
-              <td><a href="http://pathway.stanford.edu/" target="_blank" rel="noopener noreferrer">Biochemical Pathway Search</a></td>
-              <td>Search or browse pathway information in CGD, including pathways, reactions, enzymes, and chemical compounds.</td>
-              <td>Find metabolic pathways and related information.</td>
-              <td className="check-icon"><Link to="/help/biochem-pathways">✓</Link></td>
-            </tr>
-            <tr>
               <td><a href="/phenotype/search">Expanded Phenotype Search</a></td>
               <td>Search the text of all phenotype information to find phenotypes of interest and view the genes associated with them.</td>
               <td>Enter keywords associated with a phenotype (e.g., 'hyphal', 'virulence') to search for features.</td>
               <td className="check-icon"><Link to="/help/pheno-search">✓</Link></td>
-            </tr>
-            <tr>
-              <td><Link to="/search">Search CGD Web Pages</Link></td>
-              <td>Search CGD HTML pages, excludes the relational database.</td>
-              <td>Find CGD web pages using keywords located on the page.</td>
-              <td className="check-icon"><Link to="/help/search-form">✓</Link></td>
             </tr>
             <tr>
               <td><Link to="/genome-wide-analysis">List of genome-wide analysis papers</Link></td>
@@ -135,7 +117,7 @@ function SiteMapPage() {
               <td></td>
             </tr>
             <tr>
-              <td><a href="http://www.yeastgenome.org/help/glossary.html" target="_blank" rel="noopener noreferrer">SGD's Glossary</a></td>
+              <td><a href="https://sites.google.com/view/yeastgenome-help/sgd-general-help/glossary" target="_blank" rel="noopener noreferrer">SGD's Glossary</a></td>
               <td>List of terms and definitions at SGD.</td>
               <td>Find the definition of a new term.</td>
               <td></td>
@@ -163,19 +145,6 @@ function SiteMapPage() {
               <td>Retrieve <em>Candida</em> genomic sequence from CGD or paste in a DNA or protein sequence to analyze.</td>
               <td>Display and analyze a <em>Candida</em> sequence in many ways.</td>
               <td className="check-icon"><Link to="/help/gs-resources">✓</Link></td>
-            </tr>
-            <tr>
-              <td>
-                GBrowse Genome Browser<br />
-                <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/candida_22/"><em>C. albicans</em> A22</a> |{' '}
-                <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/cauris_b8441/"><em>C. auris</em></a> |{' '}
-                <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/cdub_cd36/"><em>C. dubliniensis</em></a> |{' '}
-                <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/cglab_cbs138/"><em>C. glabrata</em></a> |{' '}
-                <a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/cpar_cdc317/"><em>C. parapsilosis</em></a>
-              </td>
-              <td>GBrowse allows viewing and navigation of genomic sequence.</td>
-              <td>Navigate chromosomes of the <em>Candida</em> species. View annotated features.</td>
-              <td className="check-icon"><a href="http://www.candidagenome.org/cgi-bin/gbrowse2/gbrowse/candida?help=general">✓</a></td>
             </tr>
             <tr>
               <td>
@@ -209,10 +178,10 @@ function SiteMapPage() {
               <td className="check-icon"><Link to="/help/restriction-map">✓</Link></td>
             </tr>
             <tr>
-              <td><a href="http://seq.yeastgenome.org/cgi-bin/blast-fungal.pl" target="_blank" rel="noopener noreferrer">SGD's Fungal BLAST</a></td>
+              <td><a href="https://www.yeastgenome.org/blast-fungal" target="_blank" rel="noopener noreferrer">SGD's Fungal BLAST</a></td>
               <td>Search multiple fungal genomes, including <em>Candida</em> genomes, for similarity to a particular sequence.</td>
               <td>Find similarities between a sequence of interest and fungal nucleotide or protein sequences.</td>
-              <td className="check-icon"><a href="http://www.yeastgenome.org/help/fungal-blast.html" target="_blank" rel="noopener noreferrer">✓</a></td>
+              <td className="check-icon"><a href="https://www.yeastgenome.org/blast-fungal" target="_blank" rel="noopener noreferrer">✓</a></td>
             </tr>
 
             {/* GO Resources */}
@@ -227,13 +196,13 @@ function SiteMapPage() {
               <td className="category-header" id="go" rowSpan="4">
                 <Link to="/go-resources">GO Resources</Link>
               </td>
-              <td><a href="http://www.yeastgenome.org/help/GO.html" target="_blank" rel="noopener noreferrer">What is GO?</a></td>
-              <td>SGD help page that explains the philosophy of GO.</td>
+              <td><a href="https://geneontology.org/docs/introduction-to-go" target="_blank" rel="noopener noreferrer">What is GO?</a></td>
+              <td>Introduction to Gene Ontology from the GO Consortium.</td>
               <td>Get an overview of Gene Ontology (GO).</td>
               <td></td>
             </tr>
             <tr>
-              <td><a href="http://www.yeastgenome.org/help/gotutorial.html" target="_blank" rel="noopener noreferrer">SGD's GO Tutorial</a></td>
+              <td><a href="https://sites.google.com/view/yeastgenome-help/function-help/gene-ontology-go" target="_blank" rel="noopener noreferrer">SGD's GO Tutorial</a></td>
               <td>Tutorial that highlights pages and tools that use GO annotations.</td>
               <td>Learn where GO annotations are located on CGD pages and how to use them.</td>
               <td></td>
@@ -347,37 +316,37 @@ function SiteMapPage() {
               <td className="check-icon"><Link to="/help/batch-download">✓</Link></td>
             </tr>
             <tr>
-              <td><a href="/download/go/gene_association.cgd.gz">Gene Ontology (GO) Annotations File</a></td>
+              <td><a href="http://www.candidagenome.org/download/go/gene_association.cgd.gz">Gene Ontology (GO) Annotations File</a></td>
               <td>The gene_association.cgd file contains the Gene Ontology (GO) curation from CGD.</td>
               <td>Download tab-delimited files of GO information from CGD.</td>
-              <td className="check-icon"><a href="/download/go/gene_association_README.txt">✓</a></td>
+              <td className="check-icon"><a href="http://www.candidagenome.org/download/go/gene_association_README.txt">✓</a></td>
             </tr>
             <tr>
-              <td><a href="/download/chromosomal_feature_files/">Chromosomal Feature Files</a></td>
+              <td><a href="http://www.candidagenome.org/download/chromosomal_feature_files/">Chromosomal Feature Files</a></td>
               <td>Tab-delimited files of information about current chromosomal features in CGD.</td>
               <td>Download feature (gene) names, aliases, descriptions, and other information.</td>
-              <td className="check-icon"><a href="/download/chromosomal_feature_files/README">✓</a></td>
+              <td className="check-icon"><a href="http://www.candidagenome.org/download/chromosomal_feature_files/README">✓</a></td>
             </tr>
             <tr>
-              <td><a href="/download/sequence/">Sequence Files</a></td>
+              <td><a href="http://www.candidagenome.org/download/sequence/">Sequence Files</a></td>
               <td>The sequence download directory contains sequence from the <em>Candida</em> sequencing projects.</td>
               <td>Download current or archived sequence data.</td>
-              <td className="check-icon"><a href="/download/sequence/README">✓</a></td>
+              <td className="check-icon"><a href="http://www.candidagenome.org/download/sequence/README">✓</a></td>
             </tr>
             <tr>
-              <td><a href="/download/phenotype/">Phenotypes</a></td>
+              <td><a href="http://www.candidagenome.org/download/phenotype/">Phenotypes</a></td>
               <td>Tab-delimited files containing the CGD phenotype curation.</td>
               <td>Download phenotype data.</td>
-              <td className="check-icon"><a href="/download/phenotype/README">✓</a></td>
+              <td className="check-icon"><a href="http://www.candidagenome.org/download/phenotype/README">✓</a></td>
             </tr>
             <tr>
-              <td><a href="/download/homology/">Orthologs and Best Hits</a></td>
+              <td><a href="http://www.candidagenome.org/download/homology/">Orthologs and Best Hits</a></td>
               <td>This directory contains the mappings among <em>Candida</em> genes and predicted orthologs.</td>
               <td>Download homolog data.</td>
-              <td className="check-icon"><a href="/download/homology/README">✓</a></td>
+              <td className="check-icon"><a href="http://www.candidagenome.org/download/homology/README">✓</a></td>
             </tr>
             <tr>
-              <td><Link to="/download">Datasets archived at CGD</Link></td>
+              <td><Link to="/download-datasets">Datasets archived at CGD</Link></td>
               <td>Archive of published and freely available datasets.</td>
               <td>Download large-scale datasets.</td>
               <td></td>
@@ -431,7 +400,7 @@ function SiteMapPage() {
         <hr style={{ marginTop: '30px' }} />
 
         <p>
-          A complete list of genes may be found <a href="/genelist.shtml">here</a>.
+          A complete list of genes may be found <a href="http://www.candidagenome.org/cache/genelist.shtml">here</a>.
         </p>
       </div>
     </div>

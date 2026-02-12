@@ -69,16 +69,6 @@ function GenomeWideAnalysisPage() {
           <h2>Related Resources</h2>
           <ul>
             <li>
-              <a
-                href="http://textpresso.candidagenome.org/cgi-bin/textpresso/search"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Full-text Literature Search (Textpresso)
-              </a>{' '}
-              - Search the full text of <em>Candida</em> publications
-            </li>
-            <li>
               <Link to="/download-datasets">Datasets Archived at CGD</Link> - Download published
               datasets
             </li>

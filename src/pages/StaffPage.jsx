@@ -6,7 +6,7 @@ const StaffPage = () => {
   const staffMembers = {
     principalInvestigator: {
       name: 'Gavin Sherlock, Ph.D.',
-      title: 'Associate Professor',
+      title: 'Professor of Genetics',
       image: '/images/staff/gavin_sherlock.jpg',
       link: 'http://genetics.stanford.edu/~sherlock/'
     },
@@ -15,19 +15,13 @@ const StaffPage = () => {
         name: 'Jodi Lew-Smith, Ph.D.',
         title: 'Senior Biocuration Scientist',
         image: '/images/staff/jodi_lewsmith.jpg'
-      },
-      {
-        name: 'Jon Binkley',
-        title: 'Senior Scientific Programmer',
-        image: '/images/staff/jon_binkley.jpg'
       }
     ],
     programming: [
       {
-        name: 'Gail Binkley',
-        title: 'Principal Database Administrator',
-        phone: '650-498-7145',
-        image: '/images/staff/gail_binkley_tn.jpg'
+        name: 'Shuai Weng, Ph.D.',
+        title: 'Senior Scientific Programmer',
+        image: '/images/staff/weng_shuai.jpeg'
       },
       {
         name: 'Stuart Miyasato',
@@ -37,6 +31,16 @@ const StaffPage = () => {
       }
     ],
     pastContributors: [
+      {
+        name: 'Jon Binkley',
+        title: 'Senior Scientific Programmer',
+        image: '/images/staff/jon_binkley.jpg'
+      },
+      {
+        name: 'Gail Binkley',
+        title: 'Principal Database Administrator',
+        image: '/images/staff/gail_binkley_tn.jpg'
+      },
       {
         name: 'Marek Skrzypek, Ph.D.',
         title: 'Senior Scientific Curator',
@@ -70,30 +74,54 @@ const StaffPage = () => {
     ]
   };
 
-  const StaffCard = ({ member }) => (
-    <div className="staff-card">
-      <div className="staff-image-container">
-        <img src={member.image} alt={member.name} className="staff-image" />
-      </div>
-      <div className="staff-info">
-        {member.link ? (
-          <a href={member.link} target="_blank" rel="noopener noreferrer">
+  const getInitials = (name) => {
+    return name
+      .split(' ')
+      .map(part => part[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
+  const StaffCard = ({ member }) => {
+    const [imageError, setImageError] = React.useState(false);
+
+    return (
+      <div className="staff-card">
+        <div className="staff-image-container">
+          {imageError ? (
+            <div className="staff-image-placeholder">
+              {getInitials(member.name)}
+            </div>
+          ) : (
+            <img
+              src={member.image}
+              alt={member.name}
+              className="staff-image"
+              onError={() => setImageError(true)}
+            />
+          )}
+        </div>
+        <div className="staff-info">
+          {member.link ? (
+            <a href={member.link} target="_blank" rel="noopener noreferrer">
+              <strong>{member.name}</strong>
+            </a>
+          ) : (
             <strong>{member.name}</strong>
-          </a>
-        ) : (
-          <strong>{member.name}</strong>
-        )}
-        <br />
-        {member.title}
-        {member.phone && (
-          <>
-            <br />
-            Voice: {member.phone}
-          </>
-        )}
+          )}
+          <br />
+          {member.title}
+          {member.phone && (
+            <>
+              <br />
+              Voice: {member.phone}
+            </>
+          )}
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="info-page">
@@ -120,7 +148,7 @@ const StaffPage = () => {
 
         <div className="info-section">
           <h2 style={{ textAlign: 'center' }}>Bioinformatics and Scientific Curation Staff</h2>
-          <div className="staff-grid">
+          <div className="staff-grid staff-grid-single">
             {staffMembers.bioinformatics.map((member, index) => (
               <StaffCard key={index} member={member} />
             ))}

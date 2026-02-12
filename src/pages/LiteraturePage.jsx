@@ -12,35 +12,6 @@ function LiteraturePage() {
         <section className="info-section">
           <div className="help-item">
             <h3>
-              <a
-                href="http://textpresso.candidagenome.org/cgi-bin/textpresso/search"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Full-text Search (Textpresso)
-              </a>
-            </h3>
-            <p>
-              Search full-text of published papers about <em>Candida</em>, with customizable
-              keyword searching of the full-text of over 16,500 published journal articles about{' '}
-              <em>Candida</em>, using{' '}
-              <a
-                href="http://www.plosbiology.org/article/info:doi/10.1371/journal.pbio.0020309"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Textpresso
-              </a>
-              , a tool developed by{' '}
-              <a href="http://www.wormbase.org/" target="_blank" rel="noopener noreferrer">
-                Wormbase
-              </a>{' '}
-              at CalTech.
-            </p>
-          </div>
-
-          <div className="help-item">
-            <h3>
               <Link to="/topic-biblios">Highlighted Topics</Link>
             </h3>
             <p>

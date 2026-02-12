@@ -50,7 +50,7 @@ const GettingStartedHelp = () => {
           <p>
             CGD is aimed at scientists; collected information for the non-scientist about{' '}
             <em>Candida albicans</em> and other yeasts can be found at the{' '}
-            <a href="http://www.yeastgenome.org/VL-yeast.html" target="_blank" rel="noopener noreferrer">
+            <a href="https://sites.google.com/view/yeastgenome-help/more-about-yeast/what-are-yeast" target="_blank" rel="noopener noreferrer">
               Yeast Virtual Library
             </a>. CGD curators cannot answer medical or health-related questions.
           </p>
@@ -133,7 +133,7 @@ const GettingStartedHelp = () => {
             functions and subcellular locations, and the biological processes in which they are involved.
             The terms may be searched to find the set of proteins that have been annotated to a particular
             term. A detailed explanation of the GO system and how to use and search it is presented in a{' '}
-            <a href="http://www.yeastgenome.org/help/gotutorial.html" target="_blank" rel="noopener noreferrer">
+            <a href="https://sites.google.com/view/yeastgenome-help/function-help/gene-ontology-go" target="_blank" rel="noopener noreferrer">
               GO tutorial
             </a>{' '}
             provided by the <em>Saccharomyces</em> Genome Database.
@@ -161,7 +161,7 @@ const GettingStartedHelp = () => {
             also takes a list of genes as input, and identifies GO terms shared among members of the group.
             The difference between the two tools is that the GO Slim Term Mapper maps genes to broad parent
             GO terms, while the Term Finder identifies specific, granular terms shared by the group. The SGD{' '}
-            <a href="http://www.yeastgenome.org/help/gotutorial.html" target="_blank" rel="noopener noreferrer">
+            <a href="https://sites.google.com/view/yeastgenome-help/function-help/gene-ontology-go" target="_blank" rel="noopener noreferrer">
               GO tutorial
             </a>{' '}
             provides details on the use of these tools.
@@ -260,7 +260,7 @@ const GettingStartedHelp = () => {
           </p>
           <p>
             A tutorial, provided by SGD, is available to illustrate the use of the{' '}
-            <a href="http://www.yeastgenome.org/help/gotutorial.html" target="_blank" rel="noopener noreferrer">
+            <a href="https://sites.google.com/view/yeastgenome-help/function-help/gene-ontology-go" target="_blank" rel="noopener noreferrer">
               GO tools
             </a>.
           </p>
