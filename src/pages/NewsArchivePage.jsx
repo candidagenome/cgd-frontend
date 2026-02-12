@@ -26,13 +26,7 @@ const NEWS_BY_YEAR = {
           GPI-anchored cell wall proteins (GPI-CWPs), which contain many long tandem repeats.
           <br />
           See{' '}
-          <a
-            href="https://www.candidagenome.org/help/2022_glabrata_changes.shtml"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            this page
-          </a>{' '}
+          <Link to="/help/glabrata-changes-2022">this page</Link>{' '}
           for a list of added, modified, or removed features.
         </>
       ),
