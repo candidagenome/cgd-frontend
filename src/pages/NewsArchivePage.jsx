@@ -15,14 +15,25 @@ const NEWS_BY_YEAR = {
         <>
           We are pleased to announce the incorporation of a new assembly for the{' '}
           <em>C. glabrata</em> CBS138 genome, which leveraged long-read sequencing to correct
-          previous assembly errors in repetitive regions. The sub-telomeric regions of all
-          chromosomes were substantially lengthened, resulting in changes of chromosomal
+          previous assembly errors in repetitive regions (
+          <Link to="/reference/CAL0000228800">Xu et al., 2020</Link>). The sub-telomeric regions of
+          all chromosomes were substantially lengthened, resulting in changes of chromosomal
           coordinates for all genomic features. 31 new protein-coding genes were added. The rDNA
           region on Chr L was expanded significantly, and a second rDNA region was added to Chr M.
           62 genes from the previous assembly were removed, and sequences were corrected for an
           additional 32 features, ranging from single-base changes to major structural
           rearrangements. The update adds or corrects the sequences of 45 genes encoding
           GPI-anchored cell wall proteins (GPI-CWPs), which contain many long tandem repeats.
+          <br />
+          See{' '}
+          <a
+            href="https://www.candidagenome.org/help/2022_glabrata_changes.shtml"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            this page
+          </a>{' '}
+          for a list of added, modified, or removed features.
         </>
       ),
       date: 'August 30, 2022',
@@ -48,8 +59,13 @@ const NEWS_BY_YEAR = {
         <>
           2022 FEBS Advanced Lecture Course on Molecular Mechanisms of Host-pathogen Interactions
           and Virulence in Human Fungal Pathogens is now scheduled for an in person meeting next
-          May in La Colle sur Loup (France). Registration is now open at the Meeting website. The
-          registration deadline is February 1st, 2022.
+          May in La Colle sur Loup (France).
+          <br />
+          Registration is now open at the{' '}
+          <a href="https://hfp2022.febsevents.org" target="_blank" rel="noopener noreferrer">
+            Meeting website
+          </a>
+          . The registration deadline is February 1st, 2022.
         </>
       ),
       date: 'November 1, 2021',
@@ -60,7 +76,16 @@ const NEWS_BY_YEAR = {
         <>
           The Candida and Candidiasis 2021 meeting will take place online on March 21 - 27.
           Previously accepted presenters have been offered the opportunity to present their work at
-          this meeting. New abstracts can also be submitted at the website.
+          this meeting. New abstracts can also be submitted at this{' '}
+          <a
+            href="https://microbiologysociety.org/event/full-events-listing/candida-and-candidiasis-2021.html#tab-2"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            website
+          </a>
+          . The deadline for new abstract submissions is now extended to{' '}
+          <u>Friday, 17 January 2021, 5 pm GMT</u>.
         </>
       ),
       date: 'January 5, 2021',
@@ -71,7 +96,15 @@ const NEWS_BY_YEAR = {
       title: 'Frank Odds Obituary',
       content: (
         <>
-          Read Frank Odds obituary written by Neil Gow, available at The Guardian.
+          Read Frank Odds obituary written by Neil Gow, available{' '}
+          <a
+            href="https://www.theguardian.com/science/2020/aug/25/frank-odds-obituary"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            here
+          </a>
+          .
         </>
       ),
       date: 'August 26, 2020',
@@ -80,10 +113,26 @@ const NEWS_BY_YEAR = {
       title: 'Candida and Candidiasis 2020 Conference postponed',
       content: (
         <>
-          From the Microbiology Society: "Due to the continued spread of SARS-CoV-2, the cause of
-          COVID-19, the Council of the Microbiology Society, as Trustees of the Society, have taken
-          the difficult decision to postpone this year's Candida and Candidiasis Focused Meeting,
-          due to take place from 19-23 April in Montreal, Canada."
+          From the Microbiology Society:
+          <p>
+            "Due to the continued spread of SARS-CoV-2, the cause of COVID-19, the Council of the
+            Microbiology Society, as Trustees of the Society, have taken the difficult decision to
+            postpone this year's Candida and Candidiasis Focused Meeting, due to take place from
+            19-23 April in Montreal, Canada. We are currently unable to say when this event will
+            take place; however, we have spoken this morning to the Chair of the organising
+            committee and will keep you all updated as we know more."
+          </p>
+          <p>
+            The entire message is available{' '}
+            <a
+              href="https://comms.microbiologysociety.org/5AF8-67RV-672X3MWOCD/cr.aspx"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              here
+            </a>
+            .
+          </p>
         </>
       ),
       date: 'March 9, 2020',
@@ -94,7 +143,16 @@ const NEWS_BY_YEAR = {
         <>
           The conference, organized by the Microbiology Society and taking place on April 19-23,
           2020, in Montreal, Canada, is a successor to the highly valued ASM conference series that
-          finished in 2018. The abstract submission deadline was on January 9.
+          finished in 2018. <strong>The abstract submission deadline is on this Thursday, January 9</strong>.
+          Visit the{' '}
+          <a
+            href="https://microbiologysociety.org/event/society-events-and-meetings/candida-and-candidiasis-2020.html"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            conference website
+          </a>{' '}
+          to register, submit your abstract and for more information.
         </>
       ),
       date: 'January 6, 2020',
@@ -111,9 +169,62 @@ const NEWS_BY_YEAR = {
         <>
           We are pleased to announce the addition of <em>Candida auris</em> B8441 information into
           CGD. <em>C. auris</em> B8441 was sequenced by the Centers for Disease Control and
-          Prevention. <em>C. auris</em> is the fifth <em>Candida</em> species for which manually
-          curated data are available in our database, joining <em>C. albicans</em>,{' '}
-          <em>C. glabrata</em>, <em>C. parapsilosis</em>, and <em>C. dubliniensis</em>.
+          Prevention (
+          <a
+            href="https://pubmed.ncbi.nlm.nih.gov/27988485/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Lockhart et al. 2017
+          </a>
+          ). Sequence and annotation were obtained by CGD from{' '}
+          <a
+            href="https://www.ncbi.nlm.nih.gov/assembly/GCA_002759435.2"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GenBank
+          </a>
+          . <em>C. auris</em> is the fifth <em>Candida</em> species for which manually curated data
+          are available in our database, joining <em>C. albicans</em>, <em>C. glabrata</em>,{' '}
+          <em>C. parapsilosis</em>, and <em>C. dubliniensis</em>.
+          <p>The data loading is complete, and:</p>
+          <ul>
+            <li>
+              <em>C. auris</em> B8441 sequence is now available in all of the CGD tools, including
+              BLAST
+            </li>
+            <li>
+              Each <em>C. auris</em> gene now has a Locus Summary page in the database
+            </li>
+            <li>
+              Multiple sequence alignments and phylogenetic trees for orthologous groups have been
+              updated to include <em>C. auris</em> orthologs
+            </li>
+            <li>
+              <em>C. auris</em> genome and annotation is available in the GBrowse and JBrowse Genome
+              Browsers. In the coming months, we hope to add large-scale datasets to JBrowse, as
+              they become available
+            </li>
+            <li>
+              <em>C. auris</em> genes have been assigned predicted function, process, and
+              localization annotations (Gene Ontology terms) based on orthology to other{' '}
+              <em>Candida</em> species, and also <em>S. cerevisiae</em>, <em>S. pombe</em>, and{' '}
+              <em>A. nidulans</em>
+            </li>
+            <li>
+              Protein-coding genes have been assigned predicted annotations based on protein motifs
+              and domains (InterPro), and solved structures of homologous proteins from PDB have
+              been identified
+            </li>
+            <li>
+              Manual curation of the published scientific literature about <em>C. auris</em> genes
+              is ongoing, and experimental data collected from the literature will continue to be
+              added
+            </li>
+          </ul>
+          We look forward to <Link to="/contact">your feedback</Link> on the new <em>C. auris</em>{' '}
+          species data in CGD.
         </>
       ),
       date: 'August 27, 2019',
@@ -123,8 +234,15 @@ const NEWS_BY_YEAR = {
       content: (
         <>
           As you know, the CGD grant is up for renewal this year and we are going to submit an
-          application to the NIH. We have previously asked members of the community to complete a
-          User Survey to help us formulate future directions for CGD.
+          application to the NIH this summer. We have previously asked members of the community to
+          complete a User Survey to help us formulate future directions for CGD and we greatly
+          appreciate the massive response we have received, with all the invaluable suggestions. We
+          are now asking our users for letters of support to accompany the application. It is very
+          important to demonstrate unequivocally how crucial the continued existence of CGD is to{' '}
+          <em>Candida</em> research and to the community. We will greatly appreciate if you can
+          email your letter of support by <strong style={{ color: 'red' }}>June 25</strong> and if
+          you also encourage your colleagues and students to do the same. We are counting on your
+          support.
         </>
       ),
       date: 'May 22, 2019',
@@ -135,7 +253,10 @@ const NEWS_BY_YEAR = {
         <>
           It was brought to our attention that our CGD Suggestions and Questions form, the one with
           the reCAPTCHA box, was not working properly. There may have been messages that were
-          inadvertently lost. The problem is now fixed.
+          inadvertently lost. If you recently tried to contact CGD and never received a response, it
+          is most likely because we have not seen your message. We sincerely apologize for this. The
+          problem is now fixed and we also implemented measures to alert us to this kind of issues
+          in the future.
         </>
       ),
       date: 'February 4, 2019',
