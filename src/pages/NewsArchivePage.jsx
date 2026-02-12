@@ -185,20 +185,29 @@ const NEWS_BY_YEAR = {
           <p>The data loading is complete, and:</p>
           <ul>
             <li>
-              <em>C. auris</em> B8441 sequence is now available in all of the CGD tools, including
-              BLAST
+              <em>C. auris</em> B8441 sequence is now available in all of the CGD tools, including{' '}
+              <Link to="/blast">BLAST</Link>
             </li>
             <li>
-              Each <em>C. auris</em> gene now has a Locus Summary page in the database
+              Each <em>C. auris</em> gene now has a{' '}
+              <Link to="/locus/B9J08_002834">Locus Summary page</Link> in the database
             </li>
             <li>
-              Multiple sequence alignments and phylogenetic trees for orthologous groups have been
-              updated to include <em>C. auris</em> orthologs
+              Multiple sequence alignments and phylogenetic trees for{' '}
+              <Link to="/locus/B9J08_002834">orthologous groups</Link> have been updated to
+              include <em>C. auris</em> orthologs
             </li>
             <li>
-              <em>C. auris</em> genome and annotation is available in the GBrowse and JBrowse Genome
-              Browsers. In the coming months, we hope to add large-scale datasets to JBrowse, as
-              they become available
+              <em>C. auris</em> genome and annotation is available in the{' '}
+              <a
+                href="https://www.candidagenome.org/jbrowse/index.html?data=cgd_data%2FC_auris_B8441&loc=PEKT02000010_C_auris_B8441%3A118601..133000&tracks=DNA%2CTranscribed%20Features"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                JBrowse
+              </a>{' '}
+              Genome Browser. In the coming months, we hope to add large-scale datasets to JBrowse,
+              as they become available
             </li>
             <li>
               <em>C. auris</em> genes have been assigned predicted function, process, and
