@@ -431,9 +431,14 @@ const NEWS_BY_YEAR = {
       content: (
         <>
           We have corrected the haplotype assignments on chromosome 3 of <em>C. albicans</em>{' '}
-          SC5314, based on comparisons of haplotype data with sequence data for both the wild-type
-          diploid strain and the strain RBY10-10. This analysis supported the exchange of
-          approximately 845 kbp between chromosome 3A and chromosome 3B of Assembly 22.
+          SC5314, based on comparisons of haplotype data (Legrand et al, 2008; Berman and Forche,
+          2016) with sequence data (Muzzey et al, 2013) for both the wild-type diploid strain and
+          the strain RBY10-10, which is homozygous for chromosome 3A. This analysis supported the
+          exchange of approximately 845 kbp between chromosome 3A and chromosome 3B of Assembly 22
+          at CGD, including the entire left arm of the chromosome, and a portion of the right arm
+          extending from <Link to="/locus/CEN3"><em>CEN3</em></Link> to within the coding sequence
+          of the gene <Link to="/locus/C3_04040W">C3_04040W</Link> (orf19.2804). This results in
+          sequence and gene model boundary changes for most chromosome 3 features.
         </>
       ),
       date: 'June 22, 2016',
