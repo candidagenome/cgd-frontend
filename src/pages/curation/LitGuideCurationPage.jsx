@@ -515,12 +515,6 @@ function LitGuideCurationPage() {
           <div style={styles.refDetailsBox}>
             <p><strong>Title:</strong> {referenceData.title || 'N/A'}</p>
             <p><strong>Citation:</strong> {referenceData.citation || 'N/A'}</p>
-            {referenceData.abstract && (
-              <details style={styles.abstractDetails}>
-                <summary style={styles.abstractSummary}>Abstract</summary>
-                <p style={styles.abstractText}>{referenceData.abstract}</p>
-              </details>
-            )}
             <p>
               <strong>Curation Status:</strong>{' '}
               <select
@@ -904,23 +898,6 @@ const styles = {
     border: '1px solid #ddd',
     borderRadius: '4px',
     marginBottom: '1.5rem',
-  },
-  abstractDetails: {
-    marginTop: '0.5rem',
-  },
-  abstractSummary: {
-    cursor: 'pointer',
-    fontWeight: 'bold',
-    color: '#337ab7',
-  },
-  abstractText: {
-    marginTop: '0.5rem',
-    padding: '0.5rem',
-    backgroundColor: '#fff',
-    border: '1px solid #eee',
-    borderRadius: '4px',
-    fontSize: '0.9rem',
-    lineHeight: '1.5',
   },
   statusSelectInline: {
     padding: '0.25rem 0.5rem',
