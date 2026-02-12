@@ -243,9 +243,10 @@ const NEWS_BY_YEAR = {
           are now asking our users for letters of support to accompany the application. It is very
           important to demonstrate unequivocally how crucial the continued existence of CGD is to{' '}
           <em>Candida</em> research and to the community. We will greatly appreciate if you can
-          email your letter of support by <strong style={{ color: 'red' }}>June 25</strong> and if
-          you also encourage your colleagues and students to do the same. We are counting on your
-          support.
+          email your letter of support to{' '}
+          <a href="mailto:candida-curator@lists.stanford.edu">candida-curator@lists.stanford.edu</a>{' '}
+          by <strong style={{ color: 'red' }}>June 25</strong> and if you also encourage your
+          colleagues and students to do the same. We are counting on your support.
         </>
       ),
       date: 'May 22, 2019',
@@ -274,9 +275,21 @@ const NEWS_BY_YEAR = {
       ),
       content: (
         <>
-          <em>Candida glabrata</em> Multi Locus Sequence Typing (MLST) database at PubMLST.org is
-          accepting submissions again. As of August 2018, the <em>C. glabrata</em> MLST database
-          hosted at pubmlst.org has re-opened its submission pipeline.
+          <em>Candida glabrata</em> Multi Locus Sequence Typing (MLST) database at{' '}
+          <a href="http://pubmlst.org/" target="_blank" rel="noopener noreferrer">
+            PubMLST.org
+          </a>{' '}
+          is accepting submissions again. As of August 2018, the <em>C. glabrata</em> MLST database
+          hosted at{' '}
+          <a href="http://pubmlst.org/" target="_blank" rel="noopener noreferrer">
+            pubmlst.org
+          </a>{' '}
+          has re-opened its submission pipeline. They welcome submissions of new alleles and
+          sequence types as well as isolate data from ongoing or published studies. Please visit{' '}
+          <a href="http://pubmlst.org/cglabrata/" target="_blank" rel="noopener noreferrer">
+            pubmlst.org/cglabrata
+          </a>{' '}
+          for more information.
         </>
       ),
       date: 'August 27, 2018',
@@ -289,9 +302,48 @@ const NEWS_BY_YEAR = {
       ),
       content: (
         <>
-          The sequence and annotation of <em>C. lusitaniae</em> strain CBS 6936, described in
-          Durrens et al. (2017), has been made available at CGD. We provide downloads for
-          sequences, chromosomal features, gff files and protein domain predictions.
+          The sequence and annotation of <em>C. lusitaniae</em> strain CBS 6936, described in{' '}
+          <a
+            href="https://www.ncbi.nlm.nih.gov/pubmed/28774979"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Durrens <em>et al.</em> (2017)
+          </a>
+          , has been made available at CGD. We provide downloads for{' '}
+          <a
+            href="http://www.candidagenome.org/download/sequence/C_lusitaniae_CBS6936/current/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            sequences
+          </a>
+          ,{' '}
+          <a
+            href="http://www.candidagenome.org/download/chromosomal_feature_files/C_lusitaniae_CBS6936/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            chromosomal features
+          </a>
+          ,{' '}
+          <a
+            href="http://www.candidagenome.org/download/gff/C_lusitaniae_CBS6936/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            gff files
+          </a>{' '}
+          and{' '}
+          <a
+            href="http://www.candidagenome.org/download/domains/C_lusitaniae_CBS6936/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            protein domain predictions
+          </a>
+          . In addition, <em>C. lusitaniae</em> CBS 6936 is included among the datasets searchable
+          by our <Link to="/blast">multi-species BLAST tool</Link>.
         </>
       ),
       date: 'February 27, 2018',
@@ -303,9 +355,50 @@ const NEWS_BY_YEAR = {
       content: (
         <>
           CGD has added tracks in JBrowse showing the evolutionary conservation of genomic features
-          for <em>C. albicans</em> SC5314, <em>C. glabrata</em> CBS138, <em>C. dubliniensis</em>{' '}
-          CD36, and <em>C. parapsilosis</em> CDC317. Conservation is shown in four optional
-          quantitative tracks, representing increasing levels of evolutionary diversity.
+          for{' '}
+          <a
+            href="https://www.candidagenome.org/jbrowse/index.html?data=cgd_data%2FC_albicans_SC5314&loc=Ca22chr1A_C_albicans_SC5314%3A120521..134790&tracks=DNA%2CTranscribed%20Features"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <em>C. albicans</em> SC5314
+          </a>
+          ,{' '}
+          <a
+            href="https://www.candidagenome.org/jbrowse/index.html?data=cgd_data%2FC_glabrata_CBS138&loc=ChrL_C_glabrata_CBS138%3A1176131..1190400&tracks=DNA%2CTranscribed%20Features"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <em>C. glabrata</em> CBS138
+          </a>
+          ,{' '}
+          <a
+            href="https://www.candidagenome.org/jbrowse/index.html?data=cgd_data%2FC_dubliniensis_CD36&loc=Chr1_C_dubliniensis_CD36%3A131101..145480&tracks=DNA%2CTranscribed%20Features"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <em>C. dubliniensis</em> CD36
+          </a>
+          , and{' '}
+          <a
+            href="https://www.candidagenome.org/jbrowse/index.html?data=cgd_data%2FC_parapsilosis_CDC317&loc=Contig005569_C_parapsilosis_CDC317%3A2164961..2179340&tracks=DNA%2CTranscribed%20Features"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <em>C. parapsilosis</em> CDC317
+          </a>
+          . Conservation is shown in four optional quantitative tracks, representing increasing
+          levels of evolutionary diversity. Conservation scores and their underlying alignments are
+          available for download in the{' '}
+          <a
+            href="http://www.candidagenome.org/download/genome_alignments/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            CGD downloads directory
+          </a>
+          . Please see our <Link to="/help/jbrowse">JBrowse Help Page</Link> for more information
+          about JBrowse at CGD.
         </>
       ),
       date: 'December 20, 2017',
@@ -317,9 +410,13 @@ const NEWS_BY_YEAR = {
       content: (
         <>
           CGD has implemented JBrowse, the fast, intuitive, and customizable genome browser
-          developed by the Generic Model Organism Database project (GMOD). JBrowse allows users to
-          quickly view large-scale sequence data in a genomic context, at multiple zoom-levels of
-          resolution.
+          developed by the Generic Model Organism Database project (
+          <a href="http://gmod.org/wiki/Main_Page" target="_blank" rel="noopener noreferrer">
+            GMOD
+          </a>
+          ). JBrowse allows users to quickly view large-scale sequence data in a genomic context,
+          at multiple zoom-levels of resolution. Please see our{' '}
+          <Link to="/help/jbrowse">JBrowse Help Page</Link> for more details.
         </>
       ),
       date: 'September 29, 2016',
@@ -335,7 +432,8 @@ const NEWS_BY_YEAR = {
         <>
           We have corrected the haplotype assignments on chromosome 3 of <em>C. albicans</em>{' '}
           SC5314, based on comparisons of haplotype data with sequence data for both the wild-type
-          diploid strain and the strain RBY10-10.
+          diploid strain and the strain RBY10-10. This analysis supported the exchange of
+          approximately 845 kbp between chromosome 3A and chromosome 3B of Assembly 22.
         </>
       ),
       date: 'June 22, 2016',
@@ -348,9 +446,28 @@ const NEWS_BY_YEAR = {
       ),
       content: (
         <>
-          We now provide links on CGD Homology Pages and CGD Multi-Genome BLAST results pages to
-          gene annotations from EnsemblFungi for the seven <em>Candida</em>-related strains for
-          which we provide sequence and gene model downloads, but do not actively curate.
+          We now provide links on CGD Homology Pages and <Link to="/blast">CGD Multi-Genome BLAST</Link>{' '}
+          results pages to gene annotations from{' '}
+          <a href="http://fungi.ensembl.org/index.html" target="_blank" rel="noopener noreferrer">
+            EnsemblFungi
+          </a>{' '}
+          for the seven <em>Candida</em>-related strains for which we provide{' '}
+          <a
+            href="http://www.candidagenome.org/download/sequence/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            sequence
+          </a>{' '}
+          and{' '}
+          <a
+            href="http://www.candidagenome.org/download/gff/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            gene model
+          </a>{' '}
+          downloads, but do not actively curate.
         </>
       ),
       date: 'June 6, 2016',
@@ -366,7 +483,8 @@ const NEWS_BY_YEAR = {
           We have released a major sequence update for <em>C. albicans</em> SC5314 (Assembly 22,
           version s06-m01-r01). Based on reanalysis by CGD of all available sequence data, the
           update affects more than 300 features, correcting many ORF translation errors and
-          resolving many sequence ambiguities.
+          resolving many sequence ambiguities. The specific sequence changes can be viewed on our{' '}
+          <Link to="/genome-version-history">Chromosome History pages</Link>.
         </>
       ),
       date: 'February 2, 2016',
@@ -384,7 +502,15 @@ const NEWS_BY_YEAR = {
           Multiple <em>C. glabrata</em> gene models were updated based on gene expression analysis
           conducted by Linde et al. (2015). 4,994 features were affected: 107 new features were
           added, including 49 protein-coding genes and 58 non-coding RNAs; 4 ORFs were deleted; the
-          sequences for 132 features were extended and 10 shortened.
+          sequences for 132 features were extended and 10 shortened. For a list of updates, see the{' '}
+          <a
+            href="http://www.candidagenome.org/download/systematic_results/Linde_2015/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Supplementary Table
+          </a>
+          .
         </>
       ),
       date: 'April 15, 2015',
@@ -396,9 +522,22 @@ const NEWS_BY_YEAR = {
       content: (
         <>
           Our renewal of CGD's R01 grant was unsuccessful, so we are currently working on a
-          resubmission. In order to convincingly demonstrate the importance of CGD to the
-          community, we ask that our users provide us with letters of support to accompany the
-          application.
+          resubmission, which is due at the NIH on March 5th. In order to convincingly demonstrate
+          the importance of CGD to the community, we ask that our users provide us with letters of
+          support to accompany the application - please highlight how you use CGD, and how its
+          discontinued availability would impact your research. We also ask you to take a few
+          minutes and fill out a{' '}
+          <a
+            href="https://www.surveymonkey.com/s/D35TKVC"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            survey
+          </a>{' '}
+          that will help us to identify specific needs of the community. We will greatly appreciate
+          if you can email{' '}
+          <a href="mailto:candida-curator@lists.stanford.edu">candida-curator@lists.stanford.edu</a>{' '}
+          letters of support and complete the survey by February 15.
         </>
       ),
       date: 'January 22, 2014',
@@ -415,7 +554,8 @@ const NEWS_BY_YEAR = {
           sequence has now become available at CGD, fully integrated into the CGD environment.
           Taking advantage of next-generation sequencing and achieving nearly 700-fold coverage,
           this phased, diploid assembly permits more sensitive, allele-specific analysis of the
-          genome structure and function.
+          genome structure and function. Assembly 22 supersedes the previous Assembly 21 as the
+          default genome sequence for <em>C. albicans</em> SC5314.
         </>
       ),
       date: 'June 27, 2014',
@@ -438,7 +578,15 @@ const NEWS_BY_YEAR = {
       content: (
         <>
           The Protein Information tab for each <em>Candida albicans</em> gene now links to
-          experimental mass spectrometry data at the Peptide Atlas web site.
+          experimental mass spectrometry data at the{' '}
+          <a
+            href="http://www.peptideatlas.org/overview.php"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Peptide Atlas
+          </a>{' '}
+          web site.
         </>
       ),
       date: 'December 4, 2013',
@@ -447,8 +595,23 @@ const NEWS_BY_YEAR = {
       title: 'Sequence trace files available',
       content: (
         <>
-          We have added archival <em>Candida</em> sequence data from the NCBI TraceDB site, and
-          these data are now available from our download site.
+          We have added archival <em>Candida</em> sequence data from the{' '}
+          <a
+            href="http://www.ncbi.nlm.nih.gov/Traces/trace.cgi?view=list_arrivals"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            NCBI TraceDB
+          </a>{' '}
+          site, and these data are now available from our{' '}
+          <a
+            href="http://www.candidagenome.org/download/sequence/NCBI/TraceDB/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            download site
+          </a>
+          .
         </>
       ),
       date: 'November 12, 2013',
@@ -463,7 +626,13 @@ const NEWS_BY_YEAR = {
         <>
           CGD Locus Summary pages now feature links to <em>Aspergillus nidulans</em> and{' '}
           <em>Neurospora crassa</em> orthologs alongside the links to{' '}
-          <em>Schizosaccharomyces pombe</em> and <em>Saccharomyces cerevisiae</em> orthologs.
+          <em>Schizosaccharomyces pombe</em> and <em>Saccharomyces cerevisiae</em> orthologs (see{' '}
+          <Link to="/locus/ACT1">example</Link>). The new <em>A. nidulans</em> links lead to the
+          ortholog's Locus Summary page at the{' '}
+          <a href="http://www.aspgd.org" target="_blank" rel="noopener noreferrer">
+            Aspergillus Genome Database
+          </a>
+          .
         </>
       ),
       date: 'August 13, 2013',
@@ -478,10 +647,21 @@ const NEWS_BY_YEAR = {
         <>
           We are pleased to announce that CGD is now hosting the <em>C. dubliniensis</em> CD36
           genome sequence and reference annotation. These data were formerly collected and
-          maintained by the Sanger Institute's GeneDB resource.
+          maintained by the Sanger Institute's GeneDB resource. We provide Locus Summary pages for
+          each <em>C. dubliniensis</em> gene (for example,{' '}
+          <Link to="/locus/Cd36_01180">Cd36_01180</Link>), <Link to="/blast">BLAST</Link>, and the
+          full suite of{' '}
+          <a
+            href="http://www.candidagenome.org/download/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            downloadable files
+          </a>
+          .
         </>
       ),
-      date: 'June 6, 2013',
+      date: 'April 30, 2013',
     },
     {
       title: 'Additions and Improvements to Datasets Available for Download at CGD',
@@ -538,8 +718,21 @@ const NEWS_BY_YEAR = {
       content: (
         <>
           We are pleased to announce that we are now using the curated synteny information provided
-          by the <em>Candida</em> Gene Order Browser (CGOB) for CGD's ortholog mappings among{' '}
-          <em>Candida</em> species.
+          by the <em>Candida</em> Gene Order Browser (
+          <a href="http://cgob3.ucd.ie/" target="_blank" rel="noopener noreferrer">
+            CGOB
+          </a>
+          ) for CGD's ortholog mappings among <em>Candida</em> species, and between{' '}
+          <em>Candida</em> species and <em>S. cerevisiae</em>. The ortholog mappings between each
+          pair of species are also available in our{' '}
+          <a
+            href="http://www.candidagenome.org/download/homology/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            download pages
+          </a>
+          .
         </>
       ),
       date: 'July 12, 2012',
@@ -567,7 +760,8 @@ const NEWS_BY_YEAR = {
         <>
           We have updated the annotation of <em>C. albicans</em> and <em>C. glabrata</em> tRNA
           genes, based on predictions using tRNAscan-SE and comparisons with{' '}
-          <em>S. cerevisiae</em> homologs.
+          <em>S. cerevisiae</em> homologs. In addition, tRNA names and aliases have been updated,
+          as outlined in the <Link to="/nomenclature">CGD Nomenclature Guide</Link>.
         </>
       ),
       date: 'July 25, 2011',
@@ -597,6 +791,12 @@ const NEWS_BY_YEAR = {
           We are pleased to announce that we have now fully integrated <em>C. glabrata</em>{' '}
           information into CGD. We have curated the entire published experimental literature that
           describes <em>C. glabrata</em> genes, as well as the <em>C. albicans</em> literature.
+          Each <em>C. glabrata</em> CBS138 gene has its own Locus Summary page in CGD (see, for
+          example, the <Link to="/locus/CAGL0M01760g"><em>C. glabrata</em> CDR1/CAGL0M01760g</Link>{' '}
+          Locus Summary page). We have also implemented a{' '}
+          <Link to="/blast">multispecies BLAST tool</Link>. Genome Snapshots are provided for both{' '}
+          <Link to="/genome-snapshot/C_albicans_SC5314"><em>C. albicans</em></Link> and{' '}
+          <Link to="/genome-snapshot/C_glabrata_CBS138"><em>C. glabrata</em></Link>.
         </>
       ),
       date: 'June, 2011',
@@ -605,8 +805,15 @@ const NEWS_BY_YEAR = {
       title: 'CGD is on Facebook',
       content: (
         <>
-          CGD now has its own page on Facebook, where we will post occasional updates and
-          announcements.
+          CGD now has its own{' '}
+          <a
+            href="https://www.facebook.com/pages/Candida-Genome-Database/173482099381649"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            page on Facebook
+          </a>
+          , where we will post occasional updates and announcements.
         </>
       ),
       date: 'July 8, 2011',
@@ -615,8 +822,12 @@ const NEWS_BY_YEAR = {
       title: 'Links to PhylomeDB phylogenetic gene trees',
       content: (
         <>
-          We have added links from CGD to phylogenetic gene tree pages in PhylomeDB. PhylomeDB is a
-          public database of gene phylogenies for exploration of the evolutionary history of genes.
+          We have added links from CGD to phylogenetic gene tree pages in{' '}
+          <a href="http://phylomedb.org/" target="_blank" rel="noopener noreferrer">
+            PhylomeDB
+          </a>
+          . PhylomeDB is a public database of gene phylogenies for exploration of the evolutionary
+          history of genes.
         </>
       ),
       date: 'April 5, 2011',
@@ -645,7 +856,15 @@ const NEWS_BY_YEAR = {
         <>
           A set of new data from a genome-wide experimental annotation study by Sellam et al.
           (2010) has been added to CGD. Displayed as a GBrowse track are 2,172 previously unknown
-          transcribed regions.
+          transcribed regions. All datafiles are available at the{' '}
+          <a
+            href="http://www.candidagenome.org/download/systematic_results/Sellam_2010/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            download directory
+          </a>
+          .
         </>
       ),
       date: 'October 12, 2010',
@@ -658,9 +877,11 @@ const NEWS_BY_YEAR = {
       ),
       content: (
         <>
-          We have added a "<em>Candida albicans</em> Strains" page to CGD, with brief descriptions
-          and references for some of the more commonly used laboratory strains, as well as a
-          lineage diagram.
+          We have added a <Link to="/strains">"<em>Candida albicans</em> Strains" page</Link> to
+          CGD, with brief descriptions and references for some of the more commonly used laboratory
+          strains, as well as a lineage diagram. If you would like to suggest additions,
+          corrections, or updates to this list, please{' '}
+          <Link to="/contact">send a message to CGD curators</Link> with details.
         </>
       ),
       date: 'July 21, 2010',
@@ -673,8 +894,10 @@ const NEWS_BY_YEAR = {
       ),
       content: (
         <>
-          A new bibliography resource is now available at CGD. Curators have compiled a set of
-          references on a variety of topics relevant to <em>Candida</em> biology.
+          A <Link to="/topic-biblios">new bibliography resource</Link> is now available at CGD.
+          Curators have compiled a set of references on a variety of topics relevant to{' '}
+          <em>Candida</em> biology. The reference lists are intended to provide a brief overview of
+          each subject area, including many key reviews.
         </>
       ),
       date: 'July 15, 2010',
@@ -689,6 +912,15 @@ const NEWS_BY_YEAR = {
         <>
           CGD now provides for download sequences from several <em>Candida</em> and{' '}
           <em>Candida</em>-related species and strains in addition to <em>C. albicans</em> SC5314.
+          All sequences are available on the{' '}
+          <a
+            href="http://candidagenome.org/download/sequence/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Sequence Downloads Page
+          </a>
+          . See the <Link to="/help/sequence">Sequence Help Page</Link> for additional information.
         </>
       ),
       date: 'July 8, 2010',
@@ -716,7 +948,15 @@ const NEWS_BY_YEAR = {
         <>
           CGD is now releasing our improved and expanded mutant phenotype pages. We have
           implemented a controlled-vocabulary system for phenotype curation that is already in use
-          by AspGD and SGD.
+          by{' '}
+          <a href="http://www.aspgd.org" target="_blank" rel="noopener noreferrer">
+            AspGD
+          </a>{' '}
+          and{' '}
+          <a href="http://www.yeastgenome.org" target="_blank" rel="noopener noreferrer">
+            SGD
+          </a>
+          .
         </>
       ),
       date: 'February 24, 2010',
@@ -726,9 +966,12 @@ const NEWS_BY_YEAR = {
       content: (
         <>
           CGD has expanded to include protein information for all verified and predicted ORFs.
-          Using software and database tools developed at the Saccharomyces Genome Database (SGD),
-          the Protein Information Pages display basic property, domain organization, structural and
-          homology information.
+          Using software and database tools developed at the{' '}
+          <a href="http://www.yeastgenome.org" target="_blank" rel="noopener noreferrer">
+            Saccharomyces Genome Database (SGD)
+          </a>
+          , the Protein Information Pages display basic property, domain organization, structural
+          and homology information.
         </>
       ),
       date: 'February 5, 2010',
@@ -753,9 +996,16 @@ const NEWS_BY_YEAR = {
       title: 'CGD paper in Nucleic Acids Research Database Issue',
       content: (
         <>
-          A paper entitled "New tools at the <em>Candida</em> Genome Database: biochemical pathways
-          and full-text literature search" will appear in the 2010 Database Issue of Nucleic Acids
-          Research.
+          A paper entitled{' '}
+          <a
+            href="http://nar.oxfordjournals.org/cgi/content/full/gkp836v1"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            "New tools at the <em>Candida</em> Genome Database: biochemical pathways and full-text
+            literature search"
+          </a>{' '}
+          will appear in the 2010 Database Issue of Nucleic Acids Research.
         </>
       ),
       date: 'October 7, 2009',
@@ -784,7 +1034,11 @@ const NEWS_BY_YEAR = {
       content: (
         <>
           A full-text literature search capability has now been added to CGD. The literature search
-          tool is powered by Textpresso, a text-mining tool developed at Wormbase.
+          tool is powered by{' '}
+          <a href="http://www.textpresso.org/" target="_blank" rel="noopener noreferrer">
+            Textpresso
+          </a>
+          , a text-mining tool developed at Wormbase.
         </>
       ),
       date: 'April 14, 2009',
@@ -805,8 +1059,10 @@ const NEWS_BY_YEAR = {
       title: 'New Genome Snapshot resource',
       content: (
         <>
-          We have created a resource, Genome Snapshot, that provides a daily count of{' '}
-          <em>C. albicans</em> genomic features and a summary of Gene Ontology (GO) annotations.
+          We have created a resource,{' '}
+          <Link to="/genome-snapshot/C_albicans_SC5314">Genome Snapshot</Link>, that provides a
+          daily count of <em>C. albicans</em> genomic features and a summary of Gene Ontology (GO)
+          annotations.
         </>
       ),
       date: 'December 3, 2008',
@@ -843,8 +1099,15 @@ const NEWS_BY_YEAR = {
       content: (
         <>
           Graphical, interactive displays of <em>Candida</em> biochemical pathways are now
-          available at CGD. The pathways were created using the Pathway Tools software developed at
-          SRI International.
+          available at CGD. The pathways were created using the{' '}
+          <a
+            href="http://bioinformatics.ai.sri.com/ptools/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Pathway Tools
+          </a>{' '}
+          software developed at SRI International.
         </>
       ),
       date: 'March 13, 2008',
@@ -856,9 +1119,16 @@ const NEWS_BY_YEAR = {
       content: (
         <>
           We are very pleased to announce significant enhancements to our web site, which have been
-          implemented in collaboration with the <em>Saccharomyces</em> Genome Database. Highlights
-          include Tabbed Browsing of Locus Information, Advanced Search, Batch Download,
-          Gene/Sequence Resources, Pattern Matching, and Primer Design Tool.
+          implemented in collaboration with the{' '}
+          <a href="http://www.yeastgenome.org" target="_blank" rel="noopener noreferrer">
+            <em>Saccharomyces</em> Genome Database
+          </a>
+          . Highlights include Tabbed Browsing of Locus Information,{' '}
+          <Link to="/feature-search">Advanced Search</Link>,{' '}
+          <Link to="/batch-download">Batch Download</Link>,{' '}
+          <Link to="/seq-tools">Gene/Sequence Resources</Link>,{' '}
+          <Link to="/patmatch">Pattern Matching</Link>, and{' '}
+          <Link to="/webprimer">Primer Design Tool</Link>.
         </>
       ),
       date: 'December 4, 2007',
@@ -923,8 +1193,15 @@ const NEWS_BY_YEAR = {
       title: 'Large-scale datasets archived at CGD',
       content: (
         <>
-          We have added an archive of large-scale datasets to our ftp site. The data are obtained
-          from published and publicly accessible supplements.
+          We have added an archive of large-scale datasets to our{' '}
+          <a
+            href="http://www.candidagenome.org/download/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            ftp site
+          </a>
+          . The data are obtained from published and publicly accessible supplements.
         </>
       ),
       date: 'December 22, 2005',
@@ -939,7 +1216,11 @@ const NEWS_BY_YEAR = {
         <>
           CGD now includes links to <em>S. cerevisiae</em> orthologs of <em>C. albicans</em> genes.
           Ortholog gene names appear on the Locus Pages and are hyperlinked to the corresponding
-          Locus Pages at the <em>Saccharomyces</em> Genome Database (SGD).
+          Locus Pages at the{' '}
+          <a href="http://www.yeastgenome.org" target="_blank" rel="noopener noreferrer">
+            <em>Saccharomyces</em> Genome Database (SGD)
+          </a>
+          .
         </>
       ),
       date: 'August 15, 2005',
@@ -953,9 +1234,15 @@ const NEWS_BY_YEAR = {
       content: (
         <>
           The manual annotation of the <em>Candida albicans</em> genome by the Annotation Working
-          Group is described in a new paper by B. R. Braun et al., entitled "A Human-Curated
-          Annotation of the <em>Candida albicans</em> Genome." The paper is published in the
-          inaugural issue of PLoS-Genetics.
+          Group is described in a new paper by B. R. Braun et al., entitled{' '}
+          <a
+            href="https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.0010001"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            "A Human-Curated Annotation of the <em>Candida albicans</em> Genome."
+          </a>{' '}
+          The paper is published in the inaugural issue of PLoS-Genetics.
         </>
       ),
       date: 'August 2, 2005',
@@ -975,10 +1262,16 @@ const NEWS_BY_YEAR = {
       title: 'CGD paper is published in Nucleic Acids Research',
       content: (
         <>
-          A paper describing the <em>Candida</em> Genome Database has been published in the Nucleic
-          Acids Research 2005 Database Issue. The paper is entitled "The <em>Candida</em> Genome
-          Database (CGD), a community resource for <em>Candida albicans</em> gene and protein
-          information."
+          A paper describing the <em>Candida</em> Genome Database has been published in the{' '}
+          <a
+            href="https://academic.oup.com/nar/article/33/suppl_1/D532/2505237"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Nucleic Acids Research 2005 Database Issue
+          </a>
+          . The paper is entitled "The <em>Candida</em> Genome Database (CGD), a community resource
+          for <em>Candida albicans</em> gene and protein information."
         </>
       ),
       date: 'January 3, 2005',
@@ -990,8 +1283,16 @@ const NEWS_BY_YEAR = {
       content: (
         <>
           We are pleased to announce that all of the CGD Gene Ontology (GO) curation is now
-          available for download. This CGD GO Annotations File is updated daily to reflect the very
-          latest curation in CGD.
+          available for{' '}
+          <a
+            href="http://www.candidagenome.org/download/go/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            download
+          </a>
+          . This CGD GO Annotations File is updated daily to reflect the very latest curation in
+          CGD.
         </>
       ),
       date: 'November 17, 2004',
@@ -1000,10 +1301,10 @@ const NEWS_BY_YEAR = {
       title: 'CGD Gene Registry is now available',
       content: (
         <>
-          CGD is ready to provide a gene name registry for the <em>Candida</em> research community.
-          As agreed by the community at the ASM Conference on Candida and Candidiasis in March
-          2004, all new genetic names for <em>C. albicans</em> genes should be reserved through the
-          gene registry before publication.
+          CGD is ready to provide a <Link to="/gene-registry">gene name registry</Link> for the{' '}
+          <em>Candida</em> research community. As agreed by the community at the ASM Conference on
+          Candida and Candidiasis in March 2004, all new genetic names for <em>C. albicans</em>{' '}
+          genes should be reserved through the gene registry before publication.
         </>
       ),
       date: 'November 12, 2004',
@@ -1014,7 +1315,7 @@ const NEWS_BY_YEAR = {
         <>
           CGD is ready to serve as a directory for the <em>Candida</em> research community. You may
           submit information about your research interests, and contact information, to CGD using
-          the Colleague Submission/Update form.
+          the <Link to="/colleague-update">Colleague Submission/Update form</Link>.
         </>
       ),
       date: 'September 7, 2004',
