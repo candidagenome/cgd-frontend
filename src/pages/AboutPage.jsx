@@ -11,7 +11,7 @@ function AboutPage() {
 
         <section className="info-section">
           <p>
-            The <em>Candida</em> Genome Database (CGD) provides online access to genomic sequence
+            The <em>Candida</em> HELLO Genome Database (CGD) provides online access to genomic sequence
             data and manually curated functional information about genes and proteins of the human
             pathogen <em>Candida albicans</em> and related species.
           </p>
