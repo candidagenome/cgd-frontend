@@ -79,11 +79,17 @@ function LitGuideCurationPage() {
   }, []);
 
   // Load feature on mount if featureName provided
+  // If it's a pure numeric value, redirect to reference curation page
   useEffect(() => {
     if (featureName) {
+      // Check if it's a pure numeric value (likely a reference_no)
+      if (/^\d+$/.test(featureName)) {
+        navigate(`/curation/reference/${featureName}`, { replace: true });
+        return;
+      }
       loadFeatureLiterature(featureName);
     }
-  }, [featureName, loadFeatureLiterature]);
+  }, [featureName, loadFeatureLiterature, navigate]);
 
   // Handle feature search
   const handleFeatureSearch = (e) => {
