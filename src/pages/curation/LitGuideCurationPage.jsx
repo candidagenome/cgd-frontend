@@ -25,8 +25,12 @@ function LitGuideCurationPage() {
   const [refSearchResults, setRefSearchResults] = useState(null);
   const [searching, setSearching] = useState(false);
 
-  // Feature and literature state
+  // Feature and literature state (feature-centric view)
   const [featureData, setFeatureData] = useState(null);
+  // Reference and literature state (reference-centric view)
+  const [referenceData, setReferenceData] = useState(null);
+  const [viewMode, setViewMode] = useState(null); // 'feature' or 'reference'
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -34,6 +38,10 @@ function LitGuideCurationPage() {
   // Available options
   const [topics, setTopics] = useState([]);
   const [statuses, setStatuses] = useState([]);
+
+  // Add feature form state (for reference view)
+  const [newFeature, setNewFeature] = useState('');
+  const [newFeatureTopic, setNewFeatureTopic] = useState('');
 
   // Add topic form state
   const [selectedRef, setSelectedRef] = useState(null);
@@ -57,16 +65,18 @@ function LitGuideCurationPage() {
     loadOptions();
   }, []);
 
-  // Load feature literature
+  // Load feature literature (feature-centric view)
   const loadFeatureLiterature = useCallback(async (identifier) => {
     if (!identifier) return;
 
     setLoading(true);
     setError(null);
+    setReferenceData(null);
 
     try {
       const data = await litguideCurationApi.getFeatureLiterature(identifier);
       setFeatureData(data);
+      setViewMode('feature');
     } catch (err) {
       if (err.response?.status === 404) {
         setError(`Feature '${identifier}' not found`);
@@ -78,18 +88,41 @@ function LitGuideCurationPage() {
     }
   }, []);
 
-  // Load feature on mount if featureName provided
-  // If it's a pure numeric value, redirect to reference curation page
+  // Load reference literature (reference-centric view)
+  const loadReferenceLiterature = useCallback(async (referenceNo) => {
+    if (!referenceNo) return;
+
+    setLoading(true);
+    setError(null);
+    setFeatureData(null);
+
+    try {
+      const data = await litguideCurationApi.getReferenceLiterature(referenceNo);
+      setReferenceData(data);
+      setViewMode('reference');
+    } catch (err) {
+      if (err.response?.status === 404) {
+        setError(`Reference '${referenceNo}' not found`);
+      } else {
+        setError('Failed to load reference literature');
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Load on mount based on featureName type
+  // Numeric = reference view, otherwise = feature view
   useEffect(() => {
     if (featureName) {
-      // Check if it's a pure numeric value (likely a reference_no)
+      // Check if it's a pure numeric value (reference_no)
       if (/^\d+$/.test(featureName)) {
-        navigate(`/curation/reference/${featureName}`, { replace: true });
-        return;
+        loadReferenceLiterature(featureName);
+      } else {
+        loadFeatureLiterature(featureName);
       }
-      loadFeatureLiterature(featureName);
     }
-  }, [featureName, loadFeatureLiterature, navigate]);
+  }, [featureName, loadFeatureLiterature, loadReferenceLiterature]);
 
   // Handle feature search
   const handleFeatureSearch = (e) => {
@@ -155,10 +188,50 @@ function LitGuideCurationPage() {
     try {
       await litguideCurationApi.setReferenceStatus(referenceNo, status);
       setSuccessMessage(`Curation status set to '${status}'`);
-      loadFeatureLiterature(featureData.feature_no);
+      if (viewMode === 'feature' && featureData) {
+        loadFeatureLiterature(featureData.feature_no);
+      } else if (viewMode === 'reference' && referenceData) {
+        loadReferenceLiterature(referenceData.reference_no);
+      }
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
       setError(err.response?.data?.detail || 'Failed to set status');
+    }
+  };
+
+  // Handle add feature to reference (reference view)
+  const handleAddFeatureToReference = async () => {
+    if (!referenceData || !newFeature || !newFeatureTopic) return;
+
+    try {
+      await litguideCurationApi.addFeatureToReference(
+        referenceData.reference_no,
+        newFeature,
+        newFeatureTopic
+      );
+      setSuccessMessage(`Feature '${newFeature}' added with topic '${newFeatureTopic}'`);
+      setNewFeature('');
+      setNewFeatureTopic('');
+      loadReferenceLiterature(referenceData.reference_no);
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to add feature');
+    }
+  };
+
+  // Handle remove topic (works for both views)
+  const handleRemoveTopicForReference = async (refpropFeatNo) => {
+    if (!window.confirm('Are you sure you want to remove this topic association?')) return;
+
+    try {
+      await litguideCurationApi.removeTopicAssociation(refpropFeatNo);
+      setSuccessMessage('Topic association removed');
+      if (referenceData) {
+        loadReferenceLiterature(referenceData.reference_no);
+      }
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to remove topic');
     }
   };
 
@@ -198,10 +271,10 @@ function LitGuideCurationPage() {
       </div>
 
       {/* Loading State */}
-      {loading && <div style={styles.loading}>Loading feature literature...</div>}
+      {loading && <div style={styles.loading}>Loading...</div>}
 
-      {/* Feature Literature */}
-      {featureData && !loading && (
+      {/* Feature Literature (feature-centric view) */}
+      {viewMode === 'feature' && featureData && !loading && (
         <div style={styles.featureSection}>
           <div style={styles.featureHeader}>
             <h2>
@@ -420,8 +493,137 @@ function LitGuideCurationPage() {
         </div>
       )}
 
+      {/* Reference-centric View */}
+      {viewMode === 'reference' && referenceData && !loading && (
+        <div style={styles.referenceSection}>
+          <div style={styles.referenceHeader}>
+            <h2>
+              {referenceData.pubmed ? `PMID:${referenceData.pubmed}` : `Reference ${referenceData.reference_no}`}
+              <span style={styles.refYear}> ({referenceData.year || 'N/A'})</span>
+            </h2>
+            <div style={styles.headerActions}>
+              <Link to={`/reference/${referenceData.reference_no}`} style={styles.headerLink}>
+                View Reference Page
+              </Link>
+              <Link to={`/curation/reference/${referenceData.reference_no}`} style={styles.headerLink}>
+                Reference Curation
+              </Link>
+            </div>
+          </div>
+
+          {/* Reference Details */}
+          <div style={styles.refDetailsBox}>
+            <p><strong>Title:</strong> {referenceData.title || 'N/A'}</p>
+            <p><strong>Citation:</strong> {referenceData.citation || 'N/A'}</p>
+            {referenceData.abstract && (
+              <details style={styles.abstractDetails}>
+                <summary style={styles.abstractSummary}>Abstract</summary>
+                <p style={styles.abstractText}>{referenceData.abstract}</p>
+              </details>
+            )}
+            <p>
+              <strong>Curation Status:</strong>{' '}
+              <select
+                value={referenceData.curation_status || ''}
+                onChange={(e) => {
+                  if (e.target.value) {
+                    handleSetStatus(referenceData.reference_no, e.target.value);
+                  }
+                }}
+                style={styles.statusSelectInline}
+              >
+                <option value="">Not yet curated</option>
+                {statuses.map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
+            </p>
+          </div>
+
+          {/* Add Feature Form */}
+          <div style={styles.addSection}>
+            <h3 style={styles.sectionHeader}>Add Feature with Topic</h3>
+            <div style={styles.addFeatureRow}>
+              <input
+                type="text"
+                value={newFeature}
+                onChange={(e) => setNewFeature(e.target.value)}
+                placeholder="Feature name or gene name..."
+                style={styles.featureInput}
+              />
+              <select
+                value={newFeatureTopic}
+                onChange={(e) => setNewFeatureTopic(e.target.value)}
+                style={styles.topicSelect}
+              >
+                <option value="">Select topic...</option>
+                {topics.map((topic) => (
+                  <option key={topic} value={topic}>{topic}</option>
+                ))}
+              </select>
+              <button
+                onClick={handleAddFeatureToReference}
+                disabled={!newFeature || !newFeatureTopic}
+                style={styles.addButton}
+              >
+                Add Feature
+              </button>
+            </div>
+          </div>
+
+          {/* Features with Topics */}
+          <div style={styles.literatureSection}>
+            <h3 style={styles.sectionHeader}>
+              Associated Features ({referenceData.features?.length || 0})
+            </h3>
+
+            {referenceData.features?.length > 0 ? (
+              <table style={styles.table}>
+                <thead>
+                  <tr>
+                    <th style={styles.th}>Feature</th>
+                    <th style={styles.th}>Gene Name</th>
+                    <th style={styles.th}>Type</th>
+                    <th style={styles.th}>Topics</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {referenceData.features.map((feat) => (
+                    <tr key={feat.feature_no}>
+                      <td style={styles.td}>
+                        <Link to={`/locus/${feat.feature_name}`}>
+                          {feat.feature_name}
+                        </Link>
+                      </td>
+                      <td style={styles.td}>{feat.gene_name || '-'}</td>
+                      <td style={styles.td}>{feat.feature_type || '-'}</td>
+                      <td style={styles.td}>
+                        {feat.topics.map((topic) => (
+                          <div key={topic.refprop_feat_no} style={styles.topicTag}>
+                            {topic.topic}
+                            <button
+                              onClick={() => handleRemoveTopicForReference(topic.refprop_feat_no)}
+                              style={styles.removeTopicBtn}
+                              title="Remove topic"
+                            >
+                              x
+                            </button>
+                          </div>
+                        ))}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p style={styles.noItems}>No features associated with this reference yet.</p>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Initial State */}
-      {!featureData && !loading && !featureName && (
+      {!featureData && !referenceData && !loading && !featureName && (
         <div style={styles.noFeature}>
           <p>Search for a feature above to begin literature curation.</p>
         </div>
@@ -679,6 +881,66 @@ const styles = {
     color: '#666',
     backgroundColor: '#f9f9f9',
     borderRadius: '4px',
+  },
+  // Reference view styles
+  referenceSection: {
+    marginTop: '1rem',
+  },
+  referenceHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '1rem',
+    flexWrap: 'wrap',
+    gap: '0.5rem',
+  },
+  headerActions: {
+    display: 'flex',
+    gap: '0.5rem',
+  },
+  refDetailsBox: {
+    padding: '1rem',
+    backgroundColor: '#f9f9f9',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    marginBottom: '1.5rem',
+  },
+  abstractDetails: {
+    marginTop: '0.5rem',
+  },
+  abstractSummary: {
+    cursor: 'pointer',
+    fontWeight: 'bold',
+    color: '#337ab7',
+  },
+  abstractText: {
+    marginTop: '0.5rem',
+    padding: '0.5rem',
+    backgroundColor: '#fff',
+    border: '1px solid #eee',
+    borderRadius: '4px',
+    fontSize: '0.9rem',
+    lineHeight: '1.5',
+  },
+  statusSelectInline: {
+    padding: '0.25rem 0.5rem',
+    fontSize: '0.9rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    marginLeft: '0.5rem',
+  },
+  addFeatureRow: {
+    display: 'flex',
+    gap: '0.5rem',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+  },
+  featureInput: {
+    padding: '0.5rem',
+    fontSize: '1rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    minWidth: '200px',
   },
 };
 

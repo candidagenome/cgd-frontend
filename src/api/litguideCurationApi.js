@@ -92,6 +92,33 @@ export const litguideCurationApi = {
     });
     return response.data;
   },
+
+  /**
+   * Get reference details with all associated features and topics.
+   *
+   * @param {number} referenceNo - Reference number
+   * @returns {Promise<Object>} - Reference with features and topics
+   */
+  getReferenceLiterature: async (referenceNo) => {
+    const response = await api.get(`/api/curation/litguide/reference/${referenceNo}`);
+    return response.data;
+  },
+
+  /**
+   * Add feature-topic association to a reference.
+   *
+   * @param {number} referenceNo - Reference number
+   * @param {string} featureIdentifier - Feature name, gene name, or feature_no
+   * @param {string} topic - Literature topic
+   * @returns {Promise<Object>}
+   */
+  addFeatureToReference: async (referenceNo, featureIdentifier, topic) => {
+    const response = await api.post(`/api/curation/litguide/reference/${referenceNo}/feature`, {
+      feature_identifier: featureIdentifier,
+      topic,
+    });
+    return response.data;
+  },
 };
 
 export default litguideCurationApi;
