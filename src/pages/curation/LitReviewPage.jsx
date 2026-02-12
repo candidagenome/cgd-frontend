@@ -78,6 +78,7 @@ function LitReviewPage() {
 
   // Handle radio button selection
   const handleSelection = (pubmed, action) => {
+    console.log('handleSelection called:', pubmed, action);
     setSelections((prev) => ({
       ...prev,
       [pubmed]: action,
@@ -102,7 +103,10 @@ function LitReviewPage() {
 
   // Submit single paper action
   const handleSubmitSingle = async (pubmed) => {
+    console.log('handleSubmitSingle called with pubmed:', pubmed);
+    console.log('Current selections:', selections);
     const action = selections[pubmed];
+    console.log('Action for this pubmed:', action);
     if (!action) {
       alert('Please select an action first');
       return;
@@ -112,7 +116,9 @@ function LitReviewPage() {
     try {
       let result;
       if (action === 'add') {
+        console.log('Calling triageAdd with pubmed:', pubmed);
         result = await triageAdd(pubmed);
+        console.log('triageAdd result:', result);
       } else if (action === 'high_priority') {
         const geneInput = geneInputs[pubmed] || '';
         const featureNames = geneInput
