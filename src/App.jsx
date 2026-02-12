@@ -31,6 +31,7 @@ import SearchPage from './pages/SearchPage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import MeetingsPage from './pages/MeetingsPage';
 import CommunityNewsPage from './pages/CommunityNewsPage';
+import NewsArchivePage from './pages/NewsArchivePage';
 import JobPostingsPage from './pages/JobPostingsPage';
 import ExternalResourcesPage from './pages/ExternalResourcesPage';
 import NomenclaturePage from './pages/NomenclaturePage';
@@ -211,6 +212,7 @@ function App() {
           <Route path="/search/results" element={<SearchResultsPage />} />
           <Route path="/meetings" element={<MeetingsPage />} />
           <Route path="/community-news" element={<CommunityNewsPage />} />
+          <Route path="/news/archive" element={<NewsArchivePage />} />
           <Route path="/job-postings" element={<JobPostingsPage />} />
           <Route path="/external-resources" element={<ExternalResourcesPage />} />
           <Route path="/nomenclature" element={<NomenclaturePage />} />
