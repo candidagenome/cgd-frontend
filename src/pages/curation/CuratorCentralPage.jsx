@@ -57,14 +57,6 @@ function CuratorCentralPage() {
                 <a href="https://wiki.candidagenome.org/index.php/Help:CurateLocusFeat" target="_blank" rel="noopener noreferrer">Help</a>
               </li>
               <li>
-                <Link to="/curation/feature/new">Add a New Feature</Link>
-                {' | '}
-                <a href="https://wiki.candidagenome.org/index.php/Help:CurateLocusFeat" target="_blank" rel="noopener noreferrer">Help</a>
-              </li>
-              <li>
-                <Link to="/curation/links">Add Links and Pull-downs to Locus Page</Link>
-              </li>
-              <li>
                 <Link to="/curation/go">Curate GO</Link>
                 {' | '}
                 <Link to="/curation/go/todo">GO ToDo List</Link>
@@ -74,19 +66,27 @@ function CuratorCentralPage() {
                 {' | '}
                 <a href="https://wiki.candidagenome.org/index.php/Help:Phenotype_Curation_Help" target="_blank" rel="noopener noreferrer">Help</a>
               </li>
-              <li>
-                <Link to="/curation/paragraph">Paragraphs</Link>
+              <li style={styles.disabledItem}>
+                <Link to="/curation/feature/new" style={styles.disabledLink}>Add a New Feature</Link>
                 {' | '}
-                <a href="https://wiki.candidagenome.org/index.php/Help:paragraph" target="_blank" rel="noopener noreferrer">Help</a>
+                <a href="https://wiki.candidagenome.org/index.php/Help:CurateLocusFeat" target="_blank" rel="noopener noreferrer" style={styles.disabledLink}>Help</a>
               </li>
-              <li>
-                <Link to="/curation/location/new">Add New Location for existing Feature</Link>
+              <li style={styles.disabledItem}>
+                <Link to="/curation/links" style={styles.disabledLink}>Add Links and Pull-downs to Locus Page</Link>
               </li>
-              <li>
-                <Link to="/curation/sequence">Update Chromosome Sequence</Link>
+              <li style={styles.disabledItem}>
+                <Link to="/curation/paragraph" style={styles.disabledLink}>Paragraphs</Link>
+                {' | '}
+                <a href="https://wiki.candidagenome.org/index.php/Help:paragraph" target="_blank" rel="noopener noreferrer" style={styles.disabledLink}>Help</a>
               </li>
-              <li>
-                <Link to="/curation/coordinates">Update Feature Coordinates and Relationships</Link>
+              <li style={styles.disabledItem}>
+                <Link to="/curation/location/new" style={styles.disabledLink}>Add New Location for existing Feature</Link>
+              </li>
+              <li style={styles.disabledItem}>
+                <Link to="/curation/sequence" style={styles.disabledLink}>Update Chromosome Sequence</Link>
+              </li>
+              <li style={styles.disabledItem}>
+                <Link to="/curation/coordinates" style={styles.disabledLink}>Update Feature Coordinates and Relationships</Link>
               </li>
             </ul>
           </section>
@@ -94,11 +94,11 @@ function CuratorCentralPage() {
           <section style={styles.section}>
             <h3 style={styles.sectionHeader}>Useful links</h3>
             <ul style={styles.linkList}>
-              <li>
-                <a href="https://wiki.candidagenome.org/" target="_blank" rel="noopener noreferrer">General staff page</a>
+              <li style={styles.disabledItem}>
+                <a href="https://wiki.candidagenome.org/" target="_blank" rel="noopener noreferrer" style={styles.disabledLink}>General staff page</a>
               </li>
-              <li>
-                <a href="https://wiki.candidagenome.org/index.php/CGD:help" target="_blank" rel="noopener noreferrer">CGD Curator Help</a>
+              <li style={styles.disabledItem}>
+                <a href="https://wiki.candidagenome.org/index.php/CGD:help" target="_blank" rel="noopener noreferrer" style={styles.disabledLink}>CGD Curator Help</a>
               </li>
             </ul>
           </section>
@@ -120,19 +120,19 @@ function CuratorCentralPage() {
                 <a href="https://wiki.candidagenome.org/index.php/Help:geneinfo" target="_blank" rel="noopener noreferrer">Help</a>
               </li>
               <li>
-                <Link to="/curation/literature/review">PubMed New Literature Review</Link>
-              </li>
-              <li>
                 <Link to="/curation/reference/create">Create and/or Link PubMed Reference</Link>
               </li>
               <li>
                 <Link to="/curation/reference/search">Edit or delete an existing reference</Link>
               </li>
-              <li>
-                <Link to="/curation/reference/annotation">Edit Reference Annotations</Link>
+              <li style={styles.disabledItem}>
+                <Link to="/curation/literature/review" style={styles.disabledLink}>PubMed New Literature Review</Link>
               </li>
-              <li>
-                <Link to="/curation/reference/search" target="_blank">Reference Search</Link>
+              <li style={styles.disabledItem}>
+                <Link to="/curation/reference/annotation" style={styles.disabledLink}>Edit Reference Annotations</Link>
+              </li>
+              <li style={styles.disabledItem}>
+                <Link to="/curation/reference/search" target="_blank" style={styles.disabledLink}>Reference Search</Link>
               </li>
             </ul>
           </section>
@@ -140,17 +140,17 @@ function CuratorCentralPage() {
           <section style={styles.section}>
             <h3 style={styles.sectionHeader}>Misc. curator tools</h3>
             <ul style={styles.linkList}>
-              <li>
-                <Link to="/curation/note/new">Enter a new curator note</Link>
+              <li style={styles.disabledItem}>
+                <Link to="/curation/note/new" style={styles.disabledLink}>Enter a new curator note</Link>
               </li>
-              <li>
-                <Link to="/curation/note/edit">Edit an existing curator note</Link>
+              <li style={styles.disabledItem}>
+                <Link to="/curation/note/edit" style={styles.disabledLink}>Edit an existing curator note</Link>
               </li>
-              <li>
-                <Link to="/curation/db-search">Database Search (Phenotypes)</Link>
+              <li style={styles.disabledItem}>
+                <Link to="/curation/db-search" style={styles.disabledLink}>Database Search (Phenotypes)</Link>
               </li>
-              <li>
-                <Link to="/curation/seq-alignment">Sequence Alignment Tool</Link>
+              <li style={styles.disabledItem}>
+                <Link to="/curation/seq-alignment" style={styles.disabledLink}>Sequence Alignment Tool</Link>
               </li>
             </ul>
           </section>
@@ -158,14 +158,14 @@ function CuratorCentralPage() {
           <section style={styles.section}>
             <h3 style={styles.sectionHeader}>Database resources/tools</h3>
             <ul style={styles.linkList}>
-              <li>
-                <a href="https://wiki.candidagenome.org/index.php/Main_Page#CGD" target="_blank" rel="noopener noreferrer">CGD business rules</a>
+              <li style={styles.disabledItem}>
+                <a href="https://wiki.candidagenome.org/index.php/Main_Page#CGD" target="_blank" rel="noopener noreferrer" style={styles.disabledLink}>CGD business rules</a>
               </li>
-              <li>
-                <a href="https://wiki.candidagenome.org/index.php/Main_Page#CGD" target="_blank" rel="noopener noreferrer">CGD table specifications</a>
+              <li style={styles.disabledItem}>
+                <a href="https://wiki.candidagenome.org/index.php/Main_Page#CGD" target="_blank" rel="noopener noreferrer" style={styles.disabledLink}>CGD table specifications</a>
               </li>
-              <li>
-                <a href="https://wiki.candidagenome.org/index.php/Main_Page#Database" target="_blank" rel="noopener noreferrer">Oracle resources</a>
+              <li style={styles.disabledItem}>
+                <a href="https://wiki.candidagenome.org/index.php/Main_Page#Database" target="_blank" rel="noopener noreferrer" style={styles.disabledLink}>Oracle resources</a>
               </li>
             </ul>
           </section>
@@ -232,6 +232,12 @@ const styles = {
     listStyle: 'none',
     padding: 0,
     margin: 0,
+  },
+  disabledItem: {
+    color: '#999',
+  },
+  disabledLink: {
+    color: '#999',
   },
 };
 
