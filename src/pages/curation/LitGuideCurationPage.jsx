@@ -21,6 +21,9 @@ function LitGuideCurationPage() {
 
   // Search state
   const [featureSearch, setFeatureSearch] = useState('');
+  const [pmidSearch, setPmidSearch] = useState('');
+  const [pmidSearching, setPmidSearching] = useState(false);
+  const [pmidError, setPmidError] = useState(null);
   const [refSearch, setRefSearch] = useState('');
   const [refSearchResults, setRefSearchResults] = useState(null);
   const [searching, setSearching] = useState(false);
@@ -129,6 +132,38 @@ function LitGuideCurationPage() {
     e.preventDefault();
     if (!featureSearch.trim()) return;
     navigate(`/curation/litguide/${featureSearch.trim()}`);
+  };
+
+  // Handle PMID search
+  const handlePmidSearch = async (e) => {
+    e.preventDefault();
+    const pmid = pmidSearch.trim();
+    if (!pmid) return;
+
+    setPmidSearching(true);
+    setPmidError(null);
+
+    try {
+      // Search for the reference by PMID
+      const data = await litguideCurationApi.searchReferences(pmid);
+      if (data.references && data.references.length > 0) {
+        // Find the exact PMID match
+        const exactMatch = data.references.find(ref => ref.pubmed === pmid || ref.pubmed === parseInt(pmid, 10));
+        if (exactMatch) {
+          // Navigate to reference-centric view using reference_no
+          navigate(`/curation/litguide/${exactMatch.reference_no}`);
+        } else {
+          // If no exact match, use the first result
+          navigate(`/curation/litguide/${data.references[0].reference_no}`);
+        }
+      } else {
+        setPmidError(`No reference found for PMID: ${pmid}`);
+      }
+    } catch (err) {
+      setPmidError('Failed to search for PMID');
+    } finally {
+      setPmidSearching(false);
+    }
   };
 
   // Handle reference search
@@ -253,21 +288,44 @@ function LitGuideCurationPage() {
       {successMessage && <div style={styles.success}>{successMessage}</div>}
       {error && <div style={styles.error}>{error}</div>}
 
-      {/* Feature Search */}
+      {/* Search Section */}
       <div style={styles.searchSection}>
-        <h3>Find Feature</h3>
-        <form onSubmit={handleFeatureSearch} style={styles.searchForm}>
-          <input
-            type="text"
-            value={featureSearch}
-            onChange={(e) => setFeatureSearch(e.target.value)}
-            placeholder="Enter feature name or gene name..."
-            style={styles.searchInput}
-          />
-          <button type="submit" style={styles.searchButton}>
-            Search
-          </button>
-        </form>
+        <div style={styles.searchRow}>
+          {/* Feature Search */}
+          <div style={styles.searchBox}>
+            <h3>Find Feature</h3>
+            <form onSubmit={handleFeatureSearch} style={styles.searchForm}>
+              <input
+                type="text"
+                value={featureSearch}
+                onChange={(e) => setFeatureSearch(e.target.value)}
+                placeholder="Enter feature name or gene name..."
+                style={styles.searchInput}
+              />
+              <button type="submit" style={styles.searchButton}>
+                Search
+              </button>
+            </form>
+          </div>
+
+          {/* PMID Search */}
+          <div style={styles.searchBox}>
+            <h3>Find by PMID</h3>
+            <form onSubmit={handlePmidSearch} style={styles.searchForm}>
+              <input
+                type="text"
+                value={pmidSearch}
+                onChange={(e) => setPmidSearch(e.target.value)}
+                placeholder="Enter PMID..."
+                style={styles.searchInput}
+              />
+              <button type="submit" disabled={pmidSearching} style={styles.searchButton}>
+                {pmidSearching ? 'Searching...' : 'Search'}
+              </button>
+            </form>
+            {pmidError && <div style={styles.searchError}>{pmidError}</div>}
+          </div>
+        </div>
       </div>
 
       {/* Loading State */}
@@ -682,6 +740,20 @@ const styles = {
     backgroundColor: '#f9f9f9',
     border: '1px solid #ddd',
     borderRadius: '4px',
+  },
+  searchRow: {
+    display: 'flex',
+    gap: '2rem',
+    flexWrap: 'wrap',
+  },
+  searchBox: {
+    flex: 1,
+    minWidth: '300px',
+  },
+  searchError: {
+    marginTop: '0.5rem',
+    color: '#c00',
+    fontSize: '0.9rem',
   },
   searchForm: {
     display: 'flex',
