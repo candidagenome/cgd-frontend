@@ -56,14 +56,6 @@ function CuratorCentralPage() {
                 {' | '}
                 <a href="https://wiki.candidagenome.org/index.php/Help:CurateLocusFeat" target="_blank" rel="noopener noreferrer">Help</a>
               </li>
-              <li style={styles.disabledItem}>
-                <Link to="/curation/feature/new" style={styles.disabledLink}>Add a New Feature</Link>
-                {' | '}
-                <a href="https://wiki.candidagenome.org/index.php/Help:CurateLocusFeat" target="_blank" rel="noopener noreferrer" style={styles.disabledLink}>Help</a>
-              </li>
-              <li style={styles.disabledItem}>
-                <Link to="/curation/links" style={styles.disabledLink}>Add Links and Pull-downs to Locus Page</Link>
-              </li>
               <li>
                 <Link to="/curation/go">Curate GO</Link>
                 {' | '}
@@ -73,6 +65,14 @@ function CuratorCentralPage() {
                 <Link to="/curation/phenotype">Curate Phenotype</Link>
                 {' | '}
                 <a href="https://wiki.candidagenome.org/index.php/Help:Phenotype_Curation_Help" target="_blank" rel="noopener noreferrer">Help</a>
+              </li>
+              <li style={styles.disabledItem}>
+                <Link to="/curation/feature/new" style={styles.disabledLink}>Add a New Feature</Link>
+                {' | '}
+                <a href="https://wiki.candidagenome.org/index.php/Help:CurateLocusFeat" target="_blank" rel="noopener noreferrer" style={styles.disabledLink}>Help</a>
+              </li>
+              <li style={styles.disabledItem}>
+                <Link to="/curation/links" style={styles.disabledLink}>Add Links and Pull-downs to Locus Page</Link>
               </li>
               <li style={styles.disabledItem}>
                 <Link to="/curation/paragraph" style={styles.disabledLink}>Paragraphs</Link>
@@ -119,14 +119,14 @@ function CuratorCentralPage() {
                 {' | '}
                 <a href="https://wiki.candidagenome.org/index.php/Help:geneinfo" target="_blank" rel="noopener noreferrer">Help</a>
               </li>
-              <li style={styles.disabledItem}>
-                <Link to="/curation/literature/review" style={styles.disabledLink}>PubMed New Literature Review</Link>
-              </li>
               <li>
                 <Link to="/curation/reference/create">Create and/or Link PubMed Reference</Link>
               </li>
               <li>
                 <Link to="/curation/reference/search">Edit or delete an existing reference</Link>
+              </li>
+              <li style={styles.disabledItem}>
+                <Link to="/curation/literature/review" style={styles.disabledLink}>PubMed New Literature Review</Link>
               </li>
               <li style={styles.disabledItem}>
                 <Link to="/curation/reference/annotation" style={styles.disabledLink}>Edit Reference Annotations</Link>
