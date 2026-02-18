@@ -148,14 +148,17 @@ function ReferenceSearchPage() {
   };
 
   const loadReferenceDetails = async (refNo) => {
+    console.log('loadReferenceDetails called with refNo:', refNo);
     try {
       const [details, usage] = await Promise.all([
         referenceCurationApi.getCurationDetails(refNo),
         referenceCurationApi.getReferenceUsage(refNo),
       ]);
+      console.log('Reference details loaded:', details, usage);
       setSelectedRef(details);
       setRefUsage(usage);
     } catch (err) {
+      console.error('loadReferenceDetails error:', err);
       setError(err.response?.data?.detail || err.message);
     }
   };
