@@ -193,12 +193,12 @@ function GoCurationPage() {
     }
   };
 
-  // Helper to look up reference by CGDID
+  // Helper to look up reference by CGDID (dbxref_id like CAL0142015)
   const lookupReferenceByCgdid = async (cgdid) => {
     try {
-      // CGDID format is like "CGD_REF:xxx" or just the number
-      const formattedId = cgdid.includes('CGD_REF:') ? cgdid : `CGD_REF:${cgdid}`;
-      const response = await api.get(`/api/reference/${formattedId}`);
+      // Remove any prefix like "CGD_REF:" - database stores just the ID
+      const cleanId = cgdid.replace(/^CGD_REF:/i, '').trim();
+      const response = await api.get(`/api/reference/${cleanId}`);
       // API returns { result: { reference_no: ... } }
       return response.data.result?.reference_no || response.data.reference_no;
     } catch {
