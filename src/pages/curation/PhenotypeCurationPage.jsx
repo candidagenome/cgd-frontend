@@ -545,6 +545,11 @@ function PhenotypeCurationPage() {
       <div style={styles.annotations}>
         <h2>
           Existing Phenotype Annotations ({featureData?.annotations?.length || 0})
+          {featureData?.features_searched > 1 && (
+            <span style={styles.featuresSearched}>
+              {' '}(from {featureData.features_searched} features)
+            </span>
+          )}
         </h2>
 
         {featureData?.annotations?.length === 0 ? (
@@ -555,6 +560,9 @@ function PhenotypeCurationPage() {
           <table style={styles.table}>
             <thead>
               <tr>
+                {featureData?.features_searched > 1 && (
+                  <th style={styles.th}>Feature</th>
+                )}
                 <th style={styles.th}>Experiment Type</th>
                 <th style={styles.th}>Mutant Type</th>
                 <th style={styles.th}>Observable</th>
@@ -567,6 +575,13 @@ function PhenotypeCurationPage() {
             <tbody>
               {featureData?.annotations?.map((ann) => (
                 <tr key={ann.pheno_annotation_no}>
+                  {featureData?.features_searched > 1 && (
+                    <td style={styles.td}>
+                      <Link to={`/locus/${ann.feature_name}`}>
+                        {ann.feature_name}
+                      </Link>
+                    </td>
+                  )}
                   <td style={styles.td}>{ann.experiment_type}</td>
                   <td style={styles.td}>{ann.mutant_type}</td>
                   <td style={styles.td}>{ann.observable}</td>
@@ -861,6 +876,11 @@ const styles = {
   },
   annotations: {
     marginTop: '1.5rem',
+  },
+  featuresSearched: {
+    fontSize: '0.85rem',
+    fontWeight: 'normal',
+    color: '#666',
   },
   noAnnotations: {
     padding: '2rem',
