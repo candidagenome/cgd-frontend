@@ -10,10 +10,15 @@ export const phenotypeCurationApi = {
    * Get all phenotype annotations for a feature.
    *
    * @param {string} featureName - Feature name or gene name
+   * @param {string} [organismAbbrev] - Optional organism abbreviation to filter by
    * @returns {Promise<{feature_no: number, feature_name: string, gene_name: string, annotations: Array}>}
    */
-  getAnnotations: async (featureName) => {
-    const response = await api.get(`/api/curation/phenotype/${encodeURIComponent(featureName)}`);
+  getAnnotations: async (featureName, organismAbbrev = null) => {
+    const params = {};
+    if (organismAbbrev) {
+      params.organism = organismAbbrev;
+    }
+    const response = await api.get(`/api/curation/phenotype/${encodeURIComponent(featureName)}`, { params });
     return response.data;
   },
 

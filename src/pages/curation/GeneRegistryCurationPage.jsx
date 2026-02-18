@@ -162,86 +162,74 @@ export default function GeneRegistryCurationPage() {
   };
 
   return (
-    <div className="container mx-auto p-6 max-w-6xl">
-      <div className="mb-6">
-        <Link to="/curation" className="text-blue-600 hover:underline">
-          &larr; Back to Curator Central
-        </Link>
+    <div style={styles.container}>
+      <div style={styles.backLink}>
+        <Link to="/curation">&larr; Back to Curator Central</Link>
       </div>
 
-      <h1 className="text-2xl font-bold mb-6">Process Gene Registry Forms</h1>
+      <h1 style={styles.title}>Process Gene Registry Forms</h1>
 
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          {error}
-        </div>
+        <div style={styles.errorBox}>{error}</div>
       )}
 
       {success && (
-        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-          {success}
-        </div>
+        <div style={styles.successBox}>{success}</div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div style={styles.columnsWrapper}>
         {/* Submissions List */}
-        <div className="bg-white border rounded p-4">
-          <h2 className="font-semibold mb-4">Pending Submissions</h2>
+        <div style={styles.panel}>
+          <h2 style={styles.panelTitle}>Pending Submissions</h2>
 
           {loadingList ? (
             <p>Loading...</p>
           ) : submissions.length === 0 ? (
-            <p className="text-gray-600">No pending submissions.</p>
+            <p style={styles.mutedText}>No pending submissions.</p>
           ) : (
-            <div className="space-y-2 max-h-96 overflow-y-auto">
+            <div style={styles.submissionsList}>
               {submissions.map((sub) => (
                 <div
                   key={sub.id}
                   onClick={() => handleSelectSubmission(sub.id)}
-                  className={`p-3 border rounded cursor-pointer hover:bg-blue-50 ${
-                    selectedId === sub.id ? 'bg-blue-100 border-blue-400' : ''
-                  }`}
+                  style={{
+                    ...styles.submissionItem,
+                    ...(selectedId === sub.id ? styles.submissionItemSelected : {}),
+                  }}
                 >
-                  <div className="font-medium">{sub.gene_name || 'Unknown gene'}</div>
-                  <div className="text-sm text-gray-600">
+                  <div style={styles.geneName}>{sub.gene_name || 'Unknown gene'}</div>
+                  <div style={styles.smallText}>
                     {sub.orf_name && <span>ORF: {sub.orf_name} | </span>}
                     {sub.organism}
                   </div>
-                  <div className="text-sm text-gray-500">
-                    From: {sub.submitter_name}
-                  </div>
-                  <div className="text-xs text-gray-400">
-                    {sub.submitted_at?.split('T')[0]}
-                  </div>
+                  <div style={styles.smallMutedText}>From: {sub.submitter_name}</div>
+                  <div style={styles.dateText}>{sub.submitted_at?.split('T')[0]}</div>
                 </div>
               ))}
             </div>
           )}
 
-          <button
-            onClick={loadSubmissions}
-            className="mt-4 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-          >
+          <button onClick={loadSubmissions} style={styles.refreshButton}>
             Refresh List
           </button>
         </div>
 
         {/* Submission Details / Processing Form */}
-        <div className="bg-white border rounded p-4">
-          <h2 className="font-semibold mb-4">
+        <div style={styles.panel}>
+          <h2 style={styles.panelTitle}>
             {details ? 'Process Submission' : 'Select a submission'}
           </h2>
 
           {loadingDetails ? (
             <p>Loading details...</p>
           ) : details ? (
-            <div className="space-y-4">
+            <div>
               {/* Submitter Info */}
               {details.colleague_info && (
-                <div className="p-3 bg-gray-50 rounded text-sm">
+                <div style={styles.infoBox}>
                   <strong>Submitter:</strong> {details.colleague_info.name}
                   {details.colleague_info.email && (
-                    <span className="text-gray-600"> ({details.colleague_info.email})</span>
+                    <span style={styles.mutedText}> ({details.colleague_info.email})</span>
                   )}
                   <br />
                   {details.colleague_info.institution}
@@ -250,10 +238,10 @@ export default function GeneRegistryCurationPage() {
 
               {/* ORF Info */}
               {details.orf_info && (
-                <div className="p-3 bg-yellow-50 border border-yellow-200 rounded text-sm">
+                <div style={styles.orfInfoBox}>
                   <strong>ORF Found:</strong> {details.orf_info.feature_name}
                   {details.orf_info.gene_name && (
-                    <span className="text-red-600">
+                    <span style={{ color: '#dc2626' }}>
                       {' '}(Already named: {details.orf_info.gene_name})
                     </span>
                   )}
@@ -263,108 +251,104 @@ export default function GeneRegistryCurationPage() {
               )}
 
               {/* Processing Form */}
-              <div className="space-y-3">
-                <div>
-                  <label className="block font-medium text-sm mb-1">Gene Name *</label>
+              <div style={styles.formSection}>
+                <div style={styles.formGroup}>
+                  <label style={styles.label}>Gene Name *</label>
                   <input
                     type="text"
                     value={geneName}
                     onChange={(e) => setGeneName(e.target.value)}
-                    className="w-full border rounded px-3 py-2"
+                    style={styles.input}
                   />
                 </div>
 
-                <div>
-                  <label className="block font-medium text-sm mb-1">ORF Name</label>
+                <div style={styles.formGroup}>
+                  <label style={styles.label}>ORF Name</label>
                   <input
                     type="text"
                     value={orfName}
                     onChange={(e) => setOrfName(e.target.value)}
                     placeholder="Defaults to gene name (uppercased)"
-                    className="w-full border rounded px-3 py-2"
+                    style={styles.input}
                   />
                 </div>
 
-                <div>
-                  <label className="block font-medium text-sm mb-1">Organism *</label>
+                <div style={styles.formGroup}>
+                  <label style={styles.label}>Organism *</label>
                   <input
                     type="text"
                     value={organismAbbrev}
                     onChange={(e) => setOrganismAbbrev(e.target.value)}
-                    className="w-full border rounded px-3 py-2"
+                    style={styles.input}
                   />
                 </div>
 
-                <div>
-                  <label className="block font-medium text-sm mb-1">Description</label>
+                <div style={styles.formGroup}>
+                  <label style={styles.label}>Description</label>
                   <textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     rows={2}
-                    className="w-full border rounded px-3 py-2"
+                    style={styles.textarea}
                   />
                 </div>
 
-                <div>
-                  <label className="block font-medium text-sm mb-1">Headline</label>
+                <div style={styles.formGroup}>
+                  <label style={styles.label}>Headline</label>
                   <input
                     type="text"
                     value={headline}
                     onChange={(e) => setHeadline(e.target.value)}
-                    className="w-full border rounded px-3 py-2"
+                    style={styles.input}
                   />
                 </div>
 
-                <div>
-                  <label className="block font-medium text-sm mb-1">
-                    Aliases (comma-separated)
-                  </label>
+                <div style={styles.formGroup}>
+                  <label style={styles.label}>Aliases (comma-separated)</label>
                   <input
                     type="text"
                     value={aliases}
                     onChange={(e) => setAliases(e.target.value)}
                     placeholder="e.g., ABC1, XYZ2"
-                    className="w-full border rounded px-3 py-2"
+                    style={styles.input}
                   />
                 </div>
 
-                <div>
-                  <label className="block font-medium text-sm mb-1">Reference No</label>
+                <div style={styles.formGroup}>
+                  <label style={styles.label}>Reference No</label>
                   <input
                     type="number"
                     value={referenceNo}
                     onChange={(e) => setReferenceNo(e.target.value)}
                     placeholder="Optional"
-                    className="w-full border rounded px-3 py-2"
+                    style={styles.input}
                   />
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-2 pt-4 border-t">
+              <div style={styles.buttonGroup}>
                 <button
                   onClick={handleProcess}
                   disabled={processing}
-                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+                  style={{
+                    ...styles.button,
+                    ...styles.buttonPrimary,
+                    ...(processing ? styles.buttonDisabled : {}),
+                  }}
                 >
                   {processing ? 'Processing...' : 'Commit'}
                 </button>
-                <button
-                  onClick={handleDelay}
-                  className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
-                >
+                <button onClick={handleDelay} style={{ ...styles.button, ...styles.buttonWarning }}>
                   Delay
                 </button>
-                <button
-                  onClick={handleDelete}
-                  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-                >
+                <button onClick={handleDelete} style={{ ...styles.button, ...styles.buttonDanger }}>
                   Delete
                 </button>
               </div>
             </div>
           ) : (
-            <p className="text-gray-600">
+            <p style={styles.mutedText}>
               Select a submission from the list to view details and process it.
             </p>
           )}
@@ -373,3 +357,165 @@ export default function GeneRegistryCurationPage() {
     </div>
   );
 }
+
+const styles = {
+  container: {
+    maxWidth: '1100px',
+    margin: '1rem auto',
+    padding: '1rem 1.5rem',
+  },
+  backLink: {
+    marginBottom: '1.5rem',
+  },
+  title: {
+    fontSize: '1.5rem',
+    fontWeight: 'bold',
+    marginBottom: '1.5rem',
+  },
+  errorBox: {
+    backgroundColor: '#fee2e2',
+    border: '1px solid #f87171',
+    color: '#b91c1c',
+    padding: '0.75rem 1rem',
+    borderRadius: '4px',
+    marginBottom: '1rem',
+  },
+  successBox: {
+    backgroundColor: '#dcfce7',
+    border: '1px solid #4ade80',
+    color: '#166534',
+    padding: '0.75rem 1rem',
+    borderRadius: '4px',
+    marginBottom: '1rem',
+  },
+  columnsWrapper: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gap: '1.5rem',
+  },
+  panel: {
+    backgroundColor: '#fff',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    padding: '1rem',
+  },
+  panelTitle: {
+    fontWeight: '600',
+    marginBottom: '1rem',
+    fontSize: '1.1rem',
+  },
+  mutedText: {
+    color: '#666',
+  },
+  submissionsList: {
+    maxHeight: '400px',
+    overflowY: 'auto',
+  },
+  submissionItem: {
+    padding: '0.75rem',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    marginBottom: '0.5rem',
+  },
+  submissionItemSelected: {
+    backgroundColor: '#dbeafe',
+    borderColor: '#3b82f6',
+  },
+  geneName: {
+    fontWeight: '500',
+  },
+  smallText: {
+    fontSize: '0.875rem',
+    color: '#666',
+  },
+  smallMutedText: {
+    fontSize: '0.875rem',
+    color: '#888',
+  },
+  dateText: {
+    fontSize: '0.75rem',
+    color: '#999',
+  },
+  refreshButton: {
+    marginTop: '1rem',
+    padding: '0.5rem 1rem',
+    backgroundColor: '#e5e7eb',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  },
+  infoBox: {
+    padding: '0.75rem',
+    backgroundColor: '#f9fafb',
+    borderRadius: '4px',
+    fontSize: '0.875rem',
+    marginBottom: '1rem',
+  },
+  orfInfoBox: {
+    padding: '0.75rem',
+    backgroundColor: '#fefce8',
+    border: '1px solid #fde047',
+    borderRadius: '4px',
+    fontSize: '0.875rem',
+    marginBottom: '1rem',
+  },
+  formSection: {
+    marginBottom: '1rem',
+  },
+  formGroup: {
+    marginBottom: '0.75rem',
+  },
+  label: {
+    display: 'block',
+    fontWeight: '500',
+    fontSize: '0.875rem',
+    marginBottom: '0.25rem',
+  },
+  input: {
+    width: '100%',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    padding: '0.5rem 0.75rem',
+    fontSize: '1rem',
+    boxSizing: 'border-box',
+  },
+  textarea: {
+    width: '100%',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    padding: '0.5rem 0.75rem',
+    fontSize: '1rem',
+    boxSizing: 'border-box',
+    resize: 'vertical',
+  },
+  buttonGroup: {
+    display: 'flex',
+    gap: '0.5rem',
+    paddingTop: '1rem',
+    borderTop: '1px solid #e5e7eb',
+  },
+  button: {
+    padding: '0.5rem 1rem',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontWeight: '500',
+  },
+  buttonPrimary: {
+    backgroundColor: '#2563eb',
+    color: '#fff',
+  },
+  buttonWarning: {
+    backgroundColor: '#eab308',
+    color: '#fff',
+  },
+  buttonDanger: {
+    backgroundColor: '#dc2626',
+    color: '#fff',
+  },
+  buttonDisabled: {
+    opacity: 0.5,
+    cursor: 'not-allowed',
+  },
+};

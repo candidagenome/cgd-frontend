@@ -85,6 +85,7 @@ import GeneRegistryCurationPage from './pages/curation/GeneRegistryCurationPage'
 import ParagraphCurationPage from './pages/curation/ParagraphCurationPage';
 import LitReviewPage from './pages/curation/LitReviewPage';
 import ReferenceSearchPage from './pages/curation/ReferenceSearchPage';
+import ReferenceSearchResultsPage from './pages/curation/ReferenceSearchResultsPage';
 import RefAnnotationCurationPage from './pages/curation/RefAnnotationCurationPage';
 import DbSearchPage from './pages/curation/DbSearchPage';
 import SequenceCurationPage from './pages/curation/SequenceCurationPage';
@@ -452,6 +453,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ReferenceSearchPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/reference/search/results"
+            element={
+              <ProtectedRoute>
+                <ReferenceSearchResultsPage />
               </ProtectedRoute>
             }
           />

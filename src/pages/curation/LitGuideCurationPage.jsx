@@ -637,6 +637,7 @@ function LitGuideCurationPage() {
                     <th style={styles.th}>Gene Name</th>
                     <th style={styles.th}>Type</th>
                     <th style={styles.th}>Topics</th>
+                    <th style={styles.th}>Curate</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -662,6 +663,21 @@ function LitGuideCurationPage() {
                             </button>
                           </div>
                         ))}
+                      </td>
+                      <td style={styles.td}>
+                        <Link
+                          to={`/curation/phenotype/${feat.feature_name}`}
+                          style={styles.curateLink}
+                        >
+                          Phenotype
+                        </Link>
+                        {' | '}
+                        <Link
+                          to={`/curation/go/${feat.feature_name}`}
+                          style={styles.curateLink}
+                        >
+                          GO
+                        </Link>
                       </td>
                     </tr>
                   ))}
@@ -928,6 +944,11 @@ const styles = {
     borderRadius: '3px',
     cursor: 'pointer',
     marginRight: '0.5rem',
+    fontSize: '0.85rem',
+  },
+  curateLink: {
+    color: '#337ab7',
+    textDecoration: 'none',
     fontSize: '0.85rem',
   },
   statusSelect: {

@@ -58,8 +58,6 @@ function CuratorCentralPage() {
               </li>
               <li>
                 <Link to="/curation/go">Curate GO</Link>
-                {' | '}
-                <Link to="/curation/go/todo">GO ToDo List</Link>
               </li>
               <li>
                 <Link to="/curation/phenotype">Curate Phenotype</Link>

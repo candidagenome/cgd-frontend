@@ -20,6 +20,7 @@ import {
   triageDiscard,
   triageBatch,
 } from '../../api/litReviewApi';
+import { filterAllowedOrganisms } from '../../constants/organisms';
 
 const PUBMED_URL = 'https://pubmed.ncbi.nlm.nih.gov';
 const ITEMS_PER_PAGE = 50;
@@ -60,7 +61,7 @@ function LitReviewPage() {
       ]);
       setPapers(papersData.papers);
       setTotal(papersData.total);
-      setOrganisms(orgsData.organisms);
+      setOrganisms(filterAllowedOrganisms(orgsData.organisms));
       // Reset selections
       setSelections({});
       setGeneInputs({});

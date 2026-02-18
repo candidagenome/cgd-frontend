@@ -13,6 +13,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, useSearchParams, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import phenotypeCurationApi from '../../api/phenotypeCurationApi';
+import { getOrganisms } from '../../api/litReviewApi';
+import { filterAllowedOrganisms } from '../../constants/organisms';
 
 function PhenotypeCurationPage() {
   const { featureName: paramFeatureName } = useParams();
@@ -30,6 +32,8 @@ function PhenotypeCurationPage() {
 
   // Search state (when no feature specified)
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedOrganism, setSelectedOrganism] = useState('');
+  const [organisms, setOrganisms] = useState([]);
 
   // New annotation form state
   const [showAddForm, setShowAddForm] = useState(false);
@@ -50,6 +54,28 @@ function PhenotypeCurationPage() {
   const [mutantTypes, setMutantTypes] = useState([]);
   const [qualifiers, setQualifiers] = useState([]);
   const [propertyTypes, setPropertyTypes] = useState([]);
+
+  // Initialize organism from URL params
+  useEffect(() => {
+    const organismParam = searchParams.get('organism');
+    if (organismParam) {
+      setSelectedOrganism(organismParam);
+    }
+  }, [searchParams]);
+
+  // Load organisms on mount
+  useEffect(() => {
+    const loadOrganisms = async () => {
+      try {
+        const data = await getOrganisms();
+        setOrganisms(filterAllowedOrganisms(data.organisms || []));
+      } catch (err) {
+        console.error('Failed to load organisms:', err);
+      }
+    };
+
+    loadOrganisms();
+  }, []);
 
   // Load CV terms
   useEffect(() => {
@@ -81,7 +107,9 @@ function PhenotypeCurationPage() {
     setError(null);
 
     try {
-      const data = await phenotypeCurationApi.getAnnotations(featureName);
+      // Pass organism filter if selected (from URL param or dropdown)
+      const organismParam = searchParams.get('organism') || selectedOrganism;
+      const data = await phenotypeCurationApi.getAnnotations(featureName, organismParam || null);
       setFeatureData(data);
     } catch (err) {
       if (err.response?.status === 404) {
@@ -93,7 +121,7 @@ function PhenotypeCurationPage() {
     } finally {
       setLoading(false);
     }
-  }, [featureName]);
+  }, [featureName, searchParams, selectedOrganism]);
 
   // Load annotations on mount and when featureName changes
   useEffect(() => {
@@ -106,7 +134,11 @@ function PhenotypeCurationPage() {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      window.location.href = `/curation/phenotype?query=${encodeURIComponent(searchQuery.trim())}`;
+      let url = `/curation/phenotype?query=${encodeURIComponent(searchQuery.trim())}`;
+      if (selectedOrganism) {
+        url += `&organism=${encodeURIComponent(selectedOrganism)}`;
+      }
+      window.location.href = url;
     }
   };
 
@@ -241,6 +273,18 @@ function PhenotypeCurationPage() {
         <div style={styles.searchForm}>
           <p>Enter a gene/feature name to curate phenotype annotations:</p>
           <form onSubmit={handleSearch} style={styles.searchFormInner}>
+            <select
+              value={selectedOrganism}
+              onChange={(e) => setSelectedOrganism(e.target.value)}
+              style={styles.organismSelect}
+            >
+              <option value="">All species</option>
+              {organisms.map((org) => (
+                <option key={org.organism_abbrev} value={org.organism_abbrev}>
+                  {org.organism_name}
+                </option>
+              ))}
+            </select>
             <input
               type="text"
               value={searchQuery}
@@ -502,6 +546,11 @@ function PhenotypeCurationPage() {
       <div style={styles.annotations}>
         <h2>
           Existing Phenotype Annotations ({featureData?.annotations?.length || 0})
+          {featureData?.features_searched > 1 && (
+            <span style={styles.featuresSearched}>
+              {' '}(from {featureData.features_searched} features)
+            </span>
+          )}
         </h2>
 
         {featureData?.annotations?.length === 0 ? (
@@ -512,6 +561,9 @@ function PhenotypeCurationPage() {
           <table style={styles.table}>
             <thead>
               <tr>
+                {featureData?.features_searched > 1 && (
+                  <th style={styles.th}>Feature</th>
+                )}
                 <th style={styles.th}>Experiment Type</th>
                 <th style={styles.th}>Mutant Type</th>
                 <th style={styles.th}>Observable</th>
@@ -524,6 +576,13 @@ function PhenotypeCurationPage() {
             <tbody>
               {featureData?.annotations?.map((ann) => (
                 <tr key={ann.pheno_annotation_no}>
+                  {featureData?.features_searched > 1 && (
+                    <td style={styles.td}>
+                      <Link to={`/locus/${ann.feature_name}`}>
+                        {ann.feature_name}
+                      </Link>
+                    </td>
+                  )}
                   <td style={styles.td}>{ann.experiment_type}</td>
                   <td style={styles.td}>{ann.mutant_type}</td>
                   <td style={styles.td}>{ann.observable}</td>
@@ -659,6 +718,13 @@ const styles = {
     border: 'none',
     borderRadius: '4px',
     cursor: 'pointer',
+  },
+  organismSelect: {
+    padding: '0.5rem',
+    fontSize: '1rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    minWidth: '200px',
   },
   actions: {
     marginBottom: '1rem',
@@ -811,6 +877,11 @@ const styles = {
   },
   annotations: {
     marginTop: '1.5rem',
+  },
+  featuresSearched: {
+    fontSize: '0.85rem',
+    fontWeight: 'normal',
+    color: '#666',
   },
   noAnnotations: {
     padding: '2rem',

@@ -5,12 +5,14 @@
  * Mirrors legacy curateLitTodo.pl functionality.
  */
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import todoListApi from '../../api/todoListApi';
+import litguideCurationApi from '../../api/litguideCurationApi';
 
 function LitGuideTodoListPage() {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const [years, setYears] = useState([]);
   const [statuses, setStatuses] = useState([]);
@@ -20,6 +22,11 @@ function LitGuideTodoListPage() {
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // PMID search state
+  const [pmidSearch, setPmidSearch] = useState('');
+  const [pmidSearching, setPmidSearching] = useState(false);
+  const [pmidError, setPmidError] = useState(null);
 
   // Load available years and statuses on mount
   useEffect(() => {
@@ -64,11 +71,48 @@ function LitGuideTodoListPage() {
     loadTodoList();
   }, [selectedStatus, selectedYear]);
 
+  // Handle PMID search
+  const handlePmidSearch = async (e) => {
+    e.preventDefault();
+    const pmid = pmidSearch.trim();
+    if (!pmid) return;
+
+    setPmidSearching(true);
+    setPmidError(null);
+
+    try {
+      // Search for the reference by PMID
+      const data = await litguideCurationApi.searchReferences(pmid);
+      if (data.references && data.references.length > 0) {
+        // Find the exact PMID match
+        const exactMatch = data.references.find(
+          (ref) => ref.pubmed === pmid || ref.pubmed === parseInt(pmid, 10)
+        );
+        if (exactMatch) {
+          navigate(`/curation/litguide/${exactMatch.reference_no}`);
+        } else {
+          navigate(`/curation/litguide/${data.references[0].reference_no}`);
+        }
+      } else {
+        setPmidError(`No reference found for PMID: ${pmid}`);
+      }
+    } catch (err) {
+      setPmidError('Failed to search for PMID');
+    } finally {
+      setPmidSearching(false);
+    }
+  };
+
   return (
     <div className="litguide-todo-list-page" style={styles.container}>
       <div style={styles.header}>
         <h1>Literature Guide Todo List</h1>
-        <p>Welcome, {user?.first_name} {user?.last_name}</p>
+        <div style={styles.headerRight}>
+          <span>Curator: {user?.first_name} {user?.last_name}</span>
+          <Link to="/curation" style={styles.headerLink}>
+            Curator Central
+          </Link>
+        </div>
       </div>
 
       <div style={styles.controls}>
@@ -109,9 +153,25 @@ function LitGuideTodoListPage() {
           </select>
         </div>
 
-        <Link to="/curation" style={styles.backLink}>
-          Back to Curator Central
-        </Link>
+        <div style={styles.filterGroup}>
+          <form onSubmit={handlePmidSearch} style={styles.pmidSearchForm}>
+            <input
+              type="text"
+              value={pmidSearch}
+              onChange={(e) => setPmidSearch(e.target.value)}
+              placeholder="Search by PMID..."
+              style={styles.pmidInput}
+            />
+            <button
+              type="submit"
+              disabled={pmidSearching}
+              style={styles.pmidButton}
+            >
+              {pmidSearching ? '...' : 'Go'}
+            </button>
+          </form>
+          {pmidError && <div style={styles.pmidError}>{pmidError}</div>}
+        </div>
       </div>
 
       {error && <div style={styles.error}>{error}</div>}
@@ -206,6 +266,21 @@ const styles = {
     marginBottom: '1rem',
     borderBottom: '2px solid #333',
     paddingBottom: '0.5rem',
+    flexWrap: 'wrap',
+    gap: '1rem',
+  },
+  headerRight: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '1rem',
+    fontSize: '0.9rem',
+  },
+  headerLink: {
+    padding: '0.25rem 0.5rem',
+    backgroundColor: '#f0f0f0',
+    borderRadius: '4px',
+    textDecoration: 'none',
+    color: '#333',
   },
   controls: {
     display: 'flex',
@@ -232,8 +307,30 @@ const styles = {
     border: '1px solid #ccc',
     minWidth: '150px',
   },
-  backLink: {
-    marginLeft: 'auto',
+  pmidSearchForm: {
+    display: 'flex',
+    gap: '0.25rem',
+  },
+  pmidInput: {
+    padding: '0.5rem',
+    fontSize: '1rem',
+    borderRadius: '4px',
+    border: '1px solid #ccc',
+    width: '180px',
+  },
+  pmidButton: {
+    padding: '0.5rem 0.75rem',
+    fontSize: '1rem',
+    backgroundColor: '#337ab7',
+    color: 'white',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  },
+  pmidError: {
+    color: '#c00',
+    fontSize: '0.85rem',
+    marginLeft: '0.5rem',
   },
   error: {
     padding: '1rem',
