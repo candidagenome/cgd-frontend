@@ -107,7 +107,12 @@ function LitGuideTodoListPage() {
     <div className="litguide-todo-list-page" style={styles.container}>
       <div style={styles.header}>
         <h1>Literature Guide Todo List</h1>
-        <p>Welcome, {user?.first_name} {user?.last_name}</p>
+        <div style={styles.headerRight}>
+          <span>Curator: {user?.first_name} {user?.last_name}</span>
+          <Link to="/curation" style={styles.headerLink}>
+            Curator Central
+          </Link>
+        </div>
       </div>
 
       <div style={styles.controls}>
@@ -167,10 +172,6 @@ function LitGuideTodoListPage() {
           </form>
           {pmidError && <div style={styles.pmidError}>{pmidError}</div>}
         </div>
-
-        <Link to="/curation" style={styles.backLink}>
-          Back to Curator Central
-        </Link>
       </div>
 
       {error && <div style={styles.error}>{error}</div>}
@@ -265,6 +266,21 @@ const styles = {
     marginBottom: '1rem',
     borderBottom: '2px solid #333',
     paddingBottom: '0.5rem',
+    flexWrap: 'wrap',
+    gap: '1rem',
+  },
+  headerRight: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '1rem',
+    fontSize: '0.9rem',
+  },
+  headerLink: {
+    padding: '0.25rem 0.5rem',
+    backgroundColor: '#f0f0f0',
+    borderRadius: '4px',
+    textDecoration: 'none',
+    color: '#333',
   },
   controls: {
     display: 'flex',
@@ -291,9 +307,6 @@ const styles = {
     border: '1px solid #ccc',
     minWidth: '150px',
   },
-  backLink: {
-    marginLeft: 'auto',
-  },
   pmidSearchForm: {
     display: 'flex',
     gap: '0.25rem',
@@ -303,7 +316,7 @@ const styles = {
     fontSize: '1rem',
     borderRadius: '4px',
     border: '1px solid #ccc',
-    width: '120px',
+    width: '180px',
   },
   pmidButton: {
     padding: '0.5rem 0.75rem',
