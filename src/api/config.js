@@ -178,4 +178,4 @@ api.interceptors.response.use(
 );
 
 export default api;
-export { API_BASE_URL, setAccessToken, clearAccessToken, getAccessToken };
+export { API_BASE_URL };
