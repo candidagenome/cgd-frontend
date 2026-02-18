@@ -13,6 +13,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, useSearchParams, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import phenotypeCurationApi from '../../api/phenotypeCurationApi';
+import { getOrganisms } from '../../api/litReviewApi';
 
 function PhenotypeCurationPage() {
   const { featureName: paramFeatureName } = useParams();
@@ -30,6 +31,8 @@ function PhenotypeCurationPage() {
 
   // Search state (when no feature specified)
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedOrganism, setSelectedOrganism] = useState('');
+  const [organisms, setOrganisms] = useState([]);
 
   // New annotation form state
   const [showAddForm, setShowAddForm] = useState(false);
@@ -50,6 +53,28 @@ function PhenotypeCurationPage() {
   const [mutantTypes, setMutantTypes] = useState([]);
   const [qualifiers, setQualifiers] = useState([]);
   const [propertyTypes, setPropertyTypes] = useState([]);
+
+  // Initialize organism from URL params
+  useEffect(() => {
+    const organismParam = searchParams.get('organism');
+    if (organismParam) {
+      setSelectedOrganism(organismParam);
+    }
+  }, [searchParams]);
+
+  // Load organisms on mount
+  useEffect(() => {
+    const loadOrganisms = async () => {
+      try {
+        const data = await getOrganisms();
+        setOrganisms(data.organisms || []);
+      } catch (err) {
+        console.error('Failed to load organisms:', err);
+      }
+    };
+
+    loadOrganisms();
+  }, []);
 
   // Load CV terms
   useEffect(() => {
@@ -106,7 +131,11 @@ function PhenotypeCurationPage() {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      window.location.href = `/curation/phenotype?query=${encodeURIComponent(searchQuery.trim())}`;
+      let url = `/curation/phenotype?query=${encodeURIComponent(searchQuery.trim())}`;
+      if (selectedOrganism) {
+        url += `&organism=${encodeURIComponent(selectedOrganism)}`;
+      }
+      window.location.href = url;
     }
   };
 
@@ -241,6 +270,18 @@ function PhenotypeCurationPage() {
         <div style={styles.searchForm}>
           <p>Enter a gene/feature name to curate phenotype annotations:</p>
           <form onSubmit={handleSearch} style={styles.searchFormInner}>
+            <select
+              value={selectedOrganism}
+              onChange={(e) => setSelectedOrganism(e.target.value)}
+              style={styles.organismSelect}
+            >
+              <option value="">All species</option>
+              {organisms.map((org) => (
+                <option key={org.organism_abbrev} value={org.organism_abbrev}>
+                  {org.organism_name}
+                </option>
+              ))}
+            </select>
             <input
               type="text"
               value={searchQuery}
@@ -659,6 +700,13 @@ const styles = {
     border: 'none',
     borderRadius: '4px',
     cursor: 'pointer',
+  },
+  organismSelect: {
+    padding: '0.5rem',
+    fontSize: '1rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    minWidth: '200px',
   },
   actions: {
     marginBottom: '1rem',

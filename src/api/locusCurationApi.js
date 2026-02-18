@@ -7,17 +7,32 @@ import api from './config';
 
 export const locusCurationApi = {
   /**
+   * Get list of organisms for dropdown.
+   *
+   * @returns {Promise<{organisms: Array}>}
+   */
+  getOrganisms: async () => {
+    const response = await api.get('/api/curation/litreview/organisms');
+    return response.data;
+  },
+
+  /**
    * Search features by name.
    *
    * @param {string} query - Search query
-   * @param {number} [page=1] - Page number
-   * @param {number} [pageSize=50] - Results per page
+   * @param {Object} [options] - Search options
+   * @param {string} [options.organismAbbrev] - Filter by organism abbreviation
+   * @param {number} [options.page=1] - Page number
+   * @param {number} [options.pageSize=50] - Results per page
    * @returns {Promise<{features: Array, total: number, page: number, page_size: number}>}
    */
-  searchFeatures: async (query, page = 1, pageSize = 50) => {
-    const response = await api.get('/api/curation/locus/search', {
-      params: { query, page, page_size: pageSize },
-    });
+  searchFeatures: async (query, options = {}) => {
+    const { organismAbbrev, page = 1, pageSize = 50 } = options;
+    const params = { query, page, page_size: pageSize };
+    if (organismAbbrev) {
+      params.organism_abbrev = organismAbbrev;
+    }
+    const response = await api.get('/api/curation/locus/search', { params });
     return response.data;
   },
 

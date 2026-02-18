@@ -13,11 +13,16 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import goCurationApi from '../../api/goCurationApi';
+import { getOrganisms } from '../../api/litReviewApi';
 
 function GoCurationPage() {
   const { featureName } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  // Organism state
+  const [organisms, setOrganisms] = useState([]);
+  const [selectedOrganism, setSelectedOrganism] = useState('');
 
   // Search form state (when no feature specified)
   const [searchQuery, setSearchQuery] = useState('');
@@ -62,7 +67,7 @@ function GoCurationPage() {
     }
   }, [featureName]);
 
-  // Load evidence codes
+  // Load evidence codes and organisms
   useEffect(() => {
     const loadEvidenceCodes = async () => {
       try {
@@ -73,7 +78,20 @@ function GoCurationPage() {
       }
     };
 
+    const loadOrganisms = async () => {
+      try {
+        const data = await getOrganisms();
+        setOrganisms(data.organisms || []);
+        if (data.organisms?.length > 0) {
+          setSelectedOrganism(data.organisms[0].organism_abbrev);
+        }
+      } catch (err) {
+        console.error('Failed to load organisms:', err);
+      }
+    };
+
     loadEvidenceCodes();
+    loadOrganisms();
   }, []);
 
   // Load annotations on mount and when featureName changes
@@ -203,9 +221,6 @@ function GoCurationPage() {
           <h1>GO Curation</h1>
           <div style={styles.headerRight}>
             <span>Curator: {user?.first_name} {user?.last_name}</span>
-            <Link to="/curation/go/todo" style={styles.headerLink}>
-              GO Todo List
-            </Link>
             <Link to="/curation" style={styles.headerLink}>
               Curator Central
             </Link>
@@ -218,6 +233,18 @@ function GoCurationPage() {
             Enter a feature name (systematic name or gene name) to view and edit its GO annotations.
           </p>
           <form onSubmit={handleSearch} style={styles.searchForm}>
+            <select
+              value={selectedOrganism}
+              onChange={(e) => setSelectedOrganism(e.target.value)}
+              style={styles.organismSelect}
+            >
+              <option value="">All organisms</option>
+              {organisms.map((org) => (
+                <option key={org.organism_abbrev} value={org.organism_abbrev}>
+                  {org.organism_name}
+                </option>
+              ))}
+            </select>
             <input
               type="text"
               value={searchQuery}
@@ -258,9 +285,6 @@ function GoCurationPage() {
         <h1>GO Curation: {featureData?.feature_name}</h1>
         <div style={styles.headerRight}>
           <span>Curator: {user?.first_name} {user?.last_name}</span>
-          <Link to="/curation/go/todo" style={styles.headerLink}>
-            GO Todo List
-          </Link>
           <Link to="/curation" style={styles.headerLink}>
             Curator Central
           </Link>
@@ -710,13 +734,21 @@ const styles = {
     display: 'flex',
     gap: '0.5rem',
     justifyContent: 'center',
+    flexWrap: 'wrap',
   },
   searchInput: {
     padding: '0.75rem 1rem',
     fontSize: '1rem',
     border: '1px solid #ccc',
     borderRadius: '4px',
-    width: '300px',
+    width: '200px',
+  },
+  organismSelect: {
+    padding: '0.75rem 1rem',
+    fontSize: '1rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    minWidth: '180px',
   },
   searchButton: {
     padding: '0.75rem 1.5rem',

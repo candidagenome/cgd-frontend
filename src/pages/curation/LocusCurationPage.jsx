@@ -18,6 +18,10 @@ function LocusCurationPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
+  // Organism state
+  const [organisms, setOrganisms] = useState([]);
+  const [selectedOrganism, setSelectedOrganism] = useState('');
+
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState(null);
@@ -28,6 +32,23 @@ function LocusCurationPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+
+  // Load organisms on mount
+  useEffect(() => {
+    const loadOrganisms = async () => {
+      try {
+        const data = await locusCurationApi.getOrganisms();
+        setOrganisms(data.organisms || []);
+        // Default to first organism if available
+        if (data.organisms?.length > 0) {
+          setSelectedOrganism(data.organisms[0].organism_abbrev);
+        }
+      } catch (err) {
+        console.error('Failed to load organisms:', err);
+      }
+    };
+    loadOrganisms();
+  }, []);
 
   // Edit form state
   const [editMode, setEditMode] = useState(false);
@@ -89,7 +110,9 @@ function LocusCurationPage() {
     setError(null);
 
     try {
-      const data = await locusCurationApi.searchFeatures(searchQuery);
+      const data = await locusCurationApi.searchFeatures(searchQuery, {
+        organismAbbrev: selectedOrganism || undefined,
+      });
       setSearchResults(data);
     } catch (err) {
       setError('Search failed');
@@ -248,6 +271,18 @@ function LocusCurationPage() {
       {/* Search Form */}
       <div style={styles.searchSection}>
         <form onSubmit={handleSearch} style={styles.searchForm}>
+          <select
+            value={selectedOrganism}
+            onChange={(e) => setSelectedOrganism(e.target.value)}
+            style={styles.organismSelect}
+          >
+            <option value="">All organisms</option>
+            {organisms.map((org) => (
+              <option key={org.organism_abbrev} value={org.organism_abbrev}>
+                {org.organism_name}
+              </option>
+            ))}
+          </select>
           <input
             type="text"
             value={searchQuery}
@@ -762,6 +797,13 @@ const styles = {
     fontSize: '1rem',
     border: '1px solid #ccc',
     borderRadius: '4px',
+  },
+  organismSelect: {
+    padding: '0.5rem',
+    fontSize: '1rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    minWidth: '200px',
   },
   searchButton: {
     padding: '0.5rem 1rem',
