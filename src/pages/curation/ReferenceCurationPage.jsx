@@ -56,6 +56,19 @@ function ReferenceCurationPage() {
   const [litguideTopic, setLitguideTopic] = useState('');
   const [linking, setLinking] = useState(false);
 
+  // Edit reference state
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState('');
+  const [editYear, setEditYear] = useState('');
+  const [editVolume, setEditVolume] = useState('');
+  const [editPages, setEditPages] = useState('');
+  const [saving, setSaving] = useState(false);
+
+  // Delete reference state
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [referenceUsage, setReferenceUsage] = useState(null);
+  const [deleting, setDeleting] = useState(false);
+
   // Load reference data
   const loadReference = useCallback(async () => {
     if (!referenceNo) return;
@@ -210,6 +223,97 @@ function ReferenceCurationPage() {
   // Add more author fields
   const addAuthorFields = () => {
     setManualAuthors([...manualAuthors, '', '', '', '']);
+  };
+
+  // Start editing reference
+  const handleStartEdit = () => {
+    setEditTitle(referenceData?.title || '');
+    setEditYear(referenceData?.year || '');
+    setEditVolume(referenceData?.volume || '');
+    setEditPages(referenceData?.pages || '');
+    setIsEditing(true);
+  };
+
+  // Cancel editing
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setError(null);
+  };
+
+  // Save edited reference
+  const handleSaveEdit = async () => {
+    setSaving(true);
+    setError(null);
+
+    try {
+      const updates = {};
+      if (editTitle !== (referenceData?.title || '')) {
+        updates.title = editTitle || null;
+      }
+      if (editYear !== (referenceData?.year || '')) {
+        updates.year = editYear ? parseInt(editYear, 10) : null;
+      }
+      if (editVolume !== (referenceData?.volume || '')) {
+        updates.volume = editVolume || null;
+      }
+      if (editPages !== (referenceData?.pages || '')) {
+        updates.pages = editPages || null;
+      }
+
+      if (Object.keys(updates).length === 0) {
+        setIsEditing(false);
+        return;
+      }
+
+      await referenceCurationApi.updateReference(parseInt(referenceNo, 10), updates);
+      setSuccessMessage('Reference updated successfully');
+      setIsEditing(false);
+      loadReference();
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to update reference');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Show delete confirmation
+  const handleShowDeleteConfirm = async () => {
+    setError(null);
+    try {
+      const usage = await referenceCurationApi.getReferenceUsage(parseInt(referenceNo, 10));
+      setReferenceUsage(usage);
+      setShowDeleteConfirm(true);
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to check reference usage');
+    }
+  };
+
+  // Cancel delete
+  const handleCancelDelete = () => {
+    setShowDeleteConfirm(false);
+    setReferenceUsage(null);
+  };
+
+  // Delete reference
+  const handleDeleteReference = async () => {
+    setDeleting(true);
+    setError(null);
+
+    try {
+      await referenceCurationApi.deleteReference(parseInt(referenceNo, 10));
+      setSuccessMessage('Reference deleted successfully');
+      setShowDeleteConfirm(false);
+      // Navigate back to curation central after a short delay
+      setTimeout(() => {
+        navigate('/curation');
+      }, 1500);
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to delete reference');
+      setShowDeleteConfirm(false);
+    } finally {
+      setDeleting(false);
+    }
   };
 
   // Handle literature guide linking
@@ -509,64 +613,188 @@ function ReferenceCurationPage() {
       {successMessage && <div style={styles.success}>{successMessage}</div>}
       {error && <div style={styles.error}>{error}</div>}
 
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div style={styles.modalOverlay}>
+          <div style={styles.modal}>
+            <h3>Delete Reference?</h3>
+            <p>Are you sure you want to delete reference {referenceNo}?</p>
+
+            {referenceUsage && referenceUsage.in_use && (
+              <div style={styles.usageWarning}>
+                <strong>Warning:</strong> This reference has linked data:
+                <ul>
+                  {referenceUsage.go_ref_count > 0 && (
+                    <li>GO annotations: {referenceUsage.go_ref_count}</li>
+                  )}
+                  {referenceUsage.ref_link_count > 0 && (
+                    <li>Reference links: {referenceUsage.ref_link_count}</li>
+                  )}
+                  {referenceUsage.refprop_feat_count > 0 && (
+                    <li>Literature guide links: {referenceUsage.refprop_feat_count}</li>
+                  )}
+                </ul>
+                <p>Deleting will fail if linked data exists. Remove links first.</p>
+              </div>
+            )}
+
+            <div style={styles.modalButtons}>
+              <button
+                onClick={handleDeleteReference}
+                disabled={deleting}
+                style={styles.deleteConfirmButton}
+              >
+                {deleting ? 'Deleting...' : 'Delete'}
+              </button>
+              <button
+                onClick={handleCancelDelete}
+                style={styles.cancelButton}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Reference Details */}
       <section style={styles.section}>
-        <h2>Reference Details</h2>
-        <table style={styles.detailsTable}>
-          <tbody>
-            <tr>
-              <th style={styles.detailsTh}>Reference #:</th>
-              <td style={styles.detailsTd}>{referenceData?.reference_no}</td>
-            </tr>
-            <tr>
-              <th style={styles.detailsTh}>PubMed:</th>
-              <td style={styles.detailsTd}>
-                {referenceData?.pubmed ? (
-                  <a
-                    href={`https://pubmed.ncbi.nlm.nih.gov/${referenceData.pubmed}/`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {referenceData.pubmed}
-                  </a>
-                ) : (
-                  '-'
-                )}
-              </td>
-            </tr>
-            <tr>
-              <th style={styles.detailsTh}>Title:</th>
-              <td style={styles.detailsTd}>{referenceData?.title || '-'}</td>
-            </tr>
-            <tr>
-              <th style={styles.detailsTh}>Citation:</th>
-              <td style={styles.detailsTd}>{referenceData?.citation}</td>
-            </tr>
-            <tr>
-              <th style={styles.detailsTh}>Year:</th>
-              <td style={styles.detailsTd}>{referenceData?.year}</td>
-            </tr>
-            <tr>
-              <th style={styles.detailsTh}>Status:</th>
-              <td style={styles.detailsTd}>{referenceData?.status}</td>
-            </tr>
-            <tr>
-              <th style={styles.detailsTh}>Source:</th>
-              <td style={styles.detailsTd}>{referenceData?.source}</td>
-            </tr>
-          </tbody>
-        </table>
-
-        {referenceData?.abstract && (
-          <div style={styles.abstract}>
-            <h3>Abstract</h3>
-            <p>{referenceData.abstract}</p>
+        <div style={styles.sectionHeader}>
+          <h2>Reference Details</h2>
+          <div style={styles.sectionActions}>
+            {!isEditing && (
+              <>
+                <button onClick={handleStartEdit} style={styles.editButton}>
+                  Edit
+                </button>
+                <button onClick={handleShowDeleteConfirm} style={styles.deleteButton}>
+                  Delete
+                </button>
+              </>
+            )}
           </div>
-        )}
+        </div>
 
-        <p>
-          <Link to={`/reference/${referenceNo}`}>View full reference page</Link>
-        </p>
+        {isEditing ? (
+          <div style={styles.editForm}>
+            <div style={styles.editRow}>
+              <label style={styles.editLabel}>Title:</label>
+              <textarea
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                style={styles.editTextarea}
+                rows={2}
+              />
+            </div>
+            <div style={styles.editGrid}>
+              <div style={styles.editGridItem}>
+                <label style={styles.editLabelSmall}>Year:</label>
+                <input
+                  type="number"
+                  value={editYear}
+                  onChange={(e) => setEditYear(e.target.value)}
+                  style={styles.editInputSmall}
+                />
+              </div>
+              <div style={styles.editGridItem}>
+                <label style={styles.editLabelSmall}>Volume:</label>
+                <input
+                  type="text"
+                  value={editVolume}
+                  onChange={(e) => setEditVolume(e.target.value)}
+                  style={styles.editInputSmall}
+                />
+              </div>
+              <div style={styles.editGridItem}>
+                <label style={styles.editLabelSmall}>Pages:</label>
+                <input
+                  type="text"
+                  value={editPages}
+                  onChange={(e) => setEditPages(e.target.value)}
+                  style={styles.editInputSmall}
+                />
+              </div>
+            </div>
+            <div style={styles.editButtons}>
+              <button
+                onClick={handleSaveEdit}
+                disabled={saving}
+                style={styles.saveButton}
+              >
+                {saving ? 'Saving...' : 'Save Changes'}
+              </button>
+              <button onClick={handleCancelEdit} style={styles.cancelButton}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <table style={styles.detailsTable}>
+              <tbody>
+                <tr>
+                  <th style={styles.detailsTh}>Reference #:</th>
+                  <td style={styles.detailsTd}>{referenceData?.reference_no}</td>
+                </tr>
+                <tr>
+                  <th style={styles.detailsTh}>PubMed:</th>
+                  <td style={styles.detailsTd}>
+                    {referenceData?.pubmed ? (
+                      <a
+                        href={`https://pubmed.ncbi.nlm.nih.gov/${referenceData.pubmed}/`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {referenceData.pubmed}
+                      </a>
+                    ) : (
+                      '-'
+                    )}
+                  </td>
+                </tr>
+                <tr>
+                  <th style={styles.detailsTh}>Title:</th>
+                  <td style={styles.detailsTd}>{referenceData?.title || '-'}</td>
+                </tr>
+                <tr>
+                  <th style={styles.detailsTh}>Citation:</th>
+                  <td style={styles.detailsTd}>{referenceData?.citation}</td>
+                </tr>
+                <tr>
+                  <th style={styles.detailsTh}>Year:</th>
+                  <td style={styles.detailsTd}>{referenceData?.year}</td>
+                </tr>
+                <tr>
+                  <th style={styles.detailsTh}>Volume:</th>
+                  <td style={styles.detailsTd}>{referenceData?.volume || '-'}</td>
+                </tr>
+                <tr>
+                  <th style={styles.detailsTh}>Pages:</th>
+                  <td style={styles.detailsTd}>{referenceData?.pages || '-'}</td>
+                </tr>
+                <tr>
+                  <th style={styles.detailsTh}>Status:</th>
+                  <td style={styles.detailsTd}>{referenceData?.status}</td>
+                </tr>
+                <tr>
+                  <th style={styles.detailsTh}>Source:</th>
+                  <td style={styles.detailsTd}>{referenceData?.source}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            {referenceData?.abstract && (
+              <div style={styles.abstract}>
+                <h3>Abstract</h3>
+                <p>{referenceData.abstract}</p>
+              </div>
+            )}
+
+            <p>
+              <Link to={`/reference/${referenceNo}`}>View full reference page</Link>
+            </p>
+          </>
+        )}
       </section>
 
       {/* Curation Status */}
@@ -926,6 +1154,137 @@ const styles = {
   noData: {
     color: '#666',
     fontStyle: 'italic',
+  },
+  sectionHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '1rem',
+  },
+  sectionActions: {
+    display: 'flex',
+    gap: '0.5rem',
+  },
+  editButton: {
+    padding: '0.4rem 0.8rem',
+    backgroundColor: '#337ab7',
+    color: 'white',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontSize: '0.9rem',
+  },
+  deleteButton: {
+    padding: '0.4rem 0.8rem',
+    backgroundColor: '#d9534f',
+    color: 'white',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontSize: '0.9rem',
+  },
+  editForm: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '1rem',
+  },
+  editRow: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '0.5rem',
+  },
+  editLabel: {
+    width: '80px',
+    fontWeight: 'bold',
+    paddingTop: '0.5rem',
+  },
+  editLabelSmall: {
+    fontSize: '0.85rem',
+    fontWeight: 'bold',
+    marginBottom: '0.25rem',
+  },
+  editTextarea: {
+    flex: 1,
+    padding: '0.5rem',
+    fontSize: '1rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    fontFamily: 'inherit',
+  },
+  editGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: '1rem',
+  },
+  editGridItem: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  editInputSmall: {
+    padding: '0.5rem',
+    fontSize: '1rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+  },
+  editButtons: {
+    display: 'flex',
+    gap: '0.5rem',
+  },
+  saveButton: {
+    padding: '0.5rem 1rem',
+    backgroundColor: '#5cb85c',
+    color: 'white',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  },
+  cancelButton: {
+    padding: '0.5rem 1rem',
+    backgroundColor: '#6c757d',
+    color: 'white',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  },
+  modalOverlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1000,
+  },
+  modal: {
+    backgroundColor: 'white',
+    padding: '1.5rem',
+    borderRadius: '8px',
+    maxWidth: '400px',
+    width: '90%',
+  },
+  usageWarning: {
+    padding: '1rem',
+    backgroundColor: '#fcf8e3',
+    border: '1px solid #faebcc',
+    borderRadius: '4px',
+    marginBottom: '1rem',
+  },
+  modalButtons: {
+    display: 'flex',
+    gap: '0.5rem',
+    justifyContent: 'flex-end',
+    marginTop: '1rem',
+  },
+  deleteConfirmButton: {
+    padding: '0.5rem 1rem',
+    backgroundColor: '#d9534f',
+    color: 'white',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
   },
 };
 
