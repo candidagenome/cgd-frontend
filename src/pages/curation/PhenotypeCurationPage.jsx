@@ -34,6 +34,14 @@ const PROPERTY_CV_MAP = {
   chebi_ontology: 'chebi_ontology',
 };
 
+// Property types that allow multiple values (separate by |)
+const ALLOW_MULTIPLES_TYPES = [
+  'chebi_ontology',
+  'Chemical_pending',
+  'Condition',
+  'Details',
+];
+
 function PhenotypeCurationPage() {
   const { featureName: paramFeatureName } = useParams();
   const [searchParams] = useSearchParams();
@@ -73,6 +81,7 @@ function PhenotypeCurationPage() {
     observables: [],
     experiment_comment: '',
     properties: {},
+    feature_list: '', // genes/features that share this annotation
   });
 
   // Initialize organism from URL params
@@ -689,6 +698,11 @@ function PhenotypeCurationPage() {
                             style={styles.propInput}
                           />
                         )}
+                        {ALLOW_MULTIPLES_TYPES.includes(propType) && (
+                          <div style={styles.multiplesNote}>
+                            allows multiples, separate by |
+                          </div>
+                        )}
                       </td>
                       <td style={styles.propTd}>
                         <input
@@ -709,6 +723,23 @@ function PhenotypeCurationPage() {
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            {/* Feature list for shared annotations */}
+            <div style={styles.featureListRow}>
+              <span>
+                Enter gene/feature names that will share all checked annotations.
+                Note, only <em style={{ color: 'red' }}>{selectedOrganism ? organisms.find(o => o.organism_abbrev === selectedOrganism)?.organism_name || selectedOrganism : 'selected species'}</em> genes are allowed here.
+              </span>
+              <input
+                type="text"
+                value={section.feature_list}
+                onChange={(e) =>
+                  updateSection(sectionIndex, 'feature_list', e.target.value)
+                }
+                style={styles.featureListInput}
+              />
+              <span style={styles.separatorNote}>separate multiples by |</span>
             </div>
 
             {/* Section divider with buttons */}
@@ -1055,6 +1086,31 @@ const styles = {
     borderRadius: '4px',
     cursor: 'pointer',
     fontSize: '0.9rem',
+  },
+  multiplesNote: {
+    fontSize: '0.75rem',
+    color: '#666',
+    marginTop: '0.25rem',
+    fontStyle: 'italic',
+  },
+  featureListRow: {
+    padding: '0.5rem',
+    backgroundColor: '#CCCCCC',
+    marginTop: '0.5rem',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    flexWrap: 'wrap',
+  },
+  featureListInput: {
+    padding: '0.35rem',
+    width: '400px',
+    border: '1px solid #ccc',
+    borderRadius: '3px',
+  },
+  separatorNote: {
+    fontSize: '0.85rem',
+    color: '#666',
   },
 };
 
