@@ -42,6 +42,21 @@ const ALLOW_MULTIPLES_TYPES = [
   'Details',
 ];
 
+// Required property types to always show (matching Perl version)
+// These are shown in order, with any additional types from DB appended
+const REQUIRED_PROPERTY_TYPES = [
+  'strain_background',
+  'chebi_ontology',
+  'Chemical_pending',
+  'fungal_anatomy_ontology',
+  'virulence_model',
+  'Allele',
+  'Reporter',
+  'Condition',
+  'Details',
+  'Note',
+];
+
 function PhenotypeCurationPage() {
   const { featureName: paramFeatureName } = useParams();
   const [searchParams] = useSearchParams();
@@ -106,14 +121,24 @@ function PhenotypeCurationPage() {
     loadOrganisms();
   }, []);
 
-  // Load property types
+  // Load property types (merge required types with database types)
   useEffect(() => {
     const loadPropertyTypes = async () => {
       try {
         const data = await phenotypeCurationApi.getPropertyTypes();
-        setPropertyTypes(data.property_types || []);
+        const dbTypes = data.property_types || [];
+        // Start with required types, then add any additional types from DB
+        const allTypes = [...REQUIRED_PROPERTY_TYPES];
+        for (const t of dbTypes) {
+          if (!allTypes.includes(t)) {
+            allTypes.push(t);
+          }
+        }
+        setPropertyTypes(allTypes);
       } catch (err) {
         console.error('Failed to load property types:', err);
+        // Fall back to required types if API fails
+        setPropertyTypes(REQUIRED_PROPERTY_TYPES);
       }
     };
 
