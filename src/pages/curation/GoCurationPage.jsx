@@ -53,7 +53,6 @@ function GoCurationPage() {
     goid: '',
     reference_no: '',
     pubmed: '',
-    cgdid: '', // CGDID for reference lookup
     evidence: '',
     qualifiers: [],
     ic_from_goid: '',
@@ -193,19 +192,6 @@ function GoCurationPage() {
     }
   };
 
-  // Helper to look up reference by CGDID (dbxref_id like CAL0142015)
-  const lookupReferenceByCgdid = async (cgdid) => {
-    try {
-      // Remove any prefix like "CGD_REF:" - database stores just the ID
-      const cleanId = cgdid.replace(/^CGD_REF:/i, '').trim();
-      const response = await api.get(`/api/reference/${cleanId}`);
-      // API returns { result: { reference_no: ... } }
-      return response.data.result?.reference_no || response.data.reference_no;
-    } catch {
-      return null;
-    }
-  };
-
   // Handle submit - process all rows with data
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -232,8 +218,8 @@ function GoCurationPage() {
           errors.push(`Row ${i + 1}: Evidence code is required`);
           continue;
         }
-        if (!row.reference_no && !row.pubmed && !row.cgdid) {
-          errors.push(`Row ${i + 1}: Reference number, PubMed ID, or CGDID is required`);
+        if (!row.reference_no && !row.pubmed) {
+          errors.push(`Row ${i + 1}: Reference number or PubMed ID is required`);
           continue;
         }
 
@@ -264,13 +250,11 @@ function GoCurationPage() {
           evidence: row.evidence,
         };
 
-        // Add reference identifier (backend accepts reference_no, pubmed, or dbxref_id)
+        // Add reference identifier (backend accepts reference_no or pubmed)
         if (row.reference_no) {
           data.reference_no = parseInt(row.reference_no, 10);
         } else if (row.pubmed) {
           data.pubmed = parseInt(row.pubmed, 10);
-        } else if (row.cgdid) {
-          data.dbxref_id = row.cgdid.trim();
         }
 
         if (row.qualifiers.length > 0) {
@@ -476,7 +460,7 @@ function GoCurationPage() {
                     <span style={styles.thHint}>and relevant qualifier(s)</span>
                   </th>
                   <th style={styles.th}>
-                    Enter reference_no OR pubmed OR CGDID<br />
+                    Enter reference_no OR pubmed<br />
                     <span style={styles.thHint}>(if more than one, enter in another row)</span>
                   </th>
                   <th style={styles.th}>Choose Evidence code</th>
@@ -553,16 +537,6 @@ function GoCurationPage() {
                             type="text"
                             value={row.pubmed}
                             onChange={(e) => handleRowChange(idx, 'pubmed', e.target.value)}
-                            style={styles.smallInput}
-                          />
-                        </div>
-                        <div style={styles.orDivider}>OR</div>
-                        <div style={styles.fieldGroup}>
-                          <label style={styles.smallLabel}>CGDID:</label>
-                          <input
-                            type="text"
-                            value={row.cgdid}
-                            onChange={(e) => handleRowChange(idx, 'cgdid', e.target.value)}
                             style={styles.smallInput}
                           />
                         </div>

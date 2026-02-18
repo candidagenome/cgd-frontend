@@ -7,37 +7,12 @@ const API_BASE_URL = import.meta.env.VITE_API_URL ||
     ? 'https://backend.dev.candidagenome.org'
     : '');
 
-// Store access token in memory (not localStorage for security)
-// This is used for Authorization header since browsers block cross-site cookies
-let accessToken = null;
-
-/**
- * Set the access token for API requests.
- * Called after successful login.
- */
-export const setAccessToken = (token) => {
-  accessToken = token;
-};
-
-/**
- * Clear the access token.
- * Called on logout or session expiry.
- */
-export const clearAccessToken = () => {
-  accessToken = null;
-};
-
-/**
- * Get the current access token.
- */
-export const getAccessToken = () => accessToken;
-
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
-  // Include cookies in requests (fallback for same-origin deployments)
+  // Include cookies in requests (needed for HttpOnly auth cookies)
   withCredentials: true,
 });
 
@@ -75,15 +50,13 @@ const recentlyRefreshed = () => {
 /**
  * Request interceptor - add auth token to requests.
  *
- * Adds Authorization header with Bearer token for cross-origin requests.
- * Modern browsers block cross-site cookies, so we use header-based auth.
+ * The access token is stored in an HttpOnly cookie by the server,
+ * which is automatically included with withCredentials: true.
+ * This interceptor is here for future use if we need header-based auth.
  */
 api.interceptors.request.use(
   (config) => {
-    // Add Authorization header if we have a token
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    }
+    // Token is in HttpOnly cookie, automatically sent by browser
     return config;
   },
   (error) => {
@@ -145,13 +118,8 @@ api.interceptors.response.use(
       try {
         // Attempt to refresh the token
         console.log('Calling /api/auth/refresh...');
-        const refreshResponse = await api.post('/api/auth/refresh');
+        await api.post('/api/auth/refresh');
         console.log('Token refresh successful');
-
-        // Store the new access token
-        if (refreshResponse.data?.access_token) {
-          accessToken = refreshResponse.data.access_token;
-        }
 
         lastRefreshTime = Date.now();
         isRefreshing = false;
@@ -163,7 +131,6 @@ api.interceptors.response.use(
         console.error('Token refresh failed:', refreshError.response?.status, refreshError.response?.data);
 
         isRefreshing = false;
-        accessToken = null; // Clear token on refresh failure
         onRefreshComplete(refreshError);
 
         // Refresh failed - user needs to re-login
