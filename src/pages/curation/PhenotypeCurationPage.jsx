@@ -106,7 +106,9 @@ function PhenotypeCurationPage() {
     setError(null);
 
     try {
-      const data = await phenotypeCurationApi.getAnnotations(featureName);
+      // Pass organism filter if selected (from URL param or dropdown)
+      const organismParam = searchParams.get('organism') || selectedOrganism;
+      const data = await phenotypeCurationApi.getAnnotations(featureName, organismParam || null);
       setFeatureData(data);
     } catch (err) {
       if (err.response?.status === 404) {
@@ -118,7 +120,7 @@ function PhenotypeCurationPage() {
     } finally {
       setLoading(false);
     }
-  }, [featureName]);
+  }, [featureName, searchParams, selectedOrganism]);
 
   // Load annotations on mount and when featureName changes
   useEffect(() => {
