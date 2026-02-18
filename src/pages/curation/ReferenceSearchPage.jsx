@@ -32,6 +32,7 @@ function ReferenceSearchPage() {
   const [volume, setVolume] = useState('');
   const [page, setPage] = useState('');
   const [author1, setAuthor1] = useState('');
+  const [author2, setAuthor2] = useState('');
   const [keyword, setKeyword] = useState('');
   const [minYear, setMinYear] = useState('');
   const [maxYear, setMaxYear] = useState('');
@@ -87,6 +88,7 @@ function ReferenceSearchPage() {
       params.set('page', page);
     } else if (searchType === 'keyword') {
       if (author1) params.set('author', author1);
+      if (author2) params.set('author2', author2);
       if (keyword) params.set('keyword', keyword);
       if (minYear) params.set('min_year', minYear);
       if (maxYear) params.set('max_year', maxYear);
@@ -268,7 +270,22 @@ function ReferenceSearchPage() {
             </div>
             <div style={styles.formRow}>
               <label>
-                Keyword in Title/Abstract:{' '}
+                Author (Last Name, First Initial):{' '}
+                <input
+                  type="text"
+                  value={author2}
+                  onChange={(e) => {
+                    setAuthor2(e.target.value);
+                    setSearchType('keyword');
+                  }}
+                  style={styles.input}
+                  placeholder="e.g., Doe A"
+                />
+              </label>
+            </div>
+            <div style={styles.formRow}>
+              <label>
+                Word(s) in Title or Abstract:{' '}
                 <input
                   type="text"
                   value={keyword}
@@ -315,7 +332,7 @@ function ReferenceSearchPage() {
             </div>
             <button
               onClick={() => handleSearch()}
-              disabled={!author1 && !keyword}
+              disabled={!author1 && !author2 && !keyword}
               style={styles.searchButton}
             >
               Search

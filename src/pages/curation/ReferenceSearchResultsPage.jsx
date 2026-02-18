@@ -48,6 +48,7 @@ function ReferenceSearchResultsPage() {
       const volume = searchParams.get('volume');
       const page = searchParams.get('page');
       const author = searchParams.get('author');
+      const author2 = searchParams.get('author2');
       const keyword = searchParams.get('keyword');
       const minYear = searchParams.get('min_year');
       const maxYear = searchParams.get('max_year');
@@ -69,6 +70,10 @@ function ReferenceSearchResultsPage() {
         if (author) {
           params.author = author;
           criteriaText = `Author: ${author}`;
+        }
+        if (author2) {
+          params.author2 = author2;
+          criteriaText += criteriaText ? `, Author: ${author2}` : `Author: ${author2}`;
         }
         if (keyword) {
           params.keyword = keyword;
@@ -275,6 +280,18 @@ function ReferenceSearchResultsPage() {
                 </tr>
               )}
               <tr>
+                <td style={styles.infoLabel}>Year:</td>
+                <td>{selectedRef.year || '-'}</td>
+              </tr>
+              <tr>
+                <td style={styles.infoLabel}>Volume:</td>
+                <td>{selectedRef.volume || '-'}</td>
+              </tr>
+              <tr>
+                <td style={styles.infoLabel}>Pages:</td>
+                <td>{selectedRef.pages || '-'}</td>
+              </tr>
+              <tr>
                 <td style={styles.infoLabel}>Status:</td>
                 <td>{selectedRef.status}</td>
               </tr>
@@ -282,18 +299,6 @@ function ReferenceSearchResultsPage() {
                 <td style={styles.infoLabel}>Source:</td>
                 <td>{selectedRef.source}</td>
               </tr>
-              {selectedRef.volume && (
-                <tr>
-                  <td style={styles.infoLabel}>Volume:</td>
-                  <td>{selectedRef.volume}</td>
-                </tr>
-              )}
-              {selectedRef.pages && (
-                <tr>
-                  <td style={styles.infoLabel}>Pages:</td>
-                  <td>{selectedRef.pages}</td>
-                </tr>
-              )}
               {selectedRef.curation_status && (
                 <tr>
                   <td style={styles.infoLabel}>Curation Status:</td>
