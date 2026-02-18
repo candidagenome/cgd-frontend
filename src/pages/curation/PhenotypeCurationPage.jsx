@@ -14,6 +14,7 @@ import { useParams, useSearchParams, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import phenotypeCurationApi from '../../api/phenotypeCurationApi';
 import { getOrganisms } from '../../api/litReviewApi';
+import { filterAllowedOrganisms } from '../../constants/organisms';
 
 function PhenotypeCurationPage() {
   const { featureName: paramFeatureName } = useParams();
@@ -67,7 +68,7 @@ function PhenotypeCurationPage() {
     const loadOrganisms = async () => {
       try {
         const data = await getOrganisms();
-        setOrganisms(data.organisms || []);
+        setOrganisms(filterAllowedOrganisms(data.organisms || []));
       } catch (err) {
         console.error('Failed to load organisms:', err);
       }

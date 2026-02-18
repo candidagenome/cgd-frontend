@@ -14,6 +14,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import goCurationApi from '../../api/goCurationApi';
 import { getOrganisms } from '../../api/litReviewApi';
+import { filterAllowedOrganisms } from '../../constants/organisms';
 
 function GoCurationPage() {
   const { featureName } = useParams();
@@ -81,9 +82,10 @@ function GoCurationPage() {
     const loadOrganisms = async () => {
       try {
         const data = await getOrganisms();
-        setOrganisms(data.organisms || []);
-        if (data.organisms?.length > 0) {
-          setSelectedOrganism(data.organisms[0].organism_abbrev);
+        const filteredOrganisms = filterAllowedOrganisms(data.organisms || []);
+        setOrganisms(filteredOrganisms);
+        if (filteredOrganisms.length > 0) {
+          setSelectedOrganism(filteredOrganisms[0].organism_abbrev);
         }
       } catch (err) {
         console.error('Failed to load organisms:', err);

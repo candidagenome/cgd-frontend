@@ -20,6 +20,7 @@ import {
   linkFeature,
   unlinkFeature,
 } from '../../api/paragraphCurationApi';
+import { filterAllowedOrganisms } from '../../constants/organisms';
 
 export default function ParagraphCurationPage() {
   // Mode state
@@ -60,11 +61,12 @@ export default function ParagraphCurationPage() {
     const loadOrganisms = async () => {
       try {
         const data = await getOrganisms();
-        setOrganisms(data.organisms);
-        if (data.organisms.length > 0) {
-          setEntryOrganism(data.organisms[0].organism_abbrev);
-          setNewOrganism(data.organisms[0].organism_abbrev);
-          setLinkOrganism(data.organisms[0].organism_abbrev);
+        const filteredOrganisms = filterAllowedOrganisms(data.organisms);
+        setOrganisms(filteredOrganisms);
+        if (filteredOrganisms.length > 0) {
+          setEntryOrganism(filteredOrganisms[0].organism_abbrev);
+          setNewOrganism(filteredOrganisms[0].organism_abbrev);
+          setLinkOrganism(filteredOrganisms[0].organism_abbrev);
         }
       } catch (err) {
         console.error('Failed to load organisms:', err);

@@ -13,6 +13,7 @@ import {
   updateLinks,
 } from '../../api/linkCurationApi';
 import { getOrganisms } from '../../api/featureCurationApi';
+import { filterAllowedOrganisms } from '../../constants/organisms';
 
 export default function LinkCurationPage() {
   // State for organisms dropdown
@@ -43,10 +44,11 @@ export default function LinkCurationPage() {
     const loadData = async () => {
       try {
         const orgsData = await getOrganisms();
-        setOrganisms(orgsData.organisms);
+        const filteredOrganisms = filterAllowedOrganisms(orgsData.organisms);
+        setOrganisms(filteredOrganisms);
 
-        if (orgsData.organisms.length > 0) {
-          setOrganismAbbrev(orgsData.organisms[0].organism_abbrev);
+        if (filteredOrganisms.length > 0) {
+          setOrganismAbbrev(filteredOrganisms[0].organism_abbrev);
         }
       } catch (err) {
         setError('Failed to load organisms: ' + (err.response?.data?.detail || err.message));

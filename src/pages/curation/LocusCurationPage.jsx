@@ -12,6 +12,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import locusCurationApi from '../../api/locusCurationApi';
+import { filterAllowedOrganisms } from '../../constants/organisms';
 
 function LocusCurationPage() {
   const { featureName } = useParams();
@@ -38,10 +39,11 @@ function LocusCurationPage() {
     const loadOrganisms = async () => {
       try {
         const data = await locusCurationApi.getOrganisms();
-        setOrganisms(data.organisms || []);
+        const filteredOrganisms = filterAllowedOrganisms(data.organisms || []);
+        setOrganisms(filteredOrganisms);
         // Default to first organism if available
-        if (data.organisms?.length > 0) {
-          setSelectedOrganism(data.organisms[0].organism_abbrev);
+        if (filteredOrganisms.length > 0) {
+          setSelectedOrganism(filteredOrganisms[0].organism_abbrev);
         }
       } catch (err) {
         console.error('Failed to load organisms:', err);

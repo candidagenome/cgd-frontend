@@ -16,6 +16,7 @@ import {
   createFeature,
 } from '../../api/featureCurationApi';
 import litguideCurationApi from '../../api/litguideCurationApi';
+import { filterAllowedOrganisms } from '../../constants/organisms';
 
 export default function NewFeaturePage() {
   // State for dropdowns
@@ -61,14 +62,15 @@ export default function NewFeaturePage() {
           getStrands(),
         ]);
 
-        setOrganisms(orgsData.organisms);
+        const filteredOrganisms = filterAllowedOrganisms(orgsData.organisms);
+        setOrganisms(filteredOrganisms);
         setFeatureTypes(typesData.feature_types);
         setQualifiers(qualsData.qualifiers);
         setStrands(strandsData.strands);
 
         // Set default organism if available
-        if (orgsData.organisms.length > 0) {
-          setOrganismAbbrev(orgsData.organisms[0].organism_abbrev);
+        if (filteredOrganisms.length > 0) {
+          setOrganismAbbrev(filteredOrganisms[0].organism_abbrev);
         }
       } catch (err) {
         setError('Failed to load form data: ' + (err.response?.data?.detail || err.message));

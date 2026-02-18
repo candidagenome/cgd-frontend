@@ -13,6 +13,7 @@ import {
   getFeatureInfo,
   addLocation,
 } from '../../api/featureCurationApi';
+import { filterAllowedOrganisms } from '../../constants/organisms';
 
 export default function NewLocationPage() {
   // State for dropdowns
@@ -47,12 +48,13 @@ export default function NewLocationPage() {
           getStrands(),
         ]);
 
-        setOrganisms(orgsData.organisms);
+        const filteredOrganisms = filterAllowedOrganisms(orgsData.organisms);
+        setOrganisms(filteredOrganisms);
         setStrands(strandsData.strands);
 
         // Set default organism if available
-        if (orgsData.organisms.length > 0) {
-          setOrganismAbbrev(orgsData.organisms[0].organism_abbrev);
+        if (filteredOrganisms.length > 0) {
+          setOrganismAbbrev(filteredOrganisms[0].organism_abbrev);
         }
       } catch (err) {
         setError('Failed to load form data: ' + (err.response?.data?.detail || err.message));
