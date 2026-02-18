@@ -90,6 +90,7 @@ function ReferenceSearchPage() {
   }, [searchParams]);
 
   const handleSearch = async (overrideParams = null) => {
+    console.log('handleSearch called, searchType:', searchType, 'pubmed:', pubmed);
     setLoading(true);
     setError(null);
     setMessage(null);
@@ -119,13 +120,17 @@ function ReferenceSearchPage() {
         }
       }
 
+      console.log('Search params:', params);
+
       if (Object.keys(params).length === 0) {
         setError('Please enter search criteria');
         setLoading(false);
         return;
       }
 
+      console.log('Calling searchReferences API...');
       const data = await referenceCurationApi.searchReferences(params);
+      console.log('API response:', data);
       setResults(data.results);
 
       if (data.results.length === 0) {
@@ -135,6 +140,7 @@ function ReferenceSearchPage() {
         await loadReferenceDetails(data.results[0].reference_no);
       }
     } catch (err) {
+      console.error('Search error:', err);
       setError(err.response?.data?.detail || err.message);
     } finally {
       setLoading(false);
