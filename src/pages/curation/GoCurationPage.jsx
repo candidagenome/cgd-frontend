@@ -794,26 +794,40 @@ function GoCurationPage() {
                       </td>
                       <td style={styles.td}>{ann.go_evidence}</td>
                       <td style={styles.td}>
-                        {/* Evidence support (with/from info) - displayed if available */}
-                        {ann.with_support_text || ann.from_goid ? (
-                          <span>
-                            {ann.with_support_text && <span>with {ann.with_support_text}</span>}
-                            {ann.from_goid && (
-                              <span>
-                                from{' '}
-                                <a
-                                  href={`http://amigo.geneontology.org/amigo/term/GO:${String(ann.from_goid).padStart(7, '0')}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  GO:{String(ann.from_goid).padStart(7, '0')}
-                                </a>
-                              </span>
-                            )}
-                          </span>
-                        ) : (
-                          <span style={styles.noSupport}>-</span>
-                        )}
+                        {/* Evidence support (with/from info) from references */}
+                        {(() => {
+                          // Collect all evidence support from all references
+                          const allSupport = ann.references?.flatMap(
+                            (ref) => ref.evidence_support || []
+                          ) || [];
+                          if (allSupport.length === 0) {
+                            return <span style={styles.noSupport}>-</span>;
+                          }
+                          return (
+                            <div>
+                              {allSupport.map((sup, idx) => (
+                                <div key={idx}>
+                                  {sup.support_type === 'From' && sup.dbxref_type === 'GOID' ? (
+                                    <span>
+                                      from{' '}
+                                      <a
+                                        href={`http://amigo.geneontology.org/amigo/term/GO:${String(sup.dbxref_id).padStart(7, '0')}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                      >
+                                        GO:{String(sup.dbxref_id).padStart(7, '0')}
+                                      </a>
+                                    </span>
+                                  ) : (
+                                    <span>
+                                      {sup.support_type.toLowerCase()} {sup.source}: {sup.dbxref_id}
+                                    </span>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          );
+                        })()}
                       </td>
                       <td style={styles.td}>
                         {ann.references?.map((ref, idx) => (
