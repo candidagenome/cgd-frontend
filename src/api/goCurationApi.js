@@ -40,7 +40,9 @@ export const goCurationApi = {
    * @param {Object} data - Annotation data
    * @param {number} data.goid - GO ID (without GO: prefix)
    * @param {string} data.evidence - Evidence code
-   * @param {number} data.reference_no - Reference number
+   * @param {number} [data.reference_no] - Reference number (or use pubmed/dbxref_id)
+   * @param {number} [data.pubmed] - PubMed ID (alternative to reference_no)
+   * @param {string} [data.dbxref_id] - CGDID like CAL0080735 (alternative to reference_no)
    * @param {string} [data.annotation_type] - Annotation type (default: "manually curated")
    * @param {string} [data.source] - Source (default: "CGD")
    * @param {string[]} [data.qualifiers] - GO qualifiers

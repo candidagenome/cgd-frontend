@@ -249,23 +249,6 @@ function GoCurationPage() {
           continue;
         }
 
-        // Get reference_no (from pubmed or cgdid if needed)
-        let refNo = row.reference_no ? parseInt(row.reference_no, 10) : null;
-        if (!refNo && row.pubmed) {
-          refNo = await lookupReferenceByPubmed(row.pubmed);
-          if (!refNo) {
-            errors.push(`Row ${i + 1}: PubMed ${row.pubmed} not found in database`);
-            continue;
-          }
-        }
-        if (!refNo && row.cgdid) {
-          refNo = await lookupReferenceByCgdid(row.cgdid);
-          if (!refNo) {
-            errors.push(`Row ${i + 1}: CGDID ${row.cgdid} not found in database`);
-            continue;
-          }
-        }
-
         // Clean up GO ID - remove "GO:" prefix if present and parse as integer
         let goidValue = row.goid.toString().trim();
         goidValue = goidValue.replace(/^GO:/i, '').replace(/^0+/, ''); // Remove GO: prefix and leading zeros
@@ -275,11 +258,20 @@ function GoCurationPage() {
           continue;
         }
 
+        // Build data object - backend handles reference lookup from pubmed/dbxref_id
         const data = {
           goid: goidNum,
           evidence: row.evidence,
-          reference_no: refNo,
         };
+
+        // Add reference identifier (backend accepts reference_no, pubmed, or dbxref_id)
+        if (row.reference_no) {
+          data.reference_no = parseInt(row.reference_no, 10);
+        } else if (row.pubmed) {
+          data.pubmed = parseInt(row.pubmed, 10);
+        } else if (row.cgdid) {
+          data.dbxref_id = row.cgdid.trim();
+        }
 
         if (row.qualifiers.length > 0) {
           data.qualifiers = row.qualifiers;

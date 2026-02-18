@@ -9,6 +9,7 @@
  */
 import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import authApi from '../api/authApi';
+import { setAccessToken, clearAccessToken } from '../api/config';
 
 const AuthContext = createContext(null);
 
@@ -55,6 +56,11 @@ export function AuthProvider({ children }) {
         const result = await authApi.refresh();
         console.log('Token refresh successful');
 
+        // Store the new access token
+        if (result?.access_token) {
+          setAccessToken(result.access_token);
+        }
+
         // If backend returns new expires_in, adjust the timer
         if (result?.expires_in && result.expires_in > 0) {
           const newInterval = Math.max((result.expires_in - 60) * 1000, 60000); // Refresh 1 min before expiry, min 1 min
@@ -69,6 +75,7 @@ export function AuthProvider({ children }) {
         // If refresh fails, user needs to re-login
         setUser(null);
         setError('Your session has expired. Please log in again.');
+        clearAccessToken();
         if (refreshTimerRef.current) {
           clearInterval(refreshTimerRef.current);
           refreshTimerRef.current = null;
@@ -106,6 +113,7 @@ export function AuthProvider({ children }) {
       if (!isMountedRef.current) return;
       setUser(null);
       setError('Your session has expired. Please log in again.');
+      clearAccessToken();
       if (refreshTimerRef.current) {
         clearInterval(refreshTimerRef.current);
         refreshTimerRef.current = null;
@@ -142,6 +150,11 @@ export function AuthProvider({ children }) {
       // Call login endpoint
       const loginResult = await authApi.login(username, password);
 
+      // Store access token for Authorization header (browsers block cross-site cookies)
+      if (loginResult?.access_token) {
+        setAccessToken(loginResult.access_token);
+      }
+
       // Fetch user info
       const userData = await authApi.getMe();
       setUser(userData);
@@ -175,6 +188,7 @@ export function AuthProvider({ children }) {
     } finally {
       setUser(null);
       setError(null);
+      clearAccessToken();
       clearRefreshTimer();
     }
   }, [clearRefreshTimer]);
