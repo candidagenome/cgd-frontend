@@ -264,8 +264,17 @@ function GoCurationPage() {
           }
         }
 
+        // Clean up GO ID - remove "GO:" prefix if present and parse as integer
+        let goidValue = row.goid.toString().trim();
+        goidValue = goidValue.replace(/^GO:/i, '').replace(/^0+/, ''); // Remove GO: prefix and leading zeros
+        const goidNum = parseInt(goidValue, 10);
+        if (isNaN(goidNum)) {
+          errors.push(`Row ${i + 1}: Invalid GO ID format: ${row.goid}`);
+          continue;
+        }
+
         const data = {
-          goid: parseInt(row.goid, 10),
+          goid: goidNum,
           evidence: row.evidence,
           reference_no: refNo,
         };
@@ -275,7 +284,15 @@ function GoCurationPage() {
         }
 
         if (row.ic_from_goid) {
-          data.ic_from_goid = parseInt(row.ic_from_goid, 10);
+          // Clean up IC from GOid - remove "GO:" prefix if present
+          let icGoidValue = row.ic_from_goid.toString().trim();
+          icGoidValue = icGoidValue.replace(/^GO:/i, '').replace(/^0+/, '');
+          const icGoidNum = parseInt(icGoidValue, 10);
+          if (isNaN(icGoidNum)) {
+            errors.push(`Row ${i + 1}: Invalid IC from GO ID format: ${row.ic_from_goid}`);
+            continue;
+          }
+          data.ic_from_goid = icGoidNum;
         }
 
         // Feature list - create annotation for each feature
