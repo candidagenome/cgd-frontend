@@ -53,11 +53,13 @@ function GoCurationPage() {
     goid: '',
     reference_no: '',
     pubmed: '',
+    cgdid: '', // CGDID for reference lookup
     evidence: '',
     qualifiers: [],
     ic_from_goid: '',
     with_db: '',
     with_id: '',
+    with_evidence_codes: [], // Selected evidence codes for with/from (IGI, IPI, etc.)
     feature_list: '', // For sharing annotations with other features
   });
 
@@ -190,6 +192,18 @@ function GoCurationPage() {
     }
   };
 
+  // Helper to look up reference by CGDID
+  const lookupReferenceByCgdid = async (cgdid) => {
+    try {
+      // CGDID format is like "CGD_REF:xxx" or just the number
+      const formattedId = cgdid.includes('CGD_REF:') ? cgdid : `CGD_REF:${cgdid}`;
+      const response = await api.get(`/api/reference/${formattedId}`);
+      return response.data.reference_no;
+    } catch {
+      return null;
+    }
+  };
+
   // Handle submit - process all rows with data
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -216,8 +230,8 @@ function GoCurationPage() {
           errors.push(`Row ${i + 1}: Evidence code is required`);
           continue;
         }
-        if (!row.reference_no && !row.pubmed) {
-          errors.push(`Row ${i + 1}: Reference number or PubMed ID is required`);
+        if (!row.reference_no && !row.pubmed && !row.cgdid) {
+          errors.push(`Row ${i + 1}: Reference number, PubMed ID, or CGDID is required`);
           continue;
         }
 
@@ -233,12 +247,19 @@ function GoCurationPage() {
           continue;
         }
 
-        // Get reference_no (from pubmed if needed)
+        // Get reference_no (from pubmed or cgdid if needed)
         let refNo = row.reference_no ? parseInt(row.reference_no, 10) : null;
         if (!refNo && row.pubmed) {
           refNo = await lookupReferenceByPubmed(row.pubmed);
           if (!refNo) {
             errors.push(`Row ${i + 1}: PubMed ${row.pubmed} not found in database`);
+            continue;
+          }
+        }
+        if (!refNo && row.cgdid) {
+          refNo = await lookupReferenceByCgdid(row.cgdid);
+          if (!refNo) {
+            errors.push(`Row ${i + 1}: CGDID ${row.cgdid} not found in database`);
             continue;
           }
         }
@@ -444,7 +465,7 @@ function GoCurationPage() {
                     <span style={styles.thHint}>and relevant qualifier(s)</span>
                   </th>
                   <th style={styles.th}>
-                    Enter reference_no OR pubmed id<br />
+                    Enter reference_no OR pubmed OR CGDID<br />
                     <span style={styles.thHint}>(if more than one, enter in another row)</span>
                   </th>
                   <th style={styles.th}>Choose Evidence code</th>
@@ -477,7 +498,7 @@ function GoCurationPage() {
                         <div style={styles.fieldGroup}>
                           <label style={styles.smallLabel}>GO#:</label>
                           <input
-                            type="number"
+                            type="text"
                             value={row.goid}
                             onChange={(e) => handleRowChange(idx, 'goid', e.target.value)}
                             style={styles.smallInput}
@@ -508,7 +529,7 @@ function GoCurationPage() {
                         <div style={styles.fieldGroup}>
                           <label style={styles.smallLabel}>Reference_No:</label>
                           <input
-                            type="number"
+                            type="text"
                             value={row.reference_no}
                             onChange={(e) => handleRowChange(idx, 'reference_no', e.target.value)}
                             style={styles.smallInput}
@@ -518,9 +539,19 @@ function GoCurationPage() {
                         <div style={styles.fieldGroup}>
                           <label style={styles.smallLabel}>Pubmed:</label>
                           <input
-                            type="number"
+                            type="text"
                             value={row.pubmed}
                             onChange={(e) => handleRowChange(idx, 'pubmed', e.target.value)}
+                            style={styles.smallInput}
+                          />
+                        </div>
+                        <div style={styles.orDivider}>OR</div>
+                        <div style={styles.fieldGroup}>
+                          <label style={styles.smallLabel}>CGDID:</label>
+                          <input
+                            type="text"
+                            value={row.cgdid}
+                            onChange={(e) => handleRowChange(idx, 'cgdid', e.target.value)}
                             style={styles.smallInput}
                           />
                         </div>
@@ -547,10 +578,24 @@ function GoCurationPage() {
                       {/* With/From */}
                       <td style={styles.td}>
                         <div style={styles.withFromSection}>
-                          <div style={styles.fieldGroup}>
-                            <span style={styles.smallLabel}>
-                              {EVIDENCE_CODES_WITH_FROM.join(', ')} with:
-                            </span>
+                          {/* Evidence code checkboxes for with/from */}
+                          <div style={styles.withEvidenceCheckboxes}>
+                            {EVIDENCE_CODES_WITH_FROM.map((code) => (
+                              <label key={code} style={styles.checkboxLabel}>
+                                <input
+                                  type="checkbox"
+                                  checked={row.with_evidence_codes?.includes(code) || false}
+                                  onChange={(e) => {
+                                    const newCodes = e.target.checked
+                                      ? [...(row.with_evidence_codes || []), code]
+                                      : (row.with_evidence_codes || []).filter((c) => c !== code);
+                                    handleRowChange(idx, 'with_evidence_codes', newCodes);
+                                  }}
+                                />
+                                {code}
+                              </label>
+                            ))}
+                            <span style={styles.withLabel}>with:</span>
                           </div>
                           <div style={styles.fieldGroup}>
                             <label style={styles.smallLabel}>DB:</label>
@@ -582,7 +627,7 @@ function GoCurationPage() {
                           <div style={styles.fieldGroup}>
                             <label style={styles.smallLabel}>IC from GOid:</label>
                             <input
-                              type="number"
+                              type="text"
                               value={row.ic_from_goid}
                               onChange={(e) => handleRowChange(idx, 'ic_from_goid', e.target.value)}
                               style={styles.smallInput}
@@ -1109,6 +1154,18 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '0.25rem',
+  },
+  withEvidenceCheckboxes: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '0.25rem',
+    alignItems: 'center',
+    marginBottom: '0.5rem',
+    fontSize: '0.8rem',
+  },
+  withLabel: {
+    fontWeight: 'bold',
+    marginLeft: '0.25rem',
   },
   featureListLabel: {
     padding: '0.5rem',
