@@ -186,7 +186,8 @@ function GoCurationPage() {
   const lookupReferenceByPubmed = async (pubmed) => {
     try {
       const response = await api.get(`/api/reference/${pubmed}`);
-      return response.data.reference_no;
+      // API returns { result: { reference_no: ... } }
+      return response.data.result?.reference_no || response.data.reference_no;
     } catch {
       return null;
     }
@@ -198,7 +199,8 @@ function GoCurationPage() {
       // CGDID format is like "CGD_REF:xxx" or just the number
       const formattedId = cgdid.includes('CGD_REF:') ? cgdid : `CGD_REF:${cgdid}`;
       const response = await api.get(`/api/reference/${formattedId}`);
-      return response.data.reference_no;
+      // API returns { result: { reference_no: ... } }
+      return response.data.result?.reference_no || response.data.reference_no;
     } catch {
       return null;
     }
