@@ -24,6 +24,60 @@ const EVIDENCE_CODES_WITH_FROM = ['IGI', 'IPI', 'ISS', 'ISA', 'ISM', 'IGC', 'ISO
 const INITIAL_ROWS = 4;
 const MORE_ROWS_INCREMENT = 3;
 
+/**
+ * Parse API error into a meaningful user-friendly message.
+ * Handles network errors, CORS issues (often masking backend 500 errors),
+ * and standard API error responses.
+ */
+function parseApiError(err) {
+  // Check for network error (no response received)
+  // This happens when CORS blocks access to the response
+  if (err.message === 'Network Error' || !err.response) {
+    return 'Network error: Unable to reach the server. ' +
+           'This may indicate a server crash - check backend logs for details.';
+  }
+
+  // Handle specific HTTP status codes
+  const status = err.response?.status;
+  const detail = err.response?.data?.detail;
+  const errorType = err.response?.data?.error_type;
+
+  if (status === 500) {
+    // Backend now returns meaningful error messages with detail field
+    if (detail) {
+      // Remove "Internal server error: " prefix if present to avoid redundancy
+      const cleanDetail = detail.replace(/^Internal server error:\s*/i, '');
+      return cleanDetail || 'Internal server error';
+    }
+    return `Server error: ${errorType || 'Unknown error'}. Check backend logs.`;
+  }
+  if (status === 401) {
+    return 'Authentication required. Please log in again.';
+  }
+  if (status === 403) {
+    return 'Permission denied. You do not have access to perform this action.';
+  }
+  if (status === 404) {
+    return detail || 'Resource not found. The feature, GO term, or reference may not exist.';
+  }
+  if (status === 422) {
+    // Validation error - parse the detail
+    if (typeof detail === 'string') {
+      return `Validation error: ${detail}`;
+    }
+    if (Array.isArray(detail)) {
+      return `Validation error: ${detail.map(d => d.msg || d.message || JSON.stringify(d)).join('; ')}`;
+    }
+    return `Validation error: ${JSON.stringify(detail)}`;
+  }
+  if (status === 400) {
+    return detail || 'Invalid data submitted.';
+  }
+
+  // Default: return detail or message
+  return detail || err.message || 'An unexpected error occurred';
+}
+
 function GoCurationPage() {
   const { featureName } = useParams();
   const { user } = useAuth();
@@ -86,7 +140,7 @@ function GoCurationPage() {
       if (err.response?.status === 404) {
         setError(`Feature '${featureName}' not found`);
       } else {
-        setError('Failed to load GO annotations');
+        setError(`Failed to load GO annotations: ${parseApiError(err)}`);
       }
     } finally {
       setLoading(false);
@@ -142,7 +196,7 @@ function GoCurationPage() {
       loadAnnotations();
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
-      setError('Failed to mark annotation as reviewed');
+      setError(`Failed to mark annotation as reviewed: ${parseApiError(err)}`);
     }
   };
 
@@ -158,7 +212,7 @@ function GoCurationPage() {
       loadAnnotations();
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
-      setError(err.response?.data?.detail || 'Failed to delete annotation');
+      setError(`Failed to delete annotation: ${parseApiError(err)}`);
     }
   };
 
@@ -285,7 +339,7 @@ function GoCurationPage() {
             await goCurationApi.createAnnotation(feat, data);
             results.push(`Row ${i + 1}: Annotation created for ${feat}`);
           } catch (err) {
-            errors.push(`Row ${i + 1} (${feat}): ${err.response?.data?.detail || err.message}`);
+            errors.push(`Row ${i + 1} (${feat}): ${parseApiError(err)}`);
           }
         }
       }
@@ -317,7 +371,7 @@ function GoCurationPage() {
         setTimeout(() => setSuccessMessage(null), 5000);
       }
     } catch (err) {
-      setFormError(err.response?.data?.detail || err.message || 'Failed to create annotations');
+      setFormError(parseApiError(err));
     } finally {
       setSubmitting(false);
     }
