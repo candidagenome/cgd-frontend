@@ -50,6 +50,10 @@ function LitGuideCurationPage() {
   const [unlinkFeature, setUnlinkFeature] = useState('');
   const [unlinking, setUnlinking] = useState(false);
 
+  // Notes state (for reference view)
+  const [notes, setNotes] = useState([]);
+  const [notesLoading, setNotesLoading] = useState(false);
+
   // Add topic form state
   const [selectedRef, setSelectedRef] = useState(null);
   const [selectedTopic, setSelectedTopic] = useState('');
@@ -130,6 +134,29 @@ function LitGuideCurationPage() {
       }
     }
   }, [featureName, loadFeatureLiterature, loadReferenceLiterature]);
+
+  // Load notes when reference data changes
+  useEffect(() => {
+    const loadNotes = async () => {
+      if (!referenceData?.reference_no) {
+        setNotes([]);
+        return;
+      }
+
+      setNotesLoading(true);
+      try {
+        const data = await litguideCurationApi.getReferenceNotes(referenceData.reference_no);
+        setNotes(data.notes || []);
+      } catch (err) {
+        console.error('Failed to load notes:', err);
+        setNotes([]);
+      } finally {
+        setNotesLoading(false);
+      }
+    };
+
+    loadNotes();
+  }, [referenceData?.reference_no]);
 
   // Handle feature search
   const handleFeatureSearch = (e) => {
@@ -774,6 +801,39 @@ function LitGuideCurationPage() {
               <p style={styles.noItems}>No features associated with this reference yet.</p>
             )}
           </div>
+
+          {/* Associated Notes Section */}
+          <div style={styles.notesSection}>
+            <h3 style={styles.notesHeader}>
+              <a name="Notes">Associated Notes</a>
+              {notesLoading && <span style={styles.notesLoading}> (loading...)</span>}
+            </h3>
+
+            {notes.length > 0 ? (
+              <table style={styles.table}>
+                <thead>
+                  <tr>
+                    <th style={{ ...styles.th, width: '15%' }}>Feature</th>
+                    <th style={{ ...styles.th, width: '20%' }}>Topic</th>
+                    <th style={{ ...styles.th, width: '65%' }}>Note</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {notes.map((note, idx) => (
+                    <tr key={idx}>
+                      <td style={styles.td}>{note.feature_name || '-'}</td>
+                      <td style={styles.tdTopic}>{note.topic}</td>
+                      <td style={styles.td}>{note.note}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p style={styles.noItems}>
+                {notesLoading ? 'Loading notes...' : 'No notes found.'}
+              </p>
+            )}
+          </div>
         </div>
       )}
 
@@ -1140,6 +1200,28 @@ const styles = {
     fontSize: '0.85rem',
     color: '#666',
     fontStyle: 'italic',
+  },
+  // Notes section styles
+  notesSection: {
+    marginTop: '1.5rem',
+  },
+  notesHeader: {
+    backgroundColor: 'navajowhite',
+    padding: '0.5rem',
+    margin: '0 0 1rem 0',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+  },
+  notesLoading: {
+    fontWeight: 'normal',
+    fontStyle: 'italic',
+    color: '#666',
+  },
+  tdTopic: {
+    padding: '0.5rem',
+    borderBottom: '1px solid #ddd',
+    verticalAlign: 'top',
+    fontSize: '0.85rem',
   },
 };
 

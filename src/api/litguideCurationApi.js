@@ -136,6 +136,19 @@ export const litguideCurationApi = {
     });
     return response.data;
   },
+
+  /**
+   * Get curation notes associated with a reference.
+   *
+   * Returns notes linked to features (via topics) and non-gene topic notes.
+   *
+   * @param {number} referenceNo - Reference number
+   * @returns {Promise<{reference_no: number, notes: Array}>}
+   */
+  getReferenceNotes: async (referenceNo) => {
+    const response = await api.get(`/api/curation/litguide/reference/${referenceNo}/notes`);
+    return response.data;
+  },
 };
 
 export default litguideCurationApi;
