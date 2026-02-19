@@ -10,14 +10,19 @@
  * Mirrors legacy LitGuideCurationPage.pm functionality.
  */
 import { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import litguideCurationApi from '../../api/litguideCurationApi';
 
 function LitGuideCurationPage() {
   const { featureName } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+
+  // Organism state
+  const [organisms, setOrganisms] = useState([]);
+  const [currentOrganism, setCurrentOrganism] = useState(searchParams.get('organism') || null);
 
   // Search state
   const [featureSearch, setFeatureSearch] = useState('');
@@ -63,16 +68,18 @@ function LitGuideCurationPage() {
   const [selectedRef, setSelectedRef] = useState(null);
   const [selectedTopic, setSelectedTopic] = useState('');
 
-  // Load available topics and statuses
+  // Load available topics, statuses, and organisms
   useEffect(() => {
     const loadOptions = async () => {
       try {
-        const [topicsData, statusesData] = await Promise.all([
+        const [topicsData, statusesData, organismsData] = await Promise.all([
           litguideCurationApi.getTopics(),
           litguideCurationApi.getStatuses(),
+          litguideCurationApi.getOrganisms(),
         ]);
         setTopics(topicsData.topics);
         setStatuses(statusesData.statuses);
+        setOrganisms(organismsData.organisms || []);
       } catch (err) {
         console.error('Failed to load options:', err);
       }
@@ -105,7 +112,7 @@ function LitGuideCurationPage() {
   }, []);
 
   // Load reference literature (reference-centric view)
-  const loadReferenceLiterature = useCallback(async (referenceNo) => {
+  const loadReferenceLiterature = useCallback(async (referenceNo, organism = null) => {
     if (!referenceNo) return;
 
     setLoading(true);
@@ -113,9 +120,13 @@ function LitGuideCurationPage() {
     setFeatureData(null);
 
     try {
-      const data = await litguideCurationApi.getReferenceLiterature(referenceNo);
+      const data = await litguideCurationApi.getReferenceLiterature(referenceNo, organism);
       setReferenceData(data);
       setViewMode('reference');
+      // Update current organism from response if available
+      if (data.current_organism) {
+        setCurrentOrganism(data.current_organism.organism_abbrev);
+      }
     } catch (err) {
       if (err.response?.status === 404) {
         setError(`Reference '${referenceNo}' not found`);
@@ -133,12 +144,26 @@ function LitGuideCurationPage() {
     if (featureName) {
       // Check if it's a pure numeric value (reference_no)
       if (/^\d+$/.test(featureName)) {
-        loadReferenceLiterature(featureName);
+        const orgParam = searchParams.get('organism');
+        loadReferenceLiterature(featureName, orgParam);
       } else {
         loadFeatureLiterature(featureName);
       }
     }
-  }, [featureName, loadFeatureLiterature, loadReferenceLiterature]);
+  }, [featureName, searchParams, loadFeatureLiterature, loadReferenceLiterature]);
+
+  // Handle organism change
+  const handleOrganismChange = (newOrganism) => {
+    setCurrentOrganism(newOrganism);
+    if (newOrganism) {
+      setSearchParams({ organism: newOrganism });
+    } else {
+      setSearchParams({});
+    }
+    if (referenceData?.reference_no) {
+      loadReferenceLiterature(referenceData.reference_no, newOrganism);
+    }
+  };
 
   // Load notes when reference data changes
   useEffect(() => {
@@ -285,7 +310,7 @@ function LitGuideCurationPage() {
       if (viewMode === 'feature' && featureData) {
         loadFeatureLiterature(featureData.feature_no);
       } else if (viewMode === 'reference' && referenceData) {
-        loadReferenceLiterature(referenceData.reference_no);
+        loadReferenceLiterature(referenceData.reference_no, currentOrganism);
       }
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
@@ -306,7 +331,7 @@ function LitGuideCurationPage() {
       setSuccessMessage(`Feature '${newFeature}' added with topic '${newFeatureTopic}'`);
       setNewFeature('');
       setNewFeatureTopic('');
-      loadReferenceLiterature(referenceData.reference_no);
+      loadReferenceLiterature(referenceData.reference_no, currentOrganism);
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
       setError(err.response?.data?.detail || 'Failed to add feature');
@@ -321,7 +346,7 @@ function LitGuideCurationPage() {
       await litguideCurationApi.removeTopicAssociation(refpropFeatNo);
       setSuccessMessage('Topic association removed');
       if (referenceData) {
-        loadReferenceLiterature(referenceData.reference_no);
+        loadReferenceLiterature(referenceData.reference_no, currentOrganism);
       }
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
@@ -375,7 +400,7 @@ function LitGuideCurationPage() {
       setSuccessMessage(
         `Unlinked ${results.success.length} feature(s): ${results.success.join(', ')}`
       );
-      loadReferenceLiterature(referenceData.reference_no);
+      loadReferenceLiterature(referenceData.reference_no, currentOrganism);
       setTimeout(() => setSuccessMessage(null), 5000);
     }
 
@@ -709,6 +734,22 @@ function LitGuideCurationPage() {
               <span style={styles.refYear}> ({referenceData.year || 'N/A'})</span>
             </h2>
             <div style={styles.headerActions}>
+              {/* Organism Selector */}
+              <div style={styles.organismSelector}>
+                <label style={styles.organismLabel}>Organism:</label>
+                <select
+                  value={currentOrganism || ''}
+                  onChange={(e) => handleOrganismChange(e.target.value || null)}
+                  style={styles.organismSelect}
+                >
+                  <option value="">All Species</option>
+                  {organisms.map((org) => (
+                    <option key={org.organism_abbrev} value={org.organism_abbrev}>
+                      {org.organism_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <Link to={`/reference/${referenceData.reference_no}`} style={styles.headerLink}>
                 View Reference Page
               </Link>
@@ -874,7 +915,11 @@ function LitGuideCurationPage() {
           {/* Features with Topics */}
           <div style={styles.literatureSection}>
             <h3 style={styles.sectionHeader}>
-              Associated Features ({referenceData.features?.length || 0})
+              {referenceData.current_organism
+                ? `Features from ${referenceData.current_organism.organism_name}`
+                : 'Associated Features'
+              }
+              {' '}({referenceData.features?.length || 0})
             </h3>
 
             {referenceData.features?.length > 0 ? (
@@ -935,6 +980,52 @@ function LitGuideCurationPage() {
               <p style={styles.noItems}>No features associated with this reference yet.</p>
             )}
           </div>
+
+          {/* Other Species Section (only shown when organism is selected) */}
+          {currentOrganism && referenceData.other_organisms && Object.keys(referenceData.other_organisms).length > 0 && (
+            <div style={styles.otherSpeciesSection}>
+              <h3 style={styles.otherSpeciesHeader}>
+                Features from Other Species
+              </h3>
+
+              <table style={styles.table}>
+                <thead>
+                  <tr>
+                    <th style={styles.th}>Species</th>
+                    <th style={styles.th}>Features</th>
+                    <th style={styles.th}>Topics</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.values(referenceData.other_organisms).map((orgData) => (
+                    <tr key={orgData.organism_abbrev}>
+                      <td style={styles.td}>
+                        <button
+                          onClick={() => handleOrganismChange(orgData.organism_abbrev)}
+                          style={styles.speciesLink}
+                          title={`Switch to ${orgData.organism_name}`}
+                        >
+                          <em>{orgData.organism_name}</em>
+                        </button>
+                      </td>
+                      <td style={styles.td}>
+                        {orgData.features.map((f, idx) => (
+                          <span key={f.feature_no}>
+                            {f.gene_name || f.feature_name}
+                            {idx < orgData.features.length - 1 && ', '}
+                          </span>
+                        ))}
+                      </td>
+                      <td style={styles.td}>
+                        {/* Collect unique topics from all features */}
+                        {[...new Set(orgData.features.flatMap(f => f.topics.map(t => t.topic)))].join(', ')}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           {/* Associated Notes Section */}
           <div style={styles.notesSection}>
@@ -1417,6 +1508,47 @@ const styles = {
     borderRadius: '4px',
     cursor: 'pointer',
     fontSize: '0.9rem',
+  },
+  // Organism selector styles
+  organismSelector: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    marginRight: '1rem',
+  },
+  organismLabel: {
+    fontSize: '0.9rem',
+    fontWeight: 'bold',
+  },
+  organismSelect: {
+    padding: '0.25rem 0.5rem',
+    fontSize: '0.9rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    minWidth: '180px',
+  },
+  // Other species section styles
+  otherSpeciesSection: {
+    marginBottom: '1.5rem',
+    padding: '1rem',
+    backgroundColor: '#f5f5f5',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+  },
+  otherSpeciesHeader: {
+    backgroundColor: '#CCCCFF',
+    padding: '0.5rem',
+    margin: '0 0 1rem 0',
+    fontSize: '1rem',
+  },
+  speciesLink: {
+    background: 'none',
+    border: 'none',
+    color: '#337ab7',
+    cursor: 'pointer',
+    padding: 0,
+    fontSize: '0.9rem',
+    textDecoration: 'underline',
   },
 };
 

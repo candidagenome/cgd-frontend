@@ -94,13 +94,28 @@ export const litguideCurationApi = {
   },
 
   /**
+   * Get available organisms that have features in the database.
+   *
+   * @returns {Promise<{organisms: Array}>}
+   */
+  getOrganisms: async () => {
+    const response = await api.get('/api/curation/litguide/organisms');
+    return response.data;
+  },
+
+  /**
    * Get reference details with all associated features and topics.
    *
    * @param {number} referenceNo - Reference number
+   * @param {string} [organism] - Optional organism abbreviation to filter features
    * @returns {Promise<Object>} - Reference with features and topics
    */
-  getReferenceLiterature: async (referenceNo) => {
-    const response = await api.get(`/api/curation/litguide/reference/${referenceNo}`);
+  getReferenceLiterature: async (referenceNo, organism = null) => {
+    const params = {};
+    if (organism) {
+      params.organism = organism;
+    }
+    const response = await api.get(`/api/curation/litguide/reference/${referenceNo}`, { params });
     return response.data;
   },
 
