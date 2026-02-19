@@ -46,6 +46,10 @@ function LitGuideCurationPage() {
   const [newFeature, setNewFeature] = useState('');
   const [newFeatureTopic, setNewFeatureTopic] = useState('');
 
+  // Unlink feature state (for reference view)
+  const [unlinkFeature, setUnlinkFeature] = useState('');
+  const [unlinking, setUnlinking] = useState(false);
+
   // Add topic form state
   const [selectedRef, setSelectedRef] = useState(null);
   const [selectedTopic, setSelectedTopic] = useState('');
@@ -267,6 +271,63 @@ function LitGuideCurationPage() {
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
       setError(err.response?.data?.detail || 'Failed to remove topic');
+    }
+  };
+
+  // Handle unlink feature from reference
+  const handleUnlinkFeature = async () => {
+    if (!referenceData || !unlinkFeature.trim()) return;
+
+    // Parse multiple features (separated by | or space)
+    const featureNames = unlinkFeature
+      .split(/[|\s]+/)
+      .map((f) => f.trim())
+      .filter((f) => f);
+
+    if (featureNames.length === 0) return;
+
+    const confirmMsg =
+      featureNames.length === 1
+        ? `Are you sure you want to unlink '${featureNames[0]}' from this paper?`
+        : `Are you sure you want to unlink ${featureNames.length} features from this paper?\n\nFeatures: ${featureNames.join(', ')}`;
+
+    if (!window.confirm(confirmMsg)) return;
+
+    setUnlinking(true);
+    setError(null);
+
+    const results = { success: [], failed: [] };
+
+    for (const featureName of featureNames) {
+      try {
+        const result = await litguideCurationApi.unlinkFeatureFromReference(
+          referenceData.reference_no,
+          featureName
+        );
+        results.success.push(result.feature_name);
+      } catch (err) {
+        results.failed.push({
+          name: featureName,
+          error: err.response?.data?.detail || 'Unknown error',
+        });
+      }
+    }
+
+    setUnlinking(false);
+    setUnlinkFeature('');
+
+    if (results.success.length > 0) {
+      setSuccessMessage(
+        `Unlinked ${results.success.length} feature(s): ${results.success.join(', ')}`
+      );
+      loadReferenceLiterature(referenceData.reference_no);
+      setTimeout(() => setSuccessMessage(null), 5000);
+    }
+
+    if (results.failed.length > 0) {
+      setError(
+        `Failed to unlink: ${results.failed.map((f) => `${f.name} (${f.error})`).join('; ')}`
+      );
     }
   };
 
@@ -622,6 +683,32 @@ function LitGuideCurationPage() {
               </button>
             </div>
           </div>
+
+          {/* Unlink Feature Section */}
+          {referenceData.pubmed && (
+            <div style={styles.unlinkSection}>
+              <h3 style={styles.unlinkHeader}>Unlink Feature from Paper</h3>
+              <div style={styles.unlinkRow}>
+                <input
+                  type="text"
+                  value={unlinkFeature}
+                  onChange={(e) => setUnlinkFeature(e.target.value)}
+                  placeholder="Feature name(s) to unlink..."
+                  style={styles.unlinkInput}
+                />
+                <button
+                  onClick={handleUnlinkFeature}
+                  disabled={!unlinkFeature.trim() || unlinking}
+                  style={styles.unlinkButton}
+                >
+                  {unlinking ? 'Unlinking...' : 'Unlink'}
+                </button>
+              </div>
+              <p style={styles.unlinkHelp}>
+                Separate multiple features with | or space. This will remove the link between the paper and feature(s), including any topic associations.
+              </p>
+            </div>
+          )}
 
           {/* Features with Topics */}
           <div style={styles.literatureSection}>
@@ -1011,6 +1098,48 @@ const styles = {
     border: '1px solid #ccc',
     borderRadius: '4px',
     minWidth: '200px',
+  },
+  // Unlink section styles
+  unlinkSection: {
+    padding: '1rem',
+    backgroundColor: '#fff8e6',
+    border: '1px solid #f0d080',
+    borderRadius: '4px',
+    marginBottom: '1.5rem',
+  },
+  unlinkHeader: {
+    backgroundColor: '#f0d080',
+    padding: '0.5rem',
+    margin: '0 0 1rem 0',
+    fontSize: '1rem',
+    color: '#664400',
+  },
+  unlinkRow: {
+    display: 'flex',
+    gap: '0.5rem',
+    alignItems: 'center',
+  },
+  unlinkInput: {
+    flex: 1,
+    padding: '0.5rem',
+    fontSize: '1rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    maxWidth: '400px',
+  },
+  unlinkButton: {
+    padding: '0.5rem 1rem',
+    backgroundColor: '#d9534f',
+    color: 'white',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  },
+  unlinkHelp: {
+    marginTop: '0.5rem',
+    fontSize: '0.85rem',
+    color: '#666',
+    fontStyle: 'italic',
   },
 };
 

@@ -119,6 +119,23 @@ export const litguideCurationApi = {
     });
     return response.data;
   },
+
+  /**
+   * Unlink a feature from a reference.
+   *
+   * Removes the link between the feature and reference, as well as
+   * any topic associations for this feature-reference pair.
+   *
+   * @param {number} referenceNo - Reference number
+   * @param {string} featureIdentifier - Feature name, gene name, or feature_no
+   * @returns {Promise<Object>}
+   */
+  unlinkFeatureFromReference: async (referenceNo, featureIdentifier) => {
+    const response = await api.delete(`/api/curation/litguide/reference/${referenceNo}/feature`, {
+      data: { feature_identifier: featureIdentifier },
+    });
+    return response.data;
+  },
 };
 
 export default litguideCurationApi;
