@@ -23,8 +23,8 @@ import CVTreeSelect from '../../components/curation/CVTreeSelect';
 import ObservableBrowseModal from '../../components/curation/ObservableBrowseModal';
 
 // Default number of new annotation sections to show
-const MIN_NEW_SECTIONS = 5;
-const ADD_SECTIONS_COUNT = 4;
+const MIN_NEW_SECTIONS = 1;
+const ADD_SECTIONS_COUNT = 1;
 
 // Property types that have CV tree browsers
 const PROPERTY_CV_MAP = {
@@ -775,32 +775,31 @@ function PhenotypeCurationPage() {
               <span style={styles.separatorNote}>separate multiples by |</span>
             </div>
 
-            {/* Section divider with buttons */}
-            <div style={styles.sectionDivider}>
-              <hr style={styles.hr} />
-              <div style={styles.sectionButtons}>
-                <button
-                  type="button"
-                  onClick={handleAddMoreSections}
-                  style={styles.moreRowsBtn}
-                >
-                  More Phenotype Rows
-                </button>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  style={styles.submitBtn}
-                >
-                  {submitting ? 'Submitting...' : 'Submit'}
-                </button>
-                <button type="reset" style={styles.resetBtn}>
-                  Reset
-                </button>
-              </div>
-              <hr style={styles.hr} />
-            </div>
+            {/* Section divider */}
+            <hr style={styles.sectionHr} />
           </div>
         ))}
+
+        {/* Buttons at bottom - outside the section loop */}
+        <div style={styles.formButtons}>
+          <button
+            type="button"
+            onClick={handleAddMoreSections}
+            style={styles.moreRowsBtn}
+          >
+            + More Phenotype Rows
+          </button>
+          <button
+            type="submit"
+            disabled={submitting}
+            style={styles.submitBtn}
+          >
+            {submitting ? 'Submitting...' : 'Submit'}
+          </button>
+          <button type="reset" style={styles.resetBtn}>
+            Reset
+          </button>
+        </div>
       </form>
 
       {/* Observable Browse Modal */}
@@ -1081,19 +1080,17 @@ const styles = {
     border: '1px solid #ccc',
     borderRadius: '3px',
   },
-  sectionDivider: {
-    marginTop: '0.5rem',
-    marginBottom: '1rem',
-  },
-  hr: {
+  sectionHr: {
     border: 'none',
-    borderTop: '3px solid #6A6A6A',
-    margin: '0.5rem 0',
+    borderTop: '2px dashed #ccc',
+    margin: '1rem 0',
   },
-  sectionButtons: {
+  formButtons: {
     display: 'flex',
     gap: '0.5rem',
-    padding: '0.5rem 0',
+    padding: '1rem 0',
+    borderTop: '3px solid #6A6A6A',
+    marginTop: '0.5rem',
   },
   moreRowsBtn: {
     padding: '0.4rem 0.75rem',
