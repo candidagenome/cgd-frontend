@@ -31,18 +31,25 @@ const MORE_ROWS_INCREMENT = 3;
  */
 function parseApiError(err) {
   // Check for network error (no response received)
+  // This happens when CORS blocks access to the response
   if (err.message === 'Network Error' || !err.response) {
-    // This often indicates a backend 500 error that didn't return CORS headers
-    return 'Server error: The backend server encountered an error. ' +
-           'Please check backend logs for details or try again later.';
+    return 'Network error: Unable to reach the server. ' +
+           'This may indicate a server crash - check backend logs for details.';
   }
 
   // Handle specific HTTP status codes
   const status = err.response?.status;
   const detail = err.response?.data?.detail;
+  const errorType = err.response?.data?.error_type;
 
   if (status === 500) {
-    return `Server error (500): ${detail || 'Internal server error. Please check backend logs.'}`;
+    // Backend now returns meaningful error messages with detail field
+    if (detail) {
+      // Remove "Internal server error: " prefix if present to avoid redundancy
+      const cleanDetail = detail.replace(/^Internal server error:\s*/i, '');
+      return cleanDetail || 'Internal server error';
+    }
+    return `Server error: ${errorType || 'Unknown error'}. Check backend logs.`;
   }
   if (status === 401) {
     return 'Authentication required. Please log in again.';
@@ -64,7 +71,7 @@ function parseApiError(err) {
     return `Validation error: ${JSON.stringify(detail)}`;
   }
   if (status === 400) {
-    return `Bad request: ${detail || 'Invalid data submitted.'}`;
+    return detail || 'Invalid data submitted.';
   }
 
   // Default: return detail or message
