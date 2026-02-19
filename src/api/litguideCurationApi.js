@@ -149,6 +149,47 @@ export const litguideCurationApi = {
     const response = await api.get(`/api/curation/litguide/reference/${referenceNo}/notes`);
     return response.data;
   },
+
+  /**
+   * Get non-gene topics for a reference.
+   *
+   * Topics linked to reference but NOT associated with any feature.
+   *
+   * @param {number} referenceNo - Reference number
+   * @returns {Promise<{reference_no: number, public_topics: Array, internal_topics: Array}>}
+   */
+  getNongeneTopics: async (referenceNo) => {
+    const response = await api.get(`/api/curation/litguide/reference/${referenceNo}/nongene-topics`);
+    return response.data;
+  },
+
+  /**
+   * Add a non-gene topic to a reference.
+   *
+   * @param {number} referenceNo - Reference number
+   * @param {string} topic - Literature topic
+   * @returns {Promise<{ref_property_no: number, message: string}>}
+   */
+  addNongeneTopic: async (referenceNo, topic) => {
+    const response = await api.post(`/api/curation/litguide/reference/${referenceNo}/nongene-topic`, {
+      topic,
+    });
+    return response.data;
+  },
+
+  /**
+   * Remove a non-gene topic from a reference.
+   *
+   * @param {number} referenceNo - Reference number
+   * @param {number} refPropertyNo - Reference property number
+   * @returns {Promise<{success: boolean, message: string}>}
+   */
+  removeNongeneTopic: async (referenceNo, refPropertyNo) => {
+    const response = await api.delete(
+      `/api/curation/litguide/reference/${referenceNo}/nongene-topic/${refPropertyNo}`
+    );
+    return response.data;
+  },
 };
 
 export default litguideCurationApi;

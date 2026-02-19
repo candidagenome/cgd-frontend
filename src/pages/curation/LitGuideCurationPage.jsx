@@ -54,6 +54,11 @@ function LitGuideCurationPage() {
   const [notes, setNotes] = useState([]);
   const [notesLoading, setNotesLoading] = useState(false);
 
+  // Non-gene topics state (for reference view)
+  const [nongeneTopics, setNongeneTopics] = useState({ public_topics: [], internal_topics: [] });
+  const [nongeneTopicsLoading, setNongeneTopicsLoading] = useState(false);
+  const [newNongeneTopic, setNewNongeneTopic] = useState('');
+
   // Add topic form state
   const [selectedRef, setSelectedRef] = useState(null);
   const [selectedTopic, setSelectedTopic] = useState('');
@@ -156,6 +161,29 @@ function LitGuideCurationPage() {
     };
 
     loadNotes();
+  }, [referenceData?.reference_no]);
+
+  // Load non-gene topics when reference data changes
+  useEffect(() => {
+    const loadNongeneTopics = async () => {
+      if (!referenceData?.reference_no) {
+        setNongeneTopics({ public_topics: [], internal_topics: [] });
+        return;
+      }
+
+      setNongeneTopicsLoading(true);
+      try {
+        const data = await litguideCurationApi.getNongeneTopics(referenceData.reference_no);
+        setNongeneTopics(data);
+      } catch (err) {
+        console.error('Failed to load non-gene topics:', err);
+        setNongeneTopics({ public_topics: [], internal_topics: [] });
+      } finally {
+        setNongeneTopicsLoading(false);
+      }
+    };
+
+    loadNongeneTopics();
   }, [referenceData?.reference_no]);
 
   // Handle feature search
@@ -355,6 +383,39 @@ function LitGuideCurationPage() {
       setError(
         `Failed to unlink: ${results.failed.map((f) => `${f.name} (${f.error})`).join('; ')}`
       );
+    }
+  };
+
+  // Handle add non-gene topic
+  const handleAddNongeneTopic = async () => {
+    if (!referenceData || !newNongeneTopic) return;
+
+    try {
+      await litguideCurationApi.addNongeneTopic(referenceData.reference_no, newNongeneTopic);
+      setSuccessMessage(`Non-gene topic '${newNongeneTopic}' added`);
+      setNewNongeneTopic('');
+      // Reload non-gene topics
+      const data = await litguideCurationApi.getNongeneTopics(referenceData.reference_no);
+      setNongeneTopics(data);
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to add non-gene topic');
+    }
+  };
+
+  // Handle remove non-gene topic
+  const handleRemoveNongeneTopic = async (refPropertyNo, topicName) => {
+    if (!window.confirm(`Are you sure you want to remove the topic '${topicName}'?`)) return;
+
+    try {
+      await litguideCurationApi.removeNongeneTopic(referenceData.reference_no, refPropertyNo);
+      setSuccessMessage(`Non-gene topic '${topicName}' removed`);
+      // Reload non-gene topics
+      const data = await litguideCurationApi.getNongeneTopics(referenceData.reference_no);
+      setNongeneTopics(data);
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to remove non-gene topic');
     }
   };
 
@@ -736,6 +797,79 @@ function LitGuideCurationPage() {
               </p>
             </div>
           )}
+
+          {/* Non-Gene Topics Section */}
+          <div style={styles.nongeneSection}>
+            <h3 style={styles.nongeneHeader}>
+              Literature Topics Linked to this Paper (not associated with features)
+              {nongeneTopicsLoading && <span style={styles.notesLoading}> (loading...)</span>}
+            </h3>
+
+            <div style={styles.nongeneContent}>
+              {/* Public Topics */}
+              <div style={styles.nongeneRow}>
+                <strong style={styles.nongeneLabel}>Public Topics:</strong>
+                <span style={styles.nongeneTopics}>
+                  {nongeneTopics.public_topics.length > 0 ? (
+                    nongeneTopics.public_topics.map((t, idx) => (
+                      <span key={t.ref_property_no} style={styles.nongeneTopicTag}>
+                        {t.topic}
+                        <button
+                          onClick={() => handleRemoveNongeneTopic(t.ref_property_no, t.topic)}
+                          style={styles.removeTopicBtn}
+                          title="Remove topic"
+                        >
+                          x
+                        </button>
+                        {idx < nongeneTopics.public_topics.length - 1 && ' | '}
+                      </span>
+                    ))
+                  ) : (
+                    <span style={styles.nothingYet}>nothing yet</span>
+                  )}
+                </span>
+              </div>
+
+              {/* Internal Topics (Curation Status) */}
+              <div style={styles.nongeneRowInternal}>
+                <strong style={styles.nongeneLabel}>Internal Topics:</strong>
+                <span style={styles.nongeneTopics}>
+                  {nongeneTopics.internal_topics.length > 0 ? (
+                    nongeneTopics.internal_topics.map((t, idx) => (
+                      <span key={t.ref_property_no}>
+                        {t.topic}
+                        {idx < nongeneTopics.internal_topics.length - 1 && ' | '}
+                      </span>
+                    ))
+                  ) : (
+                    <span style={styles.nothingYet}>nothing yet</span>
+                  )}
+                </span>
+              </div>
+
+              {/* Add Non-Gene Topic */}
+              <div style={styles.addNongeneRow}>
+                <span style={styles.nongeneLabel}>Add Topic:</span>
+                <select
+                  value={newNongeneTopic}
+                  onChange={(e) => setNewNongeneTopic(e.target.value)}
+                  style={styles.nongeneSelect}
+                >
+                  <option value="">Select topic...</option>
+                  {topics.map((topic) => (
+                    <option key={topic} value={topic}>{topic}</option>
+                  ))}
+                </select>
+                <button
+                  onClick={handleAddNongeneTopic}
+                  disabled={!newNongeneTopic}
+                  style={styles.addNongeneBtn}
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+          </div>
 
           {/* Features with Topics */}
           <div style={styles.literatureSection}>
@@ -1222,6 +1356,67 @@ const styles = {
     borderBottom: '1px solid #ddd',
     verticalAlign: 'top',
     fontSize: '0.85rem',
+  },
+  // Non-gene topics section styles
+  nongeneSection: {
+    marginBottom: '1.5rem',
+  },
+  nongeneHeader: {
+    backgroundColor: 'navajowhite',
+    padding: '0.5rem',
+    margin: '0 0 0.5rem 0',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+  },
+  nongeneContent: {
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    overflow: 'hidden',
+  },
+  nongeneRow: {
+    padding: '0.5rem',
+    backgroundColor: '#CCFFCC',
+    fontSize: '0.9rem',
+  },
+  nongeneRowInternal: {
+    padding: '0.5rem',
+    backgroundColor: '#CCFFFF',
+    fontSize: '0.9rem',
+  },
+  nongeneLabel: {
+    marginRight: '0.5rem',
+  },
+  nongeneTopics: {
+    display: 'inline',
+  },
+  nongeneTopicTag: {
+    display: 'inline',
+  },
+  nothingYet: {
+    fontStyle: 'italic',
+    color: '#666',
+  },
+  addNongeneRow: {
+    padding: '0.5rem',
+    backgroundColor: '#f5f5f5',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+  },
+  nongeneSelect: {
+    padding: '0.25rem 0.5rem',
+    fontSize: '0.9rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+  },
+  addNongeneBtn: {
+    padding: '0.25rem 0.75rem',
+    backgroundColor: '#5cb85c',
+    color: 'white',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontSize: '0.9rem',
   },
 };
 
