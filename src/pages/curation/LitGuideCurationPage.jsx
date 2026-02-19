@@ -10,14 +10,19 @@
  * Mirrors legacy LitGuideCurationPage.pm functionality.
  */
 import { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import litguideCurationApi from '../../api/litguideCurationApi';
 
 function LitGuideCurationPage() {
   const { featureName } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+
+  // Organism state
+  const [organisms, setOrganisms] = useState([]);
+  const [currentOrganism, setCurrentOrganism] = useState(searchParams.get('organism') || null);
 
   // Search state
   const [featureSearch, setFeatureSearch] = useState('');
@@ -46,20 +51,43 @@ function LitGuideCurationPage() {
   const [newFeature, setNewFeature] = useState('');
   const [newFeatureTopic, setNewFeatureTopic] = useState('');
 
+  // Unlink feature state (for reference view)
+  const [unlinkFeature, setUnlinkFeature] = useState('');
+  const [unlinking, setUnlinking] = useState(false);
+
+  // Notes state (for reference view)
+  const [notes, setNotes] = useState([]);
+  const [notesLoading, setNotesLoading] = useState(false);
+
+  // Non-gene topics state (for reference view)
+  const [nongeneTopics, setNongeneTopics] = useState({ public_topics: [], internal_topics: [] });
+  const [nongeneTopicsLoading, setNongeneTopicsLoading] = useState(false);
+  const [newNongeneTopic, setNewNongeneTopic] = useState('');
+
+  // Help section state
+  const [showHelp, setShowHelp] = useState(false);
+
+  // Bulk delete state
+  const [bulkDeleteMode, setBulkDeleteMode] = useState(false);
+  const [selectedForDelete, setSelectedForDelete] = useState(new Set());
+  const [bulkDeleting, setBulkDeleting] = useState(false);
+
   // Add topic form state
   const [selectedRef, setSelectedRef] = useState(null);
   const [selectedTopic, setSelectedTopic] = useState('');
 
-  // Load available topics and statuses
+  // Load available topics, statuses, and organisms
   useEffect(() => {
     const loadOptions = async () => {
       try {
-        const [topicsData, statusesData] = await Promise.all([
+        const [topicsData, statusesData, organismsData] = await Promise.all([
           litguideCurationApi.getTopics(),
           litguideCurationApi.getStatuses(),
+          litguideCurationApi.getOrganisms(),
         ]);
         setTopics(topicsData.topics);
         setStatuses(statusesData.statuses);
+        setOrganisms(organismsData.organisms || []);
       } catch (err) {
         console.error('Failed to load options:', err);
       }
@@ -92,7 +120,7 @@ function LitGuideCurationPage() {
   }, []);
 
   // Load reference literature (reference-centric view)
-  const loadReferenceLiterature = useCallback(async (referenceNo) => {
+  const loadReferenceLiterature = useCallback(async (referenceNo, organism = null) => {
     if (!referenceNo) return;
 
     setLoading(true);
@@ -100,9 +128,13 @@ function LitGuideCurationPage() {
     setFeatureData(null);
 
     try {
-      const data = await litguideCurationApi.getReferenceLiterature(referenceNo);
+      const data = await litguideCurationApi.getReferenceLiterature(referenceNo, organism);
       setReferenceData(data);
       setViewMode('reference');
+      // Update current organism from response if available
+      if (data.current_organism) {
+        setCurrentOrganism(data.current_organism.organism_abbrev);
+      }
     } catch (err) {
       if (err.response?.status === 404) {
         setError(`Reference '${referenceNo}' not found`);
@@ -120,12 +152,72 @@ function LitGuideCurationPage() {
     if (featureName) {
       // Check if it's a pure numeric value (reference_no)
       if (/^\d+$/.test(featureName)) {
-        loadReferenceLiterature(featureName);
+        const orgParam = searchParams.get('organism');
+        loadReferenceLiterature(featureName, orgParam);
       } else {
         loadFeatureLiterature(featureName);
       }
     }
-  }, [featureName, loadFeatureLiterature, loadReferenceLiterature]);
+  }, [featureName, searchParams, loadFeatureLiterature, loadReferenceLiterature]);
+
+  // Handle organism change
+  const handleOrganismChange = (newOrganism) => {
+    setCurrentOrganism(newOrganism);
+    if (newOrganism) {
+      setSearchParams({ organism: newOrganism });
+    } else {
+      setSearchParams({});
+    }
+    if (referenceData?.reference_no) {
+      loadReferenceLiterature(referenceData.reference_no, newOrganism);
+    }
+  };
+
+  // Load notes when reference data changes
+  useEffect(() => {
+    const loadNotes = async () => {
+      if (!referenceData?.reference_no) {
+        setNotes([]);
+        return;
+      }
+
+      setNotesLoading(true);
+      try {
+        const data = await litguideCurationApi.getReferenceNotes(referenceData.reference_no);
+        setNotes(data.notes || []);
+      } catch (err) {
+        console.error('Failed to load notes:', err);
+        setNotes([]);
+      } finally {
+        setNotesLoading(false);
+      }
+    };
+
+    loadNotes();
+  }, [referenceData?.reference_no]);
+
+  // Load non-gene topics when reference data changes
+  useEffect(() => {
+    const loadNongeneTopics = async () => {
+      if (!referenceData?.reference_no) {
+        setNongeneTopics({ public_topics: [], internal_topics: [] });
+        return;
+      }
+
+      setNongeneTopicsLoading(true);
+      try {
+        const data = await litguideCurationApi.getNongeneTopics(referenceData.reference_no);
+        setNongeneTopics(data);
+      } catch (err) {
+        console.error('Failed to load non-gene topics:', err);
+        setNongeneTopics({ public_topics: [], internal_topics: [] });
+      } finally {
+        setNongeneTopicsLoading(false);
+      }
+    };
+
+    loadNongeneTopics();
+  }, [referenceData?.reference_no]);
 
   // Handle feature search
   const handleFeatureSearch = (e) => {
@@ -226,7 +318,7 @@ function LitGuideCurationPage() {
       if (viewMode === 'feature' && featureData) {
         loadFeatureLiterature(featureData.feature_no);
       } else if (viewMode === 'reference' && referenceData) {
-        loadReferenceLiterature(referenceData.reference_no);
+        loadReferenceLiterature(referenceData.reference_no, currentOrganism);
       }
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
@@ -247,7 +339,7 @@ function LitGuideCurationPage() {
       setSuccessMessage(`Feature '${newFeature}' added with topic '${newFeatureTopic}'`);
       setNewFeature('');
       setNewFeatureTopic('');
-      loadReferenceLiterature(referenceData.reference_no);
+      loadReferenceLiterature(referenceData.reference_no, currentOrganism);
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
       setError(err.response?.data?.detail || 'Failed to add feature');
@@ -262,11 +354,169 @@ function LitGuideCurationPage() {
       await litguideCurationApi.removeTopicAssociation(refpropFeatNo);
       setSuccessMessage('Topic association removed');
       if (referenceData) {
-        loadReferenceLiterature(referenceData.reference_no);
+        loadReferenceLiterature(referenceData.reference_no, currentOrganism);
       }
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
       setError(err.response?.data?.detail || 'Failed to remove topic');
+    }
+  };
+
+  // Handle unlink feature from reference
+  const handleUnlinkFeature = async () => {
+    if (!referenceData || !unlinkFeature.trim()) return;
+
+    // Parse multiple features (separated by | or space)
+    const featureNames = unlinkFeature
+      .split(/[|\s]+/)
+      .map((f) => f.trim())
+      .filter((f) => f);
+
+    if (featureNames.length === 0) return;
+
+    const confirmMsg =
+      featureNames.length === 1
+        ? `Are you sure you want to unlink '${featureNames[0]}' from this paper?`
+        : `Are you sure you want to unlink ${featureNames.length} features from this paper?\n\nFeatures: ${featureNames.join(', ')}`;
+
+    if (!window.confirm(confirmMsg)) return;
+
+    setUnlinking(true);
+    setError(null);
+
+    const results = { success: [], failed: [] };
+
+    for (const featureName of featureNames) {
+      try {
+        const result = await litguideCurationApi.unlinkFeatureFromReference(
+          referenceData.reference_no,
+          featureName
+        );
+        results.success.push(result.feature_name);
+      } catch (err) {
+        results.failed.push({
+          name: featureName,
+          error: err.response?.data?.detail || 'Unknown error',
+        });
+      }
+    }
+
+    setUnlinking(false);
+    setUnlinkFeature('');
+
+    if (results.success.length > 0) {
+      setSuccessMessage(
+        `Unlinked ${results.success.length} feature(s): ${results.success.join(', ')}`
+      );
+      loadReferenceLiterature(referenceData.reference_no, currentOrganism);
+      setTimeout(() => setSuccessMessage(null), 5000);
+    }
+
+    if (results.failed.length > 0) {
+      setError(
+        `Failed to unlink: ${results.failed.map((f) => `${f.name} (${f.error})`).join('; ')}`
+      );
+    }
+  };
+
+  // Handle toggle selection for bulk delete
+  const handleToggleDeleteSelection = (refpropFeatNo) => {
+    setSelectedForDelete((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(refpropFeatNo)) {
+        newSet.delete(refpropFeatNo);
+      } else {
+        newSet.add(refpropFeatNo);
+      }
+      return newSet;
+    });
+  };
+
+  // Handle select all for bulk delete
+  const handleSelectAllForDelete = () => {
+    if (!referenceData?.features) return;
+    const allIds = new Set();
+    referenceData.features.forEach((feat) => {
+      feat.topics.forEach((topic) => {
+        allIds.add(topic.refprop_feat_no);
+      });
+    });
+    setSelectedForDelete(allIds);
+  };
+
+  // Handle clear selection
+  const handleClearSelection = () => {
+    setSelectedForDelete(new Set());
+  };
+
+  // Handle bulk delete
+  const handleBulkDelete = async () => {
+    if (selectedForDelete.size === 0) return;
+
+    const confirmMsg = `Are you sure you want to delete ${selectedForDelete.size} topic association(s)?`;
+    if (!window.confirm(confirmMsg)) return;
+
+    setBulkDeleting(true);
+    setError(null);
+
+    let successCount = 0;
+    let failCount = 0;
+
+    for (const refpropFeatNo of selectedForDelete) {
+      try {
+        await litguideCurationApi.removeTopicAssociation(refpropFeatNo);
+        successCount++;
+      } catch (err) {
+        failCount++;
+        console.error(`Failed to delete ${refpropFeatNo}:`, err);
+      }
+    }
+
+    setBulkDeleting(false);
+    setSelectedForDelete(new Set());
+    setBulkDeleteMode(false);
+
+    if (successCount > 0) {
+      setSuccessMessage(`Deleted ${successCount} topic association(s)`);
+      loadReferenceLiterature(referenceData.reference_no, currentOrganism);
+      setTimeout(() => setSuccessMessage(null), 3000);
+    }
+
+    if (failCount > 0) {
+      setError(`Failed to delete ${failCount} topic association(s)`);
+    }
+  };
+
+  // Handle add non-gene topic
+  const handleAddNongeneTopic = async () => {
+    if (!referenceData || !newNongeneTopic) return;
+
+    try {
+      await litguideCurationApi.addNongeneTopic(referenceData.reference_no, newNongeneTopic);
+      setSuccessMessage(`Non-gene topic '${newNongeneTopic}' added`);
+      setNewNongeneTopic('');
+      // Reload non-gene topics
+      const data = await litguideCurationApi.getNongeneTopics(referenceData.reference_no);
+      setNongeneTopics(data);
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to add non-gene topic');
+    }
+  };
+
+  // Handle remove non-gene topic
+  const handleRemoveNongeneTopic = async (refPropertyNo, topicName) => {
+    if (!window.confirm(`Are you sure you want to remove the topic '${topicName}'?`)) return;
+
+    try {
+      await litguideCurationApi.removeNongeneTopic(referenceData.reference_no, refPropertyNo);
+      setSuccessMessage(`Non-gene topic '${topicName}' removed`);
+      // Reload non-gene topics
+      const data = await litguideCurationApi.getNongeneTopics(referenceData.reference_no);
+      setNongeneTopics(data);
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to remove non-gene topic');
     }
   };
 
@@ -287,6 +537,55 @@ function LitGuideCurationPage() {
 
       {successMessage && <div style={styles.success}>{successMessage}</div>}
       {error && <div style={styles.error}>{error}</div>}
+
+      {/* Help Section */}
+      <div style={styles.helpSection}>
+        <button
+          onClick={() => setShowHelp(!showHelp)}
+          style={styles.helpToggle}
+        >
+          {showHelp ? '▼ Hide Help' : '► Show Help'}
+        </button>
+        {showHelp && (
+          <div style={styles.helpContent}>
+            <h4 style={styles.helpTitle}>Literature Guide Curation Help</h4>
+            <ul style={styles.helpList}>
+              <li>
+                <strong>Feature Search:</strong> Enter a gene name or ORF name to view literature
+                associated with that feature.
+              </li>
+              <li>
+                <strong>PMID Search:</strong> Enter a PubMed ID to view and curate that reference directly.
+              </li>
+              <li>
+                <strong>Adding Topics:</strong> Use the dropdown menus to select literature topics.
+                Click "Add" to associate a topic with a feature-reference pair.
+              </li>
+              <li>
+                <strong>Removing Topics:</strong> Click the "x" button next to any topic to remove
+                the association.
+              </li>
+              <li>
+                <strong>Non-Gene Topics:</strong> Topics can be associated with a reference without
+                linking to a specific feature. Use the "Add Topic" dropdown in the non-gene topics section.
+              </li>
+              <li>
+                <strong>Unlinking Features:</strong> To unlink a feature from a paper, enter the
+                feature name(s) in the unlink box. Separate multiple features with spaces or | (pipe).
+              </li>
+              <li>
+                <strong>Multi-Species:</strong> Use the organism dropdown to filter features by species.
+                Features from other species are shown in a separate read-only section - click the
+                species name to switch context.
+              </li>
+              <li>
+                <strong>Curation Status:</strong> Set the curation status using the dropdown to track
+                progress (e.g., "Not Yet Curated", "High Priority", "Done: Curated").
+              </li>
+            </ul>
+          </div>
+        )}
+      </div>
 
       {/* Search Section */}
       <div style={styles.searchSection}>
@@ -560,6 +859,22 @@ function LitGuideCurationPage() {
               <span style={styles.refYear}> ({referenceData.year || 'N/A'})</span>
             </h2>
             <div style={styles.headerActions}>
+              {/* Organism Selector */}
+              <div style={styles.organismSelector}>
+                <label style={styles.organismLabel}>Organism:</label>
+                <select
+                  value={currentOrganism || ''}
+                  onChange={(e) => handleOrganismChange(e.target.value || null)}
+                  style={styles.organismSelect}
+                >
+                  <option value="">All Species</option>
+                  {organisms.map((org) => (
+                    <option key={org.organism_abbrev} value={org.organism_abbrev}>
+                      {org.organism_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <Link to={`/reference/${referenceData.reference_no}`} style={styles.headerLink}>
                 View Reference Page
               </Link>
@@ -567,6 +882,21 @@ function LitGuideCurationPage() {
                 Reference Curation
               </Link>
             </div>
+          </div>
+
+          {/* In-Page Navigation */}
+          <div style={styles.inPageNav}>
+            <a href="#AddFeature" style={styles.navLink}>Add Feature</a>
+            {' | '}
+            <a href="#NongeneTopics" style={styles.navLink}>Non-Gene Topics</a>
+            {' | '}
+            <a href="#Features" style={styles.navLink}>Features</a>
+            {' | '}
+            <a href="#Notes" style={styles.navLink}>Notes</a>
+            {' | '}
+            <Link to={`/curation/phenotype?query=`} style={styles.navLink}>Curate Phenotype</Link>
+            {' | '}
+            <Link to={`/curation/go`} style={styles.navLink}>Curate GO</Link>
           </div>
 
           {/* Reference Details */}
@@ -593,7 +923,7 @@ function LitGuideCurationPage() {
           </div>
 
           {/* Add Feature Form */}
-          <div style={styles.addSection}>
+          <div id="AddFeature" style={styles.addSection}>
             <h3 style={styles.sectionHeader}>Add Feature with Topic</h3>
             <div style={styles.addFeatureRow}>
               <input
@@ -623,11 +953,165 @@ function LitGuideCurationPage() {
             </div>
           </div>
 
-          {/* Features with Topics */}
-          <div style={styles.literatureSection}>
-            <h3 style={styles.sectionHeader}>
-              Associated Features ({referenceData.features?.length || 0})
+          {/* Unlink Feature Section */}
+          {referenceData.pubmed && (
+            <div style={styles.unlinkSection}>
+              <h3 style={styles.unlinkHeader}>Unlink Feature from Paper</h3>
+              <div style={styles.unlinkRow}>
+                <input
+                  type="text"
+                  value={unlinkFeature}
+                  onChange={(e) => setUnlinkFeature(e.target.value)}
+                  placeholder="Feature name(s) to unlink..."
+                  style={styles.unlinkInput}
+                />
+                <button
+                  onClick={handleUnlinkFeature}
+                  disabled={!unlinkFeature.trim() || unlinking}
+                  style={styles.unlinkButton}
+                >
+                  {unlinking ? 'Unlinking...' : 'Unlink'}
+                </button>
+              </div>
+              <p style={styles.unlinkHelp}>
+                Separate multiple features with | or space. This will remove the link between the paper and feature(s), including any topic associations.
+              </p>
+            </div>
+          )}
+
+          {/* Non-Gene Topics Section */}
+          <div id="NongeneTopics" style={styles.nongeneSection}>
+            <h3 style={styles.nongeneHeader}>
+              Literature Topics Linked to this Paper (not associated with features)
+              {nongeneTopicsLoading && <span style={styles.notesLoading}> (loading...)</span>}
             </h3>
+
+            <div style={styles.nongeneContent}>
+              {/* Public Topics */}
+              <div style={styles.nongeneRow}>
+                <strong style={styles.nongeneLabel}>Public Topics:</strong>
+                <span style={styles.nongeneTopics}>
+                  {nongeneTopics.public_topics.length > 0 ? (
+                    nongeneTopics.public_topics.map((t, idx) => (
+                      <span key={t.ref_property_no} style={styles.nongeneTopicTag}>
+                        {t.topic}
+                        <button
+                          onClick={() => handleRemoveNongeneTopic(t.ref_property_no, t.topic)}
+                          style={styles.removeTopicBtn}
+                          title="Remove topic"
+                        >
+                          x
+                        </button>
+                        {idx < nongeneTopics.public_topics.length - 1 && ' | '}
+                      </span>
+                    ))
+                  ) : (
+                    <span style={styles.nothingYet}>nothing yet</span>
+                  )}
+                </span>
+              </div>
+
+              {/* Internal Topics (Curation Status) */}
+              <div style={styles.nongeneRowInternal}>
+                <strong style={styles.nongeneLabel}>Internal Topics:</strong>
+                <span style={styles.nongeneTopics}>
+                  {nongeneTopics.internal_topics.length > 0 ? (
+                    nongeneTopics.internal_topics.map((t, idx) => (
+                      <span key={t.ref_property_no}>
+                        {t.topic}
+                        {idx < nongeneTopics.internal_topics.length - 1 && ' | '}
+                      </span>
+                    ))
+                  ) : (
+                    <span style={styles.nothingYet}>nothing yet</span>
+                  )}
+                </span>
+              </div>
+
+              {/* Add Non-Gene Topic */}
+              <div style={styles.addNongeneRow}>
+                <span style={styles.nongeneLabel}>Add Topic:</span>
+                <select
+                  value={newNongeneTopic}
+                  onChange={(e) => setNewNongeneTopic(e.target.value)}
+                  style={styles.nongeneSelect}
+                >
+                  <option value="">Select topic...</option>
+                  {topics.map((topic) => (
+                    <option key={topic} value={topic}>{topic}</option>
+                  ))}
+                </select>
+                <button
+                  onClick={handleAddNongeneTopic}
+                  disabled={!newNongeneTopic}
+                  style={styles.addNongeneBtn}
+                >
+                  Add
+                </button>
+              </div>
+
+              {/* Edit/Delete Reference Data Link */}
+              <div style={styles.editRefRow}>
+                Use the{' '}
+                <Link
+                  to={`/curation/reference/${referenceData.reference_no}`}
+                  style={styles.editRefLink}
+                >
+                  Edit/Delete Reference Data
+                </Link>
+                {' '}page to delete specific database records or the entire reference and all associations.
+              </div>
+            </div>
+          </div>
+
+          {/* Features with Topics */}
+          <div id="Features" style={styles.literatureSection}>
+            <div style={styles.sectionHeaderRow}>
+              <h3 style={styles.sectionHeaderInline}>
+                {referenceData.current_organism
+                  ? `Features from ${referenceData.current_organism.organism_name}`
+                  : 'Associated Features'
+                }
+                {' '}({referenceData.features?.length || 0})
+              </h3>
+              {referenceData.features?.length > 0 && (
+                <div style={styles.bulkDeleteControls}>
+                  {bulkDeleteMode ? (
+                    <>
+                      <button onClick={handleSelectAllForDelete} style={styles.bulkBtn}>
+                        Select All
+                      </button>
+                      <button onClick={handleClearSelection} style={styles.bulkBtn}>
+                        Clear
+                      </button>
+                      <button
+                        onClick={handleBulkDelete}
+                        disabled={selectedForDelete.size === 0 || bulkDeleting}
+                        style={styles.bulkDeleteBtn}
+                      >
+                        {bulkDeleting ? 'Deleting...' : `Delete Selected (${selectedForDelete.size})`}
+                      </button>
+                      <button
+                        onClick={() => {
+                          setBulkDeleteMode(false);
+                          setSelectedForDelete(new Set());
+                        }}
+                        style={styles.bulkCancelBtn}
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={() => setBulkDeleteMode(true)}
+                      style={styles.bulkModeBtn}
+                    >
+                      Bulk Delete Mode
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
 
             {referenceData.features?.length > 0 ? (
               <table style={styles.table}>
@@ -653,14 +1137,24 @@ function LitGuideCurationPage() {
                       <td style={styles.td}>
                         {feat.topics.map((topic) => (
                           <div key={topic.refprop_feat_no} style={styles.topicTag}>
+                            {bulkDeleteMode && (
+                              <input
+                                type="checkbox"
+                                checked={selectedForDelete.has(topic.refprop_feat_no)}
+                                onChange={() => handleToggleDeleteSelection(topic.refprop_feat_no)}
+                                style={styles.bulkCheckbox}
+                              />
+                            )}
                             {topic.topic}
-                            <button
-                              onClick={() => handleRemoveTopicForReference(topic.refprop_feat_no)}
-                              style={styles.removeTopicBtn}
-                              title="Remove topic"
-                            >
-                              x
-                            </button>
+                            {!bulkDeleteMode && (
+                              <button
+                                onClick={() => handleRemoveTopicForReference(topic.refprop_feat_no)}
+                                style={styles.removeTopicBtn}
+                                title="Remove topic"
+                              >
+                                x
+                              </button>
+                            )}
                           </div>
                         ))}
                       </td>
@@ -685,6 +1179,85 @@ function LitGuideCurationPage() {
               </table>
             ) : (
               <p style={styles.noItems}>No features associated with this reference yet.</p>
+            )}
+          </div>
+
+          {/* Other Species Section (only shown when organism is selected) */}
+          {currentOrganism && referenceData.other_organisms && Object.keys(referenceData.other_organisms).length > 0 && (
+            <div style={styles.otherSpeciesSection}>
+              <h3 style={styles.otherSpeciesHeader}>
+                Features from Other Species
+              </h3>
+
+              <table style={styles.table}>
+                <thead>
+                  <tr>
+                    <th style={styles.th}>Species</th>
+                    <th style={styles.th}>Features</th>
+                    <th style={styles.th}>Topics</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.values(referenceData.other_organisms).map((orgData) => (
+                    <tr key={orgData.organism_abbrev}>
+                      <td style={styles.td}>
+                        <button
+                          onClick={() => handleOrganismChange(orgData.organism_abbrev)}
+                          style={styles.speciesLink}
+                          title={`Switch to ${orgData.organism_name}`}
+                        >
+                          <em>{orgData.organism_name}</em>
+                        </button>
+                      </td>
+                      <td style={styles.td}>
+                        {orgData.features.map((f, idx) => (
+                          <span key={f.feature_no}>
+                            {f.gene_name || f.feature_name}
+                            {idx < orgData.features.length - 1 && ', '}
+                          </span>
+                        ))}
+                      </td>
+                      <td style={styles.td}>
+                        {/* Collect unique topics from all features */}
+                        {[...new Set(orgData.features.flatMap(f => f.topics.map(t => t.topic)))].join(', ')}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {/* Associated Notes Section */}
+          <div id="Notes" style={styles.notesSection}>
+            <h3 style={styles.notesHeader}>
+              Associated Notes
+              {notesLoading && <span style={styles.notesLoading}> (loading...)</span>}
+            </h3>
+
+            {notes.length > 0 ? (
+              <table style={styles.table}>
+                <thead>
+                  <tr>
+                    <th style={{ ...styles.th, width: '15%' }}>Feature</th>
+                    <th style={{ ...styles.th, width: '20%' }}>Topic</th>
+                    <th style={{ ...styles.th, width: '65%' }}>Note</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {notes.map((note, idx) => (
+                    <tr key={idx}>
+                      <td style={styles.td}>{note.feature_name || '-'}</td>
+                      <td style={styles.tdTopic}>{note.topic}</td>
+                      <td style={styles.td}>{note.note}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p style={styles.noItems}>
+                {notesLoading ? 'Loading notes...' : 'No notes found.'}
+              </p>
             )}
           </div>
         </div>
@@ -1011,6 +1584,285 @@ const styles = {
     border: '1px solid #ccc',
     borderRadius: '4px',
     minWidth: '200px',
+  },
+  // Unlink section styles
+  unlinkSection: {
+    padding: '1rem',
+    backgroundColor: '#fff8e6',
+    border: '1px solid #f0d080',
+    borderRadius: '4px',
+    marginBottom: '1.5rem',
+  },
+  unlinkHeader: {
+    backgroundColor: '#f0d080',
+    padding: '0.5rem',
+    margin: '0 0 1rem 0',
+    fontSize: '1rem',
+    color: '#664400',
+  },
+  unlinkRow: {
+    display: 'flex',
+    gap: '0.5rem',
+    alignItems: 'center',
+  },
+  unlinkInput: {
+    flex: 1,
+    padding: '0.5rem',
+    fontSize: '1rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    maxWidth: '400px',
+  },
+  unlinkButton: {
+    padding: '0.5rem 1rem',
+    backgroundColor: '#d9534f',
+    color: 'white',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  },
+  unlinkHelp: {
+    marginTop: '0.5rem',
+    fontSize: '0.85rem',
+    color: '#666',
+    fontStyle: 'italic',
+  },
+  // Notes section styles
+  notesSection: {
+    marginTop: '1.5rem',
+  },
+  notesHeader: {
+    backgroundColor: 'navajowhite',
+    padding: '0.5rem',
+    margin: '0 0 1rem 0',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+  },
+  notesLoading: {
+    fontWeight: 'normal',
+    fontStyle: 'italic',
+    color: '#666',
+  },
+  tdTopic: {
+    padding: '0.5rem',
+    borderBottom: '1px solid #ddd',
+    verticalAlign: 'top',
+    fontSize: '0.85rem',
+  },
+  // Non-gene topics section styles
+  nongeneSection: {
+    marginBottom: '1.5rem',
+  },
+  nongeneHeader: {
+    backgroundColor: 'navajowhite',
+    padding: '0.5rem',
+    margin: '0 0 0.5rem 0',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+  },
+  nongeneContent: {
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    overflow: 'hidden',
+  },
+  nongeneRow: {
+    padding: '0.5rem',
+    backgroundColor: '#CCFFCC',
+    fontSize: '0.9rem',
+  },
+  nongeneRowInternal: {
+    padding: '0.5rem',
+    backgroundColor: '#CCFFFF',
+    fontSize: '0.9rem',
+  },
+  nongeneLabel: {
+    marginRight: '0.5rem',
+  },
+  nongeneTopics: {
+    display: 'inline',
+  },
+  nongeneTopicTag: {
+    display: 'inline',
+  },
+  nothingYet: {
+    fontStyle: 'italic',
+    color: '#666',
+  },
+  addNongeneRow: {
+    padding: '0.5rem',
+    backgroundColor: '#f5f5f5',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+  },
+  nongeneSelect: {
+    padding: '0.25rem 0.5rem',
+    fontSize: '0.9rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+  },
+  addNongeneBtn: {
+    padding: '0.25rem 0.75rem',
+    backgroundColor: '#5cb85c',
+    color: 'white',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontSize: '0.9rem',
+  },
+  // Organism selector styles
+  organismSelector: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    marginRight: '1rem',
+  },
+  organismLabel: {
+    fontSize: '0.9rem',
+    fontWeight: 'bold',
+  },
+  organismSelect: {
+    padding: '0.25rem 0.5rem',
+    fontSize: '0.9rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    minWidth: '180px',
+  },
+  // Other species section styles
+  otherSpeciesSection: {
+    marginBottom: '1.5rem',
+    padding: '1rem',
+    backgroundColor: '#f5f5f5',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+  },
+  otherSpeciesHeader: {
+    backgroundColor: '#CCCCFF',
+    padding: '0.5rem',
+    margin: '0 0 1rem 0',
+    fontSize: '1rem',
+  },
+  speciesLink: {
+    background: 'none',
+    border: 'none',
+    color: '#337ab7',
+    cursor: 'pointer',
+    padding: 0,
+    fontSize: '0.9rem',
+    textDecoration: 'underline',
+  },
+  // Edit/Delete reference link styles
+  editRefRow: {
+    padding: '0.5rem',
+    backgroundColor: '#f0f0f0',
+    fontSize: '0.85rem',
+    color: '#666',
+    borderTop: '1px solid #ddd',
+  },
+  editRefLink: {
+    color: '#337ab7',
+    textDecoration: 'none',
+    fontWeight: 'bold',
+  },
+  // Help section styles
+  helpSection: {
+    marginBottom: '1rem',
+  },
+  helpToggle: {
+    background: 'none',
+    border: 'none',
+    color: '#337ab7',
+    cursor: 'pointer',
+    fontSize: '0.9rem',
+    padding: '0.25rem 0',
+  },
+  helpContent: {
+    padding: '1rem',
+    backgroundColor: '#fffef0',
+    border: '1px solid #e0d890',
+    borderRadius: '4px',
+    marginTop: '0.5rem',
+  },
+  helpTitle: {
+    margin: '0 0 0.75rem 0',
+    color: '#665500',
+  },
+  helpList: {
+    margin: 0,
+    paddingLeft: '1.5rem',
+    lineHeight: '1.6',
+    fontSize: '0.9rem',
+  },
+  // In-page navigation styles
+  inPageNav: {
+    padding: '0.5rem',
+    backgroundColor: '#f0f0f0',
+    borderRadius: '4px',
+    marginBottom: '1rem',
+    fontSize: '0.9rem',
+    textAlign: 'center',
+  },
+  navLink: {
+    color: '#337ab7',
+    textDecoration: 'none',
+  },
+  // Bulk delete styles
+  sectionHeaderRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#CCCCFF',
+    padding: '0.5rem',
+    marginBottom: '0.5rem',
+  },
+  sectionHeaderInline: {
+    margin: 0,
+    fontSize: '1rem',
+  },
+  bulkDeleteControls: {
+    display: 'flex',
+    gap: '0.5rem',
+    alignItems: 'center',
+  },
+  bulkModeBtn: {
+    padding: '0.25rem 0.5rem',
+    backgroundColor: '#f0ad4e',
+    color: 'white',
+    border: 'none',
+    borderRadius: '3px',
+    cursor: 'pointer',
+    fontSize: '0.8rem',
+  },
+  bulkBtn: {
+    padding: '0.25rem 0.5rem',
+    backgroundColor: '#5bc0de',
+    color: 'white',
+    border: 'none',
+    borderRadius: '3px',
+    cursor: 'pointer',
+    fontSize: '0.8rem',
+  },
+  bulkDeleteBtn: {
+    padding: '0.25rem 0.5rem',
+    backgroundColor: '#d9534f',
+    color: 'white',
+    border: 'none',
+    borderRadius: '3px',
+    cursor: 'pointer',
+    fontSize: '0.8rem',
+  },
+  bulkCancelBtn: {
+    padding: '0.25rem 0.5rem',
+    backgroundColor: '#777',
+    color: 'white',
+    border: 'none',
+    borderRadius: '3px',
+    cursor: 'pointer',
+    fontSize: '0.8rem',
+  },
+  bulkCheckbox: {
+    marginRight: '0.25rem',
+    cursor: 'pointer',
   },
 };
 

@@ -5,6 +5,10 @@
  */
 import api from './config';
 
+// Cache for CV term data to avoid redundant API calls
+const cvTreeCache = new Map();
+const cvTermsCache = new Map();
+
 export const phenotypeCurationApi = {
   /**
    * Get all phenotype annotations for a feature.
@@ -53,24 +57,34 @@ export const phenotypeCurationApi = {
   },
 
   /**
-   * Get CV terms for dropdowns.
+   * Get CV terms for dropdowns (cached).
    *
    * @param {string} cvName - CV name (experiment_type, mutant_type, qualifier)
    * @returns {Promise<{cv_name: string, terms: string[]}>}
    */
   getCVTerms: async (cvName) => {
+    // Return cached data if available
+    if (cvTermsCache.has(cvName)) {
+      return cvTermsCache.get(cvName);
+    }
     const response = await api.get(`/api/curation/phenotype/cv/${encodeURIComponent(cvName)}`);
+    cvTermsCache.set(cvName, response.data);
     return response.data;
   },
 
   /**
-   * Get hierarchical CV terms as a tree structure.
+   * Get hierarchical CV terms as a tree structure (cached).
    *
    * @param {string} cvName - CV name (experiment_type, mutant_type, qualifier, observable)
    * @returns {Promise<{cv_name: string, tree: Array<{term: string, depth: number, children: Array}>}>}
    */
   getCVTermTree: async (cvName) => {
+    // Return cached data if available
+    if (cvTreeCache.has(cvName)) {
+      return cvTreeCache.get(cvName);
+    }
     const response = await api.get(`/api/curation/phenotype/cv-tree/${encodeURIComponent(cvName)}`);
+    cvTreeCache.set(cvName, response.data);
     return response.data;
   },
 

@@ -94,13 +94,28 @@ export const litguideCurationApi = {
   },
 
   /**
+   * Get available organisms that have features in the database.
+   *
+   * @returns {Promise<{organisms: Array}>}
+   */
+  getOrganisms: async () => {
+    const response = await api.get('/api/curation/litguide/organisms');
+    return response.data;
+  },
+
+  /**
    * Get reference details with all associated features and topics.
    *
    * @param {number} referenceNo - Reference number
+   * @param {string} [organism] - Optional organism abbreviation to filter features
    * @returns {Promise<Object>} - Reference with features and topics
    */
-  getReferenceLiterature: async (referenceNo) => {
-    const response = await api.get(`/api/curation/litguide/reference/${referenceNo}`);
+  getReferenceLiterature: async (referenceNo, organism = null) => {
+    const params = {};
+    if (organism) {
+      params.organism = organism;
+    }
+    const response = await api.get(`/api/curation/litguide/reference/${referenceNo}`, { params });
     return response.data;
   },
 
@@ -117,6 +132,77 @@ export const litguideCurationApi = {
       feature_identifier: featureIdentifier,
       topic,
     });
+    return response.data;
+  },
+
+  /**
+   * Unlink a feature from a reference.
+   *
+   * Removes the link between the feature and reference, as well as
+   * any topic associations for this feature-reference pair.
+   *
+   * @param {number} referenceNo - Reference number
+   * @param {string} featureIdentifier - Feature name, gene name, or feature_no
+   * @returns {Promise<Object>}
+   */
+  unlinkFeatureFromReference: async (referenceNo, featureIdentifier) => {
+    const response = await api.delete(`/api/curation/litguide/reference/${referenceNo}/feature`, {
+      data: { feature_identifier: featureIdentifier },
+    });
+    return response.data;
+  },
+
+  /**
+   * Get curation notes associated with a reference.
+   *
+   * Returns notes linked to features (via topics) and non-gene topic notes.
+   *
+   * @param {number} referenceNo - Reference number
+   * @returns {Promise<{reference_no: number, notes: Array}>}
+   */
+  getReferenceNotes: async (referenceNo) => {
+    const response = await api.get(`/api/curation/litguide/reference/${referenceNo}/notes`);
+    return response.data;
+  },
+
+  /**
+   * Get non-gene topics for a reference.
+   *
+   * Topics linked to reference but NOT associated with any feature.
+   *
+   * @param {number} referenceNo - Reference number
+   * @returns {Promise<{reference_no: number, public_topics: Array, internal_topics: Array}>}
+   */
+  getNongeneTopics: async (referenceNo) => {
+    const response = await api.get(`/api/curation/litguide/reference/${referenceNo}/nongene-topics`);
+    return response.data;
+  },
+
+  /**
+   * Add a non-gene topic to a reference.
+   *
+   * @param {number} referenceNo - Reference number
+   * @param {string} topic - Literature topic
+   * @returns {Promise<{ref_property_no: number, message: string}>}
+   */
+  addNongeneTopic: async (referenceNo, topic) => {
+    const response = await api.post(`/api/curation/litguide/reference/${referenceNo}/nongene-topic`, {
+      topic,
+    });
+    return response.data;
+  },
+
+  /**
+   * Remove a non-gene topic from a reference.
+   *
+   * @param {number} referenceNo - Reference number
+   * @param {number} refPropertyNo - Reference property number
+   * @returns {Promise<{success: boolean, message: string}>}
+   */
+  removeNongeneTopic: async (referenceNo, refPropertyNo) => {
+    const response = await api.delete(
+      `/api/curation/litguide/reference/${referenceNo}/nongene-topic/${refPropertyNo}`
+    );
     return response.data;
   },
 };

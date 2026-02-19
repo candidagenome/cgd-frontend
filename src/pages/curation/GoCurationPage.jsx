@@ -188,18 +188,6 @@ function GoCurationPage() {
     return acc;
   }, {}) || {};
 
-  // Handle mark as reviewed
-  const handleMarkReviewed = async (annotationNo) => {
-    try {
-      await goCurationApi.markAsReviewed(annotationNo);
-      setSuccessMessage('Annotation marked as reviewed');
-      loadAnnotations();
-      setTimeout(() => setSuccessMessage(null), 3000);
-    } catch (err) {
-      setError(`Failed to mark annotation as reviewed: ${parseApiError(err)}`);
-    }
-  };
-
   // Handle delete annotation
   const handleDelete = async (annotationNo) => {
     if (!window.confirm('Are you sure you want to delete this annotation?')) {
@@ -869,33 +857,13 @@ function GoCurationPage() {
                         {ann.date_last_reviewed?.split('T')[0] || '-'}
                       </td>
                       <td style={styles.td}>
-                        <button
-                          type="button"
-                          onClick={() => handleMarkReviewed(ann.go_annotation_no)}
-                          style={styles.actionButton}
-                          title="Mark as reviewed (update date)"
-                        >
-                          Review
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleDelete(ann.go_annotation_no)}
-                          style={styles.deleteButton}
-                          title="Delete annotation"
-                        >
-                          Delete
-                        </button>
-                        {/* Show "update date" option for "unknown" terms like Perl version */}
-                        {ann.go_term?.toLowerCase().includes('unknown') && (
-                          <button
-                            type="button"
-                            onClick={() => handleMarkReviewed(ann.go_annotation_no)}
-                            style={styles.updateDateButton}
-                            title="Update date_created for unknown term"
-                          >
-                            Update Date
-                          </button>
-                        )}
+                        <label style={styles.deleteLabel}>
+                          <input
+                            type="checkbox"
+                            onChange={() => handleDelete(ann.go_annotation_no)}
+                          />
+                          {' '}delete
+                        </label>
                       </td>
                     </tr>
                   ))}
@@ -1101,35 +1069,9 @@ const styles = {
   noSupport: {
     color: '#999',
   },
-  actionButton: {
-    padding: '0.25rem 0.5rem',
-    backgroundColor: '#5cb85c',
-    color: 'white',
-    border: 'none',
-    borderRadius: '3px',
-    cursor: 'pointer',
-    marginRight: '0.25rem',
+  deleteLabel: {
     fontSize: '0.85rem',
-  },
-  deleteButton: {
-    padding: '0.25rem 0.5rem',
-    backgroundColor: '#d9534f',
-    color: 'white',
-    border: 'none',
-    borderRadius: '3px',
     cursor: 'pointer',
-    fontSize: '0.85rem',
-  },
-  updateDateButton: {
-    padding: '0.25rem 0.5rem',
-    backgroundColor: '#f0ad4e',
-    color: 'white',
-    border: 'none',
-    borderRadius: '3px',
-    cursor: 'pointer',
-    fontSize: '0.85rem',
-    marginTop: '0.25rem',
-    display: 'block',
   },
   sectionTitle: {
     backgroundColor: '#CCCCFF',
