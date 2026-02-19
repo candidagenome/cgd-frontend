@@ -64,6 +64,17 @@ export const phenotypeCurationApi = {
   },
 
   /**
+   * Get hierarchical CV terms as a tree structure.
+   *
+   * @param {string} cvName - CV name (experiment_type, mutant_type, qualifier, observable)
+   * @returns {Promise<{cv_name: string, tree: Array<{term: string, depth: number, children: Array}>}>}
+   */
+  getCVTermTree: async (cvName) => {
+    const response = await api.get(`/api/curation/phenotype/cv-tree/${encodeURIComponent(cvName)}`);
+    return response.data;
+  },
+
+  /**
    * Get valid property types for experiment properties.
    *
    * @returns {Promise<{property_types: string[]}>}

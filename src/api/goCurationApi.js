@@ -2,6 +2,7 @@
  * GO Curation API module for GO annotation CRUD operations.
  *
  * Requires curator authentication.
+ * Mirrors legacy goCuration CGI functionality (UpdateGO.pm).
  */
 import api from './config';
 
@@ -18,17 +19,35 @@ export const goCurationApi = {
   },
 
   /**
+   * Look up reference by pubmed ID.
+   *
+   * @param {number|string} pubmed - PubMed ID
+   * @returns {Promise<{reference_no: number} | null>}
+   */
+  getReferenceByPubmed: async (pubmed) => {
+    try {
+      const response = await api.get(`/api/reference/${pubmed}`);
+      return response.data;
+    } catch {
+      return null;
+    }
+  },
+
+  /**
    * Create a new GO annotation.
    *
    * @param {string} featureName - Feature name
    * @param {Object} data - Annotation data
    * @param {number} data.goid - GO ID (without GO: prefix)
    * @param {string} data.evidence - Evidence code
-   * @param {number} data.reference_no - Reference number
+   * @param {number} [data.reference_no] - Reference number (or use pubmed)
+   * @param {number} [data.pubmed] - PubMed ID (alternative to reference_no)
    * @param {string} [data.annotation_type] - Annotation type (default: "manually curated")
    * @param {string} [data.source] - Source (default: "CGD")
    * @param {string[]} [data.qualifiers] - GO qualifiers
    * @param {number} [data.ic_from_goid] - GO ID for IC evidence
+   * @param {string} [data.with_db] - Database for with/from evidence (e.g., "SGD", "UniProtKB")
+   * @param {string} [data.with_id] - ID for with/from evidence (separate multiples by |)
    * @returns {Promise<{go_annotation_no: number, message: string}>}
    */
   createAnnotation: async (featureName, data) => {
@@ -44,6 +63,19 @@ export const goCurationApi = {
    */
   markAsReviewed: async (annotationNo) => {
     const response = await api.post(`/api/curation/go/${annotationNo}/review`);
+    return response.data;
+  },
+
+  /**
+   * Mark all annotations for a feature as reviewed (bulk operation).
+   *
+   * @param {string} featureName - Feature name
+   * @returns {Promise<{success: boolean, count: number, message: string}>}
+   */
+  markAllAsReviewed: async (featureName) => {
+    const response = await api.post(
+      `/api/curation/go/${encodeURIComponent(featureName)}/review-all`
+    );
     return response.data;
   },
 

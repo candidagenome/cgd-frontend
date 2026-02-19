@@ -7,14 +7,22 @@
  * - Mark annotations as reviewed
  * - Delete annotations
  *
- * Mirrors legacy goCuration CGI functionality.
+ * Mirrors legacy goCuration CGI functionality (UpdateGO.pm).
  */
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import goCurationApi from '../../api/goCurationApi';
+import api from '../../api/config';
 import { getOrganisms } from '../../api/litReviewApi';
 import { filterAllowedOrganisms } from '../../constants/organisms';
+
+// Evidence codes that require "with/from" support
+const EVIDENCE_CODES_WITH_FROM = ['IGI', 'IPI', 'ISS', 'ISA', 'ISM', 'IGC', 'ISO'];
+
+// Number of annotation rows to show initially
+const INITIAL_ROWS = 4;
+const MORE_ROWS_INCREMENT = 3;
 
 function GoCurationPage() {
   const { featureName } = useParams();
@@ -34,18 +42,35 @@ function GoCurationPage() {
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
 
-  // New annotation form state
+  // New annotation form state - multiple rows like Perl version
   const [showAddForm, setShowAddForm] = useState(false);
   const [evidenceCodes, setEvidenceCodes] = useState([]);
-  const [newAnnotation, setNewAnnotation] = useState({
+  const [rowCount, setRowCount] = useState(INITIAL_ROWS);
+
+  // Create empty row template
+  const createEmptyRow = () => ({
+    ontology: '', // P/F/C
     goid: '',
-    evidence: '',
     reference_no: '',
+    pubmed: '',
+    evidence: '',
     qualifiers: [],
     ic_from_goid: '',
+    with_db: '',
+    with_id: '',
+    with_evidence_codes: [], // Selected evidence codes for with/from (IGI, IPI, etc.)
+    feature_list: '', // For sharing annotations with other features
   });
+
+  // Initialize annotation rows
+  const [annotationRows, setAnnotationRows] = useState(
+    Array(INITIAL_ROWS).fill(null).map(() => createEmptyRow())
+  );
   const [formError, setFormError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+
+  // For "mark all reviewed" checkbox
+  const [markAllReviewed, setMarkAllReviewed] = useState(null); // null, 'Yes', or 'No'
 
   // Load feature annotations
   const loadAnnotations = useCallback(async () => {
@@ -137,64 +162,162 @@ function GoCurationPage() {
     }
   };
 
-  // Handle new annotation form change
-  const handleFormChange = (field, value) => {
-    setNewAnnotation((prev) => ({ ...prev, [field]: value }));
+  // Handle row field change
+  const handleRowChange = (rowIndex, field, value) => {
+    setAnnotationRows((prev) => {
+      const updated = [...prev];
+      updated[rowIndex] = { ...updated[rowIndex], [field]: value };
+      return updated;
+    });
     setFormError(null);
   };
 
-  // Handle create annotation
-  const handleCreateAnnotation = async (e) => {
+  // Add more rows
+  const handleMoreRows = () => {
+    setAnnotationRows((prev) => [
+      ...prev,
+      ...Array(MORE_ROWS_INCREMENT).fill(null).map(() => createEmptyRow()),
+    ]);
+    setRowCount((prev) => prev + MORE_ROWS_INCREMENT);
+  };
+
+  // Helper to look up reference by pubmed
+  const lookupReferenceByPubmed = async (pubmed) => {
+    try {
+      const response = await api.get(`/api/reference/${pubmed}`);
+      // API returns { result: { reference_no: ... } }
+      return response.data.result?.reference_no || response.data.reference_no;
+    } catch {
+      return null;
+    }
+  };
+
+  // Handle submit - process all rows with data
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setFormError(null);
     setSubmitting(true);
 
+    const results = [];
+    const errors = [];
+
     try {
-      // Validate required fields
-      if (!newAnnotation.goid) {
-        throw new Error('GO ID is required');
-      }
-      if (!newAnnotation.evidence) {
-        throw new Error('Evidence code is required');
-      }
-      if (!newAnnotation.reference_no) {
-        throw new Error('Reference number is required');
+      // Process each row that has data
+      for (let i = 0; i < annotationRows.length; i++) {
+        const row = annotationRows[i];
+
+        // Skip empty rows
+        if (!row.goid) continue;
+
+        // Validate required fields
+        if (!row.ontology) {
+          errors.push(`Row ${i + 1}: Ontology selection is required`);
+          continue;
+        }
+        if (!row.evidence) {
+          errors.push(`Row ${i + 1}: Evidence code is required`);
+          continue;
+        }
+        if (!row.reference_no && !row.pubmed) {
+          errors.push(`Row ${i + 1}: Reference number or PubMed ID is required`);
+          continue;
+        }
+
+        // Validate IC evidence requires from GOid
+        if (row.evidence === 'IC' && !row.ic_from_goid) {
+          errors.push(`Row ${i + 1}: IC evidence requires "from GO ID" value`);
+          continue;
+        }
+
+        // Validate with/from for evidence codes that require it
+        if (EVIDENCE_CODES_WITH_FROM.includes(row.evidence) && row.with_db && !row.with_id) {
+          errors.push(`Row ${i + 1}: With ID is required when DB is selected`);
+          continue;
+        }
+
+        // Clean up GO ID - remove "GO:" prefix if present and parse as integer
+        let goidValue = row.goid.toString().trim();
+        goidValue = goidValue.replace(/^GO:/i, '').replace(/^0+/, ''); // Remove GO: prefix and leading zeros
+        const goidNum = parseInt(goidValue, 10);
+        if (isNaN(goidNum)) {
+          errors.push(`Row ${i + 1}: Invalid GO ID format: ${row.goid}`);
+          continue;
+        }
+
+        // Build data object - backend handles reference lookup from pubmed/dbxref_id
+        const data = {
+          goid: goidNum,
+          evidence: row.evidence,
+        };
+
+        // Add reference identifier (backend accepts reference_no or pubmed)
+        if (row.reference_no) {
+          data.reference_no = parseInt(row.reference_no, 10);
+        } else if (row.pubmed) {
+          data.pubmed = parseInt(row.pubmed, 10);
+        }
+
+        if (row.qualifiers.length > 0) {
+          data.qualifiers = row.qualifiers;
+        }
+
+        if (row.ic_from_goid) {
+          // Clean up IC from GOid - remove "GO:" prefix if present
+          let icGoidValue = row.ic_from_goid.toString().trim();
+          icGoidValue = icGoidValue.replace(/^GO:/i, '').replace(/^0+/, '');
+          const icGoidNum = parseInt(icGoidValue, 10);
+          if (isNaN(icGoidNum)) {
+            errors.push(`Row ${i + 1}: Invalid IC from GO ID format: ${row.ic_from_goid}`);
+            continue;
+          }
+          data.ic_from_goid = icGoidNum;
+        }
+
+        // Feature list - create annotation for each feature
+        const featuresToAnnotate = [featureName];
+        if (row.feature_list) {
+          const additionalFeatures = row.feature_list.split('|').map((f) => f.trim()).filter(Boolean);
+          featuresToAnnotate.push(...additionalFeatures);
+        }
+
+        for (const feat of featuresToAnnotate) {
+          try {
+            await goCurationApi.createAnnotation(feat, data);
+            results.push(`Row ${i + 1}: Annotation created for ${feat}`);
+          } catch (err) {
+            errors.push(`Row ${i + 1} (${feat}): ${err.response?.data?.detail || err.message}`);
+          }
+        }
       }
 
-      // Validate IC evidence requires from GOid
-      if (newAnnotation.evidence === 'IC' && !newAnnotation.ic_from_goid) {
-        throw new Error('IC evidence requires "from GO ID" value');
+      // Handle "mark all reviewed" if selected
+      if (markAllReviewed === 'Yes' && featureData?.annotations?.length > 0) {
+        for (const ann of featureData.annotations) {
+          try {
+            await goCurationApi.markAsReviewed(ann.go_annotation_no);
+          } catch {
+            // Ignore individual errors for bulk review
+          }
+        }
+        results.push('All existing annotations marked as reviewed');
       }
 
-      const data = {
-        goid: parseInt(newAnnotation.goid, 10),
-        evidence: newAnnotation.evidence,
-        reference_no: parseInt(newAnnotation.reference_no, 10),
-      };
-
-      if (newAnnotation.qualifiers.length > 0) {
-        data.qualifiers = newAnnotation.qualifiers;
+      if (errors.length > 0) {
+        setFormError(errors.join('\n'));
       }
 
-      if (newAnnotation.ic_from_goid) {
-        data.ic_from_goid = parseInt(newAnnotation.ic_from_goid, 10);
+      if (results.length > 0) {
+        setSuccessMessage(results.join('; '));
+        // Reset form
+        setAnnotationRows(Array(INITIAL_ROWS).fill(null).map(() => createEmptyRow()));
+        setRowCount(INITIAL_ROWS);
+        setShowAddForm(false);
+        setMarkAllReviewed(null);
+        loadAnnotations();
+        setTimeout(() => setSuccessMessage(null), 5000);
       }
-
-      await goCurationApi.createAnnotation(featureName, data);
-
-      setSuccessMessage('Annotation created successfully');
-      setShowAddForm(false);
-      setNewAnnotation({
-        goid: '',
-        evidence: '',
-        reference_no: '',
-        qualifiers: [],
-        ic_from_goid: '',
-      });
-      loadAnnotations();
-      setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
-      setFormError(err.response?.data?.detail || err.message || 'Failed to create annotation');
+      setFormError(err.response?.data?.detail || err.message || 'Failed to create annotations');
     } finally {
       setSubmitting(false);
     }
@@ -314,113 +437,275 @@ function GoCurationPage() {
         </button>
       </div>
 
-      {/* Add Annotation Form */}
+      {/* Add Annotation Form - Multiple Rows like Perl version */}
       {showAddForm && (
         <div style={styles.formContainer}>
-          <h3>Add New GO Annotation</h3>
-          {formError && <div style={styles.formError}>{formError}</div>}
-
-          <form onSubmit={handleCreateAnnotation} style={styles.form}>
-            <div style={styles.formRow}>
-              <label style={styles.formLabel}>
-                GO ID: <span style={styles.required}>*</span>
-              </label>
-              <input
-                type="number"
-                value={newAnnotation.goid}
-                onChange={(e) => handleFormChange('goid', e.target.value)}
-                placeholder="e.g., 5515"
-                style={styles.formInput}
-                required
-              />
-              <span style={styles.formHint}>Enter GO ID without "GO:" prefix</span>
+          <h3 style={styles.sectionTitle}>Enter New Annotations</h3>
+          {formError && (
+            <div style={styles.formError}>
+              {formError.split('\n').map((line, i) => (
+                <div key={i}>{line}</div>
+              ))}
             </div>
+          )}
 
-            <div style={styles.formRow}>
-              <label style={styles.formLabel}>
-                Evidence Code: <span style={styles.required}>*</span>
-              </label>
-              <select
-                value={newAnnotation.evidence}
-                onChange={(e) => handleFormChange('evidence', e.target.value)}
-                style={styles.formSelect}
-                required
-              >
-                <option value="">Select evidence code...</option>
-                {evidenceCodes.map((code) => (
-                  <option key={code} value={code}>
-                    {code}
-                  </option>
+          <form onSubmit={handleSubmit}>
+            {/* Header row */}
+            <table style={styles.annotationTable}>
+              <thead>
+                <tr>
+                  <th style={styles.th}>Choose Ontology</th>
+                  <th style={styles.th}>
+                    Enter GO ID number<br />
+                    <span style={styles.thHint}>and relevant qualifier(s)</span>
+                  </th>
+                  <th style={styles.th}>
+                    Enter reference_no OR pubmed<br />
+                    <span style={styles.thHint}>(if more than one, enter in another row)</span>
+                  </th>
+                  <th style={styles.th}>Choose Evidence code</th>
+                  <th style={styles.th}>
+                    Enter With OR From Association<br />
+                    <span style={styles.thHint}>(if more than one DB, enter in another row)</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {annotationRows.map((row, idx) => (
+                  <React.Fragment key={idx}>
+                    <tr style={styles.annotationRow}>
+                      {/* Ontology */}
+                      <td style={styles.td}>
+                        <select
+                          value={row.ontology}
+                          onChange={(e) => handleRowChange(idx, 'ontology', e.target.value)}
+                          style={styles.formSelect}
+                        >
+                          <option value="">-Ontology-</option>
+                          <option value="P">Process</option>
+                          <option value="F">Function</option>
+                          <option value="C">Component</option>
+                        </select>
+                      </td>
+
+                      {/* GO ID and Qualifiers */}
+                      <td style={styles.td}>
+                        <div style={styles.fieldGroup}>
+                          <label style={styles.smallLabel}>GO#:</label>
+                          <input
+                            type="text"
+                            value={row.goid}
+                            onChange={(e) => handleRowChange(idx, 'goid', e.target.value)}
+                            style={styles.smallInput}
+                            placeholder="e.g., 5515"
+                          />
+                        </div>
+                        <div style={styles.qualifierGroup}>
+                          {['NOT', 'contributes_to', 'colocalizes_with'].map((q) => (
+                            <label key={q} style={styles.checkboxLabel}>
+                              <input
+                                type="checkbox"
+                                checked={row.qualifiers.includes(q)}
+                                onChange={(e) => {
+                                  const newQualifiers = e.target.checked
+                                    ? [...row.qualifiers, q]
+                                    : row.qualifiers.filter((x) => x !== q);
+                                  handleRowChange(idx, 'qualifiers', newQualifiers);
+                                }}
+                              />
+                              <span style={styles.qualifierLabel}>{q}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </td>
+
+                      {/* Reference */}
+                      <td style={styles.td}>
+                        <div style={styles.fieldGroup}>
+                          <label style={styles.smallLabel}>Reference_No:</label>
+                          <input
+                            type="text"
+                            value={row.reference_no}
+                            onChange={(e) => handleRowChange(idx, 'reference_no', e.target.value)}
+                            style={styles.smallInput}
+                          />
+                        </div>
+                        <div style={styles.orDivider}>OR</div>
+                        <div style={styles.fieldGroup}>
+                          <label style={styles.smallLabel}>Pubmed:</label>
+                          <input
+                            type="text"
+                            value={row.pubmed}
+                            onChange={(e) => handleRowChange(idx, 'pubmed', e.target.value)}
+                            style={styles.smallInput}
+                          />
+                        </div>
+                      </td>
+
+                      {/* Evidence Code */}
+                      <td style={styles.td}>
+                        <div style={styles.evidenceCheckboxes}>
+                          {evidenceCodes.map((code) => (
+                            <label key={code} style={styles.evidenceLabel}>
+                              <input
+                                type="radio"
+                                name={`evidence-${idx}`}
+                                value={code}
+                                checked={row.evidence === code}
+                                onChange={(e) => handleRowChange(idx, 'evidence', e.target.value)}
+                              />
+                              {code}
+                            </label>
+                          ))}
+                        </div>
+                      </td>
+
+                      {/* With/From */}
+                      <td style={styles.td}>
+                        <div style={styles.withFromSection}>
+                          {/* Evidence code checkboxes for with/from */}
+                          <div style={styles.withEvidenceCheckboxes}>
+                            {EVIDENCE_CODES_WITH_FROM.map((code) => (
+                              <label key={code} style={styles.checkboxLabel}>
+                                <input
+                                  type="checkbox"
+                                  checked={row.with_evidence_codes?.includes(code) || false}
+                                  onChange={(e) => {
+                                    const newCodes = e.target.checked
+                                      ? [...(row.with_evidence_codes || []), code]
+                                      : (row.with_evidence_codes || []).filter((c) => c !== code);
+                                    handleRowChange(idx, 'with_evidence_codes', newCodes);
+                                  }}
+                                />
+                                {code}
+                              </label>
+                            ))}
+                            <span style={styles.withLabel}>with:</span>
+                          </div>
+                          <div style={styles.fieldGroup}>
+                            <label style={styles.smallLabel}>DB:</label>
+                            <select
+                              value={row.with_db}
+                              onChange={(e) => handleRowChange(idx, 'with_db', e.target.value)}
+                              style={styles.smallSelect}
+                            >
+                              <option value="">-select database-</option>
+                              <option value="CGD">CGD</option>
+                              <option value="SGD">SGD</option>
+                              <option value="UniProtKB">UniProtKB</option>
+                              <option value="PANTHER">PANTHER</option>
+                              <option value="InterPro">InterPro</option>
+                              <option value="Pfam">Pfam</option>
+                            </select>
+                          </div>
+                          <div style={styles.fieldGroup}>
+                            <label style={styles.smallLabel}>ID:</label>
+                            <input
+                              type="text"
+                              value={row.with_id}
+                              onChange={(e) => handleRowChange(idx, 'with_id', e.target.value)}
+                              style={styles.smallInput}
+                              placeholder="separate by |"
+                            />
+                          </div>
+                          <div style={styles.orDivider}>---- OR ----</div>
+                          <div style={styles.fieldGroup}>
+                            <label style={styles.smallLabel}>IC from GOid:</label>
+                            <input
+                              type="text"
+                              value={row.ic_from_goid}
+                              onChange={(e) => handleRowChange(idx, 'ic_from_goid', e.target.value)}
+                              style={styles.smallInput}
+                              placeholder="separate by |"
+                            />
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    {/* Feature list row */}
+                    <tr>
+                      <td colSpan="2" style={styles.featureListLabel}>
+                        <span style={styles.smallText}>
+                          Enter features that share this GO annotation; Note, only{' '}
+                          <strong style={{ color: 'red' }}>{featureData?.organism_name || 'this species'}</strong>{' '}
+                          genes are allowed here. Separate multiples by |
+                        </span>
+                      </td>
+                      <td colSpan="3" style={styles.td}>
+                        <input
+                          type="text"
+                          value={row.feature_list}
+                          onChange={(e) => handleRowChange(idx, 'feature_list', e.target.value)}
+                          style={styles.featureListInput}
+                          placeholder="e.g., ACT1|CDC19"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan="5" style={styles.rowSeparator}>
+                        <hr />
+                      </td>
+                    </tr>
+                  </React.Fragment>
                 ))}
-              </select>
-            </div>
+              </tbody>
+            </table>
 
-            {newAnnotation.evidence === 'IC' && (
-              <div style={styles.formRow}>
-                <label style={styles.formLabel}>
-                  From GO ID: <span style={styles.required}>*</span>
+            {/* Mark all reviewed checkbox - only show if there are existing annotations */}
+            {featureData?.annotations?.length > 0 && (
+              <div style={styles.reviewSection}>
+                <span style={styles.reviewLabel}>
+                  Curator had examined and agrees with ALL of the current annotations for the 3 ontologies?
+                </span>
+                <label style={styles.checkboxLabel}>
+                  <input
+                    type="radio"
+                    name="markAllReviewed"
+                    value="Yes"
+                    checked={markAllReviewed === 'Yes'}
+                    onChange={() => setMarkAllReviewed('Yes')}
+                  />
+                  Yes
                 </label>
-                <input
-                  type="number"
-                  value={newAnnotation.ic_from_goid}
-                  onChange={(e) => handleFormChange('ic_from_goid', e.target.value)}
-                  placeholder="GO ID for IC inference"
-                  style={styles.formInput}
-                  required
-                />
+                <label style={styles.checkboxLabel}>
+                  <input
+                    type="radio"
+                    name="markAllReviewed"
+                    value="No"
+                    checked={markAllReviewed === 'No'}
+                    onChange={() => setMarkAllReviewed('No')}
+                  />
+                  No
+                </label>
+                <div style={styles.reviewHint}>
+                  (checking "YES" updates the Last Reviewed date on the annotation page to today&apos;s date)
+                </div>
               </div>
             )}
 
-            <div style={styles.formRow}>
-              <label style={styles.formLabel}>
-                Reference #: <span style={styles.required}>*</span>
-              </label>
-              <input
-                type="number"
-                value={newAnnotation.reference_no}
-                onChange={(e) => handleFormChange('reference_no', e.target.value)}
-                placeholder="Reference number"
-                style={styles.formInput}
-                required
-              />
-            </div>
-
-            <div style={styles.formRow}>
-              <label style={styles.formLabel}>Qualifiers:</label>
-              <div style={styles.checkboxGroup}>
-                {['NOT', 'contributes_to', 'colocalizes_with'].map((q) => (
-                  <label key={q} style={styles.checkboxLabel}>
-                    <input
-                      type="checkbox"
-                      checked={newAnnotation.qualifiers.includes(q)}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          handleFormChange('qualifiers', [...newAnnotation.qualifiers, q]);
-                        } else {
-                          handleFormChange(
-                            'qualifiers',
-                            newAnnotation.qualifiers.filter((x) => x !== q)
-                          );
-                        }
-                      }}
-                    />
-                    {q}
-                  </label>
-                ))}
-              </div>
-            </div>
-
             <div style={styles.formButtons}>
+              <button
+                type="button"
+                onClick={handleMoreRows}
+                style={styles.moreRowsButton}
+              >
+                More Rows
+              </button>
               <button
                 type="submit"
                 disabled={submitting}
                 style={styles.submitButton}
               >
-                {submitting ? 'Creating...' : 'Create Annotation'}
+                {submitting ? 'Submitting...' : 'Submit'}
               </button>
               <button
                 type="button"
-                onClick={() => setShowAddForm(false)}
+                onClick={() => {
+                  setShowAddForm(false);
+                  setAnnotationRows(Array(INITIAL_ROWS).fill(null).map(() => createEmptyRow()));
+                  setRowCount(INITIAL_ROWS);
+                  setMarkAllReviewed(null);
+                }}
                 style={styles.cancelButton}
               >
                 Cancel
@@ -449,6 +734,7 @@ function GoCurationPage() {
                     <th style={styles.th}>GO ID</th>
                     <th style={styles.th}>Term</th>
                     <th style={styles.th}>Evidence</th>
+                    <th style={styles.th}>Evidence Support</th>
                     <th style={styles.th}>References</th>
                     <th style={styles.th}>Last Reviewed</th>
                     <th style={styles.th}>Actions</th>
@@ -466,8 +752,51 @@ function GoCurationPage() {
                           GO:{String(ann.goid).padStart(7, '0')}
                         </a>
                       </td>
-                      <td style={styles.td}>{ann.go_term}</td>
+                      <td style={styles.td}>
+                        {ann.references?.some((r) => r.qualifiers?.length > 0) && (
+                          <span style={styles.termQualifier}>
+                            {ann.references.find((r) => r.qualifiers?.length > 0)?.qualifiers?.[0]?.toLowerCase()}{' '}
+                          </span>
+                        )}
+                        {ann.go_term}
+                      </td>
                       <td style={styles.td}>{ann.go_evidence}</td>
+                      <td style={styles.td}>
+                        {/* Evidence support (with/from info) from references */}
+                        {(() => {
+                          // Collect all evidence support from all references
+                          const allSupport = ann.references?.flatMap(
+                            (ref) => ref.evidence_support || []
+                          ) || [];
+                          if (allSupport.length === 0) {
+                            return <span style={styles.noSupport}>-</span>;
+                          }
+                          return (
+                            <div>
+                              {allSupport.map((sup, idx) => (
+                                <div key={idx}>
+                                  {sup.support_type === 'From' && sup.dbxref_type === 'GOID' ? (
+                                    <span>
+                                      from{' '}
+                                      <a
+                                        href={`http://amigo.geneontology.org/amigo/term/GO:${String(sup.dbxref_id).padStart(7, '0')}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                      >
+                                        GO:{String(sup.dbxref_id).padStart(7, '0')}
+                                      </a>
+                                    </span>
+                                  ) : (
+                                    <span>
+                                      {sup.support_type.toLowerCase()} {sup.source}: {sup.dbxref_id}
+                                    </span>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          );
+                        })()}
+                      </td>
                       <td style={styles.td}>
                         {ann.references?.map((ref, idx) => (
                           <div key={ref.go_ref_no}>
@@ -502,6 +831,17 @@ function GoCurationPage() {
                         >
                           Delete
                         </button>
+                        {/* Show "update date" option for "unknown" terms like Perl version */}
+                        {ann.go_term?.toLowerCase().includes('unknown') && (
+                          <button
+                            type="button"
+                            onClick={() => handleMarkReviewed(ann.go_annotation_no)}
+                            style={styles.updateDateButton}
+                            title="Update date_created for unknown term"
+                          >
+                            Update Date
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -517,7 +857,7 @@ function GoCurationPage() {
 
 const styles = {
   container: {
-    maxWidth: '1200px',
+    maxWidth: '1400px',
     margin: '1rem auto',
     padding: '1rem',
   },
@@ -700,6 +1040,13 @@ const styles = {
     fontSize: '0.85rem',
     color: '#666',
   },
+  termQualifier: {
+    color: 'red',
+    fontStyle: 'italic',
+  },
+  noSupport: {
+    color: '#999',
+  },
   actionButton: {
     padding: '0.25rem 0.5rem',
     backgroundColor: '#5cb85c',
@@ -718,6 +1065,152 @@ const styles = {
     borderRadius: '3px',
     cursor: 'pointer',
     fontSize: '0.85rem',
+  },
+  updateDateButton: {
+    padding: '0.25rem 0.5rem',
+    backgroundColor: '#f0ad4e',
+    color: 'white',
+    border: 'none',
+    borderRadius: '3px',
+    cursor: 'pointer',
+    fontSize: '0.85rem',
+    marginTop: '0.25rem',
+    display: 'block',
+  },
+  sectionTitle: {
+    backgroundColor: '#CCCCFF',
+    padding: '0.5rem',
+    marginBottom: '1rem',
+  },
+  annotationTable: {
+    width: '100%',
+    borderCollapse: 'collapse',
+    fontSize: '0.85rem',
+    marginBottom: '1rem',
+  },
+  annotationRow: {
+    verticalAlign: 'top',
+  },
+  thHint: {
+    fontSize: '0.75rem',
+    fontWeight: 'normal',
+    fontStyle: 'italic',
+  },
+  fieldGroup: {
+    marginBottom: '0.5rem',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.25rem',
+    flexWrap: 'wrap',
+  },
+  smallLabel: {
+    fontSize: '0.8rem',
+    fontWeight: 'bold',
+    minWidth: '80px',
+  },
+  smallInput: {
+    padding: '0.25rem 0.5rem',
+    fontSize: '0.85rem',
+    border: '1px solid #ccc',
+    borderRadius: '3px',
+    width: '100px',
+  },
+  smallSelect: {
+    padding: '0.25rem',
+    fontSize: '0.85rem',
+    border: '1px solid #ccc',
+    borderRadius: '3px',
+  },
+  orDivider: {
+    textAlign: 'center',
+    fontSize: '0.8rem',
+    color: '#666',
+    margin: '0.25rem 0',
+  },
+  qualifierGroup: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.15rem',
+    marginTop: '0.5rem',
+  },
+  qualifierLabel: {
+    fontSize: '0.8rem',
+    marginLeft: '0.25rem',
+  },
+  evidenceCheckboxes: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(4, 1fr)',
+    gap: '0.15rem',
+    fontSize: '0.8rem',
+  },
+  evidenceLabel: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.1rem',
+    fontSize: '0.8rem',
+  },
+  withFromSection: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.25rem',
+  },
+  withEvidenceCheckboxes: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '0.25rem',
+    alignItems: 'center',
+    marginBottom: '0.5rem',
+    fontSize: '0.8rem',
+  },
+  withLabel: {
+    fontWeight: 'bold',
+    marginLeft: '0.25rem',
+  },
+  featureListLabel: {
+    padding: '0.5rem',
+    fontSize: '0.85rem',
+    textAlign: 'left',
+  },
+  featureListInput: {
+    width: '100%',
+    padding: '0.25rem 0.5rem',
+    fontSize: '0.85rem',
+    border: '1px solid #ccc',
+    borderRadius: '3px',
+  },
+  smallText: {
+    fontSize: '0.8rem',
+  },
+  rowSeparator: {
+    padding: '0',
+  },
+  reviewSection: {
+    padding: '1rem',
+    backgroundColor: '#fff8dc',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    marginBottom: '1rem',
+  },
+  reviewLabel: {
+    fontWeight: 'bold',
+    fontSize: '0.9rem',
+    color: 'red',
+    marginRight: '1rem',
+  },
+  reviewHint: {
+    fontSize: '0.8rem',
+    color: '#666',
+    marginTop: '0.25rem',
+    fontStyle: 'italic',
+  },
+  moreRowsButton: {
+    padding: '0.5rem 1rem',
+    backgroundColor: '#f5f5f5',
+    color: '#333',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    marginRight: '0.5rem',
   },
   searchContainer: {
     maxWidth: '600px',
