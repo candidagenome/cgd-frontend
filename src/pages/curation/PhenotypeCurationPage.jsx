@@ -300,10 +300,12 @@ function PhenotypeCurationPage() {
           throw new Error('Reference number or PubMed ID is required');
         }
 
-        // Get reference_no (TODO: support pubmed lookup)
-        const refNo = parseInt(section.reference_no, 10);
-        if (!refNo || isNaN(refNo)) {
-          throw new Error('Valid reference number is required');
+        // Parse reference fields - backend accepts either reference_no or pubmed
+        const refNo = section.reference_no ? parseInt(section.reference_no, 10) : null;
+        const pubmedId = section.pubmed ? parseInt(section.pubmed, 10) : null;
+
+        if (!refNo && !pubmedId) {
+          throw new Error('Valid reference number or PubMed ID is required');
         }
 
         // Build properties array
@@ -325,9 +327,15 @@ function PhenotypeCurationPage() {
             mutant_type: section.mutant_type,
             observable: observable,
             qualifier: section.qualifier || null,
-            reference_no: refNo,
             experiment_comment: section.experiment_comment || null,
           };
+
+          // Add reference identifier (backend accepts reference_no or pubmed)
+          if (refNo) {
+            data.reference_no = refNo;
+          } else if (pubmedId) {
+            data.pubmed = pubmedId;
+          }
 
           if (properties.length > 0) {
             data.properties = properties;
