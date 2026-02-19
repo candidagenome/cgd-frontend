@@ -64,6 +64,14 @@ function LitGuideCurationPage() {
   const [nongeneTopicsLoading, setNongeneTopicsLoading] = useState(false);
   const [newNongeneTopic, setNewNongeneTopic] = useState('');
 
+  // Help section state
+  const [showHelp, setShowHelp] = useState(false);
+
+  // Bulk delete state
+  const [bulkDeleteMode, setBulkDeleteMode] = useState(false);
+  const [selectedForDelete, setSelectedForDelete] = useState(new Set());
+  const [bulkDeleting, setBulkDeleting] = useState(false);
+
   // Add topic form state
   const [selectedRef, setSelectedRef] = useState(null);
   const [selectedTopic, setSelectedTopic] = useState('');
@@ -411,6 +419,74 @@ function LitGuideCurationPage() {
     }
   };
 
+  // Handle toggle selection for bulk delete
+  const handleToggleDeleteSelection = (refpropFeatNo) => {
+    setSelectedForDelete((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(refpropFeatNo)) {
+        newSet.delete(refpropFeatNo);
+      } else {
+        newSet.add(refpropFeatNo);
+      }
+      return newSet;
+    });
+  };
+
+  // Handle select all for bulk delete
+  const handleSelectAllForDelete = () => {
+    if (!referenceData?.features) return;
+    const allIds = new Set();
+    referenceData.features.forEach((feat) => {
+      feat.topics.forEach((topic) => {
+        allIds.add(topic.refprop_feat_no);
+      });
+    });
+    setSelectedForDelete(allIds);
+  };
+
+  // Handle clear selection
+  const handleClearSelection = () => {
+    setSelectedForDelete(new Set());
+  };
+
+  // Handle bulk delete
+  const handleBulkDelete = async () => {
+    if (selectedForDelete.size === 0) return;
+
+    const confirmMsg = `Are you sure you want to delete ${selectedForDelete.size} topic association(s)?`;
+    if (!window.confirm(confirmMsg)) return;
+
+    setBulkDeleting(true);
+    setError(null);
+
+    let successCount = 0;
+    let failCount = 0;
+
+    for (const refpropFeatNo of selectedForDelete) {
+      try {
+        await litguideCurationApi.removeTopicAssociation(refpropFeatNo);
+        successCount++;
+      } catch (err) {
+        failCount++;
+        console.error(`Failed to delete ${refpropFeatNo}:`, err);
+      }
+    }
+
+    setBulkDeleting(false);
+    setSelectedForDelete(new Set());
+    setBulkDeleteMode(false);
+
+    if (successCount > 0) {
+      setSuccessMessage(`Deleted ${successCount} topic association(s)`);
+      loadReferenceLiterature(referenceData.reference_no, currentOrganism);
+      setTimeout(() => setSuccessMessage(null), 3000);
+    }
+
+    if (failCount > 0) {
+      setError(`Failed to delete ${failCount} topic association(s)`);
+    }
+  };
+
   // Handle add non-gene topic
   const handleAddNongeneTopic = async () => {
     if (!referenceData || !newNongeneTopic) return;
@@ -461,6 +537,55 @@ function LitGuideCurationPage() {
 
       {successMessage && <div style={styles.success}>{successMessage}</div>}
       {error && <div style={styles.error}>{error}</div>}
+
+      {/* Help Section */}
+      <div style={styles.helpSection}>
+        <button
+          onClick={() => setShowHelp(!showHelp)}
+          style={styles.helpToggle}
+        >
+          {showHelp ? '▼ Hide Help' : '► Show Help'}
+        </button>
+        {showHelp && (
+          <div style={styles.helpContent}>
+            <h4 style={styles.helpTitle}>Literature Guide Curation Help</h4>
+            <ul style={styles.helpList}>
+              <li>
+                <strong>Feature Search:</strong> Enter a gene name or ORF name to view literature
+                associated with that feature.
+              </li>
+              <li>
+                <strong>PMID Search:</strong> Enter a PubMed ID to view and curate that reference directly.
+              </li>
+              <li>
+                <strong>Adding Topics:</strong> Use the dropdown menus to select literature topics.
+                Click "Add" to associate a topic with a feature-reference pair.
+              </li>
+              <li>
+                <strong>Removing Topics:</strong> Click the "x" button next to any topic to remove
+                the association.
+              </li>
+              <li>
+                <strong>Non-Gene Topics:</strong> Topics can be associated with a reference without
+                linking to a specific feature. Use the "Add Topic" dropdown in the non-gene topics section.
+              </li>
+              <li>
+                <strong>Unlinking Features:</strong> To unlink a feature from a paper, enter the
+                feature name(s) in the unlink box. Separate multiple features with spaces or | (pipe).
+              </li>
+              <li>
+                <strong>Multi-Species:</strong> Use the organism dropdown to filter features by species.
+                Features from other species are shown in a separate read-only section - click the
+                species name to switch context.
+              </li>
+              <li>
+                <strong>Curation Status:</strong> Set the curation status using the dropdown to track
+                progress (e.g., "Not Yet Curated", "High Priority", "Done: Curated").
+              </li>
+            </ul>
+          </div>
+        )}
+      </div>
 
       {/* Search Section */}
       <div style={styles.searchSection}>
@@ -759,6 +884,21 @@ function LitGuideCurationPage() {
             </div>
           </div>
 
+          {/* In-Page Navigation */}
+          <div style={styles.inPageNav}>
+            <a href="#AddFeature" style={styles.navLink}>Add Feature</a>
+            {' | '}
+            <a href="#NongeneTopics" style={styles.navLink}>Non-Gene Topics</a>
+            {' | '}
+            <a href="#Features" style={styles.navLink}>Features</a>
+            {' | '}
+            <a href="#Notes" style={styles.navLink}>Notes</a>
+            {' | '}
+            <Link to={`/curation/phenotype?query=`} style={styles.navLink}>Curate Phenotype</Link>
+            {' | '}
+            <Link to={`/curation/go`} style={styles.navLink}>Curate GO</Link>
+          </div>
+
           {/* Reference Details */}
           <div style={styles.refDetailsBox}>
             <p><strong>Title:</strong> {referenceData.title || 'N/A'}</p>
@@ -783,7 +923,7 @@ function LitGuideCurationPage() {
           </div>
 
           {/* Add Feature Form */}
-          <div style={styles.addSection}>
+          <div id="AddFeature" style={styles.addSection}>
             <h3 style={styles.sectionHeader}>Add Feature with Topic</h3>
             <div style={styles.addFeatureRow}>
               <input
@@ -840,7 +980,7 @@ function LitGuideCurationPage() {
           )}
 
           {/* Non-Gene Topics Section */}
-          <div style={styles.nongeneSection}>
+          <div id="NongeneTopics" style={styles.nongeneSection}>
             <h3 style={styles.nongeneHeader}>
               Literature Topics Linked to this Paper (not associated with features)
               {nongeneTopicsLoading && <span style={styles.notesLoading}> (loading...)</span>}
@@ -909,18 +1049,69 @@ function LitGuideCurationPage() {
                   Add
                 </button>
               </div>
+
+              {/* Edit/Delete Reference Data Link */}
+              <div style={styles.editRefRow}>
+                Use the{' '}
+                <Link
+                  to={`/curation/reference/${referenceData.reference_no}`}
+                  style={styles.editRefLink}
+                >
+                  Edit/Delete Reference Data
+                </Link>
+                {' '}page to delete specific database records or the entire reference and all associations.
+              </div>
             </div>
           </div>
 
           {/* Features with Topics */}
-          <div style={styles.literatureSection}>
-            <h3 style={styles.sectionHeader}>
-              {referenceData.current_organism
-                ? `Features from ${referenceData.current_organism.organism_name}`
-                : 'Associated Features'
-              }
-              {' '}({referenceData.features?.length || 0})
-            </h3>
+          <div id="Features" style={styles.literatureSection}>
+            <div style={styles.sectionHeaderRow}>
+              <h3 style={styles.sectionHeaderInline}>
+                {referenceData.current_organism
+                  ? `Features from ${referenceData.current_organism.organism_name}`
+                  : 'Associated Features'
+                }
+                {' '}({referenceData.features?.length || 0})
+              </h3>
+              {referenceData.features?.length > 0 && (
+                <div style={styles.bulkDeleteControls}>
+                  {bulkDeleteMode ? (
+                    <>
+                      <button onClick={handleSelectAllForDelete} style={styles.bulkBtn}>
+                        Select All
+                      </button>
+                      <button onClick={handleClearSelection} style={styles.bulkBtn}>
+                        Clear
+                      </button>
+                      <button
+                        onClick={handleBulkDelete}
+                        disabled={selectedForDelete.size === 0 || bulkDeleting}
+                        style={styles.bulkDeleteBtn}
+                      >
+                        {bulkDeleting ? 'Deleting...' : `Delete Selected (${selectedForDelete.size})`}
+                      </button>
+                      <button
+                        onClick={() => {
+                          setBulkDeleteMode(false);
+                          setSelectedForDelete(new Set());
+                        }}
+                        style={styles.bulkCancelBtn}
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={() => setBulkDeleteMode(true)}
+                      style={styles.bulkModeBtn}
+                    >
+                      Bulk Delete Mode
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
 
             {referenceData.features?.length > 0 ? (
               <table style={styles.table}>
@@ -946,14 +1137,24 @@ function LitGuideCurationPage() {
                       <td style={styles.td}>
                         {feat.topics.map((topic) => (
                           <div key={topic.refprop_feat_no} style={styles.topicTag}>
+                            {bulkDeleteMode && (
+                              <input
+                                type="checkbox"
+                                checked={selectedForDelete.has(topic.refprop_feat_no)}
+                                onChange={() => handleToggleDeleteSelection(topic.refprop_feat_no)}
+                                style={styles.bulkCheckbox}
+                              />
+                            )}
                             {topic.topic}
-                            <button
-                              onClick={() => handleRemoveTopicForReference(topic.refprop_feat_no)}
-                              style={styles.removeTopicBtn}
-                              title="Remove topic"
-                            >
-                              x
-                            </button>
+                            {!bulkDeleteMode && (
+                              <button
+                                onClick={() => handleRemoveTopicForReference(topic.refprop_feat_no)}
+                                style={styles.removeTopicBtn}
+                                title="Remove topic"
+                              >
+                                x
+                              </button>
+                            )}
                           </div>
                         ))}
                       </td>
@@ -1028,9 +1229,9 @@ function LitGuideCurationPage() {
           )}
 
           {/* Associated Notes Section */}
-          <div style={styles.notesSection}>
+          <div id="Notes" style={styles.notesSection}>
             <h3 style={styles.notesHeader}>
-              <a name="Notes">Associated Notes</a>
+              Associated Notes
               {notesLoading && <span style={styles.notesLoading}> (loading...)</span>}
             </h3>
 
@@ -1549,6 +1750,119 @@ const styles = {
     padding: 0,
     fontSize: '0.9rem',
     textDecoration: 'underline',
+  },
+  // Edit/Delete reference link styles
+  editRefRow: {
+    padding: '0.5rem',
+    backgroundColor: '#f0f0f0',
+    fontSize: '0.85rem',
+    color: '#666',
+    borderTop: '1px solid #ddd',
+  },
+  editRefLink: {
+    color: '#337ab7',
+    textDecoration: 'none',
+    fontWeight: 'bold',
+  },
+  // Help section styles
+  helpSection: {
+    marginBottom: '1rem',
+  },
+  helpToggle: {
+    background: 'none',
+    border: 'none',
+    color: '#337ab7',
+    cursor: 'pointer',
+    fontSize: '0.9rem',
+    padding: '0.25rem 0',
+  },
+  helpContent: {
+    padding: '1rem',
+    backgroundColor: '#fffef0',
+    border: '1px solid #e0d890',
+    borderRadius: '4px',
+    marginTop: '0.5rem',
+  },
+  helpTitle: {
+    margin: '0 0 0.75rem 0',
+    color: '#665500',
+  },
+  helpList: {
+    margin: 0,
+    paddingLeft: '1.5rem',
+    lineHeight: '1.6',
+    fontSize: '0.9rem',
+  },
+  // In-page navigation styles
+  inPageNav: {
+    padding: '0.5rem',
+    backgroundColor: '#f0f0f0',
+    borderRadius: '4px',
+    marginBottom: '1rem',
+    fontSize: '0.9rem',
+    textAlign: 'center',
+  },
+  navLink: {
+    color: '#337ab7',
+    textDecoration: 'none',
+  },
+  // Bulk delete styles
+  sectionHeaderRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#CCCCFF',
+    padding: '0.5rem',
+    marginBottom: '0.5rem',
+  },
+  sectionHeaderInline: {
+    margin: 0,
+    fontSize: '1rem',
+  },
+  bulkDeleteControls: {
+    display: 'flex',
+    gap: '0.5rem',
+    alignItems: 'center',
+  },
+  bulkModeBtn: {
+    padding: '0.25rem 0.5rem',
+    backgroundColor: '#f0ad4e',
+    color: 'white',
+    border: 'none',
+    borderRadius: '3px',
+    cursor: 'pointer',
+    fontSize: '0.8rem',
+  },
+  bulkBtn: {
+    padding: '0.25rem 0.5rem',
+    backgroundColor: '#5bc0de',
+    color: 'white',
+    border: 'none',
+    borderRadius: '3px',
+    cursor: 'pointer',
+    fontSize: '0.8rem',
+  },
+  bulkDeleteBtn: {
+    padding: '0.25rem 0.5rem',
+    backgroundColor: '#d9534f',
+    color: 'white',
+    border: 'none',
+    borderRadius: '3px',
+    cursor: 'pointer',
+    fontSize: '0.8rem',
+  },
+  bulkCancelBtn: {
+    padding: '0.25rem 0.5rem',
+    backgroundColor: '#777',
+    color: 'white',
+    border: 'none',
+    borderRadius: '3px',
+    cursor: 'pointer',
+    fontSize: '0.8rem',
+  },
+  bulkCheckbox: {
+    marginRight: '0.25rem',
+    cursor: 'pointer',
   },
 };
 
