@@ -566,31 +566,34 @@ export function buildCitationLinks(ref) {
   }
 
   // Process URLs if available (check url_type for categorization)
+  // Match backend logic from locus_service.py _build_citation_links_for_locus
   if (ref.urls && Array.isArray(ref.urls)) {
     ref.urls.forEach((urlItem) => {
       // Handle both string URLs and URL objects
       const url = typeof urlItem === 'string' ? urlItem : urlItem.url;
       const urlType = (urlItem.url_type || '').toLowerCase();
 
-      if (urlType.includes('full') && urlType.includes('text')) {
+      if (urlType.includes('supplement')) {
+        // Reference supplement
         links.push({
-          name: 'Access Full Text',
+          name: 'Reference Supplement',
           url,
           link_type: 'external',
         });
-      } else if (
-        urlType.includes('reference data') ||
-        urlType.includes('download') ||
-        urlType.includes('dataset')
-      ) {
+      } else if (urlType.includes('reference data')) {
+        // Skip Reference Data (not shown as full text, matching Perl behavior)
+      } else if (urlType.includes('download') || urlType.includes('dataset')) {
+        // Download Datasets
         links.push({
           name: 'Download Datasets',
           url,
           link_type: 'external',
         });
-      } else if (urlType.includes('web') && urlType.includes('supplement')) {
+      } else {
+        // All other URL types shown as Full Text (matching Perl default behavior)
+        // This includes: Reference LINKOUT, Reference full text, and any others
         links.push({
-          name: 'Web Supplement',
+          name: 'Full Text',
           url,
           link_type: 'external',
         });
