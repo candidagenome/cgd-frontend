@@ -386,7 +386,7 @@ function LocusCurationPage() {
                   <th style={styles.th}>Gene Name</th>
                   <th style={styles.th}>Type</th>
                   <th style={styles.th}>Headline</th>
-                  <th style={styles.th}>Action</th>
+                  <th style={styles.thAction}>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -396,7 +396,7 @@ function LocusCurationPage() {
                     <td style={styles.td}>{f.gene_name || '-'}</td>
                     <td style={styles.td}>{f.feature_type}</td>
                     <td style={styles.td}>{f.headline || '-'}</td>
-                    <td style={styles.td}>
+                    <td style={styles.tdAction}>
                       <button
                         onClick={() => handleSelectFeature(f)}
                         style={styles.actionButton}
@@ -674,7 +674,7 @@ function LocusCurationPage() {
                     <th style={styles.th}>Alias</th>
                     <th style={styles.th}>Type</th>
                     <th style={styles.th}>References</th>
-                    <th style={styles.th}>Action</th>
+                    <th style={styles.thAction}>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -709,7 +709,7 @@ function LocusCurationPage() {
                           );
                         })}
                       </td>
-                      <td style={styles.td}>
+                      <td style={styles.tdAction}>
                         <button
                           onClick={() => handleRemoveAlias(alias.feat_alias_no)}
                           style={styles.deleteButton}
@@ -781,7 +781,7 @@ function LocusCurationPage() {
                     <th style={styles.th}>Type</th>
                     <th style={styles.th}>Text</th>
                     <th style={styles.th}>Date</th>
-                    <th style={styles.th}>Action</th>
+                    <th style={styles.thAction}>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -790,7 +790,7 @@ function LocusCurationPage() {
                       <td style={styles.td}>{note.note_type}</td>
                       <td style={styles.td}>{note.note_text}</td>
                       <td style={styles.td}>{note.date_created?.split('T')[0] || '-'}</td>
-                      <td style={styles.td}>
+                      <td style={styles.tdAction}>
                         <button
                           onClick={() => handleRemoveNote(note.note_link_no)}
                           style={styles.deleteButton}
@@ -860,7 +860,7 @@ function LocusCurationPage() {
                   <tr>
                     <th style={styles.th}>Type</th>
                     <th style={styles.th}>Link</th>
-                    <th style={styles.th}>Action</th>
+                    <th style={styles.thAction}>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -872,7 +872,7 @@ function LocusCurationPage() {
                           {url.link}
                         </a>
                       </td>
-                      <td style={styles.td}>
+                      <td style={styles.tdAction}>
                         <button
                           onClick={() => handleRemoveUrl(url.feat_url_no)}
                           style={styles.deleteButton}
@@ -1067,12 +1067,26 @@ const styles = {
     borderBottom: '2px solid #333',
     backgroundColor: '#f5f5f5',
   },
+  thAction: {
+    textAlign: 'right',
+    padding: '0.5rem',
+    borderBottom: '2px solid #333',
+    backgroundColor: '#f5f5f5',
+    width: '80px',
+  },
   td: {
     padding: '0.5rem',
     borderBottom: '1px solid #ddd',
     verticalAlign: 'top',
     wordWrap: 'break-word',
     overflow: 'hidden',
+  },
+  tdAction: {
+    padding: '0.5rem',
+    borderBottom: '1px solid #ddd',
+    verticalAlign: 'top',
+    textAlign: 'right',
+    width: '80px',
   },
   editForm: {
     display: 'flex',
