@@ -671,8 +671,8 @@ function LocusCurationPage() {
               <table style={styles.table}>
                 <thead>
                   <tr>
-                    <th style={styles.thSmall}>Alias</th>
-                    <th style={styles.thSmall}>Type</th>
+                    <th style={styles.thMedium}>Alias</th>
+                    <th style={styles.thMedium}>Type</th>
                     <th style={styles.th}>References</th>
                     <th style={styles.thAction}>Action</th>
                   </tr>
@@ -858,7 +858,7 @@ function LocusCurationPage() {
               <table style={styles.table}>
                 <thead>
                   <tr>
-                    <th style={styles.thMedium}>Type</th>
+                    <th style={styles.thMediumLarge}>Type</th>
                     <th style={styles.th}>Link</th>
                     <th style={styles.thAction}>Action</th>
                   </tr>
@@ -1086,7 +1086,14 @@ const styles = {
     padding: '0.5rem',
     borderBottom: '2px solid #333',
     backgroundColor: '#f5f5f5',
-    width: '120px',
+    width: '200px',
+  },
+  thMediumLarge: {
+    textAlign: 'left',
+    padding: '0.5rem',
+    borderBottom: '2px solid #333',
+    backgroundColor: '#f5f5f5',
+    width: '250px',
   },
   td: {
     padding: '0.5rem',
