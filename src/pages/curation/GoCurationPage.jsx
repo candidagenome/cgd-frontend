@@ -476,14 +476,19 @@ function GoCurationPage() {
       <div style={styles.annotations}>
         <h2>Existing GO Annotations ({featureData?.annotations?.length || 0})</h2>
 
-        {Object.entries(annotationsByAspect).length === 0 ? (
+        {(!featureData?.annotations || featureData.annotations.length === 0) ? (
           <p style={styles.noAnnotations}>No GO annotations found for this feature.</p>
         ) : (
           // Display aspects in order: Function first, then Process, then Component
           aspectOrder
-            .filter(aspect => annotationsByAspect[aspect])
+            .filter(aspect => annotationsByAspect[aspect] && annotationsByAspect[aspect].length > 0)
+            .concat(
+              // Add any aspects not in aspectOrder (fallback)
+              Object.keys(annotationsByAspect).filter(a => !aspectOrder.includes(a))
+            )
             .map((aspect) => {
               const annotations = annotationsByAspect[aspect];
+              if (!annotations || annotations.length === 0) return null;
               return (
             <section key={aspect} style={styles.aspectSection}>
               <h3 style={styles.aspectHeader}>
