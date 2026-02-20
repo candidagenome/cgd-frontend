@@ -13,6 +13,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import locusCurationApi from '../../api/locusCurationApi';
 import { filterAllowedOrganisms } from '../../constants/organisms';
+import { formatCitationString, CitationLinksBelow, buildCitationLinks } from '../../utils/formatCitation.jsx';
 
 function LocusCurationPage() {
   const { featureName } = useParams();
@@ -272,43 +273,57 @@ function LocusCurationPage() {
     }
   };
 
-  // Render field references as a list with citations and unlink buttons
+  // Render field references as a list with citations and links (matching Locus Summary style)
   const renderFieldRefs = (refs, fieldName) => {
     if (!refs || refs.length === 0) return null;
     return (
       <div style={styles.refList}>
         <div style={styles.refListHeader}>References:</div>
-        <ul style={styles.refListItems}>
-          {refs.map((ref) => (
-            <li key={ref.ref_link_no} style={styles.refListItem}>
-              <div style={styles.refCitation}>
-                {ref.pubmed ? (
-                  <a
-                    href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    PMID:{ref.pubmed}
-                  </a>
-                ) : (
-                  <Link to={`/reference/${ref.reference_no}`}>
-                    Ref:{ref.reference_no}
-                  </Link>
-                )}
-                {ref.citation && (
-                  <span style={styles.citationText}> - {ref.citation}</span>
-                )}
+        <div style={styles.refListItems}>
+          {refs.map((ref) => {
+            const links = buildCitationLinks({
+              dbxref_id: ref.dbxref_id,
+              reference_no: ref.reference_no,
+              pubmed: ref.pubmed,
+            });
+            return (
+              <div key={ref.ref_link_no} style={styles.refListItem}>
+                <div style={styles.refCitation}>
+                  <div style={styles.citationLine}>
+                    {ref.citation ? (
+                      <>
+                        {formatCitationString(ref.citation)}
+                        {ref.pubmed && <span style={styles.pmidText}> PMID: {ref.pubmed}</span>}
+                      </>
+                    ) : ref.pubmed ? (
+                      <>
+                        <a
+                          href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          PMID:{ref.pubmed}
+                        </a>
+                      </>
+                    ) : (
+                      <Link to={`/reference/${ref.reference_no}`}>
+                        Ref:{ref.reference_no}
+                      </Link>
+                    )}
+                  </div>
+                  <CitationLinksBelow links={links} />
+                </div>
+                <button
+                  onClick={() => handleUnlinkFieldReference(ref.ref_link_no, fieldName)}
+                  style={styles.unlinkButtonSmall}
+                  title="Unlink reference"
+                >
+                  unlink
+                </button>
               </div>
-              <button
-                onClick={() => handleUnlinkFieldReference(ref.ref_link_no, fieldName)}
-                style={styles.unlinkButtonSmall}
-                title="Unlink reference"
-              >
-                unlink
-              </button>
-            </li>
-          ))}
-        </ul>
+            );
+          })}
+        </div>
       </div>
     );
   };
@@ -437,7 +452,7 @@ function LocusCurationPage() {
                         type="text"
                         value={editForm.gene_name}
                         onChange={(e) => handleEditChange('gene_name', e.target.value)}
-                        style={styles.formInput}
+                        style={styles.formInputLarge}
                       />
                     </div>
                   </div>
@@ -464,7 +479,7 @@ function LocusCurationPage() {
                       <textarea
                         value={editForm.name_description}
                         onChange={(e) => handleEditChange('name_description', e.target.value)}
-                        style={styles.formTextareaWide}
+                        style={styles.formTextareaLarge}
                         rows={3}
                       />
                     </div>
@@ -497,7 +512,7 @@ function LocusCurationPage() {
                               handleEditChange('headline', e.target.value);
                             }
                           }}
-                          style={styles.formTextareaWide}
+                          style={styles.formTextareaLarge}
                           rows={5}
                           maxLength={240}
                         />
@@ -667,11 +682,30 @@ function LocusCurationPage() {
                       <td style={styles.td}>{alias.alias_name}</td>
                       <td style={styles.td}>{alias.alias_type}</td>
                       <td style={styles.td}>
-                        {alias.references?.map((ref) => (
-                          <Link key={ref.reference_no} to={`/reference/${ref.reference_no}`}>
-                            {ref.pubmed ? `PMID:${ref.pubmed}` : `Ref:${ref.reference_no}`}
-                          </Link>
-                        ))}
+                        {alias.references?.map((ref) => {
+                          const links = buildCitationLinks({
+                            dbxref_id: ref.dbxref_id,
+                            reference_no: ref.reference_no,
+                            pubmed: ref.pubmed,
+                          });
+                          return (
+                            <div key={ref.reference_no} style={styles.aliasRefItem}>
+                              <div style={styles.citationLine}>
+                                {ref.citation ? (
+                                  <>
+                                    {formatCitationString(ref.citation)}
+                                    {ref.pubmed && <span style={styles.pmidText}> PMID: {ref.pubmed}</span>}
+                                  </>
+                                ) : ref.pubmed ? (
+                                  `PMID:${ref.pubmed}`
+                                ) : (
+                                  `Ref:${ref.reference_no}`
+                                )}
+                              </div>
+                              <CitationLinksBelow links={links} />
+                            </div>
+                          );
+                        })}
                       </td>
                       <td style={styles.td}>
                         <button
@@ -1073,6 +1107,14 @@ const styles = {
     borderRadius: '4px',
     width: '200px',
   },
+  formInputLarge: {
+    padding: '0.5rem',
+    fontSize: '1rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    width: '400px',
+    maxWidth: '100%',
+  },
   formInputWide: {
     padding: '0.5rem',
     fontSize: '1rem',
@@ -1080,6 +1122,16 @@ const styles = {
     borderRadius: '4px',
     width: '500px',
     maxWidth: '100%',
+  },
+  formTextareaLarge: {
+    padding: '0.5rem',
+    fontSize: '1rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    width: '400px',
+    maxWidth: '100%',
+    resize: 'vertical',
+    fontFamily: 'inherit',
   },
   formTextareaWide: {
     padding: '0.5rem',
@@ -1209,6 +1261,16 @@ const styles = {
   citationText: {
     color: '#666',
     fontSize: '0.85rem',
+  },
+  citationLine: {
+    marginBottom: '0.25rem',
+  },
+  pmidText: {
+    color: '#666',
+    fontSize: '0.85rem',
+  },
+  aliasRefItem: {
+    marginBottom: '0.5rem',
   },
   unlinkButtonSmall: {
     padding: '0.15rem 0.4rem',
