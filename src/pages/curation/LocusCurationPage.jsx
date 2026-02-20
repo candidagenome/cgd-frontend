@@ -78,8 +78,11 @@ function LocusCurationPage() {
       setFeatureData(data);
       setEditForm({
         gene_name: data.gene_name || '',
+        gene_name_pmids: data.gene_name_pmids || '',
         name_description: data.name_description || '',
+        name_description_pmids: data.name_description_pmids || '',
         headline: data.headline || '',
+        headline_pmids: data.headline_pmids || '',
         feature_type: data.feature_type || '',
       });
     } catch (err) {
@@ -255,6 +258,51 @@ function LocusCurationPage() {
     }
   };
 
+  // Unlink field reference
+  const handleUnlinkFieldReference = async (refLinkNo, fieldName) => {
+    if (!window.confirm(`Are you sure you want to unlink this reference from ${fieldName}?`)) return;
+
+    try {
+      await locusCurationApi.unlinkFieldReference(refLinkNo);
+      setSuccessMessage('Reference unlinked');
+      loadFeature(featureData.feature_no);
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to unlink reference');
+    }
+  };
+
+  // Render field references with unlink buttons
+  const renderFieldRefs = (refs, fieldName) => {
+    if (!refs || refs.length === 0) return null;
+    return (
+      <div style={styles.fieldRefs}>
+        {refs.map((ref) => (
+          <span key={ref.ref_link_no} style={styles.refTag}>
+            {ref.pubmed ? (
+              <a
+                href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                PMID:{ref.pubmed}
+              </a>
+            ) : (
+              `Ref:${ref.reference_no}`
+            )}
+            <button
+              onClick={() => handleUnlinkFieldReference(ref.ref_link_no, fieldName)}
+              style={styles.unlinkButton}
+              title="Unlink reference"
+            >
+              ×
+            </button>
+          </span>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div style={styles.container}>
       <div style={styles.header}>
@@ -372,30 +420,82 @@ function LocusCurationPage() {
               <div style={styles.editForm}>
                 <div style={styles.formRow}>
                   <label style={styles.formLabel}>Gene Name:</label>
+                  <div style={styles.fieldWithRefs}>
+                    <input
+                      type="text"
+                      value={editForm.gene_name}
+                      onChange={(e) => handleEditChange('gene_name', e.target.value)}
+                      style={styles.formInput}
+                    />
+                    {renderFieldRefs(featureData.gene_name_refs, 'Gene Name')}
+                  </div>
+                </div>
+                <div style={styles.formRow}>
+                  <label style={styles.formLabel}>Add PMIDs:</label>
                   <input
                     type="text"
-                    value={editForm.gene_name}
-                    onChange={(e) => handleEditChange('gene_name', e.target.value)}
+                    value={editForm.gene_name_pmids}
+                    onChange={(e) => handleEditChange('gene_name_pmids', e.target.value)}
                     style={styles.formInput}
+                    placeholder="e.g. 12345678|23456789"
                   />
+                  <span style={styles.formHint}>Pipe-delimited PMIDs for Gene Name</span>
                 </div>
                 <div style={styles.formRow}>
                   <label style={styles.formLabel}>Name Description:</label>
+                  <div style={styles.fieldWithRefs}>
+                    <input
+                      type="text"
+                      value={editForm.name_description}
+                      onChange={(e) => handleEditChange('name_description', e.target.value)}
+                      style={styles.formInputWide}
+                    />
+                    {renderFieldRefs(featureData.name_description_refs, 'Name Description')}
+                  </div>
+                </div>
+                <div style={styles.formRow}>
+                  <label style={styles.formLabel}>Add PMIDs:</label>
                   <input
                     type="text"
-                    value={editForm.name_description}
-                    onChange={(e) => handleEditChange('name_description', e.target.value)}
-                    style={styles.formInputWide}
+                    value={editForm.name_description_pmids}
+                    onChange={(e) => handleEditChange('name_description_pmids', e.target.value)}
+                    style={styles.formInput}
+                    placeholder="e.g. 12345678|23456789"
                   />
+                  <span style={styles.formHint}>Pipe-delimited PMIDs for Name Description</span>
                 </div>
                 <div style={styles.formRow}>
                   <label style={styles.formLabel}>Headline:</label>
+                  <div style={styles.fieldWithRefs}>
+                    <div style={styles.textareaWrapper}>
+                      <textarea
+                        value={editForm.headline}
+                        onChange={(e) => {
+                          if (e.target.value.length <= 240) {
+                            handleEditChange('headline', e.target.value);
+                          }
+                        }}
+                        style={styles.formTextareaHeadline}
+                        rows={3}
+                        maxLength={240}
+                      />
+                      <div style={styles.charCount}>
+                        {editForm.headline?.length || 0}/240
+                      </div>
+                    </div>
+                    {renderFieldRefs(featureData.headline_refs, 'Headline')}
+                  </div>
+                </div>
+                <div style={styles.formRow}>
+                  <label style={styles.formLabel}>Add PMIDs:</label>
                   <input
                     type="text"
-                    value={editForm.headline}
-                    onChange={(e) => handleEditChange('headline', e.target.value)}
-                    style={styles.formInputWide}
+                    value={editForm.headline_pmids}
+                    onChange={(e) => handleEditChange('headline_pmids', e.target.value)}
+                    style={styles.formInput}
+                    placeholder="e.g. 12345678|23456789"
                   />
+                  <span style={styles.formHint}>Pipe-delimited PMIDs for Headline</span>
                 </div>
                 <div style={styles.formRow}>
                   <label style={styles.formLabel}>Feature Type:</label>
@@ -419,8 +519,11 @@ function LocusCurationPage() {
                       setEditMode(false);
                       setEditForm({
                         gene_name: featureData.gene_name || '',
+                        gene_name_pmids: featureData.gene_name_pmids || '',
                         name_description: featureData.name_description || '',
+                        name_description_pmids: featureData.name_description_pmids || '',
                         headline: featureData.headline || '',
+                        headline_pmids: featureData.headline_pmids || '',
                         feature_type: featureData.feature_type || '',
                       });
                     }}
@@ -976,6 +1079,68 @@ const styles = {
     width: '400px',
     maxWidth: '100%',
     resize: 'vertical',
+  },
+  formTextareaHeadline: {
+    padding: '0.5rem',
+    fontSize: '1rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    width: '400px',
+    maxWidth: '100%',
+    resize: 'vertical',
+    fontFamily: 'inherit',
+  },
+  textareaWrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.25rem',
+  },
+  charCount: {
+    fontSize: '0.8rem',
+    color: '#666',
+    textAlign: 'right',
+  },
+  formHint: {
+    fontSize: '0.8rem',
+    color: '#666',
+    fontStyle: 'italic',
+    paddingTop: '0.5rem',
+  },
+  fieldWithRefs: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.5rem',
+  },
+  fieldRefs: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '0.5rem',
+  },
+  refTag: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '0.25rem',
+    padding: '0.25rem 0.5rem',
+    backgroundColor: '#e8f4fc',
+    border: '1px solid #b8daef',
+    borderRadius: '3px',
+    fontSize: '0.85rem',
+  },
+  unlinkButton: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '18px',
+    height: '18px',
+    padding: 0,
+    border: 'none',
+    borderRadius: '50%',
+    backgroundColor: '#d9534f',
+    color: 'white',
+    fontSize: '14px',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    lineHeight: 1,
   },
   formButtons: {
     display: 'flex',
