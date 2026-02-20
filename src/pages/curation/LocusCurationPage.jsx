@@ -285,6 +285,7 @@ function LocusCurationPage() {
               dbxref_id: ref.dbxref_id,
               reference_no: ref.reference_no,
               pubmed: ref.pubmed,
+              urls: ref.urls,
             });
             return (
               <div key={ref.ref_link_no} style={styles.refListItem}>
@@ -687,6 +688,7 @@ function LocusCurationPage() {
                             dbxref_id: ref.dbxref_id,
                             reference_no: ref.reference_no,
                             pubmed: ref.pubmed,
+                            urls: ref.urls,
                           });
                           return (
                             <div key={ref.reference_no} style={styles.aliasRefItem}>
