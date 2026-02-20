@@ -365,14 +365,27 @@ function GoCurationPage() {
     }
   };
 
-  // Aspect display names and order (Function first, then Process, then Component)
+  // Aspect display names (map all variations to display names)
   const aspectNames = {
     function: 'Molecular Function (F)',
+    molecular_function: 'Molecular Function (F)',
+    f: 'Molecular Function (F)',
     process: 'Biological Process (P)',
+    biological_process: 'Biological Process (P)',
+    p: 'Biological Process (P)',
     component: 'Cellular Component (C)',
+    cellular_component: 'Cellular Component (C)',
+    c: 'Cellular Component (C)',
   };
 
-  // Define aspect display order
+  // Map aspect variations to canonical order keys
+  const aspectToOrder = {
+    function: 0, molecular_function: 0, f: 0,
+    process: 1, biological_process: 1, p: 1,
+    component: 2, cellular_component: 2, c: 2,
+  };
+
+  // Define aspect display order (canonical keys)
   const aspectOrder = ['function', 'process', 'component'];
 
   // Handle search form submission
@@ -480,12 +493,13 @@ function GoCurationPage() {
           <p style={styles.noAnnotations}>No GO annotations found for this feature.</p>
         ) : (
           // Display aspects in order: Function first, then Process, then Component
-          aspectOrder
+          Object.keys(annotationsByAspect)
             .filter(aspect => annotationsByAspect[aspect] && annotationsByAspect[aspect].length > 0)
-            .concat(
-              // Add any aspects not in aspectOrder (fallback)
-              Object.keys(annotationsByAspect).filter(a => !aspectOrder.includes(a))
-            )
+            .sort((a, b) => {
+              const orderA = aspectToOrder[a] ?? 999;
+              const orderB = aspectToOrder[b] ?? 999;
+              return orderA - orderB;
+            })
             .map((aspect) => {
               const annotations = annotationsByAspect[aspect];
               if (!annotations || annotations.length === 0) return null;
