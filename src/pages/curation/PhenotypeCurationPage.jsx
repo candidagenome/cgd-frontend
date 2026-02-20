@@ -558,8 +558,8 @@ function PhenotypeCurationPage() {
                 <th style={styles.th}>Observable</th>
                 <th style={styles.th}>Properties</th>
                 <th style={styles.th}>Comment</th>
-                <th style={styles.th}>Action</th>
                 <th style={styles.th}>Reference(s)</th>
+                <th style={styles.th}>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -586,15 +586,6 @@ function PhenotypeCurationPage() {
                   </td>
                   <td style={styles.td}>
                     {ann.experiment?.experiment_comment || '-'}
-                  </td>
-                  <td style={styles.td}>
-                    <label style={styles.deleteLabel}>
-                      <input
-                        type="checkbox"
-                        onChange={() => handleDelete(ann.pheno_annotation_no)}
-                      />
-                      {' '}delete
-                    </label>
                   </td>
                   <td style={styles.td}>
                     {ann.references?.map((ref, idx) => {
@@ -630,6 +621,15 @@ function PhenotypeCurationPage() {
                         </div>
                       );
                     })}
+                  </td>
+                  <td style={styles.td}>
+                    <label style={styles.deleteLabel}>
+                      <input
+                        type="checkbox"
+                        onChange={() => handleDelete(ann.pheno_annotation_no)}
+                      />
+                      {' '}delete
+                    </label>
                   </td>
                 </tr>
               ))}
