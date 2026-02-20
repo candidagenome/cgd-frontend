@@ -223,7 +223,11 @@ function LitGuideCurationPage() {
   const handleFeatureSearch = (e) => {
     e.preventDefault();
     if (!featureSearch.trim()) return;
-    navigate(`/curation/litguide/${featureSearch.trim()}`);
+    let url = `/curation/litguide/${featureSearch.trim()}`;
+    if (currentOrganism) {
+      url += `?organism=${encodeURIComponent(currentOrganism)}`;
+    }
+    navigate(url);
   };
 
   // Handle PMID search
@@ -589,6 +593,23 @@ function LitGuideCurationPage() {
 
       {/* Search Section */}
       <div style={styles.searchSection}>
+        {/* Species Selector */}
+        <div style={styles.speciesSelectorRow}>
+          <label style={styles.speciesLabel}>Species:</label>
+          <select
+            value={currentOrganism || ''}
+            onChange={(e) => setCurrentOrganism(e.target.value || null)}
+            style={styles.speciesSelect}
+          >
+            <option value="">All Species</option>
+            {organisms.map((org) => (
+              <option key={org.organism_abbrev} value={org.organism_abbrev}>
+                {org.organism_name}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <div style={styles.searchRow}>
           {/* Feature Search */}
           <div style={styles.searchBox}>
@@ -1329,6 +1350,25 @@ const styles = {
     backgroundColor: '#f9f9f9',
     border: '1px solid #ddd',
     borderRadius: '4px',
+  },
+  speciesSelectorRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    marginBottom: '1rem',
+    paddingBottom: '1rem',
+    borderBottom: '1px solid #ddd',
+  },
+  speciesLabel: {
+    fontWeight: 'bold',
+    fontSize: '0.95rem',
+  },
+  speciesSelect: {
+    padding: '0.5rem',
+    fontSize: '1rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    minWidth: '250px',
   },
   searchRow: {
     display: 'flex',
