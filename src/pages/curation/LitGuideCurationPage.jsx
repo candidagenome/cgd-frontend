@@ -601,7 +601,7 @@ function LitGuideCurationPage() {
             onChange={(e) => setCurrentOrganism(e.target.value || null)}
             style={styles.speciesSelect}
           >
-            <option value="">All Species</option>
+            <option value="">Select species...</option>
             {organisms.map((org) => (
               <option key={org.organism_abbrev} value={org.organism_abbrev}>
                 {org.organism_name}
