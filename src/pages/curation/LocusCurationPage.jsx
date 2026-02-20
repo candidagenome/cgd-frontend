@@ -272,33 +272,43 @@ function LocusCurationPage() {
     }
   };
 
-  // Render field references with unlink buttons
+  // Render field references as a list with citations and unlink buttons
   const renderFieldRefs = (refs, fieldName) => {
     if (!refs || refs.length === 0) return null;
     return (
-      <div style={styles.fieldRefs}>
-        {refs.map((ref) => (
-          <span key={ref.ref_link_no} style={styles.refTag}>
-            {ref.pubmed ? (
-              <a
-                href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
-                target="_blank"
-                rel="noopener noreferrer"
+      <div style={styles.refList}>
+        <div style={styles.refListHeader}>References:</div>
+        <ul style={styles.refListItems}>
+          {refs.map((ref) => (
+            <li key={ref.ref_link_no} style={styles.refListItem}>
+              <div style={styles.refCitation}>
+                {ref.pubmed ? (
+                  <a
+                    href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    PMID:{ref.pubmed}
+                  </a>
+                ) : (
+                  <Link to={`/reference/${ref.reference_no}`}>
+                    Ref:{ref.reference_no}
+                  </Link>
+                )}
+                {ref.citation && (
+                  <span style={styles.citationText}> - {ref.citation}</span>
+                )}
+              </div>
+              <button
+                onClick={() => handleUnlinkFieldReference(ref.ref_link_no, fieldName)}
+                style={styles.unlinkButtonSmall}
+                title="Unlink reference"
               >
-                PMID:{ref.pubmed}
-              </a>
-            ) : (
-              `Ref:${ref.reference_no}`
-            )}
-            <button
-              onClick={() => handleUnlinkFieldReference(ref.ref_link_no, fieldName)}
-              style={styles.unlinkButton}
-              title="Unlink reference"
-            >
-              ×
-            </button>
-          </span>
-        ))}
+                unlink
+              </button>
+            </li>
+          ))}
+        </ul>
       </div>
     );
   };
@@ -418,85 +428,101 @@ function LocusCurationPage() {
 
             {editMode ? (
               <div style={styles.editForm}>
-                <div style={styles.formRow}>
-                  <label style={styles.formLabel}>Gene Name:</label>
-                  <div style={styles.fieldWithRefs}>
-                    <input
-                      type="text"
-                      value={editForm.gene_name}
-                      onChange={(e) => handleEditChange('gene_name', e.target.value)}
-                      style={styles.formInput}
-                    />
-                    {renderFieldRefs(featureData.gene_name_refs, 'Gene Name')}
-                  </div>
-                </div>
-                <div style={styles.formRow}>
-                  <label style={styles.formLabel}>Add PMIDs:</label>
-                  <input
-                    type="text"
-                    value={editForm.gene_name_pmids}
-                    onChange={(e) => handleEditChange('gene_name_pmids', e.target.value)}
-                    style={styles.formInput}
-                    placeholder="e.g. 12345678|23456789"
-                  />
-                  <span style={styles.formHint}>Pipe-delimited PMIDs for Gene Name</span>
-                </div>
-                <div style={styles.formRow}>
-                  <label style={styles.formLabel}>Name Description:</label>
-                  <div style={styles.fieldWithRefs}>
-                    <input
-                      type="text"
-                      value={editForm.name_description}
-                      onChange={(e) => handleEditChange('name_description', e.target.value)}
-                      style={styles.formInputWide}
-                    />
-                    {renderFieldRefs(featureData.name_description_refs, 'Name Description')}
-                  </div>
-                </div>
-                <div style={styles.formRow}>
-                  <label style={styles.formLabel}>Add PMIDs:</label>
-                  <input
-                    type="text"
-                    value={editForm.name_description_pmids}
-                    onChange={(e) => handleEditChange('name_description_pmids', e.target.value)}
-                    style={styles.formInput}
-                    placeholder="e.g. 12345678|23456789"
-                  />
-                  <span style={styles.formHint}>Pipe-delimited PMIDs for Name Description</span>
-                </div>
-                <div style={styles.formRow}>
-                  <label style={styles.formLabel}>Headline:</label>
-                  <div style={styles.fieldWithRefs}>
-                    <div style={styles.textareaWrapper}>
-                      <textarea
-                        value={editForm.headline}
-                        onChange={(e) => {
-                          if (e.target.value.length <= 240) {
-                            handleEditChange('headline', e.target.value);
-                          }
-                        }}
-                        style={styles.formTextareaHeadline}
-                        rows={3}
-                        maxLength={240}
+                {/* Gene Name Section */}
+                <div style={styles.fieldSection}>
+                  <div style={styles.fieldLeft}>
+                    <div style={styles.formRow}>
+                      <label style={styles.formLabel}>Gene Name:</label>
+                      <input
+                        type="text"
+                        value={editForm.gene_name}
+                        onChange={(e) => handleEditChange('gene_name', e.target.value)}
+                        style={styles.formInput}
                       />
-                      <div style={styles.charCount}>
-                        {editForm.headline?.length || 0}/240
+                    </div>
+                  </div>
+                  <div style={styles.fieldRight}>
+                    {renderFieldRefs(featureData.gene_name_refs, 'Gene Name')}
+                    <div style={styles.addPmidRow}>
+                      <label style={styles.addPmidLabel}>Add PMIDs:</label>
+                      <input
+                        type="text"
+                        value={editForm.gene_name_pmids}
+                        onChange={(e) => handleEditChange('gene_name_pmids', e.target.value)}
+                        style={styles.formInputPmid}
+                        placeholder="e.g. 12345678|23456789"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Name Description Section */}
+                <div style={styles.fieldSection}>
+                  <div style={styles.fieldLeft}>
+                    <div style={styles.formRow}>
+                      <label style={styles.formLabel}>Name Description:</label>
+                      <textarea
+                        value={editForm.name_description}
+                        onChange={(e) => handleEditChange('name_description', e.target.value)}
+                        style={styles.formTextareaWide}
+                        rows={3}
+                      />
+                    </div>
+                  </div>
+                  <div style={styles.fieldRight}>
+                    {renderFieldRefs(featureData.name_description_refs, 'Name Description')}
+                    <div style={styles.addPmidRow}>
+                      <label style={styles.addPmidLabel}>Add PMIDs:</label>
+                      <input
+                        type="text"
+                        value={editForm.name_description_pmids}
+                        onChange={(e) => handleEditChange('name_description_pmids', e.target.value)}
+                        style={styles.formInputPmid}
+                        placeholder="e.g. 12345678|23456789"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Headline Section */}
+                <div style={styles.fieldSection}>
+                  <div style={styles.fieldLeft}>
+                    <div style={styles.formRow}>
+                      <label style={styles.formLabel}>Headline:</label>
+                      <div style={styles.textareaWrapper}>
+                        <textarea
+                          value={editForm.headline}
+                          onChange={(e) => {
+                            if (e.target.value.length <= 240) {
+                              handleEditChange('headline', e.target.value);
+                            }
+                          }}
+                          style={styles.formTextareaWide}
+                          rows={5}
+                          maxLength={240}
+                        />
+                        <div style={styles.charCount}>
+                          {editForm.headline?.length || 0}/240
+                        </div>
                       </div>
                     </div>
+                  </div>
+                  <div style={styles.fieldRight}>
                     {renderFieldRefs(featureData.headline_refs, 'Headline')}
+                    <div style={styles.addPmidRow}>
+                      <label style={styles.addPmidLabel}>Add PMIDs:</label>
+                      <input
+                        type="text"
+                        value={editForm.headline_pmids}
+                        onChange={(e) => handleEditChange('headline_pmids', e.target.value)}
+                        style={styles.formInputPmid}
+                        placeholder="e.g. 12345678|23456789"
+                      />
+                    </div>
                   </div>
                 </div>
-                <div style={styles.formRow}>
-                  <label style={styles.formLabel}>Add PMIDs:</label>
-                  <input
-                    type="text"
-                    value={editForm.headline_pmids}
-                    onChange={(e) => handleEditChange('headline_pmids', e.target.value)}
-                    style={styles.formInput}
-                    placeholder="e.g. 12345678|23456789"
-                  />
-                  <span style={styles.formHint}>Pipe-delimited PMIDs for Headline</span>
-                </div>
+
+                {/* Feature Type */}
                 <div style={styles.formRow}>
                   <label style={styles.formLabel}>Feature Type:</label>
                   <input
@@ -1052,7 +1078,25 @@ const styles = {
     fontSize: '1rem',
     border: '1px solid #ccc',
     borderRadius: '4px',
-    width: '400px',
+    width: '500px',
+    maxWidth: '100%',
+  },
+  formTextareaWide: {
+    padding: '0.5rem',
+    fontSize: '1rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    width: '500px',
+    maxWidth: '100%',
+    resize: 'vertical',
+    fontFamily: 'inherit',
+  },
+  formInputPmid: {
+    padding: '0.5rem',
+    fontSize: '1rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    width: '250px',
     maxWidth: '100%',
   },
   formSelect: {
@@ -1106,41 +1150,75 @@ const styles = {
     fontStyle: 'italic',
     paddingTop: '0.5rem',
   },
-  fieldWithRefs: {
+  fieldSection: {
+    display: 'flex',
+    gap: '2rem',
+    marginBottom: '1.5rem',
+    paddingBottom: '1rem',
+    borderBottom: '1px solid #eee',
+  },
+  fieldLeft: {
+    flex: '0 0 auto',
+  },
+  fieldRight: {
+    flex: '1 1 auto',
+    minWidth: '300px',
     display: 'flex',
     flexDirection: 'column',
-    gap: '0.5rem',
+    gap: '0.75rem',
   },
-  fieldRefs: {
+  addPmidRow: {
     display: 'flex',
-    flexWrap: 'wrap',
+    alignItems: 'center',
     gap: '0.5rem',
   },
-  refTag: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '0.25rem',
-    padding: '0.25rem 0.5rem',
-    backgroundColor: '#e8f4fc',
-    border: '1px solid #b8daef',
-    borderRadius: '3px',
+  addPmidLabel: {
+    fontWeight: 'bold',
+    fontSize: '0.9rem',
+    whiteSpace: 'nowrap',
+  },
+  refList: {
+    backgroundColor: '#f9f9f9',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    padding: '0.5rem',
+  },
+  refListHeader: {
+    fontWeight: 'bold',
+    fontSize: '0.9rem',
+    marginBottom: '0.5rem',
+    color: '#333',
+  },
+  refListItems: {
+    margin: 0,
+    padding: '0 0 0 1rem',
+    listStyle: 'disc',
+  },
+  refListItem: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    gap: '0.5rem',
+    marginBottom: '0.5rem',
+    fontSize: '0.9rem',
+  },
+  refCitation: {
+    flex: 1,
+    wordBreak: 'break-word',
+  },
+  citationText: {
+    color: '#666',
     fontSize: '0.85rem',
   },
-  unlinkButton: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '18px',
-    height: '18px',
-    padding: 0,
+  unlinkButtonSmall: {
+    padding: '0.15rem 0.4rem',
     border: 'none',
-    borderRadius: '50%',
+    borderRadius: '3px',
     backgroundColor: '#d9534f',
     color: 'white',
-    fontSize: '14px',
-    fontWeight: 'bold',
+    fontSize: '0.75rem',
     cursor: 'pointer',
-    lineHeight: 1,
+    whiteSpace: 'nowrap',
   },
   formButtons: {
     display: 'flex',
