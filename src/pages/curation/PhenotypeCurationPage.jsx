@@ -21,6 +21,7 @@ import { getOrganisms } from '../../api/litReviewApi';
 import { filterAllowedOrganisms } from '../../constants/organisms';
 import CVTreeSelect from '../../components/curation/CVTreeSelect';
 import ObservableBrowseModal from '../../components/curation/ObservableBrowseModal';
+import { formatCitationString, CitationLinksBelow, buildCitationLinks } from '../../utils/formatCitation.jsx';
 
 // Default number of new annotation sections to show
 const MIN_NEW_SECTIONS = 1;
@@ -596,15 +597,39 @@ function PhenotypeCurationPage() {
                     </label>
                   </td>
                   <td style={styles.td}>
-                    {ann.references?.map((ref, idx) => (
-                      <div key={idx}>
-                        <Link to={`/reference/${ref.reference_no}`}>
-                          {ref.pubmed
-                            ? `PMID:${ref.pubmed}`
-                            : `Ref:${ref.reference_no}`}
-                        </Link>
-                      </div>
-                    ))}
+                    {ann.references?.map((ref, idx) => {
+                      const links = buildCitationLinks({
+                        dbxref_id: ref.dbxref_id,
+                        reference_no: ref.reference_no,
+                        pubmed: ref.pubmed,
+                        urls: ref.urls,
+                      });
+                      return (
+                        <div key={idx} style={styles.refItem}>
+                          <div style={styles.citationLine}>
+                            {ref.citation ? (
+                              <>
+                                {formatCitationString(ref.citation)}
+                                {ref.pubmed && <span style={styles.pmidText}> PMID: {ref.pubmed}</span>}
+                              </>
+                            ) : ref.pubmed ? (
+                              <a
+                                href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                PMID:{ref.pubmed}
+                              </a>
+                            ) : (
+                              <Link to={`/reference/${ref.reference_no}`}>
+                                Ref:{ref.reference_no}
+                              </Link>
+                            )}
+                          </div>
+                          <CitationLinksBelow links={links} />
+                        </div>
+                      );
+                    })}
                   </td>
                 </tr>
               ))}
@@ -1015,6 +1040,16 @@ const styles = {
   },
   deleteLabel: {
     fontSize: '0.85rem',
+  },
+  refItem: {
+    marginBottom: '0.5rem',
+  },
+  citationLine: {
+    fontSize: '0.85rem',
+    lineHeight: '1.4',
+  },
+  pmidText: {
+    color: '#666',
   },
   newEntryHeader: {
     backgroundColor: '#CCCCFF',
