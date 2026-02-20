@@ -29,10 +29,16 @@ const ADD_SECTIONS_COUNT = 1;
 // Property types that have CV tree browsers
 const PROPERTY_CV_MAP = {
   strain_background: 'strain_background',
-  fungal_anatomy_ontology: 'fungal_anatomy_ontology',
   virulence_model: 'virulence_model',
   chebi_ontology: 'chebi_ontology',
 };
+
+// Property types to exclude from the form
+const EXCLUDED_PROPERTY_TYPES = [
+  'fungal_anatomy_ontology',
+  'Numerical_value',
+  'strain_name',
+];
 
 // Property types that allow multiple values (separate by |)
 const ALLOW_MULTIPLES_TYPES = [
@@ -48,7 +54,6 @@ const REQUIRED_PROPERTY_TYPES = [
   'strain_background',
   'chebi_ontology',
   'Chemical_pending',
-  'fungal_anatomy_ontology',
   'virulence_model',
   'Allele',
   'Reporter',
@@ -99,6 +104,9 @@ function PhenotypeCurationPage() {
     feature_list: '', // genes/features that share this annotation
   });
 
+  // Storage key for preserving form state
+  const storageKey = `phenotype_curation_form_${featureName}_${searchParams.get('organism') || ''}`;
+
   // Initialize organism from URL params
   useEffect(() => {
     const organismParam = searchParams.get('organism');
@@ -106,6 +114,36 @@ function PhenotypeCurationPage() {
       setSelectedOrganism(organismParam);
     }
   }, [searchParams]);
+
+  // Restore form state from sessionStorage on mount
+  useEffect(() => {
+    if (!featureName) return;
+
+    try {
+      const savedState = sessionStorage.getItem(storageKey);
+      if (savedState) {
+        const parsed = JSON.parse(savedState);
+        if (parsed.annotationSections && parsed.annotationSections.length > 0) {
+          setAnnotationSections(parsed.annotationSections);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to restore form state:', err);
+    }
+  }, [featureName, storageKey]);
+
+  // Save form state to sessionStorage whenever it changes
+  useEffect(() => {
+    if (!featureName || annotationSections.length === 0) return;
+
+    try {
+      sessionStorage.setItem(storageKey, JSON.stringify({
+        annotationSections,
+      }));
+    } catch (err) {
+      console.error('Failed to save form state:', err);
+    }
+  }, [annotationSections, featureName, storageKey]);
 
   // Load organisms on mount
   useEffect(() => {
@@ -121,7 +159,7 @@ function PhenotypeCurationPage() {
     loadOrganisms();
   }, []);
 
-  // Load property types (merge required types with database types)
+  // Load property types (merge required types with database types, exclude unwanted)
   useEffect(() => {
     const loadPropertyTypes = async () => {
       try {
@@ -134,27 +172,43 @@ function PhenotypeCurationPage() {
             allTypes.push(t);
           }
         }
-        setPropertyTypes(allTypes);
+        // Filter out excluded property types
+        const filteredTypes = allTypes.filter(t => !EXCLUDED_PROPERTY_TYPES.includes(t));
+        setPropertyTypes(filteredTypes);
       } catch (err) {
         console.error('Failed to load property types:', err);
-        // Fall back to required types if API fails
-        setPropertyTypes(REQUIRED_PROPERTY_TYPES);
+        // Fall back to required types (already filtered) if API fails
+        setPropertyTypes(REQUIRED_PROPERTY_TYPES.filter(t => !EXCLUDED_PROPERTY_TYPES.includes(t)));
       }
     };
 
     loadPropertyTypes();
   }, []);
 
-  // Initialize annotation sections when feature is loaded
+  // Initialize annotation sections when feature is loaded (only if no restored state)
   useEffect(() => {
     if (featureName && annotationSections.length === 0) {
+      // Check if we have saved state first
+      try {
+        const savedState = sessionStorage.getItem(storageKey);
+        if (savedState) {
+          const parsed = JSON.parse(savedState);
+          if (parsed.annotationSections && parsed.annotationSections.length > 0) {
+            // Restored state will be set by the restore useEffect
+            return;
+          }
+        }
+      } catch (err) {
+        // Ignore parse errors
+      }
+
       const sections = [];
       for (let i = 0; i < MIN_NEW_SECTIONS; i++) {
         sections.push(createEmptySection());
       }
       setAnnotationSections(sections);
     }
-  }, [featureName, annotationSections.length]);
+  }, [featureName, annotationSections.length, storageKey]);
 
   // Load feature annotations
   const loadAnnotations = useCallback(async () => {
@@ -287,17 +341,21 @@ function PhenotypeCurationPage() {
         }
 
         // Validate required fields
+        if (!section.reference_no && !section.pubmed) {
+          throw new Error('Reference is required: Please enter a PubMed ID or Reference number');
+        }
         if (!section.experiment_type) {
-          throw new Error('Experiment type is required for each annotation');
+          throw new Error('Experiment type is required: Please select an experiment type');
         }
         if (!section.mutant_type) {
-          throw new Error('Mutant type is required for each annotation');
+          throw new Error('Mutant type is required: Please select a mutant type');
         }
         if (section.observables.length === 0) {
-          throw new Error('At least one observable is required for each annotation');
+          throw new Error('Observable is required: Please select at least one observable');
         }
-        if (!section.reference_no && !section.pubmed) {
-          throw new Error('Reference number or PubMed ID is required');
+        // Check strain_background is filled
+        if (!section.properties?.strain_background?.value) {
+          throw new Error('Strain background is required: Please select a strain background');
         }
 
         // Parse reference fields - backend accepts either reference_no or pubmed
@@ -348,12 +406,14 @@ function PhenotypeCurationPage() {
 
       if (successCount > 0) {
         setSuccessMessage(`Created ${successCount} annotation(s) successfully`);
-        // Reset sections
-        const newSections = [];
-        for (let i = 0; i < MIN_NEW_SECTIONS; i++) {
-          newSections.push(createEmptySection());
-        }
-        setAnnotationSections(newSections);
+        // Keep form data so curator can adjust and submit another annotation
+        // Only clear the observables since those were just submitted
+        setAnnotationSections((prev) =>
+          prev.map((section) => ({
+            ...section,
+            observables: [], // Clear observables since they were submitted
+          }))
+        );
         loadAnnotations();
         setTimeout(() => setSuccessMessage(null), 5000);
       } else {
@@ -437,7 +497,17 @@ function PhenotypeCurationPage() {
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <h1>Phenotype Curation: {featureData?.feature_name}</h1>
+        <h1>
+          Phenotype Curation: {featureData?.feature_name}
+          {featureData?.gene_name && featureData.gene_name !== featureData.feature_name && (
+            <span> / {featureData.gene_name}</span>
+          )}
+          {selectedOrganism && organisms.length > 0 && (
+            <span style={styles.speciesInTitle}>
+              {' '}({organisms.find(o => o.organism_abbrev === selectedOrganism)?.organism_name || selectedOrganism})
+            </span>
+          )}
+        </h1>
         <div style={styles.headerRight}>
           <span>
             Curator: {user?.first_name} {user?.last_name}
@@ -481,9 +551,6 @@ function PhenotypeCurationPage() {
           <table style={styles.table}>
             <thead>
               <tr>
-                {featureData?.features_searched > 1 && (
-                  <th style={styles.th}>Feature</th>
-                )}
                 <th style={styles.th}>Experiment Type</th>
                 <th style={styles.th}>Mutant Type</th>
                 <th style={styles.th}>Qualifier</th>
@@ -497,13 +564,6 @@ function PhenotypeCurationPage() {
             <tbody>
               {featureData?.annotations?.map((ann) => (
                 <tr key={ann.pheno_annotation_no}>
-                  {featureData?.features_searched > 1 && (
-                    <td style={styles.td}>
-                      <Link to={`/locus/${ann.feature_name}`}>
-                        {ann.feature_name}
-                      </Link>
-                    </td>
-                  )}
                   <td style={styles.td}>{ann.experiment_type}</td>
                   <td style={styles.td}>{ann.mutant_type}</td>
                   <td style={styles.td}>{ann.qualifier || '-'}</td>
@@ -838,6 +898,12 @@ const styles = {
     alignItems: 'center',
     gap: '1rem',
     fontSize: '0.9rem',
+  },
+  speciesInTitle: {
+    fontSize: '0.85em',
+    fontWeight: 'normal',
+    color: '#666',
+    fontStyle: 'italic',
   },
   headerLink: {
     padding: '0.25rem 0.5rem',
