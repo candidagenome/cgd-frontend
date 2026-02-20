@@ -13,6 +13,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import locusCurationApi from '../../api/locusCurationApi';
 import { filterAllowedOrganisms } from '../../constants/organisms';
+import { formatCitationString, CitationLinksBelow, buildCitationLinks } from '../../utils/formatCitation.jsx';
 
 function LocusCurationPage() {
   const { featureName } = useParams();
@@ -78,8 +79,11 @@ function LocusCurationPage() {
       setFeatureData(data);
       setEditForm({
         gene_name: data.gene_name || '',
+        gene_name_pmids: data.gene_name_pmids || '',
         name_description: data.name_description || '',
+        name_description_pmids: data.name_description_pmids || '',
         headline: data.headline || '',
+        headline_pmids: data.headline_pmids || '',
         feature_type: data.feature_type || '',
       });
     } catch (err) {
@@ -255,6 +259,76 @@ function LocusCurationPage() {
     }
   };
 
+  // Unlink field reference
+  const handleUnlinkFieldReference = async (refLinkNo, fieldName) => {
+    if (!window.confirm(`Are you sure you want to unlink this reference from ${fieldName}?`)) return;
+
+    try {
+      await locusCurationApi.unlinkFieldReference(refLinkNo);
+      setSuccessMessage('Reference unlinked');
+      loadFeature(featureData.feature_no);
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to unlink reference');
+    }
+  };
+
+  // Render field references as a list with citations and links (matching Locus Summary style)
+  const renderFieldRefs = (refs, fieldName) => {
+    if (!refs || refs.length === 0) return null;
+    return (
+      <div style={styles.refList}>
+        <div style={styles.refListHeader}>References:</div>
+        <div style={styles.refListItems}>
+          {refs.map((ref) => {
+            const links = buildCitationLinks({
+              dbxref_id: ref.dbxref_id,
+              reference_no: ref.reference_no,
+              pubmed: ref.pubmed,
+              urls: ref.urls,
+            });
+            return (
+              <div key={ref.ref_link_no} style={styles.refListItem}>
+                <div style={styles.refCitation}>
+                  <div style={styles.citationLine}>
+                    {ref.citation ? (
+                      <>
+                        {formatCitationString(ref.citation)}
+                        {ref.pubmed && <span style={styles.pmidText}> PMID: {ref.pubmed}</span>}
+                      </>
+                    ) : ref.pubmed ? (
+                      <>
+                        <a
+                          href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          PMID:{ref.pubmed}
+                        </a>
+                      </>
+                    ) : (
+                      <Link to={`/reference/${ref.reference_no}`}>
+                        Ref:{ref.reference_no}
+                      </Link>
+                    )}
+                  </div>
+                  <CitationLinksBelow links={links} />
+                </div>
+                <button
+                  onClick={() => handleUnlinkFieldReference(ref.ref_link_no, fieldName)}
+                  style={styles.unlinkButtonSmall}
+                  title="Unlink reference"
+                >
+                  unlink
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div style={styles.container}>
       <div style={styles.header}>
@@ -312,7 +386,7 @@ function LocusCurationPage() {
                   <th style={styles.th}>Gene Name</th>
                   <th style={styles.th}>Type</th>
                   <th style={styles.th}>Headline</th>
-                  <th style={styles.th}>Action</th>
+                  <th style={styles.thAction}>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -322,7 +396,7 @@ function LocusCurationPage() {
                     <td style={styles.td}>{f.gene_name || '-'}</td>
                     <td style={styles.td}>{f.feature_type}</td>
                     <td style={styles.td}>{f.headline || '-'}</td>
-                    <td style={styles.td}>
+                    <td style={styles.tdAction}>
                       <button
                         onClick={() => handleSelectFeature(f)}
                         style={styles.actionButton}
@@ -370,33 +444,101 @@ function LocusCurationPage() {
 
             {editMode ? (
               <div style={styles.editForm}>
-                <div style={styles.formRow}>
-                  <label style={styles.formLabel}>Gene Name:</label>
-                  <input
-                    type="text"
-                    value={editForm.gene_name}
-                    onChange={(e) => handleEditChange('gene_name', e.target.value)}
-                    style={styles.formInput}
-                  />
+                {/* Gene Name Section */}
+                <div style={styles.fieldSection}>
+                  <div style={styles.fieldLeft}>
+                    <div style={styles.formRow}>
+                      <label style={styles.formLabel}>Gene Name:</label>
+                      <input
+                        type="text"
+                        value={editForm.gene_name}
+                        onChange={(e) => handleEditChange('gene_name', e.target.value)}
+                        style={styles.formInputLarge}
+                      />
+                    </div>
+                  </div>
+                  <div style={styles.fieldRight}>
+                    {renderFieldRefs(featureData.gene_name_refs, 'Gene Name')}
+                    <div style={styles.addPmidRow}>
+                      <label style={styles.addPmidLabel}>Add PMIDs:</label>
+                      <input
+                        type="text"
+                        value={editForm.gene_name_pmids}
+                        onChange={(e) => handleEditChange('gene_name_pmids', e.target.value)}
+                        style={styles.formInputPmid}
+                        placeholder="e.g. 12345678|23456789"
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div style={styles.formRow}>
-                  <label style={styles.formLabel}>Name Description:</label>
-                  <input
-                    type="text"
-                    value={editForm.name_description}
-                    onChange={(e) => handleEditChange('name_description', e.target.value)}
-                    style={styles.formInputWide}
-                  />
+
+                {/* Name Description Section */}
+                <div style={styles.fieldSection}>
+                  <div style={styles.fieldLeft}>
+                    <div style={styles.formRow}>
+                      <label style={styles.formLabel}>Name Description:</label>
+                      <textarea
+                        value={editForm.name_description}
+                        onChange={(e) => handleEditChange('name_description', e.target.value)}
+                        style={styles.formTextareaLarge}
+                        rows={3}
+                      />
+                    </div>
+                  </div>
+                  <div style={styles.fieldRight}>
+                    {renderFieldRefs(featureData.name_description_refs, 'Name Description')}
+                    <div style={styles.addPmidRow}>
+                      <label style={styles.addPmidLabel}>Add PMIDs:</label>
+                      <input
+                        type="text"
+                        value={editForm.name_description_pmids}
+                        onChange={(e) => handleEditChange('name_description_pmids', e.target.value)}
+                        style={styles.formInputPmid}
+                        placeholder="e.g. 12345678|23456789"
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div style={styles.formRow}>
-                  <label style={styles.formLabel}>Headline:</label>
-                  <input
-                    type="text"
-                    value={editForm.headline}
-                    onChange={(e) => handleEditChange('headline', e.target.value)}
-                    style={styles.formInputWide}
-                  />
+
+                {/* Headline Section */}
+                <div style={styles.fieldSection}>
+                  <div style={styles.fieldLeft}>
+                    <div style={styles.formRow}>
+                      <label style={styles.formLabel}>Headline:</label>
+                      <div style={styles.textareaWrapper}>
+                        <textarea
+                          value={editForm.headline}
+                          onChange={(e) => {
+                            if (e.target.value.length <= 240) {
+                              handleEditChange('headline', e.target.value);
+                            }
+                          }}
+                          style={styles.formTextareaLarge}
+                          rows={5}
+                          maxLength={240}
+                        />
+                        <div style={styles.charCount}>
+                          {editForm.headline?.length || 0}/240
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div style={styles.fieldRight}>
+                    {renderFieldRefs(featureData.headline_refs, 'Headline')}
+                    <div style={styles.addPmidRow}>
+                      <label style={styles.addPmidLabel}>Add PMIDs:</label>
+                      <input
+                        type="text"
+                        value={editForm.headline_pmids}
+                        onChange={(e) => handleEditChange('headline_pmids', e.target.value)}
+                        style={styles.formInputPmid}
+                        placeholder="e.g. 12345678|23456789"
+                      />
+                    </div>
+                  </div>
                 </div>
+
+                {/* Feature Type */}
                 <div style={styles.formRow}>
                   <label style={styles.formLabel}>Feature Type:</label>
                   <input
@@ -419,8 +561,11 @@ function LocusCurationPage() {
                       setEditMode(false);
                       setEditForm({
                         gene_name: featureData.gene_name || '',
+                        gene_name_pmids: featureData.gene_name_pmids || '',
                         name_description: featureData.name_description || '',
+                        name_description_pmids: featureData.name_description_pmids || '',
                         headline: featureData.headline || '',
+                        headline_pmids: featureData.headline_pmids || '',
                         feature_type: featureData.feature_type || '',
                       });
                     }}
@@ -526,10 +671,10 @@ function LocusCurationPage() {
               <table style={styles.table}>
                 <thead>
                   <tr>
-                    <th style={styles.th}>Alias</th>
-                    <th style={styles.th}>Type</th>
+                    <th style={styles.thMedium}>Alias</th>
+                    <th style={styles.thMedium}>Type</th>
                     <th style={styles.th}>References</th>
-                    <th style={styles.th}>Action</th>
+                    <th style={styles.thAction}>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -538,13 +683,33 @@ function LocusCurationPage() {
                       <td style={styles.td}>{alias.alias_name}</td>
                       <td style={styles.td}>{alias.alias_type}</td>
                       <td style={styles.td}>
-                        {alias.references?.map((ref) => (
-                          <Link key={ref.reference_no} to={`/reference/${ref.reference_no}`}>
-                            {ref.pubmed ? `PMID:${ref.pubmed}` : `Ref:${ref.reference_no}`}
-                          </Link>
-                        ))}
+                        {alias.references?.map((ref) => {
+                          const links = buildCitationLinks({
+                            dbxref_id: ref.dbxref_id,
+                            reference_no: ref.reference_no,
+                            pubmed: ref.pubmed,
+                            urls: ref.urls,
+                          });
+                          return (
+                            <div key={ref.reference_no} style={styles.aliasRefItem}>
+                              <div style={styles.citationLine}>
+                                {ref.citation ? (
+                                  <>
+                                    {formatCitationString(ref.citation)}
+                                    {ref.pubmed && <span style={styles.pmidText}> PMID: {ref.pubmed}</span>}
+                                  </>
+                                ) : ref.pubmed ? (
+                                  `PMID:${ref.pubmed}`
+                                ) : (
+                                  `Ref:${ref.reference_no}`
+                                )}
+                              </div>
+                              <CitationLinksBelow links={links} />
+                            </div>
+                          );
+                        })}
                       </td>
-                      <td style={styles.td}>
+                      <td style={styles.tdAction}>
                         <button
                           onClick={() => handleRemoveAlias(alias.feat_alias_no)}
                           style={styles.deleteButton}
@@ -613,10 +778,10 @@ function LocusCurationPage() {
               <table style={styles.table}>
                 <thead>
                   <tr>
-                    <th style={styles.th}>Type</th>
+                    <th style={styles.thMedium}>Type</th>
                     <th style={styles.th}>Text</th>
-                    <th style={styles.th}>Date</th>
-                    <th style={styles.th}>Action</th>
+                    <th style={styles.thSmall}>Date</th>
+                    <th style={styles.thAction}>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -625,7 +790,7 @@ function LocusCurationPage() {
                       <td style={styles.td}>{note.note_type}</td>
                       <td style={styles.td}>{note.note_text}</td>
                       <td style={styles.td}>{note.date_created?.split('T')[0] || '-'}</td>
-                      <td style={styles.td}>
+                      <td style={styles.tdAction}>
                         <button
                           onClick={() => handleRemoveNote(note.note_link_no)}
                           style={styles.deleteButton}
@@ -693,9 +858,9 @@ function LocusCurationPage() {
               <table style={styles.table}>
                 <thead>
                   <tr>
-                    <th style={styles.th}>Type</th>
+                    <th style={styles.thMediumLarge}>Type</th>
                     <th style={styles.th}>Link</th>
-                    <th style={styles.th}>Action</th>
+                    <th style={styles.thAction}>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -707,7 +872,7 @@ function LocusCurationPage() {
                           {url.link}
                         </a>
                       </td>
-                      <td style={styles.td}>
+                      <td style={styles.tdAction}>
                         <button
                           onClick={() => handleRemoveUrl(url.feat_url_no)}
                           style={styles.deleteButton}
@@ -892,6 +1057,7 @@ const styles = {
   },
   table: {
     width: '100%',
+    tableLayout: 'fixed',
     borderCollapse: 'collapse',
     fontSize: '0.9rem',
   },
@@ -901,10 +1067,47 @@ const styles = {
     borderBottom: '2px solid #333',
     backgroundColor: '#f5f5f5',
   },
+  thAction: {
+    textAlign: 'right',
+    padding: '0.5rem',
+    borderBottom: '2px solid #333',
+    backgroundColor: '#f5f5f5',
+    width: '80px',
+  },
+  thSmall: {
+    textAlign: 'left',
+    padding: '0.5rem',
+    borderBottom: '2px solid #333',
+    backgroundColor: '#f5f5f5',
+    width: '100px',
+  },
+  thMedium: {
+    textAlign: 'left',
+    padding: '0.5rem',
+    borderBottom: '2px solid #333',
+    backgroundColor: '#f5f5f5',
+    width: '200px',
+  },
+  thMediumLarge: {
+    textAlign: 'left',
+    padding: '0.5rem',
+    borderBottom: '2px solid #333',
+    backgroundColor: '#f5f5f5',
+    width: '250px',
+  },
   td: {
     padding: '0.5rem',
     borderBottom: '1px solid #ddd',
     verticalAlign: 'top',
+    wordWrap: 'break-word',
+    overflow: 'hidden',
+  },
+  tdAction: {
+    padding: '0.5rem',
+    borderBottom: '1px solid #ddd',
+    verticalAlign: 'top',
+    textAlign: 'right',
+    width: '80px',
   },
   editForm: {
     display: 'flex',
@@ -944,12 +1147,48 @@ const styles = {
     borderRadius: '4px',
     width: '200px',
   },
-  formInputWide: {
+  formInputLarge: {
     padding: '0.5rem',
     fontSize: '1rem',
     border: '1px solid #ccc',
     borderRadius: '4px',
     width: '400px',
+    maxWidth: '100%',
+  },
+  formInputWide: {
+    padding: '0.5rem',
+    fontSize: '1rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    width: '500px',
+    maxWidth: '100%',
+  },
+  formTextareaLarge: {
+    padding: '0.5rem',
+    fontSize: '1rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    width: '400px',
+    maxWidth: '100%',
+    resize: 'vertical',
+    fontFamily: 'inherit',
+  },
+  formTextareaWide: {
+    padding: '0.5rem',
+    fontSize: '1rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    width: '500px',
+    maxWidth: '100%',
+    resize: 'vertical',
+    fontFamily: 'inherit',
+  },
+  formInputPmid: {
+    padding: '0.5rem',
+    fontSize: '1rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    width: '250px',
     maxWidth: '100%',
   },
   formSelect: {
@@ -976,6 +1215,112 @@ const styles = {
     width: '400px',
     maxWidth: '100%',
     resize: 'vertical',
+  },
+  formTextareaHeadline: {
+    padding: '0.5rem',
+    fontSize: '1rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    width: '400px',
+    maxWidth: '100%',
+    resize: 'vertical',
+    fontFamily: 'inherit',
+  },
+  textareaWrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.25rem',
+  },
+  charCount: {
+    fontSize: '0.8rem',
+    color: '#666',
+    textAlign: 'right',
+  },
+  formHint: {
+    fontSize: '0.8rem',
+    color: '#666',
+    fontStyle: 'italic',
+    paddingTop: '0.5rem',
+  },
+  fieldSection: {
+    display: 'flex',
+    gap: '2rem',
+    marginBottom: '1.5rem',
+    paddingBottom: '1rem',
+    borderBottom: '1px solid #eee',
+  },
+  fieldLeft: {
+    flex: '0 0 auto',
+  },
+  fieldRight: {
+    flex: '1 1 auto',
+    minWidth: '300px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.75rem',
+  },
+  addPmidRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+  },
+  addPmidLabel: {
+    fontWeight: 'bold',
+    fontSize: '0.9rem',
+    whiteSpace: 'nowrap',
+  },
+  refList: {
+    backgroundColor: '#f9f9f9',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    padding: '0.5rem',
+  },
+  refListHeader: {
+    fontWeight: 'bold',
+    fontSize: '0.9rem',
+    marginBottom: '0.5rem',
+    color: '#333',
+  },
+  refListItems: {
+    margin: 0,
+    padding: '0 0 0 1rem',
+    listStyle: 'disc',
+  },
+  refListItem: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    gap: '0.5rem',
+    marginBottom: '0.5rem',
+    fontSize: '0.9rem',
+  },
+  refCitation: {
+    flex: 1,
+    wordBreak: 'break-word',
+  },
+  citationText: {
+    color: '#666',
+    fontSize: '0.85rem',
+  },
+  citationLine: {
+    marginBottom: '0.25rem',
+  },
+  pmidText: {
+    color: '#666',
+    fontSize: '0.85rem',
+  },
+  aliasRefItem: {
+    marginBottom: '0.5rem',
+  },
+  unlinkButtonSmall: {
+    padding: '0.15rem 0.4rem',
+    border: 'none',
+    borderRadius: '3px',
+    backgroundColor: '#d9534f',
+    color: 'white',
+    fontSize: '0.75rem',
+    cursor: 'pointer',
+    whiteSpace: 'nowrap',
   },
   formButtons: {
     display: 'flex',

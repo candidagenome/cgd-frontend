@@ -141,6 +141,17 @@ export const locusCurationApi = {
     const response = await api.delete(`/api/curation/locus/url/${featUrlNo}`);
     return response.data;
   },
+
+  /**
+   * Unlink a reference from a feature field.
+   *
+   * @param {number} refLinkNo - RefLink record ID
+   * @returns {Promise<{success: boolean, message: string}>}
+   */
+  unlinkFieldReference: async (refLinkNo) => {
+    const response = await api.delete(`/api/curation/locus/field-ref/${refLinkNo}`);
+    return response.data;
+  },
 };
 
 export default locusCurationApi;
