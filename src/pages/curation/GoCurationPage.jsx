@@ -180,9 +180,9 @@ function GoCurationPage() {
     loadAnnotations();
   }, [loadAnnotations]);
 
-  // Group annotations by aspect
+  // Group annotations by aspect (lowercase for consistent matching with aspectOrder)
   const annotationsByAspect = featureData?.annotations?.reduce((acc, ann) => {
-    const aspect = ann.go_aspect || 'Unknown';
+    const aspect = (ann.go_aspect || 'unknown').toLowerCase();
     if (!acc[aspect]) acc[aspect] = [];
     acc[aspect].push(ann);
     return acc;
