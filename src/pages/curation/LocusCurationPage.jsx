@@ -671,8 +671,8 @@ function LocusCurationPage() {
               <table style={styles.table}>
                 <thead>
                   <tr>
-                    <th style={styles.th}>Alias</th>
-                    <th style={styles.th}>Type</th>
+                    <th style={styles.thSmall}>Alias</th>
+                    <th style={styles.thSmall}>Type</th>
                     <th style={styles.th}>References</th>
                     <th style={styles.thAction}>Action</th>
                   </tr>
@@ -778,9 +778,9 @@ function LocusCurationPage() {
               <table style={styles.table}>
                 <thead>
                   <tr>
-                    <th style={styles.th}>Type</th>
+                    <th style={styles.thMedium}>Type</th>
                     <th style={styles.th}>Text</th>
-                    <th style={styles.th}>Date</th>
+                    <th style={styles.thSmall}>Date</th>
                     <th style={styles.thAction}>Action</th>
                   </tr>
                 </thead>
@@ -858,7 +858,7 @@ function LocusCurationPage() {
               <table style={styles.table}>
                 <thead>
                   <tr>
-                    <th style={styles.th}>Type</th>
+                    <th style={styles.thMedium}>Type</th>
                     <th style={styles.th}>Link</th>
                     <th style={styles.thAction}>Action</th>
                   </tr>
@@ -1073,6 +1073,20 @@ const styles = {
     borderBottom: '2px solid #333',
     backgroundColor: '#f5f5f5',
     width: '80px',
+  },
+  thSmall: {
+    textAlign: 'left',
+    padding: '0.5rem',
+    borderBottom: '2px solid #333',
+    backgroundColor: '#f5f5f5',
+    width: '100px',
+  },
+  thMedium: {
+    textAlign: 'left',
+    padding: '0.5rem',
+    borderBottom: '2px solid #333',
+    backgroundColor: '#f5f5f5',
+    width: '120px',
   },
   td: {
     padding: '0.5rem',
