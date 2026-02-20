@@ -479,15 +479,12 @@ function GoCurationPage() {
         {Object.entries(annotationsByAspect).length === 0 ? (
           <p style={styles.noAnnotations}>No GO annotations found for this feature.</p>
         ) : (
-          // Sort aspects: Function first, then Process, then Component
-          Object.entries(annotationsByAspect)
-            .sort(([a], [b]) => {
-              const orderA = aspectOrder.indexOf(a);
-              const orderB = aspectOrder.indexOf(b);
-              // If aspect not in order list, put at end
-              return (orderA === -1 ? 999 : orderA) - (orderB === -1 ? 999 : orderB);
-            })
-            .map(([aspect, annotations]) => (
+          // Display aspects in order: Function first, then Process, then Component
+          aspectOrder
+            .filter(aspect => annotationsByAspect[aspect])
+            .map((aspect) => {
+              const annotations = annotationsByAspect[aspect];
+              return (
             <section key={aspect} style={styles.aspectSection}>
               <h3 style={styles.aspectHeader}>
                 {aspectNames[aspect] || aspect} ({annotations.length})
@@ -593,7 +590,8 @@ function GoCurationPage() {
                 </tbody>
               </table>
             </section>
-          ))
+          );
+        })
         )}
       </div>
 
