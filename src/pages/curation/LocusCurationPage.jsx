@@ -830,11 +830,16 @@ function LocusCurationPage() {
                     required
                   >
                     <option value="">Select type...</option>
+                    <option value="query by CGD ORF name">query by CGD ORF name</option>
+                    <option value="query by ID assigned by database">query by ID assigned by database</option>
+                    <option value="Phenotype Viewer">Phenotype Viewer</option>
+                    <option value="Genome View">Genome View</option>
+                    <option value="Retrieve Reads">Retrieve Reads</option>
+                    <option value="Download Datasets">Download Datasets</option>
                     <option value="Reference Data">Reference Data</option>
                     <option value="Reference LINKOUT">Reference LINKOUT</option>
                     <option value="Reference supplement">Reference supplement</option>
                     <option value="Reference full text">Reference full text</option>
-                    <option value="Phenotype Viewer">Phenotype Viewer</option>
                     <option value="Research summary">Research summary</option>
                     <option value="Other">Other</option>
                   </select>
