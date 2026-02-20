@@ -180,9 +180,9 @@ function GoCurationPage() {
     loadAnnotations();
   }, [loadAnnotations]);
 
-  // Group annotations by aspect
+  // Group annotations by aspect (lowercase for consistent matching with aspectOrder)
   const annotationsByAspect = featureData?.annotations?.reduce((acc, ann) => {
-    const aspect = ann.go_aspect || 'Unknown';
+    const aspect = (ann.go_aspect || 'unknown').toLowerCase();
     if (!acc[aspect]) acc[aspect] = [];
     acc[aspect].push(ann);
     return acc;
@@ -365,12 +365,28 @@ function GoCurationPage() {
     }
   };
 
-  // Aspect display names
+  // Aspect display names (map all variations to display names)
   const aspectNames = {
     function: 'Molecular Function (F)',
+    molecular_function: 'Molecular Function (F)',
+    f: 'Molecular Function (F)',
     process: 'Biological Process (P)',
+    biological_process: 'Biological Process (P)',
+    p: 'Biological Process (P)',
     component: 'Cellular Component (C)',
+    cellular_component: 'Cellular Component (C)',
+    c: 'Cellular Component (C)',
   };
+
+  // Map aspect variations to canonical order keys
+  const aspectToOrder = {
+    function: 0, molecular_function: 0, f: 0,
+    process: 1, biological_process: 1, p: 1,
+    component: 2, cellular_component: 2, c: 2,
+  };
+
+  // Define aspect display order (canonical keys)
+  const aspectOrder = ['function', 'process', 'component'];
 
   // Handle search form submission
   const handleSearch = (e) => {
@@ -469,18 +485,148 @@ function GoCurationPage() {
       {successMessage && <div style={styles.success}>{successMessage}</div>}
       {error && <div style={styles.error}>{error}</div>}
 
-      {/* Add Annotation Button */}
-      <div style={styles.actions}>
-        <button
-          onClick={() => setShowAddForm(!showAddForm)}
-          style={styles.addButton}
-        >
-          {showAddForm ? 'Cancel' : '+ Add New GO Annotation'}
-        </button>
+      {/* Existing Annotations - displayed first so curators can check data */}
+      <div style={styles.annotations}>
+        <h2>Existing GO Annotations ({featureData?.annotations?.length || 0})</h2>
+
+        {(!featureData?.annotations || featureData.annotations.length === 0) ? (
+          <p style={styles.noAnnotations}>No GO annotations found for this feature.</p>
+        ) : (
+          // Display aspects in order: Function first, then Process, then Component
+          Object.keys(annotationsByAspect)
+            .filter(aspect => annotationsByAspect[aspect] && annotationsByAspect[aspect].length > 0)
+            .sort((a, b) => {
+              const orderA = aspectToOrder[a] ?? 999;
+              const orderB = aspectToOrder[b] ?? 999;
+              return orderA - orderB;
+            })
+            .map((aspect) => {
+              const annotations = annotationsByAspect[aspect];
+              if (!annotations || annotations.length === 0) return null;
+              return (
+            <section key={aspect} style={styles.aspectSection}>
+              <h3 style={styles.aspectHeader}>
+                {aspectNames[aspect] || aspect} ({annotations.length})
+              </h3>
+
+              <table style={styles.table}>
+                <thead>
+                  <tr>
+                    <th style={styles.th}>GO ID</th>
+                    <th style={styles.th}>Term</th>
+                    <th style={styles.th}>Evidence</th>
+                    <th style={styles.th}>Evidence Support</th>
+                    <th style={styles.th}>References</th>
+                    <th style={styles.th}>Last Reviewed</th>
+                    <th style={styles.th}>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {annotations.map((ann) => (
+                    <tr key={ann.go_annotation_no}>
+                      <td style={styles.td}>
+                        <a
+                          href={`http://amigo.geneontology.org/amigo/term/GO:${String(ann.goid).padStart(7, '0')}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          GO:{String(ann.goid).padStart(7, '0')}
+                        </a>
+                      </td>
+                      <td style={styles.td}>
+                        {ann.references?.some((r) => r.qualifiers?.length > 0) && (
+                          <span style={styles.termQualifier}>
+                            {ann.references.find((r) => r.qualifiers?.length > 0)?.qualifiers?.[0]?.toLowerCase()}{' '}
+                          </span>
+                        )}
+                        {ann.go_term}
+                      </td>
+                      <td style={styles.td}>{ann.go_evidence}</td>
+                      <td style={styles.td}>
+                        {/* Evidence support (with/from info) from references */}
+                        {(() => {
+                          // Collect all evidence support from all references
+                          const allSupport = ann.references?.flatMap(
+                            (ref) => ref.evidence_support || []
+                          ) || [];
+                          if (allSupport.length === 0) {
+                            return <span style={styles.noSupport}>-</span>;
+                          }
+                          return (
+                            <div>
+                              {allSupport.map((sup, idx) => (
+                                <div key={idx}>
+                                  {sup.support_type === 'From' && sup.dbxref_type === 'GOID' ? (
+                                    <span>
+                                      from{' '}
+                                      <a
+                                        href={`http://amigo.geneontology.org/amigo/term/GO:${String(sup.dbxref_id).padStart(7, '0')}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                      >
+                                        GO:{String(sup.dbxref_id).padStart(7, '0')}
+                                      </a>
+                                    </span>
+                                  ) : (
+                                    <span>
+                                      {sup.support_type.toLowerCase()} {sup.source}: {sup.dbxref_id}
+                                    </span>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          );
+                        })()}
+                      </td>
+                      <td style={styles.td}>
+                        {ann.references?.map((ref, idx) => (
+                          <div key={ref.go_ref_no}>
+                            <Link to={`/reference/${ref.reference_no}`}>
+                              {ref.pubmed ? `PMID:${ref.pubmed}` : `Ref:${ref.reference_no}`}
+                            </Link>
+                            {ref.qualifiers?.length > 0 && (
+                              <span style={styles.qualifiers}>
+                                {' '}({ref.qualifiers.join(', ')})
+                              </span>
+                            )}
+                          </div>
+                        ))}
+                      </td>
+                      <td style={styles.td}>
+                        {ann.date_last_reviewed?.split('T')[0] || '-'}
+                      </td>
+                      <td style={styles.td}>
+                        <label style={styles.deleteLabel}>
+                          <input
+                            type="checkbox"
+                            onChange={() => handleDelete(ann.go_annotation_no)}
+                          />
+                          {' '}delete
+                        </label>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </section>
+          );
+        })
+        )}
       </div>
 
-      {/* Add Annotation Form - Multiple Rows like Perl version */}
-      {showAddForm && (
+      {/* Add New GO Annotation - at bottom so curators can check existing data first */}
+      <div style={styles.addSection}>
+        <h2 style={styles.addSectionHeader}>Add New GO Annotation</h2>
+
+        {/* Add Annotation Form - Multiple Rows like Perl version */}
+        {!showAddForm ? (
+          <button
+            onClick={() => setShowAddForm(true)}
+            style={styles.addButton}
+          >
+            + Add New GO Annotation
+          </button>
+        ) : (
         <div style={styles.formContainer}>
           <h3 style={styles.sectionTitle}>Enter New Annotations</h3>
           {formError && (
@@ -756,122 +902,6 @@ function GoCurationPage() {
           </form>
         </div>
       )}
-
-      {/* Existing Annotations */}
-      <div style={styles.annotations}>
-        <h2>Existing GO Annotations ({featureData?.annotations?.length || 0})</h2>
-
-        {Object.entries(annotationsByAspect).length === 0 ? (
-          <p style={styles.noAnnotations}>No GO annotations found for this feature.</p>
-        ) : (
-          Object.entries(annotationsByAspect).map(([aspect, annotations]) => (
-            <section key={aspect} style={styles.aspectSection}>
-              <h3 style={styles.aspectHeader}>
-                {aspectNames[aspect] || aspect} ({annotations.length})
-              </h3>
-
-              <table style={styles.table}>
-                <thead>
-                  <tr>
-                    <th style={styles.th}>GO ID</th>
-                    <th style={styles.th}>Term</th>
-                    <th style={styles.th}>Evidence</th>
-                    <th style={styles.th}>Evidence Support</th>
-                    <th style={styles.th}>References</th>
-                    <th style={styles.th}>Last Reviewed</th>
-                    <th style={styles.th}>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {annotations.map((ann) => (
-                    <tr key={ann.go_annotation_no}>
-                      <td style={styles.td}>
-                        <a
-                          href={`http://amigo.geneontology.org/amigo/term/GO:${String(ann.goid).padStart(7, '0')}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          GO:{String(ann.goid).padStart(7, '0')}
-                        </a>
-                      </td>
-                      <td style={styles.td}>
-                        {ann.references?.some((r) => r.qualifiers?.length > 0) && (
-                          <span style={styles.termQualifier}>
-                            {ann.references.find((r) => r.qualifiers?.length > 0)?.qualifiers?.[0]?.toLowerCase()}{' '}
-                          </span>
-                        )}
-                        {ann.go_term}
-                      </td>
-                      <td style={styles.td}>{ann.go_evidence}</td>
-                      <td style={styles.td}>
-                        {/* Evidence support (with/from info) from references */}
-                        {(() => {
-                          // Collect all evidence support from all references
-                          const allSupport = ann.references?.flatMap(
-                            (ref) => ref.evidence_support || []
-                          ) || [];
-                          if (allSupport.length === 0) {
-                            return <span style={styles.noSupport}>-</span>;
-                          }
-                          return (
-                            <div>
-                              {allSupport.map((sup, idx) => (
-                                <div key={idx}>
-                                  {sup.support_type === 'From' && sup.dbxref_type === 'GOID' ? (
-                                    <span>
-                                      from{' '}
-                                      <a
-                                        href={`http://amigo.geneontology.org/amigo/term/GO:${String(sup.dbxref_id).padStart(7, '0')}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                      >
-                                        GO:{String(sup.dbxref_id).padStart(7, '0')}
-                                      </a>
-                                    </span>
-                                  ) : (
-                                    <span>
-                                      {sup.support_type.toLowerCase()} {sup.source}: {sup.dbxref_id}
-                                    </span>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          );
-                        })()}
-                      </td>
-                      <td style={styles.td}>
-                        {ann.references?.map((ref, idx) => (
-                          <div key={ref.go_ref_no}>
-                            <Link to={`/reference/${ref.reference_no}`}>
-                              {ref.pubmed ? `PMID:${ref.pubmed}` : `Ref:${ref.reference_no}`}
-                            </Link>
-                            {ref.qualifiers?.length > 0 && (
-                              <span style={styles.qualifiers}>
-                                {' '}({ref.qualifiers.join(', ')})
-                              </span>
-                            )}
-                          </div>
-                        ))}
-                      </td>
-                      <td style={styles.td}>
-                        {ann.date_last_reviewed?.split('T')[0] || '-'}
-                      </td>
-                      <td style={styles.td}>
-                        <label style={styles.deleteLabel}>
-                          <input
-                            type="checkbox"
-                            onChange={() => handleDelete(ann.go_annotation_no)}
-                          />
-                          {' '}delete
-                        </label>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </section>
-          ))
-        )}
       </div>
     </div>
   );
@@ -1027,6 +1057,18 @@ const styles = {
   },
   annotations: {
     marginTop: '1.5rem',
+  },
+  addSection: {
+    marginTop: '2rem',
+    padding: '1rem',
+    backgroundColor: '#f9f9f9',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+  },
+  addSectionHeader: {
+    backgroundColor: '#CCCCFF',
+    padding: '0.5rem',
+    margin: '0 0 1rem 0',
   },
   aspectSection: {
     marginBottom: '1.5rem',
