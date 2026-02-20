@@ -1057,6 +1057,7 @@ const styles = {
   },
   table: {
     width: '100%',
+    tableLayout: 'fixed',
     borderCollapse: 'collapse',
     fontSize: '0.9rem',
   },
@@ -1070,6 +1071,8 @@ const styles = {
     padding: '0.5rem',
     borderBottom: '1px solid #ddd',
     verticalAlign: 'top',
+    wordWrap: 'break-word',
+    overflow: 'hidden',
   },
   editForm: {
     display: 'flex',
