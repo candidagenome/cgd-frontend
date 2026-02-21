@@ -1722,7 +1722,7 @@ const styles = {
     marginRight: '1rem',
   },
   refIdentifiers: {
-    color: 'red',
+    fontWeight: 'bold',
     fontSize: '0.9rem',
     marginBottom: '0.5rem',
   },
