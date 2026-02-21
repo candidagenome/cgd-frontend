@@ -141,6 +141,27 @@ export const litguideCurationApi = {
   },
 
   /**
+   * Batch assign topics to multiple features.
+   *
+   * Assigns all specified literature_topics and curation_statuses to all
+   * specified features. Mirrors the Perl version's multi-row form submission.
+   *
+   * @param {number} referenceNo - Reference number
+   * @param {string[]} features - List of feature names/identifiers
+   * @param {string[]} literatureTopics - Literature topics to assign
+   * @param {string[]} curationStatuses - Curation statuses to assign
+   * @returns {Promise<{total_requested: number, successful: number, failed: number, results: Array}>}
+   */
+  batchAssignTopics: async (referenceNo, features, literatureTopics, curationStatuses) => {
+    const response = await api.post(`/api/curation/litguide/reference/${referenceNo}/batch-assign`, {
+      features,
+      literature_topics: literatureTopics,
+      curation_statuses: curationStatuses,
+    });
+    return response.data;
+  },
+
+  /**
    * Unlink a feature from a reference.
    *
    * Removes the link between the feature and reference, as well as

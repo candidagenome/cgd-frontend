@@ -18,6 +18,7 @@ import {
   buildCitationLinks,
   CitationLinksBelow,
 } from '../../utils/formatCitation';
+import TopicAssignmentRow from '../../components/curation/TopicAssignmentRow';
 
 function LitGuideCurationPage() {
   const { featureName } = useParams();
@@ -80,6 +81,18 @@ function LitGuideCurationPage() {
   // Add topic form state
   const [selectedRef, setSelectedRef] = useState(null);
   const [selectedTopic, setSelectedTopic] = useState('');
+
+  // Topic assignment rows state (for "Assign Literature Guide Topics" section)
+  const NUM_BLANK_ROWS = 5;
+  const createEmptyRow = () => ({
+    features: '',
+    literatureTopics: [],
+    curationStatuses: [],
+  });
+  const [assignmentRows, setAssignmentRows] = useState(
+    Array.from({ length: NUM_BLANK_ROWS }, createEmptyRow)
+  );
+  const [submittingAssignments, setSubmittingAssignments] = useState(false);
 
   // Load available topics, statuses, and organisms
   useEffect(() => {
@@ -527,6 +540,104 @@ function LitGuideCurationPage() {
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
       setError(err.response?.data?.detail || 'Failed to remove non-gene topic');
+    }
+  };
+
+  // Handle topic assignment row updates
+  const updateAssignmentRow = (index, field, value) => {
+    setAssignmentRows((prev) => {
+      const newRows = [...prev];
+      newRows[index] = { ...newRows[index], [field]: value };
+      return newRows;
+    });
+  };
+
+  const addAssignmentRow = () => {
+    setAssignmentRows((prev) => [...prev, createEmptyRow()]);
+  };
+
+  const removeAssignmentRow = (index) => {
+    if (assignmentRows.length <= 1) return;
+    setAssignmentRows((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const resetAssignmentRows = () => {
+    setAssignmentRows(Array.from({ length: NUM_BLANK_ROWS }, createEmptyRow));
+  };
+
+  // Handle batch submit of topic assignments
+  const handleSubmitAssignments = async () => {
+    if (!referenceData) return;
+
+    // Collect all non-empty rows
+    const rowsToSubmit = assignmentRows.filter(
+      (row) =>
+        row.features.trim() &&
+        (row.literatureTopics.length > 0 || row.curationStatuses.length > 0)
+    );
+
+    if (rowsToSubmit.length === 0) {
+      setError('Please enter at least one feature with at least one topic or status');
+      return;
+    }
+
+    setSubmittingAssignments(true);
+    setError(null);
+
+    try {
+      let totalSuccessful = 0;
+      let totalFailed = 0;
+      const errors = [];
+
+      for (const row of rowsToSubmit) {
+        // Parse features (split by space or |)
+        const features = row.features
+          .split(/[\s|]+/)
+          .map((f) => f.trim())
+          .filter((f) => f);
+
+        if (features.length === 0) continue;
+
+        const result = await litguideCurationApi.batchAssignTopics(
+          referenceData.reference_no,
+          features,
+          row.literatureTopics,
+          row.curationStatuses
+        );
+
+        totalSuccessful += result.successful;
+        totalFailed += result.failed;
+
+        // Collect any errors
+        result.results
+          .filter((r) => !r.success)
+          .forEach((r) => errors.push(`${r.feature}/${r.topic}: ${r.message}`));
+      }
+
+      if (totalSuccessful > 0) {
+        setSuccessMessage(`Successfully added ${totalSuccessful} topic association(s)`);
+        // Reload reference data
+        const data = await litguideCurationApi.getReferenceLiterature(
+          referenceData.reference_no,
+          currentOrganism
+        );
+        setReferenceData(data);
+        // Reset form
+        resetAssignmentRows();
+        setTimeout(() => setSuccessMessage(null), 5000);
+      }
+
+      if (totalFailed > 0) {
+        setError(
+          `${totalFailed} assignment(s) failed:\n${errors.slice(0, 5).join('\n')}${
+            errors.length > 5 ? `\n...and ${errors.length - 5} more` : ''
+          }`
+        );
+      }
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to submit topic assignments');
+    } finally {
+      setSubmittingAssignments(false);
     }
   };
 
@@ -1117,9 +1228,57 @@ function LitGuideCurationPage() {
             );
           })()}
 
-          {/* Add Feature Form */}
+          {/* Assign Literature Guide Topics Section */}
+          <div id="Assign" style={styles.assignSection}>
+            <h3 style={styles.assignHeader}>Assign Literature Guide Topics to this Paper</h3>
+            <p style={styles.assignHelp}>
+              Separate multiple features by spaces or | (pipe). Each row will have the specified
+              topics and curation statuses applied to all listed features.
+            </p>
+            <div style={styles.assignRows}>
+              {assignmentRows.map((row, index) => (
+                <TopicAssignmentRow
+                  key={index}
+                  features={row.features}
+                  literatureTopics={row.literatureTopics}
+                  curationStatuses={row.curationStatuses}
+                  onFeaturesChange={(value) => updateAssignmentRow(index, 'features', value)}
+                  onLiteratureTopicsChange={(value) => updateAssignmentRow(index, 'literatureTopics', value)}
+                  onCurationStatusesChange={(value) => updateAssignmentRow(index, 'curationStatuses', value)}
+                  onRemove={() => removeAssignmentRow(index)}
+                  showRemoveButton={assignmentRows.length > 1}
+                />
+              ))}
+            </div>
+            <div style={styles.assignButtons}>
+              <button
+                type="button"
+                onClick={addAssignmentRow}
+                style={styles.addRowBtn}
+              >
+                + Add Row
+              </button>
+              <button
+                type="button"
+                onClick={resetAssignmentRows}
+                style={styles.resetBtn}
+              >
+                Reset
+              </button>
+              <button
+                type="button"
+                onClick={handleSubmitAssignments}
+                disabled={submittingAssignments}
+                style={styles.submitAssignBtn}
+              >
+                {submittingAssignments ? 'Submitting...' : 'Submit'}
+              </button>
+            </div>
+          </div>
+
+          {/* Quick Add Feature (simple form) */}
           <div id="AddFeature" style={styles.addSection}>
-            <h3 style={styles.sectionHeader}>Add Feature with Topic</h3>
+            <h3 style={styles.sectionHeader}>Quick Add Feature</h3>
             <div style={styles.addFeatureRow}>
               <input
                 type="text"
@@ -1887,6 +2046,57 @@ const styles = {
   featureLinkInline: {
     color: '#337ab7',
     textDecoration: 'none',
+  },
+  // Assign Topics section styles
+  assignSection: {
+    marginBottom: '1.5rem',
+  },
+  assignHeader: {
+    backgroundColor: 'navajowhite',
+    padding: '0.5rem',
+    margin: '0 0 0.5rem 0',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+  },
+  assignHelp: {
+    fontSize: '0.85rem',
+    color: '#c00',
+    marginBottom: '0.5rem',
+    padding: '0.5rem',
+    backgroundColor: '#fff',
+  },
+  assignRows: {
+    marginBottom: '0.5rem',
+  },
+  assignButtons: {
+    display: 'flex',
+    gap: '0.5rem',
+    padding: '0.5rem',
+    backgroundColor: '#f9f9f9',
+    borderRadius: '4px',
+  },
+  addRowBtn: {
+    padding: '0.5rem 1rem',
+    backgroundColor: '#f0f0f0',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  },
+  resetBtn: {
+    padding: '0.5rem 1rem',
+    backgroundColor: '#fff',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  },
+  submitAssignBtn: {
+    padding: '0.5rem 1.5rem',
+    backgroundColor: '#007bff',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontWeight: 'bold',
   },
   statusSelectInline: {
     padding: '0.25rem 0.5rem',
