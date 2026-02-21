@@ -93,6 +93,8 @@ function LitGuideCurationPage() {
     Array.from({ length: NUM_BLANK_ROWS }, createEmptyRow)
   );
   const [submittingAssignments, setSubmittingAssignments] = useState(false);
+  const [assignmentSuccess, setAssignmentSuccess] = useState(null);
+  const [assignmentError, setAssignmentError] = useState(null);
 
   // Load available topics, statuses, and organisms
   useEffect(() => {
@@ -577,12 +579,13 @@ function LitGuideCurationPage() {
     );
 
     if (rowsToSubmit.length === 0) {
-      setError('Please enter at least one feature with at least one topic or status');
+      setAssignmentError('Please enter at least one feature with at least one topic or status');
       return;
     }
 
     setSubmittingAssignments(true);
-    setError(null);
+    setAssignmentError(null);
+    setAssignmentSuccess(null);
 
     try {
       let totalSuccessful = 0;
@@ -615,7 +618,7 @@ function LitGuideCurationPage() {
       }
 
       if (totalSuccessful > 0) {
-        setSuccessMessage(`Successfully added ${totalSuccessful} topic association(s)`);
+        setAssignmentSuccess(`Successfully added ${totalSuccessful} topic association(s)`);
         // Reload reference data
         const data = await litguideCurationApi.getReferenceLiterature(
           referenceData.reference_no,
@@ -624,18 +627,18 @@ function LitGuideCurationPage() {
         setReferenceData(data);
         // Reset form
         resetAssignmentRows();
-        setTimeout(() => setSuccessMessage(null), 5000);
+        setTimeout(() => setAssignmentSuccess(null), 5000);
       }
 
       if (totalFailed > 0) {
-        setError(
+        setAssignmentError(
           `${totalFailed} assignment(s) failed:\n${errors.slice(0, 5).join('\n')}${
             errors.length > 5 ? `\n...and ${errors.length - 5} more` : ''
           }`
         );
       }
     } catch (err) {
-      setError(err.response?.data?.detail || 'Failed to submit topic assignments');
+      setAssignmentError(err.response?.data?.detail || 'Failed to submit topic assignments');
     } finally {
       setSubmittingAssignments(false);
     }
@@ -1231,6 +1234,12 @@ function LitGuideCurationPage() {
           {/* Assign Literature Guide Topics Section */}
           <div id="Assign" style={styles.assignSection}>
             <h3 style={styles.assignHeader}>Assign Literature Guide Topics to this Paper</h3>
+            {assignmentSuccess && (
+              <div style={styles.assignSuccess}>{assignmentSuccess}</div>
+            )}
+            {assignmentError && (
+              <div style={styles.assignError}>{assignmentError}</div>
+            )}
             <p style={styles.assignHelp}>
               Separate multiple features by spaces or | (pipe). Each row will have the specified
               topics and curation statuses applied to all listed features.
@@ -2064,6 +2073,23 @@ const styles = {
     marginBottom: '0.5rem',
     padding: '0.5rem',
     backgroundColor: '#fff',
+  },
+  assignSuccess: {
+    padding: '0.75rem 1rem',
+    marginBottom: '0.5rem',
+    backgroundColor: '#d4edda',
+    color: '#155724',
+    border: '1px solid #c3e6cb',
+    borderRadius: '4px',
+  },
+  assignError: {
+    padding: '0.75rem 1rem',
+    marginBottom: '0.5rem',
+    backgroundColor: '#f8d7da',
+    color: '#721c24',
+    border: '1px solid #f5c6cb',
+    borderRadius: '4px',
+    whiteSpace: 'pre-wrap',
   },
   assignRows: {
     marginBottom: '0.5rem',
