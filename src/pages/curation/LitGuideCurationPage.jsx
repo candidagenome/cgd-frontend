@@ -659,7 +659,8 @@ function LitGuideCurationPage() {
           referenceData.reference_no,
           features,
           row.literatureTopics,
-          row.curationStatuses
+          row.curationStatuses,
+          currentOrganism
         );
 
         totalSuccessful += result.successful;
@@ -748,7 +749,8 @@ function LitGuideCurationPage() {
               referenceData.reference_no,
               currentFeatures,
               row.literatureTopics.filter((t) => !row.originalLitTopics.includes(t)),
-              row.curationStatuses.filter((t) => !row.originalCurationStatuses.includes(t))
+              row.curationStatuses.filter((t) => !row.originalCurationStatuses.includes(t)),
+              currentOrganism
             );
             totalAdded += result.successful;
           } catch (err) {

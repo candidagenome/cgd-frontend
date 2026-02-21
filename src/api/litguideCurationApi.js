@@ -150,14 +150,19 @@ export const litguideCurationApi = {
    * @param {string[]} features - List of feature names/identifiers
    * @param {string[]} literatureTopics - Literature topics to assign
    * @param {string[]} curationStatuses - Curation statuses to assign
+   * @param {string} [organism] - Optional organism abbreviation to filter feature lookup
    * @returns {Promise<{total_requested: number, successful: number, failed: number, results: Array}>}
    */
-  batchAssignTopics: async (referenceNo, features, literatureTopics, curationStatuses) => {
-    const response = await api.post(`/api/curation/litguide/reference/${referenceNo}/batch-assign`, {
+  batchAssignTopics: async (referenceNo, features, literatureTopics, curationStatuses, organism = null) => {
+    const payload = {
       features,
       literature_topics: literatureTopics,
       curation_statuses: curationStatuses,
-    });
+    };
+    if (organism) {
+      payload.organism = organism;
+    }
+    const response = await api.post(`/api/curation/litguide/reference/${referenceNo}/batch-assign`, payload);
     return response.data;
   },
 
