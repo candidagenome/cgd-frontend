@@ -19,6 +19,7 @@ import {
   CitationLinksBelow,
 } from '../../utils/formatCitation';
 import TopicAssignmentRow from '../../components/curation/TopicAssignmentRow';
+import CVTreeModal from '../../components/curation/CVTreeModal';
 
 function LitGuideCurationPage() {
   const { featureName } = useParams();
@@ -95,6 +96,16 @@ function LitGuideCurationPage() {
   const [submittingAssignments, setSubmittingAssignments] = useState(false);
   const [assignmentSuccess, setAssignmentSuccess] = useState(null);
   const [assignmentError, setAssignmentError] = useState(null);
+
+  // Edit existing topics state
+  const [editRows, setEditRows] = useState([]);
+  const [submittingEdits, setSubmittingEdits] = useState(false);
+  const [editSuccess, setEditSuccess] = useState(null);
+  const [editError, setEditError] = useState(null);
+  // Modal state for edit section
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editModalRowIndex, setEditModalRowIndex] = useState(null);
+  const [editModalType, setEditModalType] = useState(null); // 'literature_topic' or 'curation_status'
 
   // Load available topics, statuses, and organisms
   useEffect(() => {
@@ -239,6 +250,49 @@ function LitGuideCurationPage() {
 
     loadNongeneTopics();
   }, [referenceData?.reference_no]);
+
+  // Initialize edit rows when reference data changes
+  useEffect(() => {
+    if (!referenceData?.features?.length) {
+      setEditRows([]);
+      return;
+    }
+
+    // Group features by their topic combinations (same as Perl version)
+    const groups = {};
+    referenceData.features.forEach((feat) => {
+      const litTopics = feat.topics
+        .filter((t) => t.property_type === 'literature_topic')
+        .map((t) => t.topic)
+        .sort();
+      const curationStatuses = feat.topics
+        .filter((t) => t.property_type === 'curation_status')
+        .map((t) => t.topic)
+        .sort();
+      const key = `${litTopics.join('|')}::${curationStatuses.join('|')}`;
+      if (!groups[key]) {
+        groups[key] = {
+          features: [],
+          litTopics,
+          curationStatuses,
+        };
+      }
+      groups[key].features.push(feat.gene_name || feat.feature_name);
+    });
+
+    // Convert groups to edit rows
+    const rows = Object.values(groups).map((group) => ({
+      features: group.features.join(' '),
+      literatureTopics: [...group.litTopics],
+      curationStatuses: [...group.curationStatuses],
+      // Track original values for comparison
+      originalFeatures: group.features.join(' '),
+      originalLitTopics: [...group.litTopics],
+      originalCurationStatuses: [...group.curationStatuses],
+    }));
+
+    setEditRows(rows);
+  }, [referenceData?.features]);
 
   // Handle feature search
   const handleFeatureSearch = (e) => {
@@ -642,6 +696,169 @@ function LitGuideCurationPage() {
     } finally {
       setSubmittingAssignments(false);
     }
+  };
+
+  // Handle edit row updates
+  const updateEditRow = (index, field, value) => {
+    setEditRows((prev) => {
+      const newRows = [...prev];
+      newRows[index] = { ...newRows[index], [field]: value };
+      return newRows;
+    });
+  };
+
+  // Handle submit of edit changes
+  const handleSubmitEdits = async () => {
+    if (!referenceData) return;
+
+    setSubmittingEdits(true);
+    setEditError(null);
+    setEditSuccess(null);
+
+    try {
+      let totalAdded = 0;
+      let totalRemoved = 0;
+      const errors = [];
+
+      for (const row of editRows) {
+        // Parse current features
+        const currentFeatures = row.features
+          .split(/[\s|]+/)
+          .map((f) => f.trim())
+          .filter((f) => f);
+
+        // Find topics to add (in current but not in original)
+        const topicsToAdd = [
+          ...row.literatureTopics.filter((t) => !row.originalLitTopics.includes(t)),
+          ...row.curationStatuses.filter((t) => !row.originalCurationStatuses.includes(t)),
+        ];
+
+        // Find topics to remove (in original but not in current)
+        const litTopicsToRemove = row.originalLitTopics.filter(
+          (t) => !row.literatureTopics.includes(t)
+        );
+        const statusesToRemove = row.originalCurationStatuses.filter(
+          (t) => !row.curationStatuses.includes(t)
+        );
+
+        // Add new topics
+        if (topicsToAdd.length > 0 && currentFeatures.length > 0) {
+          try {
+            const result = await litguideCurationApi.batchAssignTopics(
+              referenceData.reference_no,
+              currentFeatures,
+              row.literatureTopics.filter((t) => !row.originalLitTopics.includes(t)),
+              row.curationStatuses.filter((t) => !row.originalCurationStatuses.includes(t))
+            );
+            totalAdded += result.successful;
+          } catch (err) {
+            errors.push(`Failed to add topics: ${err.message}`);
+          }
+        }
+
+        // Remove old topics - need to find the refprop_feat_no for each
+        // This requires looking up the feature-topic associations
+        for (const topic of [...litTopicsToRemove, ...statusesToRemove]) {
+          // Find features with this topic and remove the association
+          for (const feat of referenceData.features) {
+            const featName = feat.gene_name || feat.feature_name;
+            if (row.originalFeatures.includes(featName)) {
+              const topicAssoc = feat.topics.find((t) => t.topic === topic);
+              if (topicAssoc) {
+                try {
+                  await litguideCurationApi.removeTopicAssociation(topicAssoc.refprop_feat_no);
+                  totalRemoved++;
+                } catch (err) {
+                  errors.push(`Failed to remove ${topic} from ${featName}: ${err.message}`);
+                }
+              }
+            }
+          }
+        }
+      }
+
+      if (totalAdded > 0 || totalRemoved > 0) {
+        setEditSuccess(
+          `Changes saved: ${totalAdded} topic(s) added, ${totalRemoved} topic(s) removed`
+        );
+        // Reload reference data
+        const data = await litguideCurationApi.getReferenceLiterature(
+          referenceData.reference_no,
+          currentOrganism
+        );
+        setReferenceData(data);
+        setTimeout(() => setEditSuccess(null), 5000);
+      } else if (errors.length === 0) {
+        setEditSuccess('No changes to save');
+        setTimeout(() => setEditSuccess(null), 3000);
+      }
+
+      if (errors.length > 0) {
+        setEditError(errors.slice(0, 5).join('\n'));
+      }
+    } catch (err) {
+      setEditError(err.response?.data?.detail || 'Failed to save changes');
+    } finally {
+      setSubmittingEdits(false);
+    }
+  };
+
+  // Handle opening the edit modal
+  const openEditModal = (rowIndex, type) => {
+    setEditModalRowIndex(rowIndex);
+    setEditModalType(type);
+    setEditModalOpen(true);
+  };
+
+  // Handle closing the edit modal
+  const closeEditModal = () => {
+    setEditModalOpen(false);
+    setEditModalRowIndex(null);
+    setEditModalType(null);
+  };
+
+  // Handle selecting terms in the edit modal
+  const handleEditModalSelect = (selectedTerms) => {
+    if (editModalRowIndex === null || !editModalType) return;
+
+    setEditRows((prev) => {
+      const newRows = [...prev];
+      if (editModalType === 'literature_topic') {
+        newRows[editModalRowIndex] = {
+          ...newRows[editModalRowIndex],
+          literatureTopics: selectedTerms,
+        };
+      } else if (editModalType === 'curation_status') {
+        newRows[editModalRowIndex] = {
+          ...newRows[editModalRowIndex],
+          curationStatuses: selectedTerms,
+        };
+      }
+      return newRows;
+    });
+  };
+
+  // Handle removing a topic from an edit row
+  const removeEditTopic = (rowIndex, topicToRemove, type) => {
+    setEditRows((prev) => {
+      const newRows = [...prev];
+      if (type === 'literature_topic') {
+        newRows[rowIndex] = {
+          ...newRows[rowIndex],
+          literatureTopics: newRows[rowIndex].literatureTopics.filter(
+            (t) => t !== topicToRemove
+          ),
+        };
+      } else if (type === 'curation_status') {
+        newRows[rowIndex] = {
+          ...newRows[rowIndex],
+          curationStatuses: newRows[rowIndex].curationStatuses.filter(
+            (t) => t !== topicToRemove
+          ),
+        };
+      }
+      return newRows;
+    });
   };
 
   return (
@@ -1286,73 +1503,115 @@ function LitGuideCurationPage() {
           </div>
 
           {/* Edit Current Literature Guide Curation Topics */}
-          {referenceData.features?.length > 0 && (
+          {editRows.length > 0 && (
             <div id="Edit" style={styles.editTopicsSection}>
               <h3 style={styles.editTopicsHeader}>Edit Current Literature Guide Curation Topics</h3>
-              <div style={styles.editTopicsContent}>
-                {(() => {
-                  // Group features by their topic combinations (same logic as Perl version)
-                  const groups = {};
-                  referenceData.features.forEach((feat) => {
-                    const litTopics = feat.topics
-                      .filter((t) => t.property_type === 'literature_topic')
-                      .map((t) => t.topic)
-                      .sort();
-                    const curationStatuses = feat.topics
-                      .filter((t) => t.property_type === 'curation_status')
-                      .map((t) => t.topic)
-                      .sort();
-                    const key = `${litTopics.join('|')}::${curationStatuses.join('|')}`;
-                    if (!groups[key]) {
-                      groups[key] = {
-                        features: [],
-                        litTopics,
-                        curationStatuses,
-                      };
-                    }
-                    groups[key].features.push(feat.gene_name || feat.feature_name);
-                  });
 
-                  return Object.values(groups).map((group, idx) => (
-                    <div key={idx} style={styles.editTopicsRow}>
-                      <div style={styles.editTopicsRowContent}>
-                        <div style={styles.editTopicsFeaturesSection}>
-                          <label style={styles.editTopicsLabel}>Features:</label>
-                          <div style={styles.editTopicsFeaturesList}>
-                            {group.features.join(' ')}
-                          </div>
+              {editSuccess && <div style={styles.editSuccess}>{editSuccess}</div>}
+              {editError && <div style={styles.editError}>{editError}</div>}
+
+              <div style={styles.editTopicsContent}>
+                {editRows.map((row, idx) => (
+                  <div key={idx} style={styles.editTopicsRow}>
+                    <div style={styles.editTopicsRowContent}>
+                      {/* Features (read-only) */}
+                      <div style={styles.editTopicsFeaturesSection}>
+                        <label style={styles.editTopicsLabel}>Features:</label>
+                        <div style={styles.editTopicsFeaturesList}>
+                          {row.features}
                         </div>
-                        <div style={styles.editTopicsListSection}>
-                          <label style={styles.editTopicsLabel}>Literature Topics:</label>
-                          <div style={styles.editTopicsListBox}>
-                            {group.litTopics.length > 0
-                              ? group.litTopics.map((topic, i) => (
-                                  <div key={i} style={styles.editTopicsItem}>{topic}</div>
-                                ))
-                              : <span style={styles.nothingYet}>none</span>
-                            }
-                          </div>
+                      </div>
+
+                      {/* Literature Topics (editable) */}
+                      <div style={styles.editTopicsListSection}>
+                        <button
+                          type="button"
+                          onClick={() => openEditModal(idx, 'literature_topic')}
+                          style={styles.editTopicsButton}
+                        >
+                          Literature Topics
+                        </button>
+                        <div style={styles.editTopicsListBox}>
+                          {row.literatureTopics.length > 0 ? (
+                            row.literatureTopics.map((topic, i) => (
+                              <div key={i} style={styles.editTopicsItemEditable}>
+                                {topic}
+                                <button
+                                  type="button"
+                                  onClick={() => removeEditTopic(idx, topic, 'literature_topic')}
+                                  style={styles.editTopicsRemoveBtn}
+                                  title="Remove topic"
+                                >
+                                  &times;
+                                </button>
+                              </div>
+                            ))
+                          ) : (
+                            <span style={styles.nothingYet}>none</span>
+                          )}
                         </div>
-                        <div style={styles.editTopicsListSection}>
-                          <label style={styles.editTopicsLabel}>Curation Status:</label>
-                          <div style={styles.editTopicsListBox}>
-                            {group.curationStatuses.length > 0
-                              ? group.curationStatuses.map((status, i) => (
-                                  <div key={i} style={styles.editTopicsItem}>{status}</div>
-                                ))
-                              : <span style={styles.nothingYet}>none</span>
-                            }
-                          </div>
+                      </div>
+
+                      {/* Curation Status (editable) */}
+                      <div style={styles.editTopicsListSection}>
+                        <button
+                          type="button"
+                          onClick={() => openEditModal(idx, 'curation_status')}
+                          style={styles.editTopicsButton}
+                        >
+                          Curation Status
+                        </button>
+                        <div style={styles.editTopicsListBox}>
+                          {row.curationStatuses.length > 0 ? (
+                            row.curationStatuses.map((status, i) => (
+                              <div key={i} style={styles.editTopicsItemEditable}>
+                                {status}
+                                <button
+                                  type="button"
+                                  onClick={() => removeEditTopic(idx, status, 'curation_status')}
+                                  style={styles.editTopicsRemoveBtn}
+                                  title="Remove status"
+                                >
+                                  &times;
+                                </button>
+                              </div>
+                            ))
+                          ) : (
+                            <span style={styles.nothingYet}>none</span>
+                          )}
                         </div>
                       </div>
                     </div>
-                  ));
-                })()}
-                <p style={styles.editTopicsNote}>
-                  Note: To modify existing topics, remove them from the Features table below,
-                  then use "Assign Literature Guide Topics" above to add new ones.
-                </p>
+                  </div>
+                ))}
+
+                <div style={styles.editTopicsActions}>
+                  <button
+                    type="button"
+                    onClick={handleSubmitEdits}
+                    disabled={submittingEdits}
+                    style={styles.submitEditBtn}
+                  >
+                    {submittingEdits ? 'Saving...' : 'Save Changes'}
+                  </button>
+                </div>
               </div>
+
+              {/* Edit Modal */}
+              <CVTreeModal
+                isOpen={editModalOpen}
+                onClose={closeEditModal}
+                onSelect={handleEditModalSelect}
+                cvName={editModalType || 'literature_topic'}
+                title={editModalType === 'curation_status' ? 'Select Curation Status' : 'Select Literature Topics'}
+                selectedTerms={
+                  editModalRowIndex !== null && editModalType
+                    ? editModalType === 'literature_topic'
+                      ? editRows[editModalRowIndex]?.literatureTopics || []
+                      : editRows[editModalRowIndex]?.curationStatuses || []
+                    : []
+                }
+              />
             </div>
           )}
 
@@ -2269,6 +2528,69 @@ const styles = {
     fontStyle: 'italic',
     marginTop: '0.5rem',
     marginBottom: 0,
+  },
+  editTopicsButton: {
+    padding: '0.5rem 1rem',
+    fontSize: '0.85rem',
+    backgroundColor: '#f0f0f0',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontWeight: 'bold',
+    marginBottom: '0.5rem',
+  },
+  editTopicsItemEditable: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '0.25rem',
+    padding: '0.15rem 0.4rem',
+    margin: '0.1rem',
+    backgroundColor: '#e0e0e0',
+    borderRadius: '3px',
+    fontSize: '0.8rem',
+  },
+  editTopicsRemoveBtn: {
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    fontSize: '1rem',
+    color: '#666',
+    padding: '0 0.1rem',
+    lineHeight: 1,
+  },
+  editTopicsActions: {
+    display: 'flex',
+    gap: '0.5rem',
+    marginTop: '1rem',
+    paddingTop: '0.5rem',
+    borderTop: '1px solid #ddd',
+  },
+  submitEditBtn: {
+    padding: '0.5rem 1.5rem',
+    fontSize: '0.9rem',
+    backgroundColor: '#007bff',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontWeight: 'bold',
+  },
+  editSuccess: {
+    backgroundColor: '#d4edda',
+    color: '#155724',
+    padding: '0.5rem 1rem',
+    borderRadius: '4px',
+    marginBottom: '0.5rem',
+    fontSize: '0.9rem',
+  },
+  editError: {
+    backgroundColor: '#f8d7da',
+    color: '#721c24',
+    padding: '0.5rem 1rem',
+    borderRadius: '4px',
+    marginBottom: '0.5rem',
+    fontSize: '0.9rem',
+    whiteSpace: 'pre-wrap',
   },
   statusSelectInline: {
     padding: '0.25rem 0.5rem',
