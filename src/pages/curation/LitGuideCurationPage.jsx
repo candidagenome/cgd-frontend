@@ -977,24 +977,14 @@ function LitGuideCurationPage() {
             <h3 style={styles.abstractHeader}>Abstract</h3>
             <div style={styles.abstractContent}>
               <p>{referenceData.citation || 'N/A'}</p>
-              <p style={styles.refLinks}>
-                <Link to={`/reference/${referenceData.reference_no}`} style={styles.refEntryLink}>
-                  CGD Papers Entry
-                </Link>
-                {referenceData.pubmed && (
-                  <>
-                    {'  '}
-                    <a
-                      href={`https://pubmed.ncbi.nlm.nih.gov/${referenceData.pubmed}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={styles.refEntryLink}
-                    >
-                      Pubmed Entry
-                    </a>
-                  </>
-                )}
-              </p>
+              <CitationLinksBelow
+                links={buildCitationLinks({
+                  dbxref_id: referenceData.dbxref_id,
+                  reference_no: referenceData.reference_no,
+                  pubmed: referenceData.pubmed,
+                  urls: referenceData.urls,
+                })}
+              />
               <p style={styles.refIdentifiers}>
                 (CGD:{referenceData.reference_no}, PMID:{referenceData.pubmed || 'N/A'}, CGDID:{referenceData.dbxref_id || 'N/A'})
               </p>
