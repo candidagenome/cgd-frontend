@@ -302,22 +302,31 @@ function ReferenceSearchResultsPage() {
           <h3>Reference Details</h3>
 
           <div style={styles.citationBlock}>
-            <strong>{formatCitation(selectedRef)}</strong>
-            {selectedRef.urls && selectedRef.urls.length > 0 && (
-              <span style={styles.urlList}>
-                {selectedRef.urls.map((urlInfo) => (
-                  <a
-                    key={urlInfo.url_no}
-                    href={urlInfo.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={styles.urlLink}
-                  >
-                    [{urlInfo.url_type}]
-                  </a>
-                ))}
-              </span>
-            )}
+            <div>
+              <strong>{formatCitation(selectedRef)}</strong>
+              {selectedRef.pubmed && (
+                <span style={styles.pmidText}> PMID: {selectedRef.pubmed}</span>
+              )}
+            </div>
+            <div style={styles.citationLinks}>
+              <a
+                href={`/reference/${selectedRef.dbxref_id || selectedRef.reference_no}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                CGD Paper
+              </a>
+              {selectedRef.pubmed && (
+                <a
+                  href={`https://pubmed.ncbi.nlm.nih.gov/${selectedRef.pubmed}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ marginLeft: '0.5rem' }}
+                >
+                  PubMed
+                </a>
+              )}
+            </div>
           </div>
 
           <table style={styles.infoTable}>
@@ -637,12 +646,11 @@ const styles = {
     border: '1px solid #ccc',
     borderRadius: '4px',
   },
-  urlList: {
-    marginLeft: '0.5rem',
+  pmidText: {
+    fontWeight: 'normal',
   },
-  urlLink: {
-    marginLeft: '0.25rem',
-    fontSize: '0.9rem',
+  citationLinks: {
+    marginTop: '0.25rem',
   },
   infoTable: {
     marginBottom: '1rem',
