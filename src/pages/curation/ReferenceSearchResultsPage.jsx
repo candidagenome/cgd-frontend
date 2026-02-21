@@ -304,19 +304,19 @@ function ReferenceSearchResultsPage() {
           <div style={styles.citationBlock}>
             <strong>{formatCitation(selectedRef)}</strong>
             {selectedRef.urls && selectedRef.urls.length > 0 && (
-              <div style={styles.urlList}>
+              <span style={styles.urlList}>
                 {selectedRef.urls.map((urlInfo) => (
-                  <div key={urlInfo.url_no} style={styles.urlItem}>
-                    <a
-                      href={urlInfo.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      [{urlInfo.url_type}]
-                    </a>
-                  </div>
+                  <a
+                    key={urlInfo.url_no}
+                    href={urlInfo.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={styles.urlLink}
+                  >
+                    [{urlInfo.url_type}]
+                  </a>
                 ))}
-              </div>
+              </span>
             )}
           </div>
 
@@ -638,12 +638,10 @@ const styles = {
     borderRadius: '4px',
   },
   urlList: {
-    marginTop: '0.5rem',
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '0.5rem',
+    marginLeft: '0.5rem',
   },
-  urlItem: {
+  urlLink: {
+    marginLeft: '0.25rem',
     fontSize: '0.9rem',
   },
   infoTable: {
