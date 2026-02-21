@@ -972,27 +972,37 @@ function LitGuideCurationPage() {
             <Link to={`/curation/go`} style={styles.navLink}>Curate GO</Link>
           </div>
 
-          {/* Reference Details */}
-          <div style={styles.refDetailsBox}>
-            <p><strong>Title:</strong> {referenceData.title || 'N/A'}</p>
-            <p><strong>Citation:</strong> {referenceData.citation || 'N/A'}</p>
-            <p>
-              <strong>Curation Status:</strong>{' '}
-              <select
-                value={referenceData.curation_status || ''}
-                onChange={(e) => {
-                  if (e.target.value) {
-                    handleSetStatus(referenceData.reference_no, e.target.value);
-                  }
-                }}
-                style={styles.statusSelectInline}
-              >
-                <option value="">Not yet curated</option>
-                {statuses.map((s) => (
-                  <option key={s} value={s}>{s}</option>
-                ))}
-              </select>
-            </p>
+          {/* Reference Details / Abstract */}
+          <div style={styles.abstractSection}>
+            <h3 style={styles.abstractHeader}>Abstract</h3>
+            <div style={styles.abstractContent}>
+              <p>{referenceData.citation || 'N/A'}</p>
+              <p style={styles.refIdentifiers}>
+                (CGD:{referenceData.reference_no}, PMID:{referenceData.pubmed || 'N/A'}, CGDID:{referenceData.dbxref_id || 'N/A'})
+              </p>
+              {referenceData.abstract ? (
+                <blockquote style={styles.abstractText}>{referenceData.abstract}</blockquote>
+              ) : (
+                <p style={styles.noAbstract}>No abstract available.</p>
+              )}
+              <div style={styles.curationStatusRow}>
+                <strong>Curation Status:</strong>{' '}
+                <select
+                  value={referenceData.curation_status || ''}
+                  onChange={(e) => {
+                    if (e.target.value) {
+                      handleSetStatus(referenceData.reference_no, e.target.value);
+                    }
+                  }}
+                  style={styles.statusSelectInline}
+                >
+                  <option value="">Not yet curated</option>
+                  {statuses.map((s) => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
           </div>
 
           {/* Add Feature Form */}
@@ -1677,6 +1687,46 @@ const styles = {
     border: '1px solid #ddd',
     borderRadius: '4px',
     marginBottom: '1.5rem',
+  },
+  // Abstract section styles
+  abstractSection: {
+    marginBottom: '1.5rem',
+  },
+  abstractHeader: {
+    backgroundColor: 'navajowhite',
+    padding: '0.5rem',
+    margin: '0 0 0.5rem 0',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+  },
+  abstractContent: {
+    padding: '1rem',
+    backgroundColor: '#fff',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+  },
+  refIdentifiers: {
+    color: 'red',
+    fontSize: '0.9rem',
+    marginBottom: '0.5rem',
+  },
+  abstractText: {
+    margin: '1rem 2rem',
+    padding: '0.5rem',
+    borderLeft: '3px solid #ccc',
+    fontStyle: 'normal',
+    color: '#333',
+    lineHeight: '1.5',
+  },
+  noAbstract: {
+    color: '#666',
+    fontStyle: 'italic',
+    margin: '1rem 0',
+  },
+  curationStatusRow: {
+    marginTop: '1rem',
+    paddingTop: '0.5rem',
+    borderTop: '1px solid #eee',
   },
   statusSelectInline: {
     padding: '0.25rem 0.5rem',
