@@ -820,12 +820,12 @@ function LitGuideCurationPage() {
                           ))}
                         </td>
                         <td style={styles.tdAction}>
-                          <a
-                            href={`/cgi-bin/curation/litGuideCuration?refNo=${ref.reference_no}&featNo=${featureData.feature_no}&organism=${currentOrganism || ''}`}
+                          <Link
+                            to={`/curation/litguide/${ref.reference_no}${currentOrganism ? `?organism=${currentOrganism}` : ''}`}
                             style={styles.curateLink}
                           >
                             Curate
-                          </a>
+                          </Link>
                         </td>
                       </tr>
                     );
@@ -904,12 +904,12 @@ function LitGuideCurationPage() {
                           </select>
                         </td>
                         <td style={styles.tdAction}>
-                          <a
-                            href={`/cgi-bin/curation/litGuideCuration?refNo=${ref.reference_no}&featNo=${featureData.feature_no}&organism=${currentOrganism || ''}`}
+                          <Link
+                            to={`/curation/litguide/${ref.reference_no}${currentOrganism ? `?organism=${currentOrganism}` : ''}`}
                             style={styles.curateLink}
                           >
                             Curate
-                          </a>
+                          </Link>
                         </td>
                       </tr>
                     );
