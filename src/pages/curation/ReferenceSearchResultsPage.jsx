@@ -23,16 +23,15 @@ function ReferenceSearchResultsPage() {
 
   // Delete form state
   const [deleteLogComment, setDeleteLogComment] = useState('');
-  const [makeSecondary, setMakeSecondary] = useState(false);
   const [secondaryForId, setSecondaryForId] = useState('');
   const [secondaryIdType, setSecondaryIdType] = useState('CGDID');
 
   // Add URL form state - with fallback default values
-  const defaultUrlTypes = ['Full-text', 'Abstract', 'Supplemental', 'Journal', 'Publisher', 'DOI', 'Other'];
+  const defaultUrlTypes = ['Reference Data', 'Reference LINKOUT', 'Reference full text', 'Reference full text all', 'Reference Supplement'];
   const defaultUrlSources = ['Author', 'NCBI', 'Publisher'];
   const [urlOptions, setUrlOptions] = useState({ url_types: defaultUrlTypes, url_sources: defaultUrlSources });
   const [newUrl, setNewUrl] = useState('');
-  const [newUrlType, setNewUrlType] = useState('Full-text');
+  const [newUrlType, setNewUrlType] = useState('Reference full text');
   const [newUrlSource, setNewUrlSource] = useState('Author');
 
   // UI state
@@ -165,7 +164,7 @@ function ReferenceSearchResultsPage() {
       if (deleteLogComment) {
         options.delete_log_comment = deleteLogComment;
       }
-      if (makeSecondary && secondaryForId) {
+      if (secondaryForId) {
         let targetRefNo;
         if (secondaryIdType === 'reference_no') {
           targetRefNo = parseInt(secondaryForId, 10);
@@ -462,45 +461,38 @@ function ReferenceSearchResultsPage() {
               </div>
             ) : (
               <div style={styles.deleteSection}>
-                <h4>Delete Reference</h4>
+                <h4>Delete reference and manage CGDID</h4>
                 <p style={styles.note}>
                   This reference is not linked to any information in the database.
                 </p>
 
                 <div style={styles.deleteForm}>
                   <div style={styles.formRow}>
+                    <label style={styles.formLabel}>Delete this reference</label>
                     <label>
-                      Delete log comment:{' '}
+                      Delete log comments:{' '}
                       <input
                         type="text"
                         value={deleteLogComment}
                         onChange={(e) => setDeleteLogComment(e.target.value)}
                         style={{ ...styles.input, width: '300px' }}
-                        placeholder="Reason for deletion"
                       />
                     </label>
                   </div>
 
                   <div style={styles.formRow}>
                     <label>
-                      <input
-                        type="checkbox"
-                        checked={makeSecondary}
-                        onChange={(e) => setMakeSecondary(e.target.checked)}
-                      />{' '}
-                      Make this CGDID a secondary CGDID for reference:
+                      Make this CGDID a secondary CGDID for reference:{' '}
                     </label>
                     <input
                       type="text"
                       value={secondaryForId}
                       onChange={(e) => setSecondaryForId(e.target.value)}
-                      disabled={!makeSecondary}
                       style={{ ...styles.input, width: '150px', marginLeft: '0.5rem' }}
                     />
                     <select
                       value={secondaryIdType}
                       onChange={(e) => setSecondaryIdType(e.target.value)}
-                      disabled={!makeSecondary}
                       style={{ ...styles.select, marginLeft: '0.5rem' }}
                     >
                       <option value="CGDID">CGDID</option>
