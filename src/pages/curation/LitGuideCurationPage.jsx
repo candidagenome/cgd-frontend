@@ -13,6 +13,11 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import litguideCurationApi from '../../api/litguideCurationApi';
+import {
+  formatCitationString,
+  buildCitationLinks,
+  CitationLinksBelow,
+} from '../../utils/formatCitation';
 
 function LitGuideCurationPage() {
   const { featureName } = useParams();
@@ -771,37 +776,60 @@ function LitGuideCurationPage() {
                 <thead>
                   <tr>
                     <th style={styles.th}>Reference</th>
-                    <th style={styles.th}>Year</th>
-                    <th style={styles.th}>Title</th>
                     <th style={styles.th}>Topics</th>
+                    <th style={styles.thAction}>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {featureData.curated.map((ref) => (
-                    <tr key={ref.reference_no}>
-                      <td style={styles.td}>
-                        <Link to={`/reference/${ref.reference_no}`}>
-                          {ref.pubmed ? `PMID:${ref.pubmed}` : `Ref:${ref.reference_no}`}
-                        </Link>
-                      </td>
-                      <td style={styles.td}>{ref.year || '-'}</td>
-                      <td style={styles.td}>{ref.title || ref.citation}</td>
-                      <td style={styles.td}>
-                        {ref.topics.map((topic) => (
-                          <div key={topic.refprop_feat_no} style={styles.topicTag}>
-                            {topic.topic}
-                            <button
-                              onClick={() => handleRemoveTopic(topic.refprop_feat_no)}
-                              style={styles.removeTopicBtn}
-                              title="Remove topic"
-                            >
-                              x
-                            </button>
+                  {featureData.curated.map((ref) => {
+                    const links = buildCitationLinks({
+                      dbxref_id: ref.dbxref_id,
+                      reference_no: ref.reference_no,
+                      pubmed: ref.pubmed,
+                      urls: ref.urls,
+                    });
+                    return (
+                      <tr key={ref.reference_no}>
+                        <td style={styles.td}>
+                          <div style={styles.citationLine}>
+                            {ref.citation ? (
+                              <>
+                                {formatCitationString(ref.citation)}
+                                {ref.pubmed && <span style={styles.pmidText}> PMID: {ref.pubmed}</span>}
+                              </>
+                            ) : (
+                              <Link to={`/reference/${ref.reference_no}`}>
+                                {ref.pubmed ? `PMID:${ref.pubmed}` : `Ref:${ref.reference_no}`}
+                              </Link>
+                            )}
                           </div>
-                        ))}
-                      </td>
-                    </tr>
-                  ))}
+                          <CitationLinksBelow links={links} />
+                        </td>
+                        <td style={styles.td}>
+                          {ref.topics.map((topic) => (
+                            <div key={topic.refprop_feat_no} style={styles.topicTag}>
+                              {topic.topic}
+                              <button
+                                onClick={() => handleRemoveTopic(topic.refprop_feat_no)}
+                                style={styles.removeTopicBtn}
+                                title="Remove topic"
+                              >
+                                x
+                              </button>
+                            </div>
+                          ))}
+                        </td>
+                        <td style={styles.tdAction}>
+                          <a
+                            href={`/cgi-bin/curation/litGuideCuration?refNo=${ref.reference_no}&featNo=${featureData.feature_no}&organism=${currentOrganism || ''}`}
+                            style={styles.curateLink}
+                          >
+                            Curate
+                          </a>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             ) : (
@@ -820,49 +848,72 @@ function LitGuideCurationPage() {
                 <thead>
                   <tr>
                     <th style={styles.th}>Reference</th>
-                    <th style={styles.th}>Year</th>
-                    <th style={styles.th}>Title</th>
                     <th style={styles.th}>Actions</th>
+                    <th style={styles.thAction}>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {featureData.uncurated.map((ref) => (
-                    <tr key={ref.reference_no}>
-                      <td style={styles.td}>
-                        <Link to={`/reference/${ref.reference_no}`}>
-                          {ref.pubmed ? `PMID:${ref.pubmed}` : `Ref:${ref.reference_no}`}
-                        </Link>
-                      </td>
-                      <td style={styles.td}>{ref.year || '-'}</td>
-                      <td style={styles.td}>{ref.title || ref.citation}</td>
-                      <td style={styles.td}>
-                        <button
-                          onClick={() => {
-                            setSelectedRef(ref);
-                            setRefSearchResults(null);
-                          }}
-                          style={styles.actionButton}
-                        >
-                          Add Topic
-                        </button>
-                        <select
-                          onChange={(e) => {
-                            if (e.target.value) {
-                              handleSetStatus(ref.reference_no, e.target.value);
-                              e.target.value = '';
-                            }
-                          }}
-                          style={styles.statusSelect}
-                          defaultValue=""
-                        >
-                          <option value="">Set Status...</option>
-                          {statuses.map((s) => (
-                            <option key={s} value={s}>{s}</option>
-                          ))}
-                        </select>
-                      </td>
-                    </tr>
-                  ))}
+                  {featureData.uncurated.map((ref) => {
+                    const links = buildCitationLinks({
+                      dbxref_id: ref.dbxref_id,
+                      reference_no: ref.reference_no,
+                      pubmed: ref.pubmed,
+                      urls: ref.urls,
+                    });
+                    return (
+                      <tr key={ref.reference_no}>
+                        <td style={styles.td}>
+                          <div style={styles.citationLine}>
+                            {ref.citation ? (
+                              <>
+                                {formatCitationString(ref.citation)}
+                                {ref.pubmed && <span style={styles.pmidText}> PMID: {ref.pubmed}</span>}
+                              </>
+                            ) : (
+                              <Link to={`/reference/${ref.reference_no}`}>
+                                {ref.pubmed ? `PMID:${ref.pubmed}` : `Ref:${ref.reference_no}`}
+                              </Link>
+                            )}
+                          </div>
+                          <CitationLinksBelow links={links} />
+                        </td>
+                        <td style={styles.td}>
+                          <button
+                            onClick={() => {
+                              setSelectedRef(ref);
+                              setRefSearchResults(null);
+                            }}
+                            style={styles.actionButton}
+                          >
+                            Add Topic
+                          </button>
+                          <select
+                            onChange={(e) => {
+                              if (e.target.value) {
+                                handleSetStatus(ref.reference_no, e.target.value);
+                                e.target.value = '';
+                              }
+                            }}
+                            style={styles.statusSelect}
+                            defaultValue=""
+                          >
+                            <option value="">Set Status...</option>
+                            {statuses.map((s) => (
+                              <option key={s} value={s}>{s}</option>
+                            ))}
+                          </select>
+                        </td>
+                        <td style={styles.tdAction}>
+                          <a
+                            href={`/cgi-bin/curation/litGuideCuration?refNo=${ref.reference_no}&featNo=${featureData.feature_no}&organism=${currentOrganism || ''}`}
+                            style={styles.curateLink}
+                          >
+                            Curate
+                          </a>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             ) : (
@@ -1528,6 +1579,27 @@ const styles = {
     padding: '0.5rem',
     borderBottom: '1px solid #ddd',
     verticalAlign: 'top',
+  },
+  tdAction: {
+    padding: '0.5rem',
+    borderBottom: '1px solid #ddd',
+    verticalAlign: 'top',
+    textAlign: 'center',
+    whiteSpace: 'nowrap',
+  },
+  thAction: {
+    textAlign: 'center',
+    padding: '0.5rem',
+    borderBottom: '2px solid #333',
+    backgroundColor: '#f5f5f5',
+    width: '80px',
+  },
+  citationLine: {
+    marginBottom: '0.25rem',
+  },
+  pmidText: {
+    color: '#666',
+    fontSize: '0.9em',
   },
   topicTag: {
     display: 'inline-flex',
