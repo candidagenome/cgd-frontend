@@ -13,6 +13,13 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import litguideCurationApi from '../../api/litguideCurationApi';
+import {
+  formatCitationString,
+  buildCitationLinks,
+  CitationLinksBelow,
+} from '../../utils/formatCitation';
+import TopicAssignmentRow from '../../components/curation/TopicAssignmentRow';
+import CVTreeModal from '../../components/curation/CVTreeModal';
 
 function LitGuideCurationPage() {
   const { featureName } = useParams();
@@ -76,6 +83,30 @@ function LitGuideCurationPage() {
   const [selectedRef, setSelectedRef] = useState(null);
   const [selectedTopic, setSelectedTopic] = useState('');
 
+  // Topic assignment rows state (for "Assign Literature Guide Topics" section)
+  const NUM_BLANK_ROWS = 2;
+  const createEmptyRow = () => ({
+    features: '',
+    literatureTopics: [],
+    curationStatuses: [],
+  });
+  const [assignmentRows, setAssignmentRows] = useState(
+    Array.from({ length: NUM_BLANK_ROWS }, createEmptyRow)
+  );
+  const [submittingAssignments, setSubmittingAssignments] = useState(false);
+  const [assignmentSuccess, setAssignmentSuccess] = useState(null);
+  const [assignmentError, setAssignmentError] = useState(null);
+
+  // Edit existing topics state
+  const [editRows, setEditRows] = useState([]);
+  const [submittingEdits, setSubmittingEdits] = useState(false);
+  const [editSuccess, setEditSuccess] = useState(null);
+  const [editError, setEditError] = useState(null);
+  // Modal state for edit section
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editModalRowIndex, setEditModalRowIndex] = useState(null);
+  const [editModalType, setEditModalType] = useState(null); // 'literature_topic' or 'curation_status'
+
   // Load available topics, statuses, and organisms
   useEffect(() => {
     const loadOptions = async () => {
@@ -97,7 +128,7 @@ function LitGuideCurationPage() {
   }, []);
 
   // Load feature literature (feature-centric view)
-  const loadFeatureLiterature = useCallback(async (identifier) => {
+  const loadFeatureLiterature = useCallback(async (identifier, organism = null) => {
     if (!identifier) return;
 
     setLoading(true);
@@ -105,12 +136,13 @@ function LitGuideCurationPage() {
     setReferenceData(null);
 
     try {
-      const data = await litguideCurationApi.getFeatureLiterature(identifier);
+      const data = await litguideCurationApi.getFeatureLiterature(identifier, organism);
       setFeatureData(data);
       setViewMode('feature');
     } catch (err) {
       if (err.response?.status === 404) {
-        setError(`Feature '${identifier}' not found`);
+        const orgText = organism ? ` in organism '${organism}'` : '';
+        setError(`Feature '${identifier}' not found${orgText}`);
       } else {
         setError('Failed to load feature literature');
       }
@@ -150,12 +182,12 @@ function LitGuideCurationPage() {
   // Numeric = reference view, otherwise = feature view
   useEffect(() => {
     if (featureName) {
+      const orgParam = searchParams.get('organism');
       // Check if it's a pure numeric value (reference_no)
       if (/^\d+$/.test(featureName)) {
-        const orgParam = searchParams.get('organism');
         loadReferenceLiterature(featureName, orgParam);
       } else {
-        loadFeatureLiterature(featureName);
+        loadFeatureLiterature(featureName, orgParam);
       }
     }
   }, [featureName, searchParams, loadFeatureLiterature, loadReferenceLiterature]);
@@ -219,11 +251,62 @@ function LitGuideCurationPage() {
     loadNongeneTopics();
   }, [referenceData?.reference_no]);
 
+  // Initialize edit rows when reference data changes
+  useEffect(() => {
+    if (!referenceData?.features?.length) {
+      setEditRows([]);
+      return;
+    }
+
+    // Group features by their topic combinations (same as Perl version)
+    const groups = {};
+    referenceData.features.forEach((feat) => {
+      const litTopics = feat.topics
+        .filter((t) => t.property_type === 'literature_topic')
+        .map((t) => t.topic)
+        .sort();
+      const curationStatuses = feat.topics
+        .filter((t) => t.property_type === 'curation_status')
+        .map((t) => t.topic)
+        .sort();
+      const key = `${litTopics.join('|')}::${curationStatuses.join('|')}`;
+      if (!groups[key]) {
+        groups[key] = {
+          features: [],
+          featureNos: [], // Store feature_no for precise identification
+          litTopics,
+          curationStatuses,
+        };
+      }
+      groups[key].features.push(feat.gene_name || feat.feature_name);
+      groups[key].featureNos.push(feat.feature_no);
+    });
+
+    // Convert groups to edit rows
+    const rows = Object.values(groups).map((group) => ({
+      features: group.features.join(' '),
+      featureNos: [...group.featureNos], // Include feature_no array
+      literatureTopics: [...group.litTopics],
+      curationStatuses: [...group.curationStatuses],
+      // Track original values for comparison
+      originalFeatures: group.features.join(' '),
+      originalFeatureNos: [...group.featureNos],
+      originalLitTopics: [...group.litTopics],
+      originalCurationStatuses: [...group.curationStatuses],
+    }));
+
+    setEditRows(rows);
+  }, [referenceData?.features]);
+
   // Handle feature search
   const handleFeatureSearch = (e) => {
     e.preventDefault();
     if (!featureSearch.trim()) return;
-    navigate(`/curation/litguide/${featureSearch.trim()}`);
+    let url = `/curation/litguide/${featureSearch.trim()}`;
+    if (currentOrganism) {
+      url += `?organism=${encodeURIComponent(currentOrganism)}`;
+    }
+    navigate(url);
   };
 
   // Handle PMID search
@@ -520,6 +603,270 @@ function LitGuideCurationPage() {
     }
   };
 
+  // Handle topic assignment row updates
+  const updateAssignmentRow = (index, field, value) => {
+    setAssignmentRows((prev) => {
+      const newRows = [...prev];
+      newRows[index] = { ...newRows[index], [field]: value };
+      return newRows;
+    });
+  };
+
+  const addAssignmentRow = () => {
+    setAssignmentRows((prev) => [...prev, createEmptyRow()]);
+  };
+
+  const removeAssignmentRow = (index) => {
+    if (assignmentRows.length <= 1) return;
+    setAssignmentRows((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const resetAssignmentRows = () => {
+    setAssignmentRows(Array.from({ length: NUM_BLANK_ROWS }, createEmptyRow));
+  };
+
+  // Handle batch submit of topic assignments
+  const handleSubmitAssignments = async () => {
+    if (!referenceData) return;
+
+    // Collect all non-empty rows
+    const rowsToSubmit = assignmentRows.filter(
+      (row) =>
+        row.features.trim() &&
+        (row.literatureTopics.length > 0 || row.curationStatuses.length > 0)
+    );
+
+    if (rowsToSubmit.length === 0) {
+      setAssignmentError('Please enter at least one feature with at least one topic or status');
+      return;
+    }
+
+    setSubmittingAssignments(true);
+    setAssignmentError(null);
+    setAssignmentSuccess(null);
+
+    try {
+      let totalSuccessful = 0;
+      let totalFailed = 0;
+      const errors = [];
+
+      for (const row of rowsToSubmit) {
+        // Parse features (split by space or |)
+        const features = row.features
+          .split(/[\s|]+/)
+          .map((f) => f.trim())
+          .filter((f) => f);
+
+        if (features.length === 0) continue;
+
+        const result = await litguideCurationApi.batchAssignTopics(
+          referenceData.reference_no,
+          features,
+          row.literatureTopics,
+          row.curationStatuses,
+          currentOrganism
+        );
+
+        totalSuccessful += result.successful;
+        totalFailed += result.failed;
+
+        // Collect any errors
+        result.results
+          .filter((r) => !r.success)
+          .forEach((r) => errors.push(`${r.feature}/${r.topic}: ${r.message}`));
+      }
+
+      if (totalSuccessful > 0) {
+        setAssignmentSuccess(`Successfully added ${totalSuccessful} topic association(s)`);
+        // Reload reference data
+        const data = await litguideCurationApi.getReferenceLiterature(
+          referenceData.reference_no,
+          currentOrganism
+        );
+        setReferenceData(data);
+        // Reset form
+        resetAssignmentRows();
+        setTimeout(() => setAssignmentSuccess(null), 5000);
+      }
+
+      if (totalFailed > 0) {
+        setAssignmentError(
+          `${totalFailed} assignment(s) failed:\n${errors.slice(0, 5).join('\n')}${
+            errors.length > 5 ? `\n...and ${errors.length - 5} more` : ''
+          }`
+        );
+      }
+    } catch (err) {
+      setAssignmentError(err.response?.data?.detail || 'Failed to submit topic assignments');
+    } finally {
+      setSubmittingAssignments(false);
+    }
+  };
+
+  // Handle edit row updates
+  const updateEditRow = (index, field, value) => {
+    setEditRows((prev) => {
+      const newRows = [...prev];
+      newRows[index] = { ...newRows[index], [field]: value };
+      return newRows;
+    });
+  };
+
+  // Handle submit of edit changes
+  const handleSubmitEdits = async () => {
+    if (!referenceData) return;
+
+    setSubmittingEdits(true);
+    setEditError(null);
+    setEditSuccess(null);
+
+    try {
+      let totalAdded = 0;
+      let totalRemoved = 0;
+      const errors = [];
+
+      for (const row of editRows) {
+        // Use feature_no array for precise identification (convert to strings for API)
+        const featureIdentifiers = (row.featureNos || row.originalFeatureNos || []).map(
+          (no) => String(no)
+        );
+
+        // Find topics to add (in current but not in original)
+        const topicsToAdd = [
+          ...row.literatureTopics.filter((t) => !row.originalLitTopics.includes(t)),
+          ...row.curationStatuses.filter((t) => !row.originalCurationStatuses.includes(t)),
+        ];
+
+        // Find topics to remove (in original but not in current)
+        const litTopicsToRemove = row.originalLitTopics.filter(
+          (t) => !row.literatureTopics.includes(t)
+        );
+        const statusesToRemove = row.originalCurationStatuses.filter(
+          (t) => !row.curationStatuses.includes(t)
+        );
+
+        // Add new topics using feature_no for precise identification
+        if (topicsToAdd.length > 0 && featureIdentifiers.length > 0) {
+          try {
+            const result = await litguideCurationApi.batchAssignTopics(
+              referenceData.reference_no,
+              featureIdentifiers,
+              row.literatureTopics.filter((t) => !row.originalLitTopics.includes(t)),
+              row.curationStatuses.filter((t) => !row.originalCurationStatuses.includes(t)),
+              currentOrganism
+            );
+            totalAdded += result.successful;
+          } catch (err) {
+            errors.push(`Failed to add topics: ${err.message}`);
+          }
+        }
+
+        // Remove old topics - need to find the refprop_feat_no for each
+        // This requires looking up the feature-topic associations
+        for (const topic of [...litTopicsToRemove, ...statusesToRemove]) {
+          // Find features with this topic and remove the association
+          for (const feat of referenceData.features) {
+            // Use feature_no for precise matching
+            if (row.originalFeatureNos?.includes(feat.feature_no)) {
+              const topicAssoc = feat.topics.find((t) => t.topic === topic);
+              if (topicAssoc) {
+                try {
+                  await litguideCurationApi.removeTopicAssociation(topicAssoc.refprop_feat_no);
+                  totalRemoved++;
+                } catch (err) {
+                  const featName = feat.gene_name || feat.feature_name;
+                  errors.push(`Failed to remove ${topic} from ${featName}: ${err.message}`);
+                }
+              }
+            }
+          }
+        }
+      }
+
+      if (totalAdded > 0 || totalRemoved > 0) {
+        setEditSuccess(
+          `Changes saved: ${totalAdded} topic(s) added, ${totalRemoved} topic(s) removed`
+        );
+        // Reload reference data
+        const data = await litguideCurationApi.getReferenceLiterature(
+          referenceData.reference_no,
+          currentOrganism
+        );
+        setReferenceData(data);
+        setTimeout(() => setEditSuccess(null), 5000);
+      } else if (errors.length === 0) {
+        setEditSuccess('No changes to save');
+        setTimeout(() => setEditSuccess(null), 3000);
+      }
+
+      if (errors.length > 0) {
+        setEditError(errors.slice(0, 5).join('\n'));
+      }
+    } catch (err) {
+      setEditError(err.response?.data?.detail || 'Failed to save changes');
+    } finally {
+      setSubmittingEdits(false);
+    }
+  };
+
+  // Handle opening the edit modal
+  const openEditModal = (rowIndex, type) => {
+    setEditModalRowIndex(rowIndex);
+    setEditModalType(type);
+    setEditModalOpen(true);
+  };
+
+  // Handle closing the edit modal
+  const closeEditModal = () => {
+    setEditModalOpen(false);
+    setEditModalRowIndex(null);
+    setEditModalType(null);
+  };
+
+  // Handle selecting terms in the edit modal
+  const handleEditModalSelect = (selectedTerms) => {
+    if (editModalRowIndex === null || !editModalType) return;
+
+    setEditRows((prev) => {
+      const newRows = [...prev];
+      if (editModalType === 'literature_topic') {
+        newRows[editModalRowIndex] = {
+          ...newRows[editModalRowIndex],
+          literatureTopics: selectedTerms,
+        };
+      } else if (editModalType === 'curation_status') {
+        newRows[editModalRowIndex] = {
+          ...newRows[editModalRowIndex],
+          curationStatuses: selectedTerms,
+        };
+      }
+      return newRows;
+    });
+  };
+
+  // Handle removing a topic from an edit row
+  const removeEditTopic = (rowIndex, topicToRemove, type) => {
+    setEditRows((prev) => {
+      const newRows = [...prev];
+      if (type === 'literature_topic') {
+        newRows[rowIndex] = {
+          ...newRows[rowIndex],
+          literatureTopics: newRows[rowIndex].literatureTopics.filter(
+            (t) => t !== topicToRemove
+          ),
+        };
+      } else if (type === 'curation_status') {
+        newRows[rowIndex] = {
+          ...newRows[rowIndex],
+          curationStatuses: newRows[rowIndex].curationStatuses.filter(
+            (t) => t !== topicToRemove
+          ),
+        };
+      }
+      return newRows;
+    });
+  };
+
   return (
     <div style={styles.container}>
       <div style={styles.header}>
@@ -589,6 +936,23 @@ function LitGuideCurationPage() {
 
       {/* Search Section */}
       <div style={styles.searchSection}>
+        {/* Species Selector */}
+        <div style={styles.speciesSelectorRow}>
+          <label style={styles.speciesLabel}>Species:</label>
+          <select
+            value={currentOrganism || ''}
+            onChange={(e) => setCurrentOrganism(e.target.value || null)}
+            style={styles.speciesSelect}
+          >
+            <option value="">Select species...</option>
+            {organisms.map((org) => (
+              <option key={org.organism_abbrev} value={org.organism_abbrev}>
+                {org.organism_name}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <div style={styles.searchRow}>
           {/* Feature Search */}
           <div style={styles.searchBox}>
@@ -749,37 +1113,60 @@ function LitGuideCurationPage() {
                 <thead>
                   <tr>
                     <th style={styles.th}>Reference</th>
-                    <th style={styles.th}>Year</th>
-                    <th style={styles.th}>Title</th>
                     <th style={styles.th}>Topics</th>
+                    <th style={styles.thAction}>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {featureData.curated.map((ref) => (
-                    <tr key={ref.reference_no}>
-                      <td style={styles.td}>
-                        <Link to={`/reference/${ref.reference_no}`}>
-                          {ref.pubmed ? `PMID:${ref.pubmed}` : `Ref:${ref.reference_no}`}
-                        </Link>
-                      </td>
-                      <td style={styles.td}>{ref.year || '-'}</td>
-                      <td style={styles.td}>{ref.title || ref.citation}</td>
-                      <td style={styles.td}>
-                        {ref.topics.map((topic) => (
-                          <div key={topic.refprop_feat_no} style={styles.topicTag}>
-                            {topic.topic}
-                            <button
-                              onClick={() => handleRemoveTopic(topic.refprop_feat_no)}
-                              style={styles.removeTopicBtn}
-                              title="Remove topic"
-                            >
-                              x
-                            </button>
+                  {featureData.curated.map((ref) => {
+                    const links = buildCitationLinks({
+                      dbxref_id: ref.dbxref_id,
+                      reference_no: ref.reference_no,
+                      pubmed: ref.pubmed,
+                      urls: ref.urls,
+                    });
+                    return (
+                      <tr key={ref.reference_no}>
+                        <td style={styles.td}>
+                          <div style={styles.citationLine}>
+                            {ref.citation ? (
+                              <>
+                                {formatCitationString(ref.citation)}
+                                {ref.pubmed && <span style={styles.pmidText}> PMID: {ref.pubmed}</span>}
+                              </>
+                            ) : (
+                              <Link to={`/reference/${ref.reference_no}`}>
+                                {ref.pubmed ? `PMID:${ref.pubmed}` : `Ref:${ref.reference_no}`}
+                              </Link>
+                            )}
                           </div>
-                        ))}
-                      </td>
-                    </tr>
-                  ))}
+                          <CitationLinksBelow links={links} />
+                        </td>
+                        <td style={styles.td}>
+                          {ref.topics.map((topic) => (
+                            <div key={topic.refprop_feat_no} style={styles.topicTag}>
+                              {topic.topic}
+                              <button
+                                onClick={() => handleRemoveTopic(topic.refprop_feat_no)}
+                                style={styles.removeTopicBtn}
+                                title="Remove topic"
+                              >
+                                x
+                              </button>
+                            </div>
+                          ))}
+                        </td>
+                        <td style={styles.tdAction}>
+                          <Link
+                            to={`/curation/litguide/${ref.reference_no}${currentOrganism ? `?organism=${currentOrganism}` : ''}`}
+                            style={styles.curateLink}
+                          >
+                            Curate
+                          </Link>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             ) : (
@@ -798,49 +1185,72 @@ function LitGuideCurationPage() {
                 <thead>
                   <tr>
                     <th style={styles.th}>Reference</th>
-                    <th style={styles.th}>Year</th>
-                    <th style={styles.th}>Title</th>
                     <th style={styles.th}>Actions</th>
+                    <th style={styles.thAction}>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {featureData.uncurated.map((ref) => (
-                    <tr key={ref.reference_no}>
-                      <td style={styles.td}>
-                        <Link to={`/reference/${ref.reference_no}`}>
-                          {ref.pubmed ? `PMID:${ref.pubmed}` : `Ref:${ref.reference_no}`}
-                        </Link>
-                      </td>
-                      <td style={styles.td}>{ref.year || '-'}</td>
-                      <td style={styles.td}>{ref.title || ref.citation}</td>
-                      <td style={styles.td}>
-                        <button
-                          onClick={() => {
-                            setSelectedRef(ref);
-                            setRefSearchResults(null);
-                          }}
-                          style={styles.actionButton}
-                        >
-                          Add Topic
-                        </button>
-                        <select
-                          onChange={(e) => {
-                            if (e.target.value) {
-                              handleSetStatus(ref.reference_no, e.target.value);
-                              e.target.value = '';
-                            }
-                          }}
-                          style={styles.statusSelect}
-                          defaultValue=""
-                        >
-                          <option value="">Set Status...</option>
-                          {statuses.map((s) => (
-                            <option key={s} value={s}>{s}</option>
-                          ))}
-                        </select>
-                      </td>
-                    </tr>
-                  ))}
+                  {featureData.uncurated.map((ref) => {
+                    const links = buildCitationLinks({
+                      dbxref_id: ref.dbxref_id,
+                      reference_no: ref.reference_no,
+                      pubmed: ref.pubmed,
+                      urls: ref.urls,
+                    });
+                    return (
+                      <tr key={ref.reference_no}>
+                        <td style={styles.td}>
+                          <div style={styles.citationLine}>
+                            {ref.citation ? (
+                              <>
+                                {formatCitationString(ref.citation)}
+                                {ref.pubmed && <span style={styles.pmidText}> PMID: {ref.pubmed}</span>}
+                              </>
+                            ) : (
+                              <Link to={`/reference/${ref.reference_no}`}>
+                                {ref.pubmed ? `PMID:${ref.pubmed}` : `Ref:${ref.reference_no}`}
+                              </Link>
+                            )}
+                          </div>
+                          <CitationLinksBelow links={links} />
+                        </td>
+                        <td style={styles.td}>
+                          <button
+                            onClick={() => {
+                              setSelectedRef(ref);
+                              setRefSearchResults(null);
+                            }}
+                            style={styles.actionButton}
+                          >
+                            Add Topic
+                          </button>
+                          <select
+                            onChange={(e) => {
+                              if (e.target.value) {
+                                handleSetStatus(ref.reference_no, e.target.value);
+                                e.target.value = '';
+                              }
+                            }}
+                            style={styles.statusSelect}
+                            defaultValue=""
+                          >
+                            <option value="">Set Status...</option>
+                            {statuses.map((s) => (
+                              <option key={s} value={s}>{s}</option>
+                            ))}
+                          </select>
+                        </td>
+                        <td style={styles.tdAction}>
+                          <Link
+                            to={`/curation/litguide/${ref.reference_no}${currentOrganism ? `?organism=${currentOrganism}` : ''}`}
+                            style={styles.curateLink}
+                          >
+                            Curate
+                          </Link>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             ) : (
@@ -899,32 +1309,321 @@ function LitGuideCurationPage() {
             <Link to={`/curation/go`} style={styles.navLink}>Curate GO</Link>
           </div>
 
-          {/* Reference Details */}
-          <div style={styles.refDetailsBox}>
-            <p><strong>Title:</strong> {referenceData.title || 'N/A'}</p>
-            <p><strong>Citation:</strong> {referenceData.citation || 'N/A'}</p>
-            <p>
-              <strong>Curation Status:</strong>{' '}
-              <select
-                value={referenceData.curation_status || ''}
-                onChange={(e) => {
-                  if (e.target.value) {
-                    handleSetStatus(referenceData.reference_no, e.target.value);
-                  }
-                }}
-                style={styles.statusSelectInline}
-              >
-                <option value="">Not yet curated</option>
-                {statuses.map((s) => (
-                  <option key={s} value={s}>{s}</option>
-                ))}
-              </select>
-            </p>
+          {/* Reference Details / Abstract */}
+          <div style={styles.abstractSection}>
+            <h3 style={styles.abstractHeader}>Abstract</h3>
+            <div style={styles.abstractContent}>
+              <p>{referenceData.citation || 'N/A'}</p>
+              <CitationLinksBelow
+                links={buildCitationLinks({
+                  dbxref_id: referenceData.dbxref_id,
+                  reference_no: referenceData.reference_no,
+                  pubmed: referenceData.pubmed,
+                  urls: referenceData.urls,
+                })}
+              />
+              <p style={styles.refIdentifiers}>
+                (CGD:{referenceData.reference_no}, PMID:{referenceData.pubmed || 'N/A'}, CGDID:{referenceData.dbxref_id || 'N/A'})
+              </p>
+              {referenceData.abstract ? (
+                <blockquote style={styles.abstractText}>{referenceData.abstract}</blockquote>
+              ) : (
+                <p style={styles.noAbstract}>No abstract available.</p>
+              )}
+              <div style={styles.curationStatusRow}>
+                <strong>Curation Status:</strong>{' '}
+                <select
+                  value={referenceData.curation_status || ''}
+                  onChange={(e) => {
+                    if (e.target.value) {
+                      handleSetStatus(referenceData.reference_no, e.target.value);
+                    }
+                  }}
+                  style={styles.statusSelectInline}
+                >
+                  <option value="">Not yet curated</option>
+                  {statuses.map((s) => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
           </div>
 
-          {/* Add Feature Form */}
+          {/* Features Linked to this Paper - Summary Section */}
+          {(() => {
+            // Categorize features based on topic property_type
+            const publicCurated = [];
+            const notYetCurated = [];
+            const internalCurated = [];
+
+            referenceData.features?.forEach((feat) => {
+              const displayName = feat.gene_name || feat.feature_name;
+              const hasPublicTopic = feat.topics?.some(
+                (t) => t.property_type === 'literature_topic' && t.topic !== 'Not yet curated'
+              );
+              const hasNotYetCurated = feat.topics?.some(
+                (t) => t.topic === 'Not yet curated'
+              );
+              const hasInternalTopic = feat.topics?.some(
+                (t) => t.property_type === 'curation_status' && t.topic !== 'Not yet curated'
+              );
+
+              if (hasPublicTopic && !publicCurated.includes(displayName)) {
+                publicCurated.push(displayName);
+              }
+              if (hasNotYetCurated && !notYetCurated.includes(displayName)) {
+                notYetCurated.push(displayName);
+              }
+              if (hasInternalTopic && !internalCurated.includes(displayName)) {
+                internalCurated.push(displayName);
+              }
+            });
+
+            const unlinkedFeatures = referenceData.unlinked_features || [];
+
+            return (
+              <div style={styles.featuresLinkedSection}>
+                <h3 style={styles.featuresLinkedHeader}>Features Linked to this Paper</h3>
+                <div style={styles.featuresLinkedContent}>
+                  <div style={styles.featuresLinkedRow}>
+                    <strong>Public Topics Curated for:</strong>{' '}
+                    <span>
+                      {publicCurated.length > 0
+                        ? publicCurated.map((name, idx) => (
+                            <span key={name}>
+                              <Link to={`/locus/${name}`} style={styles.featureLinkInline}>
+                                {name}
+                              </Link>
+                              {idx < publicCurated.length - 1 && ' | '}
+                            </span>
+                          ))
+                        : <span style={styles.nothingYet}>nothing yet</span>
+                      }
+                    </span>
+                  </div>
+                  <div style={styles.featuresLinkedRowAlt}>
+                    <strong>Not yet curated for:</strong>{' '}
+                    <span>
+                      {notYetCurated.length > 0
+                        ? notYetCurated.map((name, idx) => (
+                            <span key={name}>
+                              <Link to={`/locus/${name}`} style={styles.featureLinkInline}>
+                                {name}
+                              </Link>
+                              {idx < notYetCurated.length - 1 && ' | '}
+                            </span>
+                          ))
+                        : <span style={styles.nothingYet}>nothing yet</span>
+                      }
+                    </span>
+                  </div>
+                  <div style={styles.featuresLinkedRowInternal}>
+                    <strong>Internal Topics Curated for:</strong>{' '}
+                    <span>
+                      {internalCurated.length > 0
+                        ? internalCurated.map((name, idx) => (
+                            <span key={name}>
+                              <Link to={`/locus/${name}`} style={styles.featureLinkInline}>
+                                {name}
+                              </Link>
+                              {idx < internalCurated.length - 1 && ' | '}
+                            </span>
+                          ))
+                        : <span style={styles.nothingYet}>nothing yet</span>
+                      }
+                    </span>
+                  </div>
+                  {referenceData.pubmed && unlinkedFeatures.length > 0 && (
+                    <div style={styles.featuresLinkedRowUnlinked}>
+                      <strong>Unlinked from:</strong>{' '}
+                      <span>
+                        {unlinkedFeatures.map((feat, idx) => (
+                          <span key={feat.feature_no}>
+                            <Link to={`/locus/${feat.feature_name}`} style={styles.featureLinkInline}>
+                              {feat.gene_name || feat.feature_name}
+                            </Link>
+                            {idx < unlinkedFeatures.length - 1 && ' | '}
+                          </span>
+                        ))}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* Assign Literature Guide Topics Section */}
+          <div id="Assign" style={styles.assignSection}>
+            <h3 style={styles.assignHeader}>Assign Literature Guide Topics to this Paper</h3>
+            {assignmentSuccess && (
+              <div style={styles.assignSuccess}>{assignmentSuccess}</div>
+            )}
+            {assignmentError && (
+              <div style={styles.assignError}>{assignmentError}</div>
+            )}
+            <p style={styles.assignHelp}>
+              Separate multiple features by spaces or | (pipe). Each row will have the specified
+              topics and curation statuses applied to all listed features.
+            </p>
+            <div style={styles.assignRows}>
+              {assignmentRows.map((row, index) => (
+                <TopicAssignmentRow
+                  key={index}
+                  features={row.features}
+                  literatureTopics={row.literatureTopics}
+                  curationStatuses={row.curationStatuses}
+                  onFeaturesChange={(value) => updateAssignmentRow(index, 'features', value)}
+                  onLiteratureTopicsChange={(value) => updateAssignmentRow(index, 'literatureTopics', value)}
+                  onCurationStatusesChange={(value) => updateAssignmentRow(index, 'curationStatuses', value)}
+                  onRemove={() => removeAssignmentRow(index)}
+                  showRemoveButton={assignmentRows.length > 1}
+                />
+              ))}
+            </div>
+            <div style={styles.assignButtons}>
+              <button
+                type="button"
+                onClick={addAssignmentRow}
+                style={styles.addRowBtn}
+              >
+                + Add Row
+              </button>
+              <button
+                type="button"
+                onClick={resetAssignmentRows}
+                style={styles.resetBtn}
+              >
+                Reset
+              </button>
+              <button
+                type="button"
+                onClick={handleSubmitAssignments}
+                disabled={submittingAssignments}
+                style={styles.submitAssignBtn}
+              >
+                {submittingAssignments ? 'Submitting...' : 'Submit'}
+              </button>
+            </div>
+          </div>
+
+          {/* Edit Current Literature Guide Curation Topics */}
+          {editRows.length > 0 && (
+            <div id="Edit" style={styles.editTopicsSection}>
+              <h3 style={styles.editTopicsHeader}>Edit Current Literature Guide Curation Topics</h3>
+
+              {editSuccess && <div style={styles.editSuccess}>{editSuccess}</div>}
+              {editError && <div style={styles.editError}>{editError}</div>}
+
+              <div style={styles.editTopicsContent}>
+                {editRows.map((row, idx) => (
+                  <div key={idx} style={styles.editTopicsRow}>
+                    <div style={styles.editTopicsRowContent}>
+                      {/* Features (read-only) */}
+                      <div style={styles.editTopicsFeaturesSection}>
+                        <label style={styles.editTopicsLabel}>Features:</label>
+                        <div style={styles.editTopicsFeaturesList}>
+                          {row.features}
+                        </div>
+                      </div>
+
+                      {/* Literature Topics (editable) */}
+                      <div style={styles.editTopicsListSection}>
+                        <button
+                          type="button"
+                          onClick={() => openEditModal(idx, 'literature_topic')}
+                          style={styles.editTopicsButton}
+                        >
+                          Literature Topics
+                        </button>
+                        <div style={styles.editTopicsListBox}>
+                          {row.literatureTopics.length > 0 ? (
+                            row.literatureTopics.map((topic, i) => (
+                              <div key={i} style={styles.editTopicsItemEditable}>
+                                {topic}
+                                <button
+                                  type="button"
+                                  onClick={() => removeEditTopic(idx, topic, 'literature_topic')}
+                                  style={styles.editTopicsRemoveBtn}
+                                  title="Remove topic"
+                                >
+                                  &times;
+                                </button>
+                              </div>
+                            ))
+                          ) : (
+                            <span style={styles.nothingYet}>none</span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Curation Status (editable) */}
+                      <div style={styles.editTopicsListSection}>
+                        <button
+                          type="button"
+                          onClick={() => openEditModal(idx, 'curation_status')}
+                          style={styles.editTopicsButton}
+                        >
+                          Curation Status
+                        </button>
+                        <div style={styles.editTopicsListBox}>
+                          {row.curationStatuses.length > 0 ? (
+                            row.curationStatuses.map((status, i) => (
+                              <div key={i} style={styles.editTopicsItemEditable}>
+                                {status}
+                                <button
+                                  type="button"
+                                  onClick={() => removeEditTopic(idx, status, 'curation_status')}
+                                  style={styles.editTopicsRemoveBtn}
+                                  title="Remove status"
+                                >
+                                  &times;
+                                </button>
+                              </div>
+                            ))
+                          ) : (
+                            <span style={styles.nothingYet}>none</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                <div style={styles.editTopicsActions}>
+                  <button
+                    type="button"
+                    onClick={handleSubmitEdits}
+                    disabled={submittingEdits}
+                    style={styles.submitEditBtn}
+                  >
+                    {submittingEdits ? 'Saving...' : 'Save Changes'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Edit Modal */}
+              <CVTreeModal
+                isOpen={editModalOpen}
+                onClose={closeEditModal}
+                onSelect={handleEditModalSelect}
+                cvName={editModalType || 'literature_topic'}
+                title={editModalType === 'curation_status' ? 'Select Curation Status' : 'Select Literature Topics'}
+                selectedTerms={
+                  editModalRowIndex !== null && editModalType
+                    ? editModalType === 'literature_topic'
+                      ? editRows[editModalRowIndex]?.literatureTopics || []
+                      : editRows[editModalRowIndex]?.curationStatuses || []
+                    : []
+                }
+              />
+            </div>
+          )}
+
+          {/* Quick Add Feature (simple form) */}
           <div id="AddFeature" style={styles.addSection}>
-            <h3 style={styles.sectionHeader}>Add Feature with Topic</h3>
+            <h3 style={styles.sectionHeader}>Quick Add Feature</h3>
             <div style={styles.addFeatureRow}>
               <input
                 type="text"
@@ -1330,6 +2029,25 @@ const styles = {
     border: '1px solid #ddd',
     borderRadius: '4px',
   },
+  speciesSelectorRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    marginBottom: '1rem',
+    paddingBottom: '1rem',
+    borderBottom: '1px solid #ddd',
+  },
+  speciesLabel: {
+    fontWeight: 'bold',
+    fontSize: '0.95rem',
+  },
+  speciesSelect: {
+    padding: '0.5rem',
+    fontSize: '1rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    minWidth: '250px',
+  },
   searchRow: {
     display: 'flex',
     gap: '2rem',
@@ -1382,7 +2100,7 @@ const styles = {
     marginBottom: '1.5rem',
   },
   sectionHeader: {
-    backgroundColor: '#CCCCFF',
+    backgroundColor: '#e0e0e0',
     padding: '0.5rem',
     margin: '0 0 1rem 0',
     fontSize: '1rem',
@@ -1488,6 +2206,27 @@ const styles = {
     borderBottom: '1px solid #ddd',
     verticalAlign: 'top',
   },
+  tdAction: {
+    padding: '0.5rem',
+    borderBottom: '1px solid #ddd',
+    verticalAlign: 'top',
+    textAlign: 'center',
+    whiteSpace: 'nowrap',
+  },
+  thAction: {
+    textAlign: 'center',
+    padding: '0.5rem',
+    borderBottom: '2px solid #333',
+    backgroundColor: '#f5f5f5',
+    width: '80px',
+  },
+  citationLine: {
+    marginBottom: '0.25rem',
+  },
+  pmidText: {
+    color: '#666',
+    fontSize: '0.9em',
+  },
   topicTag: {
     display: 'inline-flex',
     alignItems: 'center',
@@ -1565,6 +2304,300 @@ const styles = {
     borderRadius: '4px',
     marginBottom: '1.5rem',
   },
+  // Abstract section styles
+  abstractSection: {
+    marginBottom: '1.5rem',
+  },
+  abstractHeader: {
+    backgroundColor: '#d9edf7',
+    padding: '0.5rem',
+    margin: '0 0 0.5rem 0',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+  },
+  abstractContent: {
+    padding: '1rem',
+    backgroundColor: '#fff',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+  },
+  refLinks: {
+    marginBottom: '0.5rem',
+  },
+  refEntryLink: {
+    color: '#337ab7',
+    textDecoration: 'none',
+    marginRight: '1rem',
+  },
+  refIdentifiers: {
+    fontWeight: 'bold',
+    fontSize: '0.9rem',
+    marginBottom: '0.5rem',
+  },
+  abstractText: {
+    margin: '1rem 2rem',
+    padding: '0.5rem',
+    borderLeft: '3px solid #ccc',
+    fontStyle: 'normal',
+    color: '#333',
+    lineHeight: '1.5',
+  },
+  noAbstract: {
+    color: '#666',
+    fontStyle: 'italic',
+    margin: '1rem 0',
+  },
+  curationStatusRow: {
+    marginTop: '1rem',
+    paddingTop: '0.5rem',
+    borderTop: '1px solid #eee',
+  },
+  // Features Linked to this Paper section
+  featuresLinkedSection: {
+    marginBottom: '1.5rem',
+  },
+  featuresLinkedHeader: {
+    backgroundColor: '#d9edf7',
+    padding: '0.5rem',
+    margin: '0 0 0.5rem 0',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+  },
+  featuresLinkedContent: {
+    backgroundColor: '#fff',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+  },
+  featuresLinkedRow: {
+    padding: '0.5rem 1rem',
+    backgroundColor: '#f5f5f5',
+    fontSize: '0.9rem',
+  },
+  featuresLinkedRowAlt: {
+    padding: '0.5rem 1rem',
+    backgroundColor: '#f5f5f5',
+    fontSize: '0.9rem',
+  },
+  featuresLinkedRowInternal: {
+    padding: '0.5rem 1rem',
+    backgroundColor: '#f9f9f9',
+    fontSize: '0.9rem',
+  },
+  featuresLinkedRowUnlinked: {
+    padding: '0.5rem 1rem',
+    backgroundColor: '#f0f0f0',
+    fontSize: '0.9rem',
+  },
+  featureLinkInline: {
+    color: '#337ab7',
+    textDecoration: 'none',
+  },
+  // Assign Topics section styles
+  assignSection: {
+    marginBottom: '1.5rem',
+  },
+  assignHeader: {
+    backgroundColor: '#d9edf7',
+    padding: '0.5rem',
+    margin: '0 0 0.5rem 0',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+  },
+  assignHelp: {
+    fontSize: '0.85rem',
+    color: '#666',
+    marginBottom: '0.5rem',
+    padding: '0.5rem',
+    backgroundColor: '#fff',
+  },
+  assignSuccess: {
+    padding: '0.75rem 1rem',
+    marginBottom: '0.5rem',
+    backgroundColor: '#d4edda',
+    color: '#155724',
+    border: '1px solid #c3e6cb',
+    borderRadius: '4px',
+  },
+  assignError: {
+    padding: '0.75rem 1rem',
+    marginBottom: '0.5rem',
+    backgroundColor: '#f8d7da',
+    color: '#721c24',
+    border: '1px solid #f5c6cb',
+    borderRadius: '4px',
+    whiteSpace: 'pre-wrap',
+  },
+  assignRows: {
+    marginBottom: '0.5rem',
+  },
+  assignButtons: {
+    display: 'flex',
+    gap: '0.5rem',
+    padding: '0.5rem',
+    backgroundColor: '#f9f9f9',
+    borderRadius: '4px',
+  },
+  addRowBtn: {
+    padding: '0.5rem 1rem',
+    backgroundColor: '#f0f0f0',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  },
+  resetBtn: {
+    padding: '0.5rem 1rem',
+    backgroundColor: '#fff',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  },
+  submitAssignBtn: {
+    padding: '0.5rem 1.5rem',
+    backgroundColor: '#007bff',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontWeight: 'bold',
+  },
+  // Edit Current Topics section
+  editTopicsSection: {
+    marginBottom: '1.5rem',
+  },
+  editTopicsHeader: {
+    backgroundColor: '#d9edf7',
+    padding: '0.5rem',
+    margin: '0 0 0.5rem 0',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+  },
+  editTopicsContent: {
+    backgroundColor: '#fff',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    padding: '0.5rem',
+  },
+  editTopicsRow: {
+    padding: '0.75rem',
+    backgroundColor: '#fafafa',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    marginBottom: '0.5rem',
+  },
+  editTopicsRowContent: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '1rem',
+    alignItems: 'flex-start',
+  },
+  editTopicsFeaturesSection: {
+    flex: '1 1 200px',
+    minWidth: '200px',
+  },
+  editTopicsLabel: {
+    display: 'block',
+    fontWeight: 'bold',
+    marginBottom: '0.25rem',
+    fontSize: '0.9rem',
+  },
+  editTopicsFeaturesList: {
+    padding: '0.5rem',
+    backgroundColor: '#fff',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    fontSize: '0.9rem',
+    minHeight: '2rem',
+  },
+  editTopicsListSection: {
+    flex: '1 1 150px',
+    minWidth: '150px',
+  },
+  editTopicsListBox: {
+    padding: '0.25rem',
+    backgroundColor: '#fff',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    minHeight: '60px',
+    maxHeight: '100px',
+    overflow: 'auto',
+  },
+  editTopicsItem: {
+    padding: '0.2rem 0.4rem',
+    margin: '0.1rem',
+    backgroundColor: '#e8e8e8',
+    borderRadius: '3px',
+    fontSize: '0.85rem',
+  },
+  editTopicsNote: {
+    fontSize: '0.85rem',
+    color: '#666',
+    fontStyle: 'italic',
+    marginTop: '0.5rem',
+    marginBottom: 0,
+  },
+  editTopicsButton: {
+    padding: '0.5rem 1rem',
+    fontSize: '0.85rem',
+    backgroundColor: '#f0f0f0',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontWeight: 'bold',
+    marginBottom: '0.5rem',
+  },
+  editTopicsItemEditable: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '0.25rem',
+    padding: '0.15rem 0.4rem',
+    margin: '0.1rem',
+    backgroundColor: '#e0e0e0',
+    borderRadius: '3px',
+    fontSize: '0.8rem',
+  },
+  editTopicsRemoveBtn: {
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    fontSize: '1rem',
+    color: '#666',
+    padding: '0 0.1rem',
+    lineHeight: 1,
+  },
+  editTopicsActions: {
+    display: 'flex',
+    gap: '0.5rem',
+    marginTop: '1rem',
+    paddingTop: '0.5rem',
+    borderTop: '1px solid #ddd',
+  },
+  submitEditBtn: {
+    padding: '0.5rem 1.5rem',
+    fontSize: '0.9rem',
+    backgroundColor: '#007bff',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontWeight: 'bold',
+  },
+  editSuccess: {
+    backgroundColor: '#d4edda',
+    color: '#155724',
+    padding: '0.5rem 1rem',
+    borderRadius: '4px',
+    marginBottom: '0.5rem',
+    fontSize: '0.9rem',
+  },
+  editError: {
+    backgroundColor: '#f8d7da',
+    color: '#721c24',
+    padding: '0.5rem 1rem',
+    borderRadius: '4px',
+    marginBottom: '0.5rem',
+    fontSize: '0.9rem',
+    whiteSpace: 'pre-wrap',
+  },
   statusSelectInline: {
     padding: '0.25rem 0.5rem',
     fontSize: '0.9rem',
@@ -1588,17 +2621,17 @@ const styles = {
   // Unlink section styles
   unlinkSection: {
     padding: '1rem',
-    backgroundColor: '#fff8e6',
-    border: '1px solid #f0d080',
+    backgroundColor: '#fff',
+    border: '1px solid #ddd',
     borderRadius: '4px',
     marginBottom: '1.5rem',
   },
   unlinkHeader: {
-    backgroundColor: '#f0d080',
+    backgroundColor: '#d9edf7',
     padding: '0.5rem',
     margin: '0 0 1rem 0',
     fontSize: '1rem',
-    color: '#664400',
+    fontWeight: 'bold',
   },
   unlinkRow: {
     display: 'flex',
@@ -1632,7 +2665,7 @@ const styles = {
     marginTop: '1.5rem',
   },
   notesHeader: {
-    backgroundColor: 'navajowhite',
+    backgroundColor: '#d9edf7',
     padding: '0.5rem',
     margin: '0 0 1rem 0',
     fontSize: '1rem',
@@ -1654,7 +2687,7 @@ const styles = {
     marginBottom: '1.5rem',
   },
   nongeneHeader: {
-    backgroundColor: 'navajowhite',
+    backgroundColor: '#d9edf7',
     padding: '0.5rem',
     margin: '0 0 0.5rem 0',
     fontSize: '1rem',
@@ -1667,12 +2700,12 @@ const styles = {
   },
   nongeneRow: {
     padding: '0.5rem',
-    backgroundColor: '#CCFFCC',
+    backgroundColor: '#f5f5f5',
     fontSize: '0.9rem',
   },
   nongeneRowInternal: {
     padding: '0.5rem',
-    backgroundColor: '#CCFFFF',
+    backgroundColor: '#f9f9f9',
     fontSize: '0.9rem',
   },
   nongeneLabel: {
@@ -1737,7 +2770,7 @@ const styles = {
     borderRadius: '4px',
   },
   otherSpeciesHeader: {
-    backgroundColor: '#CCCCFF',
+    backgroundColor: '#e0e0e0',
     padding: '0.5rem',
     margin: '0 0 1rem 0',
     fontSize: '1rem',
@@ -1811,7 +2844,7 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#CCCCFF',
+    backgroundColor: '#e0e0e0',
     padding: '0.5rem',
     marginBottom: '0.5rem',
   },

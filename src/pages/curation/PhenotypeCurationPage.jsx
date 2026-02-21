@@ -453,7 +453,7 @@ function PhenotypeCurationPage() {
               onChange={(e) => setSelectedOrganism(e.target.value)}
               style={styles.organismSelect}
             >
-              <option value="">All species</option>
+              <option value="">Select species...</option>
               {organisms.map((org) => (
                 <option key={org.organism_abbrev} value={org.organism_abbrev}>
                   {org.organism_name}

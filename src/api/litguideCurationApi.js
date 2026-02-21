@@ -30,10 +30,15 @@ export const litguideCurationApi = {
    * Get all literature for a feature.
    *
    * @param {string|number} identifier - Feature number or name
+   * @param {string} [organism] - Optional organism abbreviation to filter
    * @returns {Promise<Object>} - Feature with curated and uncurated references
    */
-  getFeatureLiterature: async (identifier) => {
-    const response = await api.get(`/api/curation/litguide/feature/${identifier}`);
+  getFeatureLiterature: async (identifier, organism = null) => {
+    const params = {};
+    if (organism) {
+      params.organism = organism;
+    }
+    const response = await api.get(`/api/curation/litguide/feature/${identifier}`, { params });
     return response.data;
   },
 
@@ -132,6 +137,32 @@ export const litguideCurationApi = {
       feature_identifier: featureIdentifier,
       topic,
     });
+    return response.data;
+  },
+
+  /**
+   * Batch assign topics to multiple features.
+   *
+   * Assigns all specified literature_topics and curation_statuses to all
+   * specified features. Mirrors the Perl version's multi-row form submission.
+   *
+   * @param {number} referenceNo - Reference number
+   * @param {string[]} features - List of feature names/identifiers
+   * @param {string[]} literatureTopics - Literature topics to assign
+   * @param {string[]} curationStatuses - Curation statuses to assign
+   * @param {string} [organism] - Optional organism abbreviation to filter feature lookup
+   * @returns {Promise<{total_requested: number, successful: number, failed: number, results: Array}>}
+   */
+  batchAssignTopics: async (referenceNo, features, literatureTopics, curationStatuses, organism = null) => {
+    const payload = {
+      features,
+      literature_topics: literatureTopics,
+      curation_statuses: curationStatuses,
+    };
+    if (organism) {
+      payload.organism = organism;
+    }
+    const response = await api.post(`/api/curation/litguide/reference/${referenceNo}/batch-assign`, payload);
     return response.data;
   },
 
