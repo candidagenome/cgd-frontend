@@ -2100,7 +2100,7 @@ const styles = {
     marginBottom: '1.5rem',
   },
   sectionHeader: {
-    backgroundColor: '#CCCCFF',
+    backgroundColor: '#e0e0e0',
     padding: '0.5rem',
     margin: '0 0 1rem 0',
     fontSize: '1rem',
@@ -2309,7 +2309,7 @@ const styles = {
     marginBottom: '1.5rem',
   },
   abstractHeader: {
-    backgroundColor: 'navajowhite',
+    backgroundColor: '#d9edf7',
     padding: '0.5rem',
     margin: '0 0 0.5rem 0',
     fontSize: '1rem',
@@ -2357,7 +2357,7 @@ const styles = {
     marginBottom: '1.5rem',
   },
   featuresLinkedHeader: {
-    backgroundColor: 'navajowhite',
+    backgroundColor: '#d9edf7',
     padding: '0.5rem',
     margin: '0 0 0.5rem 0',
     fontSize: '1rem',
@@ -2370,7 +2370,7 @@ const styles = {
   },
   featuresLinkedRow: {
     padding: '0.5rem 1rem',
-    backgroundColor: '#CCFFCC',
+    backgroundColor: '#f5f5f5',
     fontSize: '0.9rem',
   },
   featuresLinkedRowAlt: {
@@ -2380,7 +2380,7 @@ const styles = {
   },
   featuresLinkedRowInternal: {
     padding: '0.5rem 1rem',
-    backgroundColor: '#CCFFFF',
+    backgroundColor: '#f9f9f9',
     fontSize: '0.9rem',
   },
   featuresLinkedRowUnlinked: {
@@ -2397,7 +2397,7 @@ const styles = {
     marginBottom: '1.5rem',
   },
   assignHeader: {
-    backgroundColor: 'navajowhite',
+    backgroundColor: '#d9edf7',
     padding: '0.5rem',
     margin: '0 0 0.5rem 0',
     fontSize: '1rem',
@@ -2465,7 +2465,7 @@ const styles = {
     marginBottom: '1.5rem',
   },
   editTopicsHeader: {
-    backgroundColor: 'navajowhite',
+    backgroundColor: '#d9edf7',
     padding: '0.5rem',
     margin: '0 0 0.5rem 0',
     fontSize: '1rem',
@@ -2621,17 +2621,17 @@ const styles = {
   // Unlink section styles
   unlinkSection: {
     padding: '1rem',
-    backgroundColor: '#fff8e6',
-    border: '1px solid #f0d080',
+    backgroundColor: '#fff',
+    border: '1px solid #ddd',
     borderRadius: '4px',
     marginBottom: '1.5rem',
   },
   unlinkHeader: {
-    backgroundColor: '#f0d080',
+    backgroundColor: '#d9edf7',
     padding: '0.5rem',
     margin: '0 0 1rem 0',
     fontSize: '1rem',
-    color: '#664400',
+    fontWeight: 'bold',
   },
   unlinkRow: {
     display: 'flex',
@@ -2665,7 +2665,7 @@ const styles = {
     marginTop: '1.5rem',
   },
   notesHeader: {
-    backgroundColor: 'navajowhite',
+    backgroundColor: '#d9edf7',
     padding: '0.5rem',
     margin: '0 0 1rem 0',
     fontSize: '1rem',
@@ -2687,7 +2687,7 @@ const styles = {
     marginBottom: '1.5rem',
   },
   nongeneHeader: {
-    backgroundColor: 'navajowhite',
+    backgroundColor: '#d9edf7',
     padding: '0.5rem',
     margin: '0 0 0.5rem 0',
     fontSize: '1rem',
@@ -2700,12 +2700,12 @@ const styles = {
   },
   nongeneRow: {
     padding: '0.5rem',
-    backgroundColor: '#CCFFCC',
+    backgroundColor: '#f5f5f5',
     fontSize: '0.9rem',
   },
   nongeneRowInternal: {
     padding: '0.5rem',
-    backgroundColor: '#CCFFFF',
+    backgroundColor: '#f9f9f9',
     fontSize: '0.9rem',
   },
   nongeneLabel: {
@@ -2770,7 +2770,7 @@ const styles = {
     borderRadius: '4px',
   },
   otherSpeciesHeader: {
-    backgroundColor: '#CCCCFF',
+    backgroundColor: '#e0e0e0',
     padding: '0.5rem',
     margin: '0 0 1rem 0',
     fontSize: '1rem',
@@ -2844,7 +2844,7 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#CCCCFF',
+    backgroundColor: '#e0e0e0',
     padding: '0.5rem',
     marginBottom: '0.5rem',
   },
