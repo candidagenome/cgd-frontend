@@ -23,14 +23,39 @@ function ReferenceSearchResultsPage() {
 
   // Delete form state
   const [deleteLogComment, setDeleteLogComment] = useState('');
-  const [makeSecondary, setMakeSecondary] = useState(false);
   const [secondaryForId, setSecondaryForId] = useState('');
   const [secondaryIdType, setSecondaryIdType] = useState('CGDID');
+
+  // Add URL form state - with fallback default values
+  const defaultUrlTypes = ['Reference Data', 'Reference LINKOUT', 'Reference full text', 'Reference full text all', 'Reference Supplement'];
+  const defaultUrlSources = ['Author', 'NCBI', 'Publisher'];
+  const [urlOptions, setUrlOptions] = useState({ url_types: defaultUrlTypes, url_sources: defaultUrlSources });
+  const [newUrl, setNewUrl] = useState('');
+  const [newUrlType, setNewUrlType] = useState('Reference full text');
+  const [newUrlSource, setNewUrlSource] = useState('Author');
 
   // UI state
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
+
+  // Load URL options on mount
+  useEffect(() => {
+    const loadUrlOptions = async () => {
+      try {
+        const options = await referenceCurationApi.getUrlOptions();
+        if (options.url_types?.length > 0 && options.url_sources?.length > 0) {
+          setUrlOptions(options);
+          setNewUrlSource(options.url_sources[0]);
+          setNewUrlType(options.url_types[0]);
+        }
+      } catch (err) {
+        console.error('Failed to load URL options:', err);
+        // Keep default values already set in state
+      }
+    };
+    loadUrlOptions();
+  }, []);
 
   // Perform search based on URL params
   useEffect(() => {
@@ -139,7 +164,7 @@ function ReferenceSearchResultsPage() {
       if (deleteLogComment) {
         options.delete_log_comment = deleteLogComment;
       }
-      if (makeSecondary && secondaryForId) {
+      if (secondaryForId) {
         let targetRefNo;
         if (secondaryIdType === 'reference_no') {
           targetRefNo = parseInt(secondaryForId, 10);
@@ -176,6 +201,31 @@ function ReferenceSearchResultsPage() {
   const formatCitation = (ref) => {
     if (ref.citation) return ref.citation;
     return `Reference ${ref.reference_no}`;
+  };
+
+  const handleAddUrl = async () => {
+    if (!selectedRef || !newUrl.trim()) {
+      setError('Please enter a URL');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const result = await referenceCurationApi.addReferenceUrl(
+        selectedRef.reference_no,
+        newUrl.trim(),
+        newUrlType,
+        newUrlSource
+      );
+      setMessage(result.message);
+      setNewUrl('');
+    } catch (err) {
+      setError(err.response?.data?.detail || err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -252,7 +302,42 @@ function ReferenceSearchResultsPage() {
           <h3>Reference Details</h3>
 
           <div style={styles.citationBlock}>
-            <strong>{formatCitation(selectedRef)}</strong>
+            <div>
+              <strong>{formatCitation(selectedRef)}</strong>
+              {selectedRef.pubmed && (
+                <span style={styles.pmidText}> PMID: {selectedRef.pubmed}</span>
+              )}
+            </div>
+            <div style={styles.citationLinks}>
+              <a
+                href={`/reference/${selectedRef.dbxref_id || selectedRef.reference_no}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                CGD Paper
+              </a>
+              {selectedRef.pubmed && (
+                <a
+                  href={`https://pubmed.ncbi.nlm.nih.gov/${selectedRef.pubmed}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ marginLeft: '0.5rem' }}
+                >
+                  PubMed
+                </a>
+              )}
+              {selectedRef.urls && selectedRef.urls.length > 0 && selectedRef.urls.map((urlInfo) => (
+                <a
+                  key={urlInfo.url_no}
+                  href={urlInfo.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ marginLeft: '0.5rem' }}
+                >
+                  {urlInfo.url_type}
+                </a>
+              ))}
+            </div>
           </div>
 
           <table style={styles.infoTable}>
@@ -322,6 +407,58 @@ function ReferenceSearchResultsPage() {
               </Link>
             </h4>
 
+            {/* Add URL Section */}
+            <div style={styles.addUrlSection}>
+              <h4>Add a New Reference URL</h4>
+              <div style={styles.addUrlForm}>
+                <div style={styles.formRow}>
+                  <label style={styles.formLabel}>Source:</label>
+                  <select
+                    value={newUrlSource}
+                    onChange={(e) => setNewUrlSource(e.target.value)}
+                    style={styles.select}
+                  >
+                    {urlOptions.url_sources.map((source) => (
+                      <option key={source} value={source}>
+                        {source}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div style={styles.formRow}>
+                  <label style={styles.formLabel}>URL Type:</label>
+                  <select
+                    value={newUrlType}
+                    onChange={(e) => setNewUrlType(e.target.value)}
+                    style={styles.select}
+                  >
+                    {urlOptions.url_types.map((type) => (
+                      <option key={type} value={type}>
+                        {type}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div style={styles.formRow}>
+                  <label style={styles.formLabel}>URL:</label>
+                  <input
+                    type="text"
+                    value={newUrl}
+                    onChange={(e) => setNewUrl(e.target.value)}
+                    style={{ ...styles.input, width: '800px' }}
+                    placeholder="Enter URL"
+                  />
+                </div>
+                <button
+                  onClick={handleAddUrl}
+                  disabled={loading || !newUrl.trim()}
+                  style={styles.addButton}
+                >
+                  Add URL
+                </button>
+              </div>
+            </div>
+
             {refUsage && refUsage.in_use ? (
               <div style={styles.inUseWarning}>
                 <p>
@@ -344,45 +481,38 @@ function ReferenceSearchResultsPage() {
               </div>
             ) : (
               <div style={styles.deleteSection}>
-                <h4>Delete Reference</h4>
+                <h4>Delete reference and manage CGDID</h4>
                 <p style={styles.note}>
                   This reference is not linked to any information in the database.
                 </p>
 
                 <div style={styles.deleteForm}>
                   <div style={styles.formRow}>
+                    <label style={styles.formLabel}>Delete this reference</label>
                     <label>
-                      Delete log comment:{' '}
+                      Delete log comments:{' '}
                       <input
                         type="text"
                         value={deleteLogComment}
                         onChange={(e) => setDeleteLogComment(e.target.value)}
                         style={{ ...styles.input, width: '300px' }}
-                        placeholder="Reason for deletion"
                       />
                     </label>
                   </div>
 
                   <div style={styles.formRow}>
                     <label>
-                      <input
-                        type="checkbox"
-                        checked={makeSecondary}
-                        onChange={(e) => setMakeSecondary(e.target.checked)}
-                      />{' '}
-                      Make this CGDID a secondary CGDID for reference:
+                      Make this CGDID a secondary CGDID for reference:{' '}
                     </label>
                     <input
                       type="text"
                       value={secondaryForId}
                       onChange={(e) => setSecondaryForId(e.target.value)}
-                      disabled={!makeSecondary}
                       style={{ ...styles.input, width: '150px', marginLeft: '0.5rem' }}
                     />
                     <select
                       value={secondaryIdType}
                       onChange={(e) => setSecondaryIdType(e.target.value)}
-                      disabled={!makeSecondary}
                       style={{ ...styles.select, marginLeft: '0.5rem' }}
                     >
                       <option value="CGDID">CGDID</option>
@@ -527,6 +657,12 @@ const styles = {
     border: '1px solid #ccc',
     borderRadius: '4px',
   },
+  pmidText: {
+    fontWeight: 'normal',
+  },
+  citationLinks: {
+    marginTop: '0.25rem',
+  },
   infoTable: {
     marginBottom: '1rem',
   },
@@ -598,6 +734,30 @@ const styles = {
     borderRadius: '4px',
     cursor: 'pointer',
     marginTop: '1rem',
+  },
+  addUrlSection: {
+    backgroundColor: '#f5f5f5',
+    padding: '1rem',
+    borderRadius: '4px',
+    border: '1px solid #ddd',
+    marginBottom: '1rem',
+  },
+  addUrlForm: {
+    marginTop: '0.5rem',
+  },
+  formLabel: {
+    display: 'inline-block',
+    width: '80px',
+    fontWeight: 'bold',
+  },
+  addButton: {
+    padding: '0.5rem 1rem',
+    backgroundColor: '#4CAF50',
+    color: 'white',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    marginTop: '0.5rem',
   },
 };
 

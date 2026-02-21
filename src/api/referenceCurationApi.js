@@ -189,6 +189,34 @@ export const referenceCurationApi = {
     });
     return response.data;
   },
+
+  /**
+   * Get URL types and sources for adding reference URLs.
+   *
+   * @returns {Promise<{url_types: string[], url_sources: string[]}>}
+   */
+  getUrlOptions: async () => {
+    const response = await api.get('/api/curation/reference/url-options');
+    return response.data;
+  },
+
+  /**
+   * Add a URL to a reference.
+   *
+   * @param {number} referenceNo - Reference number
+   * @param {string} url - The URL to add
+   * @param {string} urlType - Type of URL (Full-text, Abstract, etc.)
+   * @param {string} source - Source of URL (Author, NCBI, Publisher)
+   * @returns {Promise<{url_no: number, ref_url_no: number, message: string}>}
+   */
+  addReferenceUrl: async (referenceNo, url, urlType, source) => {
+    const response = await api.post(`/api/curation/reference/${referenceNo}/url`, {
+      url,
+      url_type: urlType,
+      source,
+    });
+    return response.data;
+  },
 };
 
 export default referenceCurationApi;
