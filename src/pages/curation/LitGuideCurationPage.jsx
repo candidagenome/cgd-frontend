@@ -273,20 +273,24 @@ function LitGuideCurationPage() {
       if (!groups[key]) {
         groups[key] = {
           features: [],
+          featureNos: [], // Store feature_no for precise identification
           litTopics,
           curationStatuses,
         };
       }
       groups[key].features.push(feat.gene_name || feat.feature_name);
+      groups[key].featureNos.push(feat.feature_no);
     });
 
     // Convert groups to edit rows
     const rows = Object.values(groups).map((group) => ({
       features: group.features.join(' '),
+      featureNos: [...group.featureNos], // Include feature_no array
       literatureTopics: [...group.litTopics],
       curationStatuses: [...group.curationStatuses],
       // Track original values for comparison
       originalFeatures: group.features.join(' '),
+      originalFeatureNos: [...group.featureNos],
       originalLitTopics: [...group.litTopics],
       originalCurationStatuses: [...group.curationStatuses],
     }));
@@ -722,11 +726,10 @@ function LitGuideCurationPage() {
       const errors = [];
 
       for (const row of editRows) {
-        // Parse current features
-        const currentFeatures = row.features
-          .split(/[\s|]+/)
-          .map((f) => f.trim())
-          .filter((f) => f);
+        // Use feature_no array for precise identification (convert to strings for API)
+        const featureIdentifiers = (row.featureNos || row.originalFeatureNos || []).map(
+          (no) => String(no)
+        );
 
         // Find topics to add (in current but not in original)
         const topicsToAdd = [
@@ -742,12 +745,12 @@ function LitGuideCurationPage() {
           (t) => !row.curationStatuses.includes(t)
         );
 
-        // Add new topics
-        if (topicsToAdd.length > 0 && currentFeatures.length > 0) {
+        // Add new topics using feature_no for precise identification
+        if (topicsToAdd.length > 0 && featureIdentifiers.length > 0) {
           try {
             const result = await litguideCurationApi.batchAssignTopics(
               referenceData.reference_no,
-              currentFeatures,
+              featureIdentifiers,
               row.literatureTopics.filter((t) => !row.originalLitTopics.includes(t)),
               row.curationStatuses.filter((t) => !row.originalCurationStatuses.includes(t)),
               currentOrganism
@@ -763,14 +766,15 @@ function LitGuideCurationPage() {
         for (const topic of [...litTopicsToRemove, ...statusesToRemove]) {
           // Find features with this topic and remove the association
           for (const feat of referenceData.features) {
-            const featName = feat.gene_name || feat.feature_name;
-            if (row.originalFeatures.includes(featName)) {
+            // Use feature_no for precise matching
+            if (row.originalFeatureNos?.includes(feat.feature_no)) {
               const topicAssoc = feat.topics.find((t) => t.topic === topic);
               if (topicAssoc) {
                 try {
                   await litguideCurationApi.removeTopicAssociation(topicAssoc.refprop_feat_no);
                   totalRemoved++;
                 } catch (err) {
+                  const featName = feat.gene_name || feat.feature_name;
                   errors.push(`Failed to remove ${topic} from ${featName}: ${err.message}`);
                 }
               }
