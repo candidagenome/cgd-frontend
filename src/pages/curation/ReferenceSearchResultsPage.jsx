@@ -27,11 +27,13 @@ function ReferenceSearchResultsPage() {
   const [secondaryForId, setSecondaryForId] = useState('');
   const [secondaryIdType, setSecondaryIdType] = useState('CGDID');
 
-  // Add URL form state
-  const [urlOptions, setUrlOptions] = useState({ url_types: [], url_sources: [] });
+  // Add URL form state - with fallback default values
+  const defaultUrlTypes = ['Full-text', 'Abstract', 'Supplemental', 'Journal', 'Publisher', 'DOI', 'Other'];
+  const defaultUrlSources = ['Author', 'NCBI', 'Publisher'];
+  const [urlOptions, setUrlOptions] = useState({ url_types: defaultUrlTypes, url_sources: defaultUrlSources });
   const [newUrl, setNewUrl] = useState('');
-  const [newUrlType, setNewUrlType] = useState('');
-  const [newUrlSource, setNewUrlSource] = useState('');
+  const [newUrlType, setNewUrlType] = useState('Full-text');
+  const [newUrlSource, setNewUrlSource] = useState('Author');
 
   // UI state
   const [loading, setLoading] = useState(true);
@@ -43,15 +45,14 @@ function ReferenceSearchResultsPage() {
     const loadUrlOptions = async () => {
       try {
         const options = await referenceCurationApi.getUrlOptions();
-        setUrlOptions(options);
-        if (options.url_sources.length > 0) {
+        if (options.url_types?.length > 0 && options.url_sources?.length > 0) {
+          setUrlOptions(options);
           setNewUrlSource(options.url_sources[0]);
-        }
-        if (options.url_types.length > 0) {
           setNewUrlType(options.url_types[0]);
         }
       } catch (err) {
         console.error('Failed to load URL options:', err);
+        // Keep default values already set in state
       }
     };
     loadUrlOptions();
@@ -303,6 +304,21 @@ function ReferenceSearchResultsPage() {
 
           <div style={styles.citationBlock}>
             <strong>{formatCitation(selectedRef)}</strong>
+            {selectedRef.urls && selectedRef.urls.length > 0 && (
+              <div style={styles.urlList}>
+                {selectedRef.urls.map((urlInfo) => (
+                  <div key={urlInfo.url_no} style={styles.urlItem}>
+                    <a
+                      href={urlInfo.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      [{urlInfo.url_type}]
+                    </a>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <table style={styles.infoTable}>
@@ -410,7 +426,7 @@ function ReferenceSearchResultsPage() {
                     type="text"
                     value={newUrl}
                     onChange={(e) => setNewUrl(e.target.value)}
-                    style={{ ...styles.input, width: '400px' }}
+                    style={{ ...styles.input, width: '800px' }}
                     placeholder="Enter URL"
                   />
                 </div>
@@ -628,6 +644,15 @@ const styles = {
     backgroundColor: '#fff',
     border: '1px solid #ccc',
     borderRadius: '4px',
+  },
+  urlList: {
+    marginTop: '0.5rem',
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '0.5rem',
+  },
+  urlItem: {
+    fontSize: '0.9rem',
   },
   infoTable: {
     marginBottom: '1rem',
