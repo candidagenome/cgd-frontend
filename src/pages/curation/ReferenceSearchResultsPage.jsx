@@ -328,17 +328,21 @@ function ReferenceSearchResultsPage() {
                   PubMed
                 </a>
               )}
-              {selectedRef.urls && selectedRef.urls.length > 0 && selectedRef.urls.map((urlInfo) => (
-                <a
-                  key={urlInfo.url_no}
-                  href={urlInfo.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ marginLeft: '0.5rem' }}
-                >
-                  {urlInfo.url_type}
-                </a>
-              ))}
+              {selectedRef.urls && selectedRef.urls.length > 0 ? (
+                selectedRef.urls.map((urlInfo) => (
+                  <a
+                    key={urlInfo.url_no}
+                    href={urlInfo.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ marginLeft: '0.5rem' }}
+                  >
+                    {urlInfo.url_type}
+                  </a>
+                ))
+              ) : (
+                <span style={{ marginLeft: '0.5rem', color: 'red' }}>[No URLs]</span>
+              )}
             </div>
           </div>
 
