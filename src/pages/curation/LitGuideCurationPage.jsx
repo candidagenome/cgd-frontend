@@ -2405,7 +2405,7 @@ const styles = {
   },
   assignHelp: {
     fontSize: '0.85rem',
-    color: '#c00',
+    color: '#666',
     marginBottom: '0.5rem',
     padding: '0.5rem',
     backgroundColor: '#fff',
