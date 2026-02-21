@@ -95,15 +95,8 @@ function ReferencePage() {
 
     const ref = data.info.result;
 
-    // Build links for this reference
-    const links = buildCitationLinks({
-      dbxref_id: ref.dbxref_id,
-      pubmed: ref.pubmed,
-      urls: [
-        ...(ref.full_text_url ? [{ url: ref.full_text_url, url_type: 'full text' }] : []),
-        ...(ref.supplement_url ? [{ url: ref.supplement_url, url_type: 'web supplement' }] : []),
-      ],
-    });
+    // Use links from API response (includes CGD Paper, PubMed, Full Text, Reference Data, etc.)
+    const links = ref.links || [];
 
     return (
       <div className="citation-section">
