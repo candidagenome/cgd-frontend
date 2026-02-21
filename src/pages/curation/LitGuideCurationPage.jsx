@@ -1290,69 +1290,66 @@ function LitGuideCurationPage() {
             <div id="Edit" style={styles.editTopicsSection}>
               <h3 style={styles.editTopicsHeader}>Edit Current Literature Guide Curation Topics</h3>
               <div style={styles.editTopicsContent}>
-                <table style={styles.editTopicsTable}>
-                  <thead>
-                    <tr>
-                      <th style={styles.editTopicsTh}>Features</th>
-                      <th style={styles.editTopicsTh}>Literature Topics</th>
-                      <th style={styles.editTopicsTh}>Curation Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(() => {
-                      // Group features by their topic combinations
-                      const groups = {};
-                      referenceData.features.forEach((feat) => {
-                        const litTopics = feat.topics
-                          .filter((t) => t.property_type === 'literature_topic')
-                          .map((t) => t.topic)
-                          .sort();
-                        const curationStatuses = feat.topics
-                          .filter((t) => t.property_type === 'curation_status')
-                          .map((t) => t.topic)
-                          .sort();
-                        const key = `${litTopics.join('|')}::${curationStatuses.join('|')}`;
-                        if (!groups[key]) {
-                          groups[key] = {
-                            features: [],
-                            litTopics,
-                            curationStatuses,
-                          };
-                        }
-                        groups[key].features.push(feat.gene_name || feat.feature_name);
-                      });
+                {(() => {
+                  // Group features by their topic combinations (same logic as Perl version)
+                  const groups = {};
+                  referenceData.features.forEach((feat) => {
+                    const litTopics = feat.topics
+                      .filter((t) => t.property_type === 'literature_topic')
+                      .map((t) => t.topic)
+                      .sort();
+                    const curationStatuses = feat.topics
+                      .filter((t) => t.property_type === 'curation_status')
+                      .map((t) => t.topic)
+                      .sort();
+                    const key = `${litTopics.join('|')}::${curationStatuses.join('|')}`;
+                    if (!groups[key]) {
+                      groups[key] = {
+                        features: [],
+                        litTopics,
+                        curationStatuses,
+                      };
+                    }
+                    groups[key].features.push(feat.gene_name || feat.feature_name);
+                  });
 
-                      return Object.values(groups).map((group, idx) => (
-                        <tr key={idx}>
-                          <td style={styles.editTopicsTd}>
-                            {group.features.map((name, i) => (
-                              <span key={name}>
-                                <Link to={`/locus/${name}`} style={styles.featureLinkInline}>
-                                  {name}
-                                </Link>
-                                {i < group.features.length - 1 && ' | '}
-                              </span>
-                            ))}
-                          </td>
-                          <td style={styles.editTopicsTd}>
+                  return Object.values(groups).map((group, idx) => (
+                    <div key={idx} style={styles.editTopicsRow}>
+                      <div style={styles.editTopicsRowContent}>
+                        <div style={styles.editTopicsFeaturesSection}>
+                          <label style={styles.editTopicsLabel}>Features:</label>
+                          <div style={styles.editTopicsFeaturesList}>
+                            {group.features.join(' ')}
+                          </div>
+                        </div>
+                        <div style={styles.editTopicsListSection}>
+                          <label style={styles.editTopicsLabel}>Literature Topics:</label>
+                          <div style={styles.editTopicsListBox}>
                             {group.litTopics.length > 0
-                              ? group.litTopics.join(', ')
+                              ? group.litTopics.map((topic, i) => (
+                                  <div key={i} style={styles.editTopicsItem}>{topic}</div>
+                                ))
                               : <span style={styles.nothingYet}>none</span>
                             }
-                          </td>
-                          <td style={styles.editTopicsTd}>
+                          </div>
+                        </div>
+                        <div style={styles.editTopicsListSection}>
+                          <label style={styles.editTopicsLabel}>Curation Status:</label>
+                          <div style={styles.editTopicsListBox}>
                             {group.curationStatuses.length > 0
-                              ? group.curationStatuses.join(', ')
+                              ? group.curationStatuses.map((status, i) => (
+                                  <div key={i} style={styles.editTopicsItem}>{status}</div>
+                                ))
                               : <span style={styles.nothingYet}>none</span>
                             }
-                          </td>
-                        </tr>
-                      ));
-                    })()}
-                  </tbody>
-                </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ));
+                })()}
                 <p style={styles.editTopicsNote}>
-                  To edit topics, use the Features table below to remove individual topics,
+                  Note: To modify existing topics, remove them from the Features table below,
                   then use "Assign Literature Guide Topics" above to add new ones.
                 </p>
               </div>
@@ -2215,21 +2212,56 @@ const styles = {
     borderRadius: '4px',
     padding: '0.5rem',
   },
-  editTopicsTable: {
-    width: '100%',
-    borderCollapse: 'collapse',
+  editTopicsRow: {
+    padding: '0.75rem',
+    backgroundColor: '#fafafa',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    marginBottom: '0.5rem',
+  },
+  editTopicsRowContent: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '1rem',
+    alignItems: 'flex-start',
+  },
+  editTopicsFeaturesSection: {
+    flex: '1 1 200px',
+    minWidth: '200px',
+  },
+  editTopicsLabel: {
+    display: 'block',
+    fontWeight: 'bold',
+    marginBottom: '0.25rem',
     fontSize: '0.9rem',
   },
-  editTopicsTh: {
-    backgroundColor: '#f5f5f5',
+  editTopicsFeaturesList: {
     padding: '0.5rem',
-    textAlign: 'left',
-    borderBottom: '2px solid #ddd',
+    backgroundColor: '#fff',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    fontSize: '0.9rem',
+    minHeight: '2rem',
   },
-  editTopicsTd: {
-    padding: '0.5rem',
-    borderBottom: '1px solid #eee',
-    verticalAlign: 'top',
+  editTopicsListSection: {
+    flex: '1 1 150px',
+    minWidth: '150px',
+  },
+  editTopicsListBox: {
+    padding: '0.25rem',
+    backgroundColor: '#fff',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    minHeight: '60px',
+    maxHeight: '100px',
+    overflow: 'auto',
+  },
+  editTopicsItem: {
+    padding: '0.2rem 0.4rem',
+    margin: '0.1rem',
+    backgroundColor: '#e8e8e8',
+    borderRadius: '3px',
+    fontSize: '0.85rem',
   },
   editTopicsNote: {
     fontSize: '0.85rem',
