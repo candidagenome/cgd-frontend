@@ -30,10 +30,15 @@ export const litguideCurationApi = {
    * Get all literature for a feature.
    *
    * @param {string|number} identifier - Feature number or name
+   * @param {string} [organism] - Optional organism abbreviation to filter
    * @returns {Promise<Object>} - Feature with curated and uncurated references
    */
-  getFeatureLiterature: async (identifier) => {
-    const response = await api.get(`/api/curation/litguide/feature/${identifier}`);
+  getFeatureLiterature: async (identifier, organism = null) => {
+    const params = {};
+    if (organism) {
+      params.organism = organism;
+    }
+    const response = await api.get(`/api/curation/litguide/feature/${identifier}`, { params });
     return response.data;
   },
 

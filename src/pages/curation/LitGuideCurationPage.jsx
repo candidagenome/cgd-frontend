@@ -97,7 +97,7 @@ function LitGuideCurationPage() {
   }, []);
 
   // Load feature literature (feature-centric view)
-  const loadFeatureLiterature = useCallback(async (identifier) => {
+  const loadFeatureLiterature = useCallback(async (identifier, organism = null) => {
     if (!identifier) return;
 
     setLoading(true);
@@ -105,12 +105,13 @@ function LitGuideCurationPage() {
     setReferenceData(null);
 
     try {
-      const data = await litguideCurationApi.getFeatureLiterature(identifier);
+      const data = await litguideCurationApi.getFeatureLiterature(identifier, organism);
       setFeatureData(data);
       setViewMode('feature');
     } catch (err) {
       if (err.response?.status === 404) {
-        setError(`Feature '${identifier}' not found`);
+        const orgText = organism ? ` in organism '${organism}'` : '';
+        setError(`Feature '${identifier}' not found${orgText}`);
       } else {
         setError('Failed to load feature literature');
       }
@@ -150,12 +151,12 @@ function LitGuideCurationPage() {
   // Numeric = reference view, otherwise = feature view
   useEffect(() => {
     if (featureName) {
+      const orgParam = searchParams.get('organism');
       // Check if it's a pure numeric value (reference_no)
       if (/^\d+$/.test(featureName)) {
-        const orgParam = searchParams.get('organism');
         loadReferenceLiterature(featureName, orgParam);
       } else {
-        loadFeatureLiterature(featureName);
+        loadFeatureLiterature(featureName, orgParam);
       }
     }
   }, [featureName, searchParams, loadFeatureLiterature, loadReferenceLiterature]);
