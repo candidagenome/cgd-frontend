@@ -27,10 +27,35 @@ function ReferenceSearchResultsPage() {
   const [secondaryForId, setSecondaryForId] = useState('');
   const [secondaryIdType, setSecondaryIdType] = useState('CGDID');
 
+  // Add URL form state
+  const [urlOptions, setUrlOptions] = useState({ url_types: [], url_sources: [] });
+  const [newUrl, setNewUrl] = useState('');
+  const [newUrlType, setNewUrlType] = useState('');
+  const [newUrlSource, setNewUrlSource] = useState('');
+
   // UI state
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
+
+  // Load URL options on mount
+  useEffect(() => {
+    const loadUrlOptions = async () => {
+      try {
+        const options = await referenceCurationApi.getUrlOptions();
+        setUrlOptions(options);
+        if (options.url_sources.length > 0) {
+          setNewUrlSource(options.url_sources[0]);
+        }
+        if (options.url_types.length > 0) {
+          setNewUrlType(options.url_types[0]);
+        }
+      } catch (err) {
+        console.error('Failed to load URL options:', err);
+      }
+    };
+    loadUrlOptions();
+  }, []);
 
   // Perform search based on URL params
   useEffect(() => {
@@ -178,6 +203,31 @@ function ReferenceSearchResultsPage() {
     return `Reference ${ref.reference_no}`;
   };
 
+  const handleAddUrl = async () => {
+    if (!selectedRef || !newUrl.trim()) {
+      setError('Please enter a URL');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const result = await referenceCurationApi.addReferenceUrl(
+        selectedRef.reference_no,
+        newUrl.trim(),
+        newUrlType,
+        newUrlSource
+      );
+      setMessage(result.message);
+      setNewUrl('');
+    } catch (err) {
+      setError(err.response?.data?.detail || err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div style={styles.container}>
       <div style={styles.header}>
@@ -321,6 +371,58 @@ function ReferenceSearchResultsPage() {
                 Edit reference information
               </Link>
             </h4>
+
+            {/* Add URL Section */}
+            <div style={styles.addUrlSection}>
+              <h4>Add a New Reference URL</h4>
+              <div style={styles.addUrlForm}>
+                <div style={styles.formRow}>
+                  <label style={styles.formLabel}>Source:</label>
+                  <select
+                    value={newUrlSource}
+                    onChange={(e) => setNewUrlSource(e.target.value)}
+                    style={styles.select}
+                  >
+                    {urlOptions.url_sources.map((source) => (
+                      <option key={source} value={source}>
+                        {source}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div style={styles.formRow}>
+                  <label style={styles.formLabel}>URL Type:</label>
+                  <select
+                    value={newUrlType}
+                    onChange={(e) => setNewUrlType(e.target.value)}
+                    style={styles.select}
+                  >
+                    {urlOptions.url_types.map((type) => (
+                      <option key={type} value={type}>
+                        {type}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div style={styles.formRow}>
+                  <label style={styles.formLabel}>URL:</label>
+                  <input
+                    type="text"
+                    value={newUrl}
+                    onChange={(e) => setNewUrl(e.target.value)}
+                    style={{ ...styles.input, width: '400px' }}
+                    placeholder="Enter URL"
+                  />
+                </div>
+                <button
+                  onClick={handleAddUrl}
+                  disabled={loading || !newUrl.trim()}
+                  style={styles.addButton}
+                >
+                  Add URL
+                </button>
+              </div>
+            </div>
 
             {refUsage && refUsage.in_use ? (
               <div style={styles.inUseWarning}>
@@ -598,6 +700,30 @@ const styles = {
     borderRadius: '4px',
     cursor: 'pointer',
     marginTop: '1rem',
+  },
+  addUrlSection: {
+    backgroundColor: '#f5f5f5',
+    padding: '1rem',
+    borderRadius: '4px',
+    border: '1px solid #ddd',
+    marginBottom: '1rem',
+  },
+  addUrlForm: {
+    marginTop: '0.5rem',
+  },
+  formLabel: {
+    display: 'inline-block',
+    width: '80px',
+    fontWeight: 'bold',
+  },
+  addButton: {
+    padding: '0.5rem 1rem',
+    backgroundColor: '#4CAF50',
+    color: 'white',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    marginTop: '0.5rem',
   },
 };
 
