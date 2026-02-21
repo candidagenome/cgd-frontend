@@ -1013,6 +1013,110 @@ function LitGuideCurationPage() {
             </div>
           </div>
 
+          {/* Features Linked to this Paper - Summary Section */}
+          {(() => {
+            // Categorize features based on topic property_type
+            const publicCurated = [];
+            const notYetCurated = [];
+            const internalCurated = [];
+
+            referenceData.features?.forEach((feat) => {
+              const displayName = feat.gene_name || feat.feature_name;
+              const hasPublicTopic = feat.topics?.some(
+                (t) => t.property_type === 'literature_topic' && t.topic !== 'Not yet curated'
+              );
+              const hasNotYetCurated = feat.topics?.some(
+                (t) => t.topic === 'Not yet curated'
+              );
+              const hasInternalTopic = feat.topics?.some(
+                (t) => t.property_type === 'curation_status' && t.topic !== 'Not yet curated'
+              );
+
+              if (hasPublicTopic && !publicCurated.includes(displayName)) {
+                publicCurated.push(displayName);
+              }
+              if (hasNotYetCurated && !notYetCurated.includes(displayName)) {
+                notYetCurated.push(displayName);
+              }
+              if (hasInternalTopic && !internalCurated.includes(displayName)) {
+                internalCurated.push(displayName);
+              }
+            });
+
+            const unlinkedFeatures = referenceData.unlinked_features || [];
+
+            return (
+              <div style={styles.featuresLinkedSection}>
+                <h3 style={styles.featuresLinkedHeader}>Features Linked to this Paper</h3>
+                <div style={styles.featuresLinkedContent}>
+                  <div style={styles.featuresLinkedRow}>
+                    <strong>Public Topics Curated for:</strong>{' '}
+                    <span>
+                      {publicCurated.length > 0
+                        ? publicCurated.map((name, idx) => (
+                            <span key={name}>
+                              <Link to={`/locus/${name}`} style={styles.featureLinkInline}>
+                                {name}
+                              </Link>
+                              {idx < publicCurated.length - 1 && ' | '}
+                            </span>
+                          ))
+                        : <span style={styles.nothingYet}>nothing yet</span>
+                      }
+                    </span>
+                  </div>
+                  <div style={styles.featuresLinkedRowAlt}>
+                    <strong>Not yet curated for:</strong>{' '}
+                    <span>
+                      {notYetCurated.length > 0
+                        ? notYetCurated.map((name, idx) => (
+                            <span key={name}>
+                              <Link to={`/locus/${name}`} style={styles.featureLinkInline}>
+                                {name}
+                              </Link>
+                              {idx < notYetCurated.length - 1 && ' | '}
+                            </span>
+                          ))
+                        : <span style={styles.nothingYet}>nothing yet</span>
+                      }
+                    </span>
+                  </div>
+                  <div style={styles.featuresLinkedRowInternal}>
+                    <strong>Internal Topics Curated for:</strong>{' '}
+                    <span>
+                      {internalCurated.length > 0
+                        ? internalCurated.map((name, idx) => (
+                            <span key={name}>
+                              <Link to={`/locus/${name}`} style={styles.featureLinkInline}>
+                                {name}
+                              </Link>
+                              {idx < internalCurated.length - 1 && ' | '}
+                            </span>
+                          ))
+                        : <span style={styles.nothingYet}>nothing yet</span>
+                      }
+                    </span>
+                  </div>
+                  {referenceData.pubmed && unlinkedFeatures.length > 0 && (
+                    <div style={styles.featuresLinkedRowUnlinked}>
+                      <strong>Unlinked from:</strong>{' '}
+                      <span>
+                        {unlinkedFeatures.map((feat, idx) => (
+                          <span key={feat.feature_no}>
+                            <Link to={`/locus/${feat.feature_name}`} style={styles.featureLinkInline}>
+                              {feat.gene_name || feat.feature_name}
+                            </Link>
+                            {idx < unlinkedFeatures.length - 1 && ' | '}
+                          </span>
+                        ))}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })()}
+
           {/* Add Feature Form */}
           <div id="AddFeature" style={styles.addSection}>
             <h3 style={styles.sectionHeader}>Add Feature with Topic</h3>
@@ -1743,6 +1847,46 @@ const styles = {
     marginTop: '1rem',
     paddingTop: '0.5rem',
     borderTop: '1px solid #eee',
+  },
+  // Features Linked to this Paper section
+  featuresLinkedSection: {
+    marginBottom: '1.5rem',
+  },
+  featuresLinkedHeader: {
+    backgroundColor: 'navajowhite',
+    padding: '0.5rem',
+    margin: '0 0 0.5rem 0',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+  },
+  featuresLinkedContent: {
+    backgroundColor: '#fff',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+  },
+  featuresLinkedRow: {
+    padding: '0.5rem 1rem',
+    backgroundColor: '#CCFFCC',
+    fontSize: '0.9rem',
+  },
+  featuresLinkedRowAlt: {
+    padding: '0.5rem 1rem',
+    backgroundColor: '#f5f5f5',
+    fontSize: '0.9rem',
+  },
+  featuresLinkedRowInternal: {
+    padding: '0.5rem 1rem',
+    backgroundColor: '#CCFFFF',
+    fontSize: '0.9rem',
+  },
+  featuresLinkedRowUnlinked: {
+    padding: '0.5rem 1rem',
+    backgroundColor: '#f0f0f0',
+    fontSize: '0.9rem',
+  },
+  featureLinkInline: {
+    color: '#337ab7',
+    textDecoration: 'none',
   },
   statusSelectInline: {
     padding: '0.25rem 0.5rem',
