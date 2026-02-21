@@ -142,6 +142,8 @@ function ReferenceSearchResultsPage() {
         referenceCurationApi.getCurationDetails(refNo),
         referenceCurationApi.getReferenceUsage(refNo),
       ]);
+      console.log('Reference details:', details);
+      console.log('URLs:', details.urls);
       setSelectedRef(details);
       setRefUsage(usage);
     } catch (err) {
