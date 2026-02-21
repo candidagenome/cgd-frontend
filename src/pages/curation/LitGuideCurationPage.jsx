@@ -83,7 +83,7 @@ function LitGuideCurationPage() {
   const [selectedTopic, setSelectedTopic] = useState('');
 
   // Topic assignment rows state (for "Assign Literature Guide Topics" section)
-  const NUM_BLANK_ROWS = 5;
+  const NUM_BLANK_ROWS = 2;
   const createEmptyRow = () => ({
     features: '',
     literatureTopics: [],
