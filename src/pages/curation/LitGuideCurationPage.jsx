@@ -1285,6 +1285,80 @@ function LitGuideCurationPage() {
             </div>
           </div>
 
+          {/* Edit Current Literature Guide Curation Topics */}
+          {referenceData.features?.length > 0 && (
+            <div id="Edit" style={styles.editTopicsSection}>
+              <h3 style={styles.editTopicsHeader}>Edit Current Literature Guide Curation Topics</h3>
+              <div style={styles.editTopicsContent}>
+                <table style={styles.editTopicsTable}>
+                  <thead>
+                    <tr>
+                      <th style={styles.editTopicsTh}>Features</th>
+                      <th style={styles.editTopicsTh}>Literature Topics</th>
+                      <th style={styles.editTopicsTh}>Curation Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(() => {
+                      // Group features by their topic combinations
+                      const groups = {};
+                      referenceData.features.forEach((feat) => {
+                        const litTopics = feat.topics
+                          .filter((t) => t.property_type === 'literature_topic')
+                          .map((t) => t.topic)
+                          .sort();
+                        const curationStatuses = feat.topics
+                          .filter((t) => t.property_type === 'curation_status')
+                          .map((t) => t.topic)
+                          .sort();
+                        const key = `${litTopics.join('|')}::${curationStatuses.join('|')}`;
+                        if (!groups[key]) {
+                          groups[key] = {
+                            features: [],
+                            litTopics,
+                            curationStatuses,
+                          };
+                        }
+                        groups[key].features.push(feat.gene_name || feat.feature_name);
+                      });
+
+                      return Object.values(groups).map((group, idx) => (
+                        <tr key={idx}>
+                          <td style={styles.editTopicsTd}>
+                            {group.features.map((name, i) => (
+                              <span key={name}>
+                                <Link to={`/locus/${name}`} style={styles.featureLinkInline}>
+                                  {name}
+                                </Link>
+                                {i < group.features.length - 1 && ' | '}
+                              </span>
+                            ))}
+                          </td>
+                          <td style={styles.editTopicsTd}>
+                            {group.litTopics.length > 0
+                              ? group.litTopics.join(', ')
+                              : <span style={styles.nothingYet}>none</span>
+                            }
+                          </td>
+                          <td style={styles.editTopicsTd}>
+                            {group.curationStatuses.length > 0
+                              ? group.curationStatuses.join(', ')
+                              : <span style={styles.nothingYet}>none</span>
+                            }
+                          </td>
+                        </tr>
+                      ));
+                    })()}
+                  </tbody>
+                </table>
+                <p style={styles.editTopicsNote}>
+                  To edit topics, use the Features table below to remove individual topics,
+                  then use "Assign Literature Guide Topics" above to add new ones.
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Quick Add Feature (simple form) */}
           <div id="AddFeature" style={styles.addSection}>
             <h3 style={styles.sectionHeader}>Quick Add Feature</h3>
@@ -2123,6 +2197,46 @@ const styles = {
     borderRadius: '4px',
     cursor: 'pointer',
     fontWeight: 'bold',
+  },
+  // Edit Current Topics section
+  editTopicsSection: {
+    marginBottom: '1.5rem',
+  },
+  editTopicsHeader: {
+    backgroundColor: 'navajowhite',
+    padding: '0.5rem',
+    margin: '0 0 0.5rem 0',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+  },
+  editTopicsContent: {
+    backgroundColor: '#fff',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    padding: '0.5rem',
+  },
+  editTopicsTable: {
+    width: '100%',
+    borderCollapse: 'collapse',
+    fontSize: '0.9rem',
+  },
+  editTopicsTh: {
+    backgroundColor: '#f5f5f5',
+    padding: '0.5rem',
+    textAlign: 'left',
+    borderBottom: '2px solid #ddd',
+  },
+  editTopicsTd: {
+    padding: '0.5rem',
+    borderBottom: '1px solid #eee',
+    verticalAlign: 'top',
+  },
+  editTopicsNote: {
+    fontSize: '0.85rem',
+    color: '#666',
+    fontStyle: 'italic',
+    marginTop: '0.5rem',
+    marginBottom: 0,
   },
   statusSelectInline: {
     padding: '0.25rem 0.5rem',
