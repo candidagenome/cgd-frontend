@@ -137,7 +137,7 @@ const ExternalResourcesPage = () => {
           </p>
 
           <p>
-            <a href="http://seq.yeastgenome.org/cgi-bin/blast-fungal.pl" target="_blank" rel="noopener noreferrer">Fungal Genomes BLAST at SGD</a><br />
+            <a href="https://www.yeastgenome.org/blast-fungal" target="_blank" rel="noopener noreferrer">Fungal Genomes BLAST at SGD</a><br />
             <small>BLAST search for sequence similarity within fungal genomes, provided by the <em>Saccharomyces</em> Genome Database.</small>
           </p>
 

@@ -36,7 +36,7 @@ const SearchPage = () => {
   const handleGoogleSearch = (e) => {
     e.preventDefault();
     if (googleSearchQuery.trim()) {
-      window.location.href = `/cgi-bin/google.pl?input=${encodeURIComponent(googleSearchQuery)}`;
+      window.open(`https://www.google.com/search?q=site:candidagenome.org+${encodeURIComponent(googleSearchQuery)}`, '_blank');
     }
   };
 

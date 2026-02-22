@@ -39,7 +39,7 @@ const BlastHelp = () => {
           <p>
             BLAST searches offered by CGD allow users to compare any query sequence to <em>Candida</em>{' '}
             sequence datasets. To search other fungal sequences, use SGD's{' '}
-            <a href="http://seq.yeastgenome.org/cgi-bin/blast-fungal.pl" target="_blank" rel="noopener noreferrer">
+            <a href="https://www.yeastgenome.org/blast-fungal" target="_blank" rel="noopener noreferrer">
               Fungal BLAST
             </a>{' '}
             tool. To search other datasets,{' '}

@@ -67,7 +67,7 @@ function GOTermFinderHelp() {
           <p>
             The GO Term Finder is described in detail in{' '}
             <a
-              href="http://db.yeastgenome.org/cgi-bin/reference/reference.pl?pubmed=15297299"
+              href="https://pubmed.ncbi.nlm.nih.gov/15297299"
               target="_blank"
               rel="noopener noreferrer"
             >

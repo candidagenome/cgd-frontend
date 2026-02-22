@@ -165,7 +165,7 @@ function GOSlimHelp() {
           <p>
             Let's take an example from SGD. Consider a small group of 4 <em>S. cerevisiae</em> genes--{' '}
             <a
-              href="http://www.yeastgenome.org/cgi-bin/locus.fpl?dbid=S0007268"
+              href="https://www.yeastgenome.org/locus/S0007268"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -173,7 +173,7 @@ function GOSlimHelp() {
             </a>
             ,{' '}
             <a
-              href="http://www.yeastgenome.org/cgi-bin/locus.fpl?dbid=S0002264"
+              href="https://www.yeastgenome.org/locus/S0002264"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -181,7 +181,7 @@ function GOSlimHelp() {
             </a>
             ,{' '}
             <a
-              href="http://www.yeastgenome.org/cgi-bin/locus.fpl?dbid=S0000296"
+              href="https://www.yeastgenome.org/locus/S0000296"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -189,7 +189,7 @@ function GOSlimHelp() {
             </a>{' '}
             and{' '}
             <a
-              href="http://www.yeastgenome.org/cgi-bin/locus.fpl?dbid=S0001930"
+              href="https://www.yeastgenome.org/locus/S0001930"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -209,7 +209,7 @@ function GOSlimHelp() {
               <tr>
                 <td>
                   <a
-                    href="http://www.yeastgenome.org/cgi-bin/locus.fpl?dbid=S0007268"
+                    href="https://www.yeastgenome.org/locus/S0007268"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -221,7 +221,7 @@ function GOSlimHelp() {
               <tr>
                 <td>
                   <a
-                    href="http://www.yeastgenome.org/cgi-bin/locus.fpl?dbid=S0002264"
+                    href="https://www.yeastgenome.org/locus/S0002264"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -233,7 +233,7 @@ function GOSlimHelp() {
               <tr>
                 <td>
                   <a
-                    href="http://www.yeastgenome.org/cgi-bin/locus.fpl?dbid=S0000296"
+                    href="https://www.yeastgenome.org/locus/S0000296"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -245,7 +245,7 @@ function GOSlimHelp() {
               <tr>
                 <td>
                   <a
-                    href="http://www.yeastgenome.org/cgi-bin/locus.fpl?dbid=S0001930"
+                    href="https://www.yeastgenome.org/locus/S0001930"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -273,7 +273,7 @@ function GOSlimHelp() {
                 <td>2 out of 4 genes, 50%</td>
                 <td>
                   <a
-                    href="http://www.yeastgenome.org/cgi-bin/locus.fpl?dbid=S0002264"
+                    href="https://www.yeastgenome.org/locus/S0002264"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -281,7 +281,7 @@ function GOSlimHelp() {
                   </a>
                   ,{' '}
                   <a
-                    href="http://www.yeastgenome.org/cgi-bin/locus.fpl?dbid=S0001930"
+                    href="https://www.yeastgenome.org/locus/S0001930"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -294,7 +294,7 @@ function GOSlimHelp() {
                 <td>2 out of 4 genes, 50%</td>
                 <td>
                   <a
-                    href="http://www.yeastgenome.org/cgi-bin/locus.fpl?dbid=S0007268"
+                    href="https://www.yeastgenome.org/locus/S0007268"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -302,7 +302,7 @@ function GOSlimHelp() {
                   </a>
                   ,{' '}
                   <a
-                    href="http://www.yeastgenome.org/cgi-bin/locus.fpl?dbid=S0000296"
+                    href="https://www.yeastgenome.org/locus/S0000296"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -315,7 +315,7 @@ function GOSlimHelp() {
                 <td>1 out of 4 genes, 25%</td>
                 <td>
                   <a
-                    href="http://www.yeastgenome.org/cgi-bin/locus.fpl?dbid=S0007268"
+                    href="https://www.yeastgenome.org/locus/S0007268"
                     target="_blank"
                     rel="noopener noreferrer"
                   >

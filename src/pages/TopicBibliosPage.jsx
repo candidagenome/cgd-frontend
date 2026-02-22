@@ -9,14 +9,14 @@ const Citation = ({ text, pmid, children }) => (
     {pmid && (
       <div className="citation-links">
         <a
-          href={`/cgi-bin/reference/reference.pl?pubmed=${pmid}`}
+          href={`/reference/${pmid}`}
           target="infowin"
           title="CGD Reference"
         >
           <img src="/images/refsml.gif" alt="CGD" />
         </a>
         <a
-          href={`http://www.ncbi.nlm.nih.gov/pubmed/${pmid}`}
+          href={`https://pubmed.ncbi.nlm.nih.gov/${pmid}`}
           target="infowin"
           rel="noopener noreferrer"
           title="PubMed"
