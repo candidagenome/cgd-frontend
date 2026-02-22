@@ -152,13 +152,16 @@ const TextSearchResultsPage = () => {
     // Don't show ID if it's the same as the name
     const showId = result.id && result.id !== result.name;
 
-    // Determine if link is external
+    // Determine if link is external or if there's no link
+    const hasLink = result.link && result.link.length > 0;
     const external = isExternalLink(result.link);
 
     return (
       <div key={`${result.category}-${result.id}`} className="text-search-result-item">
         <div className="text-search-result-name">
-          {external ? (
+          {!hasLink ? (
+            <span dangerouslySetInnerHTML={{ __html: displayName }} />
+          ) : external ? (
             <a
               href={result.link}
               target="_blank"
