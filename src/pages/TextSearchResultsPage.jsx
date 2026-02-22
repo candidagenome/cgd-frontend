@@ -18,13 +18,14 @@ const CATEGORY_LABELS = {
   notes: 'History Notes',
   external_ids: 'External Database IDs',
   orthologs: 'Orthologs / Best Hits',
+  literature_topics: 'Literature Topics',
 };
 
 // Order in which categories are displayed
 const CATEGORY_ORDER = [
   'genes', 'descriptions', 'go_terms', 'colleagues', 'authors',
   'pathways', 'paragraphs', 'abstracts', 'name_descriptions',
-  'phenotypes', 'notes', 'external_ids', 'orthologs'
+  'phenotypes', 'notes', 'external_ids', 'orthologs', 'literature_topics'
 ];
 
 const PAGE_SIZE = 20;

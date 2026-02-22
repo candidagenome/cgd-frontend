@@ -296,6 +296,10 @@
   border-left-color: #f44336;
 }
 
+.text-search-results-list.literature_topics .text-search-result-item {
+  border-left-color: #ff5722;
+}
+
 /* Back to search link */
 .back-to-search {
   margin-top: 30px;
