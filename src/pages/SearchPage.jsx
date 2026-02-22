@@ -20,14 +20,16 @@ const SearchPage = () => {
   const handleTextSearch = (e) => {
     e.preventDefault();
     if (textSearchQuery.trim()) {
-      window.location.href = `/cgi-bin/search/textSearch?query=${encodeURIComponent(textSearchQuery)}`;
+      // Use React Router navigation for proper browser history
+      navigate(`/search/text?query=${encodeURIComponent(textSearchQuery)}`);
     }
   };
 
   const handleOrthologSearch = (e) => {
     e.preventDefault();
     if (orthologSearchQuery.trim()) {
-      window.location.href = `/cgi-bin/search/textSearch?type=homolog&query=${encodeURIComponent(orthologSearchQuery)}`;
+      // Use React Router navigation with type=homolog for ortholog-only search
+      navigate(`/search/text?type=homolog&query=${encodeURIComponent(orthologSearchQuery)}`);
     }
   };
 
