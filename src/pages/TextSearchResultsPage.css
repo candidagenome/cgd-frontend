@@ -125,30 +125,35 @@
 }
 
 .text-search-facets .facet-item.selected {
-  background-color: #1976d2;
-  color: #fff;
-  border-left-color: #0d47a1;
+  background-color: #e3f2fd;
+  color: #1565c0;
+  border-left-color: #1976d2;
+}
+
+.text-search-facets .facet-item.selected .facet-label {
+  color: #1565c0;
+  font-weight: 600;
 }
 
 .text-search-facets .facet-item.selected .facet-count {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: #1976d2;
   color: #fff;
 }
 
 /* Categories with zero results - muted appearance */
 .text-search-facets .facet-item.disabled {
   cursor: not-allowed;
-  color: #aaa;
+  color: #888;
 }
 
 .text-search-facets .facet-item.disabled .facet-label {
-  color: #aaa;
+  color: #888;
   font-weight: 400;
 }
 
 .text-search-facets .facet-item.disabled .facet-count {
-  background-color: #eee;
-  color: #bbb;
+  background-color: #e8e8e8;
+  color: #888;
 }
 
 /* Category labels */
