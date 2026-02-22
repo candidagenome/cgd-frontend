@@ -5,20 +5,6 @@ import './LocusComponents.css';
 const DEFAULT_ORGANISM = 'Candida albicans SC5314';
 
 /**
- * Detect the type of locus identifier and return appropriate label.
- * - CGDID: starts with "CAL" followed by digits (e.g., CAL0000191211)
- * - Systematic name: other identifier formats (e.g., C1_13700W_A)
- */
-function getIdentifierLabel(identifier) {
-  if (!identifier) return null;
-
-  if (/^CAL\d+$/i.test(identifier)) {
-    return `CGDID ${identifier}`;
-  }
-  return `Systematic name ${identifier}`;
-}
-
-/**
  * Reusable organism selector component for tab pages.
  * Defaults to "Candida albicans SC5314" if it has data.
  */
@@ -31,13 +17,12 @@ function OrganismSelector({ organisms, selectedOrganism, onOrganismChange, dataT
 
   // If only one organism, show info text instead of dropdown
   if (organisms.length === 1) {
-    const identifierLabel = getIdentifierLabel(name);
     return (
       <div className="organism-selector single-organism">
         <div className="organism-info-container">
           <span className="organism-info">Organism: <strong>{organisms[0]}</strong></span>
-          {identifierLabel && (
-            <span className="organism-availability-note">({identifierLabel} is specific to this organism)</span>
+          {name && (
+            <span className="organism-availability-note">(Identifier {name} is specific to this organism)</span>
           )}
         </div>
       </div>
