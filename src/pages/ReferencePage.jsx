@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import useReferenceData from '../hooks/useReferenceData';
 import referenceApi from '../api/referenceApi';
-import { formatCitationString, CitationLinksBelow, buildCitationLinks } from '../utils/formatCitation.jsx';
+import { formatCitationString, CitationLinksBelow, renderCitationItem } from '../utils/formatCitation.jsx';
 import './ReferencePage.css';
 
 const GENES_PER_TABLE = 10;
@@ -434,10 +434,7 @@ function ReferencePage() {
                     {highlightAuthor(ref.author_list, author_query)}
                   </td>
                   <td className="citation-cell">
-                    <div className="citation-line">
-                      {formatCitationString(ref.citation)}
-                    </div>
-                    <CitationLinksBelow links={ref.links} />
+                    {renderCitationItem(ref)}
                   </td>
                 </tr>
               ))}

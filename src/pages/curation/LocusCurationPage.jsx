@@ -13,7 +13,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import locusCurationApi from '../../api/locusCurationApi';
 import { filterAllowedOrganisms } from '../../constants/organisms';
-import { formatCitationString, CitationLinksBelow, buildCitationLinks } from '../../utils/formatCitation.jsx';
+import { renderCitationItem } from '../../utils/formatCitation.jsx';
 
 function LocusCurationPage() {
   const { featureName } = useParams();
@@ -280,50 +280,20 @@ function LocusCurationPage() {
       <div style={styles.refList}>
         <div style={styles.refListHeader}>References:</div>
         <div style={styles.refListItems}>
-          {refs.map((ref) => {
-            const links = buildCitationLinks({
-              dbxref_id: ref.dbxref_id,
-              reference_no: ref.reference_no,
-              pubmed: ref.pubmed,
-              urls: ref.urls,
-            });
-            return (
-              <div key={ref.ref_link_no} style={styles.refListItem}>
-                <div style={styles.refCitation}>
-                  <div style={styles.citationLine}>
-                    {ref.citation ? (
-                      <>
-                        {formatCitationString(ref.citation)}
-                        {ref.pubmed && <span style={styles.pmidText}> PMID: {ref.pubmed}</span>}
-                      </>
-                    ) : ref.pubmed ? (
-                      <>
-                        <a
-                          href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          PMID:{ref.pubmed}
-                        </a>
-                      </>
-                    ) : (
-                      <Link to={`/reference/${ref.reference_no}`}>
-                        Ref:{ref.reference_no}
-                      </Link>
-                    )}
-                  </div>
-                  <CitationLinksBelow links={links} />
-                </div>
-                <button
-                  onClick={() => handleUnlinkFieldReference(ref.ref_link_no, fieldName)}
-                  style={styles.unlinkButtonSmall}
-                  title="Unlink reference"
-                >
-                  unlink
-                </button>
+          {refs.map((ref) => (
+            <div key={ref.ref_link_no} style={styles.refListItem}>
+              <div style={styles.refCitation}>
+                {renderCitationItem(ref, { itemClassName: '' })}
               </div>
-            );
-          })}
+              <button
+                onClick={() => handleUnlinkFieldReference(ref.ref_link_no, fieldName)}
+                style={styles.unlinkButtonSmall}
+                title="Unlink reference"
+              >
+                unlink
+              </button>
+            </div>
+          ))}
         </div>
       </div>
     );
@@ -683,31 +653,11 @@ function LocusCurationPage() {
                       <td style={styles.td}>{alias.alias_name}</td>
                       <td style={styles.td}>{alias.alias_type}</td>
                       <td style={styles.td}>
-                        {alias.references?.map((ref) => {
-                          const links = buildCitationLinks({
-                            dbxref_id: ref.dbxref_id,
-                            reference_no: ref.reference_no,
-                            pubmed: ref.pubmed,
-                            urls: ref.urls,
-                          });
-                          return (
-                            <div key={ref.reference_no} style={styles.aliasRefItem}>
-                              <div style={styles.citationLine}>
-                                {ref.citation ? (
-                                  <>
-                                    {formatCitationString(ref.citation)}
-                                    {ref.pubmed && <span style={styles.pmidText}> PMID: {ref.pubmed}</span>}
-                                  </>
-                                ) : ref.pubmed ? (
-                                  `PMID:${ref.pubmed}`
-                                ) : (
-                                  `Ref:${ref.reference_no}`
-                                )}
-                              </div>
-                              <CitationLinksBelow links={links} />
-                            </div>
-                          );
-                        })}
+                        {alias.references?.map((ref) => (
+                          <div key={ref.reference_no} style={styles.aliasRefItem}>
+                            {renderCitationItem(ref, { itemClassName: '' })}
+                          </div>
+                        ))}
                       </td>
                       <td style={styles.tdAction}>
                         <button
@@ -1302,17 +1252,6 @@ const styles = {
   refCitation: {
     flex: 1,
     wordBreak: 'break-word',
-  },
-  citationText: {
-    color: '#666',
-    fontSize: '0.85rem',
-  },
-  citationLine: {
-    marginBottom: '0.25rem',
-  },
-  pmidText: {
-    color: '#666',
-    fontSize: '0.85rem',
   },
   aliasRefItem: {
     marginBottom: '0.5rem',

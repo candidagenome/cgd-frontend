@@ -2,11 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './LocusComponents.css';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
-import {
-  formatCitationString,
-  CitationLinksBelow,
-  buildCitationLinks,
-} from '../../utils/formatCitation.jsx';
+import { renderCitationItem } from '../../utils/formatCitation.jsx';
 
 // Helper to format date for display
 const formatDate = (dateStr) => {
@@ -114,25 +110,6 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
       ...prev,
       [key]: !prev[key],
     }));
-  };
-
-  // Helper: links below (no brackets)
-  const renderLinksBelow = (ref) => {
-    const displayLinks =
-      ref?.links && ref.links.length > 0 ? ref.links : buildCitationLinks(ref);
-    return <CitationLinksBelow links={displayLinks} />;
-  };
-
-  // Helper: citation line + optional PMID
-  const renderCitationLine = (ref) => {
-    const journal = ref?.journal_name || ref?.journal || null;
-
-    return (
-      <div className="citation-line">
-        {formatCitationString(ref?.citation, journal)}
-        {ref?.pubmed ? <span className="citation-pmid"> PMID: {ref.pubmed}</span> : null}
-      </div>
-    );
   };
 
   // Build PubMed search URL
@@ -410,8 +387,7 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
               return (
                 <tr key={idx} className={idx % 2 === 0 ? '' : 'alt-row'}>
                   <td>
-                    <div className="ref-citation">{renderCitationLine(ref)}</div>
-                    {renderLinksBelow(ref)}
+                    {renderCitationItem(ref, { itemClassName: 'ref-citation' })}
                   </td>
                   <td className="species-cell">
                     {ref.species || currentOrganism?.split(' ').slice(0, 2).join(' ') || 'C. albicans'}
@@ -491,8 +467,7 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
                 <div className="year-references">
                   {yearRefs.map((ref, idx) => (
                     <div key={idx} className="reference-card">
-                      <div className="ref-citation">{renderCitationLine(ref)}</div>
-                      {renderLinksBelow(ref)}
+                      {renderCitationItem(ref, { itemClassName: 'ref-citation' })}
                       {ref?.title && <div className="ref-title-block">"{ref.title}"</div>}
                     </div>
                   ))}

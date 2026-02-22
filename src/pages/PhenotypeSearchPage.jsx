@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import phenotypeApi from '../api/phenotypeApi';
-import { formatCitationString, CitationLinksBelow, buildCitationLinks } from '../utils/formatCitation.jsx';
+import { renderCitationItem } from '../utils/formatCitation.jsx';
 import './PhenotypeSearchPage.css';
 
 // Pagination settings
@@ -339,22 +339,11 @@ function PhenotypeSearchPage() {
 
                   <td className="references-cell">
                     {result.references && result.references.length > 0 ? (
-                      result.references.map((ref, refIdx) => {
-                        const citationLinks =
-                          ref.links && ref.links.length > 0
-                            ? ref.links
-                            : buildCitationLinks({ dbxref_id: ref.dbxref_id, pubmed: ref.pubmed });
-
-                        return (
-                          <div key={refIdx} className="reference-item">
-                            <div className="citation-line">
-                              {formatCitationString(ref.citation)}
-                              {ref.pubmed && <span className="citation-pmid"> PMID: {ref.pubmed}</span>}
-                            </div>
-                            <CitationLinksBelow links={citationLinks} />
-                          </div>
-                        );
-                      })
+                      result.references.map((ref, refIdx) => (
+                        <React.Fragment key={refIdx}>
+                          {renderCitationItem(ref, { itemClassName: 'reference-item' })}
+                        </React.Fragment>
+                      ))
                     ) : (
                       '-'
                     )}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
-import { formatCitationString, CitationLinksBelow, buildCitationLinks } from '../../utils/formatCitation.jsx';
+import { renderCitationItem } from '../../utils/formatCitation.jsx';
 import './LocusComponents.css';
 
 // Annotation type labels (matching Perl format)
@@ -168,76 +168,11 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
                   </td>
 
                   <td>
-                    {ann.references?.map((ref, refIdx) => {
-                      const isObject = typeof ref === 'object' && ref !== null;
-
-                      const refId = isObject
-                        ? (ref.dbxref_id || ref.reference_id || (ref.pubmed ? `PMID:${ref.pubmed}` : null))
-                        : ref;
-
-                      const citation = isObject ? ref.citation : null;
-                      const journal = isObject ? (ref.journal_name || ref.journal) : null;
-                      const links = isObject ? ref.links : null;
-
-                      return (
-                        <div key={refIdx} className="go-reference-item">
-                          {(() => {
-                            // Object ref with a full citation: show citation + links BELOW (no brackets)
-                            if (isObject && citation) {
-                              const computedLinks = buildCitationLinks(ref);
-                              const displayLinks = (links && links.length > 0) ? links : computedLinks;
-
-                              return (
-                                <>
-                                  <div className="citation-line">
-                                    {formatCitationString(citation, journal)}
-                                    {ref?.pubmed ? <span className="citation-pmid"> PMID: {ref.pubmed}</span> : null}
-                                  </div>
-                                  <CitationLinksBelow links={displayLinks} />
-                                </>
-                              );
-                            }
-
-                            // Fallback: string or object without citation
-                            if (typeof refId === 'string' && refId.startsWith('PMID:')) {
-                              const pmid = refId.replace('PMID:', '');
-                              return (
-                                <>
-                                  <div className="citation-line">
-                                    <a
-                                      href={`https://pubmed.ncbi.nlm.nih.gov/${pmid}`}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                    >
-                                      {refId}
-                                    </a>
-                                  </div>
-                                  <CitationLinksBelow
-                                    links={[
-                                      {
-                                        name: 'PubMed',
-                                        url: `https://pubmed.ncbi.nlm.nih.gov/${pmid}`,
-                                        link_type: 'external',
-                                      },
-                                    ]}
-                                  />
-                                </>
-                              );
-                            }
-
-                            if (typeof refId === 'string' && (refId.startsWith('CGD_REF:') || refId.startsWith('CA'))) {
-                              return (
-                                <div className="citation-line">
-                                  <Link to={`/reference/${refId}`}>{refId}</Link>
-                                </div>
-                              );
-                            }
-
-                            return <div className="citation-line">{refId}</div>;
-                          })()}
-                        </div>
-                      );
-                    })}
+                    {ann.references?.map((ref, refIdx) => (
+                      <React.Fragment key={refIdx}>
+                        {renderCitationItem(ref, { itemClassName: 'go-reference-item' })}
+                      </React.Fragment>
+                    ))}
                   </td>
 
                   <td>

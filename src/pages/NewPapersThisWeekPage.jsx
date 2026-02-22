@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import referenceApi from '../api/referenceApi';
-import { formatCitationString, CitationLinksBelow } from '../utils/formatCitation';
+import { renderCitationItem } from '../utils/formatCitation';
 import './NewPapersThisWeekPage.css';
 
 function NewPapersThisWeekPage() {
@@ -69,17 +69,7 @@ function NewPapersThisWeekPage() {
         <div className="papers-list">
           {data.references.map((paper) => (
             <div key={paper.reference_no} className="paper-item">
-              <div className="citation-line">
-                {paper.citation ? (
-                  formatCitationString(paper.citation)
-                ) : (
-                  <Link to={`/reference/${paper.dbxref_id}`}>
-                    {paper.title || paper.dbxref_id}
-                  </Link>
-                )}
-                {paper.pubmed && <span className="citation-pmid"> PMID: {paper.pubmed}</span>}
-              </div>
-              <CitationLinksBelow links={paper.links} />
+              {renderCitationItem(paper, { itemClassName: '' })}
               <div className="date-added">Added: {formatDate(paper.date_created)}</div>
             </div>
           ))}

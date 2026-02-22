@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './LocusComponents.css';
-import { formatCitationString, CitationLinksBelow, buildCitationLinks } from '../../utils/formatCitation.jsx';
+import { renderCitationItem } from '../../utils/formatCitation.jsx';
 
 function LocusSummary({
   data,
@@ -886,15 +886,7 @@ function LocusSummary({
             {feature.cited_references.map((ref, idx) => (
               <div key={ref.reference_no} id={`ref${idx + 1}`} className="reference-item">
                 <span className="reference-number">{idx + 1})</span>
-                <div className="reference-citation">
-                  <span className="reference-text">
-                    {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
-                    {ref?.pubmed ? <span className="citation-pmid"> PMID: {ref.pubmed}</span> : null}
-                  </span>
-                  {ref.links && ref.links.length > 0 && (
-                    <CitationLinksBelow links={ref.links && ref.links.length ? ref.links : buildCitationLinks(ref)} />
-                  )}
-                </div>
+                {renderCitationItem(ref, { itemClassName: 'reference-citation' })}
               </div>
             ))}
           </div>
