@@ -70,10 +70,8 @@
 
 /* Main results area - FIXED WIDTH */
 .search-main {
-  flex: 1 1 auto;
-  min-width: 600px; /* Minimum width to prevent shrinking */
-  max-width: 800px; /* Fixed max width for consistent display */
-  width: 100%;
+  flex: 0 0 800px;
+  min-width: 800px;
 }
 
 .search-results-list {
@@ -393,7 +391,7 @@
    Responsive Design
    =========================================== */
 
-@media (max-width: 768px) {
+@media (max-width: 1100px) {
   .search-layout {
     flex-direction: column;
     gap: 20px;
@@ -402,6 +400,13 @@
   .search-sidebar {
     flex: none;
     width: 100%;
+    min-width: auto;
+  }
+
+  .search-main {
+    flex: none;
+    width: 100%;
+    min-width: auto;
   }
 
   .facet-list {
