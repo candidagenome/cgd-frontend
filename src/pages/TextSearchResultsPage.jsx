@@ -174,20 +174,6 @@ const TextSearchResultsPage = () => {
           {showId && <span className="text-search-result-id">({result.id})</span>}
           {external && <span className="external-link-icon" title="External link">&#x2197;</span>}
         </div>
-        {displayDescription && (
-          <div
-            className="text-search-result-description"
-            dangerouslySetInnerHTML={{ __html: displayDescription }}
-          />
-        )}
-        {result.organism && (
-          <div className="text-search-result-organism">{result.organism}</div>
-        )}
-        {result.match_context && (
-          <div className="text-search-result-context">
-            <span className="context-label">Type:</span> {result.match_context}
-          </div>
-        )}
         {result.links && result.links.length > 0 && (
           <div className="text-search-result-links">
             {result.links.map((link, idx) => (
@@ -202,6 +188,20 @@ const TextSearchResultsPage = () => {
                 {idx < result.links.length - 1 && ' | '}
               </span>
             ))}
+          </div>
+        )}
+        {displayDescription && (
+          <div
+            className="text-search-result-description"
+            dangerouslySetInnerHTML={{ __html: displayDescription }}
+          />
+        )}
+        {result.organism && (
+          <div className="text-search-result-organism">{result.organism}</div>
+        )}
+        {result.match_context && (
+          <div className="text-search-result-context">
+            <span className="context-label">Type:</span> {result.match_context}
           </div>
         )}
       </div>
