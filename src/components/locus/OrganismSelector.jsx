@@ -16,7 +16,10 @@ function OrganismSelector({ organisms, selectedOrganism, onOrganismChange, dataT
   if (organisms.length === 1) {
     return (
       <div className="organism-selector single-organism">
-        <span className="organism-info">Organism: <strong>{organisms[0]}</strong></span>
+        <div className="organism-info-container">
+          <span className="organism-info">Organism: <strong>{organisms[0]}</strong></span>
+          <span className="organism-availability-note">(Not available in other organisms)</span>
+        </div>
       </div>
     );
   }
