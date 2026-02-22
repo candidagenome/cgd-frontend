@@ -29,6 +29,7 @@ import CommunityPage from './pages/CommunityPage';
 import SubmitDataPage from './pages/SubmitDataPage';
 import SearchPage from './pages/SearchPage';
 import SearchResultsPage from './pages/SearchResultsPage';
+import TextSearchResultsPage from './pages/TextSearchResultsPage';
 import MeetingsPage from './pages/MeetingsPage';
 import CommunityNewsPage from './pages/CommunityNewsPage';
 import NewsArchivePage from './pages/NewsArchivePage';
@@ -212,6 +213,7 @@ function App() {
           <Route path="/submit-data" element={<SubmitDataPage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/search/results" element={<SearchResultsPage />} />
+          <Route path="/search/text" element={<TextSearchResultsPage />} />
           <Route path="/meetings" element={<MeetingsPage />} />
           <Route path="/community-news" element={<CommunityNewsPage />} />
           <Route path="/news/archive" element={<NewsArchivePage />} />

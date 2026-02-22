@@ -1,23 +1,23 @@
-/* Search Results Page Styles */
+/* Text Search Results Page Styles */
 
-.search-results-page {
+.text-search-results-page {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
 }
 
-.search-results-content {
+.text-search-results-content {
   background-color: #fff;
   padding: 30px;
   border-radius: 4px;
 }
 
-.search-results-page h1 {
+.text-search-results-page h1 {
   color: #1976d2;
   margin-bottom: 10px;
 }
 
-.search-results-page hr {
+.text-search-results-page hr {
   border: none;
   border-top: 2px solid #1976d2;
   margin-bottom: 25px;
@@ -34,21 +34,21 @@
 }
 
 /* Loading and error states */
-.search-loading,
-.search-error,
-.search-no-results,
-.search-no-selection {
+.text-search-loading,
+.text-search-error,
+.text-search-no-results,
+.text-search-no-selection {
   text-align: center;
   padding: 40px 20px;
   color: #666;
 }
 
-.search-error {
+.text-search-error {
   color: #d32f2f;
 }
 
-.search-no-results,
-.search-no-selection {
+.text-search-no-results,
+.text-search-no-selection {
   font-style: italic;
 }
 
@@ -56,40 +56,42 @@
    Faceted Layout - Sidebar + Main Content
    =========================================== */
 
-.search-layout {
+.text-search-layout {
   display: flex;
   gap: 30px;
   min-height: 400px;
 }
 
 /* Sidebar with facets */
-.search-sidebar {
-  flex: 0 0 220px;
-  min-width: 220px;
+.text-search-sidebar {
+  flex: 0 0 250px;
+  min-width: 250px;
 }
 
 /* Main results area - FIXED WIDTH */
-.search-main {
+.text-search-main {
   flex: 0 0 800px;
   min-width: 800px;
 }
 
-.search-results-list {
-  min-height: 300px; /* Minimum height for consistency */
+.text-search-results-list {
+  min-height: 300px;
 }
 
 /* ===========================================
    Facets (Category filters)
    =========================================== */
 
-.search-facets {
+.text-search-facets {
   background-color: #f8f9fa;
   border-radius: 6px;
   padding: 15px;
   border: 1px solid #e0e0e0;
+  position: sticky;
+  top: 20px;
 }
 
-.search-facets h3 {
+.text-search-facets h3 {
   margin: 0 0 12px 0;
   font-size: 1em;
   color: #333;
@@ -99,56 +101,57 @@
   border-bottom: 1px solid #ddd;
 }
 
-.facet-list {
+.text-search-facets .facet-list {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.facet-item {
+.text-search-facets .facet-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 12px;
-  margin-bottom: 4px;
+  padding: 8px 10px;
+  margin-bottom: 3px;
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.15s ease;
   border-left: 3px solid transparent;
+  font-size: 0.9em;
 }
 
-.facet-item:hover:not(.disabled) {
+.text-search-facets .facet-item:hover:not(.disabled) {
   background-color: #e3f2fd;
 }
 
-.facet-item.selected {
+.text-search-facets .facet-item.selected {
   background-color: #1976d2;
   color: #fff;
   border-left-color: #0d47a1;
 }
 
-.facet-item.selected .facet-count {
+.text-search-facets .facet-item.selected .facet-count {
   background-color: rgba(255, 255, 255, 0.2);
   color: #fff;
 }
 
-.facet-item.disabled {
+.text-search-facets .facet-item.disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.facet-label {
-  font-size: 0.95em;
+.text-search-facets .facet-label {
+  font-size: 0.9em;
   font-weight: 500;
 }
 
-.facet-count {
-  font-size: 0.85em;
+.text-search-facets .facet-count {
+  font-size: 0.8em;
   background-color: #e0e0e0;
   color: #555;
-  padding: 2px 8px;
+  padding: 2px 6px;
   border-radius: 10px;
-  min-width: 24px;
+  min-width: 20px;
   text-align: center;
 }
 
@@ -156,7 +159,7 @@
    Results List
    =========================================== */
 
-.search-results-list h2 {
+.text-search-results-list h2 {
   color: #333;
   font-size: 1.3em;
   margin: 0 0 20px 0;
@@ -164,7 +167,7 @@
   border-bottom: 2px solid #e0e0e0;
 }
 
-.search-results-list h2 .category-count {
+.text-search-results-list h2 .category-count {
   font-size: 0.75em;
   color: #666;
   font-weight: normal;
@@ -172,7 +175,7 @@
 }
 
 /* Result items */
-.search-result-item {
+.text-search-result-item {
   padding: 15px 18px;
   margin-bottom: 10px;
   background-color: #fafafa;
@@ -181,119 +184,134 @@
   transition: all 0.15s ease;
 }
 
-.search-result-item:hover {
+.text-search-result-item:hover {
   background-color: #f0f7ff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
-.search-result-name {
+.text-search-result-name {
   font-weight: 600;
   margin-bottom: 6px;
 }
 
-.search-result-name a {
+.text-search-result-name a {
   color: #1976d2;
   text-decoration: none;
   font-size: 1.05em;
 }
 
-.search-result-name a:hover {
+.text-search-result-name a:hover {
   text-decoration: underline;
 }
 
-.search-result-id {
+.text-search-result-id {
   font-size: 0.85em;
   color: #888;
   margin-left: 10px;
   font-weight: normal;
 }
 
-.search-result-description {
+.external-link-icon {
+  font-size: 0.8em;
+  color: #888;
+  margin-left: 5px;
+}
+
+.text-search-result-description {
   font-size: 0.9em;
   color: #555;
   margin-top: 6px;
   line-height: 1.5;
 }
 
-.search-result-organism {
+.text-search-result-organism {
   font-size: 0.85em;
   color: #666;
   font-style: italic;
   margin-top: 6px;
 }
 
-/* Category-specific border colors */
-.search-results-list.genes .search-result-item {
-  border-left-color: #4caf50;
+.text-search-result-context {
+  font-size: 0.8em;
+  color: #888;
+  margin-top: 6px;
 }
 
-.search-results-list.go_terms .search-result-item {
-  border-left-color: #2196f3;
+.text-search-result-context .context-label {
+  font-weight: 600;
 }
 
-.search-results-list.phenotypes .search-result-item {
-  border-left-color: #ff9800;
+.text-search-result-links {
+  font-size: 0.85em;
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid #eee;
 }
 
-.search-results-list.references .search-result-item {
-  border-left-color: #9c27b0;
-}
-
-/* ===========================================
-   Reference Item Styling (Citation format)
-   =========================================== */
-
-.search-result-item.reference-item {
-  padding: 15px 18px;
-  display: block;
-}
-
-.search-result-item.reference-item .citation-line {
-  display: block;
-  width: 100%;
-  line-height: 1.6;
-  color: #333;
-  margin-bottom: 0;
-}
-
-.search-result-item.reference-item .citation-pmid {
-  color: #666;
-  font-size: 0.9em;
-}
-
-/* Citation links below - must be on a new line */
-.search-result-item.reference-item .citation-links-below {
-  display: block !important;
-  width: 100%;
-  margin-top: 3px;
-  font-size: 0.9em;
-  clear: both;
-}
-
-.search-result-item.reference-item .citation-links-below .citation-link {
+.text-search-result-links .citation-link a {
   color: #1976d2;
   text-decoration: none;
-  margin-right: 8px;
 }
 
-.search-result-item.reference-item .citation-links-below .citation-link:hover {
+.text-search-result-links .citation-link a:hover {
   text-decoration: underline;
 }
 
-/* Separator between links */
-.search-result-item.reference-item .citation-links-below .citation-link-sep {
-  color: #999;
-  margin: 0 4px;
+/* Category-specific border colors */
+.text-search-results-list.genes .text-search-result-item {
+  border-left-color: #4caf50;
 }
 
-.search-result-item.reference-item .citation-links-below .citation-link::before {
-  content: "";
-  color: #999;
-  margin-right: 0;
+.text-search-results-list.descriptions .text-search-result-item {
+  border-left-color: #8bc34a;
 }
 
-.search-result-item.reference-item .citation-links-below .citation-link:first-child::before {
-  content: "";
+.text-search-results-list.go_terms .text-search-result-item {
+  border-left-color: #2196f3;
+}
+
+.text-search-results-list.colleagues .text-search-result-item {
+  border-left-color: #00bcd4;
+}
+
+.text-search-results-list.authors .text-search-result-item {
+  border-left-color: #03a9f4;
+}
+
+.text-search-results-list.pathways .text-search-result-item {
+  border-left-color: #009688;
+}
+
+.text-search-results-list.paragraphs .text-search-result-item {
+  border-left-color: #673ab7;
+}
+
+.text-search-results-list.abstracts .text-search-result-item {
+  border-left-color: #9c27b0;
+}
+
+.text-search-results-list.name_descriptions .text-search-result-item {
+  border-left-color: #e91e63;
+}
+
+.text-search-results-list.phenotypes .text-search-result-item {
+  border-left-color: #ff9800;
+}
+
+.text-search-results-list.notes .text-search-result-item {
+  border-left-color: #795548;
+}
+
+.text-search-results-list.external_ids .text-search-result-item {
+  border-left-color: #607d8b;
+}
+
+.text-search-results-list.orthologs .text-search-result-item {
+  border-left-color: #f44336;
+}
+
+.text-search-results-list.literature_topics .text-search-result-item {
+  border-left-color: #ff5722;
 }
 
 /* Back to search link */
@@ -377,10 +395,9 @@
    Search Result Highlighting
    =========================================== */
 
-.search-result-item mark,
-.search-result-name mark,
-.search-result-description mark,
-.citation-line mark {
+.text-search-result-item mark,
+.text-search-result-name mark,
+.text-search-result-description mark {
   background-color: #fff59d;
   color: inherit;
   padding: 0 2px;
@@ -392,32 +409,47 @@
    =========================================== */
 
 @media (max-width: 1100px) {
-  .search-layout {
+  .text-search-layout {
     flex-direction: column;
     gap: 20px;
   }
 
-  .search-sidebar {
+  .text-search-sidebar {
     flex: none;
     width: 100%;
     min-width: auto;
   }
 
-  .search-main {
+  .text-search-main {
     flex: none;
     width: 100%;
     min-width: auto;
   }
 
-  .facet-list {
+  .text-search-facets {
+    position: static;
+  }
+
+  .text-search-facets .facet-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
   }
 
-  .facet-item {
+  .text-search-facets .facet-item {
     flex: 1 1 auto;
-    min-width: 140px;
+    min-width: 180px;
     margin-bottom: 0;
+    padding: 6px 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  .text-search-results-content {
+    padding: 15px;
+  }
+
+  .text-search-facets .facet-item {
+    min-width: 140px;
   }
 }
