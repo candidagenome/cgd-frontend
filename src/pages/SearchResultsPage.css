@@ -87,6 +87,8 @@
   border-radius: 6px;
   padding: 15px;
   border: 1px solid #e0e0e0;
+  position: sticky;
+  top: 20px;
 }
 
 .search-facets h3 {
@@ -109,12 +111,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 12px;
-  margin-bottom: 4px;
+  padding: 8px 10px;
+  margin-bottom: 3px;
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.15s ease;
   border-left: 3px solid transparent;
+  font-size: 0.9em;
 }
 
 .facet-item:hover:not(.disabled) {
@@ -122,34 +125,65 @@
 }
 
 .facet-item.selected {
-  background-color: #1976d2;
-  color: #fff;
-  border-left-color: #0d47a1;
+  background-color: #e3f2fd;
+  color: #1565c0;
+  border-left-color: transparent;
+}
+
+.facet-item.selected .facet-label {
+  color: #1565c0;
+  font-weight: 600;
 }
 
 .facet-item.selected .facet-count {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: #fff;
+  background-color: #90caf9;
+  color: #0d47a1;
 }
 
+/* Categories with zero results - muted appearance */
 .facet-item.disabled {
-  opacity: 0.5;
   cursor: not-allowed;
+  color: #888;
 }
 
+.facet-item.disabled .facet-label {
+  color: #888;
+  font-weight: 400;
+}
+
+.facet-item.disabled .facet-count {
+  background-color: #e8e8e8;
+  color: #888;
+}
+
+/* Category labels */
 .facet-label {
-  font-size: 0.95em;
-  font-weight: 500;
+  font-size: 0.9em;
+  font-weight: 400;
+  color: #666;
+}
+
+/* Categories with results - emphasized appearance */
+.facet-item:not(.disabled):not(.selected) .facet-label {
+  color: #333;
+  font-weight: 600;
 }
 
 .facet-count {
-  font-size: 0.85em;
+  font-size: 0.8em;
   background-color: #e0e0e0;
   color: #555;
-  padding: 2px 8px;
+  padding: 2px 6px;
   border-radius: 10px;
-  min-width: 24px;
+  min-width: 20px;
   text-align: center;
+}
+
+/* Non-zero count badge - stronger appearance */
+.facet-item:not(.disabled):not(.selected) .facet-count {
+  background-color: #d0d0d0;
+  color: #333;
+  font-weight: 500;
 }
 
 /* ===========================================
@@ -409,15 +443,20 @@
     min-width: auto;
   }
 
+  .search-facets {
+    position: static;
+  }
+
   .facet-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
   }
 
   .facet-item {
     flex: 1 1 auto;
     min-width: 140px;
     margin-bottom: 0;
+    padding: 6px 10px;
   }
 }

@@ -125,24 +125,48 @@
 }
 
 .text-search-facets .facet-item.selected {
-  background-color: #1976d2;
-  color: #fff;
-  border-left-color: #0d47a1;
+  background-color: #e3f2fd;
+  color: #1565c0;
+  border-left-color: transparent;
+}
+
+.text-search-facets .facet-item.selected .facet-label {
+  color: #1565c0;
+  font-weight: 600;
 }
 
 .text-search-facets .facet-item.selected .facet-count {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: #fff;
+  background-color: #90caf9;
+  color: #0d47a1;
 }
 
+/* Categories with zero results - muted appearance */
 .text-search-facets .facet-item.disabled {
-  opacity: 0.5;
   cursor: not-allowed;
+  color: #888;
 }
 
+.text-search-facets .facet-item.disabled .facet-label {
+  color: #888;
+  font-weight: 400;
+}
+
+.text-search-facets .facet-item.disabled .facet-count {
+  background-color: #e8e8e8;
+  color: #888;
+}
+
+/* Category labels */
 .text-search-facets .facet-label {
   font-size: 0.9em;
-  font-weight: 500;
+  font-weight: 400;
+  color: #666;
+}
+
+/* Categories with results - emphasized appearance */
+.text-search-facets .facet-item:not(.disabled):not(.selected) .facet-label {
+  color: #333;
+  font-weight: 600;
 }
 
 .text-search-facets .facet-count {
@@ -153,6 +177,13 @@
   border-radius: 10px;
   min-width: 20px;
   text-align: center;
+}
+
+/* Non-zero count badge - stronger appearance */
+.text-search-facets .facet-item:not(.disabled):not(.selected) .facet-count {
+  background-color: #d0d0d0;
+  color: #333;
+  font-weight: 500;
 }
 
 /* ===========================================
