@@ -185,6 +185,22 @@ const TextSearchResultsPage = () => {
             <span className="context-label">Type:</span> {result.match_context}
           </div>
         )}
+        {result.links && result.links.length > 0 && (
+          <div className="text-search-result-links">
+            {result.links.map((link, idx) => (
+              <span key={idx} className="citation-link">
+                {link.link_type === 'external' ? (
+                  <a href={link.url} target="_blank" rel="noopener noreferrer">
+                    {link.name}
+                  </a>
+                ) : (
+                  <Link to={link.url}>{link.name}</Link>
+                )}
+                {idx < result.links.length - 1 && ' | '}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     );
   };

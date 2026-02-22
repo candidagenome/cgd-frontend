@@ -243,6 +243,22 @@
   font-weight: 600;
 }
 
+.text-search-result-links {
+  font-size: 0.85em;
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid #eee;
+}
+
+.text-search-result-links .citation-link a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.text-search-result-links .citation-link a:hover {
+  text-decoration: underline;
+}
+
 /* Category-specific border colors */
 .text-search-results-list.genes .text-search-result-item {
   border-left-color: #4caf50;
