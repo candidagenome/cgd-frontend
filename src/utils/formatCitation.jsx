@@ -298,11 +298,212 @@ export function formatShortCitation(ref) {
 }
 
 /**
+ * THE unified function for rendering any citation with links.
+ * Use this everywhere instead of inline logic.
+ *
+ * @param {Object|string} ref - Reference object or string (PMID:xxx, CGD_REF:xxx)
+ * @param {Object} options - { showPmid: true, className: '', itemClassName: '' }
+ * @returns {React.ReactNode} Complete citation with links below
+ */
+export function renderCitationItem(ref, options = {}) {
+  const { showPmid = true, className = '', itemClassName = 'citation-item' } = options;
+
+  if (!ref) return null;
+
+  // Handle string references (like "PMID:12345" or "CGD_REF:CAL0000001")
+  if (typeof ref === 'string') {
+    // Check if it's a PMID string
+    if (ref.startsWith('PMID:')) {
+      const pmid = ref.replace('PMID:', '');
+      return (
+        <div className={`${itemClassName} ${className}`.trim()}>
+          <div className="citation-line">
+            <a
+              href={`https://pubmed.ncbi.nlm.nih.gov/${pmid}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {ref}
+            </a>
+          </div>
+          <CitationLinksBelow
+            links={[
+              {
+                name: 'PubMed',
+                url: `https://pubmed.ncbi.nlm.nih.gov/${pmid}`,
+                link_type: 'external',
+              },
+            ]}
+          />
+        </div>
+      );
+    }
+
+    // Check if it's a CGD_REF or CA reference
+    if (ref.startsWith('CGD_REF:') || ref.startsWith('CA')) {
+      return (
+        <div className={`${itemClassName} ${className}`.trim()}>
+          <div className="citation-line">
+            <Link to={`/reference/${ref}`}>{ref}</Link>
+          </div>
+          <CitationLinksBelow
+            links={[
+              {
+                name: 'CGD Paper',
+                url: `/reference/${ref}`,
+                link_type: 'internal',
+              },
+            ]}
+          />
+        </div>
+      );
+    }
+
+    // Otherwise format as citation string
+    return (
+      <div className={`${itemClassName} ${className}`.trim()}>
+        <div className="citation-line">{formatCitationString(ref)}</div>
+      </div>
+    );
+  }
+
+  // If HTML is provided, use it (already formatted from backend)
+  if (ref.html) {
+    return (
+      <div className={`${itemClassName} ${className}`.trim()}>
+        <span dangerouslySetInnerHTML={{ __html: ref.html }} />
+      </div>
+    );
+  }
+
+  // Extract reference identifiers
+  const refId =
+    ref.dbxref_id || ref.reference_id || (ref.pubmed ? `PMID:${ref.pubmed}` : null);
+
+  // Prioritize full citation over display_name (which may be shortened)
+  const citation = ref.citation || ref.display_name || ref.formatted_citation;
+  const journal = ref.journal_name || ref.journal;
+
+  // Prefer backend-provided links, fall back to building them
+  const links = ref.links;
+
+  // Display full formatted citation when available (links on next line)
+  if (citation) {
+    const computedLinks =
+      links && links.length > 0
+        ? links
+        : buildCitationLinks({
+            dbxref_id: ref.dbxref_id,
+            reference_id: ref.reference_id,
+            pubmed: ref.pubmed,
+            urls: ref.urls,
+          });
+
+    return (
+      <div className={`${itemClassName} ${className}`.trim()}>
+        <div className="citation-line">
+          {formatCitationString(citation, journal)}
+          {showPmid && ref.pubmed ? (
+            <span className="citation-pmid"> PMID: {ref.pubmed}</span>
+          ) : null}
+        </div>
+        <CitationLinksBelow links={computedLinks} />
+      </div>
+    );
+  }
+
+  // Fallback to showing reference ID as link (links below, no brackets)
+  if (refId) {
+    // If backend links exist, show them below the id
+    if (links && links.length > 0) {
+      return (
+        <div className={`${itemClassName} ${className}`.trim()}>
+          <div className="citation-line">
+            {typeof refId === 'string' &&
+            (refId.startsWith('CGD_REF:') || refId.startsWith('CA')) ? (
+              <Link to={`/reference/${refId}`}>{refId}</Link>
+            ) : typeof refId === 'string' && refId.startsWith('PMID:') ? (
+              <a
+                href={`https://pubmed.ncbi.nlm.nih.gov/${refId.replace('PMID:', '')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {refId}
+              </a>
+            ) : (
+              refId
+            )}
+          </div>
+          <CitationLinksBelow links={links} />
+        </div>
+      );
+    }
+
+    // Otherwise build minimal links from the id if possible
+    if (typeof refId === 'string' && (refId.startsWith('CGD_REF:') || refId.startsWith('CA'))) {
+      return (
+        <div className={`${itemClassName} ${className}`.trim()}>
+          <div className="citation-line">
+            <Link to={`/reference/${refId}`}>{refId}</Link>
+          </div>
+        </div>
+      );
+    }
+
+    if (typeof refId === 'string' && refId.startsWith('PMID:')) {
+      const pmid = refId.replace('PMID:', '');
+      return (
+        <div className={`${itemClassName} ${className}`.trim()}>
+          <div className="citation-line">
+            <a
+              href={`https://pubmed.ncbi.nlm.nih.gov/${pmid}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {refId}
+            </a>
+          </div>
+          <CitationLinksBelow
+            links={[
+              {
+                name: 'PubMed',
+                url: `https://pubmed.ncbi.nlm.nih.gov/${pmid}`,
+                link_type: 'external',
+              },
+            ]}
+          />
+        </div>
+      );
+    }
+
+    // Final fallback: render the id as-is
+    return (
+      <div className={`${itemClassName} ${className}`.trim()}>
+        <div className="citation-line">{refId}</div>
+      </div>
+    );
+  }
+
+  // Final fallback to title or text
+  const fallback = ref.title || ref.text;
+  if (fallback) {
+    return (
+      <div className={`${itemClassName} ${className}`.trim()}>
+        <div className="citation-line">{fallback}</div>
+      </div>
+    );
+  }
+
+  return null;
+}
+
+/**
  * Format a single reference item (helper for formatHistoryReference)
  * Uses the same display pattern as Gene Ontology tab
  * @param {Object|string} ref - Reference object or string
  * @param {number} idx - Index for key generation
  * @returns {React.ReactNode} Formatted reference
+ * @deprecated Use renderCitationItem instead
  */
 function formatSingleReference(ref, idx = 0) {
   if (!ref) return null;
@@ -677,6 +878,7 @@ export default {
   formatAuthors,
   formatShortCitation,
   formatHistoryReference,
+  renderCitationItem,
   CitationLinks,
   CitationLinksBelow,
   buildCitationLinks,

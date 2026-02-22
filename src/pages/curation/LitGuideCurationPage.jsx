@@ -13,11 +13,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import litguideCurationApi from '../../api/litguideCurationApi';
-import {
-  formatCitationString,
-  buildCitationLinks,
-  CitationLinksBelow,
-} from '../../utils/formatCitation';
+import { renderCitationItem, buildCitationLinks, CitationLinksBelow } from '../../utils/formatCitation';
 import TopicAssignmentRow from '../../components/curation/TopicAssignmentRow';
 import CVTreeModal from '../../components/curation/CVTreeModal';
 
@@ -1118,29 +1114,10 @@ function LitGuideCurationPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {featureData.curated.map((ref) => {
-                    const links = buildCitationLinks({
-                      dbxref_id: ref.dbxref_id,
-                      reference_no: ref.reference_no,
-                      pubmed: ref.pubmed,
-                      urls: ref.urls,
-                    });
-                    return (
+                  {featureData.curated.map((ref) => (
                       <tr key={ref.reference_no}>
                         <td style={styles.td}>
-                          <div style={styles.citationLine}>
-                            {ref.citation ? (
-                              <>
-                                {formatCitationString(ref.citation)}
-                                {ref.pubmed && <span style={styles.pmidText}> PMID: {ref.pubmed}</span>}
-                              </>
-                            ) : (
-                              <Link to={`/reference/${ref.reference_no}`}>
-                                {ref.pubmed ? `PMID:${ref.pubmed}` : `Ref:${ref.reference_no}`}
-                              </Link>
-                            )}
-                          </div>
-                          <CitationLinksBelow links={links} />
+                          {renderCitationItem(ref, { itemClassName: '' })}
                         </td>
                         <td style={styles.td}>
                           {ref.topics.map((topic) => (
@@ -1165,8 +1142,7 @@ function LitGuideCurationPage() {
                           </Link>
                         </td>
                       </tr>
-                    );
-                  })}
+                  ))}
                 </tbody>
               </table>
             ) : (
@@ -1190,29 +1166,10 @@ function LitGuideCurationPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {featureData.uncurated.map((ref) => {
-                    const links = buildCitationLinks({
-                      dbxref_id: ref.dbxref_id,
-                      reference_no: ref.reference_no,
-                      pubmed: ref.pubmed,
-                      urls: ref.urls,
-                    });
-                    return (
+                  {featureData.uncurated.map((ref) => (
                       <tr key={ref.reference_no}>
                         <td style={styles.td}>
-                          <div style={styles.citationLine}>
-                            {ref.citation ? (
-                              <>
-                                {formatCitationString(ref.citation)}
-                                {ref.pubmed && <span style={styles.pmidText}> PMID: {ref.pubmed}</span>}
-                              </>
-                            ) : (
-                              <Link to={`/reference/${ref.reference_no}`}>
-                                {ref.pubmed ? `PMID:${ref.pubmed}` : `Ref:${ref.reference_no}`}
-                              </Link>
-                            )}
-                          </div>
-                          <CitationLinksBelow links={links} />
+                          {renderCitationItem(ref, { itemClassName: '' })}
                         </td>
                         <td style={styles.td}>
                           <button
@@ -1249,8 +1206,7 @@ function LitGuideCurationPage() {
                           </Link>
                         </td>
                       </tr>
-                    );
-                  })}
+                  ))}
                 </tbody>
               </table>
             ) : (

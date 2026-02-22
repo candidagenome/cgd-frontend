@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
 import AlphaFoldViewer from './AlphaFoldViewer';
-import { formatCitationString, CitationLinksBelow, buildCitationLinks } from '../../utils/formatCitation.jsx';
+import { renderCitationItem } from '../../utils/formatCitation.jsx';
 import './LocusComponents.css';
 
 function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
@@ -286,15 +286,7 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                 {orgData.cited_references.map((ref, idx) => (
                   <div key={idx} id={`ref${idx + 1}`} className="reference-item">
                     <span className="reference-number">{idx + 1})</span>
-                    <div className="reference-citation">
-                      <span className="reference-text">
-                        {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
-                        {ref?.pubmed ? <span className="citation-pmid"> PMID: {ref.pubmed}</span> : null}
-                      </span>
-                      {ref.links && ref.links.length > 0 && (
-                        <CitationLinksBelow links={ref.links && ref.links.length ? ref.links : buildCitationLinks(ref)} />
-                      )}
-                    </div>
+                    {renderCitationItem(ref, { itemClassName: 'reference-citation' })}
                   </div>
                 ))}
               </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import referenceApi from '../api/referenceApi';
-import { formatCitationString, CitationLinksBelow } from '../utils/formatCitation';
+import { renderCitationItem } from '../utils/formatCitation';
 import './GenomeWideAnalysisPapersPage.css';
 
 const PAGE_SIZE = 50;
@@ -202,16 +202,7 @@ function GenomeWideAnalysisPapersPage() {
               {data.references.map((paper) => (
                 <tr key={paper.reference_no}>
                   <td className="reference-cell">
-                    <div className="citation-line">
-                      {paper.citation ? (
-                        formatCitationString(paper.citation)
-                      ) : (
-                        <Link to={`/reference/${paper.dbxref_id}`}>
-                          {paper.dbxref_id}
-                        </Link>
-                      )}
-                    </div>
-                    <CitationLinksBelow links={paper.links} />
+                    {renderCitationItem(paper, { itemClassName: '' })}
                   </td>
                   <td className="topics-cell">{paper.topics?.join(', ') || '-'}</td>
                   <td className="species-cell">{formatSpecies(paper.species)}</td>

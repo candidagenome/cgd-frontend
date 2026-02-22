@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import goApi from '../api/goApi';
-import { formatCitationString, CitationLinksBelow, buildCitationLinks } from '../utils/formatCitation.jsx';
+import { renderCitationItem } from '../utils/formatCitation.jsx';
 import { GODiagram } from '../components/go';
 import './GoTermPage.css';
 
@@ -439,24 +439,11 @@ function GoTermPage() {
                     <em>{getOrganismAbbrev(gene.species)}</em>
                   </td>
                   <td className="references-cell">
-                    {gene.references && gene.references.map((ref, refIdx) => {
-                      const citationLinks = ref.links && ref.links.length > 0
-                        ? ref.links
-                        : buildCitationLinks({
-                            dbxref_id: ref.dbxref_id,
-                            pubmed: ref.pubmed,
-                          });
-
-                      return (
-                        <div key={refIdx} className="reference-item">
-                          <div className="citation-line">
-                            {formatCitationString(ref.citation)}
-                            {ref.pubmed && <span className="citation-pmid"> PMID: {ref.pubmed}</span>}
-                          </div>
-                          <CitationLinksBelow links={citationLinks} />
-                        </div>
-                      );
-                    })}
+                    {gene.references?.map((ref, refIdx) => (
+                      <React.Fragment key={refIdx}>
+                        {renderCitationItem(ref, { itemClassName: 'reference-item' })}
+                      </React.Fragment>
+                    ))}
                   </td>
                   <td className="evidence-cell">
                     {gene.references && gene.references.map((ref, refIdx) => (
