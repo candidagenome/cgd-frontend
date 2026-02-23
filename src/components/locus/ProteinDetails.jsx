@@ -49,29 +49,25 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
         <>
           <table className="info-table">
             <tbody>
-              {/* Protein Standard Name (e.g., Act1p) */}
+              {/* Standard Name (e.g., ACT1) */}
               <tr>
-                <th>Protein Standard Name</th>
+                <th>Standard Name</th>
                 <td>
-                  {orgData.protein_standard_name ? (
-                    orgData.protein_standard_name_with_refs ? (
-                      <strong dangerouslySetInnerHTML={{ __html: orgData.protein_standard_name_with_refs }} />
-                    ) : (
-                      <strong>{orgData.protein_standard_name}</strong>
-                    )
+                  {orgData.gene_name || orgData.stanford_name ? (
+                    <strong>{orgData.gene_name || orgData.stanford_name}</strong>
                   ) : (
                     <span className="no-value">-</span>
                   )}
                 </td>
               </tr>
 
-              {/* Protein Systematic Name (e.g., C1_13700wp_a) */}
+              {/* Systematic Name (e.g., C1_13700W_A) */}
               <tr>
-                <th>Protein Systematic Name</th>
-                <td>{orgData.protein_systematic_name || orgData.systematic_name}</td>
+                <th>Systematic Name</th>
+                <td>{orgData.systematic_name || orgData.feature_name}</td>
               </tr>
 
-              {/* Allele Names (protein format, e.g., C1_13700wp_b) */}
+              {/* Allele Names (e.g., C1_13700W_B) */}
               {orgData.allele_names && orgData.allele_names.length > 0 && (
                 <tr>
                   <th>Allele Name{orgData.allele_names.length > 1 ? 's' : ''}</th>
@@ -81,7 +77,7 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                         {allele.allele_name_with_refs ? (
                           <span dangerouslySetInnerHTML={{ __html: allele.allele_name_with_refs }} />
                         ) : (
-                          <span>{allele.protein_allele_name || allele.allele_name}</span>
+                          <span>{allele.allele_name || allele.feature_name}</span>
                         )}
                         {idx < orgData.allele_names.length - 1 ? ', ' : ''}
                       </span>
