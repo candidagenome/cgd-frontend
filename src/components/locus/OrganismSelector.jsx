@@ -1,4 +1,5 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import './LocusComponents.css';
 
 const DEFAULT_ORGANISM = 'Candida albicans SC5314';
@@ -8,6 +9,8 @@ const DEFAULT_ORGANISM = 'Candida albicans SC5314';
  * Defaults to "Candida albicans SC5314" if it has data.
  */
 function OrganismSelector({ organisms, selectedOrganism, onOrganismChange, dataType }) {
+  const { name } = useParams();
+
   if (!organisms || organisms.length === 0) {
     return null;
   }
@@ -16,7 +19,12 @@ function OrganismSelector({ organisms, selectedOrganism, onOrganismChange, dataT
   if (organisms.length === 1) {
     return (
       <div className="organism-selector single-organism">
-        <span className="organism-info">Organism: <strong>{organisms[0]}</strong></span>
+        <div className="organism-info-container">
+          <span className="organism-info">Organism: <strong>{organisms[0]}</strong></span>
+          {name && (
+            <span className="organism-availability-note">(Identifier {name} is specific to this organism)</span>
+          )}
+        </div>
       </div>
     );
   }
