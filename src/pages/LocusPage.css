@@ -4,6 +4,8 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Header */
@@ -25,7 +27,7 @@
   font-size: 1.1em;
 }
 
-/* Tab Navigation */
+/* Tab Navigation - sticky to prevent jumping during content loads */
 .tab-navigation {
   display: flex;
   flex-wrap: wrap;
@@ -33,6 +35,10 @@
   margin-bottom: 20px;
   padding: 10px 0;
   border-bottom: 1px solid #e0e0e0;
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  z-index: 100;
 }
 
 .tab-button {
@@ -60,7 +66,16 @@
 
 /* Tab Content */
 .tab-content {
-  min-height: 400px;
+  min-height: 500px;
+  width: 100%;
+}
+
+/* Ensure loading states don't cause layout shift */
+.tab-content .loading,
+.tab-content .error,
+.tab-content .no-data {
+  text-align: left;
+  min-height: 100px;
 }
 
 /* Loading and Error states */
