@@ -1,9 +1,11 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, Suspense, lazy } from 'react';
 import { Link } from 'react-router-dom';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
-import PhylogeneticTreeViewer from './PhylogeneticTreeViewer';
-import AlignmentViewer from './AlignmentViewer';
 import './LocusComponents.css';
+
+// Lazy load heavy visualization components
+const PhylogeneticTreeViewer = lazy(() => import('./PhylogeneticTreeViewer'));
+const AlignmentViewer = lazy(() => import('./AlignmentViewer'));
 
 // Helper to get status color styling
 const getStatusStyle = (status) => {
@@ -16,6 +18,10 @@ const getStatusStyle = (status) => {
 };
 
 function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
+  // State for lazy-loaded alignment viewers
+  const [showProteinAlignment, setShowProteinAlignment] = useState(false);
+  const [showCodingAlignment, setShowCodingAlignment] = useState(false);
+
   // Get available organisms from the data - memoize to prevent new array reference each render
   const organisms = useMemo(() => {
     return data?.results ? Object.keys(data.results) : [];
@@ -30,6 +36,12 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
       }
     }
   }, [organisms, selectedOrganism, onOrganismChange]);
+
+  // Reset alignment visibility when organism changes
+  useEffect(() => {
+    setShowProteinAlignment(false);
+    setShowCodingAlignment(false);
+  }, [selectedOrganism]);
 
   if (loading) return <div className="loading">Loading homology data...</div>;
   if (error) return <div className="error">Error: {error}</div>;
@@ -268,11 +280,13 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                         Tree Display
                       </th>
                       <td>
-                        <PhylogeneticTreeViewer
-                          newickTree={orgData.phylogenetic_tree.newick_tree}
-                          leafCount={orgData.phylogenetic_tree.leaf_count}
-                          orthologs={orgData.ortholog_cluster?.orthologs}
-                        />
+                        <Suspense fallback={<div className="loading">Loading tree viewer...</div>}>
+                          <PhylogeneticTreeViewer
+                            newickTree={orgData.phylogenetic_tree.newick_tree}
+                            leafCount={orgData.phylogenetic_tree.leaf_count}
+                            orthologs={orgData.ortholog_cluster?.orthologs}
+                          />
+                        </Suspense>
                         <div style={{ marginTop: '8px', fontSize: '12px', color: '#666' }}>
                           {orgData.phylogenetic_tree.leaf_count} leaves
                         </div>
@@ -304,10 +318,29 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                 <tr className="section-with-divider">
                   <th style={{ verticalAlign: 'top' }}>Protein Sequence Alignment</th>
                   <td style={{ padding: '15px 0' }}>
-                    <AlignmentViewer
-                      sequences={orgData.protein_alignment.sequences}
-                      alignmentType="protein"
-                    />
+                    {!showProteinAlignment ? (
+                      <button
+                        onClick={() => setShowProteinAlignment(true)}
+                        style={{
+                          padding: '8px 16px',
+                          backgroundColor: '#1976d2',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontSize: '14px'
+                        }}
+                      >
+                        Load Protein Sequence Alignment
+                      </button>
+                    ) : (
+                      <Suspense fallback={<div className="loading">Loading alignment...</div>}>
+                        <AlignmentViewer
+                          sequences={orgData.protein_alignment.sequences}
+                          alignmentType="protein"
+                        />
+                      </Suspense>
+                    )}
                     {/* Download Links */}
                     {orgData.protein_alignment.download_links && orgData.protein_alignment.download_links.length > 0 && (
                       <div style={{ marginTop: '10px', display: 'flex', gap: '15px', fontSize: '13px' }}>
@@ -328,10 +361,29 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                 <tr className="section-with-divider">
                   <th style={{ verticalAlign: 'top' }}>Coding Sequence Alignment</th>
                   <td style={{ padding: '15px 0' }}>
-                    <AlignmentViewer
-                      sequences={orgData.coding_alignment.sequences}
-                      alignmentType="coding"
-                    />
+                    {!showCodingAlignment ? (
+                      <button
+                        onClick={() => setShowCodingAlignment(true)}
+                        style={{
+                          padding: '8px 16px',
+                          backgroundColor: '#1976d2',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontSize: '14px'
+                        }}
+                      >
+                        Load Coding Sequence Alignment
+                      </button>
+                    ) : (
+                      <Suspense fallback={<div className="loading">Loading alignment...</div>}>
+                        <AlignmentViewer
+                          sequences={orgData.coding_alignment.sequences}
+                          alignmentType="coding"
+                        />
+                      </Suspense>
+                    )}
                     {/* Download Links */}
                     {orgData.coding_alignment.download_links && orgData.coding_alignment.download_links.length > 0 && (
                       <div style={{ marginTop: '10px', display: 'flex', gap: '15px', fontSize: '13px' }}>

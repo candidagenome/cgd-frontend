@@ -1,12 +1,15 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState, Suspense, lazy } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
-import AlphaFoldViewer from './AlphaFoldViewer';
 import { renderCitationItem } from '../../utils/formatCitation.jsx';
 import './LocusComponents.css';
 
+// Lazy load heavy 3D viewer component
+const AlphaFoldViewer = lazy(() => import('./AlphaFoldViewer'));
+
 function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
   const { name: locusName } = useParams();
+  const [showAlphaFold, setShowAlphaFold] = useState(false);
 
   // Get available organisms from the data - memoize to prevent new array reference each render
   const organisms = useMemo(() => {
@@ -22,6 +25,11 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
       }
     }
   }, [organisms, selectedOrganism, onOrganismChange]);
+
+  // Reset AlphaFold viewer when organism changes
+  useEffect(() => {
+    setShowAlphaFold(false);
+  }, [selectedOrganism]);
 
   if (loading) return <div className="loading">Loading protein data...</div>;
   if (error) return <div className="error">Error: {error}</div>;
@@ -53,11 +61,7 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
               <tr>
                 <th>Standard Name</th>
                 <td>
-                  {orgData.gene_name || orgData.stanford_name ? (
-                    <strong>{orgData.gene_name || orgData.stanford_name}</strong>
-                  ) : (
-                    <span className="no-value">-</span>
-                  )}
+                  {orgData.gene_name || orgData.stanford_name || <span className="no-value">-</span>}
                 </td>
               </tr>
 
@@ -74,11 +78,7 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                   <td>
                     {orgData.allele_names.map((allele, idx) => (
                       <span key={idx}>
-                        {allele.allele_name_with_refs ? (
-                          <span dangerouslySetInnerHTML={{ __html: allele.allele_name_with_refs }} />
-                        ) : (
-                          <span>{allele.allele_name || allele.feature_name}</span>
-                        )}
+                        {allele.feature_name || allele.systematic_name || allele.allele_name}
                         {idx < orgData.allele_names.length - 1 ? ', ' : ''}
                       </span>
                     ))}
@@ -121,10 +121,29 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                 <th style={{ verticalAlign: 'top' }}>Structural Information</th>
                 <td>
                   <div style={{ marginBottom: '10px', fontWeight: '600' }}>AlphaFold Protein Structure</div>
-                  <AlphaFoldViewer
-                    key={orgData.alphafold_info?.uniprot_id || selectedOrganism}
-                    uniprotId={orgData.alphafold_info?.uniprot_id}
-                  />
+                  {showAlphaFold ? (
+                    <Suspense fallback={<div className="loading">Loading 3D viewer...</div>}>
+                      <AlphaFoldViewer
+                        key={orgData.alphafold_info?.uniprot_id || selectedOrganism}
+                        uniprotId={orgData.alphafold_info?.uniprot_id}
+                      />
+                    </Suspense>
+                  ) : (
+                    <button
+                      onClick={() => setShowAlphaFold(true)}
+                      style={{
+                        padding: '10px 20px',
+                        backgroundColor: '#1976d2',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontSize: '14px'
+                      }}
+                    >
+                      Load 3D Structure
+                    </button>
+                  )}
                 </td>
               </tr>
 

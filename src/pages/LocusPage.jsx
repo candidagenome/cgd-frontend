@@ -70,6 +70,17 @@ function LocusPage() {
     }
   }, [data.info, selectedOrganism]);
 
+  // Prefetch API data for Protein and Homology tabs in background
+  useEffect(() => {
+    if (data.info && loadersRef.current) {
+      const timer = setTimeout(() => {
+        loadersRef.current.loadProteinDetails?.();
+        loadersRef.current.loadHomologyDetails?.();
+      }, 200);
+      return () => clearTimeout(timer);
+    }
+  }, [data.info]);
+
   const handleTabClick = (tabId) => {
     setActiveTab(tabId);
   };
