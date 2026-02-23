@@ -70,14 +70,30 @@
 }
 
 /* =====================================================
+   DETAIL COMPONENT WRAPPERS - prevent layout shift
+   ===================================================== */
+
+.summary-details,
+.go-details,
+.phenotype-details,
+.protein-details,
+.homology-details,
+.sequence-details,
+.references-details,
+.history-details {
+  width: 100%;
+}
+
+/* =====================================================
    LOADING, ERROR, NO DATA
    ===================================================== */
 
 .loading {
   padding: 20px;
-  text-align: center;
+  text-align: left;
   color: #666;
   font-style: italic;
+  width: 100%;
 }
 
 .error {
