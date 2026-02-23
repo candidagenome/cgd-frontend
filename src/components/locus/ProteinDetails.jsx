@@ -1,9 +1,11 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, Suspense, lazy } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
-import AlphaFoldViewer from './AlphaFoldViewer';
 import { renderCitationItem } from '../../utils/formatCitation.jsx';
 import './LocusComponents.css';
+
+// Lazy load heavy 3D viewer component
+const AlphaFoldViewer = lazy(() => import('./AlphaFoldViewer'));
 
 function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
   const { name: locusName } = useParams();
@@ -121,10 +123,12 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                 <th style={{ verticalAlign: 'top' }}>Structural Information</th>
                 <td>
                   <div style={{ marginBottom: '10px', fontWeight: '600' }}>AlphaFold Protein Structure</div>
-                  <AlphaFoldViewer
-                    key={orgData.alphafold_info?.uniprot_id || selectedOrganism}
-                    uniprotId={orgData.alphafold_info?.uniprot_id}
-                  />
+                  <Suspense fallback={<div className="loading">Loading 3D viewer...</div>}>
+                    <AlphaFoldViewer
+                      key={orgData.alphafold_info?.uniprot_id || selectedOrganism}
+                      uniprotId={orgData.alphafold_info?.uniprot_id}
+                    />
+                  </Suspense>
                 </td>
               </tr>
 

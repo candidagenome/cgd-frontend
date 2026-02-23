@@ -70,6 +70,7 @@ function LocusPage() {
     }
   }, [data.info, selectedOrganism]);
 
+
   const handleTabClick = (tabId) => {
     setActiveTab(tabId);
   };
