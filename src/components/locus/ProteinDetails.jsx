@@ -61,11 +61,7 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
               <tr>
                 <th>Standard Name</th>
                 <td>
-                  {orgData.gene_name || orgData.stanford_name ? (
-                    <strong>{orgData.gene_name || orgData.stanford_name}</strong>
-                  ) : (
-                    <span className="no-value">-</span>
-                  )}
+                  {orgData.gene_name || orgData.stanford_name || <span className="no-value">-</span>}
                 </td>
               </tr>
 
@@ -82,11 +78,7 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                   <td>
                     {orgData.allele_names.map((allele, idx) => (
                       <span key={idx}>
-                        {allele.allele_name_with_refs ? (
-                          <span dangerouslySetInnerHTML={{ __html: allele.allele_name_with_refs }} />
-                        ) : (
-                          <span>{allele.allele_name || allele.feature_name}</span>
-                        )}
+                        {allele.feature_name || allele.systematic_name || allele.allele_name}
                         {idx < orgData.allele_names.length - 1 ? ', ' : ''}
                       </span>
                     ))}
