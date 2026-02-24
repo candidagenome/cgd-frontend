@@ -1410,6 +1410,32 @@ function LitGuideCurationPage() {
             );
           })()}
 
+          {/* Unlink Feature Section */}
+          {referenceData.pubmed && (
+            <div style={styles.unlinkSection}>
+              <h3 style={styles.unlinkHeader}>Unlink Feature from Paper</h3>
+              <div style={styles.unlinkRow}>
+                <input
+                  type="text"
+                  value={unlinkFeature}
+                  onChange={(e) => setUnlinkFeature(e.target.value)}
+                  placeholder="Feature name(s) to unlink..."
+                  style={styles.unlinkInput}
+                />
+                <button
+                  onClick={handleUnlinkFeature}
+                  disabled={!unlinkFeature.trim() || unlinking}
+                  style={styles.unlinkButton}
+                >
+                  {unlinking ? 'Unlinking...' : 'Unlink'}
+                </button>
+              </div>
+              <p style={styles.unlinkHelp}>
+                Separate multiple features with | or space. This will remove the link between the paper and feature(s), including any topic associations.
+              </p>
+            </div>
+          )}
+
           {/* Assign Literature Guide Topics Section */}
           <div id="Assign" style={styles.assignSection}>
             <h3 style={styles.assignHeader}>Assign Literature Guide Topics to this Paper</h3>
@@ -1607,32 +1633,6 @@ function LitGuideCurationPage() {
               </button>
             </div>
           </div>
-
-          {/* Unlink Feature Section */}
-          {referenceData.pubmed && (
-            <div style={styles.unlinkSection}>
-              <h3 style={styles.unlinkHeader}>Unlink Feature from Paper</h3>
-              <div style={styles.unlinkRow}>
-                <input
-                  type="text"
-                  value={unlinkFeature}
-                  onChange={(e) => setUnlinkFeature(e.target.value)}
-                  placeholder="Feature name(s) to unlink..."
-                  style={styles.unlinkInput}
-                />
-                <button
-                  onClick={handleUnlinkFeature}
-                  disabled={!unlinkFeature.trim() || unlinking}
-                  style={styles.unlinkButton}
-                >
-                  {unlinking ? 'Unlinking...' : 'Unlink'}
-                </button>
-              </div>
-              <p style={styles.unlinkHelp}>
-                Separate multiple features with | or space. This will remove the link between the paper and feature(s), including any topic associations.
-              </p>
-            </div>
-          )}
 
           {/* Non-Gene Topics Section */}
           <div id="NongeneTopics" style={styles.nongeneSection}>
