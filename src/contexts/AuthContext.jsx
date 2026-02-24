@@ -12,9 +12,9 @@ import authApi from '../api/authApi';
 
 const AuthContext = createContext(null);
 
-// Default refresh interval: 10 minutes (safe default if backend doesn't specify)
+// Default refresh interval: 1 week (safe default if backend doesn't specify)
 // Will be overridden by actual expires_in from backend if provided
-const DEFAULT_REFRESH_INTERVAL_MS = 10 * 60 * 1000;
+const DEFAULT_REFRESH_INTERVAL_MS = 7 * 24 * 60 * 60 * 1000;
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);

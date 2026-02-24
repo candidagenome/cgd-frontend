@@ -26,6 +26,12 @@ function CuratorCentralPage() {
         </div>
       </div>
 
+      <div style={styles.notice}>
+        <strong>Note:</strong> Tools shown in <span style={styles.fadedExample}>faded text</span> have
+        been refactored but have not yet been fully tested. Please let the group know if you
+        would like to use any of these tools.
+      </div>
+
       <div style={styles.columns}>
         {/* Left Column */}
         <div style={styles.column}>
@@ -235,6 +241,18 @@ const styles = {
     color: '#999',
   },
   disabledLink: {
+    color: '#999',
+  },
+  notice: {
+    backgroundColor: '#fff3cd',
+    border: '1px solid #ffc107',
+    borderRadius: '4px',
+    padding: '0.75rem 1rem',
+    marginBottom: '1.5rem',
+    fontSize: '0.95rem',
+    color: '#856404',
+  },
+  fadedExample: {
     color: '#999',
   },
 };

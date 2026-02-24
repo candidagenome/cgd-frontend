@@ -537,11 +537,6 @@ function PhenotypeCurationPage() {
       <div style={styles.existingSection}>
         <h2 style={styles.existingHeader}>
           Current Data ({featureData?.annotations?.length || 0})
-          {featureData?.features_searched > 1 && (
-            <span style={styles.featuresSearched}>
-              {' '}(from {featureData.features_searched} features)
-            </span>
-          )}
         </h2>
 
         {featureData?.annotations?.length === 0 ? (
@@ -977,11 +972,6 @@ const styles = {
     backgroundColor: '#CCCCFF',
     padding: '0.5rem',
     margin: '-0.5rem -0.5rem 0.5rem -0.5rem',
-  },
-  featuresSearched: {
-    fontSize: '0.85rem',
-    fontWeight: 'normal',
-    color: '#666',
   },
   noAnnotations: {
     padding: '1rem',
