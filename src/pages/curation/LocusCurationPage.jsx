@@ -4,7 +4,7 @@
  * Full locus/feature information curation interface.
  * - Search for features
  * - Edit basic feature fields (gene name, description, headline, etc.)
- * - Manage aliases, notes, and URLs
+ * - Manage aliases and notes
  *
  * Mirrors legacy locusCuration CGI functionality.
  */
@@ -61,11 +61,9 @@ function LocusCurationPage() {
   // Add item forms state
   const [showAddAlias, setShowAddAlias] = useState(false);
   const [showAddNote, setShowAddNote] = useState(false);
-  const [showAddUrl, setShowAddUrl] = useState(false);
 
   const [newAlias, setNewAlias] = useState({ alias_name: '', alias_type: 'Uniform', reference_no: '' });
   const [newNote, setNewNote] = useState({ note_type: '', note_text: '' });
-  const [newUrl, setNewUrl] = useState({ url_type: '', link: '' });
 
   // Load feature details
   const loadFeature = useCallback(async (identifier) => {
@@ -225,37 +223,6 @@ function LocusCurationPage() {
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
       setError(err.response?.data?.detail || 'Failed to remove note');
-    }
-  };
-
-  // Add URL
-  const handleAddUrl = async (e) => {
-    e.preventDefault();
-    if (!newUrl.url_type.trim() || !newUrl.link.trim()) return;
-
-    try {
-      await locusCurationApi.addUrl(featureData.feature_no, newUrl.url_type, newUrl.link);
-      setSuccessMessage('URL added');
-      setShowAddUrl(false);
-      setNewUrl({ url_type: '', link: '' });
-      loadFeature(featureData.feature_no);
-      setTimeout(() => setSuccessMessage(null), 3000);
-    } catch (err) {
-      setError(err.response?.data?.detail || 'Failed to add URL');
-    }
-  };
-
-  // Remove URL
-  const handleRemoveUrl = async (featUrlNo) => {
-    if (!window.confirm('Are you sure you want to remove this URL?')) return;
-
-    try {
-      await locusCurationApi.removeUrl(featUrlNo);
-      setSuccessMessage('URL removed');
-      loadFeature(featureData.feature_no);
-      setTimeout(() => setSuccessMessage(null), 3000);
-    } catch (err) {
-      setError(err.response?.data?.detail || 'Failed to remove URL');
     }
   };
 
@@ -757,92 +724,6 @@ function LocusCurationPage() {
             )}
           </div>
 
-          {/* URLs Section */}
-          <div style={styles.infoSection}>
-            <div style={styles.sectionHeaderRow}>
-              <h3 style={styles.sectionHeader}>URLs ({featureData.urls?.length || 0})</h3>
-              <button
-                onClick={() => setShowAddUrl(!showAddUrl)}
-                style={styles.addButton}
-              >
-                {showAddUrl ? 'Cancel' : '+ Add URL'}
-              </button>
-            </div>
-
-            {showAddUrl && (
-              <form onSubmit={handleAddUrl} style={styles.addForm}>
-                <div style={styles.formRow}>
-                  <label style={styles.formLabelSmall}>URL Type:</label>
-                  <select
-                    value={newUrl.url_type}
-                    onChange={(e) => setNewUrl({ ...newUrl, url_type: e.target.value })}
-                    style={styles.formSelect}
-                    required
-                  >
-                    <option value="">Select type...</option>
-                    <option value="query by CGD ORF name">query by CGD ORF name</option>
-                    <option value="query by ID assigned by database">query by ID assigned by database</option>
-                    <option value="Phenotype Viewer">Phenotype Viewer</option>
-                    <option value="Genome View">Genome View</option>
-                    <option value="Retrieve Reads">Retrieve Reads</option>
-                    <option value="Download Datasets">Download Datasets</option>
-                    <option value="Reference Data">Reference Data</option>
-                    <option value="Reference LINKOUT">Reference LINKOUT</option>
-                    <option value="Reference supplement">Reference supplement</option>
-                    <option value="Reference full text">Reference full text</option>
-                    <option value="Research summary">Research summary</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-                <div style={styles.formRow}>
-                  <label style={styles.formLabelSmall}>Link:</label>
-                  <input
-                    type="url"
-                    value={newUrl.link}
-                    onChange={(e) => setNewUrl({ ...newUrl, link: e.target.value })}
-                    style={styles.formInputWide}
-                    placeholder="https://..."
-                    required
-                  />
-                </div>
-                <button type="submit" style={styles.submitButton}>Add URL</button>
-              </form>
-            )}
-
-            {featureData.urls?.length > 0 ? (
-              <table style={styles.table}>
-                <thead>
-                  <tr>
-                    <th style={styles.thMediumLarge}>Type</th>
-                    <th style={styles.th}>Link</th>
-                    <th style={styles.thAction}>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {featureData.urls.map((url) => (
-                    <tr key={url.feat_url_no}>
-                      <td style={styles.td}>{url.url_type}</td>
-                      <td style={styles.td}>
-                        <a href={url.link} target="_blank" rel="noopener noreferrer">
-                          {url.link}
-                        </a>
-                      </td>
-                      <td style={styles.tdAction}>
-                        <button
-                          onClick={() => handleRemoveUrl(url.feat_url_no)}
-                          style={styles.deleteButton}
-                        >
-                          Remove
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <p style={styles.noItems}>No URLs.</p>
-            )}
-          </div>
         </div>
       )}
 
