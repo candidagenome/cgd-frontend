@@ -304,6 +304,81 @@
 }
 
 /* ===========================================
+   GO / PHENOTYPE ANNOTATION SECTIONS
+   =========================================== */
+
+.annotation-intro {
+  margin: 0 0 15px 0;
+}
+
+.annotation-aspect-section {
+  margin-bottom: 20px;
+}
+
+.aspect-header {
+  background: #e8f4fd;
+  color: #333;
+  padding: 8px 15px;
+  margin: 0 0 1px 0;
+  font-size: 1rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.count-badge {
+  background: #1976d2;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: normal;
+}
+
+.annotation-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  font-size: 0.9rem;
+}
+
+.annotation-table th,
+.annotation-table td {
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.annotation-table th {
+  background: #e0e0e0;
+  font-weight: bold;
+}
+
+.annotation-table tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+.annotation-table tr:hover {
+  background: #f0f0f0;
+}
+
+.annotation-table a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.annotation-table a:hover {
+  text-decoration: underline;
+}
+
+.annotation-table .organism-label {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* ===========================================
    AUTHOR SEARCH SECTION
    =========================================== */
 

@@ -37,10 +37,16 @@ function ReferencePage() {
   const [authorSearchLoading, setAuthorSearchLoading] = useState(false);
   const [authorSearchError, setAuthorSearchError] = useState(null);
 
-  // Load literature topics data on mount
+  // Load literature topics, GO, and phenotype data on mount
   useEffect(() => {
     if (loaders.loadLiteratureTopics) {
       loaders.loadLiteratureTopics();
+    }
+    if (loaders.loadGoDetails) {
+      loaders.loadGoDetails();
+    }
+    if (loaders.loadPhenotypeDetails) {
+      loaders.loadPhenotypeDetails();
     }
   }, [loaders]);
 
@@ -383,6 +389,173 @@ function ReferencePage() {
     );
   };
 
+  // Aspect labels for GO annotations
+  const ASPECT_LABELS = {
+    'F': 'Molecular Function',
+    'P': 'Biological Process',
+    'C': 'Cellular Component',
+  };
+
+  // Render GO annotations section
+  const renderGoSection = () => {
+    if (loading.goDetails) {
+      return (
+        <div className="section" id="go-annotations">
+          <h2 className="section-header">GO Annotations</h2>
+          <div className="section-content">
+            <div className="loading">Loading GO annotations...</div>
+          </div>
+        </div>
+      );
+    }
+
+    if (errors.goDetails || !data.goDetails) {
+      return null;
+    }
+
+    const { annotations } = data.goDetails;
+
+    if (!annotations || annotations.length === 0) {
+      return null;
+    }
+
+    // Group annotations by aspect
+    const groupedByAspect = {};
+    annotations.forEach(ann => {
+      const aspect = ann.go_aspect || 'P';
+      if (!groupedByAspect[aspect]) {
+        groupedByAspect[aspect] = [];
+      }
+      groupedByAspect[aspect].push(ann);
+    });
+
+    return (
+      <div className="section" id="go-annotations">
+        <h2 className="section-header">GO Annotations</h2>
+        <div className="section-content">
+          <p className="annotation-intro">
+            This reference has been used to make <strong>{annotations.length}</strong> GO annotation{annotations.length !== 1 ? 's' : ''}.
+          </p>
+
+          {['F', 'P', 'C'].map(aspect => {
+            const aspectAnnotations = groupedByAspect[aspect];
+            if (!aspectAnnotations || aspectAnnotations.length === 0) return null;
+
+            return (
+              <div key={aspect} className="annotation-aspect-section">
+                <h4 className="aspect-header">
+                  {ASPECT_LABELS[aspect]}
+                  <span className="count-badge">{aspectAnnotations.length}</span>
+                </h4>
+                <table className="data-table annotation-table">
+                  <thead>
+                    <tr>
+                      <th>Gene</th>
+                      <th>GO Term</th>
+                      <th>GO ID</th>
+                      <th>Evidence</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {aspectAnnotations.map((ann, idx) => (
+                      <tr key={idx}>
+                        <td>
+                          <Link to={`/locus/${ann.feature_name}`}>
+                            {ann.gene_name || ann.feature_name.replace(/_[A-Z]$/, '')}
+                          </Link>
+                          <br />
+                          <span className="organism-label">
+                            (<em>{getOrganismAbbrev(ann.organism_name)}</em>)
+                          </span>
+                        </td>
+                        <td>
+                          <Link to={`/go/${ann.goid}`}>{ann.go_term}</Link>
+                        </td>
+                        <td>
+                          <Link to={`/go/${ann.goid}`}>{ann.goid}</Link>
+                        </td>
+                        <td>{ann.evidence}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  // Render phenotype annotations section
+  const renderPhenotypeSection = () => {
+    if (loading.phenotypeDetails) {
+      return (
+        <div className="section" id="phenotype-annotations">
+          <h2 className="section-header">Phenotype Annotations</h2>
+          <div className="section-content">
+            <div className="loading">Loading phenotype annotations...</div>
+          </div>
+        </div>
+      );
+    }
+
+    if (errors.phenotypeDetails || !data.phenotypeDetails) {
+      return null;
+    }
+
+    const { annotations } = data.phenotypeDetails;
+
+    if (!annotations || annotations.length === 0) {
+      return null;
+    }
+
+    return (
+      <div className="section" id="phenotype-annotations">
+        <h2 className="section-header">Phenotype Annotations</h2>
+        <div className="section-content">
+          <p className="annotation-intro">
+            This reference has been used to make <strong>{annotations.length}</strong> phenotype annotation{annotations.length !== 1 ? 's' : ''}.
+          </p>
+
+          <table className="data-table annotation-table">
+            <thead>
+              <tr>
+                <th>Gene</th>
+                <th>Phenotype</th>
+                <th>Experiment Type</th>
+                <th>Mutant Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              {annotations.map((ann, idx) => (
+                <tr key={idx}>
+                  <td>
+                    <Link to={`/locus/${ann.feature_name}`}>
+                      {ann.gene_name || ann.feature_name.replace(/_[A-Z]$/, '')}
+                    </Link>
+                    <br />
+                    <span className="organism-label">
+                      (<em>{getOrganismAbbrev(ann.organism_name)}</em>)
+                    </span>
+                  </td>
+                  <td>
+                    <Link to={`/phenotype/search?observable=${encodeURIComponent(ann.observable)}`}>
+                      {ann.observable}
+                    </Link>
+                    {ann.qualifier && `: ${ann.qualifier}`}
+                  </td>
+                  <td>{ann.experiment_type}</td>
+                  <td>{ann.mutant_type}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  };
+
   // Render author search section
   // Highlight author name in author list
   const highlightAuthor = (authorList, searchQuery) => {
@@ -524,6 +697,14 @@ function ReferencePage() {
       links.push({ id: 'summary', label: 'Summary Chart' });
     }
 
+    if (data.goDetails?.annotations?.length > 0) {
+      links.push({ id: 'go-annotations', label: 'GO Annotations' });
+    }
+
+    if (data.phenotypeDetails?.annotations?.length > 0) {
+      links.push({ id: 'phenotype-annotations', label: 'Phenotype Annotations' });
+    }
+
     if (data.info?.result?.authors?.length > 0) {
       links.push({ id: 'author', label: 'Author Search' });
     }
@@ -565,6 +746,10 @@ function ReferencePage() {
       {renderAbstract()}
 
       {renderTopicsSection()}
+
+      {renderGoSection()}
+
+      {renderPhenotypeSection()}
 
       {renderAuthorSearch()}
 
