@@ -6,7 +6,24 @@ import { formatCitationString, CitationLinksBelow, renderCitationItem } from '..
 import './ReferencePage.css';
 
 const GENES_PER_TABLE = 10;
-const ROWS_PER_PAGE = 20;
+const ROWS_PER_PAGE = 10;
+
+// Download data as TSV file
+const downloadAsTsv = (data, headers, filename) => {
+  const headerRow = headers.join('\t');
+  const dataRows = data.map(row => row.join('\t')).join('\n');
+  const tsvContent = `${headerRow}\n${dataRows}`;
+
+  const blob = new Blob([tsvContent], { type: 'text/tab-separated-values' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+};
 
 // Get display name for a gene - use gene_name if available, otherwise strip _A suffix from feature_name
 const getGeneDisplayName = (feature) => {
@@ -494,13 +511,33 @@ function ReferencePage() {
       groupedByAspect[aspect].push(ann);
     });
 
+    // Download handler for GO annotations
+    const handleGoDownload = () => {
+      const headers = ['Gene', 'Gene Name', 'Organism', 'GO Aspect', 'GO Term', 'GO ID', 'Evidence'];
+      const rows = annotations.map(ann => [
+        ann.feature_name,
+        ann.gene_name || '',
+        ann.organism_name,
+        ASPECT_LABELS[ann.go_aspect] || ann.go_aspect,
+        ann.go_term,
+        ann.goid,
+        ann.evidence,
+      ]);
+      downloadAsTsv(rows, headers, `go_annotations_${id}.tsv`);
+    };
+
     return (
       <div className="section" id="go-annotations">
         <h2 className="section-header">GO Annotations</h2>
         <div className="section-content">
-          <p className="annotation-intro">
-            This reference has been used to make <strong>{annotations.length}</strong> GO annotation{annotations.length !== 1 ? 's' : ''}.
-          </p>
+          <div className="annotation-header-row">
+            <p className="annotation-intro">
+              This reference has been used to make <strong>{annotations.length}</strong> GO annotation{annotations.length !== 1 ? 's' : ''}.
+            </p>
+            <button onClick={handleGoDownload} className="download-btn" title="Download GO annotations as TSV">
+              Download
+            </button>
+          </div>
 
           {annotations.length > ROWS_PER_PAGE && renderPagination(goPage, totalPages, setGoPage, annotations.length, 'annotations')}
 
@@ -584,13 +621,33 @@ function ReferencePage() {
     const endIdx = startIdx + ROWS_PER_PAGE;
     const paginatedAnnotations = annotations.slice(startIdx, endIdx);
 
+    // Download handler for phenotype annotations
+    const handlePhenotypeDownload = () => {
+      const headers = ['Gene', 'Gene Name', 'Organism', 'Phenotype', 'Qualifier', 'Experiment Type', 'Mutant Type'];
+      const rows = annotations.map(ann => [
+        ann.feature_name,
+        ann.gene_name || '',
+        ann.organism_name,
+        ann.observable,
+        ann.qualifier || '',
+        ann.experiment_type,
+        ann.mutant_type,
+      ]);
+      downloadAsTsv(rows, headers, `phenotype_annotations_${id}.tsv`);
+    };
+
     return (
       <div className="section" id="phenotype-annotations">
         <h2 className="section-header">Phenotype Annotations</h2>
         <div className="section-content">
-          <p className="annotation-intro">
-            This reference has been used to make <strong>{annotations.length}</strong> phenotype annotation{annotations.length !== 1 ? 's' : ''}.
-          </p>
+          <div className="annotation-header-row">
+            <p className="annotation-intro">
+              This reference has been used to make <strong>{annotations.length}</strong> phenotype annotation{annotations.length !== 1 ? 's' : ''}.
+            </p>
+            <button onClick={handlePhenotypeDownload} className="download-btn" title="Download phenotype annotations as TSV">
+              Download
+            </button>
+          </div>
 
           {annotations.length > ROWS_PER_PAGE && renderPagination(phenotypePage, totalPages, setPhenotypePage, annotations.length, 'annotations')}
 
