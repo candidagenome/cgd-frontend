@@ -6,6 +6,24 @@ import { formatCitationString, CitationLinksBelow, renderCitationItem } from '..
 import './ReferencePage.css';
 
 const GENES_PER_TABLE = 10;
+const ROWS_PER_PAGE = 10;
+
+// Download data as TSV file
+const downloadAsTsv = (data, headers, filename) => {
+  const headerRow = headers.join('\t');
+  const dataRows = data.map(row => row.join('\t')).join('\n');
+  const tsvContent = `${headerRow}\n${dataRows}`;
+
+  const blob = new Blob([tsvContent], { type: 'text/tab-separated-values' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+};
 
 // Get display name for a gene - use gene_name if available, otherwise strip _A suffix from feature_name
 const getGeneDisplayName = (feature) => {
@@ -36,11 +54,25 @@ function ReferencePage() {
   const [authorSearchResults, setAuthorSearchResults] = useState(null);
   const [authorSearchLoading, setAuthorSearchLoading] = useState(false);
   const [authorSearchError, setAuthorSearchError] = useState(null);
+  const [goPage, setGoPage] = useState(1);
+  const [phenotypePage, setPhenotypePage] = useState(1);
 
-  // Load literature topics data on mount
+  // Reset pagination when reference changes
+  useEffect(() => {
+    setGoPage(1);
+    setPhenotypePage(1);
+  }, [id]);
+
+  // Load literature topics, GO, and phenotype data on mount
   useEffect(() => {
     if (loaders.loadLiteratureTopics) {
       loaders.loadLiteratureTopics();
+    }
+    if (loaders.loadGoDetails) {
+      loaders.loadGoDetails();
+    }
+    if (loaders.loadPhenotypeDetails) {
+      loaders.loadPhenotypeDetails();
     }
   }, [loaders]);
 
@@ -383,6 +415,282 @@ function ReferencePage() {
     );
   };
 
+  // Aspect labels for GO annotations
+  const ASPECT_LABELS = {
+    'F': 'Molecular Function',
+    'P': 'Biological Process',
+    'C': 'Cellular Component',
+  };
+
+  // Render pagination controls
+  const renderPagination = (currentPage, totalPages, onPageChange, totalItems, itemName) => {
+    if (totalPages <= 1) return null;
+
+    const startItem = (currentPage - 1) * ROWS_PER_PAGE + 1;
+    const endItem = Math.min(currentPage * ROWS_PER_PAGE, totalItems);
+
+    return (
+      <div className="pagination-controls">
+        <span className="pagination-info">
+          Showing {startItem}-{endItem} of {totalItems} {itemName}
+        </span>
+        <div className="pagination-buttons">
+          <button
+            onClick={() => onPageChange(1)}
+            disabled={currentPage === 1}
+            className="pagination-btn"
+            title="First page"
+          >
+            &laquo;
+          </button>
+          <button
+            onClick={() => onPageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="pagination-btn"
+          >
+            Previous
+          </button>
+          <span className="pagination-page">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() => onPageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="pagination-btn"
+          >
+            Next
+          </button>
+          <button
+            onClick={() => onPageChange(totalPages)}
+            disabled={currentPage === totalPages}
+            className="pagination-btn"
+            title="Last page"
+          >
+            &raquo;
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  // Render GO annotations section
+  const renderGoSection = () => {
+    if (loading.goDetails) {
+      return (
+        <div className="section" id="go-annotations">
+          <h2 className="section-header">GO Annotations</h2>
+          <div className="section-content">
+            <div className="loading">Loading GO annotations...</div>
+          </div>
+        </div>
+      );
+    }
+
+    if (errors.goDetails || !data.goDetails) {
+      return null;
+    }
+
+    const { annotations } = data.goDetails;
+
+    if (!annotations || annotations.length === 0) {
+      return null;
+    }
+
+    const totalPages = Math.ceil(annotations.length / ROWS_PER_PAGE);
+    const startIdx = (goPage - 1) * ROWS_PER_PAGE;
+    const endIdx = startIdx + ROWS_PER_PAGE;
+    const paginatedAnnotations = annotations.slice(startIdx, endIdx);
+
+    // Group paginated annotations by aspect
+    const groupedByAspect = {};
+    paginatedAnnotations.forEach(ann => {
+      const aspect = ann.go_aspect || 'P';
+      if (!groupedByAspect[aspect]) {
+        groupedByAspect[aspect] = [];
+      }
+      groupedByAspect[aspect].push(ann);
+    });
+
+    // Download handler for GO annotations
+    const handleGoDownload = () => {
+      const headers = ['Gene', 'Gene Name', 'Organism', 'GO Aspect', 'GO Term', 'GO ID', 'Evidence'];
+      const rows = annotations.map(ann => [
+        ann.feature_name,
+        ann.gene_name || '',
+        ann.organism_name,
+        ASPECT_LABELS[ann.go_aspect] || ann.go_aspect,
+        ann.go_term,
+        ann.goid,
+        ann.evidence,
+      ]);
+      downloadAsTsv(rows, headers, `go_annotations_${id}.tsv`);
+    };
+
+    return (
+      <div className="section" id="go-annotations">
+        <h2 className="section-header">GO Annotations</h2>
+        <div className="section-content">
+          <div className="annotation-header-row">
+            <p className="annotation-intro">
+              This reference has been used to make <strong>{annotations.length}</strong> GO annotation{annotations.length !== 1 ? 's' : ''}.
+            </p>
+            <button onClick={handleGoDownload} className="download-btn" title="Download GO annotations as TSV">
+              Download
+            </button>
+          </div>
+
+          {annotations.length > ROWS_PER_PAGE && renderPagination(goPage, totalPages, setGoPage, annotations.length, 'annotations')}
+
+          {['F', 'P', 'C'].map(aspect => {
+            const aspectAnnotations = groupedByAspect[aspect];
+            if (!aspectAnnotations || aspectAnnotations.length === 0) return null;
+
+            return (
+              <div key={aspect} className="annotation-aspect-section">
+                <h4 className="aspect-header">
+                  {ASPECT_LABELS[aspect]}
+                  <span className="count-badge">{aspectAnnotations.length}</span>
+                </h4>
+                <table className="data-table annotation-table">
+                  <thead>
+                    <tr>
+                      <th>Gene</th>
+                      <th>GO Term</th>
+                      <th>GO ID</th>
+                      <th>Evidence</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {aspectAnnotations.map((ann, idx) => (
+                      <tr key={idx}>
+                        <td>
+                          <Link to={`/locus/${ann.feature_name}`}>
+                            {ann.gene_name || ann.feature_name.replace(/_[A-Z]$/, '')}
+                          </Link>
+                          <br />
+                          <span className="organism-label">
+                            (<em>{getOrganismAbbrev(ann.organism_name)}</em>)
+                          </span>
+                        </td>
+                        <td>
+                          <Link to={`/go/${ann.goid}`}>{ann.go_term}</Link>
+                        </td>
+                        <td>
+                          <Link to={`/go/${ann.goid}`}>{ann.goid}</Link>
+                        </td>
+                        <td>{ann.evidence}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            );
+          })}
+
+          {annotations.length > ROWS_PER_PAGE && renderPagination(goPage, totalPages, setGoPage, annotations.length, 'annotations')}
+        </div>
+      </div>
+    );
+  };
+
+  // Render phenotype annotations section
+  const renderPhenotypeSection = () => {
+    if (loading.phenotypeDetails) {
+      return (
+        <div className="section" id="phenotype-annotations">
+          <h2 className="section-header">Phenotype Annotations</h2>
+          <div className="section-content">
+            <div className="loading">Loading phenotype annotations...</div>
+          </div>
+        </div>
+      );
+    }
+
+    if (errors.phenotypeDetails || !data.phenotypeDetails) {
+      return null;
+    }
+
+    const { annotations } = data.phenotypeDetails;
+
+    if (!annotations || annotations.length === 0) {
+      return null;
+    }
+
+    const totalPages = Math.ceil(annotations.length / ROWS_PER_PAGE);
+    const startIdx = (phenotypePage - 1) * ROWS_PER_PAGE;
+    const endIdx = startIdx + ROWS_PER_PAGE;
+    const paginatedAnnotations = annotations.slice(startIdx, endIdx);
+
+    // Download handler for phenotype annotations
+    const handlePhenotypeDownload = () => {
+      const headers = ['Gene', 'Gene Name', 'Organism', 'Phenotype', 'Qualifier', 'Experiment Type', 'Mutant Type'];
+      const rows = annotations.map(ann => [
+        ann.feature_name,
+        ann.gene_name || '',
+        ann.organism_name,
+        ann.observable,
+        ann.qualifier || '',
+        ann.experiment_type,
+        ann.mutant_type,
+      ]);
+      downloadAsTsv(rows, headers, `phenotype_annotations_${id}.tsv`);
+    };
+
+    return (
+      <div className="section" id="phenotype-annotations">
+        <h2 className="section-header">Phenotype Annotations</h2>
+        <div className="section-content">
+          <div className="annotation-header-row">
+            <p className="annotation-intro">
+              This reference has been used to make <strong>{annotations.length}</strong> phenotype annotation{annotations.length !== 1 ? 's' : ''}.
+            </p>
+            <button onClick={handlePhenotypeDownload} className="download-btn" title="Download phenotype annotations as TSV">
+              Download
+            </button>
+          </div>
+
+          {annotations.length > ROWS_PER_PAGE && renderPagination(phenotypePage, totalPages, setPhenotypePage, annotations.length, 'annotations')}
+
+          <table className="data-table annotation-table">
+            <thead>
+              <tr>
+                <th>Gene</th>
+                <th>Phenotype</th>
+                <th>Experiment Type</th>
+                <th>Mutant Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              {paginatedAnnotations.map((ann, idx) => (
+                <tr key={idx}>
+                  <td>
+                    <Link to={`/locus/${ann.feature_name}`}>
+                      {ann.gene_name || ann.feature_name.replace(/_[A-Z]$/, '')}
+                    </Link>
+                    <br />
+                    <span className="organism-label">
+                      (<em>{getOrganismAbbrev(ann.organism_name)}</em>)
+                    </span>
+                  </td>
+                  <td>
+                    <Link to={`/phenotype/search?observable=${encodeURIComponent(ann.observable)}`}>
+                      {ann.observable}
+                    </Link>
+                    {ann.qualifier && `: ${ann.qualifier}`}
+                  </td>
+                  <td>{ann.experiment_type}</td>
+                  <td>{ann.mutant_type}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {annotations.length > ROWS_PER_PAGE && renderPagination(phenotypePage, totalPages, setPhenotypePage, annotations.length, 'annotations')}
+        </div>
+      </div>
+    );
+  };
+
   // Render author search section
   // Highlight author name in author list
   const highlightAuthor = (authorList, searchQuery) => {
@@ -524,6 +832,14 @@ function ReferencePage() {
       links.push({ id: 'summary', label: 'Summary Chart' });
     }
 
+    if (data.goDetails?.annotations?.length > 0) {
+      links.push({ id: 'go-annotations', label: 'GO Annotations' });
+    }
+
+    if (data.phenotypeDetails?.annotations?.length > 0) {
+      links.push({ id: 'phenotype-annotations', label: 'Phenotype Annotations' });
+    }
+
     if (data.info?.result?.authors?.length > 0) {
       links.push({ id: 'author', label: 'Author Search' });
     }
@@ -563,8 +879,16 @@ function ReferencePage() {
       {renderCitation()}
 
       {renderAbstract()}
+      {data.info?.result?.abstract && renderPageNav()}
 
       {renderTopicsSection()}
+      {(data.literatureTopics?.all_features?.length > 0 || data.literatureTopics?.topics?.length > 0) && renderPageNav()}
+
+      {renderGoSection()}
+      {data.goDetails?.annotations?.length > 0 && renderPageNav()}
+
+      {renderPhenotypeSection()}
+      {data.phenotypeDetails?.annotations?.length > 0 && renderPageNav()}
 
       {renderAuthorSearch()}
 

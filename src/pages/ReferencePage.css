@@ -304,6 +304,151 @@
 }
 
 /* ===========================================
+   GO / PHENOTYPE ANNOTATION SECTIONS
+   =========================================== */
+
+.annotation-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.annotation-intro {
+  margin: 0;
+}
+
+.download-btn {
+  padding: 6px 16px;
+  background: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.download-btn:hover {
+  background: #1565c0;
+}
+
+.annotation-aspect-section {
+  margin-bottom: 20px;
+}
+
+.aspect-header {
+  background: #e8f4fd;
+  color: #333;
+  padding: 8px 15px;
+  margin: 0 0 1px 0;
+  font-size: 1rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.count-badge {
+  background: #1976d2;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: normal;
+}
+
+.annotation-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  font-size: 0.9rem;
+}
+
+.annotation-table th,
+.annotation-table td {
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.annotation-table th {
+  background: #e0e0e0;
+  font-weight: bold;
+}
+
+.annotation-table tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+.annotation-table tr:hover {
+  background: #f0f0f0;
+}
+
+.annotation-table a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.annotation-table a:hover {
+  text-decoration: underline;
+}
+
+.annotation-table .organism-label {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* Pagination Controls */
+.pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  margin: 10px 0;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  background: #fafafa;
+}
+
+.pagination-info {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.pagination-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pagination-btn {
+  padding: 6px 12px;
+  background: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: #1565c0;
+}
+
+.pagination-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination-page {
+  font-size: 0.9rem;
+  color: #333;
+  padding: 0 10px;
+}
+
+/* ===========================================
    AUTHOR SEARCH SECTION
    =========================================== */
 
