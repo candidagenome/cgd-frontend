@@ -744,12 +744,16 @@ function ReferencePage() {
       {renderCitation()}
 
       {renderAbstract()}
+      {data.info?.result?.abstract && renderPageNav()}
 
       {renderTopicsSection()}
+      {(data.literatureTopics?.all_features?.length > 0 || data.literatureTopics?.topics?.length > 0) && renderPageNav()}
 
       {renderGoSection()}
+      {data.goDetails?.annotations?.length > 0 && renderPageNav()}
 
       {renderPhenotypeSection()}
+      {data.phenotypeDetails?.annotations?.length > 0 && renderPageNav()}
 
       {renderAuthorSearch()}
 
