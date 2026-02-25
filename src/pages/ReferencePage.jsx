@@ -6,6 +6,7 @@ import { formatCitationString, CitationLinksBelow, renderCitationItem } from '..
 import './ReferencePage.css';
 
 const GENES_PER_TABLE = 10;
+const ROWS_PER_PAGE = 20;
 
 // Get display name for a gene - use gene_name if available, otherwise strip _A suffix from feature_name
 const getGeneDisplayName = (feature) => {
@@ -36,6 +37,14 @@ function ReferencePage() {
   const [authorSearchResults, setAuthorSearchResults] = useState(null);
   const [authorSearchLoading, setAuthorSearchLoading] = useState(false);
   const [authorSearchError, setAuthorSearchError] = useState(null);
+  const [goPage, setGoPage] = useState(1);
+  const [phenotypePage, setPhenotypePage] = useState(1);
+
+  // Reset pagination when reference changes
+  useEffect(() => {
+    setGoPage(1);
+    setPhenotypePage(1);
+  }, [id]);
 
   // Load literature topics, GO, and phenotype data on mount
   useEffect(() => {
@@ -396,6 +405,57 @@ function ReferencePage() {
     'C': 'Cellular Component',
   };
 
+  // Render pagination controls
+  const renderPagination = (currentPage, totalPages, onPageChange, totalItems, itemName) => {
+    if (totalPages <= 1) return null;
+
+    const startItem = (currentPage - 1) * ROWS_PER_PAGE + 1;
+    const endItem = Math.min(currentPage * ROWS_PER_PAGE, totalItems);
+
+    return (
+      <div className="pagination-controls">
+        <span className="pagination-info">
+          Showing {startItem}-{endItem} of {totalItems} {itemName}
+        </span>
+        <div className="pagination-buttons">
+          <button
+            onClick={() => onPageChange(1)}
+            disabled={currentPage === 1}
+            className="pagination-btn"
+            title="First page"
+          >
+            &laquo;
+          </button>
+          <button
+            onClick={() => onPageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="pagination-btn"
+          >
+            Previous
+          </button>
+          <span className="pagination-page">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() => onPageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="pagination-btn"
+          >
+            Next
+          </button>
+          <button
+            onClick={() => onPageChange(totalPages)}
+            disabled={currentPage === totalPages}
+            className="pagination-btn"
+            title="Last page"
+          >
+            &raquo;
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   // Render GO annotations section
   const renderGoSection = () => {
     if (loading.goDetails) {
@@ -419,9 +479,14 @@ function ReferencePage() {
       return null;
     }
 
-    // Group annotations by aspect
+    const totalPages = Math.ceil(annotations.length / ROWS_PER_PAGE);
+    const startIdx = (goPage - 1) * ROWS_PER_PAGE;
+    const endIdx = startIdx + ROWS_PER_PAGE;
+    const paginatedAnnotations = annotations.slice(startIdx, endIdx);
+
+    // Group paginated annotations by aspect
     const groupedByAspect = {};
-    annotations.forEach(ann => {
+    paginatedAnnotations.forEach(ann => {
       const aspect = ann.go_aspect || 'P';
       if (!groupedByAspect[aspect]) {
         groupedByAspect[aspect] = [];
@@ -436,6 +501,8 @@ function ReferencePage() {
           <p className="annotation-intro">
             This reference has been used to make <strong>{annotations.length}</strong> GO annotation{annotations.length !== 1 ? 's' : ''}.
           </p>
+
+          {annotations.length > ROWS_PER_PAGE && renderPagination(goPage, totalPages, setGoPage, annotations.length, 'annotations')}
 
           {['F', 'P', 'C'].map(aspect => {
             const aspectAnnotations = groupedByAspect[aspect];
@@ -482,6 +549,8 @@ function ReferencePage() {
               </div>
             );
           })}
+
+          {annotations.length > ROWS_PER_PAGE && renderPagination(goPage, totalPages, setGoPage, annotations.length, 'annotations')}
         </div>
       </div>
     );
@@ -510,6 +579,11 @@ function ReferencePage() {
       return null;
     }
 
+    const totalPages = Math.ceil(annotations.length / ROWS_PER_PAGE);
+    const startIdx = (phenotypePage - 1) * ROWS_PER_PAGE;
+    const endIdx = startIdx + ROWS_PER_PAGE;
+    const paginatedAnnotations = annotations.slice(startIdx, endIdx);
+
     return (
       <div className="section" id="phenotype-annotations">
         <h2 className="section-header">Phenotype Annotations</h2>
@@ -517,6 +591,8 @@ function ReferencePage() {
           <p className="annotation-intro">
             This reference has been used to make <strong>{annotations.length}</strong> phenotype annotation{annotations.length !== 1 ? 's' : ''}.
           </p>
+
+          {annotations.length > ROWS_PER_PAGE && renderPagination(phenotypePage, totalPages, setPhenotypePage, annotations.length, 'annotations')}
 
           <table className="data-table annotation-table">
             <thead>
@@ -528,7 +604,7 @@ function ReferencePage() {
               </tr>
             </thead>
             <tbody>
-              {annotations.map((ann, idx) => (
+              {paginatedAnnotations.map((ann, idx) => (
                 <tr key={idx}>
                   <td>
                     <Link to={`/locus/${ann.feature_name}`}>
@@ -551,6 +627,8 @@ function ReferencePage() {
               ))}
             </tbody>
           </table>
+
+          {annotations.length > ROWS_PER_PAGE && renderPagination(phenotypePage, totalPages, setPhenotypePage, annotations.length, 'annotations')}
         </div>
       </div>
     );
