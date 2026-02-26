@@ -226,9 +226,14 @@ const TextSearchResultsPage = () => {
         <ul className="facet-list">
           {categoriesToShow.map(categoryKey => {
             // Use pagination total if available for selected category, otherwise use initial count
-            const count = (selectedCategory === categoryKey && pagination)
+            // Also ensure we show at least the number of actual results displayed
+            let count = (selectedCategory === categoryKey && pagination)
               ? pagination.total_items
               : getCategoryCount(categoryKey);
+            // If we have more results than the count says, use the actual count
+            if (selectedCategory === categoryKey && categoryResults && categoryResults.length > count) {
+              count = categoryResults.length;
+            }
             const isSelected = selectedCategory === categoryKey;
             const hasResults = count > 0;
 
@@ -360,7 +365,8 @@ const TextSearchResultsPage = () => {
     }
 
     const results = categoryResults || [];
-    const totalCount = pagination?.total_items || results.length;
+    // Use the larger of pagination total or actual results length
+    const totalCount = Math.max(pagination?.total_items || 0, results.length);
 
     return (
       <div className={`text-search-results-list ${selectedCategory}`}>
