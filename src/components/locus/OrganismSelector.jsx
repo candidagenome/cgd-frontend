@@ -7,8 +7,10 @@ const DEFAULT_ORGANISM = 'Candida albicans SC5314';
 /**
  * Reusable organism selector component for tab pages.
  * Defaults to "Candida albicans SC5314" if it has data.
+ *
+ * @param {string} context - 'locus' (default) or 'search' to customize messaging
  */
-function OrganismSelector({ organisms, selectedOrganism, onOrganismChange, dataType }) {
+function OrganismSelector({ organisms, selectedOrganism, onOrganismChange, dataType, context = 'locus' }) {
   const { name } = useParams();
 
   if (!organisms || organisms.length === 0) {
@@ -17,12 +19,18 @@ function OrganismSelector({ organisms, selectedOrganism, onOrganismChange, dataT
 
   // If only one organism, show info text instead of dropdown
   if (organisms.length === 1) {
+    const note = context === 'search'
+      ? '(Results are only found in this organism)'
+      : name
+        ? `(Identifier ${name} is specific to this organism)`
+        : null;
+
     return (
       <div className="organism-selector single-organism">
         <div className="organism-info-container">
           <span className="organism-info">Organism: <strong>{organisms[0]}</strong></span>
-          {name && (
-            <span className="organism-availability-note">(Identifier {name} is specific to this organism)</span>
+          {note && (
+            <span className="organism-availability-note">{note}</span>
           )}
         </div>
       </div>

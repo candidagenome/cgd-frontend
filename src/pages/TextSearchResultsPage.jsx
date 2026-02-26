@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { searchApi } from '../api/searchApi';
+import OrganismSelector, { getDefaultOrganism } from '../components/locus/OrganismSelector';
 import './TextSearchResultsPage.css';
 
 // Category labels for display
@@ -47,6 +48,10 @@ const TextSearchResultsPage = () => {
   const [categoryLoading, setCategoryLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
+
+  // Organism filtering state
+  const [availableOrganisms, setAvailableOrganisms] = useState([]);
+  const [selectedOrganism, setSelectedOrganism] = useState(null);
 
   // Fetch paginated results for a category
   const fetchCategoryResults = useCallback(async (category, page) => {
@@ -114,6 +119,21 @@ const TextSearchResultsPage = () => {
     fetchResults();
   }, [query, type, navigate, fetchCategoryResults]);
 
+  // Extract organisms when category results change
+  useEffect(() => {
+    if (categoryResults && categoryResults.length > 0) {
+      const organisms = [...new Set(categoryResults.map(r => r.organism).filter(Boolean))];
+      setAvailableOrganisms(organisms);
+      // Default to preferred organism or keep current selection if still valid
+      if (!selectedOrganism || !organisms.includes(selectedOrganism)) {
+        setSelectedOrganism(getDefaultOrganism(organisms));
+      }
+    } else {
+      setAvailableOrganisms([]);
+      setSelectedOrganism(null);
+    }
+  }, [categoryResults, selectedOrganism]);
+
   // Handle category change
   const handleCategoryChange = async (category) => {
     if (category === selectedCategory) return;
@@ -122,6 +142,9 @@ const TextSearchResultsPage = () => {
     setCurrentPage(1);
     setCategoryResults(null);
     setPagination(null);
+    // Reset organism selection when changing category
+    setAvailableOrganisms([]);
+    setSelectedOrganism(null);
     await fetchCategoryResults(category, 1);
   };
 
@@ -365,6 +388,10 @@ const TextSearchResultsPage = () => {
     }
 
     const results = categoryResults || [];
+    // Filter results by selected organism
+    const filteredResults = selectedOrganism
+      ? results.filter(r => r.organism === selectedOrganism)
+      : results;
     // Use the larger of pagination total or actual results length
     const totalCount = Math.max(pagination?.total_items || 0, results.length);
 
@@ -374,7 +401,16 @@ const TextSearchResultsPage = () => {
           {CATEGORY_LABELS[selectedCategory]}
           <span className="category-count">({totalCount} results)</span>
         </h2>
-        {results.map(renderResultItem)}
+        {availableOrganisms.length > 0 && (
+          <OrganismSelector
+            organisms={availableOrganisms}
+            selectedOrganism={selectedOrganism}
+            onOrganismChange={setSelectedOrganism}
+            dataType="search"
+            context="search"
+          />
+        )}
+        {filteredResults.map(renderResultItem)}
         {renderPagination()}
       </div>
     );
