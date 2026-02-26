@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { searchApi } from '../api/searchApi';
 import { CitationLinksBelow } from '../utils/formatCitation';
 import './SearchResultsPage.css';
@@ -16,7 +16,6 @@ const PAGE_SIZE = 20;
 
 const SearchResultsPage = () => {
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
   const query = searchParams.get('query') || '';
 
   // Initial quick search results (for category counts)
@@ -64,16 +63,7 @@ const SearchResultsPage = () => {
       setCurrentPage(1);
 
       try {
-        // First, try to resolve the query as an exact identifier
-        const resolveResult = await searchApi.resolve(query);
-
-        if (resolveResult.resolved && resolveResult.redirect_url) {
-          // Exact match found - redirect directly using React Router
-          navigate(resolveResult.redirect_url, { replace: true });
-          return;
-        }
-
-        // No exact match - perform quick search to get category counts
+        // Perform quick search to get category counts
         const data = await searchApi.quickSearch(query);
         setInitialResults(data);
 
@@ -100,7 +90,7 @@ const SearchResultsPage = () => {
     };
 
     fetchResults();
-  }, [query, navigate, fetchCategoryResults]);
+  }, [query, fetchCategoryResults]);
 
   // Handle category change
   const handleCategoryChange = async (category) => {
