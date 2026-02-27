@@ -3,7 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { searchApi } from '../api/searchApi';
-import { renderCitationItem } from '../utils/formatCitation.jsx';
+import { CitationLinksBelow } from '../utils/formatCitation.jsx';
 import './SearchResultsPage.css';
 
 // Register AG Grid modules once
@@ -22,20 +22,13 @@ const CombinedResultRenderer = (props) => {
   const id = data.id;
   const organism = data.organism;
 
-  // For references category, use the unified renderCitationItem function
+  // For references category, show PMID/ID as link, citation below, then links
   const isReferences = data.category === 'references';
 
   if (isReferences) {
-    // Build a reference object for renderCitationItem
-    const refObj = {
-      citation: data.description,
-      dbxref_id: data.dbxref_id || data.id,
-      reference_id: data.reference_id,
-      pubmed: data.pubmed,
-      urls: data.urls,
-      links: data.links,
-    };
-
+    // data.name is "PMID:xxx" or dbxref_id
+    // data.description is the citation text
+    // data.links is the array of citation links from the API
     return (
       <div className="combined-result-cell references-cell">
         <div className="result-header">
@@ -46,7 +39,15 @@ const CombinedResultRenderer = (props) => {
           />
           {organism && <span className="result-organism">{organism}</span>}
         </div>
-        {renderCitationItem(refObj, { itemClassName: 'search-citation-item', showPmid: false })}
+        {displayDesc && (
+          <div
+            className="result-description"
+            dangerouslySetInnerHTML={{ __html: displayDesc }}
+          />
+        )}
+        {data.links && data.links.length > 0 && (
+          <CitationLinksBelow links={data.links} className="search-result-links" />
+        )}
       </div>
     );
   }

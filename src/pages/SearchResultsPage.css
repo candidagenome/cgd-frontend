@@ -333,29 +333,19 @@
   line-height: 1.5;
 }
 
-/* Citation styling for references category */
-.combined-result-cell.references-cell .search-citation-item {
-  margin-top: 4px;
-}
-
-.combined-result-cell.references-cell .search-citation-item .citation-line {
-  font-size: 0.9em;
-  color: #555;
-  line-height: 1.5;
-}
-
-.combined-result-cell.references-cell .search-citation-item .citation-links-below {
+/* Citation links styling for references category */
+.combined-result-cell.references-cell .search-result-links {
   margin-top: 4px;
   font-size: 0.9em;
 }
 
-.combined-result-cell.references-cell .search-citation-item .citation-links-below .citation-link {
+.combined-result-cell.references-cell .search-result-links .citation-link {
   color: #1976d2;
   text-decoration: none;
   margin-right: 12px;
 }
 
-.combined-result-cell.references-cell .search-citation-item .citation-links-below .citation-link:hover {
+.combined-result-cell.references-cell .search-result-links .citation-link:hover {
   text-decoration: underline;
 }
 

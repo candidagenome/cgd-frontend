@@ -3,7 +3,7 @@ import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { searchApi } from '../api/searchApi';
-import { renderCitationItem } from '../utils/formatCitation.jsx';
+import { CitationLinksBelow } from '../utils/formatCitation.jsx';
 import './TextSearchResultsPage.css';
 
 // Register AG Grid modules once
@@ -24,7 +24,10 @@ const CombinedResultRenderer = (props) => {
   const link = data.link;
   const isExternal = link && (link.startsWith('http://') || link.startsWith('https://'));
 
-  // For abstracts category (Paper Abstracts), use the unified renderCitationItem function
+  // For abstracts category (Paper Abstracts):
+  // - name = citation text
+  // - description = abstract snippet (context around match)
+  // - links = citation links from API
   const isAbstracts = data.category === 'abstracts';
 
   const renderNameLink = () => {
@@ -52,23 +55,26 @@ const CombinedResultRenderer = (props) => {
   };
 
   if (isAbstracts) {
-    // Build a reference object for renderCitationItem
-    const refObj = {
-      citation: data.description,
-      dbxref_id: data.dbxref_id || data.id,
-      reference_id: data.reference_id,
-      pubmed: data.pubmed,
-      urls: data.urls,
-      links: data.links,
-    };
-
+    // For abstracts: show citation (name), links below citation, then abstract snippet (description)
     return (
       <div className="combined-result-cell abstracts-cell">
         <div className="result-header">
-          {renderNameLink()}
+          {/* Citation text (no link for abstracts - link is null) */}
+          <span className="result-citation" dangerouslySetInnerHTML={{ __html: displayName }} />
+          {id && <span className="result-id">({id})</span>}
           {organism && <span className="result-organism">{organism}</span>}
         </div>
-        {renderCitationItem(refObj, { itemClassName: 'search-citation-item', showPmid: false })}
+        {/* Links right below the citation */}
+        {data.links && data.links.length > 0 && (
+          <CitationLinksBelow links={data.links} className="search-result-links" />
+        )}
+        {/* Abstract snippet below the links */}
+        {displayDesc && (
+          <div
+            className="result-abstract"
+            dangerouslySetInnerHTML={{ __html: displayDesc }}
+          />
+        )}
       </div>
     );
   }

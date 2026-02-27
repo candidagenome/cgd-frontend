@@ -347,30 +347,35 @@
   line-height: 1.5;
 }
 
-/* Citation styling for abstracts category (Paper Abstracts) */
-.combined-result-cell.abstracts-cell .search-citation-item {
-  margin-top: 4px;
+/* Styling for abstracts category (Paper Abstracts) */
+.combined-result-cell.abstracts-cell .result-citation {
+  font-weight: 600;
+  font-size: 1em;
+  color: #333;
+  line-height: 1.4;
 }
 
-.combined-result-cell.abstracts-cell .search-citation-item .citation-line {
-  font-size: 0.9em;
-  color: #555;
-  line-height: 1.5;
-}
-
-.combined-result-cell.abstracts-cell .search-citation-item .citation-links-below {
+.combined-result-cell.abstracts-cell .search-result-links {
   margin-top: 4px;
   font-size: 0.9em;
 }
 
-.combined-result-cell.abstracts-cell .search-citation-item .citation-links-below .citation-link {
+.combined-result-cell.abstracts-cell .search-result-links .citation-link {
   color: #1976d2;
   text-decoration: none;
   margin-right: 12px;
 }
 
-.combined-result-cell.abstracts-cell .search-citation-item .citation-links-below .citation-link:hover {
+.combined-result-cell.abstracts-cell .search-result-links .citation-link:hover {
   text-decoration: underline;
+}
+
+.combined-result-cell.abstracts-cell .result-abstract {
+  margin-top: 8px;
+  font-size: 0.9em;
+  color: #555;
+  line-height: 1.5;
+  font-style: italic;
 }
 
 /* Result items */
