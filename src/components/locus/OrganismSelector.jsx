@@ -3,22 +3,46 @@ import { useParams } from 'react-router-dom';
 import './LocusComponents.css';
 
 const DEFAULT_ORGANISM = 'Candida albicans SC5314';
+const ALL_ORGANISMS_VALUE = '__all__';
 
 /**
  * Reusable organism selector component for tab pages.
  * Defaults to "Candida albicans SC5314" if it has data.
  *
  * @param {string} context - 'locus' (default) or 'search' to customize messaging
+ * @param {Object} organismCounts - Optional map of organism name to count (for search context)
+ * @param {boolean} showAllOption - Whether to show "All Organisms" option (default: false)
  */
-function OrganismSelector({ organisms, selectedOrganism, onOrganismChange, dataType, context = 'locus' }) {
+function OrganismSelector({
+  organisms,
+  selectedOrganism,
+  onOrganismChange,
+  dataType,
+  context = 'locus',
+  organismCounts = null,
+  showAllOption = false
+}) {
   const { name } = useParams();
 
   if (!organisms || organisms.length === 0) {
     return null;
   }
 
+  // Calculate total count for "All Organisms" option
+  const totalCount = organismCounts
+    ? Object.values(organismCounts).reduce((sum, count) => sum + count, 0)
+    : organisms.length;
+
+  // Helper to format organism label with count
+  const formatOrganismLabel = (org) => {
+    if (organismCounts && organismCounts[org] !== undefined) {
+      return `${org} (${organismCounts[org]})`;
+    }
+    return org;
+  };
+
   // If only one organism, show info text instead of dropdown
-  if (organisms.length === 1) {
+  if (organisms.length === 1 && !showAllOption) {
     const note = context === 'search'
       ? '(Results are only found in this organism)'
       : name
@@ -28,7 +52,7 @@ function OrganismSelector({ organisms, selectedOrganism, onOrganismChange, dataT
     return (
       <div className="organism-selector single-organism">
         <div className="organism-info-container">
-          <span className="organism-info">Organism: <strong>{organisms[0]}</strong></span>
+          <span className="organism-info">Organism: <strong>{formatOrganismLabel(organisms[0])}</strong></span>
           {note && (
             <span className="organism-availability-note">{note}</span>
           )}
@@ -37,17 +61,26 @@ function OrganismSelector({ organisms, selectedOrganism, onOrganismChange, dataT
     );
   }
 
+  // Handle dropdown change - convert special "all" value to null
+  const handleChange = (e) => {
+    const value = e.target.value;
+    onOrganismChange(value === ALL_ORGANISMS_VALUE ? null : value);
+  };
+
   return (
     <div className="organism-selector">
       <label htmlFor={`organism-select-${dataType || 'default'}`}>Select Organism: </label>
       <select
         id={`organism-select-${dataType || 'default'}`}
-        value={selectedOrganism || ''}
-        onChange={(e) => onOrganismChange(e.target.value)}
+        value={selectedOrganism || ALL_ORGANISMS_VALUE}
+        onChange={handleChange}
         className="organism-dropdown"
       >
+        {showAllOption && (
+          <option value={ALL_ORGANISMS_VALUE}>All Organisms ({totalCount})</option>
+        )}
         {organisms.map(org => (
-          <option key={org} value={org}>{org}</option>
+          <option key={org} value={org}>{formatOrganismLabel(org)}</option>
         ))}
       </select>
     </div>

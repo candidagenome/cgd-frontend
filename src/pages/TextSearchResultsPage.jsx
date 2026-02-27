@@ -52,6 +52,7 @@ const TextSearchResultsPage = () => {
   // Organism filtering state
   const [availableOrganisms, setAvailableOrganisms] = useState([]);
   const [selectedOrganism, setSelectedOrganism] = useState(null);
+  const [organismCounts, setOrganismCounts] = useState({});
 
   // Fetch paginated results for a category
   const fetchCategoryResults = useCallback(async (category, page) => {
@@ -119,17 +120,27 @@ const TextSearchResultsPage = () => {
     fetchResults();
   }, [query, type, navigate, fetchCategoryResults]);
 
-  // Extract organisms when category results change
+  // Extract organisms and calculate counts when category results change
   useEffect(() => {
     if (categoryResults && categoryResults.length > 0) {
-      const organisms = [...new Set(categoryResults.map(r => r.organism).filter(Boolean))];
+      // Calculate counts per organism
+      const counts = {};
+      categoryResults.forEach(r => {
+        if (r.organism) {
+          counts[r.organism] = (counts[r.organism] || 0) + 1;
+        }
+      });
+      setOrganismCounts(counts);
+
+      const organisms = Object.keys(counts);
       setAvailableOrganisms(organisms);
-      // Default to preferred organism or keep current selection if still valid
-      if (!selectedOrganism || !organisms.includes(selectedOrganism)) {
-        setSelectedOrganism(getDefaultOrganism(organisms));
+      // Default to "All Organisms" (null) to show all results initially
+      if (selectedOrganism !== null && !organisms.includes(selectedOrganism)) {
+        setSelectedOrganism(null);
       }
     } else {
       setAvailableOrganisms([]);
+      setOrganismCounts({});
       setSelectedOrganism(null);
     }
   }, [categoryResults, selectedOrganism]);
@@ -144,6 +155,7 @@ const TextSearchResultsPage = () => {
     setPagination(null);
     // Reset organism selection when changing category
     setAvailableOrganisms([]);
+    setOrganismCounts({});
     setSelectedOrganism(null);
     await fetchCategoryResults(category, 1);
   };
@@ -392,14 +404,16 @@ const TextSearchResultsPage = () => {
     const filteredResults = selectedOrganism
       ? results.filter(r => r.organism === selectedOrganism)
       : results;
-    // Use the larger of pagination total or actual results length
+    // Use the larger of pagination total or actual results length for total count
     const totalCount = Math.max(pagination?.total_items || 0, results.length);
+    // Show filtered count in header when organism is selected, otherwise show total
+    const displayCount = selectedOrganism ? filteredResults.length : totalCount;
 
     return (
       <div className={`text-search-results-list ${selectedCategory}`}>
         <h2>
           {CATEGORY_LABELS[selectedCategory]}
-          <span className="category-count">({totalCount} results)</span>
+          <span className="category-count">({displayCount} results)</span>
         </h2>
         {availableOrganisms.length > 0 && (
           <OrganismSelector
@@ -408,6 +422,8 @@ const TextSearchResultsPage = () => {
             onOrganismChange={setSelectedOrganism}
             dataType="search"
             context="search"
+            organismCounts={organismCounts}
+            showAllOption={true}
           />
         )}
         {filteredResults.map(renderResultItem)}
