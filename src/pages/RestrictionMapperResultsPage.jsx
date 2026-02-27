@@ -1,7 +1,15 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { AgGridReact } from 'ag-grid-react';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import restrictionMapperApi from '../api/restrictionMapperApi';
 import './RestrictionMapperResultsPage.css';
+
+// Register AG Grid modules once
+if (!ModuleRegistry.__cgdRegistered) {
+  ModuleRegistry.registerModules([AllCommunityModule]);
+  ModuleRegistry.__cgdRegistered = true;
+}
 
 // Enzyme type colors
 const ENZYME_TYPE_COLORS = {
@@ -10,19 +18,13 @@ const ENZYME_TYPE_COLORS = {
   'blunt': { bg: '#e8f5e9', border: '#388e3c', label: 'Blunt End' },
 };
 
-const ITEMS_PER_PAGE_OPTIONS = [25, 50, 100];
-
 function RestrictionMapperResultsPage() {
   const navigate = useNavigate();
   const [results, setResults] = useState(null);
   const [params, setParams] = useState(null);
   const [selectedEnzyme, setSelectedEnzyme] = useState(null);
-  const [sortBy, setSortBy] = useState('name');
-  const [sortOrder, setSortOrder] = useState('asc');
   const [showNonCutting, setShowNonCutting] = useState(false);
   const [downloading, setDownloading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(25);
 
   // Load results from sessionStorage
   useEffect(() => {
@@ -41,72 +43,6 @@ function RestrictionMapperResultsPage() {
       navigate('/restriction-mapper');
     }
   }, [navigate]);
-
-  // Sort enzymes
-  const sortedEnzymes = useMemo(() => {
-    if (!results?.cutting_enzymes) return [];
-
-    const sorted = [...results.cutting_enzymes].sort((a, b) => {
-      let comparison = 0;
-      switch (sortBy) {
-        case 'name':
-          comparison = a.enzyme_name.localeCompare(b.enzyme_name);
-          break;
-        case 'cuts':
-          comparison = a.total_cuts - b.total_cuts;
-          break;
-        case 'type':
-          comparison = a.enzyme_type.localeCompare(b.enzyme_type);
-          break;
-        default:
-          comparison = 0;
-      }
-      return sortOrder === 'asc' ? comparison : -comparison;
-    });
-
-    return sorted;
-  }, [results?.cutting_enzymes, sortBy, sortOrder]);
-
-  // Paginated enzymes
-  const paginatedEnzymes = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    return sortedEnzymes.slice(startIndex, endIndex);
-  }, [sortedEnzymes, currentPage, itemsPerPage]);
-
-  // Total pages
-  const totalPages = useMemo(() => {
-    return Math.ceil(sortedEnzymes.length / itemsPerPage);
-  }, [sortedEnzymes.length, itemsPerPage]);
-
-  // Handle sort change
-  const handleSort = (field) => {
-    if (sortBy === field) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortBy(field);
-      setSortOrder('asc');
-    }
-    setCurrentPage(1); // Reset to first page on sort change
-  };
-
-  // Handle page change
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-    setSelectedEnzyme(null); // Close any open details
-  };
-
-  // Handle items per page change
-  const handleItemsPerPageChange = (e) => {
-    setItemsPerPage(Number(e.target.value));
-    setCurrentPage(1);
-  };
-
-  // Get sort indicator
-  const getSortIndicator = (field) => {
-    if (sortBy !== field) return '';
-    return sortOrder === 'asc' ? ' ▲' : ' ▼';
-  };
 
   // Handle download
   const handleDownload = async (type) => {
@@ -157,6 +93,82 @@ function RestrictionMapperResultsPage() {
       .sort((a, b) => a.position - b.position);
   }, [results?.cutting_enzymes]);
 
+  // AG Grid column definitions
+  const columnDefs = useMemo(() => [
+    {
+      headerName: 'Enzyme',
+      field: 'enzyme_name',
+      sortable: true,
+      width: 120,
+    },
+    {
+      headerName: 'Recognition',
+      field: 'recognition_seq',
+      cellRenderer: (params) => {
+        return <code>{params.value}</code>;
+      },
+      width: 150,
+    },
+    {
+      headerName: 'Type',
+      field: 'enzyme_type',
+      sortable: true,
+      cellRenderer: (params) => {
+        const enzyme = params.data;
+        if (!enzyme) return '-';
+        const typeColors = ENZYME_TYPE_COLORS[enzyme.enzyme_type] || {};
+        return (
+          <span
+            className="type-badge"
+            style={{
+              backgroundColor: typeColors.bg,
+              borderColor: typeColors.border,
+            }}
+          >
+            {typeColors.label || enzyme.enzyme_type}
+          </span>
+        );
+      },
+      width: 130,
+    },
+    {
+      headerName: 'Cuts',
+      field: 'total_cuts',
+      sortable: true,
+      width: 80,
+    },
+    {
+      headerName: 'Actions',
+      cellRenderer: (params) => {
+        const enzyme = params.data;
+        if (!enzyme) return '-';
+        const isSelected = selectedEnzyme?.enzyme_name === enzyme.enzyme_name;
+        return (
+          <button
+            className="details-btn"
+            onClick={() => setSelectedEnzyme(isSelected ? null : enzyme)}
+          >
+            {isSelected ? 'Hide Details' : 'Show Details'}
+          </button>
+        );
+      },
+      width: 120,
+      sortable: false,
+    },
+  ], [selectedEnzyme]);
+
+  const defaultColDef = useMemo(() => ({
+    resizable: true,
+  }), []);
+
+  // Row style based on enzyme type
+  const getRowStyle = (params) => {
+    const enzyme = params.data;
+    if (!enzyme) return {};
+    const typeColors = ENZYME_TYPE_COLORS[enzyme.enzyme_type] || {};
+    return { backgroundColor: typeColors.bg };
+  };
+
   if (!results) {
     return (
       <div className="restriction-results-page">
@@ -171,6 +183,8 @@ function RestrictionMapperResultsPage() {
       </div>
     );
   }
+
+  const cuttingEnzymes = results.cutting_enzymes || [];
 
   return (
     <div className="restriction-results-page">
@@ -189,7 +203,7 @@ function RestrictionMapperResultsPage() {
           </div>
           <div className="summary-row">
             <span>
-              <strong>{sortedEnzymes.length} cutting enzyme{sortedEnzymes.length !== 1 ? 's' : ''}</strong>
+              <strong>{cuttingEnzymes.length} cutting enzyme{cuttingEnzymes.length !== 1 ? 's' : ''}</strong>
               {' '}out of {results.total_enzymes_searched} searched
             </span>
             <span>
@@ -216,7 +230,7 @@ function RestrictionMapperResultsPage() {
         </div>
 
         {/* Visual Restriction Map */}
-        {sortedEnzymes.length > 0 && (
+        {cuttingEnzymes.length > 0 && (
           <div className="restriction-map-section">
             <h2>Restriction Map</h2>
             <div className="restriction-map-container">
@@ -260,7 +274,7 @@ function RestrictionMapperResultsPage() {
           <button
             className="download-btn"
             onClick={() => handleDownload('results')}
-            disabled={downloading || sortedEnzymes.length === 0}
+            disabled={downloading || cuttingEnzymes.length === 0}
           >
             Download Cutting Enzymes (TSV)
           </button>
@@ -273,180 +287,53 @@ function RestrictionMapperResultsPage() {
           </button>
         </div>
 
-        {/* Cutting Enzymes Table */}
-        {sortedEnzymes.length > 0 ? (
+        {/* Cutting Enzymes Table with AG Grid */}
+        {cuttingEnzymes.length > 0 ? (
           <div className="enzymes-section">
-            <h2>Cutting Enzymes ({sortedEnzymes.length})</h2>
-            <table className="enzymes-table">
-              <thead>
-                <tr>
-                  <th
-                    className="sortable"
-                    onClick={() => handleSort('name')}
-                  >
-                    Enzyme{getSortIndicator('name')}
-                  </th>
-                  <th>Recognition</th>
-                  <th
-                    className="sortable"
-                    onClick={() => handleSort('type')}
-                  >
-                    Type{getSortIndicator('type')}
-                  </th>
-                  <th
-                    className="sortable"
-                    onClick={() => handleSort('cuts')}
-                  >
-                    Cuts{getSortIndicator('cuts')}
-                  </th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {paginatedEnzymes.map((enzyme) => {
-                  const typeColors = ENZYME_TYPE_COLORS[enzyme.enzyme_type] || {};
-                  const isSelected = selectedEnzyme?.enzyme_name === enzyme.enzyme_name;
+            <h2>Cutting Enzymes ({cuttingEnzymes.length})</h2>
+            <div className="ag-grid-wrapper" style={{ width: '100%' }}>
+              <AgGridReact
+                rowData={cuttingEnzymes}
+                columnDefs={columnDefs}
+                defaultColDef={defaultColDef}
+                domLayout="autoHeight"
+                suppressCellFocus={true}
+                enableCellTextSelection={true}
+                pagination={true}
+                paginationPageSize={10}
+                paginationPageSizeSelector={[10, 25, 50, 100]}
+                getRowStyle={getRowStyle}
+                getRowId={(params) => params.data.enzyme_name}
+              />
+            </div>
 
-                  return (
-                    <React.Fragment key={enzyme.enzyme_name}>
-                      <tr
-                        className={isSelected ? 'selected' : ''}
-                        style={{
-                          backgroundColor: typeColors.bg,
-                        }}
-                      >
-                        <td className="enzyme-name">{enzyme.enzyme_name}</td>
-                        <td className="recognition">
-                          <code>{enzyme.recognition_seq}</code>
-                        </td>
-                        <td className="enzyme-type">
-                          <span
-                            className="type-badge"
-                            style={{
-                              backgroundColor: typeColors.bg,
-                              borderColor: typeColors.border,
-                            }}
-                          >
-                            {typeColors.label || enzyme.enzyme_type}
-                          </span>
-                        </td>
-                        <td className="cuts">{enzyme.total_cuts}</td>
-                        <td>
-                          <button
-                            className="details-btn"
-                            onClick={() => setSelectedEnzyme(isSelected ? null : enzyme)}
-                          >
-                            {isSelected ? 'Hide Details' : 'Show Details'}
-                          </button>
-                        </td>
-                      </tr>
-                      {isSelected && (
-                        <tr className="enzyme-details-row">
-                          <td colSpan="5">
-                            <div className="enzyme-details">
-                              <div className="details-section">
-                                <strong>Cut Positions (Watson strand):</strong>
-                                <span className="positions">
-                                  {enzyme.cut_positions_watson.length > 0
-                                    ? enzyme.cut_positions_watson.join(', ')
-                                    : 'None'}
-                                </span>
-                              </div>
-                              <div className="details-section">
-                                <strong>Cut Positions (Crick strand):</strong>
-                                <span className="positions">
-                                  {enzyme.cut_positions_crick.length > 0
-                                    ? enzyme.cut_positions_crick.join(', ')
-                                    : 'None'}
-                                </span>
-                              </div>
-                              <div className="details-section">
-                                <strong>Fragment Sizes:</strong>
-                                <span className="fragments">
-                                  {enzyme.fragment_sizes.join(', ')} bp
-                                </span>
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
-                      )}
-                    </React.Fragment>
-                  );
-                })}
-              </tbody>
-            </table>
-
-            {/* Pagination Controls */}
-            {totalPages > 1 && (
-              <div className="pagination-controls">
-                <div className="pagination-info">
-                  Showing {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, sortedEnzymes.length)} of {sortedEnzymes.length} enzymes
-                </div>
-                <div className="pagination-buttons">
-                  <button
-                    className="pagination-btn"
-                    onClick={() => handlePageChange(1)}
-                    disabled={currentPage === 1}
-                  >
-                    First
-                  </button>
-                  <button
-                    className="pagination-btn"
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                  >
-                    Previous
-                  </button>
-                  <span className="pagination-pages">
-                    {/* Show page numbers */}
-                    {Array.from({ length: totalPages }, (_, i) => i + 1)
-                      .filter(page => {
-                        // Show first, last, and pages around current
-                        return page === 1 ||
-                          page === totalPages ||
-                          Math.abs(page - currentPage) <= 2;
-                      })
-                      .reduce((acc, page, idx, arr) => {
-                        // Add ellipsis between non-consecutive pages
-                        if (idx > 0 && page - arr[idx - 1] > 1) {
-                          acc.push(<span key={`ellipsis-${page}`} className="pagination-ellipsis">...</span>);
-                        }
-                        acc.push(
-                          <button
-                            key={page}
-                            className={`pagination-btn page-number ${currentPage === page ? 'active' : ''}`}
-                            onClick={() => handlePageChange(page)}
-                          >
-                            {page}
-                          </button>
-                        );
-                        return acc;
-                      }, [])}
-                  </span>
-                  <button
-                    className="pagination-btn"
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                  >
-                    Next
-                  </button>
-                  <button
-                    className="pagination-btn"
-                    onClick={() => handlePageChange(totalPages)}
-                    disabled={currentPage === totalPages}
-                  >
-                    Last
-                  </button>
-                </div>
-                <div className="pagination-per-page">
-                  <label>
-                    Per page:
-                    <select value={itemsPerPage} onChange={handleItemsPerPageChange}>
-                      {ITEMS_PER_PAGE_OPTIONS.map(option => (
-                        <option key={option} value={option}>{option}</option>
-                      ))}
-                    </select>
-                  </label>
+            {/* Selected Enzyme Details */}
+            {selectedEnzyme && (
+              <div className="enzyme-details-panel">
+                <h3>{selectedEnzyme.enzyme_name} Details</h3>
+                <div className="enzyme-details">
+                  <div className="details-section">
+                    <strong>Cut Positions (Watson strand):</strong>
+                    <span className="positions">
+                      {selectedEnzyme.cut_positions_watson.length > 0
+                        ? selectedEnzyme.cut_positions_watson.join(', ')
+                        : 'None'}
+                    </span>
+                  </div>
+                  <div className="details-section">
+                    <strong>Cut Positions (Crick strand):</strong>
+                    <span className="positions">
+                      {selectedEnzyme.cut_positions_crick.length > 0
+                        ? selectedEnzyme.cut_positions_crick.join(', ')
+                        : 'None'}
+                    </span>
+                  </div>
+                  <div className="details-section">
+                    <strong>Fragment Sizes:</strong>
+                    <span className="fragments">
+                      {selectedEnzyme.fragment_sizes.join(', ')} bp
+                    </span>
+                  </div>
                 </div>
               </div>
             )}

@@ -1,7 +1,7 @@
 /* Restriction Mapper Results Page Styles */
 
 .restriction-results-page {
-  max-width: 1200px;
+  width: 1200px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -175,60 +175,17 @@
   background-color: #616161;
 }
 
-/* Enzymes Table */
+/* Enzymes Section with AG Grid */
 .enzymes-section {
   margin-bottom: 25px;
 }
 
-.enzymes-table {
+/* AG Grid Wrapper */
+.ag-grid-wrapper {
   width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9em;
 }
 
-.enzymes-table th,
-.enzymes-table td {
-  padding: 10px 12px;
-  text-align: left;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.enzymes-table th {
-  background-color: #f5f5f5;
-  font-weight: 600;
-  color: #333;
-  white-space: nowrap;
-}
-
-.enzymes-table th.sortable {
-  cursor: pointer;
-  user-select: none;
-}
-
-.enzymes-table th.sortable:hover {
-  background-color: #eeeeee;
-}
-
-.enzymes-table tbody tr:hover {
-  filter: brightness(0.97);
-}
-
-.enzymes-table tbody tr.selected {
-  outline: 2px solid #1976d2;
-  outline-offset: -2px;
-}
-
-.enzyme-name {
-  font-weight: 500;
-}
-
-.recognition code {
-  font-family: 'Courier New', monospace;
-  background-color: rgba(0, 0, 0, 0.05);
-  padding: 2px 6px;
-  border-radius: 3px;
-}
-
+/* Type Badge in AG Grid */
 .type-badge {
   display: inline-block;
   padding: 3px 8px;
@@ -237,11 +194,7 @@
   border: 1px solid;
 }
 
-.cuts {
-  text-align: center;
-  font-weight: 500;
-}
-
+/* Details Button in AG Grid */
 .details-btn {
   padding: 4px 10px;
   background-color: #e3f2fd;
@@ -257,15 +210,23 @@
   background-color: #bbdefb;
 }
 
-/* Enzyme Details Row */
-.enzyme-details-row td {
-  padding: 0 !important;
-  background-color: #fafafa !important;
+/* Enzyme Details Panel */
+.enzyme-details-panel {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+.enzyme-details-panel h3 {
+  margin: 0 0 15px 0;
+  color: #1976d2;
+  font-size: 1.1em;
 }
 
 .enzyme-details {
-  padding: 15px 20px;
-  border-top: 1px solid #e0e0e0;
+  padding: 0;
 }
 
 .details-section {
@@ -286,91 +247,6 @@
   font-family: 'Courier New', monospace;
   font-size: 0.9em;
   color: #333;
-}
-
-/* Pagination Controls */
-.pagination-controls {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin-top: 20px;
-  padding: 15px;
-  background-color: #f5f5f5;
-  border-radius: 4px;
-}
-
-.pagination-info {
-  font-size: 0.9em;
-  color: #666;
-}
-
-.pagination-buttons {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.pagination-btn {
-  padding: 6px 12px;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 0.85em;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.pagination-btn:hover:not(:disabled) {
-  background-color: #e3f2fd;
-  border-color: #90caf9;
-}
-
-.pagination-btn:disabled {
-  color: #bbb;
-  cursor: not-allowed;
-}
-
-.pagination-btn.page-number {
-  min-width: 36px;
-  text-align: center;
-}
-
-.pagination-btn.page-number.active {
-  background-color: #1976d2;
-  color: white;
-  border-color: #1976d2;
-}
-
-.pagination-pages {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-}
-
-.pagination-ellipsis {
-  padding: 0 5px;
-  color: #999;
-}
-
-.pagination-per-page {
-  font-size: 0.9em;
-  color: #666;
-}
-
-.pagination-per-page label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.pagination-per-page select {
-  padding: 5px 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background-color: #fff;
-  cursor: pointer;
 }
 
 /* No Results */
@@ -474,6 +350,8 @@
 /* Responsive */
 @media (max-width: 768px) {
   .restriction-results-page {
+    width: 100%;
+    min-width: 320px;
     padding: 10px;
   }
 
@@ -495,33 +373,9 @@
     flex-direction: column;
   }
 
-  .enzymes-table {
-    font-size: 0.8em;
-  }
-
-  .enzymes-table th,
-  .enzymes-table td {
-    padding: 8px 6px;
-  }
-
   .details-section strong {
     display: block;
     min-width: auto;
     margin-bottom: 5px;
-  }
-
-  .pagination-controls {
-    flex-direction: column;
-    align-items: stretch;
-    text-align: center;
-  }
-
-  .pagination-buttons {
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .pagination-per-page {
-    justify-content: center;
   }
 }
