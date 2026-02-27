@@ -294,6 +294,12 @@
 /* Combined result cell styling */
 .combined-result-cell {
   padding: 4px 0;
+  width: 100%;
+}
+
+/* Ensure AG Grid cell content takes full width */
+.ag-grid-wrapper .ag-cell-value {
+  width: 100%;
 }
 
 .combined-result-cell .result-header {
@@ -333,8 +339,35 @@
   line-height: 1.5;
 }
 
+/* References category styling - full width layout */
+.combined-result-cell.references-cell {
+  width: 100%;
+}
+
+.combined-result-cell.references-cell .result-header {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.combined-result-cell.references-cell .result-name {
+  display: inline;
+}
+
+.combined-result-cell.references-cell .result-organism {
+  display: inline;
+  margin-left: 8px;
+}
+
+.combined-result-cell.references-cell .result-description {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+}
+
 /* Citation links styling for references category */
 .combined-result-cell.references-cell .search-result-links {
+  display: block;
+  width: 100%;
   margin-top: 4px;
   font-size: 0.9em;
 }
