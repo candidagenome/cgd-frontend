@@ -1,7 +1,7 @@
 .go-term-finder-results-page {
-  max-width: 1200px;
+  width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 15px 20px;
 }
 
 .results-content.wide {
@@ -395,9 +395,18 @@
 }
 
 /* Responsive */
+@media (max-width: 1240px) {
+  .go-term-finder-results-page {
+    width: auto;
+    max-width: 1200px;
+    margin: 0 20px;
+  }
+}
+
 @media (max-width: 768px) {
   .go-term-finder-results-page {
     padding: 10px;
+    margin: 0 10px;
   }
 
   .summary-grid {
