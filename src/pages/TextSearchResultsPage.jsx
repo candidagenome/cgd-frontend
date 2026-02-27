@@ -53,6 +53,7 @@ const TextSearchResultsPage = () => {
   const [availableOrganisms, setAvailableOrganisms] = useState([]);
   const [selectedOrganism, setSelectedOrganism] = useState(null);
   const [organismCounts, setOrganismCounts] = useState({});
+  const [hasApiOrganismCounts, setHasApiOrganismCounts] = useState(false);
 
   // Fetch paginated results for a category
   const fetchCategoryResults = useCallback(async (category, page) => {
@@ -63,6 +64,14 @@ const TextSearchResultsPage = () => {
       const data = await searchApi.textSearchCategory(query, category, page, PAGE_SIZE);
       setCategoryResults(data.results);
       setPagination(data.pagination);
+      // Use organism counts from API if provided (counts ALL results, not just current page)
+      if (data.organism_counts) {
+        setOrganismCounts(data.organism_counts);
+        setAvailableOrganisms(Object.keys(data.organism_counts));
+        setHasApiOrganismCounts(true);
+      } else {
+        setHasApiOrganismCounts(false);
+      }
     } catch (err) {
       console.error('Category search error:', err);
       setError('Failed to load results. Please try again.');
@@ -120,10 +129,19 @@ const TextSearchResultsPage = () => {
     fetchResults();
   }, [query, type, navigate, fetchCategoryResults]);
 
-  // Extract organisms and calculate counts when category results change
+  // Extract organisms and calculate counts when category results change (fallback when API doesn't provide counts)
   useEffect(() => {
+    // Skip if API already provided organism counts
+    if (hasApiOrganismCounts) {
+      // Just validate selected organism against available organisms
+      if (selectedOrganism !== null && !availableOrganisms.includes(selectedOrganism)) {
+        setSelectedOrganism(null);
+      }
+      return;
+    }
+
     if (categoryResults && categoryResults.length > 0) {
-      // Calculate counts per organism
+      // Calculate counts per organism from current page (fallback)
       const counts = {};
       categoryResults.forEach(r => {
         if (r.organism) {
@@ -143,7 +161,7 @@ const TextSearchResultsPage = () => {
       setOrganismCounts({});
       setSelectedOrganism(null);
     }
-  }, [categoryResults, selectedOrganism]);
+  }, [categoryResults, selectedOrganism, hasApiOrganismCounts, availableOrganisms]);
 
   // Handle category change
   const handleCategoryChange = async (category) => {
@@ -157,6 +175,7 @@ const TextSearchResultsPage = () => {
     setAvailableOrganisms([]);
     setOrganismCounts({});
     setSelectedOrganism(null);
+    setHasApiOrganismCounts(false);
     await fetchCategoryResults(category, 1);
   };
 
