@@ -21,7 +21,11 @@ const CombinedResultRenderer = (props) => {
   const displayDesc = data.highlighted_description || data.description;
   const id = data.id;
   const organism = data.organism;
-  const link = data.link;
+
+  // For locus-related categories, use gene name (data.name) for the link URL
+  // This ensures we use "/locus/HOG1" instead of "/locus/orf19.xxx"
+  const isLocusCategory = ['genes', 'descriptions', 'paragraphs', 'name_descriptions', 'notes', 'orthologs'].includes(data.category);
+  const link = isLocusCategory && data.name ? `/locus/${data.name}` : data.link;
 
   // For abstracts category (Paper Abstracts):
   // - name = citation text
@@ -33,11 +37,14 @@ const CombinedResultRenderer = (props) => {
     if (!link) {
       return <span className="result-name" dangerouslySetInnerHTML={{ __html: displayName }} />;
     }
+    // Use named target so all search result links open in the same tab
+    // Only add rel="noopener noreferrer" for external links (internal links don't need it)
+    const isExternal = link.startsWith('http');
     return (
       <a
         href={link}
         target="search_result"
-        rel="noopener noreferrer"
+        rel={isExternal ? "noopener noreferrer" : undefined}
         className="result-name"
         dangerouslySetInnerHTML={{ __html: displayName }}
       />

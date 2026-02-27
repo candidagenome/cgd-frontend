@@ -154,19 +154,22 @@ export function CitationLinksBelow({ links, className = '', target = '' }) {
 
   return (
     <div className={`citation-links-below ${className}`.trim()}>
-      {links.map((link, idx) => (
-        <React.Fragment key={`${link.name}-${idx}`}>
-          {idx > 0 && <span className="citation-link-sep"> </span>}
-          <a
-            href={link.url}
-            target={linkTarget}
-            rel="noopener noreferrer"
-            className="citation-link"
-          >
-            {link.name}
-          </a>
-        </React.Fragment>
-      ))}
+      {links.map((link, idx) => {
+        const isExternal = link.url?.startsWith('http') || link.link_type === 'external';
+        return (
+          <React.Fragment key={`${link.name}-${idx}`}>
+            {idx > 0 && <span className="citation-link-sep"> </span>}
+            <a
+              href={link.url}
+              target={linkTarget}
+              rel={isExternal ? "noopener noreferrer" : undefined}
+              className="citation-link"
+            >
+              {link.name}
+            </a>
+          </React.Fragment>
+        );
+      })}
     </div>
   );
 }

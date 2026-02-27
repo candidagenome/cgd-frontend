@@ -30,13 +30,14 @@ const CombinedResultRenderer = (props) => {
     // data.name is "PMID:xxx" or dbxref_id
     // data.description is the citation text
     // data.links is the array of citation links from the API
+    const isExternal = data.link?.startsWith('http');
     return (
       <div className="combined-result-cell references-cell">
         <div className="result-header">
           <a
             href={data.link}
             target="search_result"
-            rel="noopener noreferrer"
+            rel={isExternal ? "noopener noreferrer" : undefined}
             className="result-name"
             dangerouslySetInnerHTML={{ __html: displayName }}
           />
@@ -58,6 +59,7 @@ const CombinedResultRenderer = (props) => {
   // For genes category, link to /locus/[gene_name]
   const isGenes = data.category === 'genes';
   const linkUrl = isGenes ? `/locus/${data.name}` : data.link;
+  const isExternal = linkUrl?.startsWith('http');
 
   return (
     <div className="combined-result-cell">
@@ -65,7 +67,7 @@ const CombinedResultRenderer = (props) => {
         <a
           href={linkUrl}
           target="search_result"
-          rel="noopener noreferrer"
+          rel={isExternal ? "noopener noreferrer" : undefined}
           className="result-name"
           dangerouslySetInnerHTML={{ __html: displayName }}
         />
