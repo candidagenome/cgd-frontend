@@ -401,12 +401,12 @@ const TextSearchResultsPage = () => {
           rowData={filteredResults}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
-          domLayout="normal"
+          domLayout="autoHeight"
           suppressCellFocus={true}
           enableCellTextSelection={true}
           pagination={true}
-          paginationPageSize={20}
-          paginationPageSizeSelector={[20, 50, 100]}
+          paginationPageSize={10}
+          paginationPageSizeSelector={[10, 25, 50, 100]}
           getRowId={(params) => `${params.data.category}-${params.data.id}`}
         />
       </div>
