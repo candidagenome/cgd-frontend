@@ -62,13 +62,22 @@ const TextSearchResultsPage = () => {
     setCategoryLoading(true);
     try {
       const data = await searchApi.textSearchCategory(query, category, page, PAGE_SIZE);
+      console.log('textSearchCategory response:', { category, results: data.results?.length, pagination: data.pagination });
       setCategoryResults(data.results);
       setPagination(data.pagination);
       // Use organism counts from API if provided (counts ALL results, not just current page)
       if (data.organism_counts) {
+        const organisms = Object.keys(data.organism_counts);
         setOrganismCounts(data.organism_counts);
-        setAvailableOrganisms(Object.keys(data.organism_counts));
+        setAvailableOrganisms(organisms);
         setHasApiOrganismCounts(true);
+        // Validate selectedOrganism against the fresh organism list
+        setSelectedOrganism(prev => {
+          if (prev !== null && !organisms.includes(prev)) {
+            return null;
+          }
+          return prev;
+        });
       } else {
         setHasApiOrganismCounts(false);
       }
@@ -131,7 +140,7 @@ const TextSearchResultsPage = () => {
 
   // Extract organisms and calculate counts when category results change (fallback when API doesn't provide counts)
   useEffect(() => {
-    // Skip if API already provided organism counts
+    // Skip if API already provided organism counts (validation is handled in fetchCategoryResults)
     if (hasApiOrganismCounts) {
       return;
     }
@@ -418,6 +427,10 @@ const TextSearchResultsPage = () => {
     }
 
     const results = categoryResults || [];
+    // Debug: log if results are unexpectedly empty while pagination exists
+    if (results.length === 0 && pagination?.total_items > 0) {
+      console.warn('Results empty but pagination shows items:', { categoryResults, pagination });
+    }
     // Filter results by selected organism
     const filteredResults = selectedOrganism
       ? results.filter(r => r.organism === selectedOrganism)
