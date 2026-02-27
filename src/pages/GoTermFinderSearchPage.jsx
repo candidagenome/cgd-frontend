@@ -211,28 +211,24 @@ function GoTermFinderSearchPage() {
 
         <form onSubmit={handleSubmit}>
           {/* Step 1: Organism Selection */}
-          <div className="form-section">
+          <div className="form-section inline-section">
             <h3>
               <span className="section-number">1</span>
               Select Organism
             </h3>
-
-            <div className="form-row">
-              <label htmlFor="organism">Organism:</label>
-              <select
-                id="organism"
-                value={formData.organism_no}
-                onChange={(e) => handleInputChange('organism_no', e.target.value)}
-                required
-              >
-                <option value="">-- Select Organism --</option>
-                {config?.organisms?.map((org) => (
-                  <option key={org.organism_no} value={org.organism_no}>
-                    {org.display_name}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <select
+              id="organism"
+              value={formData.organism_no}
+              onChange={(e) => handleInputChange('organism_no', e.target.value)}
+              required
+            >
+              <option value="">-- Select --</option>
+              {config?.organisms?.map((org) => (
+                <option key={org.organism_no} value={org.organism_no}>
+                  {org.display_name}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Step 2: Gene Input */}
@@ -304,12 +300,11 @@ function GoTermFinderSearchPage() {
           </div>
 
           {/* Step 3: Ontology Selection */}
-          <div className="form-section">
+          <div className="form-section inline-section">
             <h3>
               <span className="section-number">3</span>
-              Select Ontology
+              Ontology
             </h3>
-
             <div className="ontology-options">
               <label className="radio-label">
                 <input
@@ -319,7 +314,7 @@ function GoTermFinderSearchPage() {
                   checked={formData.ontology === 'all'}
                   onChange={(e) => handleInputChange('ontology', e.target.value)}
                 />
-                <span>All Aspects</span>
+                <span>All</span>
               </label>
               <label className="radio-label">
                 <input
@@ -355,12 +350,11 @@ function GoTermFinderSearchPage() {
           </div>
 
           {/* Step 4: Background Set */}
-          <div className="form-section">
+          <div className="form-section inline-section">
             <h3>
               <span className="section-number">4</span>
-              Background Set
+              Background
             </h3>
-
             <div className="background-options">
               <label className="radio-label">
                 <input
@@ -369,7 +363,7 @@ function GoTermFinderSearchPage() {
                   checked={!formData.use_custom_background}
                   onChange={() => handleInputChange('use_custom_background', false)}
                 />
-                <span>Default (all genes with GO annotations)</span>
+                <span>Default (all genes with GO)</span>
               </label>
               <label className="radio-label">
                 <input
@@ -378,10 +372,9 @@ function GoTermFinderSearchPage() {
                   checked={formData.use_custom_background}
                   onChange={() => handleInputChange('use_custom_background', true)}
                 />
-                <span>Custom background set</span>
+                <span>Custom</span>
               </label>
             </div>
-
             {formData.use_custom_background && (
               <div className="custom-background">
                 <label htmlFor="background_genes">Background genes:</label>
@@ -405,12 +398,11 @@ function GoTermFinderSearchPage() {
           </div>
 
           {/* Step 5: Annotation Type Filter */}
-          <div className="form-section">
+          <div className="form-section inline-section">
             <h3>
               <span className="section-number">5</span>
               Annotation Types
             </h3>
-
             <div className="annotation-type-options">
               {config?.annotation_types?.map((type) => (
                 <label key={type.value} className="checkbox-label">
@@ -475,15 +467,14 @@ function GoTermFinderSearchPage() {
           </div>
 
           {/* Step 7: Statistical Parameters */}
-          <div className="form-section">
+          <div className="form-section inline-section">
             <h3>
               <span className="section-number">7</span>
-              Statistical Parameters
+              Statistics
             </h3>
-
             <div className="stat-params">
-              <div className="form-row">
-                <label htmlFor="p_value_cutoff">P-value cutoff:</label>
+              <div className="form-row-inline">
+                <label htmlFor="p_value_cutoff">P-value:</label>
                 <select
                   id="p_value_cutoff"
                   value={formData.p_value_cutoff}
@@ -495,9 +486,8 @@ function GoTermFinderSearchPage() {
                   <option value="0.1">0.1</option>
                 </select>
               </div>
-
-              <div className="form-row">
-                <label htmlFor="correction_method">Multiple testing correction:</label>
+              <div className="form-row-inline">
+                <label htmlFor="correction_method">Correction:</label>
                 <select
                   id="correction_method"
                   value={formData.correction_method}
@@ -510,9 +500,8 @@ function GoTermFinderSearchPage() {
                   ))}
                 </select>
               </div>
-
-              <div className="form-row">
-                <label htmlFor="min_genes">Minimum genes per term:</label>
+              <div className="form-row-inline">
+                <label htmlFor="min_genes">Min genes:</label>
                 <input
                   type="number"
                   id="min_genes"

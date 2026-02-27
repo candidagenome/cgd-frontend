@@ -46,7 +46,7 @@
   border: 1px solid #ddd;
   border-radius: 6px;
   padding: 12px 16px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .form-section h3 {
@@ -56,6 +56,27 @@
   margin: 0 0 10px 0;
   color: #003366;
   font-size: 1.05em;
+}
+
+/* Inline sections - header and controls on same row */
+.form-section.inline-section {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 10px 16px;
+}
+
+.form-section.inline-section h3 {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.form-section.inline-section > select {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
 }
 
 .section-number {
@@ -309,13 +330,39 @@
 
 /* Statistical parameters */
 .stat-params {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
 }
 
 .stat-params .form-row {
   margin-bottom: 0;
+}
+
+/* Inline form row - label and input on same line */
+.form-row-inline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-row-inline label {
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+}
+
+.form-row-inline select,
+.form-row-inline input[type="number"] {
+  padding: 5px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.form-row-inline input[type="number"] {
+  width: 60px;
 }
 
 /* Form actions */
@@ -378,6 +425,11 @@
     padding: 10px 12px;
   }
 
+  .form-section.inline-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   .gene-input-actions {
     flex-direction: column;
     align-items: flex-start;
@@ -390,7 +442,8 @@
   }
 
   .stat-params {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .form-actions {
