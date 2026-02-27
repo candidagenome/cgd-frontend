@@ -115,7 +115,6 @@ function GoTermFinderResultsPage() {
 
   const [results, setResults] = useState(null);
   const [request, setRequest] = useState(null);
-  const [activeTab, setActiveTab] = useState('process');
   const [expandedTerms, setExpandedTerms] = useState(new Set());
   const [graphData, setGraphData] = useState(null);
   const [graphLoading, setGraphLoading] = useState(false);
@@ -130,17 +129,6 @@ function GoTermFinderResultsPage() {
     if (storedResults) {
       const parsed = JSON.parse(storedResults);
       setResults(parsed);
-
-      // Set initial tab based on which has results
-      if (parsed.result) {
-        if (parsed.result.process_terms.length > 0) {
-          setActiveTab('process');
-        } else if (parsed.result.function_terms.length > 0) {
-          setActiveTab('function');
-        } else if (parsed.result.component_terms.length > 0) {
-          setActiveTab('component');
-        }
-      }
     } else {
       // No results, redirect to search
       navigate('/go-term-finder');
@@ -425,13 +413,16 @@ function GoTermFinderResultsPage() {
   }
 
   const { result } = results;
-  const termsByTab = {
-    process: result.process_terms || [],
-    function: result.function_terms || [],
-    component: result.component_terms || [],
+
+  // Get terms based on selected ontology
+  const getTermsForOntology = () => {
+    if (request?.ontology === 'P') return result.process_terms || [];
+    if (request?.ontology === 'F') return result.function_terms || [];
+    if (request?.ontology === 'C') return result.component_terms || [];
+    return [];
   };
 
-  const currentTerms = termsByTab[activeTab];
+  const currentTerms = getTermsForOntology();
 
   return (
     <div className="go-term-finder-results-page">
@@ -542,28 +533,15 @@ function GoTermFinderResultsPage() {
           </div>
         )}
 
-        {/* Results Tabs */}
+        {/* Results Header */}
         {result.total_enriched_terms > 0 && (
           <>
-            <div className="results-tabs">
-              <button
-                className={`tab ${activeTab === 'process' ? 'active' : ''}`}
-                onClick={() => setActiveTab('process')}
-              >
-                Biological Process ({result.process_terms.length})
-              </button>
-              <button
-                className={`tab ${activeTab === 'function' ? 'active' : ''}`}
-                onClick={() => setActiveTab('function')}
-              >
-                Molecular Function ({result.function_terms.length})
-              </button>
-              <button
-                className={`tab ${activeTab === 'component' ? 'active' : ''}`}
-                onClick={() => setActiveTab('component')}
-              >
-                Cellular Component ({result.component_terms.length})
-              </button>
+            <div className="results-header">
+              <h2>
+                {request?.ontology === 'P' && `Biological Process (${result.process_terms.length})`}
+                {request?.ontology === 'F' && `Molecular Function (${result.function_terms.length})`}
+                {request?.ontology === 'C' && `Cellular Component (${result.component_terms.length})`}
+              </h2>
             </div>
 
             {/* AG Grid Results Table */}
