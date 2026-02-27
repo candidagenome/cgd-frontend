@@ -57,9 +57,11 @@ const HeaderSearchForm = () => {
     }, 300);
   };
 
-  // Handle form submission
+  // Handle form submission - navigate to search results page
   const handleSearch = (e) => {
-    e.preventDefault();
+    if (e) {
+      e.preventDefault();
+    }
     if (searchQuery.trim()) {
       setShowSuggestions(false);
       navigate(`/search/results?query=${encodeURIComponent(searchQuery.trim())}`);
@@ -92,9 +94,13 @@ const HeaderSearchForm = () => {
         setSelectedIndex((prev) => (prev > 0 ? prev - 1 : -1));
         break;
       case 'Enter':
+        e.preventDefault();
         if (selectedIndex >= 0 && selectedIndex < suggestions.length) {
-          e.preventDefault();
+          // User selected a suggestion - navigate to that specific page
           handleSelectSuggestion(suggestions[selectedIndex]);
+        } else {
+          // No suggestion selected - go to search results page
+          handleSearch();
         }
         break;
       case 'Escape':

@@ -25,6 +25,8 @@
 
 .site-header {
   width: 100%;
+  position: relative;
+  z-index: 1100;
 }
 
 /* Top white utility row */

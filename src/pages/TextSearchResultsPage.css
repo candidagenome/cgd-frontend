@@ -1,9 +1,12 @@
 /* Text Search Results Page Styles */
 
 .text-search-results-page {
-  max-width: 1200px;
+  max-width: 1350px;
   margin: 0 auto;
   padding: 20px;
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
 }
 
 .text-search-results-content {
@@ -58,20 +61,33 @@
 
 .text-search-layout {
   display: flex;
-  gap: 30px;
-  min-height: 400px;
+  gap: 20px;
 }
 
 /* Sidebar with facets */
 .text-search-sidebar {
-  flex: 0 0 250px;
-  min-width: 250px;
+  flex: 0 0 220px;
+  min-width: 220px;
+  position: sticky;
+  top: 20px;
+  align-self: flex-start;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
 }
 
-/* Main results area - FIXED WIDTH */
+/* Main results area - expands to fill available space */
 .text-search-main {
-  flex: 0 0 800px;
-  min-width: 800px;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* AG Grid wrapper - fills available space */
+.ag-grid-wrapper {
+  flex: 1;
+  min-width: 600px;
+  max-width: 900px;
 }
 
 .text-search-results-list {
@@ -186,6 +202,36 @@
   font-weight: 500;
 }
 
+/* Organism facet section */
+.organism-facet {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+}
+
+.organism-facet h3 {
+  margin: 0 0 12px 0;
+  font-size: 1em;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.organism-facet .facet-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.organism-facet .facet-label {
+  font-size: 0.85em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+
 /* ===========================================
    Results List
    =========================================== */
@@ -203,6 +249,134 @@
   color: #666;
   font-weight: normal;
   margin-left: 10px;
+}
+
+/* ===========================================
+   AG Grid Container/Wrapper
+   =========================================== */
+
+.ag-grid-container,
+.ag-grid-wrapper {
+  width: 800px;
+}
+
+.ag-grid-container {
+  margin-bottom: 15px;
+}
+
+.ag-grid-container a,
+.ag-grid-wrapper a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.ag-grid-container a:hover,
+.ag-grid-wrapper a:hover {
+  text-decoration: underline;
+}
+
+/* AG Grid Theme Customization */
+.ag-grid-container .ag-header,
+.ag-grid-wrapper .ag-header {
+  background-color: #f5f5f5;
+}
+
+.ag-grid-container .ag-header-cell-label,
+.ag-grid-wrapper .ag-header-cell-label {
+  font-weight: 600;
+  color: #333;
+}
+
+.ag-grid-container .ag-row:hover,
+.ag-grid-wrapper .ag-row:hover {
+  background-color: #f0f7ff;
+}
+
+.ag-grid-container .ag-floating-filter-input,
+.ag-grid-wrapper .ag-floating-filter-input {
+  font-size: 0.85em;
+}
+
+/* Highlight marks in AG Grid cells */
+.ag-grid-container mark,
+.ag-grid-wrapper mark {
+  background-color: #fff59d;
+  color: inherit;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+/* Combined result cell styling */
+.combined-result-cell {
+  padding: 4px 0;
+}
+
+.combined-result-cell .result-header {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.combined-result-cell .result-name {
+  font-weight: 600;
+  font-size: 1.05em;
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.combined-result-cell .result-name:hover {
+  text-decoration: underline;
+}
+
+.combined-result-cell .result-id {
+  font-size: 0.85em;
+  color: #888;
+}
+
+.combined-result-cell .result-organism {
+  font-size: 0.85em;
+  color: #666;
+  font-style: italic;
+  margin-left: auto;
+}
+
+.combined-result-cell .result-description {
+  font-size: 0.9em;
+  color: #555;
+  line-height: 1.5;
+}
+
+/* Styling for abstracts category (Paper Abstracts) */
+.combined-result-cell.abstracts-cell .result-citation {
+  font-weight: 600;
+  font-size: 1em;
+  color: #333;
+  line-height: 1.4;
+}
+
+.combined-result-cell.abstracts-cell .search-result-links {
+  margin-top: 4px;
+  font-size: 0.9em;
+}
+
+.combined-result-cell.abstracts-cell .search-result-links .citation-link {
+  color: #1976d2;
+  text-decoration: none;
+  margin-right: 12px;
+}
+
+.combined-result-cell.abstracts-cell .search-result-links .citation-link:hover {
+  text-decoration: underline;
+}
+
+.combined-result-cell.abstracts-cell .result-abstract {
+  margin-top: 8px;
+  font-size: 0.9em;
+  color: #555;
+  line-height: 1.5;
+  font-style: italic;
 }
 
 /* Result items */
@@ -443,6 +617,7 @@
   .text-search-layout {
     flex-direction: column;
     gap: 20px;
+    height: auto;
   }
 
   .text-search-sidebar {
@@ -454,7 +629,7 @@
   .text-search-main {
     flex: none;
     width: 100%;
-    min-width: auto;
+    max-width: 800px;
   }
 
   .text-search-facets {
