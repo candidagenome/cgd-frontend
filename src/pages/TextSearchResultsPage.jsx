@@ -3,7 +3,6 @@ import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { searchApi } from '../api/searchApi';
-import OrganismSelector, { getDefaultOrganism } from '../components/locus/OrganismSelector';
 import './TextSearchResultsPage.css';
 
 // Register AG Grid modules
@@ -293,6 +292,13 @@ const TextSearchResultsPage = () => {
     // Filter categories if type=homolog
     const categoriesToShow = type === 'homolog' ? ['orthologs'] : CATEGORY_ORDER;
 
+    // Filter results by selected organism for display count
+    const results = categoryResults || [];
+    const filteredResults = selectedOrganism
+      ? results.filter(r => r.organism === selectedOrganism)
+      : results;
+    const displayCount = selectedOrganism ? filteredResults.length : totalCount;
+
     return (
       <div className="text-search-facets">
         <h3>Categories</h3>
@@ -301,17 +307,12 @@ const TextSearchResultsPage = () => {
             // Use totalCount for selected category, otherwise use initial count
             let count;
             if (selectedCategory === categoryKey) {
-              // If an organism is selected, use the organism-specific count
-              if (selectedOrganism && organismCounts[selectedOrganism] !== undefined) {
-                count = organismCounts[selectedOrganism];
-              } else {
-                count = totalCount;
-              }
+              count = displayCount;
             } else {
               count = getCategoryCount(categoryKey);
             }
             const isSelected = selectedCategory === categoryKey;
-            const hasResults = count > 0;
+            const hasResults = count > 0 || (isSelected && totalCount > 0);
 
             return (
               <li
@@ -325,6 +326,32 @@ const TextSearchResultsPage = () => {
             );
           })}
         </ul>
+
+        {/* Organism filter facet */}
+        {availableOrganisms.length > 0 && (
+          <div className="organism-facet">
+            <h3>Organism</h3>
+            <ul className="facet-list">
+              <li
+                className={`facet-item ${selectedOrganism === null ? 'selected' : ''}`}
+                onClick={() => setSelectedOrganism(null)}
+              >
+                <span className="facet-label">All Organisms</span>
+                <span className="facet-count">{totalCount}</span>
+              </li>
+              {availableOrganisms.map(organism => (
+                <li
+                  key={organism}
+                  className={`facet-item ${selectedOrganism === organism ? 'selected' : ''}`}
+                  onClick={() => setSelectedOrganism(organism)}
+                >
+                  <span className="facet-label">{organism}</span>
+                  <span className="facet-count">{organismCounts[organism] || 0}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     );
   };
@@ -352,41 +379,21 @@ const TextSearchResultsPage = () => {
     const filteredResults = selectedOrganism
       ? results.filter(r => r.organism === selectedOrganism)
       : results;
-    // Show filtered count in header when organism is selected, otherwise show total
-    const displayCount = selectedOrganism ? filteredResults.length : totalCount;
 
     return (
-      <div className={`text-search-results-list ${selectedCategory}`}>
-        <h2>
-          {CATEGORY_LABELS[selectedCategory]}
-          <span className="category-count">({displayCount} results)</span>
-        </h2>
-        {availableOrganisms.length > 0 && (
-          <OrganismSelector
-            organisms={availableOrganisms}
-            selectedOrganism={selectedOrganism}
-            onOrganismChange={setSelectedOrganism}
-            dataType="search"
-            context="search"
-            organismCounts={organismCounts}
-            showAllOption={true}
-            totalCount={totalCount}
-          />
-        )}
-        <div className="ag-grid-container">
-          <AgGridReact
-            rowData={filteredResults}
-            columnDefs={columnDefs}
-            defaultColDef={defaultColDef}
-            domLayout="autoHeight"
-            suppressCellFocus={true}
-            enableCellTextSelection={true}
-            pagination={true}
-            paginationPageSize={10}
-            paginationPageSizeSelector={[10, 20, 50]}
-            getRowId={(params) => `${params.data.category}-${params.data.id}`}
-          />
-        </div>
+      <div className="ag-grid-wrapper">
+        <AgGridReact
+          rowData={filteredResults}
+          columnDefs={columnDefs}
+          defaultColDef={defaultColDef}
+          domLayout="normal"
+          suppressCellFocus={true}
+          enableCellTextSelection={true}
+          pagination={true}
+          paginationPageSize={20}
+          paginationPageSizeSelector={[20, 50, 100]}
+          getRowId={(params) => `${params.data.category}-${params.data.id}`}
+        />
       </div>
     );
   };

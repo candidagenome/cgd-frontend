@@ -58,24 +58,31 @@
 
 .search-layout {
   display: flex;
-  gap: 30px;
-  min-height: 400px;
+  gap: 20px;
+  height: calc(100vh - 280px);
+  min-height: 500px;
 }
 
 /* Sidebar with facets */
 .search-sidebar {
   flex: 0 0 220px;
   min-width: 220px;
+  overflow-y: auto;
 }
 
-/* Main results area - FIXED WIDTH */
+/* Main results area - fills remaining space */
 .search-main {
-  flex: 0 0 950px;
-  min-width: 950px;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-.search-results-list {
-  min-height: 300px; /* Minimum height for consistency */
+/* AG Grid wrapper - fills the main area */
+.ag-grid-wrapper {
+  flex: 1;
+  width: 100%;
+  min-height: 400px;
 }
 
 /* ===========================================
@@ -184,6 +191,36 @@
   background-color: #d0d0d0;
   color: #333;
   font-weight: 500;
+}
+
+/* Organism facet section */
+.organism-facet {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+}
+
+.organism-facet h3 {
+  margin: 0 0 12px 0;
+  font-size: 1em;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.organism-facet .facet-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.organism-facet .facet-label {
+  font-size: 0.85em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
 }
 
 /* ===========================================
