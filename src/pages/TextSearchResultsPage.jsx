@@ -62,7 +62,6 @@ const TextSearchResultsPage = () => {
     setCategoryLoading(true);
     try {
       const data = await searchApi.textSearchCategory(query, category, page, PAGE_SIZE);
-      console.log('textSearchCategory response:', { category, results: data.results?.length, pagination: data.pagination });
       setCategoryResults(data.results);
       setPagination(data.pagination);
       // Use organism counts from API if provided (counts ALL results, not just current page)
@@ -427,10 +426,6 @@ const TextSearchResultsPage = () => {
     }
 
     const results = categoryResults || [];
-    // Debug: log if results are unexpectedly empty while pagination exists
-    if (results.length === 0 && pagination?.total_items > 0) {
-      console.warn('Results empty but pagination shows items:', { categoryResults, pagination });
-    }
     // Filter results by selected organism
     const filteredResults = selectedOrganism
       ? results.filter(r => r.organism === selectedOrganism)
