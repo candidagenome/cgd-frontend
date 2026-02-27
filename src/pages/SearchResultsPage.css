@@ -1,7 +1,7 @@
 /* Search Results Page Styles */
 
 .search-results-page {
-  max-width: 1200px;
+  max-width: 1350px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -70,8 +70,8 @@
 
 /* Main results area - FIXED WIDTH */
 .search-main {
-  flex: 0 0 800px;
-  min-width: 800px;
+  flex: 0 0 950px;
+  min-width: 950px;
 }
 
 .search-results-list {
@@ -469,7 +469,7 @@
    Responsive Design
    =========================================== */
 
-@media (max-width: 1100px) {
+@media (max-width: 1250px) {
   .search-layout {
     flex-direction: column;
     gap: 20px;

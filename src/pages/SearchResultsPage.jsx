@@ -60,44 +60,58 @@ const SearchResultsPage = () => {
   const [organismCounts, setOrganismCounts] = useState({});
   const [hasApiOrganismCounts, setHasApiOrganismCounts] = useState(false);
 
-  // AG Grid column definitions
-  const columnDefs = useMemo(() => [
-    {
-      headerName: 'Name',
-      field: 'name',
-      cellRenderer: NameLinkRenderer,
-      filter: 'agTextColumnFilter',
-      sortable: true,
-      minWidth: 150,
-      flex: 1,
-    },
-    {
-      headerName: 'ID',
-      field: 'id',
-      filter: 'agTextColumnFilter',
-      sortable: true,
-      minWidth: 130,
-      flex: 1,
-    },
-    {
-      headerName: 'Description',
-      field: 'description',
-      cellRenderer: DescriptionRenderer,
-      filter: 'agTextColumnFilter',
-      sortable: true,
-      minWidth: 300,
-      flex: 2,
-      tooltipField: 'description',
-    },
-    {
-      headerName: 'Organism',
-      field: 'organism',
-      filter: 'agTextColumnFilter',
-      sortable: true,
-      minWidth: 180,
-      flex: 1,
-    },
-  ], []);
+  // Check if results have organism data
+  const hasOrganismData = useMemo(() => {
+    if (!categoryResults || categoryResults.length === 0) return false;
+    return categoryResults.some(r => r.organism);
+  }, [categoryResults]);
+
+  // AG Grid column definitions - dynamically include organism column
+  const columnDefs = useMemo(() => {
+    const cols = [
+      {
+        headerName: 'Name',
+        field: 'name',
+        cellRenderer: NameLinkRenderer,
+        filter: 'agTextColumnFilter',
+        sortable: true,
+        minWidth: 150,
+        flex: 1,
+      },
+      {
+        headerName: 'ID',
+        field: 'id',
+        filter: 'agTextColumnFilter',
+        sortable: true,
+        minWidth: 130,
+        flex: 1,
+      },
+      {
+        headerName: 'Description',
+        field: 'description',
+        cellRenderer: DescriptionRenderer,
+        filter: 'agTextColumnFilter',
+        sortable: true,
+        minWidth: 300,
+        flex: 2,
+        wrapText: true,
+        autoHeight: true,
+        cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
+      },
+    ];
+    // Only add organism column if data has organism info
+    if (hasOrganismData) {
+      cols.push({
+        headerName: 'Organism',
+        field: 'organism',
+        filter: 'agTextColumnFilter',
+        sortable: true,
+        minWidth: 180,
+        flex: 1,
+      });
+    }
+    return cols;
+  }, [hasOrganismData]);
 
   // AG Grid default column definitions
   const defaultColDef = useMemo(() => ({
@@ -412,6 +426,9 @@ const SearchResultsPage = () => {
             domLayout="autoHeight"
             suppressCellFocus={true}
             enableCellTextSelection={true}
+            pagination={true}
+            paginationPageSize={10}
+            paginationPageSizeSelector={[10, 20, 50]}
             getRowId={(params) => `${params.data.category}-${params.data.id}`}
           />
         </div>

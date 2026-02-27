@@ -1,8 +1,48 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { AgGridReact } from 'ag-grid-react';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { searchApi } from '../api/searchApi';
 import OrganismSelector, { getDefaultOrganism } from '../components/locus/OrganismSelector';
 import './TextSearchResultsPage.css';
+
+// Register AG Grid modules
+ModuleRegistry.registerModules([AllCommunityModule]);
+
+// Custom cell renderer for name links
+const NameLinkRenderer = (props) => {
+  if (!props.value) return '-';
+  const displayName = props.data.highlighted_name || props.data.name;
+  const link = props.data.link;
+  const isExternal = link && (link.startsWith('http://') || link.startsWith('https://'));
+
+  if (!link) {
+    return <span dangerouslySetInnerHTML={{ __html: displayName }} />;
+  }
+  if (isExternal) {
+    return (
+      <a
+        href={link}
+        target="_blank"
+        rel="noopener noreferrer"
+        dangerouslySetInnerHTML={{ __html: displayName }}
+      />
+    );
+  }
+  return (
+    <Link
+      to={link}
+      dangerouslySetInnerHTML={{ __html: displayName }}
+    />
+  );
+};
+
+// Custom cell renderer for description with HTML
+const DescriptionRenderer = (props) => {
+  if (!props.value) return '-';
+  const displayDesc = props.data.highlighted_description || props.data.description;
+  return <span dangerouslySetInnerHTML={{ __html: displayDesc }} />;
+};
 
 // Category labels for display
 const CATEGORY_LABELS = {
@@ -54,6 +94,65 @@ const TextSearchResultsPage = () => {
   const [selectedOrganism, setSelectedOrganism] = useState(null);
   const [organismCounts, setOrganismCounts] = useState({});
   const [hasApiOrganismCounts, setHasApiOrganismCounts] = useState(false);
+
+  // Check if results have organism data
+  const hasOrganismData = useMemo(() => {
+    if (!categoryResults || categoryResults.length === 0) return false;
+    return categoryResults.some(r => r.organism);
+  }, [categoryResults]);
+
+  // AG Grid column definitions - dynamically include organism column
+  const columnDefs = useMemo(() => {
+    const cols = [
+      {
+        headerName: 'Name',
+        field: 'name',
+        cellRenderer: NameLinkRenderer,
+        filter: 'agTextColumnFilter',
+        sortable: true,
+        minWidth: 150,
+        flex: 1,
+      },
+      {
+        headerName: 'ID',
+        field: 'id',
+        filter: 'agTextColumnFilter',
+        sortable: true,
+        minWidth: 130,
+        flex: 1,
+      },
+      {
+        headerName: 'Description',
+        field: 'description',
+        cellRenderer: DescriptionRenderer,
+        filter: 'agTextColumnFilter',
+        sortable: true,
+        minWidth: 300,
+        flex: 2,
+        wrapText: true,
+        autoHeight: true,
+        cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
+      },
+    ];
+    // Only add organism column if data has organism info
+    if (hasOrganismData) {
+      cols.push({
+        headerName: 'Organism',
+        field: 'organism',
+        filter: 'agTextColumnFilter',
+        sortable: true,
+        minWidth: 180,
+        flex: 1,
+      });
+    }
+    return cols;
+  }, [hasOrganismData]);
+
+  // AG Grid default column definitions
+  const defaultColDef = useMemo(() => ({
+    resizable: true,
+    floatingFilter: true,
+  }), []);
 
   // Fetch paginated results for a category
   const fetchCategoryResults = useCallback(async (category, page) => {
@@ -199,75 +298,6 @@ const TextSearchResultsPage = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Check if a link is external
-  const isExternalLink = (link) => {
-    return link && (link.startsWith('http://') || link.startsWith('https://'));
-  };
-
-  // Render a single result item
-  const renderResultItem = (result) => {
-    // Use highlighted versions if available
-    const displayName = result.highlighted_name || result.name;
-    const displayDescription = result.highlighted_description || result.description;
-
-    // Don't show ID if it's the same as the name
-    const showId = result.id && result.id !== result.name;
-
-    // Determine if link is external or if there's no link
-    const hasLink = result.link && result.link.length > 0;
-    const external = isExternalLink(result.link);
-
-    return (
-      <div key={`${result.category}-${result.id}`} className="text-search-result-item">
-        <div className="text-search-result-name">
-          {!hasLink ? (
-            <span dangerouslySetInnerHTML={{ __html: displayName }} />
-          ) : external ? (
-            <a
-              href={result.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              dangerouslySetInnerHTML={{ __html: displayName }}
-            />
-          ) : (
-            <Link to={result.link} dangerouslySetInnerHTML={{ __html: displayName }} />
-          )}
-          {showId && <span className="text-search-result-id">({result.id})</span>}
-          {external && <span className="external-link-icon" title="External link">&#x2197;</span>}
-        </div>
-        {result.links && result.links.length > 0 && (
-          <div className="text-search-result-links">
-            {result.links.map((link, idx) => (
-              <span key={idx} className="citation-link">
-                {link.link_type === 'external' ? (
-                  <a href={link.url} target="_blank" rel="noopener noreferrer">
-                    {link.name}
-                  </a>
-                ) : (
-                  <Link to={link.url}>{link.name}</Link>
-                )}
-                {idx < result.links.length - 1 && ' | '}
-              </span>
-            ))}
-          </div>
-        )}
-        {displayDescription && (
-          <div
-            className="text-search-result-description"
-            dangerouslySetInnerHTML={{ __html: displayDescription }}
-          />
-        )}
-        {result.organism && (
-          <div className="text-search-result-organism">{result.organism}</div>
-        )}
-        {result.match_context && (
-          <div className="text-search-result-context">
-            <span className="context-label">Type:</span> {result.match_context}
-          </div>
-        )}
-      </div>
-    );
-  };
 
   // Render facets (category filters)
   const renderFacets = () => {
@@ -452,7 +482,20 @@ const TextSearchResultsPage = () => {
             showAllOption={true}
           />
         )}
-        {filteredResults.map(renderResultItem)}
+        <div className="ag-grid-container">
+          <AgGridReact
+            rowData={filteredResults}
+            columnDefs={columnDefs}
+            defaultColDef={defaultColDef}
+            domLayout="autoHeight"
+            suppressCellFocus={true}
+            enableCellTextSelection={true}
+            pagination={true}
+            paginationPageSize={10}
+            paginationPageSizeSelector={[10, 20, 50]}
+            getRowId={(params) => `${params.data.category}-${params.data.id}`}
+          />
+        </div>
         {renderPagination()}
       </div>
     );
