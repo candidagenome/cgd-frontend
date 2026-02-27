@@ -16,7 +16,7 @@ function GoTermFinderSearchPage() {
   const [formData, setFormData] = useState({
     genes: '',
     organism_no: '',
-    ontology: 'all',
+    ontology: 'P',
     use_custom_background: false,
     background_genes: '',
     evidence_codes: [],
@@ -307,16 +307,6 @@ function GoTermFinderSearchPage() {
                 <input
                   type="radio"
                   name="ontology"
-                  value="all"
-                  checked={formData.ontology === 'all'}
-                  onChange={(e) => handleInputChange('ontology', e.target.value)}
-                />
-                <span>All</span>
-              </label>
-              <label className="radio-label">
-                <input
-                  type="radio"
-                  name="ontology"
                   value="P"
                   checked={formData.ontology === 'P'}
                   onChange={(e) => handleInputChange('ontology', e.target.value)}
@@ -523,7 +513,7 @@ function GoTermFinderSearchPage() {
                 setFormData({
                   genes: '',
                   organism_no: config?.organisms?.[0]?.organism_no || '',
-                  ontology: 'all',
+                  ontology: 'P',
                   use_custom_background: false,
                   background_genes: '',
                   evidence_codes: [],
