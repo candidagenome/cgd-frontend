@@ -236,15 +236,10 @@ const SearchResultsPage = () => {
         <h3>Categories</h3>
         <ul className="facet-list">
           {CATEGORY_ORDER.map(categoryKey => {
-            // Use pagination total if available for selected category, otherwise use initial count
-            // Also ensure we show at least the number of actual results displayed
-            let count = (selectedCategory === categoryKey && pagination)
-              ? pagination.total_items
-              : (initialResults?.results_by_category?.[categoryKey]?.length || 0);
-            // If we have more results than the count says, use the actual count
-            if (selectedCategory === categoryKey && categoryResults && categoryResults.length > count) {
-              count = categoryResults.length;
-            }
+            // Use counts_by_category from API (actual total counts), fall back to pagination or results length
+            let count = initialResults?.counts_by_category?.[categoryKey]
+              ?? (selectedCategory === categoryKey && pagination ? pagination.total_items : 0)
+              ?? (initialResults?.results_by_category?.[categoryKey]?.length || 0);
             const isSelected = selectedCategory === categoryKey;
             const hasResults = count > 0;
 
@@ -255,7 +250,7 @@ const SearchResultsPage = () => {
                 onClick={() => hasResults && handleCategoryChange(categoryKey)}
               >
                 <span className="facet-label">{CATEGORY_LABELS[categoryKey]}</span>
-                <span className="facet-count">{count}{count >= 20 && selectedCategory !== categoryKey ? '+' : ''}</span>
+                <span className="facet-count">{count}</span>
               </li>
             );
           })}
