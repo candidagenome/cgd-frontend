@@ -301,32 +301,6 @@ const TextSearchResultsPage = () => {
 
     return (
       <div className="text-search-facets">
-        <h3>Categories</h3>
-        <ul className="facet-list">
-          {categoriesToShow.map(categoryKey => {
-            // Use totalCount for selected category, otherwise use initial count
-            let count;
-            if (selectedCategory === categoryKey) {
-              count = displayCount;
-            } else {
-              count = getCategoryCount(categoryKey);
-            }
-            const isSelected = selectedCategory === categoryKey;
-            const hasResults = count > 0 || (isSelected && totalCount > 0);
-
-            return (
-              <li
-                key={categoryKey}
-                className={`facet-item ${isSelected ? 'selected' : ''} ${!hasResults ? 'disabled' : ''}`}
-                onClick={() => hasResults && handleCategoryChange(categoryKey)}
-              >
-                <span className="facet-label">{CATEGORY_LABELS[categoryKey]}</span>
-                <span className="facet-count">{count}</span>
-              </li>
-            );
-          })}
-        </ul>
-
         {/* Organism filter facet */}
         {availableOrganisms.length > 0 && (
           <div className="organism-facet">
@@ -352,6 +326,32 @@ const TextSearchResultsPage = () => {
             </ul>
           </div>
         )}
+
+        <h3>Categories</h3>
+        <ul className="facet-list">
+          {categoriesToShow.map(categoryKey => {
+            // Use totalCount for selected category, otherwise use initial count
+            let count;
+            if (selectedCategory === categoryKey) {
+              count = displayCount;
+            } else {
+              count = getCategoryCount(categoryKey);
+            }
+            const isSelected = selectedCategory === categoryKey;
+            const hasResults = count > 0 || (isSelected && totalCount > 0);
+
+            return (
+              <li
+                key={categoryKey}
+                className={`facet-item ${isSelected ? 'selected' : ''} ${!hasResults ? 'disabled' : ''}`}
+                onClick={() => hasResults && handleCategoryChange(categoryKey)}
+              >
+                <span className="facet-label">{CATEGORY_LABELS[categoryKey]}</span>
+                <span className="facet-count">{count}</span>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     );
   };
