@@ -288,6 +288,7 @@ function FeatureSearchResultsPage() {
                 rowData={results?.features || []}
                 columnDefs={columnDefs}
                 defaultColDef={defaultColDef}
+                domLayout="autoHeight"
                 pagination={true}
                 paginationPageSize={10}
                 paginationPageSizeSelector={[10, 25, 50, 100]}
