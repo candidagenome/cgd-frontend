@@ -29,8 +29,6 @@ const featureSearchApi = {
    * @param {number[]} params.additional_goids - Additional GOIDs
    * @param {string[]} params.annotation_methods - GO annotation methods
    * @param {string[]} params.evidence_codes - GO evidence codes
-   * @param {number} params.page - Page number
-   * @param {number} params.page_size - Results per page
    * @param {string} params.sort_by - Sort field
    */
   search: async (params) => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import featureSearchApi from '../api/featureSearchApi';
@@ -15,18 +15,12 @@ const OrfLinkRenderer = (props) => {
 };
 
 function FeatureSearchResultsPage() {
-  const navigate = useNavigate();
-
   // State
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchParams, setSearchParams] = useState(null);
   const [downloading, setDownloading] = useState(false);
-
-  // Pagination state
-  const [page, setPage] = useState(1);
-  const [pageSize] = useState(30);
   const [sortBy, setSortBy] = useState('orf');
 
   // AG Grid column definitions
@@ -97,7 +91,6 @@ function FeatureSearchResultsPage() {
     try {
       const params = JSON.parse(storedParams);
       setSearchParams(params);
-      setPage(params.page || 1);
       setSortBy(params.sort_by || 'orf');
     } catch (err) {
       setError('Invalid search parameters');
@@ -105,7 +98,7 @@ function FeatureSearchResultsPage() {
     }
   }, []);
 
-  // Fetch results when params or pagination changes
+  // Fetch results when params change
   const fetchResults = useCallback(async () => {
     if (!searchParams) return;
 
@@ -115,8 +108,6 @@ function FeatureSearchResultsPage() {
     try {
       const params = {
         ...searchParams,
-        page,
-        page_size: pageSize,
         sort_by: sortBy,
       };
 
@@ -128,7 +119,7 @@ function FeatureSearchResultsPage() {
     } finally {
       setLoading(false);
     }
-  }, [searchParams, page, pageSize, sortBy]);
+  }, [searchParams, sortBy]);
 
   useEffect(() => {
     if (searchParams) {
@@ -136,16 +127,9 @@ function FeatureSearchResultsPage() {
     }
   }, [searchParams, fetchResults]);
 
-  // Handle pagination
-  const goToPage = (newPage) => {
-    setPage(Math.max(1, Math.min(newPage, results?.total_pages || 1)));
-    window.scrollTo(0, 0);
-  };
-
   // Handle sort change
   const handleSortChange = (e) => {
     setSortBy(e.target.value);
-    setPage(1);
   };
 
   // Handle download
@@ -156,8 +140,6 @@ function FeatureSearchResultsPage() {
     try {
       await featureSearchApi.downloadResults({
         ...searchParams,
-        page: 1,
-        page_size: 10000, // Download all
         sort_by: sortBy,
       });
     } catch (err) {
@@ -199,47 +181,6 @@ function FeatureSearchResultsPage() {
     }
 
     return parts;
-  };
-
-  // Render pagination controls
-  const renderPagination = () => {
-    if (!results || results.total_pages <= 1) return null;
-
-    return (
-      <div className="pagination">
-        <button
-          className="pagination-btn"
-          onClick={() => goToPage(1)}
-          disabled={page === 1}
-        >
-          &laquo; First
-        </button>
-        <button
-          className="pagination-btn"
-          onClick={() => goToPage(page - 1)}
-          disabled={page === 1}
-        >
-          &lsaquo; Prev
-        </button>
-        <span className="pagination-info">
-          Page {page} of {results.total_pages}
-        </span>
-        <button
-          className="pagination-btn"
-          onClick={() => goToPage(page + 1)}
-          disabled={page === results.total_pages}
-        >
-          Next &rsaquo;
-        </button>
-        <button
-          className="pagination-btn"
-          onClick={() => goToPage(results.total_pages)}
-          disabled={page === results.total_pages}
-        >
-          Last &raquo;
-        </button>
-      </div>
-    );
   };
 
   if (loading && !results) {
@@ -340,27 +281,19 @@ function FeatureSearchResultsPage() {
           </div>
         ) : (
           <>
-            <div className="results-info">
-              Showing {((page - 1) * pageSize) + 1}-
-              {Math.min(page * pageSize, results?.total_count || 0)} of{' '}
-              {results?.total_count?.toLocaleString() || 0} features
-            </div>
-
-            {renderPagination()}
-
             <div className="ag-grid-container">
               <AgGridReact
                 rowData={results?.features || []}
                 columnDefs={columnDefs}
                 defaultColDef={defaultColDef}
-                domLayout="autoHeight"
+                pagination={true}
+                paginationPageSize={10}
+                paginationPageSizeSelector={[10, 25, 50, 100]}
                 suppressCellFocus={true}
                 enableCellTextSelection={true}
                 getRowId={(params) => params.data.feature_id || params.data.orf}
               />
             </div>
-
-            {renderPagination()}
 
             {/* Filter Counts Summary */}
             {results?.filter_counts && (
