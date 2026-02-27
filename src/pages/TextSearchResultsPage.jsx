@@ -317,10 +317,18 @@ const TextSearchResultsPage = () => {
         <ul className="facet-list">
           {categoriesToShow.map(categoryKey => {
             // Use pagination total if available for selected category, otherwise use initial count
-            // Also ensure we show at least the number of actual results displayed
-            let count = (selectedCategory === categoryKey && pagination)
-              ? pagination.total_items
-              : getCategoryCount(categoryKey);
+            // For selected category with organism filter, use organism-specific count
+            let count;
+            if (selectedCategory === categoryKey && pagination) {
+              // If an organism is selected, use the organism-specific count
+              if (selectedOrganism && organismCounts[selectedOrganism] !== undefined) {
+                count = organismCounts[selectedOrganism];
+              } else {
+                count = pagination.total_items;
+              }
+            } else {
+              count = getCategoryCount(categoryKey);
+            }
             // If we have more results than the count says, use the actual count
             if (selectedCategory === categoryKey && categoryResults && categoryResults.length > count) {
               count = categoryResults.length;
