@@ -181,8 +181,18 @@
 }
 
 /* AG Grid Wrapper */
-.ag-grid-wrapper {
+.restriction-results-page .ag-grid-wrapper {
+  margin-top: 15px;
   width: 100%;
+  min-width: 100%;
+}
+
+.restriction-results-page .ag-grid-wrapper .ag-root-wrapper,
+.restriction-results-page .ag-grid-wrapper .ag-root,
+.restriction-results-page .ag-grid-wrapper .ag-body-viewport,
+.restriction-results-page .ag-grid-wrapper .ag-center-cols-container {
+  width: 100% !important;
+  min-width: 100% !important;
 }
 
 /* Type Badge in AG Grid */
