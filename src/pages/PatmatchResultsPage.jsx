@@ -343,7 +343,7 @@ function PatmatchResultsPage() {
             </p>
           </div>
         ) : (
-          <div className="ag-grid-wrapper">
+          <div className="ag-grid-wrapper" style={{ width: '100%' }}>
             <AgGridReact
               rowData={results.hits}
               columnDefs={columnDefs}

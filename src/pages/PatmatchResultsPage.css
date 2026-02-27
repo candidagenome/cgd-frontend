@@ -172,10 +172,15 @@
 .patmatch-results-page .ag-grid-wrapper {
   margin-top: 15px;
   width: 100%;
+  min-width: 100%;
 }
 
-.patmatch-results-page .ag-grid-wrapper .ag-root-wrapper {
-  width: 100%;
+.patmatch-results-page .ag-grid-wrapper .ag-root-wrapper,
+.patmatch-results-page .ag-grid-wrapper .ag-root,
+.patmatch-results-page .ag-grid-wrapper .ag-body-viewport,
+.patmatch-results-page .ag-grid-wrapper .ag-center-cols-container {
+  width: 100% !important;
+  min-width: 100% !important;
 }
 
 .seq-desc {
