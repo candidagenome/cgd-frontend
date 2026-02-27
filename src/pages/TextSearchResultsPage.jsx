@@ -112,7 +112,7 @@ const TextSearchResultsPage = () => {
   // AG Grid column definitions - single combined column
   const columnDefs = useMemo(() => [
     {
-      headerName: 'Results',
+      headerName: selectedCategory ? CATEGORY_LABELS[selectedCategory] : 'Results',
       field: 'name',
       cellRenderer: CombinedResultRenderer,
       filter: 'agTextColumnFilter',
@@ -122,7 +122,7 @@ const TextSearchResultsPage = () => {
       autoHeight: true,
       cellStyle: { whiteSpace: 'normal', lineHeight: '1.4', padding: '10px 12px' },
     },
-  ], []);
+  ], [selectedCategory]);
 
   // AG Grid default column definitions
   const defaultColDef = useMemo(() => ({
