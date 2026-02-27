@@ -1,9 +1,32 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { AgGridReact } from 'ag-grid-react';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { searchApi } from '../api/searchApi';
-import { CitationLinksBelow } from '../utils/formatCitation';
 import OrganismSelector, { getDefaultOrganism } from '../components/locus/OrganismSelector';
 import './SearchResultsPage.css';
+
+// Register AG Grid modules
+ModuleRegistry.registerModules([AllCommunityModule]);
+
+// Custom cell renderer for name links
+const NameLinkRenderer = (props) => {
+  if (!props.value) return '-';
+  const displayName = props.data.highlighted_name || props.data.name;
+  return (
+    <Link
+      to={props.data.link}
+      dangerouslySetInnerHTML={{ __html: displayName }}
+    />
+  );
+};
+
+// Custom cell renderer for description with HTML
+const DescriptionRenderer = (props) => {
+  if (!props.value) return '-';
+  const displayDesc = props.data.highlighted_description || props.data.description;
+  return <span dangerouslySetInnerHTML={{ __html: displayDesc }} />;
+};
 
 const CATEGORY_LABELS = {
   genes: 'Genes / Loci',
@@ -36,6 +59,51 @@ const SearchResultsPage = () => {
   const [selectedOrganism, setSelectedOrganism] = useState(null);
   const [organismCounts, setOrganismCounts] = useState({});
   const [hasApiOrganismCounts, setHasApiOrganismCounts] = useState(false);
+
+  // AG Grid column definitions
+  const columnDefs = useMemo(() => [
+    {
+      headerName: 'Name',
+      field: 'name',
+      cellRenderer: NameLinkRenderer,
+      filter: 'agTextColumnFilter',
+      sortable: true,
+      minWidth: 150,
+      flex: 1,
+    },
+    {
+      headerName: 'ID',
+      field: 'id',
+      filter: 'agTextColumnFilter',
+      sortable: true,
+      minWidth: 130,
+      flex: 1,
+    },
+    {
+      headerName: 'Description',
+      field: 'description',
+      cellRenderer: DescriptionRenderer,
+      filter: 'agTextColumnFilter',
+      sortable: true,
+      minWidth: 300,
+      flex: 2,
+      tooltipField: 'description',
+    },
+    {
+      headerName: 'Organism',
+      field: 'organism',
+      filter: 'agTextColumnFilter',
+      sortable: true,
+      minWidth: 180,
+      flex: 1,
+    },
+  ], []);
+
+  // AG Grid default column definitions
+  const defaultColDef = useMemo(() => ({
+    resizable: true,
+    floatingFilter: true,
+  }), []);
 
   // Fetch paginated results for a category
   const fetchCategoryResults = useCallback(async (category, page) => {
@@ -170,65 +238,6 @@ const SearchResultsPage = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Render a reference result with citation formatting
-  const renderReferenceItem = (result) => {
-    // Extract PMID from the name if it's in "PMID:xxxxx" format
-    const pmidMatch = result.name?.match(/PMID:(\d+)/);
-    const pubmed = pmidMatch ? parseInt(pmidMatch[1], 10) : null;
-
-    // Use links from API response
-    const links = result.links || [];
-
-    // Use highlighted description if available
-    const displayDescription = result.highlighted_description || result.description;
-
-    return (
-      <div key={`${result.category}-${result.id}`} className="search-result-item reference-item">
-        <div className="citation-line">
-          {displayDescription ? (
-            <span dangerouslySetInnerHTML={{ __html: displayDescription }} />
-          ) : (
-            <Link to={result.link}>{result.name}</Link>
-          )}
-          {pubmed && <span className="citation-pmid"> PMID: {pubmed}</span>}
-        </div>
-        <CitationLinksBelow links={links} />
-      </div>
-    );
-  };
-
-  // Render a standard result item (genes, GO terms, phenotypes)
-  const renderResultItem = (result) => {
-    // Use special rendering for references
-    if (result.category === 'reference') {
-      return renderReferenceItem(result);
-    }
-
-    // Don't show ID if it's the same as the name (e.g., phenotypes)
-    const showId = result.id && result.id !== result.name;
-
-    // Use highlighted versions if available
-    const displayName = result.highlighted_name || result.name;
-    const displayDescription = result.highlighted_description || result.description;
-
-    return (
-      <div key={`${result.category}-${result.id}`} className="search-result-item">
-        <div className="search-result-name">
-          <Link to={result.link} dangerouslySetInnerHTML={{ __html: displayName }} />
-          {showId && <span className="search-result-id">({result.id})</span>}
-        </div>
-        {displayDescription && (
-          <div
-            className="search-result-description"
-            dangerouslySetInnerHTML={{ __html: displayDescription }}
-          />
-        )}
-        {result.organism && (
-          <div className="search-result-organism">{result.organism}</div>
-        )}
-      </div>
-    );
-  };
 
   const renderFacets = () => {
     return (
@@ -395,7 +404,17 @@ const SearchResultsPage = () => {
             showAllOption={true}
           />
         )}
-        {filteredResults.map(renderResultItem)}
+        <div className="ag-grid-container">
+          <AgGridReact
+            rowData={filteredResults}
+            columnDefs={columnDefs}
+            defaultColDef={defaultColDef}
+            domLayout="autoHeight"
+            suppressCellFocus={true}
+            enableCellTextSelection={true}
+            getRowId={(params) => `${params.data.category}-${params.data.id}`}
+          />
+        </div>
         {renderPagination()}
       </div>
     );
