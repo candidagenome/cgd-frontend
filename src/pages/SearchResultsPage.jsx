@@ -57,8 +57,10 @@ const CombinedResultRenderer = (props) => {
   }
 
   // For genes category, link to /locus/[gene_name]
+  // Prefer gene_name (standard name like "HOG1") over name (which may be orf ID like "orf19.8514")
   const isGenes = data.category === 'genes';
-  const linkUrl = isGenes ? `/locus/${data.name}` : data.link;
+  const locusIdentifier = data.gene_name || data.name;
+  const linkUrl = isGenes ? `/locus/${locusIdentifier}` : data.link;
   const isExternal = linkUrl?.startsWith('http');
 
   return (
