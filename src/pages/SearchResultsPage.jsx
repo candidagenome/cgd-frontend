@@ -1,12 +1,15 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { searchApi } from '../api/searchApi';
 import './SearchResultsPage.css';
 
-// Register AG Grid modules
-ModuleRegistry.registerModules([AllCommunityModule]);
+// Register AG Grid modules once
+if (!ModuleRegistry.__cgdRegistered) {
+  ModuleRegistry.registerModules([AllCommunityModule]);
+  ModuleRegistry.__cgdRegistered = true;
+}
 
 // Combined cell renderer for identifier + description
 const CombinedResultRenderer = (props) => {
@@ -117,12 +120,16 @@ const SearchResultsPage = () => {
 
   // Initial search effect
   useEffect(() => {
+    let isMounted = true;
+
     const fetchResults = async () => {
       if (!query.trim()) {
-        setInitialResults(null);
-        setSelectedCategory(null);
-        setCategoryResults(null);
-        setTotalCount(0);
+        if (isMounted) {
+          setInitialResults(null);
+          setSelectedCategory(null);
+          setCategoryResults(null);
+          setTotalCount(0);
+        }
         return;
       }
 
@@ -132,6 +139,8 @@ const SearchResultsPage = () => {
       try {
         // Perform quick search to get category counts
         const data = await searchApi.quickSearch(query);
+        if (!isMounted) return;
+
         setInitialResults(data);
 
         // Auto-select first category with results
@@ -144,29 +153,35 @@ const SearchResultsPage = () => {
           // Fetch all results for this category
           await fetchCategoryResults(firstCategoryWithResults);
         } else {
-          setSelectedCategory(null);
-          setCategoryResults(null);
-          setTotalCount(0);
+          if (isMounted) {
+            setSelectedCategory(null);
+            setCategoryResults(null);
+            setTotalCount(0);
+          }
         }
       } catch (err) {
-        console.error('Search error:', err);
-        setError('Failed to perform search. Please try again.');
+        if (isMounted) {
+          console.error('Search error:', err);
+          setError('Failed to perform search. Please try again.');
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchResults();
+
+    return () => {
+      isMounted = false;
+    };
   }, [query, fetchCategoryResults]);
 
   // Extract organisms and calculate counts when category results change (fallback when API doesn't provide counts)
   useEffect(() => {
     // Skip if API already provided organism counts
     if (hasApiOrganismCounts) {
-      // Just validate selected organism against available organisms
-      if (selectedOrganism !== null && !availableOrganisms.includes(selectedOrganism)) {
-        setSelectedOrganism(null);
-      }
       return;
     }
 
@@ -179,19 +194,24 @@ const SearchResultsPage = () => {
         }
       });
       setOrganismCounts(counts);
-
-      const organisms = Object.keys(counts);
-      setAvailableOrganisms(organisms);
-      // Default to "All Organisms" (null) to show all results initially
-      if (selectedOrganism !== null && !organisms.includes(selectedOrganism)) {
-        setSelectedOrganism(null);
-      }
+      setAvailableOrganisms(Object.keys(counts));
     } else {
       setAvailableOrganisms([]);
       setOrganismCounts({});
-      setSelectedOrganism(null);
     }
-  }, [categoryResults, selectedOrganism, hasApiOrganismCounts, availableOrganisms]);
+  }, [categoryResults, hasApiOrganismCounts]);
+
+  // Reset selected organism if it's no longer available
+  useEffect(() => {
+    if (availableOrganisms.length > 0) {
+      setSelectedOrganism(prev => {
+        if (prev !== null && !availableOrganisms.includes(prev)) {
+          return null;
+        }
+        return prev;
+      });
+    }
+  }, [availableOrganisms]);
 
   // Handle category change
   const handleCategoryChange = async (category) => {

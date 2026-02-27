@@ -5,8 +5,11 @@ import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { searchApi } from '../api/searchApi';
 import './TextSearchResultsPage.css';
 
-// Register AG Grid modules
-ModuleRegistry.registerModules([AllCommunityModule]);
+// Register AG Grid modules once
+if (!ModuleRegistry.__cgdRegistered) {
+  ModuleRegistry.registerModules([AllCommunityModule]);
+  ModuleRegistry.__cgdRegistered = true;
+}
 
 // Combined cell renderer for identifier + description
 const CombinedResultRenderer = (props) => {
