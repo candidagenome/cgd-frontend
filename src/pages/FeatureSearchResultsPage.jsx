@@ -66,10 +66,12 @@ function FeatureSearchResultsPage() {
       field: 'description',
       filter: 'agTextColumnFilter',
       sortable: true,
-      minWidth: 200,
+      minWidth: 250,
       flex: 2,
+      wrapText: true,
+      autoHeight: true,
+      cellClass: 'ag-cell-wrap-text',
       valueFormatter: (params) => params.value || '-',
-      tooltipField: 'description',
     },
   ], []);
 
