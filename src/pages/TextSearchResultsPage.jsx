@@ -488,6 +488,7 @@ const TextSearchResultsPage = () => {
             context="search"
             organismCounts={organismCounts}
             showAllOption={true}
+            totalCount={totalCount}
           />
         )}
         <div className="ag-grid-container">

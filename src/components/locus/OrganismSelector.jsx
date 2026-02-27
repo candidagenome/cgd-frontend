@@ -12,6 +12,7 @@ const ALL_ORGANISMS_VALUE = '__all__';
  * @param {string} context - 'locus' (default) or 'search' to customize messaging
  * @param {Object} organismCounts - Optional map of organism name to count (for search context)
  * @param {boolean} showAllOption - Whether to show "All Organisms" option (default: false)
+ * @param {number} totalCount - Optional explicit total count for "All Organisms" (overrides calculated sum)
  */
 function OrganismSelector({
   organisms,
@@ -20,7 +21,8 @@ function OrganismSelector({
   dataType,
   context = 'locus',
   organismCounts = null,
-  showAllOption = false
+  showAllOption = false,
+  totalCount: explicitTotalCount = null
 }) {
   const { name } = useParams();
 
@@ -29,9 +31,12 @@ function OrganismSelector({
   }
 
   // Calculate total count for "All Organisms" option
-  const totalCount = organismCounts
-    ? Object.values(organismCounts).reduce((sum, count) => sum + count, 0)
-    : organisms.length;
+  // Use explicit totalCount if provided, otherwise sum organismCounts or fall back to organisms.length
+  const totalCount = explicitTotalCount !== null
+    ? explicitTotalCount
+    : (organismCounts
+        ? Object.values(organismCounts).reduce((sum, count) => sum + count, 0)
+        : organisms.length);
 
   // Helper to format organism label with count
   const formatOrganismLabel = (org) => {
