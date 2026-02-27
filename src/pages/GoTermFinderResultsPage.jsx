@@ -112,6 +112,7 @@ function GoTermFinderResultsPage() {
   const navigate = useNavigate();
   const graphContainerRef = useRef(null);
   const cyRef = useRef(null);
+  const gridRef = useRef(null);
 
   const [results, setResults] = useState(null);
   const [request, setRequest] = useState(null);
@@ -120,6 +121,23 @@ function GoTermFinderResultsPage() {
   const [graphData, setGraphData] = useState(null);
   const [graphLoading, setGraphLoading] = useState(false);
   const [showGraph, setShowGraph] = useState(false);
+
+  // Resize columns to fit when grid is ready or tab changes
+  const onGridReady = (params) => {
+    gridRef.current = params.api;
+    params.api.sizeColumnsToFit();
+  };
+
+  // Resize columns when window resizes
+  useEffect(() => {
+    const handleResize = () => {
+      if (gridRef.current) {
+        gridRef.current.sizeColumnsToFit();
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Load results from session storage
   useEffect(() => {
@@ -583,6 +601,7 @@ function GoTermFinderResultsPage() {
                     paginationPageSize={10}
                     paginationPageSizeSelector={[10, 25, 50, 100]}
                     getRowId={(params) => params.data.goid}
+                    onGridReady={onGridReady}
                   />
                 </div>
               )}
