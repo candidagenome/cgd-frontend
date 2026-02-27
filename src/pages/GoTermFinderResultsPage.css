@@ -237,57 +237,30 @@
   color: #666;
 }
 
-.results-table {
+/* AG Grid wrapper */
+.ag-grid-wrapper {
   width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9em;
-  table-layout: fixed;
 }
 
-.results-table th {
-  background: #f0f0f0;
-  padding: 10px 8px;
-  text-align: left;
-  border-bottom: 2px solid #ddd;
-  font-weight: 600;
-  color: #333;
+.ag-grid-wrapper .ag-root-wrapper {
+  border: none;
 }
 
-.results-table th.th-term {
-  width: 28%;
+.ag-grid-wrapper .ag-header-cell-label {
+  justify-content: center;
 }
 
-.results-table th.th-count {
-  width: 7%;
+.ag-grid-wrapper .ag-cell {
+  line-height: 1.4;
+}
+
+/* Cell content styles */
+.term-cell-content {
+  line-height: 1.4;
+}
+
+.count-cell-content {
   text-align: center;
-}
-
-.results-table th.th-fold {
-  width: 7%;
-  text-align: center;
-}
-
-.results-table th.th-pvalue {
-  width: 7%;
-  text-align: center;
-}
-
-.results-table th.th-genes {
-  width: 28%;
-}
-
-.results-table td {
-  padding: 10px 8px;
-  border-bottom: 1px solid #eee;
-  vertical-align: top;
-}
-
-.results-table tbody tr:hover {
-  background: #f8f9fa;
-}
-
-.term-cell {
-  word-wrap: break-word;
 }
 
 .term-link {
