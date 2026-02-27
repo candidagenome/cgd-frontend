@@ -3,7 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { searchApi } from '../api/searchApi';
-import { CitationLinksBelow, buildCitationLinks } from '../utils/formatCitation.jsx';
+import { renderCitationItem } from '../utils/formatCitation.jsx';
 import './SearchResultsPage.css';
 
 // Register AG Grid modules once
@@ -22,14 +22,34 @@ const CombinedResultRenderer = (props) => {
   const id = data.id;
   const organism = data.organism;
 
-  // Build citation links for references category
+  // For references category, use the unified renderCitationItem function
   const isReferences = data.category === 'references';
-  const citationLinks = isReferences ? buildCitationLinks({
-    dbxref_id: data.dbxref_id || data.id,
-    reference_id: data.reference_id,
-    pubmed: data.pubmed,
-    urls: data.urls,
-  }) : [];
+
+  if (isReferences) {
+    // Build a reference object for renderCitationItem
+    const refObj = {
+      citation: data.description,
+      dbxref_id: data.dbxref_id || data.id,
+      reference_id: data.reference_id,
+      pubmed: data.pubmed,
+      urls: data.urls,
+      links: data.links,
+    };
+
+    return (
+      <div className="combined-result-cell references-cell">
+        <div className="result-header">
+          <Link
+            to={data.link}
+            className="result-name"
+            dangerouslySetInnerHTML={{ __html: displayName }}
+          />
+          {organism && <span className="result-organism">{organism}</span>}
+        </div>
+        {renderCitationItem(refObj, { itemClassName: 'search-citation-item', showPmid: false })}
+      </div>
+    );
+  }
 
   return (
     <div className="combined-result-cell">
@@ -47,9 +67,6 @@ const CombinedResultRenderer = (props) => {
           className="result-description"
           dangerouslySetInnerHTML={{ __html: displayDesc }}
         />
-      )}
-      {isReferences && citationLinks.length > 0 && (
-        <CitationLinksBelow links={citationLinks} className="search-result-links" />
       )}
     </div>
   );

@@ -3,7 +3,7 @@ import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { searchApi } from '../api/searchApi';
-import { CitationLinksBelow, buildCitationLinks } from '../utils/formatCitation.jsx';
+import { renderCitationItem } from '../utils/formatCitation.jsx';
 import './TextSearchResultsPage.css';
 
 // Register AG Grid modules once
@@ -24,14 +24,8 @@ const CombinedResultRenderer = (props) => {
   const link = data.link;
   const isExternal = link && (link.startsWith('http://') || link.startsWith('https://'));
 
-  // Build citation links for abstracts category (Paper Abstracts)
+  // For abstracts category (Paper Abstracts), use the unified renderCitationItem function
   const isAbstracts = data.category === 'abstracts';
-  const citationLinks = isAbstracts ? buildCitationLinks({
-    dbxref_id: data.dbxref_id || data.id,
-    reference_id: data.reference_id,
-    pubmed: data.pubmed,
-    urls: data.urls,
-  }) : [];
 
   const renderNameLink = () => {
     if (!link) {
@@ -57,6 +51,28 @@ const CombinedResultRenderer = (props) => {
     );
   };
 
+  if (isAbstracts) {
+    // Build a reference object for renderCitationItem
+    const refObj = {
+      citation: data.description,
+      dbxref_id: data.dbxref_id || data.id,
+      reference_id: data.reference_id,
+      pubmed: data.pubmed,
+      urls: data.urls,
+      links: data.links,
+    };
+
+    return (
+      <div className="combined-result-cell abstracts-cell">
+        <div className="result-header">
+          {renderNameLink()}
+          {organism && <span className="result-organism">{organism}</span>}
+        </div>
+        {renderCitationItem(refObj, { itemClassName: 'search-citation-item', showPmid: false })}
+      </div>
+    );
+  }
+
   return (
     <div className="combined-result-cell">
       <div className="result-header">
@@ -69,9 +85,6 @@ const CombinedResultRenderer = (props) => {
           className="result-description"
           dangerouslySetInnerHTML={{ __html: displayDesc }}
         />
-      )}
-      {isAbstracts && citationLinks.length > 0 && (
-        <CitationLinksBelow links={citationLinks} className="search-result-links" />
       )}
     </div>
   );
