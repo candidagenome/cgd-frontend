@@ -112,7 +112,6 @@ function GoTermFinderResultsPage() {
   const navigate = useNavigate();
   const graphContainerRef = useRef(null);
   const cyRef = useRef(null);
-  const gridRef = useRef(null);
 
   const [results, setResults] = useState(null);
   const [request, setRequest] = useState(null);
@@ -122,44 +121,11 @@ function GoTermFinderResultsPage() {
   const [graphLoading, setGraphLoading] = useState(false);
   const [showGraph, setShowGraph] = useState(false);
 
-  // Resize columns to fit when grid is ready
-  const onGridReady = (params) => {
-    gridRef.current = params.api;
-    // Delay to ensure container is fully rendered
-    setTimeout(() => {
-      params.api.sizeColumnsToFit();
-    }, 100);
-  };
-
-  // Resize columns after first data render
-  const onFirstDataRendered = (params) => {
-    params.api.sizeColumnsToFit();
-  };
-
-  // Resize columns when window resizes or tab changes
-  useEffect(() => {
-    const handleResize = () => {
-      if (gridRef.current) {
-        gridRef.current.sizeColumnsToFit();
-      }
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // Resize columns when tab changes
-  useEffect(() => {
-    if (gridRef.current) {
-      setTimeout(() => {
-        gridRef.current.sizeColumnsToFit();
-      }, 50);
-    }
-  }, [activeTab]);
 
   // Load results from session storage
   useEffect(() => {
-    const storedResults = sessionStorage.getItem('goTermFinderResults');
-    const storedRequest = sessionStorage.getItem('goTermFinderRequest');
+    const storedResults = localStorage.getItem('goTermFinderResults');
+    const storedRequest = localStorage.getItem('goTermFinderRequest');
 
     if (storedResults) {
       const parsed = JSON.parse(storedResults);
@@ -605,7 +571,7 @@ function GoTermFinderResultsPage() {
               {currentTerms.length === 0 ? (
                 <p className="no-results">No enriched terms in this category.</p>
               ) : (
-                <div className="ag-grid-wrapper">
+                <div className="ag-grid-wrapper" style={{ width: '100%' }}>
                   <AgGridReact
                     rowData={currentTerms}
                     columnDefs={columnDefs}
@@ -618,8 +584,6 @@ function GoTermFinderResultsPage() {
                     paginationPageSize={10}
                     paginationPageSizeSelector={[10, 25, 50, 100]}
                     getRowId={(params) => params.data.goid}
-                    onGridReady={onGridReady}
-                    onFirstDataRendered={onFirstDataRendered}
                   />
                 </div>
               )}

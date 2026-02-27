@@ -239,39 +239,26 @@
   color: #666;
 }
 
-/* AG Grid wrapper */
-.ag-grid-wrapper {
+/* AG Grid Wrapper */
+.go-term-finder-results-page .ag-grid-wrapper {
+  margin-top: 15px;
   width: 100%;
+  min-width: 100%;
 }
 
-.ag-grid-wrapper .ag-root-wrapper {
-  border: none;
+.go-term-finder-results-page .ag-grid-wrapper .ag-root-wrapper,
+.go-term-finder-results-page .ag-grid-wrapper .ag-root,
+.go-term-finder-results-page .ag-grid-wrapper .ag-body-viewport,
+.go-term-finder-results-page .ag-grid-wrapper .ag-center-cols-container {
   width: 100% !important;
   min-width: 100% !important;
 }
 
-.ag-grid-wrapper .ag-root {
-  width: 100% !important;
-}
-
-.ag-grid-wrapper .ag-body-viewport,
-.ag-grid-wrapper .ag-center-cols-viewport,
-.ag-grid-wrapper .ag-header-viewport {
-  width: 100% !important;
-  min-width: 100% !important;
-}
-
-.ag-grid-wrapper .ag-center-cols-container,
-.ag-grid-wrapper .ag-header-container {
-  width: 100% !important;
-  min-width: 100% !important;
-}
-
-.ag-grid-wrapper .ag-header-cell-label {
+.go-term-finder-results-page .ag-grid-wrapper .ag-header-cell-label {
   justify-content: center;
 }
 
-.ag-grid-wrapper .ag-cell {
+.go-term-finder-results-page .ag-grid-wrapper .ag-cell {
   line-height: 1.4;
 }
 

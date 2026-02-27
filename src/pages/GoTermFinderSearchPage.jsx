@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import goTermFinderApi from '../api/goTermFinderApi';
 import './GoTermFinderSearchPage.css';
 
 function GoTermFinderSearchPage() {
-  const navigate = useNavigate();
-
   const [loading, setLoading] = useState(false);
   const [configLoading, setConfigLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -168,10 +165,10 @@ function GoTermFinderSearchPage() {
       // Run analysis
       const result = await goTermFinderApi.runAnalysis(request);
 
-      // Store results and navigate
-      sessionStorage.setItem('goTermFinderResults', JSON.stringify(result));
-      sessionStorage.setItem('goTermFinderRequest', JSON.stringify(request));
-      navigate('/go-term-finder/results');
+      // Store results and open in new tab
+      localStorage.setItem('goTermFinderResults', JSON.stringify(result));
+      localStorage.setItem('goTermFinderRequest', JSON.stringify(request));
+      window.open('/go-term-finder/results', 'gtf_result');
     } catch (err) {
       console.error('Analysis error:', err);
       setError(err.response?.data?.detail || err.message || 'Analysis failed');
