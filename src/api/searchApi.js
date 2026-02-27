@@ -40,16 +40,14 @@ export const searchApi = {
   },
 
   /**
-   * Search within a specific category with pagination
+   * Search within a specific category (returns all results)
    * @param {string} query - Search query string
    * @param {string} category - Category to search (genes, go_terms, phenotypes, references)
-   * @param {number} page - Page number (1-indexed)
-   * @param {number} pageSize - Results per page (default 20)
-   * @returns {Promise<Object>} Paginated search response with results and pagination metadata
+   * @returns {Promise<Object>} Search response with all results and total_count
    */
-  searchCategory: async (query, category, page = 1, pageSize = 20) => {
+  searchCategory: async (query, category) => {
     const response = await api.get('/api/search/category', {
-      params: { query, category, page, page_size: pageSize },
+      params: { query, category },
     });
     return response.data;
   },
@@ -69,16 +67,14 @@ export const searchApi = {
   },
 
   /**
-   * Paginated text search within a specific category
+   * Text search within a specific category (returns all results)
    * @param {string} query - Search query string
    * @param {string} category - Category to search
-   * @param {number} page - Page number (1-indexed)
-   * @param {number} pageSize - Results per page (default 20)
-   * @returns {Promise<Object>} Paginated text search response with results and pagination metadata
+   * @returns {Promise<Object>} Text search response with all results and total_count
    */
-  textSearchCategory: async (query, category, page = 1, pageSize = 20) => {
+  textSearchCategory: async (query, category) => {
     const response = await api.get('/api/search/text/category', {
-      params: { query, category, page, page_size: pageSize },
+      params: { query, category },
     });
     return response.data;
   },

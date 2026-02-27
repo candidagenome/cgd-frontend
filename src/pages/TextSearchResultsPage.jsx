@@ -69,8 +69,6 @@ const CATEGORY_ORDER = [
   'phenotypes', 'notes', 'external_ids', 'orthologs', 'literature_topics'
 ];
 
-const PAGE_SIZE = 20;
-
 const TextSearchResultsPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -79,10 +77,9 @@ const TextSearchResultsPage = () => {
 
   // Initial search results (for category counts)
   const [initialResults, setInitialResults] = useState(null);
-  // Paginated results for selected category
+  // All results for selected category
   const [categoryResults, setCategoryResults] = useState(null);
-  const [pagination, setPagination] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
 
   const [loading, setLoading] = useState(false);
   const [categoryLoading, setCategoryLoading] = useState(false);
@@ -154,16 +151,16 @@ const TextSearchResultsPage = () => {
     floatingFilter: true,
   }), []);
 
-  // Fetch paginated results for a category
-  const fetchCategoryResults = useCallback(async (category, page) => {
+  // Fetch all results for a category
+  const fetchCategoryResults = useCallback(async (category) => {
     if (!query.trim() || !category) return;
 
     setCategoryLoading(true);
     try {
-      const data = await searchApi.textSearchCategory(query, category, page, PAGE_SIZE);
+      const data = await searchApi.textSearchCategory(query, category);
       setCategoryResults(data.results);
-      setPagination(data.pagination);
-      // Use organism counts from API if provided (counts ALL results, not just current page)
+      setTotalCount(data.total_count || data.results?.length || 0);
+      // Use organism counts from API if provided
       if (data.organism_counts) {
         const organisms = Object.keys(data.organism_counts);
         setOrganismCounts(data.organism_counts);
@@ -194,13 +191,12 @@ const TextSearchResultsPage = () => {
         setInitialResults(null);
         setSelectedCategory(null);
         setCategoryResults(null);
-        setPagination(null);
+        setTotalCount(0);
         return;
       }
 
       setLoading(true);
       setError(null);
-      setCurrentPage(1);
 
       try {
         // Perform text search (with type filter if specified)
@@ -218,12 +214,12 @@ const TextSearchResultsPage = () => {
 
         if (firstCategoryWithResults) {
           setSelectedCategory(firstCategoryWithResults);
-          // Fetch first page of results for this category
-          await fetchCategoryResults(firstCategoryWithResults, 1);
+          // Fetch all results for this category
+          await fetchCategoryResults(firstCategoryWithResults);
         } else {
           setSelectedCategory(null);
           setCategoryResults(null);
-          setPagination(null);
+          setTotalCount(0);
         }
       } catch (err) {
         console.error('Search error:', err);
@@ -274,28 +270,14 @@ const TextSearchResultsPage = () => {
     if (category === selectedCategory) return;
 
     setSelectedCategory(category);
-    setCurrentPage(1);
     setCategoryResults(null);
-    setPagination(null);
+    setTotalCount(0);
     // Reset organism selection when changing category
     setAvailableOrganisms([]);
     setOrganismCounts({});
     setSelectedOrganism(null);
     setHasApiOrganismCounts(false);
-    await fetchCategoryResults(category, 1);
-  };
-
-  // Handle page change
-  const handlePageChange = async (newPage) => {
-    if (newPage === currentPage || newPage < 1 || (pagination && newPage > pagination.total_pages)) {
-      return;
-    }
-
-    setCurrentPage(newPage);
-    await fetchCategoryResults(selectedCategory, newPage);
-
-    // Scroll to top of results
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    await fetchCategoryResults(category);
   };
 
 
@@ -316,22 +298,17 @@ const TextSearchResultsPage = () => {
         <h3>Categories</h3>
         <ul className="facet-list">
           {categoriesToShow.map(categoryKey => {
-            // Use pagination total if available for selected category, otherwise use initial count
-            // For selected category with organism filter, use organism-specific count
+            // Use totalCount for selected category, otherwise use initial count
             let count;
-            if (selectedCategory === categoryKey && pagination) {
+            if (selectedCategory === categoryKey) {
               // If an organism is selected, use the organism-specific count
               if (selectedOrganism && organismCounts[selectedOrganism] !== undefined) {
                 count = organismCounts[selectedOrganism];
               } else {
-                count = pagination.total_items;
+                count = totalCount;
               }
             } else {
               count = getCategoryCount(categoryKey);
-            }
-            // If we have more results than the count says, use the actual count
-            if (selectedCategory === categoryKey && categoryResults && categoryResults.length > count) {
-              count = categoryResults.length;
             }
             const isSelected = selectedCategory === categoryKey;
             const hasResults = count > 0;
@@ -348,99 +325,6 @@ const TextSearchResultsPage = () => {
             );
           })}
         </ul>
-      </div>
-    );
-  };
-
-  // Render pagination
-  const renderPagination = () => {
-    if (!pagination || pagination.total_pages <= 1) {
-      return null;
-    }
-
-    const { page, total_pages, has_prev, has_next, total_items } = pagination;
-
-    // Generate page numbers to show
-    const pageNumbers = [];
-    const maxVisiblePages = 5;
-    let startPage = Math.max(1, page - Math.floor(maxVisiblePages / 2));
-    let endPage = Math.min(total_pages, startPage + maxVisiblePages - 1);
-
-    // Adjust start if we're near the end
-    if (endPage - startPage + 1 < maxVisiblePages) {
-      startPage = Math.max(1, endPage - maxVisiblePages + 1);
-    }
-
-    for (let i = startPage; i <= endPage; i++) {
-      pageNumbers.push(i);
-    }
-
-    return (
-      <div className="pagination">
-        <div className="pagination-info">
-          Showing {((page - 1) * PAGE_SIZE) + 1} - {Math.min(page * PAGE_SIZE, total_items)} of {total_items} results
-        </div>
-        <div className="pagination-controls">
-          <button
-            className="pagination-btn"
-            onClick={() => handlePageChange(1)}
-            disabled={!has_prev}
-            title="First page"
-          >
-            &laquo;
-          </button>
-          <button
-            className="pagination-btn"
-            onClick={() => handlePageChange(page - 1)}
-            disabled={!has_prev}
-            title="Previous page"
-          >
-            &lsaquo;
-          </button>
-
-          {startPage > 1 && (
-            <>
-              <button className="pagination-btn" onClick={() => handlePageChange(1)}>1</button>
-              {startPage > 2 && <span className="pagination-ellipsis">...</span>}
-            </>
-          )}
-
-          {pageNumbers.map(pageNum => (
-            <button
-              key={pageNum}
-              className={`pagination-btn ${pageNum === page ? 'active' : ''}`}
-              onClick={() => handlePageChange(pageNum)}
-            >
-              {pageNum}
-            </button>
-          ))}
-
-          {endPage < total_pages && (
-            <>
-              {endPage < total_pages - 1 && <span className="pagination-ellipsis">...</span>}
-              <button className="pagination-btn" onClick={() => handlePageChange(total_pages)}>
-                {total_pages}
-              </button>
-            </>
-          )}
-
-          <button
-            className="pagination-btn"
-            onClick={() => handlePageChange(page + 1)}
-            disabled={!has_next}
-            title="Next page"
-          >
-            &rsaquo;
-          </button>
-          <button
-            className="pagination-btn"
-            onClick={() => handlePageChange(total_pages)}
-            disabled={!has_next}
-            title="Last page"
-          >
-            &raquo;
-          </button>
-        </div>
       </div>
     );
   };
@@ -468,8 +352,6 @@ const TextSearchResultsPage = () => {
     const filteredResults = selectedOrganism
       ? results.filter(r => r.organism === selectedOrganism)
       : results;
-    // Use the larger of pagination total or actual results length for total count
-    const totalCount = Math.max(pagination?.total_items || 0, results.length);
     // Show filtered count in header when organism is selected, otherwise show total
     const displayCount = selectedOrganism ? filteredResults.length : totalCount;
 
@@ -505,7 +387,6 @@ const TextSearchResultsPage = () => {
             getRowId={(params) => `${params.data.category}-${params.data.id}`}
           />
         </div>
-        {renderPagination()}
       </div>
     );
   };
