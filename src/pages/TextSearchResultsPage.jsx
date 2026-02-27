@@ -36,7 +36,7 @@ const CombinedResultRenderer = (props) => {
     return (
       <a
         href={link}
-        target="_blank"
+        target="search_result"
         rel="noopener noreferrer"
         className="result-name"
         dangerouslySetInnerHTML={{ __html: displayName }}
@@ -56,7 +56,7 @@ const CombinedResultRenderer = (props) => {
         </div>
         {/* Links right below the citation */}
         {data.links && data.links.length > 0 && (
-          <CitationLinksBelow links={data.links} className="search-result-links" />
+          <CitationLinksBelow links={data.links} className="search-result-links" target="search_result" />
         )}
         {/* Abstract snippet below the links */}
         {displayDesc && (

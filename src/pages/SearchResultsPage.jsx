@@ -35,7 +35,7 @@ const CombinedResultRenderer = (props) => {
         <div className="result-header">
           <a
             href={data.link}
-            target="_blank"
+            target="search_result"
             rel="noopener noreferrer"
             className="result-name"
             dangerouslySetInnerHTML={{ __html: displayName }}
@@ -49,18 +49,22 @@ const CombinedResultRenderer = (props) => {
           />
         )}
         {data.links && data.links.length > 0 && (
-          <CitationLinksBelow links={data.links} className="search-result-links" />
+          <CitationLinksBelow links={data.links} className="search-result-links" target="search_result" />
         )}
       </div>
     );
   }
 
+  // For genes category, link to /locus/[gene_name]
+  const isGenes = data.category === 'genes';
+  const linkUrl = isGenes ? `/locus/${data.name}` : data.link;
+
   return (
     <div className="combined-result-cell">
       <div className="result-header">
         <a
-          href={data.link}
-          target="_blank"
+          href={linkUrl}
+          target="search_result"
           rel="noopener noreferrer"
           className="result-name"
           dangerouslySetInnerHTML={{ __html: displayName }}
