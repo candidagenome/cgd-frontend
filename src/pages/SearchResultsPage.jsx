@@ -23,7 +23,8 @@ const CombinedResultRenderer = (props) => {
   const organism = data.organism;
 
   // For references category, show PMID/ID as link, citation below, then links
-  const isReferences = data.category === 'references';
+  // Note: backend returns category="reference" (singular)
+  const isReferences = data.category === 'reference' || data.category === 'references';
 
   if (isReferences) {
     // data.name is "PMID:xxx" or dbxref_id
