@@ -22,7 +22,6 @@ const CombinedResultRenderer = (props) => {
   const id = data.id;
   const organism = data.organism;
   const link = data.link;
-  const isExternal = link && (link.startsWith('http://') || link.startsWith('https://'));
 
   // For abstracts category (Paper Abstracts):
   // - name = citation text
@@ -34,20 +33,11 @@ const CombinedResultRenderer = (props) => {
     if (!link) {
       return <span className="result-name" dangerouslySetInnerHTML={{ __html: displayName }} />;
     }
-    if (isExternal) {
-      return (
-        <a
-          href={link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="result-name"
-          dangerouslySetInnerHTML={{ __html: displayName }}
-        />
-      );
-    }
     return (
-      <Link
-        to={link}
+      <a
+        href={link}
+        target="_blank"
+        rel="noopener noreferrer"
         className="result-name"
         dangerouslySetInnerHTML={{ __html: displayName }}
       />

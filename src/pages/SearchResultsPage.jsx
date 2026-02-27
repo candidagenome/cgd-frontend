@@ -33,8 +33,10 @@ const CombinedResultRenderer = (props) => {
     return (
       <div className="combined-result-cell references-cell">
         <div className="result-header">
-          <Link
-            to={data.link}
+          <a
+            href={data.link}
+            target="_blank"
+            rel="noopener noreferrer"
             className="result-name"
             dangerouslySetInnerHTML={{ __html: displayName }}
           />
@@ -56,8 +58,10 @@ const CombinedResultRenderer = (props) => {
   return (
     <div className="combined-result-cell">
       <div className="result-header">
-        <Link
-          to={data.link}
+        <a
+          href={data.link}
+          target="_blank"
+          rel="noopener noreferrer"
           className="result-name"
           dangerouslySetInnerHTML={{ __html: displayName }}
         />
