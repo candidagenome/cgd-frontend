@@ -62,8 +62,6 @@
 .text-search-layout {
   display: flex;
   gap: 20px;
-  height: calc(100vh - 280px);
-  min-height: 500px;
 }
 
 /* Sidebar with facets */
