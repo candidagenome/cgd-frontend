@@ -21,8 +21,13 @@ const CombinedResultRenderer = (props) => {
   const displayDesc = data.highlighted_description || data.description;
   const id = data.id;
   const organism = data.organism;
-  const link = data.link;
-  const isExternal = link && (link.startsWith('http://') || link.startsWith('https://'));
+
+  // For locus-related categories, use gene name for the link URL
+  // Prefer gene_name (standard name like "HOG1") over name (which may be orf ID like "orf19.8514")
+  // This ensures we use "/locus/HOG1" instead of "/locus/orf19.xxx"
+  const isLocusCategory = ['genes', 'descriptions', 'paragraphs', 'name_descriptions', 'notes', 'orthologs'].includes(data.category);
+  const locusIdentifier = data.gene_name || data.name;
+  const link = isLocusCategory && locusIdentifier ? `/locus/${locusIdentifier}` : data.link;
 
   // For abstracts category (Paper Abstracts):
   // - name = citation text
@@ -34,20 +39,14 @@ const CombinedResultRenderer = (props) => {
     if (!link) {
       return <span className="result-name" dangerouslySetInnerHTML={{ __html: displayName }} />;
     }
-    if (isExternal) {
-      return (
-        <a
-          href={link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="result-name"
-          dangerouslySetInnerHTML={{ __html: displayName }}
-        />
-      );
-    }
+    // Use named target so all search result links open in the same tab
+    // Only add rel="noopener noreferrer" for external links (internal links don't need it)
+    const isExternal = link.startsWith('http');
     return (
-      <Link
-        to={link}
+      <a
+        href={link}
+        target="search_result"
+        rel={isExternal ? "noopener noreferrer" : undefined}
         className="result-name"
         dangerouslySetInnerHTML={{ __html: displayName }}
       />
@@ -66,7 +65,7 @@ const CombinedResultRenderer = (props) => {
         </div>
         {/* Links right below the citation */}
         {data.links && data.links.length > 0 && (
-          <CitationLinksBelow links={data.links} className="search-result-links" />
+          <CitationLinksBelow links={data.links} className="search-result-links" target="search_result" />
         )}
         {/* Abstract snippet below the links */}
         {displayDesc && (

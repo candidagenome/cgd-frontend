@@ -146,30 +146,30 @@ export function buildFormattedCitation(ref) {
  * New: render citation links on a separate line, no surrounding [ ]
  * This matches SGD-ish layout (links below the citation, separated by spaces)
  */
-export function CitationLinksBelow({ links, className = '' }) {
+export function CitationLinksBelow({ links, className = '', target = '' }) {
   if (!links || links.length === 0) return null;
+
+  // Use provided target or default to "_blank"
+  const linkTarget = target || '_blank';
 
   return (
     <div className={`citation-links-below ${className}`.trim()}>
-      {links.map((link, idx) => (
-        <React.Fragment key={`${link.name}-${idx}`}>
-          {idx > 0 && <span className="citation-link-sep"> </span>}
-          {link.link_type === 'internal' ? (
-            <Link to={link.url} className="citation-link">
-              {link.name}
-            </Link>
-          ) : (
+      {links.map((link, idx) => {
+        const isExternal = link.url?.startsWith('http') || link.link_type === 'external';
+        return (
+          <React.Fragment key={`${link.name}-${idx}`}>
+            {idx > 0 && <span className="citation-link-sep"> </span>}
             <a
               href={link.url}
-              target="_blank"
-              rel="noopener noreferrer"
+              target={linkTarget}
+              rel={isExternal ? "noopener noreferrer" : undefined}
               className="citation-link"
             >
               {link.name}
             </a>
-          )}
-        </React.Fragment>
-      ))}
+          </React.Fragment>
+        );
+      })}
     </div>
   );
 }

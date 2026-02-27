@@ -1,7 +1,7 @@
 /* Text Search Results Page Styles */
 
 .text-search-results-page {
-  max-width: 1350px;
+  width: 1200px;
   margin: 0 auto;
   padding: 20px;
   position: relative;

@@ -1,7 +1,7 @@
 /* Restriction Mapper Search Page Styles */
 
 .restriction-mapper-page {
-  max-width: 1000px;
+  width: 1200px;
   margin: 0 auto;
   padding: 20px;
 }

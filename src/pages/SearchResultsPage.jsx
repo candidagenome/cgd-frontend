@@ -30,11 +30,14 @@ const CombinedResultRenderer = (props) => {
     // data.name is "PMID:xxx" or dbxref_id
     // data.description is the citation text
     // data.links is the array of citation links from the API
+    const isExternal = data.link?.startsWith('http');
     return (
       <div className="combined-result-cell references-cell">
         <div className="result-header">
-          <Link
-            to={data.link}
+          <a
+            href={data.link}
+            target="search_result"
+            rel={isExternal ? "noopener noreferrer" : undefined}
             className="result-name"
             dangerouslySetInnerHTML={{ __html: displayName }}
           />
@@ -47,17 +50,26 @@ const CombinedResultRenderer = (props) => {
           />
         )}
         {data.links && data.links.length > 0 && (
-          <CitationLinksBelow links={data.links} className="search-result-links" />
+          <CitationLinksBelow links={data.links} className="search-result-links" target="search_result" />
         )}
       </div>
     );
   }
 
+  // For genes category, link to /locus/[gene_name]
+  // Prefer gene_name (standard name like "HOG1") over name (which may be orf ID like "orf19.8514")
+  const isGenes = data.category === 'genes';
+  const locusIdentifier = data.gene_name || data.name;
+  const linkUrl = isGenes ? `/locus/${locusIdentifier}` : data.link;
+  const isExternal = linkUrl?.startsWith('http');
+
   return (
     <div className="combined-result-cell">
       <div className="result-header">
-        <Link
-          to={data.link}
+        <a
+          href={linkUrl}
+          target="search_result"
+          rel={isExternal ? "noopener noreferrer" : undefined}
           className="result-name"
           dangerouslySetInnerHTML={{ __html: displayName }}
         />
