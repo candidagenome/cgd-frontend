@@ -99,7 +99,8 @@ function RestrictionMapperResultsPage() {
       headerName: 'Enzyme',
       field: 'enzyme_name',
       sortable: true,
-      width: 120,
+      flex: 1,
+      minWidth: 120,
     },
     {
       headerName: 'Recognition',
@@ -107,7 +108,8 @@ function RestrictionMapperResultsPage() {
       cellRenderer: (params) => {
         return <code>{params.value}</code>;
       },
-      width: 150,
+      flex: 1.5,
+      minWidth: 150,
     },
     {
       headerName: 'Type',
@@ -129,13 +131,15 @@ function RestrictionMapperResultsPage() {
           </span>
         );
       },
-      width: 130,
+      flex: 1,
+      minWidth: 130,
     },
     {
       headerName: 'Cuts',
       field: 'total_cuts',
       sortable: true,
-      width: 80,
+      flex: 0.5,
+      minWidth: 80,
     },
     {
       headerName: 'Actions',
@@ -152,7 +156,8 @@ function RestrictionMapperResultsPage() {
           </button>
         );
       },
-      width: 120,
+      flex: 1,
+      minWidth: 120,
       sortable: false,
     },
   ], [selectedEnzyme]);
