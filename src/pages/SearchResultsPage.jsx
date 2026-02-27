@@ -8,23 +8,35 @@ import './SearchResultsPage.css';
 // Register AG Grid modules
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-// Custom cell renderer for name links
-const NameLinkRenderer = (props) => {
-  if (!props.value) return '-';
-  const displayName = props.data.highlighted_name || props.data.name;
-  return (
-    <Link
-      to={props.data.link}
-      dangerouslySetInnerHTML={{ __html: displayName }}
-    />
-  );
-};
+// Combined cell renderer for identifier + description
+const CombinedResultRenderer = (props) => {
+  const data = props.data;
+  if (!data) return '-';
 
-// Custom cell renderer for description with HTML
-const DescriptionRenderer = (props) => {
-  if (!props.value) return '-';
-  const displayDesc = props.data.highlighted_description || props.data.description;
-  return <span dangerouslySetInnerHTML={{ __html: displayDesc }} />;
+  const displayName = data.highlighted_name || data.name;
+  const displayDesc = data.highlighted_description || data.description;
+  const id = data.id;
+  const organism = data.organism;
+
+  return (
+    <div className="combined-result-cell">
+      <div className="result-header">
+        <Link
+          to={data.link}
+          className="result-name"
+          dangerouslySetInnerHTML={{ __html: displayName }}
+        />
+        {id && <span className="result-id">({id})</span>}
+        {organism && <span className="result-organism">{organism}</span>}
+      </div>
+      {displayDesc && (
+        <div
+          className="result-description"
+          dangerouslySetInnerHTML={{ __html: displayDesc }}
+        />
+      )}
+    </div>
+  );
 };
 
 const CATEGORY_LABELS = {
@@ -57,58 +69,20 @@ const SearchResultsPage = () => {
   const [organismCounts, setOrganismCounts] = useState({});
   const [hasApiOrganismCounts, setHasApiOrganismCounts] = useState(false);
 
-  // Check if results have organism data
-  const hasOrganismData = useMemo(() => {
-    if (!categoryResults || categoryResults.length === 0) return false;
-    return categoryResults.some(r => r.organism);
-  }, [categoryResults]);
-
-  // AG Grid column definitions - dynamically include organism column
-  const columnDefs = useMemo(() => {
-    const cols = [
-      {
-        headerName: 'Name',
-        field: 'name',
-        cellRenderer: NameLinkRenderer,
-        filter: 'agTextColumnFilter',
-        sortable: true,
-        minWidth: 150,
-        flex: 1,
-      },
-      {
-        headerName: 'ID',
-        field: 'id',
-        filter: 'agTextColumnFilter',
-        sortable: true,
-        minWidth: 130,
-        flex: 1,
-      },
-      {
-        headerName: 'Description',
-        field: 'description',
-        cellRenderer: DescriptionRenderer,
-        filter: 'agTextColumnFilter',
-        sortable: true,
-        minWidth: 300,
-        flex: 2,
-        wrapText: true,
-        autoHeight: true,
-        cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
-      },
-    ];
-    // Only add organism column if data has organism info
-    if (hasOrganismData) {
-      cols.push({
-        headerName: 'Organism',
-        field: 'organism',
-        filter: 'agTextColumnFilter',
-        sortable: true,
-        minWidth: 180,
-        flex: 1,
-      });
-    }
-    return cols;
-  }, [hasOrganismData]);
+  // AG Grid column definitions - single combined column
+  const columnDefs = useMemo(() => [
+    {
+      headerName: 'Results',
+      field: 'name',
+      cellRenderer: CombinedResultRenderer,
+      filter: 'agTextColumnFilter',
+      sortable: true,
+      flex: 1,
+      wrapText: true,
+      autoHeight: true,
+      cellStyle: { whiteSpace: 'normal', lineHeight: '1.4', padding: '10px 12px' },
+    },
+  ], []);
 
   // AG Grid default column definitions
   const defaultColDef = useMemo(() => ({

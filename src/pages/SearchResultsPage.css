@@ -70,7 +70,7 @@
   overflow-y: auto;
 }
 
-/* Main results area - fills remaining space */
+/* Main results area - expands to fill available space */
 .search-main {
   flex: 1;
   min-width: 0;
@@ -279,11 +279,54 @@
 }
 
 /* Highlight marks in AG Grid cells */
-.ag-grid-container mark {
+.ag-grid-container mark,
+.ag-grid-wrapper mark {
   background-color: #fff59d;
   color: inherit;
   padding: 0 2px;
   border-radius: 2px;
+}
+
+/* Combined result cell styling */
+.combined-result-cell {
+  padding: 4px 0;
+}
+
+.combined-result-cell .result-header {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.combined-result-cell .result-name {
+  font-weight: 600;
+  font-size: 1.05em;
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.combined-result-cell .result-name:hover {
+  text-decoration: underline;
+}
+
+.combined-result-cell .result-id {
+  font-size: 0.85em;
+  color: #888;
+}
+
+.combined-result-cell .result-organism {
+  font-size: 0.85em;
+  color: #666;
+  font-style: italic;
+  margin-left: auto;
+}
+
+.combined-result-cell .result-description {
+  font-size: 0.9em;
+  color: #555;
+  line-height: 1.5;
 }
 
 /* Result items */
@@ -506,10 +549,11 @@
    Responsive Design
    =========================================== */
 
-@media (max-width: 1250px) {
+@media (max-width: 1100px) {
   .search-layout {
     flex-direction: column;
     gap: 20px;
+    height: auto;
   }
 
   .search-sidebar {
@@ -521,7 +565,7 @@
   .search-main {
     flex: none;
     width: 100%;
-    min-width: auto;
+    max-width: 800px;
   }
 
   .search-facets {
