@@ -62,6 +62,7 @@
 .text-search-layout {
   display: flex;
   gap: 20px;
+  height: calc(100vh - 280px);
   min-height: 500px;
 }
 
@@ -80,10 +81,12 @@
   flex-direction: column;
 }
 
-/* AG Grid wrapper - fixed width and height */
+/* AG Grid wrapper - fills available space */
 .ag-grid-wrapper {
-  width: 800px;
-  height: 600px;
+  flex: 1;
+  min-width: 600px;
+  max-width: 900px;
+  min-height: 400px;
 }
 
 .text-search-results-list {
@@ -342,6 +345,22 @@
   font-size: 0.9em;
   color: #555;
   line-height: 1.5;
+}
+
+/* Citation links below for abstracts category */
+.combined-result-cell .search-result-links {
+  margin-top: 6px;
+  font-size: 0.9em;
+}
+
+.combined-result-cell .search-result-links .citation-link {
+  color: #1976d2;
+  text-decoration: none;
+  margin-right: 12px;
+}
+
+.combined-result-cell .search-result-links .citation-link:hover {
+  text-decoration: underline;
 }
 
 /* Result items */

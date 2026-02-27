@@ -3,6 +3,7 @@ import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { searchApi } from '../api/searchApi';
+import { CitationLinksBelow, buildCitationLinks } from '../utils/formatCitation.jsx';
 import './TextSearchResultsPage.css';
 
 // Register AG Grid modules once
@@ -22,6 +23,15 @@ const CombinedResultRenderer = (props) => {
   const organism = data.organism;
   const link = data.link;
   const isExternal = link && (link.startsWith('http://') || link.startsWith('https://'));
+
+  // Build citation links for abstracts category (Paper Abstracts)
+  const isAbstracts = data.category === 'abstracts';
+  const citationLinks = isAbstracts ? buildCitationLinks({
+    dbxref_id: data.dbxref_id || data.id,
+    reference_id: data.reference_id,
+    pubmed: data.pubmed,
+    urls: data.urls,
+  }) : [];
 
   const renderNameLink = () => {
     if (!link) {
@@ -59,6 +69,9 @@ const CombinedResultRenderer = (props) => {
           className="result-description"
           dangerouslySetInnerHTML={{ __html: displayDesc }}
         />
+      )}
+      {isAbstracts && citationLinks.length > 0 && (
+        <CitationLinksBelow links={citationLinks} className="search-result-links" />
       )}
     </div>
   );
