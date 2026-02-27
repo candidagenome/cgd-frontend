@@ -3,6 +3,7 @@
 /* Reset inherited legacy chrome typography */
 .blast-results-page {
   max-width: 1350px;
+  min-width: 1000px;
   margin: 0 auto;
   padding: 20px;
   font-size: 14px;
