@@ -1,16 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { AgGridReact } from 'ag-grid-react';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import patmatchApi from '../api/patmatchApi';
 import './PatmatchResultsPage.css';
 
-const HITS_PER_PAGE = 20;
+// Register AG Grid modules once
+if (!ModuleRegistry.__cgdRegistered) {
+  ModuleRegistry.registerModules([AllCommunityModule]);
+  ModuleRegistry.__cgdRegistered = true;
+}
 
 function PatmatchResultsPage() {
   const [searchParams] = useSearchParams();
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
   const [downloading, setDownloading] = useState(false);
   const [selectedHit, setSelectedHit] = useState(null);
 
@@ -72,18 +77,6 @@ function PatmatchResultsPage() {
 
     fetchResults();
   }, [pattern, patternType, dataset, strand, maxMismatches, maxInsertions, maxDeletions, maxResults]);
-
-  // Pagination
-  const totalHits = results?.hits?.length || 0;
-  const totalPages = Math.ceil(totalHits / HITS_PER_PAGE);
-  const startIdx = (currentPage - 1) * HITS_PER_PAGE;
-  const endIdx = startIdx + HITS_PER_PAGE;
-  const paginatedHits = results?.hits?.slice(startIdx, endIdx) || [];
-
-  const goToPage = (page) => {
-    setCurrentPage(Math.max(1, Math.min(page, totalPages)));
-    window.scrollTo(0, 0);
-  };
 
   // Build new search URL
   const buildNewSearchUrl = () => {
@@ -162,46 +155,110 @@ function PatmatchResultsPage() {
     );
   };
 
-  // Render pagination controls
-  const renderPagination = () => {
-    if (totalPages <= 1) return null;
+  // AG Grid column definitions
+  const columnDefs = useMemo(() => [
+    {
+      headerName: '#',
+      valueGetter: (params) => params.node.rowIndex + 1,
+      width: 60,
+      suppressSizeToFit: true,
+    },
+    {
+      headerName: 'Sequence',
+      field: 'sequence_name',
+      cellRenderer: (params) => {
+        const hit = params.data;
+        if (!hit) return '-';
+        const nameLink = hit.locus_link ? (
+          <Link to={hit.locus_link} target="_blank" rel="noopener noreferrer">
+            {hit.sequence_name}
+          </Link>
+        ) : (
+          hit.sequence_name
+        );
+        return (
+          <span>
+            {nameLink}
+            {hit.sequence_description && hit.sequence_description !== hit.sequence_name && (
+              <span className="seq-desc"> ({hit.sequence_description})</span>
+            )}
+          </span>
+        );
+      },
+      flex: 2,
+    },
+    {
+      headerName: 'Position',
+      cellRenderer: (params) => {
+        const hit = params.data;
+        if (!hit) return '-';
+        return (
+          <span>
+            {hit.match_start.toLocaleString()}-{hit.match_end.toLocaleString()}
+            {hit.jbrowse_link && (
+              <a
+                href={hit.jbrowse_link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="jbrowse-link"
+                title="View in JBrowse"
+              >
+                JB
+              </a>
+            )}
+          </span>
+        );
+      },
+      width: 150,
+    },
+    {
+      headerName: 'Strand',
+      field: 'strand',
+      width: 80,
+    },
+    {
+      headerName: 'Match',
+      field: 'matched_sequence',
+      cellRenderer: (params) => {
+        const hit = params.data;
+        if (!hit) return '-';
+        return (
+          <code
+            onClick={() => handleSequenceClick(hit)}
+            style={{ cursor: 'pointer' }}
+            title="Click to view full sequence"
+          >
+            {hit.matched_sequence}
+          </code>
+        );
+      },
+      flex: 1,
+    },
+    {
+      headerName: 'Context',
+      cellRenderer: (params) => {
+        const hit = params.data;
+        if (!hit) return '-';
+        return (
+          <code
+            onClick={() => handleSequenceClick(hit)}
+            style={{ cursor: 'pointer' }}
+            title="Click to view full sequence"
+          >
+            <span className="context-before">{hit.context_before}</span>
+            <span className="context-match">{hit.matched_sequence}</span>
+            <span className="context-after">{hit.context_after}</span>
+          </code>
+        );
+      },
+      flex: 2,
+    },
+  ], []);
 
-    return (
-      <div className="pagination">
-        <button
-          className="pagination-btn"
-          onClick={() => goToPage(1)}
-          disabled={currentPage === 1}
-        >
-          &laquo; First
-        </button>
-        <button
-          className="pagination-btn"
-          onClick={() => goToPage(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          &lsaquo; Prev
-        </button>
-        <span className="pagination-info">
-          Page {currentPage} of {totalPages}
-        </span>
-        <button
-          className="pagination-btn"
-          onClick={() => goToPage(currentPage + 1)}
-          disabled={currentPage === totalPages}
-        >
-          Next &rsaquo;
-        </button>
-        <button
-          className="pagination-btn"
-          onClick={() => goToPage(totalPages)}
-          disabled={currentPage === totalPages}
-        >
-          Last &raquo;
-        </button>
-      </div>
-    );
-  };
+  const defaultColDef = useMemo(() => ({
+    sortable: true,
+    resizable: true,
+  }), []);
 
   if (loading) {
     return (
@@ -286,81 +343,20 @@ function PatmatchResultsPage() {
             </p>
           </div>
         ) : (
-          <>
-            <div className="results-info">
-              Showing {startIdx + 1}-{Math.min(endIdx, totalHits)} of {totalHits} matches
-            </div>
-
-            {renderPagination()}
-
-            <table className="results-table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Sequence</th>
-                  <th>Position</th>
-                  <th>Strand</th>
-                  <th>Match</th>
-                  <th>Context</th>
-                </tr>
-              </thead>
-              <tbody>
-                {paginatedHits.map((hit, idx) => (
-                  <tr key={idx}>
-                    <td className="row-num">{startIdx + idx + 1}</td>
-                    <td>
-                      {hit.locus_link ? (
-                        <Link to={hit.locus_link} target="_blank" rel="noopener noreferrer">
-                          {hit.sequence_name}
-                        </Link>
-                      ) : (
-                        hit.sequence_name
-                      )}
-                      {hit.sequence_description &&
-                        hit.sequence_description !== hit.sequence_name && (
-                          <span className="seq-desc"> ({hit.sequence_description})</span>
-                        )}
-                    </td>
-                    <td className="position-cell">
-                      {hit.match_start.toLocaleString()}-{hit.match_end.toLocaleString()}
-                      {hit.jbrowse_link && (
-                        <a
-                          href={hit.jbrowse_link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="jbrowse-link"
-                          title="View in JBrowse"
-                        >
-                          JB
-                        </a>
-                      )}
-                    </td>
-                    <td className="strand-cell">{hit.strand}</td>
-                    <td className="match-cell">
-                      <code
-                        onClick={() => handleSequenceClick(hit)}
-                        title="Click to view full sequence"
-                      >
-                        {hit.matched_sequence}
-                      </code>
-                    </td>
-                    <td className="context-cell">
-                      <code
-                        onClick={() => handleSequenceClick(hit)}
-                        title="Click to view full sequence"
-                      >
-                        <span className="context-before">{hit.context_before}</span>
-                        <span className="context-match">{hit.matched_sequence}</span>
-                        <span className="context-after">{hit.context_after}</span>
-                      </code>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-
-            {renderPagination()}
-          </>
+          <div className="ag-grid-wrapper">
+            <AgGridReact
+              rowData={results.hits}
+              columnDefs={columnDefs}
+              defaultColDef={defaultColDef}
+              domLayout="autoHeight"
+              suppressCellFocus={true}
+              enableCellTextSelection={true}
+              pagination={true}
+              paginationPageSize={10}
+              paginationPageSizeSelector={[10, 25, 50, 100]}
+              getRowId={(params) => `${params.data.sequence_name}-${params.data.match_start}-${params.data.match_end}`}
+            />
+          </div>
         )}
 
         {renderSequenceModal()}
