@@ -133,10 +133,6 @@ const TextSearchResultsPage = () => {
   useEffect(() => {
     // Skip if API already provided organism counts
     if (hasApiOrganismCounts) {
-      // Just validate selected organism against available organisms
-      if (selectedOrganism !== null && !availableOrganisms.includes(selectedOrganism)) {
-        setSelectedOrganism(null);
-      }
       return;
     }
 
@@ -152,16 +148,19 @@ const TextSearchResultsPage = () => {
 
       const organisms = Object.keys(counts);
       setAvailableOrganisms(organisms);
-      // Default to "All Organisms" (null) to show all results initially
-      if (selectedOrganism !== null && !organisms.includes(selectedOrganism)) {
-        setSelectedOrganism(null);
-      }
+      // Reset organism selection if the previously selected one is not available
+      setSelectedOrganism(prev => {
+        if (prev !== null && !organisms.includes(prev)) {
+          return null;
+        }
+        return prev;
+      });
     } else {
       setAvailableOrganisms([]);
       setOrganismCounts({});
       setSelectedOrganism(null);
     }
-  }, [categoryResults, selectedOrganism, hasApiOrganismCounts, availableOrganisms]);
+  }, [categoryResults, hasApiOrganismCounts]);
 
   // Handle category change
   const handleCategoryChange = async (category) => {
