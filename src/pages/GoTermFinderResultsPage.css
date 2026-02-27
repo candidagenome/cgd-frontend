@@ -247,13 +247,24 @@
 .ag-grid-wrapper .ag-root-wrapper {
   border: none;
   width: 100% !important;
+  min-width: 100% !important;
+}
+
+.ag-grid-wrapper .ag-root {
+  width: 100% !important;
 }
 
 .ag-grid-wrapper .ag-body-viewport,
+.ag-grid-wrapper .ag-center-cols-viewport,
+.ag-grid-wrapper .ag-header-viewport {
+  width: 100% !important;
+  min-width: 100% !important;
+}
+
 .ag-grid-wrapper .ag-center-cols-container,
-.ag-grid-wrapper .ag-header-viewport,
 .ag-grid-wrapper .ag-header-container {
   width: 100% !important;
+  min-width: 100% !important;
 }
 
 .ag-grid-wrapper .ag-header-cell-label {

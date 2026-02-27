@@ -122,13 +122,21 @@ function GoTermFinderResultsPage() {
   const [graphLoading, setGraphLoading] = useState(false);
   const [showGraph, setShowGraph] = useState(false);
 
-  // Resize columns to fit when grid is ready or tab changes
+  // Resize columns to fit when grid is ready
   const onGridReady = (params) => {
     gridRef.current = params.api;
+    // Delay to ensure container is fully rendered
+    setTimeout(() => {
+      params.api.sizeColumnsToFit();
+    }, 100);
+  };
+
+  // Resize columns after first data render
+  const onFirstDataRendered = (params) => {
     params.api.sizeColumnsToFit();
   };
 
-  // Resize columns when window resizes
+  // Resize columns when window resizes or tab changes
   useEffect(() => {
     const handleResize = () => {
       if (gridRef.current) {
@@ -138,6 +146,15 @@ function GoTermFinderResultsPage() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Resize columns when tab changes
+  useEffect(() => {
+    if (gridRef.current) {
+      setTimeout(() => {
+        gridRef.current.sizeColumnsToFit();
+      }, 50);
+    }
+  }, [activeTab]);
 
   // Load results from session storage
   useEffect(() => {
@@ -602,6 +619,7 @@ function GoTermFinderResultsPage() {
                     paginationPageSizeSelector={[10, 25, 50, 100]}
                     getRowId={(params) => params.data.goid}
                     onGridReady={onGridReady}
+                    onFirstDataRendered={onFirstDataRendered}
                   />
                 </div>
               )}
