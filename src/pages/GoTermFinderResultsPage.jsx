@@ -263,14 +263,14 @@ function GoTermFinderResultsPage() {
     return terms.filter(term => term.query_count > 1);
   };
 
-  // Load graph data - build from current results
-  const loadGraph = () => {
-    if (!results?.result) return;
+  // Load graph data from backend API
+  const loadGraph = async () => {
+    if (!request) return;
 
     setGraphLoading(true);
     try {
-      const termsWithMultipleGenes = getFilteredTerms();
-      setGraphData({ terms: termsWithMultipleGenes });
+      const data = await goTermFinderApi.getEnrichmentGraph(request, { maxNodes: 50 });
+      setGraphData(data);
       setGraphGeneratedDate(new Date());
       setShowGraph(true);
     } catch (err) {
@@ -289,36 +289,52 @@ function GoTermFinderResultsPage() {
       cyRef.current.destroy();
     }
 
-    if (!graphData.terms || graphData.terms.length === 0) return;
+    if (!graphData.nodes || graphData.nodes.length === 0) return;
 
     const nodes = [];
     const edges = [];
     const geneToTerms = new Map(); // Track which terms each gene is directly annotated to
 
-    // Build GO term nodes
-    graphData.terms.forEach((term) => {
+    // Build GO term nodes from API data
+    graphData.nodes.forEach((node) => {
       nodes.push({
         data: {
-          id: term.goid,
-          label: term.go_term,
-          goid: term.goid,
+          id: node.goid,
+          label: node.go_term,
+          goid: node.goid,
           nodeType: 'goterm',
-          pValue: term.p_value,
-          queryCount: term.query_count,
+          pValue: node.p_value,
+          queryCount: node.query_count,
+          isEnriched: node.is_enriched,
         },
       });
 
-      // Track genes for this term
-      if (term.genes) {
-        term.genes.forEach((gene) => {
+      // Track genes for enriched terms
+      if (node.is_enriched && node.genes && node.genes.length > 0) {
+        node.genes.forEach((gene) => {
           const geneName = gene.gene_name || gene.systematic_name;
           if (!geneToTerms.has(geneName)) {
             geneToTerms.set(geneName, []);
           }
-          geneToTerms.get(geneName).push(term.goid);
+          geneToTerms.get(geneName).push(node.goid);
         });
       }
     });
+
+    // Add hierarchy edges from API
+    if (graphData.edges) {
+      graphData.edges.forEach((edge, idx) => {
+        edges.push({
+          data: {
+            id: `hierarchy-${idx}`,
+            source: edge.source,
+            target: edge.target,
+            edgeType: 'hierarchy',
+            relationshipType: edge.relationship_type,
+          },
+        });
+      });
+    }
 
     // Group genes by their term associations to create gene cluster nodes
     const termSetToGenes = new Map();
@@ -349,7 +365,7 @@ function GoTermFinderResultsPage() {
       termIds.forEach((termId) => {
         edges.push({
           data: {
-            id: `edge-${geneNodeId}-${termId}`,
+            id: `gene-edge-${geneNodeId}-${termId}`,
             source: termId,
             target: geneNodeId,
             edgeType: 'gene-annotation',
@@ -357,6 +373,14 @@ function GoTermFinderResultsPage() {
         });
       });
     });
+
+    // Find root node (node with no incoming hierarchy edges)
+    const nodesWithParents = new Set(
+      edges.filter(e => e.data.edgeType === 'hierarchy').map(e => e.data.target)
+    );
+    const rootNodes = nodes
+      .filter(n => n.data.nodeType === 'goterm' && !nodesWithParents.has(n.data.id))
+      .map(n => n.data.id);
 
     // Create Cytoscape instance
     const cy = cytoscape({
@@ -368,18 +392,22 @@ function GoTermFinderResultsPage() {
           style: {
             'label': 'data(label)',
             'text-wrap': 'wrap',
-            'text-max-width': '140px',
-            'font-size': '11px',
+            'text-max-width': '130px',
+            'font-size': '10px',
             'font-family': 'monospace',
             'text-valign': 'center',
             'text-halign': 'center',
-            'background-color': (ele) => getPvalueColor(ele.data('pValue')),
+            'background-color': (ele) => {
+              // Non-enriched terms (ancestors) get gray color
+              if (!ele.data('isEnriched')) return PVALUE_COLORS.level6;
+              return getPvalueColor(ele.data('pValue'));
+            },
             'color': PVALUE_COLORS.textDark,
-            'width': '150px',
+            'width': '140px',
             'height': (ele) => {
               const label = ele.data('label') || '';
-              const lines = Math.ceil(label.length / 18);
-              return Math.max(50, lines * 16 + 20) + 'px';
+              const lines = Math.ceil(label.length / 16);
+              return Math.max(45, lines * 14 + 16) + 'px';
             },
             'shape': 'roundrectangle',
             'border-width': '1px',
@@ -392,8 +420,8 @@ function GoTermFinderResultsPage() {
           style: {
             'label': 'data(label)',
             'text-wrap': 'wrap',
-            'text-max-width': '200px',
-            'font-size': '10px',
+            'text-max-width': '180px',
+            'font-size': '9px',
             'font-family': 'monospace',
             'text-valign': 'center',
             'text-halign': 'center',
@@ -401,13 +429,13 @@ function GoTermFinderResultsPage() {
             'color': PVALUE_COLORS.textDark,
             'width': (ele) => {
               const label = ele.data('label') || '';
-              return Math.max(100, Math.min(250, label.length * 6 + 20)) + 'px';
+              return Math.max(80, Math.min(220, label.length * 5 + 16)) + 'px';
             },
             'height': (ele) => {
               const label = ele.data('label') || '';
               const words = label.split(' ').length;
-              const lines = Math.ceil(words / 4);
-              return Math.max(30, lines * 14 + 10) + 'px';
+              const lines = Math.ceil(words / 5);
+              return Math.max(25, lines * 12 + 8) + 'px';
             },
             'shape': 'roundrectangle',
             'border-width': '1px',
@@ -415,24 +443,34 @@ function GoTermFinderResultsPage() {
           },
         },
         {
-          selector: 'edge',
+          selector: 'edge[edgeType="hierarchy"]',
           style: {
             'width': 1.5,
             'line-color': PVALUE_COLORS.edge,
             'curve-style': 'bezier',
+            'target-arrow-shape': 'none',
+          },
+        },
+        {
+          selector: 'edge[edgeType="gene-annotation"]',
+          style: {
+            'width': 1,
+            'line-color': '#999',
+            'curve-style': 'bezier',
+            'target-arrow-shape': 'none',
           },
         },
       ],
       layout: {
         name: 'breadthfirst',
         directed: true,
-        spacingFactor: 1.5,
+        spacingFactor: 1.3,
         avoidOverlap: true,
-        roots: nodes.filter(n => n.data.nodeType === 'goterm').map(n => n.data.id),
+        roots: rootNodes.length > 0 ? rootNodes : undefined,
       },
       userZoomingEnabled: true,
       userPanningEnabled: true,
-      minZoom: 0.2,
+      minZoom: 0.15,
       maxZoom: 3,
     });
 
