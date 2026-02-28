@@ -482,6 +482,18 @@
   text-decoration: underline;
 }
 
+.analyze-link {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.analyze-link:hover {
+  text-decoration: underline;
+}
+
 .analyze-link-btn {
   color: #1976d2;
   background: none;

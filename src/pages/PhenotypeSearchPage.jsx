@@ -348,11 +348,11 @@ function PhenotypeSearchPage() {
     // Get unique gene names for the gene list
     const geneList = [...new Set(data.results.map(r => r.feature_name))];
 
-    // Helper to open tool in new tab with gene list
-    const openToolWithGenes = (toolPath) => {
+    // Helper to store gene list before navigating
+    const handleToolClick = (e) => {
       // Store gene list in sessionStorage for the target page to read
       sessionStorage.setItem('phenotypeSearchGeneList', JSON.stringify(geneList));
-      window.open(toolPath, '_blank');
+      // Let the default anchor behavior handle navigation
     };
 
     return (
@@ -365,21 +365,21 @@ function PhenotypeSearchPage() {
             <tr>
               <td className="analyze-label">Further Analysis:</td>
               <td>
-                <button type="button" className="analyze-link-btn" onClick={() => openToolWithGenes('/go-term-finder')}>
+                <a href="/go-term-finder" target="_blank" rel="noopener noreferrer" className="analyze-link" onClick={handleToolClick}>
                   GO Term Finder
-                </button>
+                </a>
                 <span className="analyze-desc">Find common features of genes in list</span>
               </td>
               <td>
-                <button type="button" className="analyze-link-btn" onClick={() => openToolWithGenes('/go-slim-mapper')}>
+                <a href="/go-slim-mapper" target="_blank" rel="noopener noreferrer" className="analyze-link" onClick={handleToolClick}>
                   GO Slim Mapper
-                </button>
+                </a>
                 <span className="analyze-desc">Sort genes into broad categories</span>
               </td>
               <td>
-                <button type="button" className="analyze-link-btn" onClick={() => openToolWithGenes('/go-annotation-summary')}>
+                <a href="/go-annotation-summary" target="_blank" rel="noopener noreferrer" className="analyze-link" onClick={handleToolClick}>
                   View GO Annotation Summary
-                </button>
+                </a>
                 <span className="analyze-desc">View all GO terms used to describe genes in list</span>
               </td>
             </tr>
@@ -390,9 +390,9 @@ function PhenotypeSearchPage() {
                 <span className="analyze-desc">Download data for the entire gene list in a tab-delimited file</span>
               </td>
               <td colSpan="2">
-                <button type="button" className="analyze-link-btn" onClick={() => openToolWithGenes('/batch-download')}>
+                <a href="/batch-download" target="_blank" rel="noopener noreferrer" className="analyze-link" onClick={handleToolClick}>
                   Batch Download
-                </button>
+                </a>
                 <span className="analyze-desc">Download selected information for entire gene list. Available information types include Sequence, Coordinates, Chromosomal Feature information, GO annotations, Phenotypes, and Ortholog or Best Hit.</span>
               </td>
             </tr>
