@@ -188,6 +188,23 @@
   color: white;
 }
 
+/* Locus input with organism dropdown */
+.locus-input-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.locus-input-row .locus-input {
+  flex: 1;
+  min-width: 200px;
+}
+
+.locus-input-row .locus-organism-select {
+  width: 220px;
+  flex-shrink: 0;
+}
+
 .inline-field {
   display: flex;
   align-items: center;
