@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import goSlimMapperApi from '../api/goSlimMapperApi';
 import './GoSlimMapperSearchPage.css';
 
 function GoSlimMapperSearchPage() {
-  const navigate = useNavigate();
-
   const [loading, setLoading] = useState(false);
   const [configLoading, setConfigLoading] = useState(true);
   const [termsLoading, setTermsLoading] = useState(false);
@@ -17,15 +15,30 @@ function GoSlimMapperSearchPage() {
   // Available terms for selected set/aspect
   const [availableTerms, setAvailableTerms] = useState([]);
 
-  // Form state
-  const [formData, setFormData] = useState({
-    genes: '',
-    organism_no: '',
-    go_set_name: '',
-    go_aspect: '',
-    selected_terms: [], // Empty = all terms
-    annotation_types: ['manually_curated', 'high_throughput', 'computational'],
+  // Form state - initialize from localStorage if available
+  const [formData, setFormData] = useState(() => {
+    const saved = localStorage.getItem('goSlimMapperFormData');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        // Ignore parse errors
+      }
+    }
+    return {
+      genes: '',
+      organism_no: '',
+      go_set_name: '',
+      go_aspect: '',
+      selected_terms: [], // Empty = all terms
+      annotation_types: ['manually_curated', 'high_throughput', 'computational'],
+    };
   });
+
+  // Save form data to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('goSlimMapperFormData', JSON.stringify(formData));
+  }, [formData]);
 
   // Load config on mount
   useEffect(() => {
@@ -184,10 +197,10 @@ function GoSlimMapperSearchPage() {
       // Run analysis
       const result = await goSlimMapperApi.runAnalysis(request);
 
-      // Store results and navigate
-      sessionStorage.setItem('goSlimMapperResults', JSON.stringify(result));
-      sessionStorage.setItem('goSlimMapperRequest', JSON.stringify(request));
-      navigate('/go-slim-mapper/results');
+      // Store results and open in new tab
+      localStorage.setItem('goSlimMapperResults', JSON.stringify(result));
+      localStorage.setItem('goSlimMapperRequest', JSON.stringify(request));
+      window.open('/go-slim-mapper/results', 'gsm_result');
     } catch (err) {
       console.error('Analysis error:', err);
       setError(err.response?.data?.detail || err.message || 'Analysis failed');
@@ -238,28 +251,24 @@ function GoSlimMapperSearchPage() {
 
         <form onSubmit={handleSubmit}>
           {/* Step 1: Organism Selection */}
-          <div className="form-section">
+          <div className="form-section inline-section">
             <h3>
               <span className="section-number">1</span>
               Select Organism
             </h3>
-
-            <div className="form-row">
-              <label htmlFor="organism">Organism:</label>
-              <select
-                id="organism"
-                value={formData.organism_no}
-                onChange={(e) => handleInputChange('organism_no', e.target.value)}
-                required
-              >
-                <option value="">-- Select Organism --</option>
-                {config?.organisms?.map((org) => (
-                  <option key={org.organism_no} value={org.organism_no}>
-                    {org.display_name}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <select
+              id="organism"
+              value={formData.organism_no}
+              onChange={(e) => handleInputChange('organism_no', e.target.value)}
+              required
+            >
+              <option value="">-- Select --</option>
+              {config?.organisms?.map((org) => (
+                <option key={org.organism_no} value={org.organism_no}>
+                  {org.display_name}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Step 2: Gene Input */}
@@ -300,46 +309,39 @@ function GoSlimMapperSearchPage() {
           </div>
 
           {/* Step 3: GO Slim Set Selection */}
-          <div className="form-section">
+          <div className="form-section inline-section">
             <h3>
               <span className="section-number">3</span>
               Select GO Slim Set
             </h3>
-
-            <div className="form-row">
-              <label htmlFor="go_set">GO Slim Set:</label>
-              <select
-                id="go_set"
-                value={formData.go_set_name}
-                onChange={(e) => handleSetChange(e.target.value)}
-                required
-              >
-                <option value="">-- Select GO Slim Set --</option>
-                {config?.go_slim_sets?.map((set) => (
-                  <option key={set.go_set_name} value={set.go_set_name}>
-                    {set.go_set_name} ({set.aspects.join(', ')})
-                  </option>
-                ))}
-              </select>
-            </div>
+            <select
+              id="go_set"
+              value={formData.go_set_name}
+              onChange={(e) => handleSetChange(e.target.value)}
+              required
+            >
+              <option value="">-- Select --</option>
+              {config?.go_slim_sets?.map((set) => (
+                <option key={set.go_set_name} value={set.go_set_name}>
+                  {set.go_set_name} ({set.aspects.join(', ')})
+                </option>
+              ))}
+            </select>
 
             {formData.go_set_name && availableAspects.length > 0 && (
-              <div className="form-row">
-                <label htmlFor="go_aspect">GO Aspect:</label>
-                <div className="aspect-options">
-                  {availableAspects.map((aspect) => (
-                    <label key={aspect} className="radio-label">
-                      <input
-                        type="radio"
-                        name="go_aspect"
-                        value={aspect}
-                        checked={formData.go_aspect === aspect}
-                        onChange={(e) => handleInputChange('go_aspect', e.target.value)}
-                      />
-                      <span>{aspectNames[aspect] || aspect}</span>
-                    </label>
-                  ))}
-                </div>
+              <div className="aspect-options">
+                {availableAspects.map((aspect) => (
+                  <label key={aspect} className="radio-label">
+                    <input
+                      type="radio"
+                      name="go_aspect"
+                      value={aspect}
+                      checked={formData.go_aspect === aspect}
+                      onChange={(e) => handleInputChange('go_aspect', e.target.value)}
+                    />
+                    <span>{aspectNames[aspect] || aspect}</span>
+                  </label>
+                ))}
               </div>
             )}
           </div>
@@ -396,12 +398,11 @@ function GoSlimMapperSearchPage() {
           )}
 
           {/* Step 5: Annotation Type Filter */}
-          <div className="form-section">
+          <div className="form-section inline-section">
             <h3>
               <span className="section-number">5</span>
               Annotation Types
             </h3>
-
             <div className="annotation-type-options">
               {config?.annotation_types?.map((type) => (
                 <label key={type.value} className="checkbox-label">

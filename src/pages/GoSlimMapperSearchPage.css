@@ -1,7 +1,7 @@
 .go-slim-mapper-search-page {
-  max-width: 900px;
+  width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 15px 20px;
 }
 
 .go-slim-mapper-content h1 {
@@ -62,6 +62,27 @@
   margin: 0 0 15px 0;
   color: #003366;
   font-size: 1.1em;
+}
+
+/* Inline sections - header and controls on same line */
+.form-section.inline-section {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 20px;
+}
+
+.form-section.inline-section h3 {
+  margin: 0;
+}
+
+.form-section.inline-section select {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  min-width: 200px;
 }
 
 .section-number {
@@ -289,13 +310,27 @@
 }
 
 /* Responsive */
-@media (max-width: 600px) {
+@media (max-width: 1240px) {
+  .go-slim-mapper-search-page {
+    width: auto;
+    max-width: 1200px;
+    margin: 0 20px;
+  }
+}
+
+@media (max-width: 768px) {
   .go-slim-mapper-search-page {
     padding: 10px;
+    margin: 0 10px;
   }
 
   .form-section {
     padding: 15px;
+  }
+
+  .form-section.inline-section {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .gene-input-actions {
@@ -303,7 +338,8 @@
     align-items: flex-start;
   }
 
-  .form-row select {
+  .form-row select,
+  .form-section.inline-section select {
     min-width: 100%;
   }
 

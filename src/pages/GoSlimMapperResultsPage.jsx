@@ -1,33 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { Link } from 'react-router-dom';
+import { AgGridReact } from 'ag-grid-react';
 import goSlimMapperApi from '../api/goSlimMapperApi';
 import './GoSlimMapperResultsPage.css';
 
 const GENES_TO_SHOW = 5;
 
 function GoSlimMapperResultsPage() {
-  const navigate = useNavigate();
-
   const [results, setResults] = useState(null);
   const [request, setRequest] = useState(null);
   const [expandedTerms, setExpandedTerms] = useState(new Set());
 
-  // Load results from session storage
+  // Load results from localStorage
   useEffect(() => {
-    const storedResults = sessionStorage.getItem('goSlimMapperResults');
-    const storedRequest = sessionStorage.getItem('goSlimMapperRequest');
+    const storedResults = localStorage.getItem('goSlimMapperResults');
+    const storedRequest = localStorage.getItem('goSlimMapperRequest');
 
     if (storedResults) {
       setResults(JSON.parse(storedResults));
-    } else {
-      // No results, redirect to search
-      navigate('/go-slim-mapper');
     }
 
     if (storedRequest) {
       setRequest(JSON.parse(storedRequest));
     }
-  }, [navigate]);
+  }, []);
 
   const toggleTermExpansion = (goid) => {
     setExpandedTerms((prev) => {
@@ -105,6 +101,69 @@ function GoSlimMapperResultsPage() {
     F: 'Molecular Function',
     C: 'Cellular Component',
   };
+
+  // AG Grid column definitions
+  const columnDefs = useMemo(() => [
+    {
+      headerName: 'GO Slim Term',
+      field: 'goid',
+      flex: 2,
+      minWidth: 300,
+      cellRenderer: (params) => {
+        const term = params.data;
+        return (
+          <div className="term-cell-content">
+            <Link to={`/go/${term.goid}`} className="term-link">
+              {term.goid}
+            </Link>
+            <br />
+            <span className="term-name">{term.go_term}</span>
+          </div>
+        );
+      },
+      autoHeight: true,
+    },
+    {
+      headerName: 'Cluster Frequency',
+      field: 'gene_count',
+      flex: 1,
+      minWidth: 180,
+      cellRenderer: (params) => {
+        const term = params.data;
+        return (
+          <div className="count-cell-content">
+            {term.gene_count} out of {term.total_genes} genes
+            <br />
+            <span className="percentage">{term.frequency_percent}%</span>
+          </div>
+        );
+      },
+      autoHeight: true,
+    },
+    {
+      headerName: 'Genes',
+      field: 'genes',
+      flex: 2,
+      minWidth: 300,
+      cellRenderer: (params) => {
+        const term = params.data;
+        return renderGeneLinks(term.genes, term.goid);
+      },
+      autoHeight: true,
+    },
+  ], [expandedTerms]);
+
+  // Default column properties
+  const defaultColDef = useMemo(() => ({
+    sortable: true,
+    resizable: true,
+    wrapText: true,
+  }), []);
+
+  // Grid ready callback
+  const onGridReady = useCallback((params) => {
+    params.api.sizeColumnsToFit();
+  }, []);
 
   if (!results) {
     return (
@@ -213,41 +272,19 @@ function GoSlimMapperResultsPage() {
               No genes were mapped to any GO Slim terms in this set.
             </p>
           ) : (
-            <table className="results-table">
-              <colgroup>
-                <col style={{ width: '40%' }} />
-                <col style={{ width: '20%' }} />
-                <col style={{ width: '40%' }} />
-              </colgroup>
-              <thead>
-                <tr>
-                  <th className="th-term">GO Slim Term</th>
-                  <th className="th-count">Cluster Frequency</th>
-                  <th className="th-genes">Genes</th>
-                </tr>
-              </thead>
-              <tbody>
-                {result.mapped_terms.map((term) => (
-                  <tr key={term.goid}>
-                    <td className="term-cell">
-                      <Link to={`/go/${term.goid}`} className="term-link">
-                        {term.goid}
-                      </Link>
-                      <br />
-                      <span className="term-name">{term.go_term}</span>
-                    </td>
-                    <td className="count-cell">
-                      {term.gene_count} out of {term.total_genes} genes
-                      <br />
-                      <span className="percentage">{term.frequency_percent}%</span>
-                    </td>
-                    <td className="genes-cell">
-                      {renderGeneLinks(term.genes, term.goid)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className="ag-grid-wrapper ag-theme-alpine">
+              <AgGridReact
+                rowData={result.mapped_terms}
+                columnDefs={columnDefs}
+                defaultColDef={defaultColDef}
+                domLayout="autoHeight"
+                pagination={true}
+                paginationPageSize={10}
+                paginationPageSizeSelector={[10, 25, 50]}
+                onGridReady={onGridReady}
+                suppressCellFocus={true}
+              />
+            </div>
           )}
         </div>
 
