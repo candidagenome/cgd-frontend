@@ -63,12 +63,48 @@ function PhenotypeSearchPage() {
     setHasSearched(true);
 
     try {
-      // Fetch all results (no pagination - use reasonable limit)
-      const result = await phenotypeApi.searchPhenotypes({
+      // Fetch all results by paginating through all pages (backend max limit is 100)
+      const PAGE_SIZE = 100;
+      let allResults = [];
+      let page = 1;
+      let totalResults = 0;
+      let query = null;
+
+      // Fetch first page to get total count
+      const firstPage = await phenotypeApi.searchPhenotypes({
         ...params,
-        limit: 1000,
+        page: 1,
+        limit: PAGE_SIZE,
       });
-      setData(result);
+
+      totalResults = firstPage.total_results;
+      query = firstPage.query;
+      allResults = firstPage.results || [];
+
+      // Fetch remaining pages if needed
+      const totalPages = Math.ceil(totalResults / PAGE_SIZE);
+      if (totalPages > 1) {
+        const remainingPages = [];
+        for (let p = 2; p <= totalPages; p++) {
+          remainingPages.push(
+            phenotypeApi.searchPhenotypes({
+              ...params,
+              page: p,
+              limit: PAGE_SIZE,
+            })
+          );
+        }
+        const pageResults = await Promise.all(remainingPages);
+        for (const pr of pageResults) {
+          allResults = allResults.concat(pr.results || []);
+        }
+      }
+
+      setData({
+        results: allResults,
+        total_results: totalResults,
+        query: query,
+      });
     } catch (err) {
       // Handle FastAPI validation errors (array of objects) or string errors
       let errorMsg = 'Failed to search phenotypes';
