@@ -20,7 +20,7 @@ const PVALUE_COLORS = {
   level4: '#FFA500',  // Orange: 1e-6 to 1e-4
   level5: '#FFD700',  // Gold/Yellow: 1e-4 to 1e-2
   level6: '#C0C0C0',  // Gray: >0.01
-  gene: '#C0C0C0',    // Gray for gene nodes
+  gene: '#B8D4E8',    // Light blue for gene nodes
   edge: '#333333',
   textDark: '#000000',
 };
