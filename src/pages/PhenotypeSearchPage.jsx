@@ -63,14 +63,24 @@ function PhenotypeSearchPage() {
     setHasSearched(true);
 
     try {
-      // Fetch all results (no pagination - use large limit)
+      // Fetch all results (no pagination - use reasonable limit)
       const result = await phenotypeApi.searchPhenotypes({
         ...params,
-        limit: 10000,
+        limit: 1000,
       });
       setData(result);
     } catch (err) {
-      setError(err.response?.data?.detail || err.message || 'Failed to search phenotypes');
+      // Handle FastAPI validation errors (array of objects) or string errors
+      let errorMsg = 'Failed to search phenotypes';
+      const detail = err.response?.data?.detail;
+      if (typeof detail === 'string') {
+        errorMsg = detail;
+      } else if (Array.isArray(detail) && detail.length > 0) {
+        errorMsg = detail.map(d => d.msg || JSON.stringify(d)).join('; ');
+      } else if (err.message) {
+        errorMsg = err.message;
+      }
+      setError(errorMsg);
       setData(null);
     } finally {
       setLoading(false);
