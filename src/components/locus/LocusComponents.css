@@ -1574,6 +1574,46 @@ a:hover {
   min-height: 0;
 }
 
+/* References table header with download button */
+.references-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.references-table-header .results-count {
+  margin: 0;
+}
+
+.references-table-header .download-btn {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85em;
+  font-weight: 500;
+}
+
+.references-table-header .download-btn:hover {
+  background-color: #43a047;
+}
+
+/* More/less genes links in Other Genes column */
+.more-genes-link,
+.less-genes-link {
+  color: #1976d2;
+  cursor: pointer;
+  font-style: italic;
+}
+
+.more-genes-link:hover,
+.less-genes-link:hover {
+  text-decoration: underline;
+}
+
 .go-table {
   margin: 0;
   border-collapse: collapse;

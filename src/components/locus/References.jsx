@@ -25,6 +25,7 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
   const [viewMode, setViewMode] = useState('summary'); // 'summary', 'list', 'grouped', 'topic'
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [localSelectedOrganism, setLocalSelectedOrganism] = useState(null);
+  const [expandedGeneRows, setExpandedGeneRows] = useState(new Set()); // Track which rows have expanded gene lists
 
   // Use either the prop or local state for organism selection
   const currentOrganism = selectedOrganism || localSelectedOrganism;
@@ -42,6 +43,19 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
       setCurrentOrganism(getDefaultOrganism(organismNames));
     }
   }, [organismNames, currentOrganism, setCurrentOrganism]);
+
+  // Toggle expanded gene list for a row
+  const toggleGeneRowExpanded = useCallback((rowId) => {
+    setExpandedGeneRows(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(rowId)) {
+        newSet.delete(rowId);
+      } else {
+        newSet.add(rowId);
+      }
+      return newSet;
+    });
+  }, []);
 
   // AG Grid column definitions for references table
   const columnDefs = useMemo(() => [
@@ -100,24 +114,50 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
           return <span className="no-other-genes">-</span>;
         }
 
+        const rowId = params.data.pubmed_id || params.rowIndex;
+        const isExpanded = expandedGeneRows.has(rowId);
+        const genesToShow = isExpanded ? otherGenesInRef : otherGenesInRef.slice(0, 10);
+        const hasMore = otherGenesInRef.length > 10;
+
         return (
           <div className="other-genes-list">
-            {otherGenesInRef.slice(0, 10).map((gene, gIdx) => (
+            {genesToShow.map((gene, gIdx) => (
               <span key={gIdx}>
                 <Link to={`/locus/${gene}`}>{gene}</Link>
-                {gIdx < Math.min(otherGenesInRef.length, 10) - 1 && ', '}
+                {gIdx < genesToShow.length - 1 && ', '}
               </span>
             ))}
-            {otherGenesInRef.length > 10 && (
-              <span className="more-genes">
+            {hasMore && !isExpanded && (
+              <span
+                className="more-genes-link"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleGeneRowExpanded(rowId);
+                }}
+                role="button"
+                tabIndex={0}
+              >
                 ... and {otherGenesInRef.length - 10} more
+              </span>
+            )}
+            {hasMore && isExpanded && (
+              <span
+                className="less-genes-link"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleGeneRowExpanded(rowId);
+                }}
+                role="button"
+                tabIndex={0}
+              >
+                {' '}[show less]
               </span>
             )}
           </div>
         );
       },
     },
-  ], [displayName, currentOrganism]);
+  ], [displayName, currentOrganism, expandedGeneRows, toggleGeneRowExpanded]);
 
   // Default column properties
   const defaultColDef = useMemo(() => ({
@@ -130,6 +170,41 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
   const onGridReady = useCallback((params) => {
     params.api.sizeColumnsToFit();
   }, []);
+
+  // Download references as TSV
+  const handleDownloadTSV = useCallback((refsToDownload) => {
+    if (!refsToDownload || refsToDownload.length === 0) return;
+
+    // Build TSV content
+    const headers = ['Authors', 'Year', 'Title', 'Journal', 'PubMed ID', 'Species', 'Other Genes'];
+    const rows = refsToDownload.map(ref => {
+      const otherGenesInRef = ref.other_genes
+        ? ref.other_genes.filter(g => g !== displayName)
+        : [];
+      const species = ref.species || currentOrganism?.split(' ').slice(0, 2).join(' ') || 'C. albicans';
+
+      return [
+        ref.authors || '',
+        ref.year || '',
+        ref.title || '',
+        ref.journal || '',
+        ref.pubmed_id || '',
+        species,
+        otherGenesInRef.join(', '),
+      ].map(field => `"${String(field).replace(/"/g, '""')}"`).join('\t');
+    });
+
+    const tsvContent = [headers.join('\t'), ...rows].join('\n');
+    const blob = new Blob([tsvContent], { type: 'text/tab-separated-values;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${displayName}_references.tsv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }, [displayName, currentOrganism]);
 
   if (loading) return <div className="loading">Loading literature...</div>;
   if (error) return <div className="error">Error: {error}</div>;
@@ -404,9 +479,18 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
 
     return (
       <div className="references-table-container">
-        <p className="results-count">
-          {sortedRefs.length} reference{sortedRefs.length !== 1 ? 's' : ''}
-        </p>
+        <div className="references-table-header">
+          <p className="results-count">
+            {sortedRefs.length} reference{sortedRefs.length !== 1 ? 's' : ''}
+          </p>
+          <button
+            className="download-btn"
+            onClick={() => handleDownloadTSV(sortedRefs)}
+            title="Download as TSV"
+          >
+            Download TSV
+          </button>
+        </div>
         <div className="references-grid-wrapper ag-theme-alpine">
           <AgGridReact
             rowData={sortedRefs}
