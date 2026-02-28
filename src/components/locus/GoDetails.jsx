@@ -157,8 +157,10 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
       flex: 2,
       minWidth: 200,
       autoHeight: true,
-      sortable: false,
-      filter: false,
+      valueGetter: (params) => {
+        const refs = params.data.references || [];
+        return refs.map(ref => ref.display_name || ref.pubmed_id || '').join('; ');
+      },
       cellRenderer: (params) => {
         const ann = params.data;
         return (
@@ -282,10 +284,7 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
 
       {/* Display data for selected organism */}
       {selectedOrganism && orgData ? (
-        <div className="organism-section">
-          <h3 className="organism-name">{selectedOrganism}</h3>
-          <p className="locus-display">Locus: {orgData.locus_display_name}</p>
-
+        <div className="go-annotations-container">
           {orgData.annotations && orgData.annotations.length > 0 ? (
             <div className="go-annotation-types">
               {/* Iterate through annotation types in order */}
@@ -336,9 +335,7 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
             <p className="no-data">No GO annotations for this organism</p>
           )}
         </div>
-      ) : (
-        <p className="no-data">Select an organism to view GO annotations</p>
-      )}
+      ) : null}
     </div>
   );
 }
