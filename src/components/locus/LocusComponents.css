@@ -1225,7 +1225,7 @@ a:hover {
 .go-annotation-types {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .annotation-type-section {
@@ -1326,10 +1326,18 @@ a:hover {
 /* GO AG Grid wrapper */
 .go-grid-wrapper {
   padding: 0;
+  margin: 0;
 }
 
 .go-grid-wrapper .ag-root-wrapper {
   border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.go-grid-wrapper.ag-theme-alpine {
+  --ag-grid-size: 4px;
+  --ag-row-height: 32px;
 }
 
 .go-grid-wrapper .ag-header {
@@ -1363,8 +1371,30 @@ a:hover {
 }
 
 .go-grid-wrapper .ag-paging-panel {
-  padding: 4px 8px;
-  font-size: 0.85em;
+  padding: 2px 8px;
+  font-size: 0.8em;
+  height: auto;
+  min-height: 28px;
+  margin: 0;
+  border-top: 1px solid #e0e0e0;
+}
+
+.go-grid-wrapper .ag-root-wrapper-body {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.go-grid-wrapper .ag-body-viewport {
+  min-height: auto !important;
+}
+
+.go-grid-wrapper .ag-layout-auto-height .ag-center-cols-viewport,
+.go-grid-wrapper .ag-layout-auto-height .ag-center-cols-container {
+  min-height: auto !important;
+}
+
+.go-grid-wrapper .ag-body-horizontal-scroll {
+  min-height: 0;
 }
 
 /* GO annotation cell styles for AG Grid */
