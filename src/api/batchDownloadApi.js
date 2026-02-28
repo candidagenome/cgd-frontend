@@ -17,13 +17,17 @@ const batchDownloadApi = {
    */
   getMetadata: async (params) => {
     // Use POST for large gene lists to avoid URL length limits
-    const response = await api.post('/api/batch-download/metadata', {
+    const requestBody = {
       genes: params.genes,
       data_types: params.dataTypes,
       flank_left: params.flankLeft || 0,
       flank_right: params.flankRight || 0,
       compress: params.compress !== false,
-    }, {
+    };
+    if (params.organism) {
+      requestBody.organism = params.organism;
+    }
+    const response = await api.post('/api/batch-download/metadata', requestBody, {
       timeout: 300000, // 5 minutes for large gene lists
     });
     return response.data;
@@ -33,13 +37,17 @@ const batchDownloadApi = {
    * Download batch data (returns blob URL for download)
    */
   download: async (params) => {
-    const response = await api.post('/api/batch-download', {
+    const requestBody = {
       genes: params.genes,
       data_types: params.dataTypes,
       flank_left: params.flankLeft || 0,
       flank_right: params.flankRight || 0,
       compress: params.compress !== false,
-    }, {
+    };
+    if (params.organism) {
+      requestBody.organism = params.organism;
+    }
+    const response = await api.post('/api/batch-download', requestBody, {
       responseType: 'blob',
       timeout: 600000, // 10 minutes for large downloads
     });

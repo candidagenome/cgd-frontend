@@ -39,6 +39,16 @@ const DATA_TYPE_INFO = {
   },
 };
 
+// Organisms with locus data in CGD database
+const ORGANISM_OPTIONS = [
+  { id: '', name: 'All organisms' },
+  { id: 'C_albicans_SC5314', name: 'C. albicans SC5314' },
+  { id: 'C_dubliniensis_CD36', name: 'C. dubliniensis CD36' },
+  { id: 'C_glabrata_CBS138', name: 'C. glabrata CBS138' },
+  { id: 'C_parapsilosis_CDC317', name: 'C. parapsilosis CDC317' },
+  { id: 'C_tropicalis_MYA-3404', name: 'C. tropicalis MYA-3404' },
+];
+
 function BatchDownloadPage() {
   // Input method
   const [inputMethod, setInputMethod] = useState('text'); // 'text' or 'file'
@@ -46,6 +56,7 @@ function BatchDownloadPage() {
   // Form state
   const [geneText, setGeneText] = useState('');
   const [geneFile, setGeneFile] = useState(null);
+  const [selectedOrganism, setSelectedOrganism] = useState('');
   const [selectedTypes, setSelectedTypes] = useState(['genomic']);
   const [flankLeft, setFlankLeft] = useState('');
   const [flankRight, setFlankRight] = useState('');
@@ -113,6 +124,7 @@ function BatchDownloadPage() {
     try {
       const result = await batchDownloadApi.getMetadata({
         genes,
+        organism: selectedOrganism || undefined,
         dataTypes: selectedTypes,
         flankLeft: flankLeft ? parseInt(flankLeft, 10) : 0,
         flankRight: flankRight ? parseInt(flankRight, 10) : 0,
@@ -151,6 +163,7 @@ function BatchDownloadPage() {
     try {
       const response = await batchDownloadApi.download({
         genes,
+        organism: selectedOrganism || undefined,
         dataTypes: selectedTypes,
         flankLeft: flankLeft ? parseInt(flankLeft, 10) : 0,
         flankRight: flankRight ? parseInt(flankRight, 10) : 0,
@@ -293,6 +306,25 @@ function BatchDownloadPage() {
                 {getGeneList().length} gene(s) entered
               </p>
             )}
+
+            {/* Organism Selection */}
+            <div className="organism-selection">
+              <label htmlFor="organism">Organism/Strain:</label>
+              <select
+                id="organism"
+                value={selectedOrganism}
+                onChange={(e) => setSelectedOrganism(e.target.value)}
+              >
+                {ORGANISM_OPTIONS.map((org) => (
+                  <option key={org.id} value={org.id}>
+                    {org.name}
+                  </option>
+                ))}
+              </select>
+              <p className="help-text">
+                Filter results to a specific organism. Leave as "All organisms" to include all matches.
+              </p>
+            </div>
           </div>
 
           {/* Step 2: Data Types */}
