@@ -23,7 +23,9 @@ const batchDownloadApi = {
     if (params.flankRight) queryParams.set('flankr', params.flankRight);
     queryParams.set('compress', params.compress);
 
-    const response = await api.get(`/api/batch-download/metadata?${queryParams}`);
+    const response = await api.get(`/api/batch-download/metadata?${queryParams}`, {
+      timeout: 300000, // 5 minutes for large gene lists
+    });
     return response.data;
   },
 
@@ -39,6 +41,7 @@ const batchDownloadApi = {
       compress: params.compress !== false,
     }, {
       responseType: 'blob',
+      timeout: 600000, // 10 minutes for large downloads
     });
 
     return response;
@@ -79,6 +82,7 @@ const batchDownloadApi = {
           'Content-Type': 'multipart/form-data',
         },
         responseType: 'blob',
+        timeout: 600000, // 10 minutes for large downloads
       }
     );
 
