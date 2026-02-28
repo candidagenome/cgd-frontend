@@ -123,28 +123,6 @@ function PhenotypeSearchPage() {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const params = new URLSearchParams();
-    if (observable.trim()) params.set('observable', observable.trim());
-    if (qualifier.trim()) params.set('qualifier', qualifier.trim());
-    if (experimentType.trim()) params.set('experiment_type', experimentType.trim());
-    if (mutantType.trim()) params.set('mutant_type', mutantType.trim());
-
-    setSearchParams(params);
-  };
-
-  const handleReset = () => {
-    setObservable('');
-    setQualifier('');
-    setExperimentType('');
-    setMutantType('');
-    setSearchParams({});
-    setData(null);
-    setHasSearched(false);
-  };
-
   // AG Grid column definitions
   const columnDefs = useMemo(() => [
     {
@@ -254,76 +232,6 @@ function PhenotypeSearchPage() {
   const onGridReady = useCallback((params) => {
     params.api.sizeColumnsToFit();
   }, []);
-
-  const renderSearchForm = () => {
-    return (
-      <div className="section" id="search-form">
-        <h2 className="section-header">Phenotype Search</h2>
-        <div className="section-content">
-          <form onSubmit={handleSubmit} className="search-form">
-            <div className="search-form-card">
-              <div className="search-fields">
-                <div className="form-group">
-                  <label htmlFor="observable">Observable</label>
-                  <input
-                    type="text"
-                    id="observable"
-                    value={observable}
-                    onChange={(e) => setObservable(e.target.value)}
-                    placeholder="e.g., cc"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="qualifier">Qualifier</label>
-                  <input
-                    type="text"
-                    id="qualifier"
-                    value={qualifier}
-                    onChange={(e) => setQualifier(e.target.value)}
-                    placeholder="e.g., ab"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="experiment_type">Experiment Type</label>
-                  <input
-                    type="text"
-                    id="experiment_type"
-                    value={experimentType}
-                    onChange={(e) => setExperimentType(e.target.value)}
-                    placeholder="e.g., cl"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="mutant_type">Mutant Type</label>
-                  <input
-                    type="text"
-                    id="mutant_type"
-                    value={mutantType}
-                    onChange={(e) => setMutantType(e.target.value)}
-                    placeholder="e.g., de"
-                  />
-                </div>
-              </div>
-
-              <div className="search-bottom-row">
-                <div className="browse-link">
-                  <Link to="/phenotype/terms">Browse observable terms</Link>
-                </div>
-
-                <div className="form-actions">
-                  <button type="submit" className="btn-search">Search</button>
-                  <button type="button" className="btn-reset" onClick={handleReset}>Reset</button>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    );
-  };
 
   const handleDownload = () => {
     if (!data || !data.results || data.results.length === 0) return;
@@ -448,8 +356,6 @@ function PhenotypeSearchPage() {
       </nav>
 
       <div className="divider" />
-
-      {renderSearchForm()}
 
       {loading && (
         <div className="loading-section">
