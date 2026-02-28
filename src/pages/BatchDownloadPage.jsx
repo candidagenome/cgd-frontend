@@ -120,7 +120,14 @@ function BatchDownloadPage() {
       });
       setMetadata(result);
     } catch (err) {
-      setError(err.response?.data?.detail || err.message || 'Failed to get preview');
+      console.error('Preview error:', err);
+      console.error('Error response:', err.response);
+      console.error('Error request:', err.request);
+      const errorMsg = err.response?.data?.detail
+        || err.response?.data?.message
+        || err.message
+        || 'Failed to get preview';
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -180,7 +187,13 @@ function BatchDownloadPage() {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (err) {
-      setError(err.response?.data?.detail || err.message || 'Download failed');
+      console.error('Download error:', err);
+      console.error('Error response:', err.response);
+      const errorMsg = err.response?.data?.detail
+        || err.response?.data?.message
+        || err.message
+        || 'Download failed';
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }
