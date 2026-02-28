@@ -8,11 +8,11 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 15px;
+  padding: 8px 12px;
   background-color: #e8f5e9;
   border: 1px solid #c8e6c9;
   border-radius: 6px;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -113,24 +113,25 @@
 
 /* Organism sections */
 .organism-section {
-  margin-bottom: 30px;
-  padding: 20px;
+  margin-bottom: 15px;
+  padding: 12px 15px;
   background-color: #f9f9f9;
-  border-radius: 8px;
+  border-radius: 6px;
   border: 1px solid #e0e0e0;
 }
 
 .organism-name {
   color: #1976d2;
-  margin: 0 0 5px 0;
-  padding-bottom: 10px;
+  margin: 0 0 3px 0;
+  padding-bottom: 6px;
   border-bottom: 2px solid #1976d2;
+  font-size: 1.1em;
 }
 
 .locus-display {
   color: #666;
-  font-size: 0.9em;
-  margin: 0 0 15px 0;
+  font-size: 0.85em;
+  margin: 0 0 10px 0;
 }
 
 /* Info table (key-value pairs) */
@@ -1218,7 +1219,7 @@ a:hover {
 .go-annotation-types {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 15px;
 }
 
 .annotation-type-section {
@@ -1229,10 +1230,10 @@ a:hover {
 
 .annotation-type-header {
   margin: 0;
-  padding: 12px 15px;
+  padding: 10px 15px;
   background-color: #e3f2fd;
   color: #1565c0;
-  font-size: 1.1em;
+  font-size: 1.05em;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -1244,22 +1245,24 @@ a:hover {
   background-color: #fafafa;
   border: 1px solid #e0e0e0;
   border-radius: 6px;
-  padding: 15px 20px;
-  margin-bottom: 20px;
+  padding: 10px 15px;
+  margin-bottom: 12px;
 }
 
 .go-intro p {
-  margin: 0 0 10px 0;
+  margin: 0 0 6px 0;
+  font-size: 0.9em;
 }
 
 .go-intro ul {
   margin: 0;
-  padding-left: 25px;
+  padding-left: 20px;
 }
 
 .go-intro li {
-  margin-bottom: 8px;
-  line-height: 1.5;
+  margin-bottom: 4px;
+  line-height: 1.4;
+  font-size: 0.9em;
 }
 
 .go-intro a {
@@ -1273,22 +1276,23 @@ a:hover {
 
 /* Last reviewed date */
 .last-reviewed {
-  padding: 8px 15px;
+  padding: 6px 15px;
   margin: 0;
   font-style: italic;
   color: #666;
   background-color: #f9f9f9;
+  font-size: 0.9em;
 }
 
 /* Section note */
 .section-note {
-  padding: 10px 15px;
+  padding: 8px 15px;
   margin: 0;
-  font-size: 0.9em;
+  font-size: 0.85em;
   color: #555;
   background-color: #fff;
   border-bottom: 1px solid #e0e0e0;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
 .go-aspect-section {
@@ -1297,10 +1301,10 @@ a:hover {
 
 .aspect-subheader {
   margin: 0;
-  padding: 10px 15px;
+  padding: 8px 15px;
   background-color: #f5f5f5;
   color: #333;
-  font-size: 0.95em;
+  font-size: 0.9em;
   font-weight: 500;
   cursor: pointer;
   display: flex;
@@ -1311,6 +1315,58 @@ a:hover {
 
 .aspect-subheader:hover {
   background-color: #eeeeee;
+}
+
+/* GO AG Grid wrapper */
+.go-grid-wrapper {
+  padding: 0;
+}
+
+.go-grid-wrapper .ag-root-wrapper {
+  border: none;
+}
+
+.go-grid-wrapper .ag-header {
+  background-color: #f9f9f9;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.go-grid-wrapper .ag-header-cell {
+  padding: 8px 10px;
+  font-weight: 500;
+  color: #333;
+  font-size: 0.9em;
+}
+
+.go-grid-wrapper .ag-cell {
+  padding: 8px 10px;
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.go-grid-wrapper .ag-row {
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.go-grid-wrapper .ag-row:hover {
+  background-color: #f5f5f5;
+}
+
+.go-grid-wrapper .ag-row-even {
+  background-color: #fafafa;
+}
+
+/* GO annotation cell styles for AG Grid */
+.go-annotation-cell {
+  line-height: 1.4;
+}
+
+.go-reference-cell {
+  line-height: 1.4;
+}
+
+.go-evidence-cell {
+  line-height: 1.4;
 }
 
 .go-table {
