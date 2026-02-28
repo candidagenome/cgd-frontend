@@ -203,10 +203,26 @@ function GoSlimMapperSearchPage() {
       // Run analysis
       const result = await goSlimMapperApi.runAnalysis(request);
 
+      console.log('Analysis result:', result);
+
+      // Check if analysis was successful
+      if (!result.success) {
+        throw new Error(result.error || 'Analysis failed');
+      }
+
       // Store results and open in new tab
-      localStorage.setItem('goSlimMapperResults', JSON.stringify(result));
-      localStorage.setItem('goSlimMapperRequest', JSON.stringify(request));
-      window.open('/go-slim-mapper/results', 'gsm_result');
+      try {
+        localStorage.setItem('goSlimMapperResults', JSON.stringify(result));
+        localStorage.setItem('goSlimMapperRequest', JSON.stringify(request));
+      } catch (storageErr) {
+        console.error('localStorage error:', storageErr);
+        throw new Error('Results too large to store. Try reducing the gene list or contact support.');
+      }
+
+      const newWindow = window.open('/go-slim-mapper/results', 'gsm_result');
+      if (!newWindow) {
+        throw new Error('Pop-up blocked. Please allow pop-ups for this site and try again.');
+      }
     } catch (err) {
       console.error('Analysis error:', err);
       setError(err.response?.data?.detail || err.message || 'Analysis failed');

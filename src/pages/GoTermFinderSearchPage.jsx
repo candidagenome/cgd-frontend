@@ -186,10 +186,26 @@ function GoTermFinderSearchPage() {
       // Run analysis
       const result = await goTermFinderApi.runAnalysis(request);
 
+      console.log('Analysis result:', result);
+
+      // Check if analysis was successful
+      if (!result.success) {
+        throw new Error(result.error || 'Analysis failed');
+      }
+
       // Store results and open in new tab
-      localStorage.setItem('goTermFinderResults', JSON.stringify(result));
-      localStorage.setItem('goTermFinderRequest', JSON.stringify(request));
-      window.open('/go-term-finder/results', 'gtf_result');
+      try {
+        localStorage.setItem('goTermFinderResults', JSON.stringify(result));
+        localStorage.setItem('goTermFinderRequest', JSON.stringify(request));
+      } catch (storageErr) {
+        console.error('localStorage error:', storageErr);
+        throw new Error('Results too large to store. Try reducing the gene list or contact support.');
+      }
+
+      const newWindow = window.open('/go-term-finder/results', 'gtf_result');
+      if (!newWindow) {
+        throw new Error('Pop-up blocked. Please allow pop-ups for this site and try again.');
+      }
     } catch (err) {
       console.error('Analysis error:', err);
       setError(err.response?.data?.detail || err.message || 'Analysis failed');
