@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import seqToolsApi from '../api/seqToolsApi';
 import './SeqToolsPage.css';
 
@@ -36,7 +36,6 @@ function SeqToolsPage() {
   // Data state
   const [assemblies, setAssemblies] = useState([]);
   const [chromosomes, setChromosomes] = useState([]);
-  const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -174,12 +173,14 @@ function SeqToolsPage() {
 
     setLoading(true);
     setError(null);
-    setResults(null);
 
     try {
       const params = buildRequestParams();
       const data = await seqToolsApi.resolve(params);
-      setResults(data);
+
+      // Store results in localStorage and open in new tab
+      localStorage.setItem('seqToolsResults', JSON.stringify(data));
+      window.open('/seq-tools/results', 'gsr');
     } catch (err) {
       setError(
         err.response?.data?.detail || err.message || 'An error occurred'
@@ -189,113 +190,10 @@ function SeqToolsPage() {
     }
   };
 
-  // Reset results when input type changes
+  // Reset error when input type changes
   const handleInputTypeChange = (type) => {
     setInputType(type);
-    setResults(null);
     setError(null);
-  };
-
-  // Render feature info card
-  const renderFeatureInfo = () => {
-    if (!results?.feature) return null;
-
-    const { feature } = results;
-    return (
-      <div className="feature-info-card">
-        <h3>Feature Information</h3>
-        <div className="feature-info-grid">
-          <div className="feature-info-item">
-            <span className="label">Feature Name</span>
-            <span className="value">
-              <Link to={`/locus/${feature.feature_name}`}>
-                {feature.feature_name}
-              </Link>
-            </span>
-          </div>
-          {feature.gene_name && (
-            <div className="feature-info-item">
-              <span className="label">Gene Name</span>
-              <span className="value">{feature.gene_name}</span>
-            </div>
-          )}
-          <div className="feature-info-item">
-            <span className="label">CGDID</span>
-            <span className="value">{feature.dbxref_id}</span>
-          </div>
-          <div className="feature-info-item">
-            <span className="label">Organism</span>
-            <span className="value">{feature.organism}</span>
-          </div>
-          {feature.chromosome && (
-            <div className="feature-info-item">
-              <span className="label">Location</span>
-              <span className="value">
-                {feature.chromosome}:{feature.start}-{feature.end}
-                {feature.strand &&
-                  ` (${feature.strand === 'W' ? '+' : '-'})`}
-              </span>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  };
-
-  // Render sequence info
-  const renderSequenceInfo = () => {
-    if (results?.input_type !== 'sequence' || !results?.sequence_length)
-      return null;
-
-    return (
-      <div className="sequence-info">
-        <p>
-          <strong>Sequence Length:</strong> {results.sequence_length} residues
-        </p>
-      </div>
-    );
-  };
-
-  // Render tool categories
-  const renderToolCategories = () => {
-    if (!results?.categories?.length) {
-      return (
-        <div className="no-results">
-          <p>No tools available for this input.</p>
-        </div>
-      );
-    }
-
-    return (
-      <div className="tool-categories">
-        {results.categories.map((category, idx) => (
-          <div key={idx} className="tool-category">
-            <h3>{category.name}</h3>
-            <div className="tool-list">
-              {category.tools.map((tool, toolIdx) => (
-                <a
-                  key={toolIdx}
-                  href={tool.url}
-                  className="tool-link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span className="tool-name">
-                    {tool.name}
-                    {tool.external && (
-                      <span className="external-icon">&#8599;</span>
-                    )}
-                  </span>
-                  {tool.description && (
-                    <span className="tool-description">{tool.description}</span>
-                  )}
-                </a>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    );
   };
 
   return (
@@ -512,24 +410,6 @@ function SeqToolsPage() {
           <div className="error-state">
             <strong>Error</strong>
             {error}
-          </div>
-        )}
-
-        {/* Loading State */}
-        {loading && (
-          <div className="loading-state">
-            <span className="loading-spinner"></span>
-            Loading tools...
-          </div>
-        )}
-
-        {/* Results */}
-        {results && !loading && (
-          <div className="results-section">
-            <h2>Available Tools</h2>
-            {renderFeatureInfo()}
-            {renderSequenceInfo()}
-            {renderToolCategories()}
           </div>
         )}
       </div>

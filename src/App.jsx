@@ -42,6 +42,7 @@ import TopicBibliosPage from './pages/TopicBibliosPage';
 import StrainsPage from './pages/StrainsPage';
 import ContactPage from './pages/ContactPage';
 import SeqToolsPage from './pages/SeqToolsPage';
+import SeqToolsResultsPage from './pages/SeqToolsResultsPage';
 import BlastSearchPage from './pages/BlastSearchPage';
 import BlastResultsPage from './pages/BlastResultsPage';
 import PatmatchSearchPage from './pages/PatmatchSearchPage';
@@ -226,6 +227,7 @@ function App() {
           <Route path="/strains" element={<StrainsPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/seq-tools" element={<SeqToolsPage />} />
+          <Route path="/seq-tools/results" element={<SeqToolsResultsPage />} />
           <Route path="/tools" element={<ToolsPage />} />
           <Route path="/blast" element={<BlastSearchPage />} />
           <Route path="/blast/results" element={<BlastResultsPage />} />
