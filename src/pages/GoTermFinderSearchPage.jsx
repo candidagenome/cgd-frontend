@@ -12,34 +12,19 @@ function GoTermFinderSearchPage() {
   // Configuration
   const [config, setConfig] = useState(null);
 
-  // Form state - initialize from localStorage if available
-  const [formData, setFormData] = useState(() => {
-    const saved = localStorage.getItem('goTermFinderFormData');
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        // Ignore parse errors
-      }
-    }
-    return {
-      genes: '',
-      organism_no: '',
-      ontology: 'P',
-      use_custom_background: false,
-      background_genes: '',
-      evidence_codes: [],
-      annotation_types: ['manually_curated', 'high_throughput', 'computational'],
-      p_value_cutoff: 0.01,
-      correction_method: 'bh',
-      min_genes_in_term: 1,
-    };
+  // Form state - always start fresh on page load
+  const [formData, setFormData] = useState({
+    genes: '',
+    organism_no: '',
+    ontology: 'P',
+    use_custom_background: false,
+    background_genes: '',
+    evidence_codes: [],
+    annotation_types: ['manually_curated', 'high_throughput', 'computational'],
+    p_value_cutoff: 0.01,
+    correction_method: 'bh',
+    min_genes_in_term: 1,
   });
-
-  // Save form data to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem('goTermFinderFormData', JSON.stringify(formData));
-  }, [formData]);
 
   // Load config on mount
   useEffect(() => {
@@ -301,7 +286,8 @@ function GoTermFinderSearchPage() {
                   type="button"
                   className="validate-btn"
                   onClick={handleValidate}
-                  disabled={loading || !formData.genes.trim() || !formData.organism_no}
+                  disabled={loading || !formData.genes.trim() || !formData.organism_no || formData.genes.split(/[\s,;\n]+/).filter((g) => g.trim()).length > 1000}
+                  title={formData.genes.split(/[\s,;\n]+/).filter((g) => g.trim()).length > 1000 ? 'Validation disabled for lists over 1000 genes' : ''}
                 >
                   Validate Genes
                 </button>

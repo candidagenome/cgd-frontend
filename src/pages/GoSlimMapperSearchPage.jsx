@@ -15,30 +15,15 @@ function GoSlimMapperSearchPage() {
   // Available terms for selected set/aspect
   const [availableTerms, setAvailableTerms] = useState([]);
 
-  // Form state - initialize from localStorage if available
-  const [formData, setFormData] = useState(() => {
-    const saved = localStorage.getItem('goSlimMapperFormData');
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        // Ignore parse errors
-      }
-    }
-    return {
-      genes: '',
-      organism_no: '',
-      go_set_name: '',
-      go_aspect: '',
-      selected_terms: [], // Empty = all terms
-      annotation_types: ['manually_curated', 'high_throughput', 'computational'],
-    };
+  // Form state - always start fresh on page load
+  const [formData, setFormData] = useState({
+    genes: '',
+    organism_no: '',
+    go_set_name: '',
+    go_aspect: '',
+    selected_terms: [], // Empty = all terms
+    annotation_types: ['manually_curated', 'high_throughput', 'computational'],
   });
-
-  // Save form data to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem('goSlimMapperFormData', JSON.stringify(formData));
-  }, [formData]);
 
   // Load config on mount
   useEffect(() => {
