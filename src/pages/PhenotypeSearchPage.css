@@ -445,8 +445,8 @@
 }
 
 .analyze-header {
-  background: #333;
-  color: #fff;
+  background: #cfe4fb;
+  color: #333;
   padding: 10px 15px;
   font-weight: bold;
   font-size: 0.95rem;
@@ -464,7 +464,7 @@
 }
 
 .analyze-label {
-  background: #f0c040;
+  background: #e8e8e8;
   font-weight: bold;
   width: 120px;
   text-align: center;
