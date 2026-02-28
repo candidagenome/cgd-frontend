@@ -12,19 +12,34 @@ function GoTermFinderSearchPage() {
   // Configuration
   const [config, setConfig] = useState(null);
 
-  // Form state
-  const [formData, setFormData] = useState({
-    genes: '',
-    organism_no: '',
-    ontology: 'P',
-    use_custom_background: false,
-    background_genes: '',
-    evidence_codes: [],
-    annotation_types: ['manually_curated', 'high_throughput', 'computational'],
-    p_value_cutoff: 0.01,
-    correction_method: 'bh',
-    min_genes_in_term: 1,
+  // Form state - initialize from localStorage if available
+  const [formData, setFormData] = useState(() => {
+    const saved = localStorage.getItem('goTermFinderFormData');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        // Ignore parse errors
+      }
+    }
+    return {
+      genes: '',
+      organism_no: '',
+      ontology: 'P',
+      use_custom_background: false,
+      background_genes: '',
+      evidence_codes: [],
+      annotation_types: ['manually_curated', 'high_throughput', 'computational'],
+      p_value_cutoff: 0.01,
+      correction_method: 'bh',
+      min_genes_in_term: 1,
+    };
   });
+
+  // Save form data to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('goTermFinderFormData', JSON.stringify(formData));
+  }, [formData]);
 
   // Load config on mount
   useEffect(() => {
@@ -32,8 +47,8 @@ function GoTermFinderSearchPage() {
       try {
         const data = await goTermFinderApi.getConfig();
         setConfig(data);
-        // Set default organism if available
-        if (data.organisms && data.organisms.length > 0) {
+        // Set default organism if available and not already set
+        if (data.organisms && data.organisms.length > 0 && !formData.organism_no) {
           setFormData((prev) => ({
             ...prev,
             organism_no: data.organisms[0].organism_no,
