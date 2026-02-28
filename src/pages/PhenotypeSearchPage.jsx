@@ -162,8 +162,8 @@ function PhenotypeSearchPage() {
     {
       headerName: 'Organism',
       field: 'organism',
-      flex: 0.8,
-      minWidth: 100,
+      flex: 0.4,
+      minWidth: 80,
       valueGetter: (params) => getOrganismAbbrev(params.data.organism),
       cellRenderer: (params) => <em>{getOrganismAbbrev(params.data.organism)}</em>,
     },
@@ -219,8 +219,8 @@ function PhenotypeSearchPage() {
     {
       headerName: 'References',
       field: 'references',
-      flex: 1.5,
-      minWidth: 180,
+      flex: 2.25,
+      minWidth: 250,
       autoHeight: true,
       valueGetter: (params) => {
         const refs = params.data.references || [];
