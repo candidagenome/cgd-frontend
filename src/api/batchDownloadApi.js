@@ -16,14 +16,14 @@ const batchDownloadApi = {
    * Get metadata about what would be downloaded
    */
   getMetadata: async (params) => {
-    const queryParams = new URLSearchParams();
-    queryParams.set('genes', params.genes.join(','));
-    queryParams.set('types', params.dataTypes.join(','));
-    if (params.flankLeft) queryParams.set('flankl', params.flankLeft);
-    if (params.flankRight) queryParams.set('flankr', params.flankRight);
-    queryParams.set('compress', params.compress);
-
-    const response = await api.get(`/api/batch-download/metadata?${queryParams}`, {
+    // Use POST for large gene lists to avoid URL length limits
+    const response = await api.post('/api/batch-download/metadata', {
+      genes: params.genes,
+      data_types: params.dataTypes,
+      flank_left: params.flankLeft || 0,
+      flank_right: params.flankRight || 0,
+      compress: params.compress !== false,
+    }, {
       timeout: 300000, // 5 minutes for large gene lists
     });
     return response.data;
