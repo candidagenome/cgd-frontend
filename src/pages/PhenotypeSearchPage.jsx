@@ -342,10 +342,56 @@ function PhenotypeSearchPage() {
     );
   };
 
+  const renderAnalyzeSection = () => {
+    if (!data || !data.results || data.results.length === 0) return null;
+
+    // Get unique gene names for the gene list
+    const geneList = [...new Set(data.results.map(r => r.feature_name))].join('\n');
+    const encodedGeneList = encodeURIComponent(geneList);
+
+    return (
+      <div className="analyze-section">
+        <div className="analyze-header">
+          Analyze gene list: further analyze the gene list displayed above or download information for this list
+        </div>
+        <table className="analyze-table">
+          <tbody>
+            <tr>
+              <td className="analyze-label">Further Analysis:</td>
+              <td>
+                <Link to={`/go-term-finder?genes=${encodedGeneList}`} className="analyze-link">GO Term Finder</Link>
+                <span className="analyze-desc">Find common features of genes in list</span>
+              </td>
+              <td>
+                <Link to={`/go-slim-mapper?genes=${encodedGeneList}`} className="analyze-link">GO Slim Mapper</Link>
+                <span className="analyze-desc">Sort genes into broad categories</span>
+              </td>
+              <td>
+                <Link to={`/go-annotation-summary?genes=${encodedGeneList}`} className="analyze-link">View GO Annotation Summary</Link>
+                <span className="analyze-desc">View all GO terms used to describe genes in list</span>
+              </td>
+            </tr>
+            <tr>
+              <td className="analyze-label">Download:</td>
+              <td>
+                <button type="button" className="analyze-link-btn" onClick={handleDownload}>Download All Search Results</button>
+                <span className="analyze-desc">Download data for the entire gene list in a tab-delimited file</span>
+              </td>
+              <td colSpan="2">
+                <Link to={`/batch-download?genes=${encodedGeneList}`} className="analyze-link">Batch Download</Link>
+                <span className="analyze-desc">Download selected information for entire gene list. Available information types include Sequence, Coordinates, Chromosomal Feature information, GO annotations, Phenotypes, and Ortholog or Best Hit.</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
   return (
     <div className="phenotype-search-page">
       <header className="page-header">
-        <h1>Phenotype Search</h1>
+        <h1>Phenotype Search Results</h1>
         <p className="subtitle">Search phenotype annotations across all genes in CGD</p>
       </header>
 
@@ -372,13 +418,11 @@ function PhenotypeSearchPage() {
       )}
 
       {!loading && !error && hasSearched && (
-        <div className="section" id="results">
-          <h2 className="section-header">Search Results</h2>
-          <div className="section-content">
-            {renderResultsSummary()}
-            {renderResultsTable()}
-          </div>
-        </div>
+        <>
+          {renderResultsSummary()}
+          {renderResultsTable()}
+          {renderAnalyzeSection()}
+        </>
       )}
 
       <div className="divider" />
