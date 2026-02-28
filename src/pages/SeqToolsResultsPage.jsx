@@ -73,6 +73,20 @@ function SeqToolsResultsPage() {
     );
   };
 
+  // Get the tool URL, handling special cases
+  const getToolUrl = (tool) => {
+    // Special case for Literature Summaries - link to locus page with literature tab
+    if (tool.name === 'Literature Summaries' && results?.feature?.feature_name) {
+      return `/locus/${results.feature.feature_name}?tab=literature`;
+    }
+    return tool.url;
+  };
+
+  // Check if tool should open in same tab (internal links)
+  const isInternalLink = (tool) => {
+    return tool.name === 'Literature Summaries';
+  };
+
   // Render tool categories
   const renderToolCategories = () => {
     if (!results?.categories?.length) {
@@ -92,14 +106,14 @@ function SeqToolsResultsPage() {
               {category.tools.map((tool, toolIdx) => (
                 <a
                   key={toolIdx}
-                  href={tool.url}
+                  href={getToolUrl(tool)}
                   className="tool-link"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target={isInternalLink(tool) ? 'gsr' : '_blank'}
+                  rel={isInternalLink(tool) ? undefined : 'noopener noreferrer'}
                 >
                   <span className="tool-name">
                     {tool.name}
-                    {tool.external && (
+                    {tool.external && !isInternalLink(tool) && (
                       <span className="external-icon">&#8599;</span>
                     )}
                   </span>
