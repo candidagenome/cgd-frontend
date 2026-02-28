@@ -191,6 +191,23 @@ function BatchDownloadPage() {
     return getGeneList().length > 0 && selectedTypes.length > 0;
   };
 
+  // Check for gene list passed from other pages (e.g., phenotype search)
+  useEffect(() => {
+    const passedGenes = sessionStorage.getItem('phenotypeSearchGeneList');
+    if (passedGenes) {
+      try {
+        const geneList = JSON.parse(passedGenes);
+        if (Array.isArray(geneList) && geneList.length > 0) {
+          setGeneText(geneList.join('\n'));
+        }
+        // Clear after reading so it doesn't persist
+        sessionStorage.removeItem('phenotypeSearchGeneList');
+      } catch (e) {
+        console.error('Failed to parse passed gene list:', e);
+      }
+    }
+  }, []);
+
   // Check if flanking options should be shown
   const showFlankingOptions = selectedTypes.includes('genomic_flanking');
 
