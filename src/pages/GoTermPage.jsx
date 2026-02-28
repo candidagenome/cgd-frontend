@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { AgGridReact } from 'ag-grid-react';
 import goApi from '../api/goApi';
 import { renderCitationItem } from '../utils/formatCitation.jsx';
 import { GODiagram } from '../components/go';
@@ -21,9 +22,6 @@ const ANNOTATION_TYPE_NAMES = {
 
 // Order for annotation types display
 const ANNOTATION_TYPE_ORDER = ['manually_curated', 'high_throughput', 'computational'];
-
-// Pagination settings
-const GENES_PER_PAGE = 10;
 
 // Abbreviate organism name (e.g., "Candida albicans SC5314" -> "C. albicans")
 const getOrganismAbbrev = (organismName) => {
@@ -48,8 +46,6 @@ function GoTermPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  // Track current page for each qualifier group (key: "annotation_type:qualifier")
-  const [currentPages, setCurrentPages] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,19 +54,6 @@ function GoTermPage() {
       try {
         const result = await goApi.getGoTerm(goid);
         setData(result);
-        // Initialize pages for each qualifier group
-        const pages = {};
-        if (result.annotations) {
-          result.annotations.forEach(ann => {
-            if (ann.qualifier_groups) {
-              ann.qualifier_groups.forEach(group => {
-                const key = `${ann.annotation_type}:${group.qualifier || 'direct'}`;
-                pages[key] = 1;
-              });
-            }
-          });
-        }
-        setCurrentPages(pages);
       } catch (err) {
         setError(err.response?.data?.detail || err.message || 'Failed to load GO term');
       } finally {
@@ -80,6 +63,90 @@ function GoTermPage() {
 
     fetchData();
   }, [goid]);
+
+  // AG Grid column definitions for gene table
+  const geneColumnDefs = useMemo(() => [
+    {
+      headerName: 'Locus',
+      field: 'locus_name',
+      flex: 1,
+      minWidth: 150,
+      valueGetter: (params) => formatLocusName(params.data),
+      cellRenderer: (params) => (
+        <Link to={`/locus/${params.data.systematic_name}`} className="gene-link">
+          {formatLocusName(params.data)}
+        </Link>
+      ),
+    },
+    {
+      headerName: 'Species',
+      field: 'species',
+      flex: 1,
+      minWidth: 120,
+      valueGetter: (params) => getOrganismAbbrev(params.data.species),
+      cellRenderer: (params) => (
+        <em>{getOrganismAbbrev(params.data.species)}</em>
+      ),
+    },
+    {
+      headerName: 'Reference(s)',
+      field: 'references',
+      flex: 2,
+      minWidth: 200,
+      autoHeight: true,
+      valueGetter: (params) => {
+        const refs = params.data.references || [];
+        return refs.map(ref => ref.display_name || ref.pubmed_id || '').join('; ');
+      },
+      cellRenderer: (params) => (
+        <div className="references-cell">
+          {params.data.references?.map((ref, refIdx) => (
+            <React.Fragment key={refIdx}>
+              {renderCitationItem(ref, { itemClassName: 'reference-item' })}
+            </React.Fragment>
+          ))}
+        </div>
+      ),
+    },
+    {
+      headerName: 'Evidence',
+      field: 'evidence',
+      flex: 1,
+      minWidth: 100,
+      autoHeight: true,
+      valueGetter: (params) => {
+        const refs = params.data.references || [];
+        return refs.flatMap(ref => ref.evidence_codes || []).join(', ');
+      },
+      cellRenderer: (params) => (
+        <div className="evidence-cell">
+          {params.data.references?.map((ref, refIdx) => (
+            <div key={refIdx} className="evidence-item">
+              {ref.evidence_codes?.map((code, codeIdx) => (
+                <span key={codeIdx}>
+                  {codeIdx > 0 && ', '}
+                  <Link to={`/go/evidence#${code}`}>{code}</Link>
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      ),
+    },
+  ], []);
+
+  // Default column properties
+  const defaultColDef = useMemo(() => ({
+    sortable: true,
+    filter: true,
+    resizable: true,
+    wrapText: true,
+  }), []);
+
+  // Grid ready callback
+  const onGridReady = useCallback((params) => {
+    params.api.sizeColumnsToFit();
+  }, []);
 
   // Build AmiGO URL
   const getAmigoUrl = (goid) => {
@@ -91,15 +158,6 @@ function GoTermPage() {
     if (!goid) return '';
     if (goid.startsWith('GO:')) return goid;
     return `GO:${goid.padStart(7, '0')}`;
-  };
-
-  // Handle page change for a qualifier group
-  const handlePageChange = (annotationType, qualifier, newPage) => {
-    const key = `${annotationType}:${qualifier || 'direct'}`;
-    setCurrentPages(prev => ({
-      ...prev,
-      [key]: newPage,
-    }));
   };
 
   // Render page navigation
@@ -299,106 +357,12 @@ function GoTermPage() {
     );
   };
 
-  // Render pagination controls for a qualifier group
-  const renderPagination = (annotationType, qualifier, totalGenes, currentPage) => {
-    const totalPages = Math.ceil(totalGenes / GENES_PER_PAGE);
-    if (totalPages <= 1) return null;
-
-    const pages = [];
-    const maxVisiblePages = 10;
-
-    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-    if (endPage - startPage + 1 < maxVisiblePages) {
-      startPage = Math.max(1, endPage - maxVisiblePages + 1);
-    }
-
-    // First page and ellipsis
-    if (startPage > 1) {
-      pages.push(
-        <button
-          key={1}
-          onClick={() => handlePageChange(annotationType, qualifier, 1)}
-          className="page-btn"
-        >
-          1
-        </button>
-      );
-      if (startPage > 2) {
-        pages.push(<span key="ellipsis-start" className="ellipsis">...</span>);
-      }
-    }
-
-    // Page numbers
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(
-        <button
-          key={i}
-          onClick={() => handlePageChange(annotationType, qualifier, i)}
-          className={`page-btn ${i === currentPage ? 'active' : ''}`}
-        >
-          {i}
-        </button>
-      );
-    }
-
-    // Last page and ellipsis
-    if (endPage < totalPages) {
-      if (endPage < totalPages - 1) {
-        pages.push(<span key="ellipsis-end" className="ellipsis">...</span>);
-      }
-      pages.push(
-        <button
-          key={totalPages}
-          onClick={() => handlePageChange(annotationType, qualifier, totalPages)}
-          className="page-btn"
-        >
-          {totalPages}
-        </button>
-      );
-    }
-
-    const startIdx = (currentPage - 1) * GENES_PER_PAGE + 1;
-    const endIdx = Math.min(currentPage * GENES_PER_PAGE, totalGenes);
-
-    return (
-      <div className="pagination">
-        <div className="pagination-info">
-          Showing {startIdx}-{endIdx} of {totalGenes} genes
-        </div>
-        <div className="pagination-controls">
-          <button
-            onClick={() => handlePageChange(annotationType, qualifier, currentPage - 1)}
-            disabled={currentPage === 1}
-            className="page-btn nav-btn"
-          >
-            &laquo; Prev
-          </button>
-          {pages}
-          <button
-            onClick={() => handlePageChange(annotationType, qualifier, currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="page-btn nav-btn"
-          >
-            Next &raquo;
-          </button>
-        </div>
-      </div>
-    );
-  };
-
-  // Render a gene table for a qualifier group
+  // Render a gene table for a qualifier group using AG Grid
   const renderQualifierGroupTable = (annotationType, group) => {
     if (!group.genes || group.genes.length === 0) {
       return null;
     }
 
-    const key = `${annotationType}:${group.qualifier || 'direct'}`;
-    const currentPage = currentPages[key] || 1;
-    const startIdx = (currentPage - 1) * GENES_PER_PAGE;
-    const endIdx = Math.min(startIdx + GENES_PER_PAGE, group.genes.length);
-    const displayedGenes = group.genes.slice(startIdx, endIdx);
     const totalGenes = group.genes.length;
 
     return (
@@ -415,55 +379,19 @@ function GoTermPage() {
           in the {ANNOTATION_TYPE_NAMES[annotationType]?.replace(' GO Annotations', '') || annotationType} set
         </p>
 
-        {renderPagination(annotationType, group.qualifier, totalGenes, currentPage)}
-
-        <div className="table-wrapper">
-          <table className="gene-table">
-            <thead>
-              <tr>
-                <th>Locus</th>
-                <th>Species</th>
-                <th>Reference(s)</th>
-                <th>Evidence</th>
-              </tr>
-            </thead>
-            <tbody>
-              {displayedGenes.map((gene, geneIdx) => (
-                <tr key={geneIdx} className={geneIdx % 2 === 1 ? 'alt-row' : ''}>
-                  <td className="locus-cell">
-                    <Link to={`/locus/${gene.systematic_name}`} className="gene-link">
-                      {formatLocusName(gene)}
-                    </Link>
-                  </td>
-                  <td className="species-cell">
-                    <em>{getOrganismAbbrev(gene.species)}</em>
-                  </td>
-                  <td className="references-cell">
-                    {gene.references?.map((ref, refIdx) => (
-                      <React.Fragment key={refIdx}>
-                        {renderCitationItem(ref, { itemClassName: 'reference-item' })}
-                      </React.Fragment>
-                    ))}
-                  </td>
-                  <td className="evidence-cell">
-                    {gene.references && gene.references.map((ref, refIdx) => (
-                      <div key={refIdx} className="evidence-item">
-                        {ref.evidence_codes.map((code, codeIdx) => (
-                          <span key={codeIdx}>
-                            {codeIdx > 0 && ', '}
-                            <Link to={`/go/evidence#${code}`}>{code}</Link>
-                          </span>
-                        ))}
-                      </div>
-                    ))}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="gene-grid-wrapper ag-theme-alpine">
+          <AgGridReact
+            rowData={group.genes}
+            columnDefs={geneColumnDefs}
+            defaultColDef={defaultColDef}
+            domLayout="autoHeight"
+            pagination={true}
+            paginationPageSize={10}
+            paginationPageSizeSelector={[10, 25, 50]}
+            onGridReady={onGridReady}
+            suppressCellFocus={true}
+          />
         </div>
-
-        {renderPagination(annotationType, group.qualifier, totalGenes, currentPage)}
       </div>
     );
   };

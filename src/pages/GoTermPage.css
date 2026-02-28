@@ -303,16 +303,16 @@
    =========================================== */
 
 .qualifier-group-section {
-  margin-top: 20px;
-  margin-bottom: 25px;
+  margin-top: 10px;
+  margin-bottom: 15px;
 }
 
 .qualifier-header {
   background: #e8f4fc;
   color: #333;
-  padding: 8px 15px;
+  padding: 6px 12px;
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: bold;
   border: 1px solid #c0d8e8;
   border-bottom: none;
@@ -320,17 +320,92 @@
 
 .qualifier-summary {
   margin: 0;
-  padding: 8px 15px;
+  padding: 6px 12px;
   background: #f8f8f8;
   border: 1px solid #c0d8e8;
   border-top: none;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: #555;
 }
 
 /* ===========================================
-   GENE TABLES
+   GENE TABLES - AG GRID
    =========================================== */
+
+.gene-grid-wrapper {
+  padding: 0;
+  margin: 0;
+  border: 1px solid #c0d8e8;
+  border-top: none;
+}
+
+.gene-grid-wrapper .ag-root-wrapper {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.gene-grid-wrapper.ag-theme-alpine {
+  --ag-grid-size: 4px;
+  --ag-row-height: 36px;
+}
+
+.gene-grid-wrapper .ag-header {
+  background-color: #e8e8e8;
+  border-bottom: 1px solid #ccc;
+}
+
+.gene-grid-wrapper .ag-header-cell {
+  padding: 6px 10px;
+  font-weight: bold;
+  color: #333;
+  font-size: 0.9em;
+}
+
+.gene-grid-wrapper .ag-cell {
+  padding: 6px 10px;
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.gene-grid-wrapper .ag-row {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.gene-grid-wrapper .ag-row:hover {
+  background-color: #f0f0f0;
+}
+
+.gene-grid-wrapper .ag-row-even {
+  background-color: #f9f9f9;
+}
+
+.gene-grid-wrapper .ag-paging-panel {
+  padding: 4px 10px;
+  font-size: 0.85em;
+  height: auto;
+  min-height: 32px;
+  margin: 0;
+  border-top: 1px solid #e0e0e0;
+}
+
+.gene-grid-wrapper .ag-root-wrapper-body {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.gene-grid-wrapper .ag-body-viewport {
+  min-height: auto !important;
+}
+
+.gene-grid-wrapper .ag-layout-auto-height .ag-center-cols-viewport,
+.gene-grid-wrapper .ag-layout-auto-height .ag-center-cols-container {
+  min-height: auto !important;
+}
+
+.gene-grid-wrapper .ag-body-horizontal-scroll {
+  min-height: 0;
+}
 
 .gene-table-section {
   margin-top: 20px;
