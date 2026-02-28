@@ -66,12 +66,13 @@ function GoSlimMapperResultsPage() {
       <div className="genes-inline">
         {genesToShow.map((gene, idx) => (
           <React.Fragment key={gene.feature_no}>
-            <Link
-              to={`/locus/${gene.systematic_name}`}
+            <a
+              href={`/locus/${gene.systematic_name}`}
               className="gene-link-inline"
+              target="gsm"
             >
               {gene.gene_name || gene.systematic_name}
-            </Link>
+            </a>
             {idx < genesToShow.length - 1 && ', '}
           </React.Fragment>
         ))}
@@ -113,9 +114,9 @@ function GoSlimMapperResultsPage() {
         const term = params.data;
         return (
           <div className="term-cell-content">
-            <Link to={`/go/${term.goid}`} className="term-link">
+            <a href={`/go/${term.goid}`} className="term-link" target="gsm">
               {term.goid}
-            </Link>
+            </a>
             <br />
             <span className="term-name">{term.go_term}</span>
           </div>
