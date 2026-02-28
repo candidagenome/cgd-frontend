@@ -10,6 +10,7 @@ const AlphaFoldViewer = lazy(() => import('./AlphaFoldViewer'));
 function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
   const { name: locusName } = useParams();
   const [showAlphaFold, setShowAlphaFold] = useState(false);
+  const [showDomainViewer, setShowDomainViewer] = useState(true); // Show domain viewer by default
 
   // Get available organisms from the data - memoize to prevent new array reference each render
   const organisms = useMemo(() => {
@@ -26,9 +27,10 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
     }
   }, [organisms, selectedOrganism, onOrganismChange]);
 
-  // Reset AlphaFold viewer when organism changes
+  // Reset viewers when organism changes
   useEffect(() => {
     setShowAlphaFold(false);
+    setShowDomainViewer(true); // Reset to show domain viewer for new organism
   }, [selectedOrganism]);
 
   if (loading) return <div className="loading">Loading protein data...</div>;
@@ -151,17 +153,47 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
               <tr className="section-with-divider section-grey-bg">
                 <th style={{ verticalAlign: 'top' }}>Conserved Domains</th>
                 <td>
-                  {orgData.pbrowse_url && (
-                    <div style={{ marginBottom: '8px' }}>
-                      <a
-                        href={orgData.pbrowse_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        View Domains in JBrowse
-                      </a>
+                  {orgData.pbrowse_url ? (
+                    <div className="domain-viewer-container">
+                      <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <button
+                          onClick={() => setShowDomainViewer(!showDomainViewer)}
+                          style={{
+                            padding: '4px 10px',
+                            backgroundColor: '#f5f5f5',
+                            border: '1px solid #ddd',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            fontSize: '12px'
+                          }}
+                        >
+                          {showDomainViewer ? '▼ Hide' : '▶ Show'} Domain Viewer
+                        </button>
+                        <a
+                          href={orgData.pbrowse_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ fontSize: '13px' }}
+                        >
+                          Open in Full JBrowse ↗
+                        </a>
+                      </div>
+                      {showDomainViewer && (
+                        <div className="domain-viewer-iframe-container" style={{ marginBottom: '12px' }}>
+                          <iframe
+                            src={orgData.pbrowse_url}
+                            title="Domain Viewer"
+                            style={{
+                              width: '100%',
+                              height: '350px',
+                              border: '1px solid #ddd',
+                              borderRadius: '4px'
+                            }}
+                          />
+                        </div>
+                      )}
                     </div>
-                  )}
+                  ) : null}
                   {orgData.conserved_domains && orgData.conserved_domains.length > 0 ? (
                     <div className="domains-table-container">
                       <p style={{ margin: '0 0 8px 0', fontSize: '13px', color: '#666' }}>
