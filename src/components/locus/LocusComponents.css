@@ -1225,13 +1225,14 @@ a:hover {
 .go-annotation-types {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 0;
 }
 
 .annotation-type-section {
   border: 1px solid #e0e0e0;
-  border-radius: 4px;
+  border-radius: 0;
   overflow: hidden;
+  margin: 0;
 }
 
 .annotation-type-header {
@@ -1252,7 +1253,7 @@ a:hover {
   border: 1px solid #e0e0e0;
   border-radius: 4px;
   padding: 6px 10px;
-  margin-bottom: 4px;
+  margin-bottom: 0;
 }
 
 .go-intro p {
