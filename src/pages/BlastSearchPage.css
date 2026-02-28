@@ -482,6 +482,21 @@
   margin-bottom: 4px;
 }
 
+/* Query Error - inline error in query section */
+.query-error {
+  background-color: #ffebee;
+  border: 1px solid #ef9a9a;
+  border-radius: 4px;
+  padding: 8px 12px;
+  color: #c62828;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+.query-error strong {
+  margin-right: 5px;
+}
+
 /* Responsive */
 @media (max-width: 900px) {
   .form-columns {

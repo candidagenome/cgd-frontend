@@ -47,22 +47,14 @@ const PROGRAM_INFO = {
 };
 
 // Organisms available for locus lookup (when using "Locus Name" input)
-// These are the main CGD organisms that have gene annotations
+// Only organisms with curated gene/locus data in the CGD database
 const LOCUS_ORGANISM_OPTIONS = [
   { id: '', name: 'Any organism (first match)' },
-  { id: 'C_albicans_SC5314_A22', name: 'C. albicans SC5314' },
-  { id: 'C_glabrata_CBS138', name: 'C. glabrata CBS138' },
-  { id: 'C_auris_B8441', name: 'C. auris B8441' },
+  { id: 'C_albicans_SC5314', name: 'C. albicans SC5314' },
   { id: 'C_dubliniensis_CD36', name: 'C. dubliniensis CD36' },
+  { id: 'C_glabrata_CBS138', name: 'C. glabrata CBS138' },
   { id: 'C_parapsilosis_CDC317', name: 'C. parapsilosis CDC317' },
   { id: 'C_tropicalis_MYA-3404', name: 'C. tropicalis MYA-3404' },
-  { id: 'C_auris_B11221', name: 'C. auris B11221' },
-  { id: 'C_albicans_WO-1', name: 'C. albicans WO-1' },
-  { id: 'C_guilliermondii_ATCC_6260', name: 'C. guilliermondii ATCC 6260' },
-  { id: 'C_lusitaniae_ATCC_42720', name: 'C. lusitaniae ATCC 42720' },
-  { id: 'C_orthopsilosis_Co_90-125', name: 'C. orthopsilosis Co 90-125' },
-  { id: 'D_hansenii_CBS767', name: 'D. hansenii CBS767' },
-  { id: 'L_elongisporus_NRLL_YB-4239', name: 'L. elongisporus NRRL YB-4239' },
 ];
 
 // Available genomes for selection (IDs match database file naming convention)
@@ -498,6 +490,13 @@ function BlastSearchPage() {
               </div>
             </div>
 
+            {/* Error Display - show at top of query section */}
+            {error && (
+              <div className="error-message query-error">
+                <strong>Error:</strong> {error}
+              </div>
+            )}
+
             {queryType === 'sequence' ? (
               <div className="form-group">
                 <textarea
@@ -860,14 +859,6 @@ function BlastSearchPage() {
             </button>
           </div>
         </form>
-
-        {/* Error Display */}
-        {error && (
-          <div className="error-state">
-            <strong>Error</strong>
-            <p>{error}</p>
-          </div>
-        )}
       </div>
     </div>
   );
