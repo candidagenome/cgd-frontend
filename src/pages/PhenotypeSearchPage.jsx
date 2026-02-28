@@ -325,6 +325,58 @@ function PhenotypeSearchPage() {
     );
   };
 
+  const handleDownload = () => {
+    if (!data || !data.results || data.results.length === 0) return;
+
+    // CSV headers
+    const headers = ['Gene', 'Organism', 'Experiment Type', 'Experiment Comment', 'Mutant Type', 'Strain', 'Phenotype', 'Qualifier', 'References'];
+
+    // Convert data to CSV rows
+    const rows = data.results.map(result => {
+      const refs = (result.references || [])
+        .map(ref => ref.display_name || ref.pubmed_id || '')
+        .join('; ');
+
+      return [
+        formatLocusName(result),
+        getOrganismAbbrev(result.organism),
+        result.experiment_type || '',
+        result.experiment_comment || '',
+        result.mutant_type || '',
+        result.strain || '',
+        result.observable || '',
+        result.qualifier || '',
+        refs,
+      ];
+    });
+
+    // Escape CSV values
+    const escapeCSV = (val) => {
+      const str = String(val || '');
+      if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+        return `"${str.replace(/"/g, '""')}"`;
+      }
+      return str;
+    };
+
+    // Build CSV content
+    const csvContent = [
+      headers.map(escapeCSV).join(','),
+      ...rows.map(row => row.map(escapeCSV).join(','))
+    ].join('\n');
+
+    // Trigger download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `phenotype_search_results.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const renderResultsSummary = () => {
     if (!data) return null;
 
@@ -336,12 +388,21 @@ function PhenotypeSearchPage() {
 
     return (
       <div className="results-summary">
-        <div className="results-count">
-          Found <strong>{data.total_results}</strong> phenotype annotation{data.total_results !== 1 ? 's' : ''}
+        <div className="results-summary-row">
+          <div className="results-summary-left">
+            <div className="results-count">
+              Found <strong>{data.total_results}</strong> phenotype annotation{data.total_results !== 1 ? 's' : ''}
+            </div>
+            {queryParts.length > 0 && (
+              <div className="query-summary">Search criteria: {queryParts.join(', ')}</div>
+            )}
+          </div>
+          {data.results && data.results.length > 0 && (
+            <button type="button" className="btn-download" onClick={handleDownload}>
+              Download CSV
+            </button>
+          )}
         </div>
-        {queryParts.length > 0 && (
-          <div className="query-summary">Search criteria: {queryParts.join(', ')}</div>
-        )}
       </div>
     );
   };
