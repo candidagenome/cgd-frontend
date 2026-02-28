@@ -350,8 +350,8 @@ function PhenotypeSearchPage() {
 
     // Helper to store gene list before navigating
     const handleToolClick = (e) => {
-      // Store gene list in sessionStorage for the target page to read
-      sessionStorage.setItem('phenotypeSearchGeneList', JSON.stringify(geneList));
+      // Store gene list in localStorage (not sessionStorage, which isn't shared across tabs)
+      localStorage.setItem('phenotypeSearchGeneList', JSON.stringify(geneList));
       // Let the default anchor behavior handle navigation
     };
 

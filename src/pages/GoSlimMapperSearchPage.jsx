@@ -65,18 +65,19 @@ function GoSlimMapperSearchPage() {
 
   // Check for gene list passed from other pages (e.g., phenotype search)
   useEffect(() => {
-    const passedGenes = sessionStorage.getItem('phenotypeSearchGeneList');
+    const passedGenes = localStorage.getItem('phenotypeSearchGeneList');
     if (passedGenes) {
       try {
         const geneList = JSON.parse(passedGenes);
         if (Array.isArray(geneList) && geneList.length > 0) {
+          // Override the saved form data with passed genes
           setFormData((prev) => ({
             ...prev,
             genes: geneList.join('\n'),
           }));
         }
         // Clear after reading so it doesn't persist
-        sessionStorage.removeItem('phenotypeSearchGeneList');
+        localStorage.removeItem('phenotypeSearchGeneList');
       } catch (e) {
         console.error('Failed to parse passed gene list:', e);
       }

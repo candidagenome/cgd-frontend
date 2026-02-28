@@ -8,7 +8,7 @@ function GoAnnotationSummaryPage() {
 
   // Check for gene list passed from other pages (e.g., phenotype search)
   useEffect(() => {
-    const passedGenes = sessionStorage.getItem('phenotypeSearchGeneList');
+    const passedGenes = localStorage.getItem('phenotypeSearchGeneList');
     if (passedGenes) {
       try {
         const geneList = JSON.parse(passedGenes);
@@ -16,7 +16,7 @@ function GoAnnotationSummaryPage() {
           setGenes(geneList);
         }
         // Clear after reading so it doesn't persist
-        sessionStorage.removeItem('phenotypeSearchGeneList');
+        localStorage.removeItem('phenotypeSearchGeneList');
       } catch (e) {
         console.error('Failed to parse passed gene list:', e);
       }
