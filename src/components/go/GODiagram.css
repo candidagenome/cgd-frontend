@@ -1,94 +1,90 @@
 /* ===========================================
-   GO DIAGRAM STYLES
+   GO DIAGRAM STYLES - SGD Style
    =========================================== */
 
 .go-diagram-container {
   border: 1px solid #ddd;
   border-radius: 4px;
-  background: #fafafa;
+  background: #fff;
   overflow: hidden;
-}
-
-/* Toolbar */
-.go-diagram-toolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 15px;
-  background: #f0f0f0;
-  border-bottom: 1px solid #ddd;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.go-diagram-buttons {
-  display: flex;
-  gap: 8px;
-}
-
-.go-diagram-btn {
-  padding: 6px 14px;
-  border: 1px solid #ccc;
-  background: white;
-  color: #333;
-  cursor: pointer;
-  font-size: 0.9rem;
-  border-radius: 3px;
-  transition: all 0.15s ease;
-}
-
-.go-diagram-btn:hover:not(:disabled) {
-  background: #e3f2fd;
-  border-color: #1976d2;
-}
-
-.go-diagram-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* Legend */
-.go-diagram-legend {
-  display: flex;
-  gap: 15px;
-  flex-wrap: wrap;
-  font-size: 0.85rem;
-  color: #555;
-}
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.legend-color {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  border-radius: 3px;
-  border: 1px solid #888;
 }
 
 /* Canvas area */
 .go-diagram-canvas {
   width: 100%;
-  height: 600px;
+  height: 550px;
   background: white;
 }
 
-/* Help text */
-.go-diagram-help {
-  padding: 8px 15px;
-  background: #f5f5f5;
-  border-top: 1px solid #ddd;
-  font-size: 0.8rem;
-  color: #666;
-  text-align: center;
+/* Footer with legend and datestamp */
+.go-diagram-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  border-top: 1px solid #eee;
+  background: #fff;
 }
 
-.go-diagram-help p {
-  margin: 0;
+/* Legend */
+.go-diagram-legend {
+  display: flex;
+  gap: 20px;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 18px;
+  height: 12px;
+  border-radius: 6px;
+  border: 2px solid;
+}
+
+.legend-dot.focus {
+  background-color: #f0c040;
+  border-color: #c9a030;
+}
+
+.legend-dot.other {
+  background-color: #6b9fd4;
+  border-color: #5080b0;
+}
+
+/* Date stamp */
+.go-diagram-datestamp {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* Download section */
+.go-diagram-download {
+  padding: 10px 20px;
+  border-top: 1px solid #eee;
+  background: #f9f9f9;
+}
+
+.go-diagram-download-btn {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #333;
+  cursor: pointer;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.go-diagram-download-btn:hover {
+  background: #f0f0f0;
+  border-color: #999;
 }
 
 /* Loading state */
@@ -144,17 +140,18 @@
    =========================================== */
 
 @media (max-width: 768px) {
-  .go-diagram-toolbar {
+  .go-diagram-canvas {
+    height: 400px;
+  }
+
+  .go-diagram-footer {
     flex-direction: column;
+    gap: 10px;
     align-items: flex-start;
   }
 
   .go-diagram-legend {
-    justify-content: flex-start;
-  }
-
-  .go-diagram-canvas {
-    height: 400px;
+    flex-wrap: wrap;
   }
 }
 
