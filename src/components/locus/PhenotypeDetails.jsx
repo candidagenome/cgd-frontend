@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { AgGridReact } from 'ag-grid-react';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
 import { renderCitationItem } from '../../utils/formatCitation.jsx';
 import './LocusComponents.css';
@@ -78,6 +79,165 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
   // Group annotations for the selected organism
   const grouped = orgData ? groupAnnotations(orgData.annotations || []) : null;
 
+  // AG Grid column definitions for phenotype table
+  const columnDefs = useMemo(() => [
+    {
+      headerName: 'Experiment Type',
+      field: 'experiment_type',
+      flex: 1,
+      minWidth: 120,
+      valueGetter: (params) => params.data.experiment_type || params.data.experiment || '-',
+      cellRenderer: (params) => (
+        <div>
+          {params.data.experiment_type || params.data.experiment || '-'}
+          {params.data.experiment_comment && (
+            <div className="experiment-comment">({params.data.experiment_comment})</div>
+          )}
+        </div>
+      ),
+    },
+    {
+      headerName: 'Mutant Information',
+      field: 'mutant_type',
+      flex: 1,
+      minWidth: 140,
+      autoHeight: true,
+      valueGetter: (params) => params.data.mutant_type || '-',
+      cellRenderer: (params) => {
+        const ann = params.data;
+        if (!ann.mutant_type) return '-';
+        return (
+          <div>
+            <span>Description: {ann.mutant_type}</span>
+            {ann.alleles && ann.alleles.length > 0 &&
+              ann.alleles.map((allele, aIdx) => (
+                <div key={aIdx}>
+                  Allele: {allele.property_value}
+                  {allele.property_description && <span> ({allele.property_description})</span>}
+                </div>
+              ))}
+          </div>
+        );
+      },
+    },
+    {
+      headerName: 'Strain Background',
+      field: 'strain',
+      flex: 1,
+      minWidth: 100,
+      valueGetter: (params) => params.data.strain || '-',
+    },
+    {
+      headerName: 'Phenotype',
+      field: 'phenotype',
+      flex: 1,
+      minWidth: 120,
+      valueGetter: (params) => params.data.phenotype?.display_name || '-',
+      cellRenderer: (params) => {
+        const ann = params.data;
+        if (!ann.phenotype?.display_name) return '-';
+        return (
+          <span>
+            <Link
+              to={`/phenotype/search?observable=${encodeURIComponent(ann.phenotype.display_name)}`}
+              className="phenotype-link"
+            >
+              {ann.phenotype.display_name}
+            </Link>
+            {ann.qualifier && `: ${ann.qualifier}`}
+          </span>
+        );
+      },
+    },
+    {
+      headerName: 'Chemical',
+      field: 'chemicals',
+      flex: 1,
+      minWidth: 100,
+      autoHeight: true,
+      valueGetter: (params) => {
+        const chems = params.data.chemicals || [];
+        return chems.map(c => c.property_value).join(', ') || '-';
+      },
+      cellRenderer: (params) => {
+        const ann = params.data;
+        if (!ann.chemicals || ann.chemicals.length === 0) return '-';
+        return (
+          <div>
+            {ann.chemicals.map((chem, cIdx) => (
+              <div key={cIdx}>
+                {chem.property_value}
+                {chem.property_description && <div>({chem.property_description})</div>}
+              </div>
+            ))}
+          </div>
+        );
+      },
+    },
+    {
+      headerName: 'Details',
+      field: 'details',
+      flex: 1,
+      minWidth: 100,
+      autoHeight: true,
+      valueGetter: (params) => {
+        const details = params.data.details || [];
+        return details.map(d => `${d.property_type}: ${d.property_value}`).join(', ') || '-';
+      },
+      cellRenderer: (params) => {
+        const ann = params.data;
+        if (!ann.details || ann.details.length === 0) return '-';
+        return (
+          <div>
+            {ann.details.map((detail, dIdx) => (
+              <div key={dIdx}>
+                {detail.property_type}: {detail.property_value}
+                {detail.property_description && <div>({detail.property_description})</div>}
+              </div>
+            ))}
+          </div>
+        );
+      },
+    },
+    {
+      headerName: 'References',
+      field: 'references',
+      flex: 1.5,
+      minWidth: 180,
+      autoHeight: true,
+      valueGetter: (params) => {
+        const refs = params.data.references || (params.data.reference ? [params.data.reference] : []);
+        return refs.map(r => r.display_name || r.pubmed_id || '').join('; ');
+      },
+      cellRenderer: (params) => {
+        const refs = params.data.references || (params.data.reference ? [params.data.reference] : []);
+        if (refs.length === 0) return '-';
+        return (
+          <div>
+            {refs.map((ref, refIdx) => (
+              <React.Fragment key={refIdx}>
+                {renderCitationItem(ref, { itemClassName: 'phenotype-reference-item' })}
+              </React.Fragment>
+            ))}
+          </div>
+        );
+      },
+    },
+  ], []);
+
+  // Default column properties
+  const defaultColDef = useMemo(() => ({
+    sortable: true,
+    filter: true,
+    resizable: true,
+    wrapText: true,
+  }), []);
+
+  // Grid ready callback
+  const onGridReady = useCallback((params) => {
+    params.api.sizeColumnsToFit();
+  }, []);
+
   return (
     <div className="phenotype-details">
       {/* Organism Selector */}
@@ -101,9 +261,7 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
 
       {/* Display data for selected organism */}
       {selectedOrganism && orgData ? (
-        <div className="organism-section">
-          <h3 className="organism-name">{selectedOrganism}</h3>
-
+        <div className="phenotype-container">
           {grouped && Object.keys(grouped).length > 0 ? (
             <div className="phenotype-groups">
               {Object.entries(grouped).map(([category, expTypes]) => (
@@ -140,115 +298,19 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
                         )}
 
                         {!isCollapsed && (
-                          <table className="data-table phenotype-table">
-                            <thead>
-                              <tr>
-                                <th>Experiment Type</th>
-                                <th>Mutant Information</th>
-                                <th>Strain Background</th>
-                                <th>Phenotype</th>
-                                <th>Chemical</th>
-                                <th>Details</th>
-                                <th>References</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {annotations.map((ann, idx) => {
-                                const refs = ann.references || (ann.reference ? [ann.reference] : []);
-
-                                return (
-                                  <tr key={idx}>
-                                    {/* Experiment Type */}
-                                    <td>
-                                      {ann.experiment_type || ann.experiment || '-'}
-                                      {ann.experiment_comment && (
-                                        <div className="experiment-comment">({ann.experiment_comment})</div>
-                                      )}
-                                    </td>
-
-                                    {/* Mutant Information */}
-                                    <td>
-                                      {ann.mutant_type ? (
-                                        <>
-                                          <span>Description: {ann.mutant_type}</span>
-                                          {ann.alleles && ann.alleles.length > 0 &&
-                                            ann.alleles.map((allele, aIdx) => (
-                                              <div key={aIdx}>
-                                                Allele: {allele.property_value}
-                                                {allele.property_description && (
-                                                  <span> ({allele.property_description})</span>
-                                                )}
-                                              </div>
-                                            ))}
-                                        </>
-                                      ) : (
-                                        '-'
-                                      )}
-                                    </td>
-
-                                    {/* Strain Background */}
-                                    <td>{ann.strain || '-'}</td>
-
-                                    {/* Phenotype */}
-                                    <td>
-                                      {ann.phenotype?.display_name ? (
-                                        <Link
-                                          to={`/phenotype/search?observable=${encodeURIComponent(ann.phenotype.display_name)}`}
-                                          className="phenotype-link"
-                                        >
-                                          {ann.phenotype.display_name}
-                                        </Link>
-                                      ) : (
-                                        '-'
-                                      )}
-                                      {ann.qualifier && `: ${ann.qualifier}`}
-                                    </td>
-
-                                    {/* Chemical */}
-                                    <td>
-                                      {ann.chemicals && ann.chemicals.length > 0 ? (
-                                        ann.chemicals.map((chem, cIdx) => (
-                                          <div key={cIdx}>
-                                            {chem.property_value}
-                                            {chem.property_description && <div>({chem.property_description})</div>}
-                                          </div>
-                                        ))
-                                      ) : (
-                                        '-'
-                                      )}
-                                    </td>
-
-                                    {/* Details */}
-                                    <td>
-                                      {ann.details && ann.details.length > 0 ? (
-                                        ann.details.map((detail, dIdx) => (
-                                          <div key={dIdx}>
-                                            {detail.property_type}: {detail.property_value}
-                                            {detail.property_description && <div>({detail.property_description})</div>}
-                                          </div>
-                                        ))
-                                      ) : (
-                                        '-'
-                                      )}
-                                    </td>
-
-                                    {/* References */}
-                                    <td>
-                                      {refs.length > 0 ? (
-                                        refs.map((ref, refIdx) => (
-                                          <React.Fragment key={refIdx}>
-                                            {renderCitationItem(ref, { itemClassName: 'go-reference-item' })}
-                                          </React.Fragment>
-                                        ))
-                                      ) : (
-                                        '-'
-                                      )}
-                                    </td>
-                                  </tr>
-                                );
-                              })}
-                            </tbody>
-                          </table>
+                          <div className="phenotype-grid-wrapper ag-theme-alpine">
+                            <AgGridReact
+                              rowData={annotations}
+                              columnDefs={columnDefs}
+                              defaultColDef={defaultColDef}
+                              domLayout="autoHeight"
+                              pagination={annotations.length > 10}
+                              paginationPageSize={10}
+                              paginationPageSizeSelector={[10, 25, 50]}
+                              onGridReady={onGridReady}
+                              suppressCellFocus={true}
+                            />
+                          </div>
                         )}
                       </div>
                     );

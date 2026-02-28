@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { AgGridReact } from 'ag-grid-react';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
 import { renderCitationItem } from '../../utils/formatCitation.jsx';
 import './LocusComponents.css';
@@ -124,6 +125,106 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
     return Object.values(typeData).reduce((sum, arr) => sum + arr.length, 0);
   };
 
+  // AG Grid column definitions for GO annotations
+  const columnDefs = useMemo(() => [
+    {
+      headerName: 'Annotation',
+      field: 'term.display_name',
+      flex: 2,
+      minWidth: 200,
+      autoHeight: true,
+      valueGetter: (params) => params.data.term?.display_name || '',
+      cellRenderer: (params) => {
+        const ann = params.data;
+        return (
+          <div className="go-annotation-cell">
+            {ann.qualifier && (
+              <span className={`go-qualifier ${ann.qualifier.toLowerCase() === 'not' ? 'qualifier-not' : ''}`}>
+                {ann.qualifier}
+              </span>
+            )}
+            {' '}
+            <a href={`/go/${ann.term?.goid}`} target="go_tab">
+              {ann.term?.display_name}
+            </a>
+          </div>
+        );
+      },
+    },
+    {
+      headerName: 'Reference',
+      field: 'references',
+      flex: 2,
+      minWidth: 200,
+      autoHeight: true,
+      valueGetter: (params) => {
+        const refs = params.data.references || [];
+        return refs.map(ref => ref.display_name || ref.pubmed_id || '').join('; ');
+      },
+      cellRenderer: (params) => {
+        const ann = params.data;
+        return (
+          <div className="go-reference-cell">
+            {ann.references?.map((ref, refIdx) => (
+              <div key={refIdx} className="go-reference-item">
+                {renderCitationItem(ref, { itemClassName: 'go-reference-item' })}
+              </div>
+            ))}
+          </div>
+        );
+      },
+    },
+    {
+      headerName: 'Evidence',
+      field: 'evidence.code',
+      flex: 2,
+      minWidth: 180,
+      autoHeight: true,
+      valueGetter: (params) => params.data.evidence?.code || '',
+      cellRenderer: (params) => {
+        const ann = params.data;
+        return (
+          <div className="go-evidence-cell">
+            <span title={EVIDENCE_DESCRIPTIONS[ann.evidence?.code] || ann.evidence?.code}>
+              {ann.evidence?.code}
+            </span>
+            {EVIDENCE_DESCRIPTIONS[ann.evidence?.code] && (
+              <span className="evidence-description">
+                {' : '}{EVIDENCE_DESCRIPTIONS[ann.evidence?.code]}
+              </span>
+            )}
+            {ann.evidence?.with_from && (
+              <div className="evidence-with">with {ann.evidence.with_from}</div>
+            )}
+            {ann.date_created && (
+              <div className="assigned-date">Assigned on {ann.date_created}</div>
+            )}
+          </div>
+        );
+      },
+    },
+    {
+      headerName: 'Assigned By',
+      field: 'source',
+      flex: 1,
+      minWidth: 100,
+      valueGetter: (params) => params.data.source || '-',
+    },
+  ], []);
+
+  // Default column properties
+  const defaultColDef = useMemo(() => ({
+    sortable: true,
+    filter: true,
+    resizable: true,
+    wrapText: true,
+  }), []);
+
+  // Grid ready callback
+  const onGridReady = useCallback((params) => {
+    params.api.sizeColumnsToFit();
+  }, []);
+
   // Render a single GO annotation table for an aspect
   const renderAspectTable = (annotations, aspectKey, typeKey) => {
     if (!annotations || annotations.length === 0) return null;
@@ -143,60 +244,19 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
         </h5>
 
         {!isCollapsed && (
-          <table className="data-table go-table">
-            <thead>
-              <tr>
-                <th>Annotation</th>
-                <th>Reference</th>
-                <th>Evidence</th>
-                <th>Assigned By</th>
-              </tr>
-            </thead>
-            <tbody>
-              {annotations.map((ann, idx) => (
-                <tr key={idx}>
-                  <td>
-                    {ann.qualifier && (
-                      <span className={`go-qualifier ${ann.qualifier.toLowerCase() === 'not' ? 'qualifier-not' : ''}`}>
-                        {ann.qualifier}
-                      </span>
-                    )}
-                    {' '}
-                    <Link to={`/go/${ann.term?.goid}`}>
-                      {ann.term?.display_name}
-                    </Link>
-                  </td>
-
-                  <td>
-                    {ann.references?.map((ref, refIdx) => (
-                      <React.Fragment key={refIdx}>
-                        {renderCitationItem(ref, { itemClassName: 'go-reference-item' })}
-                      </React.Fragment>
-                    ))}
-                  </td>
-
-                  <td>
-                    <span title={EVIDENCE_DESCRIPTIONS[ann.evidence?.code] || ann.evidence?.code}>
-                      {ann.evidence?.code}
-                    </span>
-                    {EVIDENCE_DESCRIPTIONS[ann.evidence?.code] && (
-                      <span className="evidence-description">
-                        {' : '}{EVIDENCE_DESCRIPTIONS[ann.evidence?.code]}
-                      </span>
-                    )}
-                    {ann.evidence?.with_from && (
-                      <div className="evidence-with">with {ann.evidence.with_from}</div>
-                    )}
-                    {ann.date_created && (
-                      <div className="assigned-date">Assigned on {ann.date_created}</div>
-                    )}
-                  </td>
-
-                  <td>{ann.source || '-'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="go-grid-wrapper ag-theme-alpine">
+            <AgGridReact
+              rowData={annotations}
+              columnDefs={columnDefs}
+              defaultColDef={defaultColDef}
+              domLayout="autoHeight"
+              pagination={true}
+              paginationPageSize={10}
+              paginationPageSizeSelector={[10, 25, 50]}
+              onGridReady={onGridReady}
+              suppressCellFocus={true}
+            />
+          </div>
         )}
       </div>
     );
@@ -224,10 +284,7 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
 
       {/* Display data for selected organism */}
       {selectedOrganism && orgData ? (
-        <div className="organism-section">
-          <h3 className="organism-name">{selectedOrganism}</h3>
-          <p className="locus-display">Locus: {orgData.locus_display_name}</p>
-
+        <div className="go-annotations-container">
           {orgData.annotations && orgData.annotations.length > 0 ? (
             <div className="go-annotation-types">
               {/* Iterate through annotation types in order */}
@@ -278,9 +335,7 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
             <p className="no-data">No GO annotations for this organism</p>
           )}
         </div>
-      ) : (
-        <p className="no-data">Select an organism to view GO annotations</p>
-      )}
+      ) : null}
     </div>
   );
 }

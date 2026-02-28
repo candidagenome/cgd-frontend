@@ -7,12 +7,12 @@
 .organism-selector {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 15px;
+  gap: 8px;
+  padding: 6px 10px;
   background-color: #e8f5e9;
   border: 1px solid #c8e6c9;
-  border-radius: 6px;
-  margin-bottom: 20px;
+  border-radius: 4px;
+  margin-bottom: 8px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -113,24 +113,25 @@
 
 /* Organism sections */
 .organism-section {
-  margin-bottom: 30px;
-  padding: 20px;
+  margin-bottom: 10px;
+  padding: 8px 12px;
   background-color: #f9f9f9;
-  border-radius: 8px;
+  border-radius: 4px;
   border: 1px solid #e0e0e0;
 }
 
 .organism-name {
   color: #1976d2;
-  margin: 0 0 5px 0;
-  padding-bottom: 10px;
+  margin: 0 0 2px 0;
+  padding-bottom: 4px;
   border-bottom: 2px solid #1976d2;
+  font-size: 1em;
 }
 
 .locus-display {
   color: #666;
-  font-size: 0.9em;
-  margin: 0 0 15px 0;
+  font-size: 0.85em;
+  margin: 0 0 6px 0;
 }
 
 /* Info table (key-value pairs) */
@@ -1214,52 +1215,61 @@ a:hover {
    GO TAB IMPROVEMENTS
    ===================================================== */
 
+/* GO annotations container */
+.go-annotations-container {
+  margin: 0;
+  padding: 0;
+}
+
 /* GO Annotation Types (matching Perl format) */
 .go-annotation-types {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 0;
 }
 
 .annotation-type-section {
   border: 1px solid #e0e0e0;
-  border-radius: 6px;
+  border-radius: 0;
   overflow: hidden;
+  margin: 0;
 }
 
 .annotation-type-header {
   margin: 0;
-  padding: 12px 15px;
+  padding: 6px 10px;
   background-color: #e3f2fd;
   color: #1565c0;
-  font-size: 1.1em;
+  font-size: 0.95em;
   font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 /* GO intro section */
 .go-intro {
   background-color: #fafafa;
   border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  padding: 15px 20px;
-  margin-bottom: 20px;
+  border-radius: 4px;
+  padding: 6px 10px;
+  margin-bottom: 0;
 }
 
 .go-intro p {
-  margin: 0 0 10px 0;
+  margin: 0 0 4px 0;
+  font-size: 0.85em;
 }
 
 .go-intro ul {
   margin: 0;
-  padding-left: 25px;
+  padding-left: 18px;
 }
 
 .go-intro li {
-  margin-bottom: 8px;
-  line-height: 1.5;
+  margin-bottom: 2px;
+  line-height: 1.3;
+  font-size: 0.85em;
 }
 
 .go-intro a {
@@ -1273,22 +1283,23 @@ a:hover {
 
 /* Last reviewed date */
 .last-reviewed {
-  padding: 8px 15px;
+  padding: 4px 10px;
   margin: 0;
   font-style: italic;
   color: #666;
   background-color: #f9f9f9;
+  font-size: 0.85em;
 }
 
 /* Section note */
 .section-note {
-  padding: 10px 15px;
+  padding: 5px 10px;
   margin: 0;
-  font-size: 0.9em;
+  font-size: 0.8em;
   color: #555;
   background-color: #fff;
   border-bottom: 1px solid #e0e0e0;
-  line-height: 1.5;
+  line-height: 1.3;
 }
 
 .go-aspect-section {
@@ -1297,20 +1308,196 @@ a:hover {
 
 .aspect-subheader {
   margin: 0;
-  padding: 10px 15px;
+  padding: 5px 10px;
   background-color: #f5f5f5;
   color: #333;
-  font-size: 0.95em;
+  font-size: 0.85em;
   font-weight: 500;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   transition: background-color 0.2s;
 }
 
 .aspect-subheader:hover {
   background-color: #eeeeee;
+}
+
+/* GO AG Grid wrapper */
+.go-grid-wrapper {
+  padding: 0;
+  margin: 0;
+}
+
+.go-grid-wrapper .ag-root-wrapper {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.go-grid-wrapper.ag-theme-alpine {
+  --ag-grid-size: 4px;
+  --ag-row-height: 32px;
+}
+
+.go-grid-wrapper .ag-header {
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.go-grid-wrapper .ag-header-cell {
+  padding: 5px 8px;
+  font-weight: 500;
+  color: #333;
+  font-size: 0.85em;
+}
+
+.go-grid-wrapper .ag-cell {
+  padding: 5px 8px;
+  font-size: 0.85em;
+  line-height: 1.3;
+}
+
+.go-grid-wrapper .ag-row {
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.go-grid-wrapper .ag-row:hover {
+  background-color: #f5f5f5;
+}
+
+.go-grid-wrapper .ag-row-even {
+  background-color: #fafafa;
+}
+
+.go-grid-wrapper .ag-paging-panel {
+  padding: 2px 8px;
+  font-size: 0.8em;
+  height: auto;
+  min-height: 28px;
+  margin: 0;
+  border-top: 1px solid #e0e0e0;
+}
+
+.go-grid-wrapper .ag-root-wrapper-body {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.go-grid-wrapper .ag-body-viewport {
+  min-height: auto !important;
+}
+
+.go-grid-wrapper .ag-layout-auto-height .ag-center-cols-viewport,
+.go-grid-wrapper .ag-layout-auto-height .ag-center-cols-container {
+  min-height: auto !important;
+}
+
+.go-grid-wrapper .ag-body-horizontal-scroll {
+  min-height: 0;
+}
+
+/* GO annotation cell styles for AG Grid */
+.go-annotation-cell {
+  line-height: 1.3;
+}
+
+.go-reference-cell {
+  line-height: 1.3;
+}
+
+.go-evidence-cell {
+  line-height: 1.3;
+}
+
+/* Phenotype container */
+.phenotype-container {
+  margin: 0;
+  padding: 0;
+}
+
+/* Phenotype AG Grid wrapper */
+.phenotype-grid-wrapper {
+  padding: 0;
+  margin: 0;
+}
+
+.phenotype-grid-wrapper .ag-root-wrapper {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.phenotype-grid-wrapper.ag-theme-alpine {
+  --ag-grid-size: 4px;
+  --ag-row-height: 36px;
+}
+
+.phenotype-grid-wrapper .ag-header {
+  background-color: #e3f2fd;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.phenotype-grid-wrapper .ag-header-cell {
+  padding: 5px 8px;
+  font-weight: 500;
+  color: #333;
+  font-size: 0.85em;
+}
+
+.phenotype-grid-wrapper .ag-cell {
+  padding: 5px 8px;
+  font-size: 0.85em;
+  line-height: 1.3;
+}
+
+.phenotype-grid-wrapper .ag-row {
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.phenotype-grid-wrapper .ag-row:hover {
+  background-color: #f5f5f5;
+}
+
+.phenotype-grid-wrapper .ag-row-even {
+  background-color: #fafafa;
+}
+
+.phenotype-grid-wrapper .ag-paging-panel {
+  padding: 2px 8px;
+  font-size: 0.8em;
+  height: auto;
+  min-height: 28px;
+  margin: 0;
+  border-top: 1px solid #e0e0e0;
+}
+
+.phenotype-grid-wrapper .ag-root-wrapper-body {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.phenotype-grid-wrapper .ag-body-viewport {
+  min-height: auto !important;
+}
+
+.phenotype-grid-wrapper .ag-layout-auto-height .ag-center-cols-viewport,
+.phenotype-grid-wrapper .ag-layout-auto-height .ag-center-cols-container {
+  min-height: auto !important;
+}
+
+.phenotype-grid-wrapper .ag-body-horizontal-scroll {
+  min-height: 0;
+}
+
+.phenotype-reference-item {
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.phenotype-reference-item:last-child {
+  margin-bottom: 0;
 }
 
 .go-table {
@@ -1352,27 +1539,27 @@ a:hover {
 
 .evidence-description {
   color: #666;
-  font-size: 0.9em;
+  font-size: 0.85em;
 }
 
 .evidence-with {
   color: #666;
-  font-size: 0.85em;
-  margin-top: 3px;
+  font-size: 0.8em;
+  margin-top: 2px;
   font-style: italic;
 }
 
 .assigned-date {
   color: #888;
-  font-size: 0.8em;
+  font-size: 0.75em;
   font-style: italic;
-  margin-top: 5px;
+  margin-top: 2px;
 }
 
 /* GO Reference Items */
 .go-reference-item {
-  margin-bottom: 8px;
-  line-height: 1.4;
+  margin-bottom: 4px;
+  line-height: 1.3;
 }
 
 .go-reference-item:last-child {

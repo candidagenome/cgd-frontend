@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
+import { AgGridReact } from 'ag-grid-react';
 import phenotypeApi from '../api/phenotypeApi';
 import { renderCitationItem } from '../utils/formatCitation.jsx';
 import './PhenotypeSearchPage.css';
-
-// Pagination settings
-const RESULTS_PER_PAGE = 25;
 
 // Abbreviate organism name (e.g., "Candida albicans SC5314" -> "C. albicans")
 const getOrganismAbbrev = (organismName) => {
@@ -38,7 +36,6 @@ function PhenotypeSearchPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
 
   // Track if we've performed a search
   const [hasSearched, setHasSearched] = useState(false);
@@ -48,16 +45,14 @@ function PhenotypeSearchPage() {
     const qual = searchParams.get('qualifier') || '';
     const expType = searchParams.get('experiment_type') || '';
     const mutType = searchParams.get('mutant_type') || '';
-    const page = parseInt(searchParams.get('page'), 10) || 1;
 
     setObservable(obs);
     setQualifier(qual);
     setExperimentType(expType);
     setMutantType(mutType);
-    setCurrentPage(page);
 
     if (obs || qual || expType || mutType) {
-      performSearch({ observable: obs, qualifier: qual, experiment_type: expType, mutant_type: mutType, page });
+      performSearch({ observable: obs, qualifier: qual, experiment_type: expType, mutant_type: mutType });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
@@ -68,13 +63,60 @@ function PhenotypeSearchPage() {
     setHasSearched(true);
 
     try {
-      const result = await phenotypeApi.searchPhenotypes({
+      // Fetch all results by paginating through all pages (backend max limit is 100)
+      const PAGE_SIZE = 100;
+      let allResults = [];
+      let page = 1;
+      let totalResults = 0;
+      let query = null;
+
+      // Fetch first page to get total count
+      const firstPage = await phenotypeApi.searchPhenotypes({
         ...params,
-        limit: RESULTS_PER_PAGE,
+        page: 1,
+        limit: PAGE_SIZE,
       });
-      setData(result);
+
+      totalResults = firstPage.total_results;
+      query = firstPage.query;
+      allResults = firstPage.results || [];
+
+      // Fetch remaining pages if needed
+      const totalPages = Math.ceil(totalResults / PAGE_SIZE);
+      if (totalPages > 1) {
+        const remainingPages = [];
+        for (let p = 2; p <= totalPages; p++) {
+          remainingPages.push(
+            phenotypeApi.searchPhenotypes({
+              ...params,
+              page: p,
+              limit: PAGE_SIZE,
+            })
+          );
+        }
+        const pageResults = await Promise.all(remainingPages);
+        for (const pr of pageResults) {
+          allResults = allResults.concat(pr.results || []);
+        }
+      }
+
+      setData({
+        results: allResults,
+        total_results: totalResults,
+        query: query,
+      });
     } catch (err) {
-      setError(err.response?.data?.detail || err.message || 'Failed to search phenotypes');
+      // Handle FastAPI validation errors (array of objects) or string errors
+      let errorMsg = 'Failed to search phenotypes';
+      const detail = err.response?.data?.detail;
+      if (typeof detail === 'string') {
+        errorMsg = detail;
+      } else if (Array.isArray(detail) && detail.length > 0) {
+        errorMsg = detail.map(d => d.msg || JSON.stringify(d)).join('; ');
+      } else if (err.message) {
+        errorMsg = err.message;
+      }
+      setError(errorMsg);
       setData(null);
     } finally {
       setLoading(false);
@@ -89,7 +131,6 @@ function PhenotypeSearchPage() {
     if (qualifier.trim()) params.set('qualifier', qualifier.trim());
     if (experimentType.trim()) params.set('experiment_type', experimentType.trim());
     if (mutantType.trim()) params.set('mutant_type', mutantType.trim());
-    params.set('page', '1');
 
     setSearchParams(params);
   };
@@ -102,87 +143,117 @@ function PhenotypeSearchPage() {
     setSearchParams({});
     setData(null);
     setHasSearched(false);
-    setCurrentPage(1);
   };
 
-  const handlePageChange = (newPage) => {
-    const params = new URLSearchParams(searchParams);
-    params.set('page', newPage.toString());
-    setSearchParams(params);
-  };
-
-  const renderPagination = () => {
-    if (!data || data.total_results <= RESULTS_PER_PAGE) return null;
-
-    const totalPages = Math.ceil(data.total_results / RESULTS_PER_PAGE);
-    const pages = [];
-    const maxVisiblePages = 10;
-
-    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-    if (endPage - startPage + 1 < maxVisiblePages) {
-      startPage = Math.max(1, endPage - maxVisiblePages + 1);
-    }
-
-    if (startPage > 1) {
-      pages.push(
-        <button key={1} onClick={() => handlePageChange(1)} className="page-btn">
-          1
-        </button>
-      );
-      if (startPage > 2) pages.push(<span key="ellipsis-start" className="ellipsis">...</span>);
-    }
-
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(
-        <button
-          key={i}
-          onClick={() => handlePageChange(i)}
-          className={`page-btn ${i === currentPage ? 'active' : ''}`}
-        >
-          {i}
-        </button>
-      );
-    }
-
-    if (endPage < totalPages) {
-      if (endPage < totalPages - 1) pages.push(<span key="ellipsis-end" className="ellipsis">...</span>);
-      pages.push(
-        <button key={totalPages} onClick={() => handlePageChange(totalPages)} className="page-btn">
-          {totalPages}
-        </button>
-      );
-    }
-
-    const startIdx = (currentPage - 1) * RESULTS_PER_PAGE + 1;
-    const endIdx = Math.min(currentPage * RESULTS_PER_PAGE, data.total_results);
-
-    return (
-      <div className="pagination">
-        <div className="pagination-info">
-          Showing {startIdx}-{endIdx} of {data.total_results} results
+  // AG Grid column definitions
+  const columnDefs = useMemo(() => [
+    {
+      headerName: 'Gene',
+      field: 'gene',
+      flex: 1,
+      minWidth: 120,
+      valueGetter: (params) => formatLocusName(params.data),
+      cellRenderer: (params) => (
+        <Link to={`/locus/${params.data.feature_name}`} className="gene-link">
+          {formatLocusName(params.data)}
+        </Link>
+      ),
+    },
+    {
+      headerName: 'Organism',
+      field: 'organism',
+      flex: 0.8,
+      minWidth: 100,
+      valueGetter: (params) => getOrganismAbbrev(params.data.organism),
+      cellRenderer: (params) => <em>{getOrganismAbbrev(params.data.organism)}</em>,
+    },
+    {
+      headerName: 'Experiment Type',
+      field: 'experiment_type',
+      flex: 1,
+      minWidth: 120,
+      valueGetter: (params) => params.data.experiment_type || '-',
+      cellRenderer: (params) => (
+        <div>
+          {params.data.experiment_type || '-'}
+          {params.data.experiment_comment && (
+            <div className="experiment-comment">({params.data.experiment_comment})</div>
+          )}
         </div>
-        <div className="pagination-controls">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="page-btn nav-btn"
-          >
-            &laquo; Prev
-          </button>
-          {pages}
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="page-btn nav-btn"
-          >
-            Next &raquo;
-          </button>
-        </div>
-      </div>
-    );
-  };
+      ),
+    },
+    {
+      headerName: 'Mutant Info',
+      field: 'mutant_type',
+      flex: 1,
+      minWidth: 120,
+      autoHeight: true,
+      valueGetter: (params) => params.data.mutant_type || '-',
+      cellRenderer: (params) => {
+        const result = params.data;
+        if (!result.mutant_type) return '-';
+        return (
+          <div>
+            <span>Description: {result.mutant_type}</span>
+            {result.strain && <div className="strain-info">Strain: {result.strain}</div>}
+          </div>
+        );
+      },
+    },
+    {
+      headerName: 'Phenotype',
+      field: 'phenotype',
+      flex: 1,
+      minWidth: 120,
+      valueGetter: (params) => params.data.observable || '-',
+      cellRenderer: (params) => {
+        const result = params.data;
+        return (
+          <span>
+            <span className="observable-term">{result.observable}</span>
+            {result.qualifier && <span className="qualifier-info">: {result.qualifier}</span>}
+          </span>
+        );
+      },
+    },
+    {
+      headerName: 'References',
+      field: 'references',
+      flex: 1.5,
+      minWidth: 180,
+      autoHeight: true,
+      valueGetter: (params) => {
+        const refs = params.data.references || [];
+        return refs.map(r => r.display_name || r.pubmed_id || '').join('; ');
+      },
+      cellRenderer: (params) => {
+        const refs = params.data.references || [];
+        if (refs.length === 0) return '-';
+        return (
+          <div>
+            {refs.map((ref, refIdx) => (
+              <React.Fragment key={refIdx}>
+                {renderCitationItem(ref, { itemClassName: 'reference-item' })}
+              </React.Fragment>
+            ))}
+          </div>
+        );
+      },
+    },
+  ], []);
+
+  // Default column properties
+  const defaultColDef = useMemo(() => ({
+    sortable: true,
+    filter: true,
+    resizable: true,
+    wrapText: true,
+  }), []);
+
+  // Grid ready callback
+  const onGridReady = useCallback((params) => {
+    params.api.sizeColumnsToFit();
+  }, []);
 
   const renderSearchForm = () => {
     return (
@@ -254,6 +325,58 @@ function PhenotypeSearchPage() {
     );
   };
 
+  const handleDownload = () => {
+    if (!data || !data.results || data.results.length === 0) return;
+
+    // CSV headers
+    const headers = ['Gene', 'Organism', 'Experiment Type', 'Experiment Comment', 'Mutant Type', 'Strain', 'Phenotype', 'Qualifier', 'References'];
+
+    // Convert data to CSV rows
+    const rows = data.results.map(result => {
+      const refs = (result.references || [])
+        .map(ref => ref.display_name || ref.pubmed_id || '')
+        .join('; ');
+
+      return [
+        formatLocusName(result),
+        getOrganismAbbrev(result.organism),
+        result.experiment_type || '',
+        result.experiment_comment || '',
+        result.mutant_type || '',
+        result.strain || '',
+        result.observable || '',
+        result.qualifier || '',
+        refs,
+      ];
+    });
+
+    // Escape CSV values
+    const escapeCSV = (val) => {
+      const str = String(val || '');
+      if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+        return `"${str.replace(/"/g, '""')}"`;
+      }
+      return str;
+    };
+
+    // Build CSV content
+    const csvContent = [
+      headers.map(escapeCSV).join(','),
+      ...rows.map(row => row.map(escapeCSV).join(','))
+    ].join('\n');
+
+    // Trigger download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `phenotype_search_results.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const renderResultsSummary = () => {
     if (!data) return null;
 
@@ -265,12 +388,21 @@ function PhenotypeSearchPage() {
 
     return (
       <div className="results-summary">
-        <div className="results-count">
-          Found <strong>{data.total_results}</strong> phenotype annotation{data.total_results !== 1 ? 's' : ''}
+        <div className="results-summary-row">
+          <div className="results-summary-left">
+            <div className="results-count">
+              Found <strong>{data.total_results}</strong> phenotype annotation{data.total_results !== 1 ? 's' : ''}
+            </div>
+            {queryParts.length > 0 && (
+              <div className="query-summary">Search criteria: {queryParts.join(', ')}</div>
+            )}
+          </div>
+          {data.results && data.results.length > 0 && (
+            <button type="button" className="btn-download" onClick={handleDownload}>
+              Download CSV
+            </button>
+          )}
         </div>
-        {queryParts.length > 0 && (
-          <div className="query-summary">Search criteria: {queryParts.join(', ')}</div>
-        )}
       </div>
     );
   };
@@ -286,75 +418,18 @@ function PhenotypeSearchPage() {
     }
 
     return (
-      <div className="results-table-section">
-        {renderPagination()}
-
-        <div className="table-wrapper">
-          <table className="results-table">
-            <thead>
-              <tr>
-                <th>Gene</th>
-                <th>Organism</th>
-                <th>Experiment Type</th>
-                <th>Mutant Info</th>
-                <th>Phenotype</th>
-                <th>References</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.results.map((result, idx) => (
-                <tr key={idx} className={idx % 2 === 1 ? 'alt-row' : ''}>
-                  <td className="gene-cell">
-                    <Link to={`/locus/${result.feature_name}`} className="gene-link">
-                      {formatLocusName(result)}
-                    </Link>
-                  </td>
-
-                  <td className="organism-cell">
-                    <em>{getOrganismAbbrev(result.organism)}</em>
-                  </td>
-
-                  <td className="experiment-cell">
-                    {result.experiment_type || '-'}
-                    {result.experiment_comment && (
-                      <div className="experiment-comment">({result.experiment_comment})</div>
-                    )}
-                  </td>
-
-                  <td className="mutant-cell">
-                    {result.mutant_type ? (
-                      <>
-                        <span>Description: {result.mutant_type}</span>
-                        {result.strain && <div className="strain-info">Strain: {result.strain}</div>}
-                      </>
-                    ) : (
-                      '-'
-                    )}
-                  </td>
-
-                  <td className="phenotype-cell">
-                    <span className="observable-term">{result.observable}</span>
-                    {result.qualifier && <span className="qualifier-info">: {result.qualifier}</span>}
-                  </td>
-
-                  <td className="references-cell">
-                    {result.references && result.references.length > 0 ? (
-                      result.references.map((ref, refIdx) => (
-                        <React.Fragment key={refIdx}>
-                          {renderCitationItem(ref, { itemClassName: 'reference-item' })}
-                        </React.Fragment>
-                      ))
-                    ) : (
-                      '-'
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {renderPagination()}
+      <div className="results-grid-wrapper ag-theme-alpine">
+        <AgGridReact
+          rowData={data.results}
+          columnDefs={columnDefs}
+          defaultColDef={defaultColDef}
+          domLayout="autoHeight"
+          pagination={true}
+          paginationPageSize={10}
+          paginationPageSizeSelector={[10, 25, 50, 100]}
+          onGridReady={onGridReady}
+          suppressCellFocus={true}
+        />
       </div>
     );
   };

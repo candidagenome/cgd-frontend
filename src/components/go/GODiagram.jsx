@@ -4,14 +4,12 @@ import cytoscape from 'cytoscape';
 import goApi from '../../api/goApi';
 import './GODiagram.css';
 
-// Color scheme matching legacy Perl implementation
+// Color scheme matching SGD style
 const COLORS = {
-  withAnnotations: '#4a90d9',    // Blue - terms with gene annotations
-  withoutAnnotations: '#d2b48c', // Tan - terms without annotations
-  focusTerm: '#2e7d32',          // Green - current focus term
-  edge: '#666666',               // Gray for edges
-  textLight: '#ffffff',          // White text on dark backgrounds
-  textDark: '#333333',           // Dark text on light backgrounds
+  focusTerm: '#f0c040',          // Yellow/gold - current focus term
+  otherTerm: '#6b9fd4',          // Blue - other terms
+  edge: '#999999',               // Gray for edges
+  textDark: '#555555',           // Dark text for labels
 };
 
 function GODiagram({ goid }) {
@@ -20,7 +18,11 @@ function GODiagram({ goid }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [hierarchyData, setHierarchyData] = useState(null);
+
   const navigate = useNavigate();
+
+  // Get current date for stamp
+  const dateStamp = new Date().toISOString().split('T')[0];
 
   // Fetch hierarchy data
   useEffect(() => {
@@ -50,19 +52,25 @@ function GODiagram({ goid }) {
     }
 
     // Build nodes array for Cytoscape
-    const nodes = hierarchyData.nodes.map(node => ({
-      data: {
-        id: node.goid,
-        label: node.go_term,
-        goid: node.goid,
-        goAspect: node.go_aspect,
-        directGeneCount: node.direct_gene_count,
-        inheritedGeneCount: node.inherited_gene_count,
-        hasAnnotations: node.has_annotations,
-        isFocus: node.is_focus,
-        level: node.level,
-      },
-    }));
+    const nodes = hierarchyData.nodes.map(node => {
+      // Format label with gene count
+      const geneCount = node.direct_gene_count || 0;
+      const label = `${node.go_term} (${geneCount})`;
+
+      return {
+        data: {
+          id: node.goid,
+          label: label,
+          goid: node.goid,
+          goAspect: node.go_aspect,
+          directGeneCount: node.direct_gene_count,
+          inheritedGeneCount: node.inherited_gene_count,
+          hasAnnotations: node.has_annotations,
+          isFocus: node.is_focus,
+          level: node.level,
+        },
+      };
+    });
 
     // Build edges array for Cytoscape
     const edges = hierarchyData.edges.map((edge, idx) => ({
@@ -71,6 +79,7 @@ function GODiagram({ goid }) {
         source: edge.source,
         target: edge.target,
         relationshipType: edge.relationship_type,
+        label: edge.relationship_type === 'part_of' ? 'part of' : 'is a',
       },
     }));
 
@@ -84,37 +93,35 @@ function GODiagram({ goid }) {
           style: {
             'label': 'data(label)',
             'text-wrap': 'wrap',
-            'text-max-width': '320px',
-            'font-size': '16px',
+            'text-max-width': '200px',
+            'font-size': '12px',
             'text-valign': 'center',
-            'text-halign': 'center',
-            'background-color': (ele) => {
-              if (ele.data('isFocus')) return COLORS.focusTerm;
-              return ele.data('hasAnnotations') ? COLORS.withAnnotations : COLORS.withoutAnnotations;
-            },
-            'color': (ele) => {
-              if (ele.data('isFocus')) return COLORS.textLight;
-              return ele.data('hasAnnotations') ? COLORS.textLight : COLORS.textDark;
-            },
-            'width': '340px',
-            'height': '110px',
-            'shape': 'roundrectangle',
-            'padding': '18px',
-            'border-width': (ele) => ele.data('isFocus') ? '3px' : '1px',
-            'border-color': (ele) => ele.data('isFocus') ? '#1b5e20' : '#888888',
+            'text-halign': 'right',
+            'text-margin-x': '8px',
+            'background-color': (ele) => ele.data('isFocus') ? COLORS.focusTerm : COLORS.otherTerm,
+            'color': COLORS.textDark,
+            'width': '20px',
+            'height': '20px',
+            'shape': 'ellipse',
+            'border-width': '2px',
+            'border-color': (ele) => ele.data('isFocus') ? '#c9a030' : '#5080b0',
             'cursor': 'pointer',
           },
         },
         {
           selector: 'edge',
           style: {
-            'width': 2,
+            'width': 1.5,
             'line-color': COLORS.edge,
             'target-arrow-color': COLORS.edge,
             'target-arrow-shape': 'triangle',
+            'arrow-scale': 0.6,
             'curve-style': 'bezier',
-            'arrow-scale': 0.8,
-            'line-style': (ele) => ele.data('relationshipType') === 'part_of' ? 'dashed' : 'solid',
+            'label': 'data(label)',
+            'font-size': '10px',
+            'text-rotation': 'autorotate',
+            'text-margin-y': -8,
+            'color': '#888',
           },
         },
         {
@@ -128,7 +135,7 @@ function GODiagram({ goid }) {
       layout: {
         name: 'breadthfirst',
         directed: true,
-        spacingFactor: 1.0,
+        spacingFactor: 1.2,
         avoidOverlap: true,
         roots: nodes
           .filter(n => n.data.level === Math.min(...nodes.map(x => x.data.level)))
@@ -158,16 +165,9 @@ function GODiagram({ goid }) {
 
     cyRef.current = cy;
 
-    // Center on focus node at readable zoom level (don't fit all nodes)
+    // Fit entire graph and center
     setTimeout(() => {
-      const focusNode = cy.nodes().filter(n => n.data('isFocus'));
-      if (focusNode.length > 0) {
-        // Center on focus node at zoom level 1.0 (actual size)
-        cy.zoom(1.0);
-        cy.center(focusNode);
-      } else {
-        cy.fit(undefined, 50);
-      }
+      cy.fit(undefined, 40);
     }, 100);
 
     return () => {
@@ -178,50 +178,25 @@ function GODiagram({ goid }) {
     };
   }, [hierarchyData, goid, navigate]);
 
-  // Handle "Go Up" button click
-  const handleGoUp = () => {
-    if (hierarchyData?.can_go_up && hierarchyData?.focus_term) {
-      // Find the immediate parent of the focus term
-      const parentEdge = hierarchyData.edges.find(
-        edge => edge.target === hierarchyData.focus_term.goid
-      );
-      if (parentEdge) {
-        navigate(`/go/${parentEdge.source}`);
-      }
-    }
-  };
+  // Handle PNG download
+  const handleDownload = () => {
+    if (!cyRef.current) return;
 
-  // Handle "Go Down" button click
-  const handleGoDown = () => {
-    if (hierarchyData?.can_go_down && hierarchyData?.focus_term) {
-      // Find the immediate child of the focus term
-      const childEdge = hierarchyData.edges.find(
-        edge => edge.source === hierarchyData.focus_term.goid
-      );
-      if (childEdge) {
-        navigate(`/go/${childEdge.target}`);
-      }
-    }
-  };
+    const png = cyRef.current.png({
+      output: 'blob',
+      bg: 'white',
+      scale: 2,
+      full: true,
+    });
 
-  // Handle "Reset View" button click - center on focus node
-  const handleResetView = () => {
-    if (cyRef.current) {
-      const focusNode = cyRef.current.nodes().filter(n => n.data('isFocus'));
-      if (focusNode.length > 0) {
-        cyRef.current.zoom(1.0);
-        cyRef.current.center(focusNode);
-      } else {
-        cyRef.current.fit(undefined, 50);
-      }
-    }
-  };
-
-  // Handle "Fit All" button click - zoom out to see entire graph
-  const handleFitAll = () => {
-    if (cyRef.current) {
-      cyRef.current.fit(undefined, 50);
-    }
+    const url = URL.createObjectURL(png);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `GO_${goid.replace(':', '_')}_hierarchy.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   // Loading state
@@ -260,57 +235,26 @@ function GODiagram({ goid }) {
 
   return (
     <div className="go-diagram-container">
-      <div className="go-diagram-toolbar">
-        <div className="go-diagram-buttons">
-          <button
-            className="go-diagram-btn"
-            onClick={handleGoUp}
-            disabled={!hierarchyData?.can_go_up}
-            title="Navigate to parent term"
-          >
-            Go Up
-          </button>
-          <button
-            className="go-diagram-btn"
-            onClick={handleGoDown}
-            disabled={!hierarchyData?.can_go_down}
-            title="Navigate to child term"
-          >
-            Go Down
-          </button>
-          <button
-            className="go-diagram-btn"
-            onClick={handleResetView}
-            title="Center on current term"
-          >
-            Reset View
-          </button>
-          <button
-            className="go-diagram-btn"
-            onClick={handleFitAll}
-            title="Zoom out to see entire graph"
-          >
-            Fit All
-          </button>
-        </div>
+      <div className="go-diagram-canvas" ref={containerRef}></div>
+      <div className="go-diagram-footer">
         <div className="go-diagram-legend">
           <span className="legend-item">
-            <span className="legend-color" style={{ backgroundColor: COLORS.focusTerm }}></span>
+            <span className="legend-dot focus"></span>
             Current Term
           </span>
           <span className="legend-item">
-            <span className="legend-color" style={{ backgroundColor: COLORS.withAnnotations }}></span>
-            With Annotations
-          </span>
-          <span className="legend-item">
-            <span className="legend-color" style={{ backgroundColor: COLORS.withoutAnnotations }}></span>
-            Without Annotations
+            <span className="legend-dot other"></span>
+            Other Term
           </span>
         </div>
+        <div className="go-diagram-datestamp">
+          CGD {dateStamp}
+        </div>
       </div>
-      <div className="go-diagram-canvas" ref={containerRef}></div>
-      <div className="go-diagram-help">
-        <p>Click a node to navigate to that term. Scroll to zoom. Drag to pan. Double-click to fit all.</p>
+      <div className="go-diagram-download">
+        <button type="button" className="go-diagram-download-btn" onClick={handleDownload}>
+          ⬇ Download (.png)
+        </button>
       </div>
     </div>
   );
