@@ -363,6 +363,9 @@ function PhenotypeSearchPage() {
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
           domLayout="autoHeight"
+          pagination={true}
+          paginationPageSize={10}
+          paginationPageSizeSelector={[10, 25, 50, 100]}
           onGridReady={onGridReady}
           suppressCellFocus={true}
         />
