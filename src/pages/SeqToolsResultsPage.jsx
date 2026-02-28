@@ -79,12 +79,17 @@ function SeqToolsResultsPage() {
     if (tool.name === 'Literature Summaries' && results?.feature?.feature_name) {
       return `/locus/${results.feature.feature_name}?tab=literature`;
     }
-    return tool.url;
-  };
 
-  // Check if tool should open in same tab (internal links)
-  const isInternalLink = (tool) => {
-    return tool.name === 'Literature Summaries';
+    // Convert gbrowse absolute URLs to relative
+    if (tool.url) {
+      // Handle various gbrowse URL patterns
+      const gbrowseMatch = tool.url.match(/https?:\/\/[^/]+(\/(cgi-bin\/)?gbrowse.*)/i);
+      if (gbrowseMatch) {
+        return gbrowseMatch[1];
+      }
+    }
+
+    return tool.url;
   };
 
   // Render tool categories
@@ -108,12 +113,11 @@ function SeqToolsResultsPage() {
                   key={toolIdx}
                   href={getToolUrl(tool)}
                   className="tool-link"
-                  target={isInternalLink(tool) ? 'gsr' : '_blank'}
-                  rel={isInternalLink(tool) ? undefined : 'noopener noreferrer'}
+                  target="gsr_tools"
                 >
                   <span className="tool-name">
                     {tool.name}
-                    {tool.external && !isInternalLink(tool) && (
+                    {tool.external && (
                       <span className="external-icon">&#8599;</span>
                     )}
                   </span>
