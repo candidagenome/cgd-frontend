@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import goTermFinderApi from '../api/goTermFinderApi';
 import './GoTermFinderSearchPage.css';
 
 function GoTermFinderSearchPage() {
-  const navigate = useNavigate();
-
   const [loading, setLoading] = useState(false);
   const [configLoading, setConfigLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,19 +12,34 @@ function GoTermFinderSearchPage() {
   // Configuration
   const [config, setConfig] = useState(null);
 
-  // Form state
-  const [formData, setFormData] = useState({
-    genes: '',
-    organism_no: '',
-    ontology: 'all',
-    use_custom_background: false,
-    background_genes: '',
-    evidence_codes: [],
-    annotation_types: ['manually_curated', 'high_throughput', 'computational'],
-    p_value_cutoff: 0.01,
-    correction_method: 'bh',
-    min_genes_in_term: 1,
+  // Form state - initialize from localStorage if available
+  const [formData, setFormData] = useState(() => {
+    const saved = localStorage.getItem('goTermFinderFormData');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        // Ignore parse errors
+      }
+    }
+    return {
+      genes: '',
+      organism_no: '',
+      ontology: 'P',
+      use_custom_background: false,
+      background_genes: '',
+      evidence_codes: [],
+      annotation_types: ['manually_curated', 'high_throughput', 'computational'],
+      p_value_cutoff: 0.01,
+      correction_method: 'bh',
+      min_genes_in_term: 1,
+    };
   });
+
+  // Save form data to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('goTermFinderFormData', JSON.stringify(formData));
+  }, [formData]);
 
   // Load config on mount
   useEffect(() => {
@@ -35,8 +47,8 @@ function GoTermFinderSearchPage() {
       try {
         const data = await goTermFinderApi.getConfig();
         setConfig(data);
-        // Set default organism if available
-        if (data.organisms && data.organisms.length > 0) {
+        // Set default organism if available and not already set
+        if (data.organisms && data.organisms.length > 0 && !formData.organism_no) {
           setFormData((prev) => ({
             ...prev,
             organism_no: data.organisms[0].organism_no,
@@ -168,10 +180,10 @@ function GoTermFinderSearchPage() {
       // Run analysis
       const result = await goTermFinderApi.runAnalysis(request);
 
-      // Store results and navigate
-      sessionStorage.setItem('goTermFinderResults', JSON.stringify(result));
-      sessionStorage.setItem('goTermFinderRequest', JSON.stringify(request));
-      navigate('/go-term-finder/results');
+      // Store results and open in new tab
+      localStorage.setItem('goTermFinderResults', JSON.stringify(result));
+      localStorage.setItem('goTermFinderRequest', JSON.stringify(request));
+      window.open('/go-term-finder/results', 'gtf_result');
     } catch (err) {
       console.error('Analysis error:', err);
       setError(err.response?.data?.detail || err.message || 'Analysis failed');
@@ -211,28 +223,24 @@ function GoTermFinderSearchPage() {
 
         <form onSubmit={handleSubmit}>
           {/* Step 1: Organism Selection */}
-          <div className="form-section">
+          <div className="form-section inline-section">
             <h3>
               <span className="section-number">1</span>
               Select Organism
             </h3>
-
-            <div className="form-row">
-              <label htmlFor="organism">Organism:</label>
-              <select
-                id="organism"
-                value={formData.organism_no}
-                onChange={(e) => handleInputChange('organism_no', e.target.value)}
-                required
-              >
-                <option value="">-- Select Organism --</option>
-                {config?.organisms?.map((org) => (
-                  <option key={org.organism_no} value={org.organism_no}>
-                    {org.display_name}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <select
+              id="organism"
+              value={formData.organism_no}
+              onChange={(e) => handleInputChange('organism_no', e.target.value)}
+              required
+            >
+              <option value="">-- Select --</option>
+              {config?.organisms?.map((org) => (
+                <option key={org.organism_no} value={org.organism_no}>
+                  {org.display_name}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Step 2: Gene Input */}
@@ -304,23 +312,12 @@ function GoTermFinderSearchPage() {
           </div>
 
           {/* Step 3: Ontology Selection */}
-          <div className="form-section">
+          <div className="form-section inline-section">
             <h3>
               <span className="section-number">3</span>
-              Select Ontology
+              Ontology
             </h3>
-
             <div className="ontology-options">
-              <label className="radio-label">
-                <input
-                  type="radio"
-                  name="ontology"
-                  value="all"
-                  checked={formData.ontology === 'all'}
-                  onChange={(e) => handleInputChange('ontology', e.target.value)}
-                />
-                <span>All Aspects</span>
-              </label>
               <label className="radio-label">
                 <input
                   type="radio"
@@ -355,12 +352,11 @@ function GoTermFinderSearchPage() {
           </div>
 
           {/* Step 4: Background Set */}
-          <div className="form-section">
+          <div className="form-section inline-section">
             <h3>
               <span className="section-number">4</span>
-              Background Set
+              Background
             </h3>
-
             <div className="background-options">
               <label className="radio-label">
                 <input
@@ -369,7 +365,7 @@ function GoTermFinderSearchPage() {
                   checked={!formData.use_custom_background}
                   onChange={() => handleInputChange('use_custom_background', false)}
                 />
-                <span>Default (all genes with GO annotations)</span>
+                <span>Default (all genes with GO)</span>
               </label>
               <label className="radio-label">
                 <input
@@ -378,10 +374,9 @@ function GoTermFinderSearchPage() {
                   checked={formData.use_custom_background}
                   onChange={() => handleInputChange('use_custom_background', true)}
                 />
-                <span>Custom background set</span>
+                <span>Custom</span>
               </label>
             </div>
-
             {formData.use_custom_background && (
               <div className="custom-background">
                 <label htmlFor="background_genes">Background genes:</label>
@@ -405,12 +400,11 @@ function GoTermFinderSearchPage() {
           </div>
 
           {/* Step 5: Annotation Type Filter */}
-          <div className="form-section">
+          <div className="form-section inline-section">
             <h3>
               <span className="section-number">5</span>
               Annotation Types
             </h3>
-
             <div className="annotation-type-options">
               {config?.annotation_types?.map((type) => (
                 <label key={type.value} className="checkbox-label">
@@ -475,15 +469,14 @@ function GoTermFinderSearchPage() {
           </div>
 
           {/* Step 7: Statistical Parameters */}
-          <div className="form-section">
+          <div className="form-section inline-section">
             <h3>
               <span className="section-number">7</span>
-              Statistical Parameters
+              Statistics
             </h3>
-
             <div className="stat-params">
-              <div className="form-row">
-                <label htmlFor="p_value_cutoff">P-value cutoff:</label>
+              <div className="form-row-inline">
+                <label htmlFor="p_value_cutoff">P-value:</label>
                 <select
                   id="p_value_cutoff"
                   value={formData.p_value_cutoff}
@@ -495,9 +488,8 @@ function GoTermFinderSearchPage() {
                   <option value="0.1">0.1</option>
                 </select>
               </div>
-
-              <div className="form-row">
-                <label htmlFor="correction_method">Multiple testing correction:</label>
+              <div className="form-row-inline">
+                <label htmlFor="correction_method">Correction:</label>
                 <select
                   id="correction_method"
                   value={formData.correction_method}
@@ -510,9 +502,8 @@ function GoTermFinderSearchPage() {
                   ))}
                 </select>
               </div>
-
-              <div className="form-row">
-                <label htmlFor="min_genes">Minimum genes per term:</label>
+              <div className="form-row-inline">
+                <label htmlFor="min_genes">Min genes:</label>
                 <input
                   type="number"
                   id="min_genes"
@@ -537,7 +528,7 @@ function GoTermFinderSearchPage() {
                 setFormData({
                   genes: '',
                   organism_no: config?.organisms?.[0]?.organism_no || '',
-                  ontology: 'all',
+                  ontology: 'P',
                   use_custom_background: false,
                   background_genes: '',
                   evidence_codes: [],

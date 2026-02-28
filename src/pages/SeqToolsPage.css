@@ -1,46 +1,46 @@
 /* SeqTools Page Styles */
 
 .seq-tools-page {
-  max-width: 1000px;
+  width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 15px 20px;
 }
 
 .seq-tools-content {
   background-color: #fff;
-  padding: 30px;
+  padding: 20px;
   border-radius: 4px;
 }
 
 .seq-tools-page h1 {
   color: #1976d2;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   text-align: center;
 }
 
 .seq-tools-page hr {
   border: none;
   border-top: 2px solid #1976d2;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
 }
 
 .seq-tools-page .subtitle {
   text-align: center;
   color: #666;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 /* Input Type Tabs */
 .input-type-tabs {
   display: flex;
   gap: 5px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   border-bottom: 2px solid #e0e0e0;
   padding-bottom: 0;
 }
 
 .input-type-tab {
-  padding: 12px 24px;
+  padding: 10px 20px;
   border: 1px solid #e0e0e0;
   border-bottom: none;
   background-color: #f5f5f5;
@@ -67,13 +67,13 @@
 /* Form Sections */
 .form-section {
   background-color: #f9f9f9;
-  padding: 25px;
+  padding: 15px 20px;
   border-radius: 4px;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .form-group {
-  margin-bottom: 18px;
+  margin-bottom: 12px;
 }
 
 .form-group:last-child {
@@ -170,7 +170,7 @@
 /* Submit Button */
 .submit-section {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 15px;
 }
 
 .submit-button {
@@ -195,14 +195,14 @@
 
 /* Results Section */
 .results-section {
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 .results-section h2 {
   color: #1976d2;
-  font-size: 1.4em;
-  margin-bottom: 15px;
-  padding-bottom: 10px;
+  font-size: 1.3em;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
   border-bottom: 2px solid #1976d2;
 }
 
@@ -257,7 +257,7 @@
 .tool-categories {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
+  gap: 12px;
 }
 
 .tool-category {
@@ -378,9 +378,18 @@
 }
 
 /* Responsive */
+@media (max-width: 1240px) {
+  .seq-tools-page {
+    width: auto;
+    max-width: 1200px;
+    margin: 0 20px;
+  }
+}
+
 @media (max-width: 768px) {
   .seq-tools-page {
     padding: 10px;
+    margin: 0 10px;
   }
 
   .seq-tools-content {

@@ -1,7 +1,7 @@
 .go-slim-mapper-results-page {
-  max-width: 1200px;
+  width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 15px 20px;
 }
 
 .results-content h1 {
@@ -150,64 +150,50 @@
   border-radius: 4px;
 }
 
-/* Results table */
-.results-table {
+/* AG Grid Wrapper */
+.go-slim-mapper-results-page .ag-grid-wrapper {
+  margin-top: 15px;
   width: 100%;
-  border-collapse: collapse;
-  font-size: 0.95em;
-  table-layout: fixed;
+  min-width: 100%;
 }
 
-.results-table th,
-.results-table td {
-  border: 1px solid #ddd;
-  padding: 10px 12px;
-  text-align: left;
+.go-slim-mapper-results-page .ag-grid-wrapper .ag-root-wrapper,
+.go-slim-mapper-results-page .ag-grid-wrapper .ag-root,
+.go-slim-mapper-results-page .ag-grid-wrapper .ag-body-viewport,
+.go-slim-mapper-results-page .ag-grid-wrapper .ag-center-cols-container {
+  width: 100% !important;
+  min-width: 100% !important;
 }
 
-.results-table th {
-  background: #f0f0f0;
-  font-weight: 600;
-  color: #333;
+.go-slim-mapper-results-page .ag-grid-wrapper .ag-header-cell-label {
+  justify-content: center;
 }
 
-.results-table tr:nth-child(even) {
-  background: #fafafa;
+.go-slim-mapper-results-page .ag-grid-wrapper .ag-cell {
+  line-height: 1.4;
 }
 
-.results-table tr:hover {
-  background: #f5f5f5;
+/* Cell content styles */
+.term-cell-content {
+  line-height: 1.4;
 }
 
-/* Table columns */
-.th-term {
-  width: 30%;
+.count-cell-content {
+  text-align: center;
 }
 
-.th-count {
-  width: 250px;
-}
-
-.th-genes {
-  width: auto;
-}
-
-.term-cell .term-link {
+.term-link {
   font-family: monospace;
   color: #0066cc;
   font-weight: 500;
 }
 
-.term-cell .term-name {
+.term-name {
   color: #333;
   font-size: 0.9em;
 }
 
-.count-cell {
-  white-space: nowrap;
-}
-
-.count-cell .percentage {
+.count-cell-content .percentage {
   font-weight: 500;
   color: #006600;
 }
@@ -274,9 +260,18 @@
 }
 
 /* Responsive */
+@media (max-width: 1240px) {
+  .go-slim-mapper-results-page {
+    width: auto;
+    max-width: 1200px;
+    margin: 0 20px;
+  }
+}
+
 @media (max-width: 768px) {
   .go-slim-mapper-results-page {
     padding: 10px;
+    margin: 0 10px;
   }
 
   .summary-grid {
@@ -290,26 +285,5 @@
   .action-btn {
     width: 100%;
     text-align: center;
-  }
-
-  .results-table {
-    font-size: 0.85em;
-  }
-
-  .results-table th,
-  .results-table td {
-    padding: 8px;
-  }
-
-  .th-term {
-    width: 40%;
-  }
-
-  .th-count {
-    width: 25%;
-  }
-
-  .th-genes {
-    width: 35%;
   }
 }

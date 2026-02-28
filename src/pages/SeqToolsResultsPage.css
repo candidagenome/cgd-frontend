@@ -1,0 +1,237 @@
+/* SeqTools Results Page Styles */
+
+.seq-tools-results-page {
+  width: 1200px;
+  margin: 0 auto;
+  padding: 15px 20px;
+}
+
+.seq-tools-results-page .results-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 4px;
+}
+
+.seq-tools-results-page h1 {
+  color: #1976d2;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.seq-tools-results-page hr {
+  border: none;
+  border-top: 2px solid #1976d2;
+  margin-bottom: 15px;
+}
+
+.seq-tools-results-page .loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+/* Action buttons */
+.seq-tools-results-page .action-buttons {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.seq-tools-results-page .action-btn {
+  padding: 10px 20px;
+  background: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.95em;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.seq-tools-results-page .action-btn:hover {
+  background: #1565c0;
+  color: white;
+}
+
+/* Results Section */
+.seq-tools-results-page .results-section {
+  margin-top: 15px;
+}
+
+.seq-tools-results-page .results-section h2 {
+  color: #1976d2;
+  font-size: 1.3em;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #1976d2;
+}
+
+/* Feature Info Card */
+.seq-tools-results-page .feature-info-card {
+  background-color: #e3f2fd;
+  border: 1px solid #90caf9;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 15px;
+}
+
+.seq-tools-results-page .feature-info-card h3 {
+  color: #1565c0;
+  margin: 0 0 8px 0;
+  font-size: 1em;
+}
+
+.seq-tools-results-page .feature-info-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+}
+
+.seq-tools-results-page .feature-info-item {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.seq-tools-results-page .feature-info-item .label {
+  font-size: 0.85em;
+  color: #666;
+}
+
+.seq-tools-results-page .feature-info-item .value {
+  font-weight: 500;
+  color: #333;
+}
+
+.seq-tools-results-page .feature-info-item .value a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.seq-tools-results-page .feature-info-item .value a:hover {
+  text-decoration: underline;
+}
+
+/* Tool Categories */
+.seq-tools-results-page .tool-categories {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.seq-tools-results-page .tool-category {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.seq-tools-results-page .tool-category h3 {
+  background-color: #f5f5f5;
+  color: #333;
+  margin: 0;
+  padding: 8px 12px;
+  font-size: 0.95em;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.seq-tools-results-page .tool-list {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.seq-tools-results-page .tool-link {
+  display: block;
+  padding: 8px 10px;
+  background-color: #fafafa;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.seq-tools-results-page .tool-link:hover {
+  background-color: #e3f2fd;
+  border-color: #90caf9;
+}
+
+.seq-tools-results-page .tool-link .tool-name {
+  color: #1976d2;
+  font-weight: 500;
+  font-size: 0.9em;
+}
+
+.seq-tools-results-page .tool-link .tool-description {
+  display: none;
+}
+
+.seq-tools-results-page .tool-link .external-icon {
+  font-size: 0.8em;
+  margin-left: 4px;
+  opacity: 0.7;
+}
+
+/* Sequence Info */
+.seq-tools-results-page .sequence-info {
+  background-color: #fff3e0;
+  border: 1px solid #ffcc80;
+  border-radius: 4px;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+}
+
+.seq-tools-results-page .sequence-info p {
+  margin: 0;
+  color: #e65100;
+  font-size: 0.9em;
+}
+
+/* No Results */
+.seq-tools-results-page .no-results {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+/* Responsive */
+@media (max-width: 1240px) {
+  .seq-tools-results-page {
+    width: auto;
+    max-width: 1200px;
+    margin: 0 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .seq-tools-results-page {
+    padding: 10px;
+    margin: 0 10px;
+  }
+
+  .seq-tools-results-page .results-content {
+    padding: 15px;
+  }
+
+  .seq-tools-results-page .tool-categories {
+    grid-template-columns: 1fr;
+  }
+
+  .seq-tools-results-page .feature-info-grid {
+    flex-direction: column;
+  }
+
+  .seq-tools-results-page .action-buttons {
+    flex-direction: column;
+  }
+
+  .seq-tools-results-page .action-btn {
+    width: 100%;
+    text-align: center;
+  }
+}

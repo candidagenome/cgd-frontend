@@ -1,21 +1,125 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { AgGridReact } from 'ag-grid-react';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import cytoscape from 'cytoscape';
 import goTermFinderApi from '../api/goTermFinderApi';
 import './GoTermFinderResultsPage.css';
 
-// Color scheme for the graph
-const COLORS = {
-  process: '#4a90d9',      // Blue for Biological Process
-  function: '#d4a057',     // Orange for Molecular Function
-  component: '#6ab04c',    // Green for Cellular Component
-  edge: '#666666',
-  textLight: '#ffffff',
-  textDark: '#333333',
+// Register AG Grid modules once
+if (!ModuleRegistry.__cgdGoTermFinderRegistered) {
+  ModuleRegistry.registerModules([AllCommunityModule]);
+  ModuleRegistry.__cgdGoTermFinderRegistered = true;
+}
+
+// P-value color scheme for the graph (matching SGD style)
+const PVALUE_COLORS = {
+  level1: '#00FFFF',  // Cyan: ≤1e-10
+  level2: '#00BFFF',  // Light blue: 1e-10 to 1e-8
+  level3: '#00FF00',  // Green: 1e-8 to 1e-6
+  level4: '#FFA500',  // Orange: 1e-6 to 1e-4
+  level5: '#FFD700',  // Gold/Yellow: 1e-4 to 1e-2
+  level6: '#C0C0C0',  // Gray: >0.01
+  gene: '#B8D4E8',    // Light blue for gene nodes
+  edge: '#333333',
+  textDark: '#000000',
 };
 
-const ITEMS_PER_PAGE = 20;
+// Get color based on p-value
+const getPvalueColor = (pValue) => {
+  if (pValue <= 1e-10) return PVALUE_COLORS.level1;
+  if (pValue <= 1e-8) return PVALUE_COLORS.level2;
+  if (pValue <= 1e-6) return PVALUE_COLORS.level3;
+  if (pValue <= 1e-4) return PVALUE_COLORS.level4;
+  if (pValue <= 1e-2) return PVALUE_COLORS.level5;
+  return PVALUE_COLORS.level6;
+};
+
 const GENES_TO_SHOW = 5;
+
+// Cell renderer for GO Term column
+const GoTermRenderer = (props) => {
+  const { data } = props;
+  if (!data) return null;
+
+  return (
+    <div className="term-cell-content">
+      <a
+        href={`/go/${data.goid}`}
+        target="gotools"
+        className="term-link"
+      >
+        {data.goid}
+      </a>
+      <br />
+      <span className="term-name">{data.go_term}</span>
+    </div>
+  );
+};
+
+// Cell renderer for count columns (query/background)
+const CountRenderer = (props) => {
+  const { value, data, colDef } = props;
+  if (!data) return null;
+
+  const isQuery = colDef.field === 'query_display';
+  const count = isQuery ? data.query_count : data.background_count;
+  const total = isQuery ? data.query_total : data.background_total;
+  const frequency = isQuery ? data.query_frequency : data.background_frequency;
+
+  return (
+    <div className="count-cell-content">
+      {count}/{total}
+      <br />
+      <span className="percentage">{frequency}%</span>
+    </div>
+  );
+};
+
+// Cell renderer for genes column
+const GenesRenderer = (props) => {
+  const { data, context } = props;
+  if (!data || !data.genes) return null;
+
+  const genes = data.genes;
+  const isExpanded = context?.expandedTerms?.has(data.goid);
+  const genesToShow = isExpanded ? genes : genes.slice(0, GENES_TO_SHOW);
+  const hasMore = genes.length > GENES_TO_SHOW;
+
+  return (
+    <div className="genes-inline">
+      {genesToShow.map((gene, idx) => (
+        <React.Fragment key={gene.feature_no}>
+          <a
+            href={`/locus/${gene.systematic_name}`}
+            target="gotools"
+            className="gene-link-inline"
+            title={`${gene.systematic_name}${gene.evidence_codes?.length > 0 ? ` (${gene.evidence_codes.join(', ')})` : ''}`}
+          >
+            {gene.gene_name || gene.systematic_name}
+          </a>
+          {idx < genesToShow.length - 1 && ', '}
+        </React.Fragment>
+      ))}
+      {hasMore && !isExpanded && (
+        <button
+          className="more-genes-btn"
+          onClick={() => context?.toggleTermExpansion(data.goid)}
+        >
+          +{genes.length - GENES_TO_SHOW} more
+        </button>
+      )}
+      {hasMore && isExpanded && (
+        <button
+          className="more-genes-btn"
+          onClick={() => context?.toggleTermExpansion(data.goid)}
+        >
+          show less
+        </button>
+      )}
+    </div>
+  );
+};
 
 function GoTermFinderResultsPage() {
   const navigate = useNavigate();
@@ -24,32 +128,21 @@ function GoTermFinderResultsPage() {
 
   const [results, setResults] = useState(null);
   const [request, setRequest] = useState(null);
-  const [activeTab, setActiveTab] = useState('process');
   const [expandedTerms, setExpandedTerms] = useState(new Set());
   const [graphData, setGraphData] = useState(null);
   const [graphLoading, setGraphLoading] = useState(false);
   const [showGraph, setShowGraph] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [graphGeneratedDate, setGraphGeneratedDate] = useState(null);
+
 
   // Load results from session storage
   useEffect(() => {
-    const storedResults = sessionStorage.getItem('goTermFinderResults');
-    const storedRequest = sessionStorage.getItem('goTermFinderRequest');
+    const storedResults = localStorage.getItem('goTermFinderResults');
+    const storedRequest = localStorage.getItem('goTermFinderRequest');
 
     if (storedResults) {
       const parsed = JSON.parse(storedResults);
       setResults(parsed);
-
-      // Set initial tab based on which has results
-      if (parsed.result) {
-        if (parsed.result.process_terms.length > 0) {
-          setActiveTab('process');
-        } else if (parsed.result.function_terms.length > 0) {
-          setActiveTab('function');
-        } else if (parsed.result.component_terms.length > 0) {
-          setActiveTab('component');
-        }
-      }
     } else {
       // No results, redirect to search
       navigate('/go-term-finder');
@@ -60,12 +153,117 @@ function GoTermFinderResultsPage() {
     }
   }, [navigate]);
 
-  // Reset page when tab changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [activeTab]);
+  const toggleTermExpansion = (goid) => {
+    setExpandedTerms((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(goid)) {
+        newSet.delete(goid);
+      } else {
+        newSet.add(goid);
+      }
+      return newSet;
+    });
+  };
 
-  // Load graph data
+  // AG Grid context for cell renderers
+  const gridContext = useMemo(() => ({
+    expandedTerms,
+    toggleTermExpansion,
+  }), [expandedTerms]);
+
+  // AG Grid column definitions
+  const columnDefs = useMemo(() => {
+    const cols = [
+      {
+        headerName: 'GO Term',
+        field: 'goid',
+        cellRenderer: GoTermRenderer,
+        flex: 2.5,
+        minWidth: 220,
+        wrapText: true,
+        autoHeight: true,
+        cellStyle: { lineHeight: '1.4', padding: '8px' },
+      },
+      {
+        headerName: 'Query',
+        field: 'query_display',
+        cellRenderer: CountRenderer,
+        flex: 0.8,
+        minWidth: 80,
+        cellStyle: { textAlign: 'center', padding: '8px' },
+      },
+      {
+        headerName: 'Background',
+        field: 'background_display',
+        cellRenderer: CountRenderer,
+        flex: 0.9,
+        minWidth: 90,
+        cellStyle: { textAlign: 'center', padding: '8px' },
+      },
+      {
+        headerName: 'Fold',
+        field: 'fold_enrichment',
+        flex: 0.8,
+        minWidth: 70,
+        cellStyle: { textAlign: 'center', fontWeight: '500', color: '#006600', padding: '8px' },
+        valueFormatter: (params) => params.value ? `${params.value}x` : '',
+      },
+      {
+        headerName: 'P-value',
+        field: 'p_value',
+        flex: 0.9,
+        minWidth: 85,
+        cellStyle: { textAlign: 'center', fontFamily: 'monospace', padding: '8px' },
+        valueFormatter: (params) => params.value?.toExponential(2) || '',
+      },
+    ];
+
+    // Add FDR column if correction method is not 'none'
+    if (results?.result?.correction_method !== 'none') {
+      cols.push({
+        headerName: 'FDR',
+        field: 'fdr',
+        flex: 0.9,
+        minWidth: 85,
+        cellStyle: { textAlign: 'center', fontFamily: 'monospace', padding: '8px' },
+        valueFormatter: (params) => params.value != null ? params.value.toExponential(2) : 'N/A',
+      });
+    }
+
+    cols.push({
+      headerName: 'Genes',
+      field: 'genes',
+      cellRenderer: GenesRenderer,
+      flex: 2.5,
+      minWidth: 180,
+      wrapText: true,
+      autoHeight: true,
+      cellStyle: { lineHeight: '1.5', padding: '8px' },
+    });
+
+    return cols;
+  }, [results?.result?.correction_method]);
+
+  // AG Grid default column definitions
+  const defaultColDef = useMemo(() => ({
+    resizable: true,
+    sortable: true,
+  }), []);
+
+  // Get terms for the selected ontology, filtering out single-gene terms
+  const getFilteredTerms = () => {
+    if (!results?.result || !request?.ontology) return [];
+
+    let terms = [];
+    if (request.ontology === 'P') terms = results.result.process_terms || [];
+    else if (request.ontology === 'F') terms = results.result.function_terms || [];
+    else if (request.ontology === 'C') terms = results.result.component_terms || [];
+
+    // Filter out terms with only one gene
+    return terms.filter(term => term.query_count > 1);
+  };
+
+  // Load graph data from backend API
   const loadGraph = async () => {
     if (!request) return;
 
@@ -73,6 +271,7 @@ function GoTermFinderResultsPage() {
     try {
       const data = await goTermFinderApi.getEnrichmentGraph(request, { maxNodes: 50 });
       setGraphData(data);
+      setGraphGeneratedDate(new Date());
       setShowGraph(true);
     } catch (err) {
       console.error('Failed to load graph:', err);
@@ -90,30 +289,98 @@ function GoTermFinderResultsPage() {
       cyRef.current.destroy();
     }
 
-    if (graphData.nodes.length === 0) return;
+    if (!graphData.nodes || graphData.nodes.length === 0) return;
 
-    // Build nodes
-    const nodes = graphData.nodes.map((node) => ({
-      data: {
-        id: node.goid,
-        label: node.go_term,
-        goid: node.goid,
-        goAspect: node.go_aspect,
-        pValue: node.p_value,
-        fdr: node.fdr,
-        queryCount: node.query_count,
-      },
-    }));
+    const nodes = [];
+    const edges = [];
+    const geneToTerms = new Map(); // Track which terms each gene is directly annotated to
 
-    // Build edges
-    const edges = graphData.edges.map((edge, idx) => ({
-      data: {
-        id: `edge-${idx}`,
-        source: edge.source,
-        target: edge.target,
-        relationshipType: edge.relationship_type,
-      },
-    }));
+    // Build GO term nodes from API data
+    graphData.nodes.forEach((node) => {
+      nodes.push({
+        data: {
+          id: node.goid,
+          label: node.go_term,
+          goid: node.goid,
+          nodeType: 'goterm',
+          pValue: node.p_value,
+          queryCount: node.query_count,
+          isEnriched: node.is_enriched,
+        },
+      });
+
+      // Track genes for enriched terms
+      if (node.is_enriched && node.genes && node.genes.length > 0) {
+        node.genes.forEach((gene) => {
+          const geneName = gene.gene_name || gene.systematic_name;
+          if (!geneToTerms.has(geneName)) {
+            geneToTerms.set(geneName, []);
+          }
+          geneToTerms.get(geneName).push(node.goid);
+        });
+      }
+    });
+
+    // Add hierarchy edges from API
+    if (graphData.edges) {
+      graphData.edges.forEach((edge, idx) => {
+        edges.push({
+          data: {
+            id: `hierarchy-${idx}`,
+            source: edge.source,
+            target: edge.target,
+            edgeType: 'hierarchy',
+            relationshipType: edge.relationship_type,
+          },
+        });
+      });
+    }
+
+    // Group genes by their term associations to create gene cluster nodes
+    const termSetToGenes = new Map();
+    geneToTerms.forEach((termIds, geneName) => {
+      const key = termIds.sort().join('|');
+      if (!termSetToGenes.has(key)) {
+        termSetToGenes.set(key, { genes: [], termIds });
+      }
+      termSetToGenes.get(key).genes.push(geneName);
+    });
+
+    // Create gene cluster nodes and edges
+    let geneNodeIdx = 0;
+    termSetToGenes.forEach(({ genes, termIds }) => {
+      const geneNodeId = `genes-${geneNodeIdx++}`;
+      const geneLabel = genes.join(' ');
+
+      nodes.push({
+        data: {
+          id: geneNodeId,
+          label: geneLabel,
+          nodeType: 'gene',
+          geneCount: genes.length,
+        },
+      });
+
+      // Connect gene node to all its associated GO terms
+      termIds.forEach((termId) => {
+        edges.push({
+          data: {
+            id: `gene-edge-${geneNodeId}-${termId}`,
+            source: termId,
+            target: geneNodeId,
+            edgeType: 'gene-annotation',
+          },
+        });
+      });
+    });
+
+    // Find root node (node with no incoming hierarchy edges)
+    const nodesWithParents = new Set(
+      edges.filter(e => e.data.edgeType === 'hierarchy').map(e => e.data.target)
+    );
+    const rootNodes = nodes
+      .filter(n => n.data.nodeType === 'goterm' && !nodesWithParents.has(n.data.id))
+      .map(n => n.data.id);
 
     // Create Cytoscape instance
     const cy = cytoscape({
@@ -121,62 +388,97 @@ function GoTermFinderResultsPage() {
       elements: { nodes, edges },
       style: [
         {
-          selector: 'node',
+          selector: 'node[nodeType="goterm"]',
           style: {
             'label': 'data(label)',
             'text-wrap': 'wrap',
-            'text-max-width': '280px',
-            'font-size': '14px',
+            'text-max-width': '130px',
+            'font-size': '10px',
+            'font-family': 'monospace',
             'text-valign': 'center',
             'text-halign': 'center',
             'background-color': (ele) => {
-              const aspect = ele.data('goAspect');
-              if (aspect === 'P') return COLORS.process;
-              if (aspect === 'F') return COLORS.function;
-              if (aspect === 'C') return COLORS.component;
-              return '#888';
+              // Non-enriched terms (ancestors) get gray color
+              if (!ele.data('isEnriched')) return PVALUE_COLORS.level6;
+              return getPvalueColor(ele.data('pValue'));
             },
-            'color': COLORS.textLight,
-            'width': '300px',
-            'height': '90px',
+            'color': PVALUE_COLORS.textDark,
+            'width': '140px',
+            'height': (ele) => {
+              const label = ele.data('label') || '';
+              const lines = Math.ceil(label.length / 16);
+              return Math.max(45, lines * 14 + 16) + 'px';
+            },
             'shape': 'roundrectangle',
-            'padding': '12px',
             'border-width': '1px',
             'border-color': '#666',
             'cursor': 'pointer',
           },
         },
         {
-          selector: 'edge',
+          selector: 'node[nodeType="gene"]',
           style: {
-            'width': 2,
-            'line-color': COLORS.edge,
-            'target-arrow-color': COLORS.edge,
-            'target-arrow-shape': 'triangle',
+            'label': 'data(label)',
+            'text-wrap': 'wrap',
+            'text-max-width': '180px',
+            'font-size': '9px',
+            'font-family': 'monospace',
+            'text-valign': 'center',
+            'text-halign': 'center',
+            'background-color': PVALUE_COLORS.gene,
+            'color': PVALUE_COLORS.textDark,
+            'width': (ele) => {
+              const label = ele.data('label') || '';
+              return Math.max(80, Math.min(220, label.length * 5 + 16)) + 'px';
+            },
+            'height': (ele) => {
+              const label = ele.data('label') || '';
+              const words = label.split(' ').length;
+              const lines = Math.ceil(words / 5);
+              return Math.max(25, lines * 12 + 8) + 'px';
+            },
+            'shape': 'roundrectangle',
+            'border-width': '1px',
+            'border-color': '#999',
+          },
+        },
+        {
+          selector: 'edge[edgeType="hierarchy"]',
+          style: {
+            'width': 1.5,
+            'line-color': PVALUE_COLORS.edge,
             'curve-style': 'bezier',
-            'arrow-scale': 0.8,
-            'line-style': (ele) =>
-              ele.data('relationshipType') === 'part_of' ? 'dashed' : 'solid',
+            'target-arrow-shape': 'none',
+          },
+        },
+        {
+          selector: 'edge[edgeType="gene-annotation"]',
+          style: {
+            'width': 1,
+            'line-color': '#999',
+            'curve-style': 'bezier',
+            'target-arrow-shape': 'none',
           },
         },
       ],
       layout: {
         name: 'breadthfirst',
         directed: true,
-        spacingFactor: 1.2,
+        spacingFactor: 1.3,
         avoidOverlap: true,
+        roots: rootNodes.length > 0 ? rootNodes : undefined,
       },
       userZoomingEnabled: true,
       userPanningEnabled: true,
-      minZoom: 0.3,
+      minZoom: 0.15,
       maxZoom: 3,
     });
 
-    // Click handler - navigate to GO term page
-    cy.on('tap', 'node', (evt) => {
+    // Click handler - navigate to GO term page in gotools tab
+    cy.on('tap', 'node[nodeType="goterm"]', (evt) => {
       const goid = evt.target.data('goid');
       if (goid) {
-        navigate(`/go/${goid}`);
+        window.open(`/go/${goid}`, 'gotools');
       }
     });
 
@@ -184,7 +486,7 @@ function GoTermFinderResultsPage() {
 
     // Fit graph after layout
     setTimeout(() => {
-      cy.fit(undefined, 50);
+      cy.fit(undefined, 30);
     }, 100);
 
     return () => {
@@ -193,19 +495,7 @@ function GoTermFinderResultsPage() {
         cyRef.current = null;
       }
     };
-  }, [showGraph, graphData, navigate]);
-
-  const toggleTermExpansion = (goid) => {
-    setExpandedTerms((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(goid)) {
-        newSet.delete(goid);
-      } else {
-        newSet.add(goid);
-      }
-      return newSet;
-    });
-  };
+  }, [showGraph, graphData]);
 
   const handleDownload = async (format) => {
     if (!request) return;
@@ -224,46 +514,6 @@ function GoTermFinderResultsPage() {
       console.error('Download failed:', err);
       alert('Download failed. Please try again.');
     }
-  };
-
-  // Render gene links with "more" functionality
-  const renderGeneLinks = (genes, goid) => {
-    const isExpanded = expandedTerms.has(goid);
-    const genesToShow = isExpanded ? genes : genes.slice(0, GENES_TO_SHOW);
-    const hasMore = genes.length > GENES_TO_SHOW;
-
-    return (
-      <div className="genes-inline">
-        {genesToShow.map((gene, idx) => (
-          <React.Fragment key={gene.feature_no}>
-            <Link
-              to={`/locus/${gene.systematic_name}`}
-              className="gene-link-inline"
-              title={`${gene.systematic_name}${gene.evidence_codes.length > 0 ? ` (${gene.evidence_codes.join(', ')})` : ''}`}
-            >
-              {gene.gene_name || gene.systematic_name}
-            </Link>
-            {idx < genesToShow.length - 1 && ', '}
-          </React.Fragment>
-        ))}
-        {hasMore && !isExpanded && (
-          <button
-            className="more-genes-btn"
-            onClick={() => toggleTermExpansion(goid)}
-          >
-            +{genes.length - GENES_TO_SHOW} more
-          </button>
-        )}
-        {hasMore && isExpanded && (
-          <button
-            className="more-genes-btn"
-            onClick={() => toggleTermExpansion(goid)}
-          >
-            show less
-          </button>
-        )}
-      </div>
-    );
   };
 
   if (!results) {
@@ -294,18 +544,7 @@ function GoTermFinderResultsPage() {
   }
 
   const { result } = results;
-  const termsByTab = {
-    process: result.process_terms || [],
-    function: result.function_terms || [],
-    component: result.component_terms || [],
-  };
-
-  const currentTerms = termsByTab[activeTab];
-  const totalPages = Math.ceil(currentTerms.length / ITEMS_PER_PAGE);
-  const paginatedTerms = currentTerms.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
+  const currentTerms = getFilteredTerms();
 
   return (
     <div className="go-term-finder-results-page">
@@ -361,8 +600,8 @@ function GoTermFinderResultsPage() {
               </span>
             </div>
             <div className="summary-item">
-              <span className="label">Enriched terms found:</span>
-              <span className="value highlight">{result.total_enriched_terms}</span>
+              <span className="label">Enriched terms (2+ genes):</span>
+              <span className="value highlight">{getFilteredTerms().length}</span>
             </div>
           </div>
 
@@ -382,7 +621,7 @@ function GoTermFinderResultsPage() {
           <button
             className="action-btn"
             onClick={() => loadGraph()}
-            disabled={graphLoading || result.total_enriched_terms === 0}
+            disabled={graphLoading || getFilteredTerms().length === 0}
           >
             {graphLoading ? 'Loading...' : showGraph ? 'Reload Graph' : 'Show Graph'}
           </button>
@@ -395,151 +634,94 @@ function GoTermFinderResultsPage() {
         {showGraph && (
           <div className="graph-section">
             <h2>GO Enrichment Graph</h2>
-            <div className="graph-legend">
-              <span className="legend-item">
-                <span className="legend-color" style={{ backgroundColor: COLORS.process }}></span>
-                Biological Process
-              </span>
-              <span className="legend-item">
-                <span className="legend-color" style={{ backgroundColor: COLORS.function }}></span>
-                Molecular Function
-              </span>
-              <span className="legend-item">
-                <span className="legend-color" style={{ backgroundColor: COLORS.component }}></span>
-                Cellular Component
-              </span>
-            </div>
+            <p className="graph-description">
+              Nodes in the graph are color-coded according to their p-value.
+              Genes are shown with the GO term(s) to which they are directly annotated.
+            </p>
             <div className="graph-container" ref={graphContainerRef}></div>
+            <div className="graph-footer">
+              <div className="pvalue-legend">
+                <span className="legend-label">p-value:</span>
+                <span className="legend-item">
+                  <span className="legend-color" style={{ backgroundColor: PVALUE_COLORS.level1 }}></span>
+                  ≤1e-10
+                </span>
+                <span className="legend-item">
+                  <span className="legend-color" style={{ backgroundColor: PVALUE_COLORS.level2 }}></span>
+                  1e-10 to 1e-8
+                </span>
+                <span className="legend-item">
+                  <span className="legend-color" style={{ backgroundColor: PVALUE_COLORS.level3 }}></span>
+                  1e-8 to 1e-6
+                </span>
+                <span className="legend-item">
+                  <span className="legend-color" style={{ backgroundColor: PVALUE_COLORS.level4 }}></span>
+                  1e-6 to 1e-4
+                </span>
+                <span className="legend-item">
+                  <span className="legend-color" style={{ backgroundColor: PVALUE_COLORS.level5 }}></span>
+                  1e-4 to 1e-2
+                </span>
+                <span className="legend-item">
+                  <span className="legend-color" style={{ backgroundColor: PVALUE_COLORS.level6 }}></span>
+                  &gt;0.01
+                </span>
+              </div>
+              <div className="graph-date">
+                {graphGeneratedDate && graphGeneratedDate.toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric'
+                })}
+              </div>
+            </div>
             <p className="graph-help">
-              Click a node to view the GO term page. Scroll to zoom. Drag to pan.
+              Click a GO term node to view its page. Scroll to zoom. Drag to pan.
             </p>
           </div>
         )}
 
-        {/* Results Tabs */}
-        {result.total_enriched_terms > 0 && (
+        {/* Results Header */}
+        {currentTerms.length > 0 && (
           <>
-            <div className="results-tabs">
-              <button
-                className={`tab ${activeTab === 'process' ? 'active' : ''}`}
-                onClick={() => setActiveTab('process')}
-              >
-                Biological Process ({result.process_terms.length})
-              </button>
-              <button
-                className={`tab ${activeTab === 'function' ? 'active' : ''}`}
-                onClick={() => setActiveTab('function')}
-              >
-                Molecular Function ({result.function_terms.length})
-              </button>
-              <button
-                className={`tab ${activeTab === 'component' ? 'active' : ''}`}
-                onClick={() => setActiveTab('component')}
-              >
-                Cellular Component ({result.component_terms.length})
-              </button>
+            <div className="results-header">
+              <h2>
+                {request?.ontology === 'P' && `Biological Process (${currentTerms.length})`}
+                {request?.ontology === 'F' && `Molecular Function (${currentTerms.length})`}
+                {request?.ontology === 'C' && `Cellular Component (${currentTerms.length})`}
+              </h2>
             </div>
 
-            {/* Results Table */}
+            {/* AG Grid Results Table */}
             <div className="results-table-container">
               {currentTerms.length === 0 ? (
                 <p className="no-results">No enriched terms in this category.</p>
               ) : (
-                <>
-                  <table className="results-table">
-                    <thead>
-                      <tr>
-                        <th className="th-term">GO Term</th>
-                        <th className="th-count">Query</th>
-                        <th className="th-count">Background</th>
-                        <th className="th-fold">Fold</th>
-                        <th className="th-pvalue">P-value</th>
-                        {result.correction_method !== 'none' && <th className="th-pvalue">FDR</th>}
-                        <th className="th-genes">Genes</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {paginatedTerms.map((term) => (
-                        <tr key={term.goid}>
-                          <td className="term-cell">
-                            <Link to={`/go/${term.goid}`} className="term-link">
-                              {term.goid}
-                            </Link>
-                            <br />
-                            <span className="term-name">{term.go_term}</span>
-                          </td>
-                          <td className="count-cell">
-                            {term.query_count}/{term.query_total}
-                            <br />
-                            <span className="percentage">{term.query_frequency}%</span>
-                          </td>
-                          <td className="count-cell">
-                            {term.background_count}/{term.background_total}
-                            <br />
-                            <span className="percentage">{term.background_frequency}%</span>
-                          </td>
-                          <td className="fold-cell">{term.fold_enrichment}x</td>
-                          <td className="pvalue-cell">{term.p_value.toExponential(2)}</td>
-                          {result.correction_method !== 'none' && (
-                            <td className="pvalue-cell">
-                              {term.fdr != null ? term.fdr.toExponential(2) : 'N/A'}
-                            </td>
-                          )}
-                          <td className="genes-cell">
-                            {renderGeneLinks(term.genes, term.goid)}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-
-                  {/* Pagination */}
-                  {totalPages > 1 && (
-                    <div className="pagination">
-                      <button
-                        className="page-btn"
-                        onClick={() => setCurrentPage(1)}
-                        disabled={currentPage === 1}
-                      >
-                        First
-                      </button>
-                      <button
-                        className="page-btn"
-                        onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                        disabled={currentPage === 1}
-                      >
-                        Prev
-                      </button>
-                      <span className="page-info">
-                        Page {currentPage} of {totalPages} ({currentTerms.length} terms)
-                      </span>
-                      <button
-                        className="page-btn"
-                        onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                        disabled={currentPage === totalPages}
-                      >
-                        Next
-                      </button>
-                      <button
-                        className="page-btn"
-                        onClick={() => setCurrentPage(totalPages)}
-                        disabled={currentPage === totalPages}
-                      >
-                        Last
-                      </button>
-                    </div>
-                  )}
-                </>
+                <div className="ag-grid-wrapper" style={{ width: '100%' }}>
+                  <AgGridReact
+                    rowData={currentTerms}
+                    columnDefs={columnDefs}
+                    defaultColDef={defaultColDef}
+                    context={gridContext}
+                    domLayout="autoHeight"
+                    suppressCellFocus={true}
+                    enableCellTextSelection={true}
+                    pagination={true}
+                    paginationPageSize={10}
+                    paginationPageSizeSelector={[10, 25, 50, 100]}
+                    getRowId={(params) => params.data.goid}
+                  />
+                </div>
               )}
             </div>
           </>
         )}
 
-        {result.total_enriched_terms === 0 && (
+        {currentTerms.length === 0 && (
           <div className="no-results-message">
             <h2>No Enriched Terms Found</h2>
             <p>
-              No GO terms were significantly enriched at the specified p-value cutoff.
+              No GO terms with multiple genes were significantly enriched at the specified p-value cutoff.
               Try adjusting the parameters:
             </p>
             <ul>
