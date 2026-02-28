@@ -286,8 +286,7 @@ function GoTermFinderSearchPage() {
                   type="button"
                   className="validate-btn"
                   onClick={handleValidate}
-                  disabled={loading || !formData.genes.trim() || !formData.organism_no || formData.genes.split(/[\s,;\n]+/).filter((g) => g.trim()).length > 1000}
-                  title={formData.genes.split(/[\s,;\n]+/).filter((g) => g.trim()).length > 1000 ? 'Validation disabled for lists over 1000 genes' : ''}
+                  disabled={loading || !formData.genes.trim() || !formData.organism_no}
                 >
                   Validate Genes
                 </button>
