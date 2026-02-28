@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import goTermFinderApi from '../api/goTermFinderApi';
 import './GoTermFinderSearchPage.css';
 
 function GoTermFinderSearchPage() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [configLoading, setConfigLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -193,7 +194,7 @@ function GoTermFinderSearchPage() {
         throw new Error(result.error || 'Analysis failed');
       }
 
-      // Store results and open in new tab
+      // Store results and navigate to results page
       try {
         localStorage.setItem('goTermFinderResults', JSON.stringify(result));
         localStorage.setItem('goTermFinderRequest', JSON.stringify(request));
@@ -202,10 +203,8 @@ function GoTermFinderSearchPage() {
         throw new Error('Results too large to store. Try reducing the gene list or contact support.');
       }
 
-      const newWindow = window.open('/go-term-finder/results', 'gtf_result');
-      if (!newWindow) {
-        throw new Error('Pop-up blocked. Please allow pop-ups for this site and try again.');
-      }
+      // Navigate to results page
+      navigate('/go-term-finder/results');
     } catch (err) {
       console.error('Analysis error:', err);
       setError(err.response?.data?.detail || err.message || 'Analysis failed');
