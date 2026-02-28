@@ -348,12 +348,12 @@ function PhenotypeSearchPage() {
     // Get unique gene names for the gene list
     const geneList = [...new Set(data.results.map(r => r.feature_name))];
 
-    // Helper to render hidden inputs for gene list
-    const renderGeneInputs = (inputName) => (
-      geneList.map((gene, idx) => (
-        <input key={idx} type="hidden" name={inputName} value={gene} />
-      ))
-    );
+    // Helper to open tool in new tab with gene list
+    const openToolWithGenes = (toolPath) => {
+      // Store gene list in sessionStorage for the target page to read
+      sessionStorage.setItem('phenotypeSearchGeneList', JSON.stringify(geneList));
+      window.open(toolPath, '_blank');
+    };
 
     return (
       <div className="analyze-section">
@@ -365,24 +365,21 @@ function PhenotypeSearchPage() {
             <tr>
               <td className="analyze-label">Further Analysis:</td>
               <td>
-                <form action="/go-term-finder" method="POST" className="analyze-form">
-                  {renderGeneInputs('ORFs')}
-                  <button type="submit" className="analyze-link-btn">GO Term Finder</button>
-                </form>
+                <button type="button" className="analyze-link-btn" onClick={() => openToolWithGenes('/go-term-finder')}>
+                  GO Term Finder
+                </button>
                 <span className="analyze-desc">Find common features of genes in list</span>
               </td>
               <td>
-                <form action="/go-slim-mapper" method="POST" className="analyze-form">
-                  {renderGeneInputs('ORFs')}
-                  <button type="submit" className="analyze-link-btn">GO Slim Mapper</button>
-                </form>
+                <button type="button" className="analyze-link-btn" onClick={() => openToolWithGenes('/go-slim-mapper')}>
+                  GO Slim Mapper
+                </button>
                 <span className="analyze-desc">Sort genes into broad categories</span>
               </td>
               <td>
-                <form action="/go-annotation-summary" method="POST" className="analyze-form">
-                  {renderGeneInputs('ORFs')}
-                  <button type="submit" className="analyze-link-btn">View GO Annotation Summary</button>
-                </form>
+                <button type="button" className="analyze-link-btn" onClick={() => openToolWithGenes('/go-annotation-summary')}>
+                  View GO Annotation Summary
+                </button>
                 <span className="analyze-desc">View all GO terms used to describe genes in list</span>
               </td>
             </tr>
@@ -393,10 +390,9 @@ function PhenotypeSearchPage() {
                 <span className="analyze-desc">Download data for the entire gene list in a tab-delimited file</span>
               </td>
               <td colSpan="2">
-                <form action="/batch-download" method="POST" className="analyze-form">
-                  {renderGeneInputs('ORFs')}
-                  <button type="submit" className="analyze-link-btn">Batch Download</button>
-                </form>
+                <button type="button" className="analyze-link-btn" onClick={() => openToolWithGenes('/batch-download')}>
+                  Batch Download
+                </button>
                 <span className="analyze-desc">Download selected information for entire gene list. Available information types include Sequence, Coordinates, Chromosomal Feature information, GO annotations, Phenotypes, and Ortholog or Best Hit.</span>
               </td>
             </tr>

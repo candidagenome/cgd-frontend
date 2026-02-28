@@ -63,6 +63,26 @@ function GoSlimMapperSearchPage() {
     loadConfig();
   }, []);
 
+  // Check for gene list passed from other pages (e.g., phenotype search)
+  useEffect(() => {
+    const passedGenes = sessionStorage.getItem('phenotypeSearchGeneList');
+    if (passedGenes) {
+      try {
+        const geneList = JSON.parse(passedGenes);
+        if (Array.isArray(geneList) && geneList.length > 0) {
+          setFormData((prev) => ({
+            ...prev,
+            genes: geneList.join('\n'),
+          }));
+        }
+        // Clear after reading so it doesn't persist
+        sessionStorage.removeItem('phenotypeSearchGeneList');
+      } catch (e) {
+        console.error('Failed to parse passed gene list:', e);
+      }
+    }
+  }, []);
+
   // Load terms when set/aspect changes
   useEffect(() => {
     const loadTerms = async () => {
