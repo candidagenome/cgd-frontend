@@ -7,12 +7,12 @@
 .organism-selector {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 12px;
+  gap: 8px;
+  padding: 6px 10px;
   background-color: #e8f5e9;
   border: 1px solid #c8e6c9;
-  border-radius: 6px;
-  margin-bottom: 12px;
+  border-radius: 4px;
+  margin-bottom: 8px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -113,25 +113,25 @@
 
 /* Organism sections */
 .organism-section {
-  margin-bottom: 15px;
-  padding: 12px 15px;
+  margin-bottom: 10px;
+  padding: 8px 12px;
   background-color: #f9f9f9;
-  border-radius: 6px;
+  border-radius: 4px;
   border: 1px solid #e0e0e0;
 }
 
 .organism-name {
   color: #1976d2;
-  margin: 0 0 3px 0;
-  padding-bottom: 6px;
+  margin: 0 0 2px 0;
+  padding-bottom: 4px;
   border-bottom: 2px solid #1976d2;
-  font-size: 1.1em;
+  font-size: 1em;
 }
 
 .locus-display {
   color: #666;
   font-size: 0.85em;
-  margin: 0 0 10px 0;
+  margin: 0 0 6px 0;
 }
 
 /* Info table (key-value pairs) */
@@ -1219,50 +1219,50 @@ a:hover {
 .go-annotation-types {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 8px;
 }
 
 .annotation-type-section {
   border: 1px solid #e0e0e0;
-  border-radius: 6px;
+  border-radius: 4px;
   overflow: hidden;
 }
 
 .annotation-type-header {
   margin: 0;
-  padding: 10px 15px;
+  padding: 6px 10px;
   background-color: #e3f2fd;
   color: #1565c0;
-  font-size: 1.05em;
+  font-size: 0.95em;
   font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 /* GO intro section */
 .go-intro {
   background-color: #fafafa;
   border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  padding: 10px 15px;
-  margin-bottom: 12px;
+  border-radius: 4px;
+  padding: 6px 10px;
+  margin-bottom: 8px;
 }
 
 .go-intro p {
-  margin: 0 0 6px 0;
-  font-size: 0.9em;
+  margin: 0 0 4px 0;
+  font-size: 0.85em;
 }
 
 .go-intro ul {
   margin: 0;
-  padding-left: 20px;
+  padding-left: 18px;
 }
 
 .go-intro li {
-  margin-bottom: 4px;
-  line-height: 1.4;
-  font-size: 0.9em;
+  margin-bottom: 2px;
+  line-height: 1.3;
+  font-size: 0.85em;
 }
 
 .go-intro a {
@@ -1276,23 +1276,23 @@ a:hover {
 
 /* Last reviewed date */
 .last-reviewed {
-  padding: 6px 15px;
+  padding: 4px 10px;
   margin: 0;
   font-style: italic;
   color: #666;
   background-color: #f9f9f9;
-  font-size: 0.9em;
+  font-size: 0.85em;
 }
 
 /* Section note */
 .section-note {
-  padding: 8px 15px;
+  padding: 5px 10px;
   margin: 0;
-  font-size: 0.85em;
+  font-size: 0.8em;
   color: #555;
   background-color: #fff;
   border-bottom: 1px solid #e0e0e0;
-  line-height: 1.4;
+  line-height: 1.3;
 }
 
 .go-aspect-section {
@@ -1301,15 +1301,15 @@ a:hover {
 
 .aspect-subheader {
   margin: 0;
-  padding: 8px 15px;
+  padding: 5px 10px;
   background-color: #f5f5f5;
   color: #333;
-  font-size: 0.9em;
+  font-size: 0.85em;
   font-weight: 500;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   transition: background-color 0.2s;
 }
 
@@ -1328,20 +1328,20 @@ a:hover {
 
 .go-grid-wrapper .ag-header {
   background-color: #f9f9f9;
-  border-bottom: 2px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .go-grid-wrapper .ag-header-cell {
-  padding: 8px 10px;
+  padding: 5px 8px;
   font-weight: 500;
   color: #333;
-  font-size: 0.9em;
+  font-size: 0.85em;
 }
 
 .go-grid-wrapper .ag-cell {
-  padding: 8px 10px;
-  font-size: 0.9em;
-  line-height: 1.4;
+  padding: 5px 8px;
+  font-size: 0.85em;
+  line-height: 1.3;
 }
 
 .go-grid-wrapper .ag-row {
@@ -1356,17 +1356,22 @@ a:hover {
   background-color: #fafafa;
 }
 
+.go-grid-wrapper .ag-paging-panel {
+  padding: 4px 8px;
+  font-size: 0.85em;
+}
+
 /* GO annotation cell styles for AG Grid */
 .go-annotation-cell {
-  line-height: 1.4;
+  line-height: 1.3;
 }
 
 .go-reference-cell {
-  line-height: 1.4;
+  line-height: 1.3;
 }
 
 .go-evidence-cell {
-  line-height: 1.4;
+  line-height: 1.3;
 }
 
 .go-table {
@@ -1408,27 +1413,27 @@ a:hover {
 
 .evidence-description {
   color: #666;
-  font-size: 0.9em;
+  font-size: 0.85em;
 }
 
 .evidence-with {
   color: #666;
-  font-size: 0.85em;
-  margin-top: 3px;
+  font-size: 0.8em;
+  margin-top: 2px;
   font-style: italic;
 }
 
 .assigned-date {
   color: #888;
-  font-size: 0.8em;
+  font-size: 0.75em;
   font-style: italic;
-  margin-top: 5px;
+  margin-top: 2px;
 }
 
 /* GO Reference Items */
 .go-reference-item {
-  margin-bottom: 8px;
-  line-height: 1.4;
+  margin-bottom: 4px;
+  line-height: 1.3;
 }
 
 .go-reference-item:last-child {

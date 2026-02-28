@@ -129,10 +129,11 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
   const columnDefs = useMemo(() => [
     {
       headerName: 'Annotation',
-      field: 'term',
+      field: 'term.display_name',
       flex: 2,
       minWidth: 200,
       autoHeight: true,
+      valueGetter: (params) => params.data.term?.display_name || '',
       cellRenderer: (params) => {
         const ann = params.data;
         return (
@@ -156,6 +157,8 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
       flex: 2,
       minWidth: 200,
       autoHeight: true,
+      sortable: false,
+      filter: false,
       cellRenderer: (params) => {
         const ann = params.data;
         return (
@@ -171,10 +174,11 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
     },
     {
       headerName: 'Evidence',
-      field: 'evidence',
+      field: 'evidence.code',
       flex: 2,
       minWidth: 180,
       autoHeight: true,
+      valueGetter: (params) => params.data.evidence?.code || '',
       cellRenderer: (params) => {
         const ann = params.data;
         return (
@@ -209,6 +213,7 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
   // Default column properties
   const defaultColDef = useMemo(() => ({
     sortable: true,
+    filter: true,
     resizable: true,
     wrapText: true,
   }), []);
@@ -243,7 +248,9 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
               columnDefs={columnDefs}
               defaultColDef={defaultColDef}
               domLayout="autoHeight"
-              suppressPaginationPanel={true}
+              pagination={true}
+              paginationPageSize={10}
+              paginationPageSizeSelector={[10, 25, 50]}
               onGridReady={onGridReady}
               suppressCellFocus={true}
             />
