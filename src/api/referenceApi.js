@@ -62,6 +62,14 @@ export const referenceApi = {
     const response = await api.get('/api/reference/datasets');
     return response.data;
   },
+
+  // Get disease-related papers
+  getDiseaseRelatedPapers: async (topic = null, page = 1, pageSize = 50) => {
+    const params = { page, page_size: pageSize };
+    if (topic) params.topic = topic;
+    const response = await api.get('/api/reference/disease-related', { params });
+    return response.data;
+  },
 };
 
 export default referenceApi;
