@@ -58,10 +58,17 @@ function PhenotypeSearchPage() {
     // Update form state (only query is shown in simplified form)
     setQuery(params.query);
 
-    // Perform search if any parameter is present
+    // Perform search if any parameter is present, otherwise reset to show form
     const hasParams = Object.values(params).some((v) => v);
     if (hasParams) {
       performSearch(params);
+    } else {
+      // Reset state to show search form
+      setData(null);
+      setSummaryData(null);
+      setHasSearched(false);
+      setShowSummary(false);
+      setError(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
