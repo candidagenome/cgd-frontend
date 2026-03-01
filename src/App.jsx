@@ -154,6 +154,7 @@ function App() {
                   <Link to="/sitemap">Site Map</Link>
                   <Link to="/how-to-cite">How to Cite</Link>
                   <Link to="/help">Help</Link>
+                  <a href="http://publicwiki.candidagenome.org" target="_blank" rel="noopener noreferrer">CGD Public Wiki</a>
                 </nav>
 
                 <div className="header-icons">
