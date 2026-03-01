@@ -464,7 +464,7 @@ const TextSearchResultsPage = () => {
         )}
 
         <div className="back-to-search">
-          <Link to="/search">Back to Search Options</Link>
+          <Link to="/search/text">Back to Text Search</Link>
         </div>
       </div>
     </div>

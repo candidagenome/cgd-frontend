@@ -15,7 +15,7 @@ const HeaderNav = () => {
       submenu: [
         { label: 'Advanced Feature Search', to: '/feature-search' },
         { label: 'Literature Search', to: '/literature-topic-search' },
-        { label: 'Text Search', to: '/search' },
+        { label: 'Text Search', to: '/search/text' },
         { label: 'Phenotype Search', to: '/phenotype/search' },
         { label: 'Colleague Search', to: '/colleague' },
         { label: 'External Resources', to: '/external-resources' }
