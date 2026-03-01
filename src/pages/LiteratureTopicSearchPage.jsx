@@ -273,6 +273,24 @@ function LiteratureTopicSearchPage() {
     wrapText: true,
   }), []);
 
+  // Transform data into grid rows
+  const gridData = useMemo(() => {
+    if (!data || !data.results) return [];
+
+    // Flatten results: each reference becomes a row with its associated genes
+    const rows = [];
+    for (const topicResult of data.results) {
+      for (const ref of topicResult.references) {
+        rows.push({
+          ...ref,
+          genes: topicResult.genes || [],
+          topic: topicResult.topic,
+        });
+      }
+    }
+    return rows;
+  }, [data]);
+
   // Grid ready callback
   const onGridReady = useCallback((params) => {
     params.api.sizeColumnsToFit();
