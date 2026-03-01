@@ -746,6 +746,12 @@ function PhenotypeSearchPage() {
       </header>
 
       <nav className="page-nav">
+        {hasSearched && (
+          <>
+            <Link to="/phenotype/search">New Search</Link>
+            {' | '}
+          </>
+        )}
         <Link to="/phenotype/terms">Browse Observable Terms</Link>
         {' | '}
         <Link to="/help/phenotype">Help</Link>
