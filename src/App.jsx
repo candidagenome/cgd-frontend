@@ -67,6 +67,7 @@ import GoTermFinderResultsPage from './pages/GoTermFinderResultsPage';
 import GoSlimMapperSearchPage from './pages/GoSlimMapperSearchPage';
 import GoSlimMapperResultsPage from './pages/GoSlimMapperResultsPage';
 import GoAnnotationSummaryPage from './pages/GoAnnotationSummaryPage';
+import LiteratureTopicSearchPage from './pages/LiteratureTopicSearchPage';
 import ToolsPage from './pages/ToolsPage';
 import ApiDocPage from './pages/ApiDocPage';
 
@@ -224,6 +225,7 @@ function App() {
           <Route path="/nomenclature" element={<NomenclaturePage />} />
           <Route path="/download" element={<DownloadPage />} />
           <Route path="/literature" element={<LiteraturePage />} />
+          <Route path="/literature-topic-search" element={<LiteratureTopicSearchPage />} />
           <Route path="/topic-biblios" element={<TopicBibliosPage />} />
           <Route path="/strains" element={<StrainsPage />} />
           <Route path="/contact" element={<ContactPage />} />

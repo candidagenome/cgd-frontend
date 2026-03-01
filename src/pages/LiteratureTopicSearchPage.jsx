@@ -1,0 +1,537 @@
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useSearchParams, Link } from 'react-router-dom';
+import { AgGridReact } from 'ag-grid-react';
+import literatureTopicApi from '../api/literatureTopicApi';
+import { renderCitationItem } from '../utils/formatCitation.jsx';
+import './LiteratureTopicSearchPage.css';
+
+// Abbreviate organism name
+const getOrganismAbbrev = (organismName) => {
+  if (!organismName) return '';
+  const parts = organismName.split(' ');
+  if (parts.length >= 2) {
+    return `${parts[0].charAt(0)}. ${parts[1]}`;
+  }
+  return organismName;
+};
+
+// Format locus display name
+const formatLocusName = (gene) => {
+  if (gene.gene_name && gene.gene_name !== gene.feature_name) {
+    return `${gene.gene_name}/${gene.feature_name}`;
+  }
+  return gene.feature_name;
+};
+
+// Recursive component to render topic tree
+function TopicTreeNode({ node, selectedTopics, onToggle, level = 0 }) {
+  const [expanded, setExpanded] = useState(level === 0); // Expand first level by default
+  const hasChildren = node.children && node.children.length > 0;
+  const isSelected = selectedTopics.has(node.cv_term_no);
+
+  return (
+    <div className="topic-tree-node" style={{ marginLeft: level * 20 }}>
+      <div className="topic-tree-item">
+        {hasChildren && (
+          <button
+            className="topic-tree-toggle"
+            onClick={() => setExpanded(!expanded)}
+            type="button"
+          >
+            {expanded ? '−' : '+'}
+          </button>
+        )}
+        {!hasChildren && <span className="topic-tree-spacer" />}
+        <label className="topic-tree-label">
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={() => onToggle(node.cv_term_no, node.term)}
+          />
+          <span className="topic-term">{node.term}</span>
+          {node.count > 0 && <span className="topic-count">({node.count})</span>}
+        </label>
+      </div>
+      {hasChildren && expanded && (
+        <div className="topic-tree-children">
+          {node.children.map((child) => (
+            <TopicTreeNode
+              key={child.cv_term_no}
+              node={child}
+              selectedTopics={selectedTopics}
+              onToggle={onToggle}
+              level={level + 1}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function LiteratureTopicSearchPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Topic tree state
+  const [topicTree, setTopicTree] = useState([]);
+  const [topicTreeLoading, setTopicTreeLoading] = useState(true);
+  const [topicTreeError, setTopicTreeError] = useState(null);
+  const [showTopicSelector, setShowTopicSelector] = useState(false);
+
+  // Selected topics: Map of cv_term_no -> term name
+  const [selectedTopics, setSelectedTopics] = useState(new Map());
+
+  // Results state
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [hasSearched, setHasSearched] = useState(false);
+
+  // Load topic tree on mount
+  useEffect(() => {
+    const loadTopicTree = async () => {
+      try {
+        setTopicTreeLoading(true);
+        const response = await literatureTopicApi.getTopicTree();
+        setTopicTree(response.tree || []);
+      } catch (err) {
+        setTopicTreeError('Failed to load topic tree');
+        console.error(err);
+      } finally {
+        setTopicTreeLoading(false);
+      }
+    };
+    loadTopicTree();
+  }, []);
+
+  // Handle URL params on load
+  useEffect(() => {
+    const topicsParam = searchParams.get('topics');
+    if (topicsParam && topicTree.length > 0) {
+      // Parse topic IDs from URL
+      const topicIds = topicsParam.split(',').map(Number).filter(Boolean);
+      if (topicIds.length > 0) {
+        // Build a map of cv_term_no -> term name from the tree
+        const findTopicNames = (nodes, map) => {
+          for (const node of nodes) {
+            map.set(node.cv_term_no, node.term);
+            if (node.children && node.children.length > 0) {
+              findTopicNames(node.children, map);
+            }
+          }
+        };
+        const allTopics = new Map();
+        findTopicNames(topicTree, allTopics);
+
+        // Set selected topics
+        const newSelected = new Map();
+        for (const id of topicIds) {
+          if (allTopics.has(id)) {
+            newSelected.set(id, allTopics.get(id));
+          }
+        }
+        setSelectedTopics(newSelected);
+
+        // Perform search
+        if (newSelected.size > 0) {
+          performSearch([...newSelected.keys()]);
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [topicTree]);
+
+  const toggleTopic = useCallback((cvTermNo, termName) => {
+    setSelectedTopics((prev) => {
+      const newMap = new Map(prev);
+      if (newMap.has(cvTermNo)) {
+        newMap.delete(cvTermNo);
+      } else {
+        newMap.set(cvTermNo, termName);
+      }
+      return newMap;
+    });
+  }, []);
+
+  const removeTopic = useCallback((cvTermNo) => {
+    setSelectedTopics((prev) => {
+      const newMap = new Map(prev);
+      newMap.delete(cvTermNo);
+      return newMap;
+    });
+  }, []);
+
+  const clearAllTopics = useCallback(() => {
+    setSelectedTopics(new Map());
+  }, []);
+
+  const performSearch = async (topicIds) => {
+    if (!topicIds || topicIds.length === 0) {
+      setError('Please select at least one topic');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    setHasSearched(true);
+
+    try {
+      const response = await literatureTopicApi.searchByTopics(topicIds);
+      setData(response);
+
+      // Update URL
+      setSearchParams({ topics: topicIds.join(',') });
+    } catch (err) {
+      let errorMsg = 'Failed to search literature topics';
+      const detail = err.response?.data?.detail;
+      if (typeof detail === 'string') {
+        errorMsg = detail;
+      } else if (err.message) {
+        errorMsg = err.message;
+      }
+      setError(errorMsg);
+      setData(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    performSearch([...selectedTopics.keys()]);
+  };
+
+  // Build flat data for AG Grid: one row per topic/reference/gene combination
+  const gridData = useMemo(() => {
+    if (!data || !data.results) return [];
+
+    const rows = [];
+    for (const topicResult of data.results) {
+      for (const ref of topicResult.references) {
+        // Get genes associated with this topic
+        const genes = topicResult.genes || [];
+        rows.push({
+          topic: topicResult.topic,
+          reference: ref,
+          genes: genes,
+        });
+      }
+    }
+    return rows;
+  }, [data]);
+
+  // AG Grid column definitions
+  const columnDefs = useMemo(() => [
+    {
+      headerName: 'Topic',
+      field: 'topic',
+      flex: 1,
+      minWidth: 150,
+    },
+    {
+      headerName: 'Reference',
+      field: 'reference',
+      flex: 2,
+      minWidth: 300,
+      autoHeight: true,
+      cellRenderer: (params) => {
+        const ref = params.data.reference;
+        if (!ref) return '-';
+        return (
+          <div className="reference-cell">
+            {renderCitationItem(ref, { itemClassName: 'reference-item' })}
+          </div>
+        );
+      },
+    },
+    {
+      headerName: 'Associated Genes',
+      field: 'genes',
+      flex: 2,
+      minWidth: 200,
+      autoHeight: true,
+      cellRenderer: (params) => {
+        const genes = params.data.genes || [];
+        if (genes.length === 0) return <span className="muted">-</span>;
+
+        // Show first 10 genes, with "and N more" if there are more
+        const displayGenes = genes.slice(0, 10);
+        const remaining = genes.length - 10;
+
+        return (
+          <div className="genes-cell">
+            {displayGenes.map((gene, idx) => (
+              <span key={gene.feature_no}>
+                {idx > 0 && ', '}
+                <Link to={`/locus/${gene.feature_name}`} className="gene-link">
+                  {formatLocusName(gene)}
+                </Link>
+                {gene.organism && (
+                  <span className="gene-organism"> ({getOrganismAbbrev(gene.organism)})</span>
+                )}
+              </span>
+            ))}
+            {remaining > 0 && (
+              <span className="more-genes"> and {remaining} more</span>
+            )}
+          </div>
+        );
+      },
+    },
+  ], []);
+
+  // Default column properties
+  const defaultColDef = useMemo(() => ({
+    sortable: true,
+    filter: true,
+    resizable: true,
+    wrapText: true,
+  }), []);
+
+  // Grid ready callback
+  const onGridReady = useCallback((params) => {
+    params.api.sizeColumnsToFit();
+  }, []);
+
+  const handleDownload = () => {
+    if (!data || !data.results || data.results.length === 0) return;
+
+    // CSV headers
+    const headers = ['Topic', 'Reference', 'PubMed ID', 'Year', 'Genes'];
+
+    // Convert data to CSV rows
+    const rows = [];
+    for (const topicResult of data.results) {
+      for (const ref of topicResult.references) {
+        const geneList = (topicResult.genes || [])
+          .map(g => formatLocusName(g))
+          .join('; ');
+
+        rows.push([
+          topicResult.topic,
+          ref.citation || '',
+          ref.pubmed || '',
+          ref.year || '',
+          geneList,
+        ]);
+      }
+    }
+
+    // Escape CSV values
+    const escapeCSV = (val) => {
+      const str = String(val || '');
+      if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+        return `"${str.replace(/"/g, '""')}"`;
+      }
+      return str;
+    };
+
+    // Build CSV content
+    const csvContent = [
+      headers.map(escapeCSV).join(','),
+      ...rows.map(row => row.map(escapeCSV).join(','))
+    ].join('\n');
+
+    // Trigger download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'literature_topic_search_results.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const renderResultsSummary = () => {
+    if (!data) return null;
+
+    return (
+      <div className="results-summary">
+        <div className="results-summary-row">
+          <div className="results-summary-left">
+            <div className="results-count">
+              Found <strong>{data.total_references}</strong> reference{data.total_references !== 1 ? 's' : ''}{' '}
+              and <strong>{data.total_genes}</strong> associated gene{data.total_genes !== 1 ? 's' : ''}
+            </div>
+            <div className="query-summary">
+              Selected topics: {data.query.topic_names.join(', ')}
+            </div>
+          </div>
+          {gridData.length > 0 && (
+            <button type="button" className="btn-download" onClick={handleDownload}>
+              Download CSV
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  const renderResultsTable = () => {
+    if (!data || gridData.length === 0) {
+      return (
+        <div className="no-results">
+          <p>No references found for the selected topics.</p>
+          <p>Try selecting different topics from the topic tree.</p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="results-grid-wrapper ag-theme-alpine">
+        <AgGridReact
+          rowData={gridData}
+          columnDefs={columnDefs}
+          defaultColDef={defaultColDef}
+          domLayout="autoHeight"
+          pagination={true}
+          paginationPageSize={10}
+          paginationPageSizeSelector={[10, 25, 50, 100]}
+          onGridReady={onGridReady}
+          suppressCellFocus={true}
+        />
+      </div>
+    );
+  };
+
+  return (
+    <div className="literature-topic-search-page">
+      <header className="page-header">
+        <h1>Literature Topic Search</h1>
+        <p className="subtitle">Search references by literature curation topics</p>
+      </header>
+
+      <nav className="page-nav">
+        <Link to="/literature">Literature Guide</Link>
+        {' | '}
+        <Link to="/help/literature-topics">Help</Link>
+      </nav>
+
+      <div className="divider" />
+
+      {/* Topic Selection Form */}
+      <form onSubmit={handleSubmit} className="topic-search-form">
+        <div className="form-section">
+          <h3>Select Topics</h3>
+          <p className="section-help">
+            Select one or more literature topics to search for associated references and genes.
+          </p>
+
+          {/* Selected Topics Chips */}
+          {selectedTopics.size > 0 && (
+            <div className="selected-topics">
+              <div className="selected-topics-header">
+                <span>Selected Topics ({selectedTopics.size}):</span>
+                <button
+                  type="button"
+                  className="clear-all-btn"
+                  onClick={clearAllTopics}
+                >
+                  Clear All
+                </button>
+              </div>
+              <div className="selected-topics-chips">
+                {[...selectedTopics.entries()].map(([cvTermNo, termName]) => (
+                  <span key={cvTermNo} className="topic-chip">
+                    {termName}
+                    <button
+                      type="button"
+                      className="chip-remove"
+                      onClick={() => removeTopic(cvTermNo)}
+                      aria-label={`Remove ${termName}`}
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Topic Selector Button */}
+          <button
+            type="button"
+            className="toggle-selector-btn"
+            onClick={() => setShowTopicSelector(!showTopicSelector)}
+          >
+            {showTopicSelector ? 'Hide Topic Tree' : 'Show Topic Tree'}
+          </button>
+
+          {/* Topic Tree */}
+          {showTopicSelector && (
+            <div className="topic-selector">
+              {topicTreeLoading && (
+                <div className="loading-inline">Loading topics...</div>
+              )}
+              {topicTreeError && (
+                <div className="error-inline">{topicTreeError}</div>
+              )}
+              {!topicTreeLoading && !topicTreeError && topicTree.length > 0 && (
+                <div className="topic-tree">
+                  {topicTree.map((node) => (
+                    <TopicTreeNode
+                      key={node.cv_term_no}
+                      node={node}
+                      selectedTopics={new Set(selectedTopics.keys())}
+                      onToggle={toggleTopic}
+                    />
+                  ))}
+                </div>
+              )}
+              {!topicTreeLoading && !topicTreeError && topicTree.length === 0 && (
+                <div className="no-topics">No literature topics found.</div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Submit Button */}
+        <div className="submit-section">
+          <button
+            type="submit"
+            className="submit-btn"
+            disabled={selectedTopics.size === 0 || loading}
+          >
+            {loading ? (
+              <>
+                <span className="loading-spinner"></span>
+                Searching...
+              </>
+            ) : (
+              'Search'
+            )}
+          </button>
+        </div>
+      </form>
+
+      {/* Results */}
+      {error && (
+        <div className="error-section">
+          <div className="error-icon">&#9888;</div>
+          <p className="error-message">{error}</p>
+        </div>
+      )}
+
+      {!loading && !error && hasSearched && (
+        <>
+          {renderResultsSummary()}
+          {renderResultsTable()}
+        </>
+      )}
+
+      <div className="divider" />
+
+      <div className="page-footer">
+        <p>
+          <strong>Note:</strong> Literature topics are assigned by CGD curators to indicate
+          the subject matter of each reference. Use this search to find papers and genes
+          associated with specific research topics.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export default LiteratureTopicSearchPage;
