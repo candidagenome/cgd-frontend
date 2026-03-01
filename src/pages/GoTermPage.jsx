@@ -65,12 +65,13 @@ function GoTermPage() {
   }, [goid]);
 
   // AG Grid column definitions for gene table
+  // Locus=15%, Species=15%, Reference(s)=60%, Evidence=10%
   const geneColumnDefs = useMemo(() => [
     {
       headerName: 'Locus',
       field: 'locus_name',
-      flex: 1,
-      minWidth: 150,
+      flex: 1.5,
+      minWidth: 120,
       valueGetter: (params) => formatLocusName(params.data),
       cellRenderer: (params) => (
         <Link to={`/locus/${params.data.systematic_name}`} className="gene-link">
@@ -81,8 +82,8 @@ function GoTermPage() {
     {
       headerName: 'Species',
       field: 'species',
-      flex: 1,
-      minWidth: 120,
+      flex: 1.5,
+      minWidth: 100,
       valueGetter: (params) => getOrganismAbbrev(params.data.species),
       cellRenderer: (params) => (
         <em>{getOrganismAbbrev(params.data.species)}</em>
@@ -91,8 +92,8 @@ function GoTermPage() {
     {
       headerName: 'Reference(s)',
       field: 'references',
-      flex: 2,
-      minWidth: 200,
+      flex: 6,
+      minWidth: 300,
       autoHeight: true,
       valueGetter: (params) => {
         const refs = params.data.references || [];
@@ -112,7 +113,7 @@ function GoTermPage() {
       headerName: 'Evidence',
       field: 'evidence',
       flex: 1,
-      minWidth: 100,
+      minWidth: 80,
       autoHeight: true,
       valueGetter: (params) => {
         const refs = params.data.references || [];
