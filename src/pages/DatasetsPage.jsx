@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { AgGridReact } from 'ag-grid-react';
 import referenceApi from '../api/referenceApi';
 import './InfoPages.css';
 import './DatasetsPage.css';
@@ -26,38 +27,54 @@ const DatasetsPage = () => {
     fetchData();
   }, []);
 
-  // Group references by year
-  const groupByYear = (references) => {
-    const grouped = {};
-    for (const ref of references) {
-      if (!grouped[ref.year]) {
-        grouped[ref.year] = [];
-      }
-      grouped[ref.year].push(ref);
-    }
-    return grouped;
-  };
-
-  const renderCitation = (ref) => {
+  // Cell renderer for citation with links below
+  const CitationCellRenderer = (params) => {
+    const ref = params.data;
     return (
-      <li key={ref.reference_no} className="dataset-item">
-        <span dangerouslySetInnerHTML={{ __html: ref.citation }} />
-        {' '}
-        {ref.links.map((link, idx) => (
-          <span key={idx} className="citation-link">
-            {link.link_type === 'internal' ? (
-              <Link to={link.url}>[{link.name}]</Link>
-            ) : (
-              <a href={link.url} target="_blank" rel="noopener noreferrer">
-                [{link.name}]
-              </a>
-            )}
-            {' '}
-          </span>
-        ))}
-      </li>
+      <div className="citation-cell">
+        <div
+          className="citation-text"
+          dangerouslySetInnerHTML={{ __html: ref.citation }}
+        />
+        <div className="citation-links">
+          {ref.links.map((link, idx) => (
+            <span key={idx} className="citation-link">
+              {link.link_type === 'internal' ? (
+                <Link to={link.url}>{link.name}</Link>
+              ) : (
+                <a href={link.url} target="_blank" rel="noopener noreferrer">
+                  {link.name}
+                </a>
+              )}
+            </span>
+          ))}
+        </div>
+      </div>
     );
   };
+
+  const columnDefs = useMemo(() => [
+    {
+      headerName: 'Citation',
+      field: 'citation',
+      flex: 1,
+      minWidth: 400,
+      autoHeight: true,
+      wrapText: true,
+      cellRenderer: CitationCellRenderer,
+      filter: 'agTextColumnFilter',
+      filterParams: {
+        filterOptions: ['contains', 'startsWith'],
+        defaultOption: 'contains',
+      },
+    },
+  ], []);
+
+  const defaultColDef = useMemo(() => ({
+    sortable: true,
+    filter: true,
+    resizable: true,
+  }), []);
 
   if (loading) {
     return (
@@ -83,7 +100,6 @@ const DatasetsPage = () => {
     );
   }
 
-  const groupedRefs = data ? groupByYear(data.references) : {};
   const years = data?.years || [];
 
   return (
@@ -125,16 +141,20 @@ const DatasetsPage = () => {
           Arbour et al. (2009).
         </p>
 
-        {years.map((year) => (
-          <div key={year} className="year-section">
-            <h3 id={`year-${year}`}>
-              <a name={year}>{year}:</a>
-            </h3>
-            <ul className="dataset-list">
-              {groupedRefs[year]?.map((ref) => renderCitation(ref))}
-            </ul>
+        {data && data.references && (
+          <div className="datasets-grid ag-theme-alpine">
+            <AgGridReact
+              rowData={data.references}
+              columnDefs={columnDefs}
+              defaultColDef={defaultColDef}
+              domLayout="autoHeight"
+              pagination={true}
+              paginationPageSize={10}
+              paginationPageSizeSelector={[10, 25, 50, 100]}
+              suppressCellFocus={true}
+            />
           </div>
-        ))}
+        )}
 
         {data && data.total_count === 0 && (
           <p>No datasets found.</p>
