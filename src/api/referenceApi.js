@@ -56,6 +56,12 @@ export const referenceApi = {
     const response = await api.get('/api/reference/genome-wide-analysis', { params });
     return response.data;
   },
+
+  // Get references with archived datasets
+  getReferencesWithDatasets: async () => {
+    const response = await api.get('/api/reference/datasets');
+    return response.data;
+  },
 };
 
 export default referenceApi;

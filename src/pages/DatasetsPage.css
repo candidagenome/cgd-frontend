@@ -1,0 +1,75 @@
+.datasets-page .datasets-intro {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.datasets-page .year-nav {
+  margin: 20px 0;
+  padding: 10px;
+  background: #f5f5f5;
+  border-radius: 4px;
+}
+
+.datasets-page .year-nav a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+.datasets-page .year-nav a:hover {
+  text-decoration: underline;
+}
+
+.datasets-page .datasets-note {
+  margin: 20px 0;
+  padding: 10px;
+  background: #fff8e1;
+  border-left: 3px solid #ffc107;
+}
+
+.datasets-page .note-label {
+  color: #c00;
+  font-weight: bold;
+}
+
+.datasets-page .year-section {
+  margin-bottom: 25px;
+}
+
+.datasets-page .year-section h3 {
+  margin: 20px 0 10px 0;
+  font-size: 1.1rem;
+}
+
+.datasets-page .year-section h3 a {
+  color: #333;
+  text-decoration: none;
+}
+
+.datasets-page .dataset-list {
+  list-style: disc;
+  padding-left: 25px;
+  margin: 0;
+}
+
+.datasets-page .dataset-item {
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.datasets-page .citation-link {
+  white-space: nowrap;
+}
+
+.datasets-page .citation-link a {
+  color: #0066cc;
+  text-decoration: none;
+  font-size: 0.9em;
+}
+
+.datasets-page .citation-link a:hover {
+  text-decoration: underline;
+}
+
+.datasets-page .error-message {
+  color: #c00;
+}
