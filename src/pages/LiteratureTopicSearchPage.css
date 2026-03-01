@@ -370,8 +370,8 @@
 }
 
 .results-grid-wrapper.ag-theme-alpine {
-  --ag-header-background-color: #1976d2;
-  --ag-header-foreground-color: white;
+  --ag-header-background-color: #e3f2fd;
+  --ag-header-foreground-color: #1976d2;
   --ag-row-hover-color: #e3f2fd;
 }
 
