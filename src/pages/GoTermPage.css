@@ -482,11 +482,10 @@
 }
 
 .references-cell {
-  width: 60%;
+  width: 100%;
 }
 
 .evidence-cell {
-  width: 15%;
   vertical-align: top;
   white-space: nowrap;
 }
