@@ -27,6 +27,18 @@ const DatasetsPage = () => {
     fetchData();
   }, []);
 
+  // Group references by year
+  const groupByYear = (references) => {
+    const grouped = {};
+    for (const ref of references) {
+      if (!grouped[ref.year]) {
+        grouped[ref.year] = [];
+      }
+      grouped[ref.year].push(ref);
+    }
+    return grouped;
+  };
+
   // Cell renderer for citation with links below
   const CitationCellRenderer = (params) => {
     const ref = params.data;
@@ -101,6 +113,7 @@ const DatasetsPage = () => {
   }
 
   const years = data?.years || [];
+  const groupedRefs = data ? groupByYear(data.references) : {};
 
   return (
     <div className="info-page datasets-page">
@@ -141,20 +154,23 @@ const DatasetsPage = () => {
           Arbour et al. (2009).
         </p>
 
-        {data && data.references && (
-          <div className="datasets-grid ag-theme-alpine">
-            <AgGridReact
-              rowData={data.references}
-              columnDefs={columnDefs}
-              defaultColDef={defaultColDef}
-              domLayout="autoHeight"
-              pagination={true}
-              paginationPageSize={10}
-              paginationPageSizeSelector={[10, 25, 50, 100]}
-              suppressCellFocus={true}
-            />
+        {years.map((year) => (
+          <div key={year} className="year-section" id={`year-${year}`}>
+            <h3>{year}</h3>
+            <div className="datasets-grid ag-theme-alpine">
+              <AgGridReact
+                rowData={groupedRefs[year] || []}
+                columnDefs={columnDefs}
+                defaultColDef={defaultColDef}
+                domLayout="autoHeight"
+                pagination={true}
+                paginationPageSize={10}
+                paginationPageSizeSelector={[10, 25, 50, 100]}
+                suppressCellFocus={true}
+              />
+            </div>
           </div>
-        )}
+        ))}
 
         {data && data.total_count === 0 && (
           <p>No datasets found.</p>

@@ -35,6 +35,19 @@
   color: #c00;
 }
 
+/* Year section styling */
+.datasets-page .year-section {
+  margin-bottom: 30px;
+}
+
+.datasets-page .year-section h3 {
+  margin: 0 0 10px 0;
+  padding: 8px 12px;
+  background: #e8e8e8;
+  font-size: 1.1rem;
+  color: #333;
+}
+
 /* AG Grid styling */
 .datasets-page .datasets-grid {
   margin-top: 20px;
