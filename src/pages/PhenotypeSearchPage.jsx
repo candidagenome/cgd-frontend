@@ -456,9 +456,17 @@ function PhenotypeSearchPage() {
   const renderSearchSummary = () => {
     if (!summaryData) return null;
 
-    const handleObservableClick = (obs) => {
-      // Open detailed results for this observable in a new tab
+    const handleDirectMatchClick = (obs) => {
+      // Direct match: observable contains the search term, just filter by observable
       window.open(`/phenotype/search?observable=${encodeURIComponent(obs)}`, '_blank');
+    };
+
+    const handleRelatedMatchClick = (obs) => {
+      // Related match: include original query to filter by property_value/qualifier
+      const params = new URLSearchParams();
+      params.set('observable', obs);
+      params.set('property_value', summaryData.query);
+      window.open(`/phenotype/search?${params.toString()}`, '_blank');
     };
 
     return (
@@ -478,7 +486,7 @@ function PhenotypeSearchPage() {
                   <button
                     type="button"
                     className="match-link"
-                    onClick={() => handleObservableClick(match.observable)}
+                    onClick={() => handleDirectMatchClick(match.observable)}
                   >
                     {match.observable}
                   </button>
@@ -498,7 +506,7 @@ function PhenotypeSearchPage() {
                   <button
                     type="button"
                     className="match-link"
-                    onClick={() => handleObservableClick(match.observable)}
+                    onClick={() => handleRelatedMatchClick(match.observable)}
                   >
                     {match.observable}
                   </button>
