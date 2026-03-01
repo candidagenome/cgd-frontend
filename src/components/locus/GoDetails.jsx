@@ -130,7 +130,7 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
     {
       headerName: 'Annotation',
       field: 'term.display_name',
-      flex: 2,
+      flex: 2.5,
       minWidth: 200,
       autoHeight: true,
       valueGetter: (params) => params.data.term?.display_name || '',
@@ -154,7 +154,7 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
     {
       headerName: 'Reference',
       field: 'references',
-      flex: 2,
+      flex: 3.5,
       minWidth: 200,
       autoHeight: true,
       valueGetter: (params) => {
@@ -177,7 +177,7 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
     {
       headerName: 'Evidence',
       field: 'evidence.code',
-      flex: 2,
+      flex: 2.5,
       minWidth: 180,
       autoHeight: true,
       valueGetter: (params) => params.data.evidence?.code || '',
@@ -206,7 +206,7 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
     {
       headerName: 'Assigned By',
       field: 'source',
-      flex: 1,
+      flex: 1.5,
       minWidth: 100,
       valueGetter: (params) => params.data.source || '-',
     },
