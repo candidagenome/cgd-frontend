@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
@@ -80,163 +80,165 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
   const grouped = orgData ? groupAnnotations(orgData.annotations || []) : null;
 
   // AG Grid column definitions for phenotype table
-  const columnDefs = useMemo(() => [
-    {
-      headerName: 'Experiment Type',
-      field: 'experiment_type',
-      flex: 1,
-      minWidth: 120,
-      valueGetter: (params) => params.data.experiment_type || params.data.experiment || '-',
-      cellRenderer: (params) => (
-        <div>
-          {params.data.experiment_type || params.data.experiment || '-'}
-          {params.data.experiment_comment && (
-            <div className="experiment-comment">({params.data.experiment_comment})</div>
-          )}
-        </div>
-      ),
-    },
-    {
-      headerName: 'Mutant Information',
-      field: 'mutant_type',
-      flex: 1,
-      minWidth: 140,
-      autoHeight: true,
-      valueGetter: (params) => params.data.mutant_type || '-',
-      cellRenderer: (params) => {
-        const ann = params.data;
-        if (!ann.mutant_type) return '-';
-        return (
+  const columnDefs = useMemo(
+    () => [
+      {
+        headerName: 'Experiment Type',
+        field: 'experiment_type',
+        flex: 1,
+        minWidth: 120,
+        valueGetter: (params) => params.data.experiment_type || params.data.experiment || '-',
+        cellRenderer: (params) => (
           <div>
-            <span>Description: {ann.mutant_type}</span>
-            {ann.alleles && ann.alleles.length > 0 &&
-              ann.alleles.map((allele, aIdx) => (
-                <div key={aIdx}>
-                  Allele: {allele.property_value}
-                  {allele.property_description && <span> ({allele.property_description})</span>}
+            {params.data.experiment_type || params.data.experiment || '-'}
+            {params.data.experiment_comment && (
+              <div className="experiment-comment">({params.data.experiment_comment})</div>
+            )}
+          </div>
+        ),
+      },
+      {
+        headerName: 'Mutant Information',
+        field: 'mutant_type',
+        flex: 1,
+        minWidth: 140,
+        autoHeight: true,
+        valueGetter: (params) => params.data.mutant_type || '-',
+        cellRenderer: (params) => {
+          const ann = params.data;
+          if (!ann.mutant_type) return '-';
+          return (
+            <div>
+              <span>Description: {ann.mutant_type}</span>
+              {ann.alleles &&
+                ann.alleles.length > 0 &&
+                ann.alleles.map((allele, aIdx) => (
+                  <div key={aIdx}>
+                    Allele: {allele.property_value}
+                    {allele.property_description && <span> ({allele.property_description})</span>}
+                  </div>
+                ))}
+            </div>
+          );
+        },
+      },
+      {
+        headerName: 'Strain Background',
+        field: 'strain',
+        flex: 1,
+        minWidth: 100,
+        valueGetter: (params) => params.data.strain || '-',
+      },
+      {
+        headerName: 'Phenotype',
+        field: 'phenotype',
+        flex: 1,
+        minWidth: 120,
+        valueGetter: (params) => params.data.phenotype?.display_name || '-',
+        cellRenderer: (params) => {
+          const ann = params.data;
+          if (!ann.phenotype?.display_name) return '-';
+          return (
+            <span>
+              <Link
+                to={`/phenotype/search?observable=${encodeURIComponent(ann.phenotype.display_name)}`}
+                className="phenotype-link"
+              >
+                {ann.phenotype.display_name}
+              </Link>
+              {ann.qualifier && `: ${ann.qualifier}`}
+            </span>
+          );
+        },
+      },
+      {
+        headerName: 'Chemical',
+        field: 'chemicals',
+        flex: 0.6, // smaller
+        minWidth: 80, // smaller min width
+        autoHeight: true,
+        valueGetter: (params) => {
+          const chems = params.data.chemicals || [];
+          return chems.map((c) => c.property_value).join(', ') || '-';
+        },
+        cellRenderer: (params) => {
+          const ann = params.data;
+          if (!ann.chemicals || ann.chemicals.length === 0) return '-';
+          return (
+            <div>
+              {ann.chemicals.map((chem, cIdx) => (
+                <div key={cIdx}>
+                  {chem.property_value}
+                  {chem.property_description && <div>({chem.property_description})</div>}
                 </div>
               ))}
-          </div>
-        );
+            </div>
+          );
+        },
       },
-    },
-    {
-      headerName: 'Strain Background',
-      field: 'strain',
-      flex: 1,
-      minWidth: 100,
-      valueGetter: (params) => params.data.strain || '-',
-    },
-    {
-      headerName: 'Phenotype',
-      field: 'phenotype',
-      flex: 1,
-      minWidth: 120,
-      valueGetter: (params) => params.data.phenotype?.display_name || '-',
-      cellRenderer: (params) => {
-        const ann = params.data;
-        if (!ann.phenotype?.display_name) return '-';
-        return (
-          <span>
-            <Link
-              to={`/phenotype/search?observable=${encodeURIComponent(ann.phenotype.display_name)}`}
-              className="phenotype-link"
-            >
-              {ann.phenotype.display_name}
-            </Link>
-            {ann.qualifier && `: ${ann.qualifier}`}
-          </span>
-        );
+      {
+        headerName: 'Details',
+        field: 'details',
+        flex: 1,
+        minWidth: 100,
+        autoHeight: true,
+        valueGetter: (params) => {
+          const details = params.data.details || [];
+          return details.map((d) => `${d.property_type}: ${d.property_value}`).join(', ') || '-';
+        },
+        cellRenderer: (params) => {
+          const ann = params.data;
+          if (!ann.details || ann.details.length === 0) return '-';
+          return (
+            <div>
+              {ann.details.map((detail, dIdx) => (
+                <div key={dIdx}>
+                  {detail.property_type}: {detail.property_value}
+                  {detail.property_description && <div>({detail.property_description})</div>}
+                </div>
+              ))}
+            </div>
+          );
+        },
       },
-    },
-    {
-      headerName: 'Chemical',
-      field: 'chemicals',
-      flex: 1,
-      minWidth: 100,
-      autoHeight: true,
-      valueGetter: (params) => {
-        const chems = params.data.chemicals || [];
-        return chems.map(c => c.property_value).join(', ') || '-';
+      {
+        headerName: 'References',
+        field: 'references',
+        flex: 2.5, // larger
+        minWidth: 200, // larger min width
+        autoHeight: true,
+        valueGetter: (params) => {
+          const refs = params.data.references || (params.data.reference ? [params.data.reference] : []);
+          return refs.map((r) => r.display_name || r.pubmed_id || '').join('; ');
+        },
+        cellRenderer: (params) => {
+          const refs = params.data.references || (params.data.reference ? [params.data.reference] : []);
+          if (refs.length === 0) return '-';
+          return (
+            <div>
+              {refs.map((ref, refIdx) => (
+                <React.Fragment key={refIdx}>
+                  {renderCitationItem(ref, { itemClassName: 'phenotype-reference-item' })}
+                </React.Fragment>
+              ))}
+            </div>
+          );
+        },
       },
-      cellRenderer: (params) => {
-        const ann = params.data;
-        if (!ann.chemicals || ann.chemicals.length === 0) return '-';
-        return (
-          <div>
-            {ann.chemicals.map((chem, cIdx) => (
-              <div key={cIdx}>
-                {chem.property_value}
-                {chem.property_description && <div>({chem.property_description})</div>}
-              </div>
-            ))}
-          </div>
-        );
-      },
-    },
-    {
-      headerName: 'Details',
-      field: 'details',
-      flex: 1,
-      minWidth: 100,
-      autoHeight: true,
-      valueGetter: (params) => {
-        const details = params.data.details || [];
-        return details.map(d => `${d.property_type}: ${d.property_value}`).join(', ') || '-';
-      },
-      cellRenderer: (params) => {
-        const ann = params.data;
-        if (!ann.details || ann.details.length === 0) return '-';
-        return (
-          <div>
-            {ann.details.map((detail, dIdx) => (
-              <div key={dIdx}>
-                {detail.property_type}: {detail.property_value}
-                {detail.property_description && <div>({detail.property_description})</div>}
-              </div>
-            ))}
-          </div>
-        );
-      },
-    },
-    {
-      headerName: 'References',
-      field: 'references',
-      flex: 1.5,
-      minWidth: 180,
-      autoHeight: true,
-      valueGetter: (params) => {
-        const refs = params.data.references || (params.data.reference ? [params.data.reference] : []);
-        return refs.map(r => r.display_name || r.pubmed_id || '').join('; ');
-      },
-      cellRenderer: (params) => {
-        const refs = params.data.references || (params.data.reference ? [params.data.reference] : []);
-        if (refs.length === 0) return '-';
-        return (
-          <div>
-            {refs.map((ref, refIdx) => (
-              <React.Fragment key={refIdx}>
-                {renderCitationItem(ref, { itemClassName: 'phenotype-reference-item' })}
-              </React.Fragment>
-            ))}
-          </div>
-        );
-      },
-    },
-  ], []);
+    ],
+    []
+  );
 
   // Default column properties
-  const defaultColDef = useMemo(() => ({
-    sortable: true,
-    filter: true,
-    resizable: true,
-    wrapText: true,
-  }), []);
-
-  // Grid ready callback
-  const onGridReady = useCallback((params) => {
-    params.api.sizeColumnsToFit();
-  }, []);
+  const defaultColDef = useMemo(
+    () => ({
+      sortable: true,
+      filter: true,
+      resizable: true,
+      wrapText: true,
+    }),
+    []
+  );
 
   return (
     <div className="phenotype-details">
@@ -253,8 +255,8 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
         <div className="phenotype-intro">
           <p>
             This page lists all curated single mutant phenotypes associated with{' '}
-            <strong>{orgData.locus_display_name}</strong>. Click on a term in the Phenotype
-            column to see other genes associated with that term.
+            <strong>{orgData.locus_display_name}</strong>. Click on a term in the Phenotype column
+            to see other genes associated with that term.
           </p>
         </div>
       )}
@@ -298,7 +300,7 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
                         )}
 
                         {!isCollapsed && (
-                          <div className="phenotype-grid-wrapper ag-theme-alpine">
+                          <div className="phenotype-grid-wrapper ag-theme-alpine" style={{ width: '100%' }}>
                             <AgGridReact
                               rowData={annotations}
                               columnDefs={columnDefs}
@@ -307,7 +309,6 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
                               pagination={annotations.length > 10}
                               paginationPageSize={10}
                               paginationPageSizeSelector={[10, 25, 50]}
-                              onGridReady={onGridReady}
                               suppressCellFocus={true}
                             />
                           </div>
@@ -326,8 +327,7 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
           <div className="curation-note">
             <p>
               Curation of mutant phenotypes is an ongoing project at CGD. Please contact CGD
-              curators to let us know of additional phenotype information that should be
-              incorporated.
+              curators to let us know of additional phenotype information that should be incorporated.
             </p>
           </div>
         </div>
