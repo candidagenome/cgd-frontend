@@ -257,21 +257,27 @@ function PhenotypeSearchPage() {
         },
       },
       {
-        headerName: 'Chemical/Condition',
-        field: 'chemicals',
-        flex: 1,
-        minWidth: 120,
+        headerName: 'Details',
+        field: 'details',
+        flex: 1.5,
+        minWidth: 150,
+        autoHeight: true,
         valueGetter: (params) => {
-          const chemicals = params.data.chemicals || [];
-          const conditions = params.data.conditions || [];
-          return [...chemicals, ...conditions].join(', ') || '-';
+          const details = params.data.details || [];
+          return details.map((d) => `${d.property_type}: ${d.property_value}`).join('; ') || '-';
         },
         cellRenderer: (params) => {
-          const chemicals = params.data.chemicals || [];
-          const conditions = params.data.conditions || [];
-          const all = [...chemicals, ...conditions];
-          if (all.length === 0) return '-';
-          return <span>{all.join(', ')}</span>;
+          const details = params.data.details || [];
+          if (details.length === 0) return '-';
+          return (
+            <div className="details-cell">
+              {details.map((d, idx) => (
+                <div key={idx} className="detail-item">
+                  <span className="detail-type">{d.property_type}:</span> {d.property_value}
+                </div>
+              ))}
+            </div>
+          );
         },
       },
       {

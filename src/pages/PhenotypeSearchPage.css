@@ -336,6 +336,23 @@
   color: #666;
 }
 
+.details-cell {
+  line-height: 1.4;
+}
+
+.detail-item {
+  margin-bottom: 4px;
+}
+
+.detail-item:last-child {
+  margin-bottom: 0;
+}
+
+.detail-type {
+  font-weight: 500;
+  color: #555;
+}
+
 .reference-item {
   display: flex;
   flex-direction: column;
