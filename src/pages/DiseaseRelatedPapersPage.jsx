@@ -231,9 +231,6 @@ function DiseaseRelatedPapersPage() {
         </div>
       )}
 
-      <div className="back-link">
-        <Link to="/">Back to Home</Link>
-      </div>
     </div>
   );
 }
