@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../api/config';
 import batchDownloadApi from '../api/batchDownloadApi';
 import './BatchDownloadPage.css';
 
@@ -51,7 +52,7 @@ const ORGANISM_OPTIONS = [
 
 function BatchDownloadPage() {
   // Input method
-  const [inputMethod, setInputMethod] = useState('text'); // 'text' or 'file'
+  const [inputMethod, setInputMethod] = useState('text'); // 'text', 'file', or 'region'
 
   // Form state
   const [geneText, setGeneText] = useState('');
@@ -61,6 +62,14 @@ function BatchDownloadPage() {
   const [flankLeft, setFlankLeft] = useState('');
   const [flankRight, setFlankRight] = useState('');
   const [compress, setCompress] = useState(true);
+
+  // Chromosome region state
+  const [chromosomeData, setChromosomeData] = useState(null);
+  const [regionOrganism, setRegionOrganism] = useState('');
+  const [selectedChromosome, setSelectedChromosome] = useState('');
+  const [regionStart, setRegionStart] = useState('');
+  const [regionEnd, setRegionEnd] = useState('');
+  const [regionStrand, setRegionStrand] = useState('W');
 
   // UI state
   const [loading, setLoading] = useState(false);
@@ -107,13 +116,20 @@ function BatchDownloadPage() {
 
   // Preview metadata
   const handlePreview = async () => {
-    const genes = getGeneList();
-    if (genes.length === 0) {
+    if (selectedTypes.length === 0) {
+      setError('Please select at least one data type');
+      return;
+    }
+
+    const region = getRegionData();
+    const genes = inputMethod !== 'region' ? getGeneList() : [];
+
+    if (inputMethod !== 'region' && genes.length === 0) {
       setError('Please enter at least one gene name');
       return;
     }
-    if (selectedTypes.length === 0) {
-      setError('Please select at least one data type');
+    if (inputMethod === 'region' && !region) {
+      setError('Please specify a valid chromosome region');
       return;
     }
 
@@ -123,8 +139,9 @@ function BatchDownloadPage() {
 
     try {
       const result = await batchDownloadApi.getMetadata({
-        genes,
-        organism: selectedOrganism || undefined,
+        genes: genes.length > 0 ? genes : undefined,
+        regions: region ? [region] : undefined,
+        organism: inputMethod !== 'region' ? (selectedOrganism || undefined) : undefined,
         dataTypes: selectedTypes,
         flankLeft: flankLeft ? parseInt(flankLeft, 10) : 0,
         flankRight: flankRight ? parseInt(flankRight, 10) : 0,
@@ -147,13 +164,20 @@ function BatchDownloadPage() {
 
   // Handle download
   const handleDownload = async () => {
-    const genes = getGeneList();
-    if (genes.length === 0) {
+    if (selectedTypes.length === 0) {
+      setError('Please select at least one data type');
+      return;
+    }
+
+    const region = getRegionData();
+    const genes = inputMethod !== 'region' ? getGeneList() : [];
+
+    if (inputMethod !== 'region' && genes.length === 0) {
       setError('Please enter at least one gene name');
       return;
     }
-    if (selectedTypes.length === 0) {
-      setError('Please select at least one data type');
+    if (inputMethod === 'region' && !region) {
+      setError('Please specify a valid chromosome region');
       return;
     }
 
@@ -162,8 +186,9 @@ function BatchDownloadPage() {
 
     try {
       const response = await batchDownloadApi.download({
-        genes,
-        organism: selectedOrganism || undefined,
+        genes: genes.length > 0 ? genes : undefined,
+        regions: region ? [region] : undefined,
+        organism: inputMethod !== 'region' ? (selectedOrganism || undefined) : undefined,
         dataTypes: selectedTypes,
         flankLeft: flankLeft ? parseInt(flankLeft, 10) : 0,
         flankRight: flankRight ? parseInt(flankRight, 10) : 0,
@@ -214,8 +239,45 @@ function BatchDownloadPage() {
 
   // Check if form is valid
   const isFormValid = () => {
-    return getGeneList().length > 0 && selectedTypes.length > 0;
+    if (selectedTypes.length === 0) return false;
+
+    if (inputMethod === 'region') {
+      return (
+        selectedChromosome &&
+        regionStart &&
+        regionEnd &&
+        parseInt(regionStart, 10) > 0 &&
+        parseInt(regionEnd, 10) > 0 &&
+        parseInt(regionStart, 10) <= parseInt(regionEnd, 10)
+      );
+    }
+
+    return getGeneList().length > 0;
   };
+
+  // Get region data for API call
+  const getRegionData = () => {
+    if (inputMethod !== 'region' || !selectedChromosome) return null;
+    return {
+      chromosome: selectedChromosome,
+      start: parseInt(regionStart, 10),
+      end: parseInt(regionEnd, 10),
+      strand: regionStrand,
+    };
+  };
+
+  // Fetch chromosome data when component mounts
+  useEffect(() => {
+    const fetchChromosomes = async () => {
+      try {
+        const response = await api.get('/api/chromosome');
+        setChromosomeData(response.data);
+      } catch (err) {
+        console.error('Failed to fetch chromosomes:', err);
+      }
+    };
+    fetchChromosomes();
+  }, []);
 
   // Check for gene list passed from other pages (e.g., phenotype search)
   useEffect(() => {
@@ -233,6 +295,15 @@ function BatchDownloadPage() {
       }
     }
   }, []);
+
+  // Get chromosomes for selected region organism
+  const getChromosomesForOrganism = () => {
+    if (!chromosomeData || !regionOrganism) return [];
+    const org = chromosomeData.organisms?.find(
+      (o) => o.organism_abbrev === regionOrganism
+    );
+    return org?.chromosomes || [];
+  };
 
   // Check if flanking options should be shown
   const showFlankingOptions = selectedTypes.includes('genomic_flanking');
@@ -267,9 +338,24 @@ function BatchDownloadPage() {
               >
                 Upload File
               </button>
+              <button
+                type="button"
+                className={`input-tab ${inputMethod === 'region' ? 'active' : ''}`}
+                onClick={() => {
+                  setInputMethod('region');
+                  // Filter out data types not available for region input
+                  setSelectedTypes((prev) => {
+                    const filtered = prev.filter((t) => ['genomic', 'genomic_flanking'].includes(t));
+                    // Default to genomic if nothing selected after filtering
+                    return filtered.length > 0 ? filtered : ['genomic'];
+                  });
+                }}
+              >
+                Chromosome Region
+              </button>
             </div>
 
-            {inputMethod === 'text' ? (
+            {inputMethod === 'text' && (
               <div className="form-group">
                 <textarea
                   value={geneText}
@@ -282,7 +368,9 @@ function BatchDownloadPage() {
                   or CGDIDs (e.g., CAL0001571). One per line or comma-separated.
                 </p>
               </div>
-            ) : (
+            )}
+
+            {inputMethod === 'file' && (
               <div className="form-group">
                 <input
                   type="file"
@@ -301,54 +389,150 @@ function BatchDownloadPage() {
               </div>
             )}
 
-            {geneText && (
+            {inputMethod === 'region' && (
+              <div className="region-input-section">
+                <div className="region-row">
+                  <div className="form-group">
+                    <label htmlFor="regionOrganism">Organism/Strain:</label>
+                    <select
+                      id="regionOrganism"
+                      value={regionOrganism}
+                      onChange={(e) => {
+                        setRegionOrganism(e.target.value);
+                        setSelectedChromosome('');
+                      }}
+                    >
+                      <option value="">Select organism...</option>
+                      {chromosomeData?.organisms?.map((org) => (
+                        <option key={org.organism_abbrev} value={org.organism_abbrev}>
+                          {org.organism_name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="selectedChromosome">Chromosome:</label>
+                    <select
+                      id="selectedChromosome"
+                      value={selectedChromosome}
+                      onChange={(e) => setSelectedChromosome(e.target.value)}
+                      disabled={!regionOrganism}
+                    >
+                      <option value="">Select chromosome...</option>
+                      {getChromosomesForOrganism().map((chr) => (
+                        <option key={chr.feature_name} value={chr.feature_name}>
+                          {chr.feature_name} {chr.length ? `(${(chr.length / 1000000).toFixed(2)} Mb)` : ''}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                <div className="region-row">
+                  <div className="form-group">
+                    <label htmlFor="regionStart">Start (bp):</label>
+                    <input
+                      type="number"
+                      id="regionStart"
+                      value={regionStart}
+                      onChange={(e) => setRegionStart(e.target.value)}
+                      placeholder="1"
+                      min="1"
+                      disabled={!selectedChromosome}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="regionEnd">End (bp):</label>
+                    <input
+                      type="number"
+                      id="regionEnd"
+                      value={regionEnd}
+                      onChange={(e) => setRegionEnd(e.target.value)}
+                      placeholder="10000"
+                      min="1"
+                      disabled={!selectedChromosome}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="regionStrand">Strand:</label>
+                    <select
+                      id="regionStrand"
+                      value={regionStrand}
+                      onChange={(e) => setRegionStrand(e.target.value)}
+                      disabled={!selectedChromosome}
+                    >
+                      <option value="W">Watson (+)</option>
+                      <option value="C">Crick (-)</option>
+                    </select>
+                  </div>
+                </div>
+                <p className="help-text">
+                  Specify a chromosomal region to retrieve sequence data. Enter 1-based coordinates.
+                </p>
+              </div>
+            )}
+
+            {inputMethod !== 'region' && geneText && (
               <p className="gene-count">
                 {getGeneList().length} gene(s) entered
               </p>
             )}
 
-            {/* Organism Selection */}
-            <div className="organism-selection">
-              <label htmlFor="organism">Organism/Strain:</label>
-              <select
-                id="organism"
-                value={selectedOrganism}
-                onChange={(e) => setSelectedOrganism(e.target.value)}
-              >
-                {ORGANISM_OPTIONS.map((org) => (
-                  <option key={org.id} value={org.id}>
-                    {org.name}
-                  </option>
-                ))}
-              </select>
-              <p className="help-text">
-                Filter results to a specific organism. Leave as "All organisms" to include all matches.
-              </p>
-            </div>
+            {/* Organism Selection - only for gene-based input */}
+            {inputMethod !== 'region' && (
+              <div className="organism-selection">
+                <label htmlFor="organism">Organism/Strain:</label>
+                <select
+                  id="organism"
+                  value={selectedOrganism}
+                  onChange={(e) => setSelectedOrganism(e.target.value)}
+                >
+                  {ORGANISM_OPTIONS.map((org) => (
+                    <option key={org.id} value={org.id}>
+                      {org.name}
+                    </option>
+                  ))}
+                </select>
+                <p className="help-text">
+                  Filter results to a specific organism. Leave as "All organisms" to include all matches.
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Step 2: Data Types */}
           <div className="form-section">
             <h3>2. Select Data Type(s)</h3>
-            <p className="section-help">Select one or more data types to download.</p>
+            <p className="section-help">
+              Select one or more data types to download.
+              {inputMethod === 'region' && (
+                <span className="region-note"> (Only sequence data types are available for chromosome region input)</span>
+              )}
+            </p>
 
             <div className="data-types-grid">
-              {Object.entries(DATA_TYPE_INFO).map(([type, info]) => (
+              {Object.entries(DATA_TYPE_INFO).map(([type, info]) => {
+                // For region input, only genomic and genomic_flanking are available
+                const isDisabledForRegion = inputMethod === 'region' &&
+                  !['genomic', 'genomic_flanking'].includes(type);
+
+                return (
                 <label
                   key={type}
-                  className={`data-type-option ${selectedTypes.includes(type) ? 'selected' : ''}`}
+                  className={`data-type-option ${selectedTypes.includes(type) ? 'selected' : ''} ${isDisabledForRegion ? 'disabled' : ''}`}
                 >
                   <input
                     type="checkbox"
                     checked={selectedTypes.includes(type)}
                     onChange={() => handleTypeChange(type)}
+                    disabled={isDisabledForRegion}
                   />
                   <div className="data-type-info">
                     <span className="data-type-name">{info.name}</span>
                     <span className="data-type-desc">{info.description}</span>
                   </div>
                 </label>
-              ))}
+              );
+              })}
             </div>
           </div>
 
@@ -440,10 +624,10 @@ function BatchDownloadPage() {
             <h3>Preview</h3>
             <div className="metadata-summary">
               <p>
-                <strong>Genes requested:</strong> {metadata.total_requested}
+                <strong>{inputMethod === 'region' ? 'Regions' : 'Genes'} requested:</strong> {metadata.total_requested}
               </p>
               <p>
-                <strong>Genes found:</strong> {metadata.total_found}
+                <strong>{inputMethod === 'region' ? 'Regions' : 'Genes'} found:</strong> {metadata.total_found}
               </p>
             </div>
 

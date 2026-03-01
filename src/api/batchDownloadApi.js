@@ -18,12 +18,17 @@ const batchDownloadApi = {
   getMetadata: async (params) => {
     // Use POST for large gene lists to avoid URL length limits
     const requestBody = {
-      genes: params.genes,
       data_types: params.dataTypes,
       flank_left: params.flankLeft || 0,
       flank_right: params.flankRight || 0,
       compress: params.compress !== false,
     };
+    if (params.genes && params.genes.length > 0) {
+      requestBody.genes = params.genes;
+    }
+    if (params.regions && params.regions.length > 0) {
+      requestBody.regions = params.regions;
+    }
     if (params.organism) {
       requestBody.organism = params.organism;
     }
@@ -38,12 +43,17 @@ const batchDownloadApi = {
    */
   download: async (params) => {
     const requestBody = {
-      genes: params.genes,
       data_types: params.dataTypes,
       flank_left: params.flankLeft || 0,
       flank_right: params.flankRight || 0,
       compress: params.compress !== false,
     };
+    if (params.genes && params.genes.length > 0) {
+      requestBody.genes = params.genes;
+    }
+    if (params.regions && params.regions.length > 0) {
+      requestBody.regions = params.regions;
+    }
     if (params.organism) {
       requestBody.organism = params.organism;
     }
