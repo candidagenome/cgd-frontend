@@ -14,7 +14,7 @@ const HeaderNav = () => {
       to: '/search',
       submenu: [
         { label: 'Advanced Feature Search', to: '/feature-search' },
-        { label: 'Literature Search', to: '/literature/search' },
+        { label: 'Literature Search', to: '/literature-topic-search' },
         { label: 'Text Search', to: '/search' },
         { label: 'Phenotype Search', to: '/phenotype/search' },
         { label: 'Colleague Search', to: '/colleague' },
@@ -74,7 +74,7 @@ const HeaderNav = () => {
       label: 'Literature',
       to: '/literature',
       submenu: [
-        { label: 'Literature Search', to: '/literature/search' },
+        { label: 'Literature Search', to: '/literature-topic-search' },
         { label: 'Seminal Papers', to: '/seminal-papers' },
         { label: 'CGD Public Wiki', href: 'http://publicwiki.candidagenome.org', external: true },
         { label: 'Genome-Wide Analysis Papers', to: '/genome-wide-analysis-papers' },
@@ -101,7 +101,8 @@ const HeaderNav = () => {
         { label: 'Find Candida Labs', to: '/labs' },
         { label: 'Nomenclature Guide', to: '/nomenclature' },
         { label: 'Gene Registry', to: '/gene-registry' },
-        { label: 'CGD Public Wiki', href: 'http://publicwiki.candidagenome.org', external: true }
+        { label: 'CGD Public Wiki', href: 'http://publicwiki.candidagenome.org', external: true },
+        { label: 'Developer API', to: '/developer/api' }
       ]
     }
   ];
