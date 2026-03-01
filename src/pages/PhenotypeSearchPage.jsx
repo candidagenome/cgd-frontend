@@ -193,8 +193,8 @@ function PhenotypeSearchPage() {
     if (organism) params.set('organism', organism);
     if (searchType) params.set('type', searchType);
 
-    // Navigate to update URL and trigger search
-    navigate(`/phenotype/search?${params.toString()}`);
+    // Open results in a new tab
+    window.open(`/phenotype/search?${params.toString()}`, '_blank');
   };
 
   const handleReset = () => {
