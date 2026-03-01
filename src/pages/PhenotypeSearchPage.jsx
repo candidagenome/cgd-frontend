@@ -412,6 +412,8 @@ function PhenotypeSearchPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className="form-input"
+              size="40"
+              placeholder="Enter search term..."
             />
             <button type="submit" className="btn-submit">Submit</button>
             <button type="button" className="btn-reset" onClick={handleReset}>Reset</button>
@@ -420,7 +422,19 @@ function PhenotypeSearchPage() {
 
         <div className="browse-section">
           <span>OR: </span>
-          <Link to="/phenotype/terms" className="browse-terms-link">Browse phenotype terms</Link>
+          <button
+            type="button"
+            className="browse-terms-link"
+            onClick={() => {
+              window.open(
+                '/phenotype/terms',
+                'phenotypeTerms',
+                'width=900,height=700,scrollbars=yes,resizable=yes'
+              );
+            }}
+          >
+            Browse phenotype terms
+          </button>
         </div>
       </div>
     );
@@ -654,6 +668,7 @@ function PhenotypeSearchPage() {
     <div className="phenotype-search-page">
       <header className="page-header">
         <h1>Expanded Phenotype Search</h1>
+        <hr />
       </header>
 
       {hasSearched && (
