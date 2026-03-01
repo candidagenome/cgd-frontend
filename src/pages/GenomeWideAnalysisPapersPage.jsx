@@ -219,9 +219,6 @@ function GenomeWideAnalysisPapersPage() {
     <div className="genome-wide-papers-page">
       <header className="page-header">
         <h1>Genome-wide Analysis Papers</h1>
-        <div className="header-links">
-          <Link to="/help">Help</Link>
-        </div>
       </header>
 
       {renderTopicFilters()}

@@ -205,9 +205,6 @@ function DiseaseRelatedPapersPage() {
     <div className="genome-wide-papers-page">
       <header className="page-header">
         <h1>Disease-Related Papers</h1>
-        <div className="header-links">
-          <Link to="/help">Help</Link>
-        </div>
       </header>
 
       {renderTopicFilters()}
