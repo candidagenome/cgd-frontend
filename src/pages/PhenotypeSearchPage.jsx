@@ -753,7 +753,7 @@ function PhenotypeSearchPage() {
 
       <div className="divider" />
 
-      {renderSearchForm()}
+      {!hasSearched && renderSearchForm()}
 
       {loading && (
         <div className="loading-section">
