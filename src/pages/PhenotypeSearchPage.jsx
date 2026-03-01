@@ -27,20 +27,8 @@ function PhenotypeSearchPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  // Form state - all search parameters
+  // Form state - search query (simplified form only uses query)
   const [query, setQuery] = useState('');
-  const [observable, setObservable] = useState('');
-  const [qualifier, setQualifier] = useState('');
-  const [experimentType, setExperimentType] = useState('');
-  const [mutantType, setMutantType] = useState('');
-  const [propertyValue, setPropertyValue] = useState('');
-  const [propertyType, setPropertyType] = useState('');
-  const [pubmed, setPubmed] = useState('');
-  const [organism, setOrganism] = useState('');
-  const [searchType, setSearchType] = useState(''); // 'wildcard' for wildcard search
-
-  // Dropdown options
-  const [organisms, setOrganisms] = useState([]);
 
   // Results state
   const [data, setData] = useState(null);
@@ -51,22 +39,6 @@ function PhenotypeSearchPage() {
   // Track if we've performed a search and what type
   const [hasSearched, setHasSearched] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
-
-  // Show/hide advanced search
-  const [showAdvanced, setShowAdvanced] = useState(false);
-
-  // Load organisms on mount
-  useEffect(() => {
-    const loadOrganisms = async () => {
-      try {
-        const orgData = await phenotypeApi.getOrganisms();
-        setOrganisms(orgData || []);
-      } catch (err) {
-        console.error('Failed to load organisms:', err);
-      }
-    };
-    loadOrganisms();
-  }, []);
 
   // Parse URL parameters and perform search if present
   useEffect(() => {
@@ -83,22 +55,8 @@ function PhenotypeSearchPage() {
       type: searchParams.get('type') || '',
     };
 
-    // Update form state
+    // Update form state (only query is shown in simplified form)
     setQuery(params.query);
-    setObservable(params.observable);
-    setQualifier(params.qualifier);
-    setExperimentType(params.experiment_type);
-    setMutantType(params.mutant_type);
-    setPropertyValue(params.property_value);
-    setPropertyType(params.property_type);
-    setPubmed(params.pubmed);
-    setOrganism(params.organism);
-    setSearchType(params.type);
-
-    // Check if any advanced params are set
-    if (params.property_value || params.property_type || params.pubmed || params.organism) {
-      setShowAdvanced(true);
-    }
 
     // Perform search if any parameter is present
     const hasParams = Object.values(params).some((v) => v);
@@ -201,18 +159,9 @@ function PhenotypeSearchPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Build query params
+    // Build query params (simplified form only uses query)
     const params = new URLSearchParams();
     if (query) params.set('query', query);
-    if (observable) params.set('observable', observable);
-    if (qualifier) params.set('qualifier', qualifier);
-    if (experimentType) params.set('experiment_type', experimentType);
-    if (mutantType) params.set('mutant_type', mutantType);
-    if (propertyValue) params.set('property_value', propertyValue);
-    if (propertyType) params.set('property_type', propertyType);
-    if (pubmed) params.set('pubmed', pubmed);
-    if (organism) params.set('organism', organism);
-    if (searchType) params.set('type', searchType);
 
     // Open results in a new tab
     window.open(`/phenotype/search?${params.toString()}`, '_blank');
@@ -220,17 +169,10 @@ function PhenotypeSearchPage() {
 
   const handleReset = () => {
     setQuery('');
-    setObservable('');
-    setQualifier('');
-    setExperimentType('');
-    setMutantType('');
-    setPropertyValue('');
-    setPropertyType('');
-    setPubmed('');
-    setOrganism('');
-    setSearchType('');
     setData(null);
+    setSummaryData(null);
     setHasSearched(false);
+    setShowSummary(false);
     setError(null);
     navigate('/phenotype/search');
   };
@@ -434,179 +376,39 @@ function PhenotypeSearchPage() {
   const renderSearchForm = () => {
     return (
       <div className="search-form-container">
-        <form onSubmit={handleSubmit} className="phenotype-search-form">
-          {/* Keyword Search */}
-          <div className="form-section">
-            <h3>Keyword Search</h3>
-            <div className="form-row">
-              <label htmlFor="query">Search all fields:</label>
-              <input
-                type="text"
-                id="query"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="e.g., fluconazole, inviable, biofilm"
-                className="form-input wide"
-              />
-              <span className="help-text">
-                Search phenotypes, chemicals, conditions, experiment comments. Wildcard (*) allowed.
-              </span>
-            </div>
-          </div>
+        <div className="search-instructions">
+          <p>
+            Enter keywords associated with a phenotype (e.g. &apos;hyphal&apos;, &apos;virulence&apos;) or experimental
+            condition (e.g. &apos;Spider&apos;, &apos;mouse&apos;) to search for features with a specific phenotype.
+            To broaden your search, use one or more wildcard characters (*) to indicate the location(s) where any
+            text will be tolerated. Single words or short phrases are better search criteria than are longer phrases.
+          </p>
+          <p>
+            This search looks at the text associated with mutant phenotypes in CGD; it does not search gene names.
+            To search for mutant phenotypes for a particular gene, enter the gene or systematic name in the Search
+            box at the top of this page to go to the Locus Summary page for that gene; then click on the Phenotype tab.
+          </p>
+        </div>
 
-          {/* Phenotype Search */}
-          <div className="form-section">
-            <h3>Search by Phenotype</h3>
-            <div className="form-row">
-              <label htmlFor="observable">Observable:</label>
-              <input
-                type="text"
-                id="observable"
-                value={observable}
-                onChange={(e) => setObservable(e.target.value)}
-                placeholder="e.g., inviable, colony morphology"
-                className="form-input"
-              />
-              <Link to="/phenotype/terms" className="browse-link">
-                Browse terms
-              </Link>
-            </div>
-            <div className="form-row">
-              <label htmlFor="qualifier">Qualifier:</label>
-              <input
-                type="text"
-                id="qualifier"
-                value={qualifier}
-                onChange={(e) => setQualifier(e.target.value)}
-                placeholder="e.g., increased, decreased"
-                className="form-input"
-              />
-            </div>
-          </div>
-
-          {/* Experiment Search */}
-          <div className="form-section">
-            <h3>Search by Experiment</h3>
-            <div className="form-row">
-              <label htmlFor="experimentType">Experiment Type:</label>
-              <input
-                type="text"
-                id="experimentType"
-                value={experimentType}
-                onChange={(e) => setExperimentType(e.target.value)}
-                placeholder="e.g., classical genetics, large-scale survey"
-                className="form-input"
-              />
-            </div>
-            <div className="form-row">
-              <label htmlFor="mutantType">Mutant Type:</label>
-              <input
-                type="text"
-                id="mutantType"
-                value={mutantType}
-                onChange={(e) => setMutantType(e.target.value)}
-                placeholder="e.g., null, overexpression"
-                className="form-input"
-              />
-            </div>
-          </div>
-
-          {/* Advanced Search - Collapsible */}
-          <div className="form-section advanced-section">
-            <h3
-              className="collapsible-header"
-              onClick={() => setShowAdvanced(!showAdvanced)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => e.key === 'Enter' && setShowAdvanced(!showAdvanced)}
-            >
-              <span className={`collapse-icon ${showAdvanced ? 'expanded' : ''}`}>&#9656;</span>
-              Advanced Search Options
-            </h3>
-            {showAdvanced && (
-              <div className="advanced-fields">
-                <div className="form-row">
-                  <label htmlFor="propertyValue">Chemical/Condition:</label>
-                  <input
-                    type="text"
-                    id="propertyValue"
-                    value={propertyValue}
-                    onChange={(e) => setPropertyValue(e.target.value)}
-                    placeholder="e.g., fluconazole, virgineone, 37C"
-                    className="form-input"
-                  />
-                  <span className="help-text">Search for phenotypes associated with specific chemicals or conditions</span>
-                </div>
-                <div className="form-row">
-                  <label htmlFor="propertyType">Property Type:</label>
-                  <select
-                    id="propertyType"
-                    value={propertyType}
-                    onChange={(e) => setPropertyType(e.target.value)}
-                    className="form-select"
-                  >
-                    <option value="">Any</option>
-                    <option value="chemical">Chemical</option>
-                    <option value="condition">Condition</option>
-                    <option value="reporter">Reporter</option>
-                    <option value="allele">Allele</option>
-                    <option value="strain_background">Strain Background</option>
-                  </select>
-                </div>
-                <div className="form-row">
-                  <label htmlFor="pubmed">PubMed ID:</label>
-                  <input
-                    type="text"
-                    id="pubmed"
-                    value={pubmed}
-                    onChange={(e) => setPubmed(e.target.value)}
-                    placeholder="e.g., 12345678"
-                    className="form-input"
-                  />
-                </div>
-                <div className="form-row">
-                  <label htmlFor="organism">Organism:</label>
-                  <select
-                    id="organism"
-                    value={organism}
-                    onChange={(e) => setOrganism(e.target.value)}
-                    className="form-select"
-                  >
-                    <option value="">All organisms</option>
-                    {organisms.map((org) => (
-                      <option key={org.organism_abbrev || org.name} value={org.organism_abbrev}>
-                        {org.common_name || org.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="form-row">
-                  <label htmlFor="searchType">Search Mode:</label>
-                  <select
-                    id="searchType"
-                    value={searchType}
-                    onChange={(e) => setSearchType(e.target.value)}
-                    className="form-select"
-                  >
-                    <option value="">Exact match</option>
-                    <option value="wildcard">Wildcard search</option>
-                  </select>
-                  <span className="help-text">Wildcard mode treats * as a wildcard character</span>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Submit Buttons */}
-          <div className="form-actions">
-            <button type="submit" className="btn-primary">
-              Search
-            </button>
-            <button type="button" className="btn-secondary" onClick={handleReset}>
-              Reset
-            </button>
+        <form onSubmit={handleSubmit} className="phenotype-search-form simple-form">
+          <div className="simple-search-row">
+            <label htmlFor="query">Enter phenotype:</label>
+            <input
+              type="text"
+              id="query"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="form-input"
+            />
+            <button type="submit" className="btn-submit">Submit</button>
+            <button type="button" className="btn-reset" onClick={handleReset}>Reset</button>
           </div>
         </form>
+
+        <div className="browse-section">
+          <span>OR: </span>
+          <Link to="/phenotype/terms" className="browse-terms-link">Browse phenotype terms</Link>
+        </div>
       </div>
     );
   };
@@ -831,22 +633,13 @@ function PhenotypeSearchPage() {
     <div className="phenotype-search-page">
       <header className="page-header">
         <h1>Expanded Phenotype Search</h1>
-        <p className="subtitle">Search phenotype annotations across all genes in CGD</p>
       </header>
 
-      <nav className="page-nav">
-        {hasSearched && (
-          <>
-            <Link to="/phenotype/search">New Search</Link>
-            {' | '}
-          </>
-        )}
-        <Link to="/phenotype/terms">Browse Observable Terms</Link>
-        {' | '}
-        <Link to="/help/phenotype">Help</Link>
-      </nav>
-
-      <div className="divider" />
+      {hasSearched && (
+        <nav className="page-nav">
+          <Link to="/phenotype/search">New Search</Link>
+        </nav>
+      )}
 
       {!hasSearched && renderSearchForm()}
 
@@ -873,19 +666,6 @@ function PhenotypeSearchPage() {
           {renderAnalyzeSection()}
         </>
       )}
-
-      <div className="divider" />
-
-      <div className="page-footer">
-        <p>
-          <strong>Note:</strong> To view phenotypes for a specific gene, visit the gene&apos;s locus page and select the
-          Phenotype tab.
-        </p>
-        <p>
-          Curation of mutant phenotypes is an ongoing project at CGD. Please <Link to="/contact">contact CGD curators</Link>{' '}
-          to let us know of additional phenotype information that should be incorporated.
-        </p>
-      </div>
     </div>
   );
 }
