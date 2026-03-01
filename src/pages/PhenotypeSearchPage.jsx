@@ -269,17 +269,22 @@ function PhenotypeSearchPage() {
         cellRenderer: (params) => {
           const details = params.data.details || [];
           if (details.length === 0) return '-';
+          const linkableTypes = ['Chemical', 'Allele'];
           return (
             <div className="details-cell">
               {details.map((d, idx) => (
                 <div key={idx} className="detail-item">
                   <span className="detail-type">{d.property_type}:</span>{' '}
-                  <Link
-                    to={`/phenotype/search?property_value=${encodeURIComponent(d.property_value)}`}
-                    className="detail-value-link"
-                  >
-                    {d.property_value}
-                  </Link>
+                  {linkableTypes.includes(d.property_type) ? (
+                    <Link
+                      to={`/phenotype/search?property_value=${encodeURIComponent(d.property_value)}`}
+                      className="detail-value-link"
+                    >
+                      {d.property_value}
+                    </Link>
+                  ) : (
+                    d.property_value
+                  )}
                 </div>
               ))}
             </div>
