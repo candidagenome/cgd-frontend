@@ -445,6 +445,24 @@
   text-decoration: underline;
 }
 
+/* Results by Topic */
+.results-by-topic {
+  margin-top: 15px;
+}
+
+.topic-section {
+  margin-bottom: 30px;
+}
+
+.topic-header {
+  margin: 0 0 10px 0;
+  padding: 10px 15px;
+  background: #e8e8e8;
+  color: #333;
+  font-size: 1.1rem;
+  border-left: 4px solid #1976d2;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .literature-topic-search-page {
