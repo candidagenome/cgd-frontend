@@ -38,6 +38,7 @@ import JobPostingsPage from './pages/JobPostingsPage';
 import ExternalResourcesPage from './pages/ExternalResourcesPage';
 import NomenclaturePage from './pages/NomenclaturePage';
 import DownloadPage from './pages/DownloadPage';
+import DatasetsPage from './pages/DatasetsPage';
 import LiteraturePage from './pages/LiteraturePage';
 import TopicBibliosPage from './pages/TopicBibliosPage';
 import StrainsPage from './pages/StrainsPage';
@@ -227,6 +228,7 @@ function App() {
           <Route path="/external-resources" element={<ExternalResourcesPage />} />
           <Route path="/nomenclature" element={<NomenclaturePage />} />
           <Route path="/download" element={<DownloadPage />} />
+          <Route path="/datasets" element={<DatasetsPage />} />
           <Route path="/literature" element={<LiteraturePage />} />
           <Route path="/literature-topic-search" element={<LiteratureTopicSearchPage />} />
           <Route path="/topic-biblios" element={<TopicBibliosPage />} />
