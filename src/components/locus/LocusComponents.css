@@ -624,7 +624,7 @@
 
 /* History blocks – match Summary tab look */
 .history-block {
-  margin: 16px 0 22px;
+  margin: 10px 0 14px;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   background: #ffffff;
@@ -636,7 +636,7 @@
   background: #e8f4ff;              /* light blue */
   color: #1976d2;                   /* CGD primary blue */
   font-weight: 600;
-  padding: 10px 14px;
+  padding: 8px 14px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -651,7 +651,7 @@
 
 .history-subtitle {
   font-weight: 600;
-  padding: 10px 14px 6px;
+  padding: 6px 14px 4px;
   color: #1f2d3d;
 }
 
@@ -665,12 +665,12 @@
   color: #333;
   text-align: left;
   font-weight: 600;
-  padding: 10px 14px;
+  padding: 6px 14px;
   border-bottom: 1px solid #e0e0e0;
 }
 
 .history-table td {
-  padding: 10px 14px;
+  padding: 6px 14px;
   vertical-align: top;
   border-bottom: 1px solid #f0f0f0;
 }
@@ -717,7 +717,7 @@
 }
 
 .history-empty {
-  padding: 10px 14px 14px;
+  padding: 6px 14px 8px;
   color: #777;
 }
 
