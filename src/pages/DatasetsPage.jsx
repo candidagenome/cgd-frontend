@@ -86,6 +86,7 @@ const DatasetsPage = () => {
     sortable: true,
     filter: true,
     resizable: true,
+    floatingFilter: true,
   }), []);
 
   if (loading) {
