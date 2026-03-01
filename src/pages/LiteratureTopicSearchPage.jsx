@@ -283,7 +283,7 @@ function LiteratureTopicSearchPage() {
       for (const ref of topicResult.references) {
         rows.push({
           ...ref,
-          genes: topicResult.genes || [],
+          genes: ref.genes || [],
           topic: topicResult.topic,
         });
       }
@@ -306,7 +306,7 @@ function LiteratureTopicSearchPage() {
     const rows = [];
     for (const topicResult of data.results) {
       for (const ref of topicResult.references) {
-        const geneList = (topicResult.genes || [])
+        const geneList = (ref.genes || [])
           .map(g => formatLocusName(g))
           .join('; ');
 
