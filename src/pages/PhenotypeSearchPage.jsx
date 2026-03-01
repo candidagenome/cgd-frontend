@@ -273,7 +273,13 @@ function PhenotypeSearchPage() {
             <div className="details-cell">
               {details.map((d, idx) => (
                 <div key={idx} className="detail-item">
-                  <span className="detail-type">{d.property_type}:</span> {d.property_value}
+                  <span className="detail-type">{d.property_type}:</span>{' '}
+                  <Link
+                    to={`/phenotype/search?property_value=${encodeURIComponent(d.property_value)}`}
+                    className="detail-value-link"
+                  >
+                    {d.property_value}
+                  </Link>
                 </div>
               ))}
             </div>
@@ -422,19 +428,14 @@ function PhenotypeSearchPage() {
 
         <div className="browse-section">
           <span>OR: </span>
-          <button
-            type="button"
+          <a
+            href="/phenotype/terms"
+            target="_blank"
+            rel="noopener noreferrer"
             className="browse-terms-link"
-            onClick={() => {
-              window.open(
-                '/phenotype/terms',
-                'phenotypeTerms',
-                'width=900,height=700,scrollbars=yes,resizable=yes'
-              );
-            }}
           >
             Browse phenotype terms
-          </button>
+          </a>
         </div>
       </div>
     );
