@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { AgGridReact } from 'ag-grid-react';
 import './LocusComponents.css';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
 import { renderCitationItem } from '../../utils/formatCitation.jsx';
@@ -19,14 +20,12 @@ const formatDate = (dateStr) => {
   }
 };
 
-const REFS_PER_PAGE = 30;
-
 function References({ data, loading, error, selectedOrganism, onOrganismChange, locusName }) {
   const [collapsedYears, setCollapsedYears] = useState({});
   const [viewMode, setViewMode] = useState('summary'); // 'summary', 'list', 'grouped', 'topic'
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [localSelectedOrganism, setLocalSelectedOrganism] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [expandedGeneRows, setExpandedGeneRows] = useState(new Set()); // Track which rows have expanded gene lists
 
   // Use either the prop or local state for organism selection
   const currentOrganism = selectedOrganism || localSelectedOrganism;
@@ -34,11 +33,178 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
 
   const organismNames = data?.results ? Object.keys(data.results) : [];
 
+  // Get data for current organism (computed early for hooks)
+  const orgData = currentOrganism && data?.results ? data.results[currentOrganism] : null;
+  const refs = orgData?.references || [];
+  const displayName = orgData?.locus_display_name || locusName || 'this locus';
+
   useEffect(() => {
     if (organismNames.length > 0 && !currentOrganism) {
       setCurrentOrganism(getDefaultOrganism(organismNames));
     }
   }, [organismNames, currentOrganism, setCurrentOrganism]);
+
+  // Toggle expanded gene list for a row
+  const toggleGeneRowExpanded = useCallback((rowId) => {
+    setExpandedGeneRows(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(rowId)) {
+        newSet.delete(rowId);
+      } else {
+        newSet.add(rowId);
+      }
+      return newSet;
+    });
+  }, []);
+
+  // AG Grid column definitions for references table
+  const columnDefs = useMemo(() => [
+    {
+      headerName: 'Reference',
+      field: 'reference',
+      flex: 2,
+      minWidth: 300,
+      autoHeight: true,
+      wrapText: true,
+      sortable: true,
+      filter: true,
+      valueGetter: (params) => {
+        const ref = params.data;
+        const authors = ref.authors || '';
+        const year = ref.year || '';
+        const title = ref.title || '';
+        return `${authors} (${year}) ${title}`;
+      },
+      cellRenderer: (params) => {
+        return renderCitationItem(params.data, { itemClassName: 'ref-citation' });
+      },
+    },
+    {
+      headerName: 'Species',
+      field: 'species',
+      flex: 0.5,
+      minWidth: 100,
+      sortable: true,
+      filter: true,
+      valueGetter: (params) => {
+        return params.data.species || currentOrganism?.split(' ').slice(0, 2).join(' ') || 'C. albicans';
+      },
+    },
+    {
+      headerName: 'Other Genes Addressed',
+      field: 'other_genes',
+      flex: 1,
+      minWidth: 200,
+      autoHeight: true,
+      wrapText: true,
+      sortable: true,
+      filter: true,
+      valueGetter: (params) => {
+        const otherGenesInRef = params.data.other_genes
+          ? params.data.other_genes.filter(g => g !== displayName)
+          : [];
+        return otherGenesInRef.join(', ') || '-';
+      },
+      cellRenderer: (params) => {
+        const otherGenesInRef = params.data.other_genes
+          ? params.data.other_genes.filter(g => g !== displayName)
+          : [];
+
+        if (otherGenesInRef.length === 0) {
+          return <span className="no-other-genes">-</span>;
+        }
+
+        const rowId = params.data.pubmed_id || params.rowIndex;
+        const isExpanded = expandedGeneRows.has(rowId);
+        const genesToShow = isExpanded ? otherGenesInRef : otherGenesInRef.slice(0, 10);
+        const hasMore = otherGenesInRef.length > 10;
+
+        return (
+          <div className="other-genes-list">
+            {genesToShow.map((gene, gIdx) => (
+              <span key={gIdx}>
+                <Link to={`/locus/${gene}`}>{gene}</Link>
+                {gIdx < genesToShow.length - 1 && ', '}
+              </span>
+            ))}
+            {hasMore && !isExpanded && (
+              <span
+                className="more-genes-link"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleGeneRowExpanded(rowId);
+                }}
+                role="button"
+                tabIndex={0}
+              >
+                ... and {otherGenesInRef.length - 10} more
+              </span>
+            )}
+            {hasMore && isExpanded && (
+              <span
+                className="less-genes-link"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleGeneRowExpanded(rowId);
+                }}
+                role="button"
+                tabIndex={0}
+              >
+                {' '}[show less]
+              </span>
+            )}
+          </div>
+        );
+      },
+    },
+  ], [displayName, currentOrganism, expandedGeneRows, toggleGeneRowExpanded]);
+
+  // Default column properties
+  const defaultColDef = useMemo(() => ({
+    sortable: true,
+    filter: true,
+    resizable: true,
+  }), []);
+
+  // Grid ready callback
+  const onGridReady = useCallback((params) => {
+    params.api.sizeColumnsToFit();
+  }, []);
+
+  // Download references as TSV
+  const handleDownloadTSV = useCallback((refsToDownload) => {
+    if (!refsToDownload || refsToDownload.length === 0) return;
+
+    // Build TSV content
+    const headers = ['Authors', 'Year', 'Title', 'Journal', 'PubMed ID', 'Species', 'Other Genes'];
+    const rows = refsToDownload.map(ref => {
+      const otherGenesInRef = ref.other_genes
+        ? ref.other_genes.filter(g => g !== displayName)
+        : [];
+      const species = ref.species || currentOrganism?.split(' ').slice(0, 2).join(' ') || 'C. albicans';
+
+      return [
+        ref.authors || '',
+        ref.year || '',
+        ref.title || '',
+        ref.journal || '',
+        ref.pubmed_id || '',
+        species,
+        otherGenesInRef.join(', '),
+      ].map(field => `"${String(field).replace(/"/g, '""')}"`).join('\t');
+    });
+
+    const tsvContent = [headers.join('\t'), ...rows].join('\n');
+    const blob = new Blob([tsvContent], { type: 'text/tab-separated-values;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${displayName}_references.tsv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }, [displayName, currentOrganism]);
 
   if (loading) return <div className="loading">Loading literature...</div>;
   if (error) return <div className="error">Error: {error}</div>;
@@ -47,11 +213,6 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
   if (organismNames.length === 0) {
     return <div className="no-data">No references found</div>;
   }
-
-  // Get data for current organism
-  const orgData = currentOrganism ? data.results[currentOrganism] : null;
-  const refs = orgData?.references || [];
-  const displayName = orgData?.locus_display_name || locusName || 'this locus';
 
   // Calculate reference counts
   const curatedRefs = refs.filter(ref => ref.topics && ref.topics.length > 0 && !ref.topics.includes('Not yet curated'));
@@ -137,7 +298,6 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
         key={topic}
         className={`topic-entry ${isActive ? 'active' : ''}`}
         onClick={() => {
-          setCurrentPage(1);  // Reset to first page
           if (topic === 'Literature Curation Summary') {
             setSelectedTopic(null);
             setViewMode('summary');
@@ -181,7 +341,6 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
                 key={topic.topic_name}
                 className={`topic-entry ${selectedTopic === topic.topic_name ? 'active' : ''}`}
                 onClick={() => {
-                  setCurrentPage(1);  // Reset to first page
                   setSelectedTopic(topic.topic_name);
                   setViewMode('topic');
                 }}
@@ -309,7 +468,7 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
     );
   };
 
-  // Render references table with pagination
+  // Render references table with AgGrid
   const renderReferencesTable = (refsToShow) => {
     if (!refsToShow || refsToShow.length === 0) {
       return <p className="no-data">No references found</p>;
@@ -318,105 +477,33 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
     // Sort by year descending
     const sortedRefs = [...refsToShow].sort((a, b) => (b?.year || 0) - (a?.year || 0));
 
-    // Pagination
-    const totalPages = Math.ceil(sortedRefs.length / REFS_PER_PAGE);
-    const startIdx = (currentPage - 1) * REFS_PER_PAGE;
-    const endIdx = startIdx + REFS_PER_PAGE;
-    const paginatedRefs = sortedRefs.slice(startIdx, endIdx);
-
-    const renderPagination = () => {
-      if (totalPages <= 1) return null;
-
-      return (
-        <div className="pagination">
-          <button
-            className="pagination-btn"
-            onClick={() => setCurrentPage(1)}
-            disabled={currentPage === 1}
-          >
-            &laquo; First
-          </button>
-          <button
-            className="pagination-btn"
-            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-            disabled={currentPage === 1}
-          >
-            &lsaquo; Prev
-          </button>
-          <span className="pagination-info">
-            Page {currentPage} of {totalPages}
-          </span>
-          <button
-            className="pagination-btn"
-            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-            disabled={currentPage === totalPages}
-          >
-            Next &rsaquo;
-          </button>
-          <button
-            className="pagination-btn"
-            onClick={() => setCurrentPage(totalPages)}
-            disabled={currentPage === totalPages}
-          >
-            Last &raquo;
-          </button>
-        </div>
-      );
-    };
-
     return (
       <div className="references-table-container">
-        <p className="results-count">
-          Showing {startIdx + 1}-{Math.min(endIdx, sortedRefs.length)} of {sortedRefs.length} references
-        </p>
-        {renderPagination()}
-        <table className="data-table references-table literature-table">
-          <thead>
-            <tr>
-              <th style={{ width: '50%' }}>Reference</th>
-              <th style={{ width: '15%' }}>Species</th>
-              <th style={{ width: '35%' }}>Other Genes Addressed</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedRefs.map((ref, idx) => {
-              const otherGenesInRef = ref.other_genes
-                ? ref.other_genes.filter(g => g !== displayName)
-                : [];
-
-              return (
-                <tr key={idx} className={idx % 2 === 0 ? '' : 'alt-row'}>
-                  <td>
-                    {renderCitationItem(ref, { itemClassName: 'ref-citation' })}
-                  </td>
-                  <td className="species-cell">
-                    {ref.species || currentOrganism?.split(' ').slice(0, 2).join(' ') || 'C. albicans'}
-                  </td>
-                  <td className="other-genes-cell">
-                    {otherGenesInRef.length > 0 ? (
-                      <div className="other-genes-list">
-                        {otherGenesInRef.slice(0, 10).map((gene, gIdx) => (
-                          <span key={gIdx}>
-                            <Link to={`/locus/${gene}`}>{gene}</Link>
-                            {gIdx < Math.min(otherGenesInRef.length, 10) - 1 && ', '}
-                          </span>
-                        ))}
-                        {otherGenesInRef.length > 10 && (
-                          <span className="more-genes">
-                            ... and {otherGenesInRef.length - 10} more
-                          </span>
-                        )}
-                      </div>
-                    ) : (
-                      <span className="no-other-genes">-</span>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-        {renderPagination()}
+        <div className="references-table-header">
+          <p className="results-count">
+            {sortedRefs.length} reference{sortedRefs.length !== 1 ? 's' : ''}
+          </p>
+          <button
+            className="download-btn"
+            onClick={() => handleDownloadTSV(sortedRefs)}
+            title="Download as TSV"
+          >
+            Download TSV
+          </button>
+        </div>
+        <div className="references-grid-wrapper ag-theme-alpine">
+          <AgGridReact
+            rowData={sortedRefs}
+            columnDefs={columnDefs}
+            defaultColDef={defaultColDef}
+            domLayout="autoHeight"
+            pagination={sortedRefs.length > 10}
+            paginationPageSize={10}
+            paginationPageSizeSelector={[10, 25, 50]}
+            onGridReady={onGridReady}
+            suppressCellFocus={true}
+          />
+        </div>
       </div>
     );
   };

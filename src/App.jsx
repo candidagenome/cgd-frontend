@@ -66,6 +66,7 @@ import GoTermFinderSearchPage from './pages/GoTermFinderSearchPage';
 import GoTermFinderResultsPage from './pages/GoTermFinderResultsPage';
 import GoSlimMapperSearchPage from './pages/GoSlimMapperSearchPage';
 import GoSlimMapperResultsPage from './pages/GoSlimMapperResultsPage';
+import GoAnnotationSummaryPage from './pages/GoAnnotationSummaryPage';
 import ToolsPage from './pages/ToolsPage';
 import ApiDocPage from './pages/ApiDocPage';
 
@@ -241,6 +242,7 @@ function App() {
           <Route path="/go-term-finder/results" element={<GoTermFinderResultsPage />} />
           <Route path="/go-slim-mapper" element={<GoSlimMapperSearchPage />} />
           <Route path="/go-slim-mapper/results" element={<GoSlimMapperResultsPage />} />
+          <Route path="/go-annotation-summary" element={<GoAnnotationSummaryPage />} />
           <Route path="/batch-download" element={<BatchDownloadPage />} />
           <Route path="/feature-search" element={<FeatureSearchPage />} />
           <Route path="/feature-search/results" element={<FeatureSearchResultsPage />} />

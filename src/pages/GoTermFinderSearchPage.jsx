@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import goTermFinderApi from '../api/goTermFinderApi';
 import './GoTermFinderSearchPage.css';
 
 function GoTermFinderSearchPage() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [configLoading, setConfigLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,34 +13,19 @@ function GoTermFinderSearchPage() {
   // Configuration
   const [config, setConfig] = useState(null);
 
-  // Form state - initialize from localStorage if available
-  const [formData, setFormData] = useState(() => {
-    const saved = localStorage.getItem('goTermFinderFormData');
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        // Ignore parse errors
-      }
-    }
-    return {
-      genes: '',
-      organism_no: '',
-      ontology: 'P',
-      use_custom_background: false,
-      background_genes: '',
-      evidence_codes: [],
-      annotation_types: ['manually_curated', 'high_throughput', 'computational'],
-      p_value_cutoff: 0.01,
-      correction_method: 'bh',
-      min_genes_in_term: 1,
-    };
+  // Form state - always start fresh on page load
+  const [formData, setFormData] = useState({
+    genes: '',
+    organism_no: '',
+    ontology: 'P',
+    use_custom_background: false,
+    background_genes: '',
+    evidence_codes: [],
+    annotation_types: ['manually_curated', 'high_throughput', 'computational'],
+    p_value_cutoff: 0.01,
+    correction_method: 'bh',
+    min_genes_in_term: 1,
   });
-
-  // Save form data to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem('goTermFinderFormData', JSON.stringify(formData));
-  }, [formData]);
 
   // Load config on mount
   useEffect(() => {
@@ -62,6 +48,27 @@ function GoTermFinderSearchPage() {
       }
     };
     loadConfig();
+  }, []);
+
+  // Check for gene list passed from other pages (e.g., phenotype search)
+  useEffect(() => {
+    const passedGenes = localStorage.getItem('phenotypeSearchGeneList');
+    if (passedGenes) {
+      try {
+        const geneList = JSON.parse(passedGenes);
+        if (Array.isArray(geneList) && geneList.length > 0) {
+          // Override the saved form data with passed genes
+          setFormData((prev) => ({
+            ...prev,
+            genes: geneList.join('\n'),
+          }));
+        }
+        // Clear after reading so it doesn't persist
+        localStorage.removeItem('phenotypeSearchGeneList');
+      } catch (e) {
+        console.error('Failed to parse passed gene list:', e);
+      }
+    }
   }, []);
 
   const handleInputChange = (field, value) => {
@@ -180,10 +187,24 @@ function GoTermFinderSearchPage() {
       // Run analysis
       const result = await goTermFinderApi.runAnalysis(request);
 
-      // Store results and open in new tab
-      localStorage.setItem('goTermFinderResults', JSON.stringify(result));
-      localStorage.setItem('goTermFinderRequest', JSON.stringify(request));
-      window.open('/go-term-finder/results', 'gtf_result');
+      console.log('Analysis result:', result);
+
+      // Check if analysis was successful
+      if (!result.success) {
+        throw new Error(result.error || 'Analysis failed');
+      }
+
+      // Store results and navigate to results page
+      try {
+        localStorage.setItem('goTermFinderResults', JSON.stringify(result));
+        localStorage.setItem('goTermFinderRequest', JSON.stringify(request));
+      } catch (storageErr) {
+        console.error('localStorage error:', storageErr);
+        throw new Error('Results too large to store. Try reducing the gene list or contact support.');
+      }
+
+      // Navigate to results page
+      navigate('/go-term-finder/results');
     } catch (err) {
       console.error('Analysis error:', err);
       setError(err.response?.data?.detail || err.message || 'Analysis failed');

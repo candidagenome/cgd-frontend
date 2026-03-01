@@ -16,14 +16,25 @@ const batchDownloadApi = {
    * Get metadata about what would be downloaded
    */
   getMetadata: async (params) => {
-    const queryParams = new URLSearchParams();
-    queryParams.set('genes', params.genes.join(','));
-    queryParams.set('types', params.dataTypes.join(','));
-    if (params.flankLeft) queryParams.set('flankl', params.flankLeft);
-    if (params.flankRight) queryParams.set('flankr', params.flankRight);
-    queryParams.set('compress', params.compress);
-
-    const response = await api.get(`/api/batch-download/metadata?${queryParams}`);
+    // Use POST for large gene lists to avoid URL length limits
+    const requestBody = {
+      data_types: params.dataTypes,
+      flank_left: params.flankLeft || 0,
+      flank_right: params.flankRight || 0,
+      compress: params.compress !== false,
+    };
+    if (params.genes && params.genes.length > 0) {
+      requestBody.genes = params.genes;
+    }
+    if (params.regions && params.regions.length > 0) {
+      requestBody.regions = params.regions;
+    }
+    if (params.organism) {
+      requestBody.organism = params.organism;
+    }
+    const response = await api.post('/api/batch-download/metadata', requestBody, {
+      timeout: 300000, // 5 minutes for large gene lists
+    });
     return response.data;
   },
 
@@ -31,14 +42,24 @@ const batchDownloadApi = {
    * Download batch data (returns blob URL for download)
    */
   download: async (params) => {
-    const response = await api.post('/api/batch-download', {
-      genes: params.genes,
+    const requestBody = {
       data_types: params.dataTypes,
       flank_left: params.flankLeft || 0,
       flank_right: params.flankRight || 0,
       compress: params.compress !== false,
-    }, {
+    };
+    if (params.genes && params.genes.length > 0) {
+      requestBody.genes = params.genes;
+    }
+    if (params.regions && params.regions.length > 0) {
+      requestBody.regions = params.regions;
+    }
+    if (params.organism) {
+      requestBody.organism = params.organism;
+    }
+    const response = await api.post('/api/batch-download', requestBody, {
       responseType: 'blob',
+      timeout: 600000, // 10 minutes for large downloads
     });
 
     return response;
@@ -79,6 +100,7 @@ const batchDownloadApi = {
           'Content-Type': 'multipart/form-data',
         },
         responseType: 'blob',
+        timeout: 600000, // 10 minutes for large downloads
       }
     );
 

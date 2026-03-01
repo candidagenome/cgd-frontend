@@ -1,0 +1,237 @@
+.go-annotation-summary-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.go-annotation-summary-content h1 {
+  margin: 0 0 10px 0;
+  color: #333;
+}
+
+.go-annotation-summary-content hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 10px 0 15px 0;
+}
+
+.go-annotation-summary-content .subtitle {
+  color: #555;
+  margin-bottom: 20px;
+}
+
+/* Error message */
+.go-annotation-summary-page .error-message {
+  padding: 15px;
+  background: #ffebee;
+  border-left: 4px solid #f44336;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  color: #c62828;
+}
+
+/* Loading */
+.go-annotation-summary-page .loading-section {
+  text-align: center;
+  padding: 40px;
+}
+
+.go-annotation-summary-page .loading-spinner {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e0e0e0;
+  border-top-color: #1976d2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Gene list preview */
+.genes-received h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+}
+
+.gene-list-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #f5f5f5;
+  border-radius: 4px;
+}
+
+.gene-tag {
+  background: #e3f2fd;
+  padding: 4px 10px;
+  border-radius: 3px;
+  font-size: 0.9rem;
+}
+
+.gene-tag a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.gene-tag a:hover {
+  text-decoration: underline;
+}
+
+.more-genes {
+  color: #666;
+  font-style: italic;
+  align-self: center;
+}
+
+.analyze-btn {
+  background: #1976d2;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.analyze-btn:hover {
+  background: #1565c0;
+}
+
+/* Results section */
+.results-summary {
+  padding: 15px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.results-summary p {
+  margin: 0 0 10px 0;
+}
+
+.results-summary p:last-child {
+  margin-bottom: 0;
+}
+
+.not-found-warning {
+  color: #e65100;
+}
+
+.download-buttons {
+  margin-top: 10px;
+}
+
+.download-buttons button {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.download-buttons button:hover {
+  background: #43a047;
+}
+
+/* Ontology sections */
+.ontology-section {
+  margin-bottom: 30px;
+}
+
+.ontology-section h2 {
+  color: #333;
+  margin: 0 0 15px 0;
+  padding-bottom: 5px;
+  border-bottom: 2px solid #1976d2;
+}
+
+/* Annotation table */
+.annotation-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.annotation-table th {
+  background: #1976d2;
+  color: white;
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 500;
+}
+
+.annotation-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #e0e0e0;
+  vertical-align: top;
+}
+
+.annotation-table tr.even {
+  background: white;
+}
+
+.annotation-table tr.odd {
+  background: #fafafa;
+}
+
+.annotation-table tr:hover {
+  background: #e3f2fd;
+}
+
+.annotation-table a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.annotation-table a:hover {
+  text-decoration: underline;
+}
+
+.gene-list-cell {
+  max-width: 400px;
+  line-height: 1.6;
+}
+
+.organism-name {
+  color: #666;
+  font-size: 0.85em;
+}
+
+/* No results */
+.no-results {
+  padding: 30px;
+  text-align: center;
+  background: #fff3e0;
+  border-radius: 4px;
+  color: #e65100;
+}
+
+/* No genes */
+.no-genes {
+  padding: 30px;
+  text-align: center;
+  background: #f5f5f5;
+  border-radius: 4px;
+}
+
+.no-genes p {
+  margin: 0 0 10px 0;
+  color: #666;
+}
+
+.no-genes a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.no-genes a:hover {
+  text-decoration: underline;
+}

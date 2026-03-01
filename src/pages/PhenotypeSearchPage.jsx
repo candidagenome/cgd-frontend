@@ -123,28 +123,6 @@ function PhenotypeSearchPage() {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const params = new URLSearchParams();
-    if (observable.trim()) params.set('observable', observable.trim());
-    if (qualifier.trim()) params.set('qualifier', qualifier.trim());
-    if (experimentType.trim()) params.set('experiment_type', experimentType.trim());
-    if (mutantType.trim()) params.set('mutant_type', mutantType.trim());
-
-    setSearchParams(params);
-  };
-
-  const handleReset = () => {
-    setObservable('');
-    setQualifier('');
-    setExperimentType('');
-    setMutantType('');
-    setSearchParams({});
-    setData(null);
-    setHasSearched(false);
-  };
-
   // AG Grid column definitions
   const columnDefs = useMemo(() => [
     {
@@ -162,8 +140,8 @@ function PhenotypeSearchPage() {
     {
       headerName: 'Organism',
       field: 'organism',
-      flex: 0.8,
-      minWidth: 100,
+      flex: 0.4,
+      minWidth: 80,
       valueGetter: (params) => getOrganismAbbrev(params.data.organism),
       cellRenderer: (params) => <em>{getOrganismAbbrev(params.data.organism)}</em>,
     },
@@ -219,8 +197,8 @@ function PhenotypeSearchPage() {
     {
       headerName: 'References',
       field: 'references',
-      flex: 1.5,
-      minWidth: 180,
+      flex: 2.25,
+      minWidth: 250,
       autoHeight: true,
       valueGetter: (params) => {
         const refs = params.data.references || [];
@@ -254,76 +232,6 @@ function PhenotypeSearchPage() {
   const onGridReady = useCallback((params) => {
     params.api.sizeColumnsToFit();
   }, []);
-
-  const renderSearchForm = () => {
-    return (
-      <div className="section" id="search-form">
-        <h2 className="section-header">Phenotype Search</h2>
-        <div className="section-content">
-          <form onSubmit={handleSubmit} className="search-form">
-            <div className="search-form-card">
-              <div className="search-fields">
-                <div className="form-group">
-                  <label htmlFor="observable">Observable</label>
-                  <input
-                    type="text"
-                    id="observable"
-                    value={observable}
-                    onChange={(e) => setObservable(e.target.value)}
-                    placeholder="e.g., cc"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="qualifier">Qualifier</label>
-                  <input
-                    type="text"
-                    id="qualifier"
-                    value={qualifier}
-                    onChange={(e) => setQualifier(e.target.value)}
-                    placeholder="e.g., ab"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="experiment_type">Experiment Type</label>
-                  <input
-                    type="text"
-                    id="experiment_type"
-                    value={experimentType}
-                    onChange={(e) => setExperimentType(e.target.value)}
-                    placeholder="e.g., cl"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="mutant_type">Mutant Type</label>
-                  <input
-                    type="text"
-                    id="mutant_type"
-                    value={mutantType}
-                    onChange={(e) => setMutantType(e.target.value)}
-                    placeholder="e.g., de"
-                  />
-                </div>
-              </div>
-
-              <div className="search-bottom-row">
-                <div className="browse-link">
-                  <Link to="/phenotype/terms">Browse observable terms</Link>
-                </div>
-
-                <div className="form-actions">
-                  <button type="submit" className="btn-search">Search</button>
-                  <button type="button" className="btn-reset" onClick={handleReset}>Reset</button>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    );
-  };
 
   const handleDownload = () => {
     if (!data || !data.results || data.results.length === 0) return;
@@ -434,10 +342,70 @@ function PhenotypeSearchPage() {
     );
   };
 
+  const renderAnalyzeSection = () => {
+    if (!data || !data.results || data.results.length === 0) return null;
+
+    // Get unique gene names for the gene list
+    const geneList = [...new Set(data.results.map(r => r.feature_name))];
+
+    // Helper to store gene list before navigating
+    const handleToolClick = (e) => {
+      // Store gene list in localStorage (not sessionStorage, which isn't shared across tabs)
+      localStorage.setItem('phenotypeSearchGeneList', JSON.stringify(geneList));
+      // Let the default anchor behavior handle navigation
+    };
+
+    return (
+      <div className="analyze-section">
+        <div className="analyze-header">
+          Analyze gene list: further analyze the gene list displayed above or download information for this list
+        </div>
+        <table className="analyze-table">
+          <tbody>
+            <tr>
+              <td className="analyze-label">Further Analysis:</td>
+              <td>
+                <a href="/go-term-finder" target="_blank" rel="noopener noreferrer" className="analyze-link" onClick={handleToolClick}>
+                  GO Term Finder
+                </a>
+                <span className="analyze-desc">Find common features of genes in list</span>
+              </td>
+              <td>
+                <a href="/go-slim-mapper" target="_blank" rel="noopener noreferrer" className="analyze-link" onClick={handleToolClick}>
+                  GO Slim Mapper
+                </a>
+                <span className="analyze-desc">Sort genes into broad categories</span>
+              </td>
+              <td>
+                <a href="/go-annotation-summary" target="_blank" rel="noopener noreferrer" className="analyze-link" onClick={handleToolClick}>
+                  View GO Annotation Summary
+                </a>
+                <span className="analyze-desc">View all GO terms used to describe genes in list</span>
+              </td>
+            </tr>
+            <tr>
+              <td className="analyze-label">Download:</td>
+              <td>
+                <button type="button" className="analyze-link-btn" onClick={handleDownload}>Download All Search Results</button>
+                <span className="analyze-desc">Download data for the entire gene list in a tab-delimited file</span>
+              </td>
+              <td colSpan="2">
+                <a href="/batch-download" target="_blank" rel="noopener noreferrer" className="analyze-link" onClick={handleToolClick}>
+                  Batch Download
+                </a>
+                <span className="analyze-desc">Download selected information for entire gene list. Available information types include Sequence, Coordinates, Chromosomal Feature information, GO annotations, Phenotypes, and Ortholog or Best Hit.</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
   return (
     <div className="phenotype-search-page">
       <header className="page-header">
-        <h1>Phenotype Search</h1>
+        <h1>Phenotype Search Results</h1>
         <p className="subtitle">Search phenotype annotations across all genes in CGD</p>
       </header>
 
@@ -448,8 +416,6 @@ function PhenotypeSearchPage() {
       </nav>
 
       <div className="divider" />
-
-      {renderSearchForm()}
 
       {loading && (
         <div className="loading-section">
@@ -466,13 +432,11 @@ function PhenotypeSearchPage() {
       )}
 
       {!loading && !error && hasSearched && (
-        <div className="section" id="results">
-          <h2 className="section-header">Search Results</h2>
-          <div className="section-content">
-            {renderResultsSummary()}
-            {renderResultsTable()}
-          </div>
-        </div>
+        <>
+          {renderResultsSummary()}
+          {renderResultsTable()}
+          {renderAnalyzeSection()}
+        </>
       )}
 
       <div className="divider" />

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './LocusComponents.css';
 import { renderCitationItem } from '../../utils/formatCitation.jsx';
@@ -13,6 +13,8 @@ function LocusSummary({
   sequenceData,
   sequenceLoading,
 }) {
+  const [showJBrowseViewer, setShowJBrowseViewer] = useState(true); // Show JBrowse viewer by default
+
   if (!data) return null;
 
   const feature = data;
@@ -567,21 +569,50 @@ function LocusSummary({
           {/* JBrowse */}
           {sequenceData && sequenceData.jbrowse_info && (
             <tr className="jbrowse-section">
-              <th>JBrowse</th>
+              <th style={{ verticalAlign: 'top' }}>JBrowse</th>
               <td>
-                <div className="jbrowse-link-container">
-                  <a
-                    href={sequenceData.jbrowse_info.full_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="jbrowse-button"
-                  >
-                    View in JBrowse
-                  </a>
-                  <span className="jbrowse-location">
-                    {sequenceData.jbrowse_info.chromosome}:{fmtInt(sequenceData.jbrowse_info.start_coord)}..
-                    {fmtInt(sequenceData.jbrowse_info.stop_coord)}
-                  </span>
+                <div className="jbrowse-viewer-container">
+                  <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <button
+                      onClick={() => setShowJBrowseViewer(!showJBrowseViewer)}
+                      style={{
+                        padding: '4px 10px',
+                        backgroundColor: '#f5f5f5',
+                        border: '1px solid #ddd',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontSize: '12px'
+                      }}
+                    >
+                      {showJBrowseViewer ? '▼ Hide' : '▶ Show'} JBrowse Viewer
+                    </button>
+                    <a
+                      href={sequenceData.jbrowse_info.full_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ fontSize: '13px' }}
+                    >
+                      Open in Full JBrowse ↗
+                    </a>
+                    <span className="jbrowse-location" style={{ fontSize: '13px', color: '#666' }}>
+                      {sequenceData.jbrowse_info.chromosome}:{fmtInt(sequenceData.jbrowse_info.start_coord)}..
+                      {fmtInt(sequenceData.jbrowse_info.stop_coord)}
+                    </span>
+                  </div>
+                  {showJBrowseViewer && (
+                    <div className="jbrowse-iframe-container" style={{ marginBottom: '12px' }}>
+                      <iframe
+                        src={sequenceData.jbrowse_info.full_url}
+                        title="JBrowse Viewer"
+                        style={{
+                          width: '100%',
+                          height: '350px',
+                          border: '1px solid #ddd',
+                          borderRadius: '4px'
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
               </td>
             </tr>

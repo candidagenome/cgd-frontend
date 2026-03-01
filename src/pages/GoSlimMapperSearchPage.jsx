@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import goSlimMapperApi from '../api/goSlimMapperApi';
 import './GoSlimMapperSearchPage.css';
 
 function GoSlimMapperSearchPage() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [configLoading, setConfigLoading] = useState(true);
   const [termsLoading, setTermsLoading] = useState(false);
@@ -15,30 +16,15 @@ function GoSlimMapperSearchPage() {
   // Available terms for selected set/aspect
   const [availableTerms, setAvailableTerms] = useState([]);
 
-  // Form state - initialize from localStorage if available
-  const [formData, setFormData] = useState(() => {
-    const saved = localStorage.getItem('goSlimMapperFormData');
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        // Ignore parse errors
-      }
-    }
-    return {
-      genes: '',
-      organism_no: '',
-      go_set_name: '',
-      go_aspect: '',
-      selected_terms: [], // Empty = all terms
-      annotation_types: ['manually_curated', 'high_throughput', 'computational'],
-    };
+  // Form state - always start fresh on page load
+  const [formData, setFormData] = useState({
+    genes: '',
+    organism_no: '',
+    go_set_name: '',
+    go_aspect: '',
+    selected_terms: [], // Empty = all terms
+    annotation_types: ['manually_curated', 'high_throughput', 'computational'],
   });
-
-  // Save form data to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem('goSlimMapperFormData', JSON.stringify(formData));
-  }, [formData]);
 
   // Load config on mount
   useEffect(() => {
@@ -61,6 +47,27 @@ function GoSlimMapperSearchPage() {
       }
     };
     loadConfig();
+  }, []);
+
+  // Check for gene list passed from other pages (e.g., phenotype search)
+  useEffect(() => {
+    const passedGenes = localStorage.getItem('phenotypeSearchGeneList');
+    if (passedGenes) {
+      try {
+        const geneList = JSON.parse(passedGenes);
+        if (Array.isArray(geneList) && geneList.length > 0) {
+          // Override the saved form data with passed genes
+          setFormData((prev) => ({
+            ...prev,
+            genes: geneList.join('\n'),
+          }));
+        }
+        // Clear after reading so it doesn't persist
+        localStorage.removeItem('phenotypeSearchGeneList');
+      } catch (e) {
+        console.error('Failed to parse passed gene list:', e);
+      }
+    }
   }, []);
 
   // Load terms when set/aspect changes
@@ -197,10 +204,24 @@ function GoSlimMapperSearchPage() {
       // Run analysis
       const result = await goSlimMapperApi.runAnalysis(request);
 
-      // Store results and open in new tab
-      localStorage.setItem('goSlimMapperResults', JSON.stringify(result));
-      localStorage.setItem('goSlimMapperRequest', JSON.stringify(request));
-      window.open('/go-slim-mapper/results', 'gsm_result');
+      console.log('Analysis result:', result);
+
+      // Check if analysis was successful
+      if (!result.success) {
+        throw new Error(result.error || 'Analysis failed');
+      }
+
+      // Store results and navigate to results page
+      try {
+        localStorage.setItem('goSlimMapperResults', JSON.stringify(result));
+        localStorage.setItem('goSlimMapperRequest', JSON.stringify(request));
+      } catch (storageErr) {
+        console.error('localStorage error:', storageErr);
+        throw new Error('Results too large to store. Try reducing the gene list or contact support.');
+      }
+
+      // Navigate to results page
+      navigate('/go-slim-mapper/results');
     } catch (err) {
       console.error('Analysis error:', err);
       setError(err.response?.data?.detail || err.message || 'Analysis failed');

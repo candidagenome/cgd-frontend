@@ -38,7 +38,10 @@ export const goTermFinderApi = {
    * @returns {Promise<Object>} Analysis results with enriched terms
    */
   runAnalysis: async (request) => {
-    const response = await api.post('/api/go-term-finder/analyze', request);
+    // Use longer timeout for potentially slow analysis with large gene lists
+    const response = await api.post('/api/go-term-finder/analyze', request, {
+      timeout: 300000, // 5 minutes
+    });
     return response.data;
   },
 

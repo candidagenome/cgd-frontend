@@ -46,6 +46,17 @@ const PROGRAM_INFO = {
   },
 };
 
+// Organisms available for locus lookup (when using "Locus Name" input)
+// Only organisms with curated gene/locus data in the CGD database
+const LOCUS_ORGANISM_OPTIONS = [
+  { id: '', name: 'Any organism (first match)' },
+  { id: 'C_albicans_SC5314', name: 'C. albicans SC5314' },
+  { id: 'C_dubliniensis_CD36', name: 'C. dubliniensis CD36' },
+  { id: 'C_glabrata_CBS138', name: 'C. glabrata CBS138' },
+  { id: 'C_parapsilosis_CDC317', name: 'C. parapsilosis CDC317' },
+  { id: 'C_tropicalis_MYA-3404', name: 'C. tropicalis MYA-3404' },
+];
+
 // Available genomes for selection (IDs match database file naming convention)
 const GENOME_OPTIONS = [
   { id: 'C_albicans_SC5314_A19', name: 'Candida albicans SC5314 Assembly 19' },
@@ -127,6 +138,7 @@ function BlastSearchPage() {
   );
   const [sequence, setSequence] = useState(initialSeq);
   const [locus, setLocus] = useState(initialLocus);
+  const [locusOrganism, setLocusOrganism] = useState(searchParams.get('locus_organism') || '');
   const [program, setProgram] = useState(searchParams.get('program') || 'blastn');
   const [database, setDatabase] = useState(searchParams.get('db') || '');
   const [selectedGenomes, setSelectedGenomes] = useState(() => {
@@ -296,6 +308,7 @@ function BlastSearchPage() {
       params.set('seq', sequence);
     } else if (queryType === 'locus' && locus) {
       params.set('locus', locus);
+      if (locusOrganism) params.set('locus_organism', locusOrganism);
     }
 
     if (database) params.set('db', database);
@@ -319,6 +332,7 @@ function BlastSearchPage() {
     queryType,
     sequence,
     locus,
+    locusOrganism,
     program,
     database,
     selectedGenomes,
@@ -367,6 +381,7 @@ function BlastSearchPage() {
         params.sequence = sequence;
       } else {
         params.locus = locus;
+        if (locusOrganism) params.locus_organism = locusOrganism;
       }
 
       if (wordSize) params.word_size = parseInt(wordSize, 10);
@@ -475,6 +490,13 @@ function BlastSearchPage() {
               </div>
             </div>
 
+            {/* Error Display - show at top of query section */}
+            {error && (
+              <div className="error-message query-error">
+                <strong>Error:</strong> {error}
+              </div>
+            )}
+
             {queryType === 'sequence' ? (
               <div className="form-group">
                 <textarea
@@ -486,14 +508,28 @@ function BlastSearchPage() {
               </div>
             ) : (
               <div className="form-group">
-                <input
-                  type="text"
-                  value={locus}
-                  onChange={(e) => setLocus(e.target.value)}
-                  placeholder="e.g., ACT1, orf19.5007, CAL0000191689"
-                />
+                <div className="locus-input-row">
+                  <input
+                    type="text"
+                    value={locus}
+                    onChange={(e) => setLocus(e.target.value)}
+                    placeholder="e.g., ACT1, orf19.5007, CAL0000191689"
+                    className="locus-input"
+                  />
+                  <select
+                    value={locusOrganism}
+                    onChange={(e) => setLocusOrganism(e.target.value)}
+                    className="locus-organism-select"
+                  >
+                    {LOCUS_ORGANISM_OPTIONS.map((org) => (
+                      <option key={org.id} value={org.id}>
+                        {org.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 <p className="help-text">
-                  Gene name, ORF name, or CGDID
+                  Gene name, ORF name, or CGDID. Select organism if the gene exists in multiple species.
                 </p>
               </div>
             )}
@@ -823,14 +859,6 @@ function BlastSearchPage() {
             </button>
           </div>
         </form>
-
-        {/* Error Display */}
-        {error && (
-          <div className="error-state">
-            <strong>Error</strong>
-            <p>{error}</p>
-          </div>
-        )}
       </div>
     </div>
   );
