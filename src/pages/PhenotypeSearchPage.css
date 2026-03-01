@@ -79,90 +79,161 @@
    SEARCH FORM
    =========================================== */
 
-.search-form {
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* Inner white card */
-.search-form-card {
-  background: #fff;
+.search-form-container {
+  background: #f5f5f5;
+  border: 1px solid #ddd;
   border-radius: 4px;
-  padding: 16px 20px;
-  width: min(1100px, 100%); /* wide enough for 4 columns */
-  margin: 0 auto; /* centered */
-  box-sizing: border-box;
-  overflow-x: hidden; /* prevent spill */
+  padding: 20px;
+  margin-bottom: 20px;
 }
 
-/* 4 columns, give Experiment Type more room so label never wraps */
-.search-fields {
-  display: grid;
-  grid-template-columns: 1.15fr 1.15fr 1.35fr 1.15fr;
-  gap: 14px;
-  width: 100%;
-  box-sizing: border-box;
+.phenotype-search-form {
+  max-width: 900px;
+  margin: 0 auto;
 }
 
-/* allow grid items to shrink inside their cells */
-.search-fields > .form-group {
-  min-width: 0;
+.form-section {
+  margin-bottom: 20px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 15px;
 }
 
-.form-group label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 4px;
+.form-section h3 {
+  margin: 0 0 12px 0;
+  font-size: 1rem;
   color: #333;
-
-  /* FIX: stop "Experiment Type" wrapping */
-  white-space: nowrap;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 8px;
 }
 
-.form-group input {
-  width: 100%;
-  padding: 12px 15px;
+.form-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.form-row:last-child {
+  margin-bottom: 0;
+}
+
+.form-row label {
+  min-width: 140px;
+  font-weight: 600;
+  color: #333;
+  padding-top: 8px;
+}
+
+.form-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 8px 12px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 1.1rem;
-  box-sizing: border-box;
+  font-size: 0.95rem;
 }
 
-.form-group input:focus {
+.form-input.wide {
+  min-width: 300px;
+}
+
+.form-input:focus {
   outline: none;
   border-color: #1976d2;
   box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
 }
 
-/* bottom row: browse link on left, buttons on right */
-.search-bottom-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  margin-top: 12px;
+.form-select {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  min-width: 180px;
+  background: #fff;
 }
 
-.browse-link a {
+.form-select:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+}
+
+.help-text {
+  font-size: 0.85rem;
+  color: #666;
+  flex-basis: 100%;
+  margin-left: 152px;
+  margin-top: -4px;
+}
+
+.browse-link {
   color: #1976d2;
   text-decoration: none;
-  font-size: 1.25rem; /* matches the look in your screenshots */
+  font-size: 0.9rem;
+  padding-top: 8px;
 }
 
-.browse-link a:hover {
+.browse-link:hover {
   text-decoration: underline;
 }
 
-.form-actions {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  flex-wrap: wrap;
+/* Advanced Section - Collapsible */
+.advanced-section h3 {
+  cursor: pointer;
+  user-select: none;
 }
 
-.btn-search,
-.btn-reset {
-  padding: 8px 20px;
+.collapsible-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.collapse-icon {
+  display: inline-block;
+  transition: transform 0.2s ease;
+  font-size: 0.8rem;
+}
+
+.collapse-icon.expanded {
+  transform: rotate(90deg);
+}
+
+.advanced-fields {
+  margin-top: 12px;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.btn-primary {
+  padding: 10px 30px;
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: #1565c0;
+}
+
+.btn-secondary {
+  padding: 10px 30px;
+  background: #e0e0e0;
+  color: #333;
   border: none;
   border-radius: 4px;
   font-size: 1rem;
@@ -170,21 +241,7 @@
   transition: background-color 0.2s ease;
 }
 
-.btn-search {
-  background: #1976d2;
-  color: #fff;
-}
-
-.btn-search:hover {
-  background: #1565c0;
-}
-
-.btn-reset {
-  background: #e0e0e0;
-  color: #333;
-}
-
-.btn-reset:hover {
+.btn-secondary:hover {
   background: #d0d0d0;
 }
 
@@ -522,29 +579,44 @@
    RESPONSIVE
    =========================================== */
 
-@media (max-width: 1100px) {
-  /* 2 rows (2x2) on smaller screens */
-  .search-fields {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .search-form-card {
-    width: min(900px, 100%);
-  }
-}
-
-@media (max-width: 600px) {
-  /* 1 column on phones */
-  .search-fields {
-    grid-template-columns: 1fr;
-  }
-
-  .search-bottom-row {
+@media (max-width: 768px) {
+  .form-row {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+  }
+
+  .form-row label {
+    min-width: auto;
+    padding-top: 0;
+    margin-bottom: 4px;
+  }
+
+  .form-input,
+  .form-input.wide,
+  .form-select {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .help-text {
+    margin-left: 0;
   }
 
   .form-actions {
+    flex-direction: column;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
+
+  .analyze-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .analyze-label {
     width: 100%;
   }
 }
