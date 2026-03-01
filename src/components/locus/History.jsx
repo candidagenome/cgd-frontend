@@ -5,9 +5,12 @@ import { formatHistoryReference } from '../../utils/formatCitation.jsx';
 
 /**
  * Goal layout:
- * 1) Nomenclature History (Standard Name + Alias Name(s))
- * 2) Sequence Annotation Notes
- * 3) Curation Notes
+ * 1) Nomenclature History
+ *    - Reserved Name (with contacts, dates, references) OR
+ *    - Standard Name (with date standardized, references)
+ *    - Alias Name(s) (with references)
+ * 2) Note Categories (Nomenclature History Notes, Sequence Annotation Notes,
+ *    Curation Notes, Mapping Notes, Other Notes, etc.)
  *
  * IMPORTANT: All hooks must be called unconditionally.
  */
@@ -101,6 +104,10 @@ function History({ data, loading, error }) {
     return { fallbackStandard, fallbackAliases };
   }, [orgData]);
 
+  // Use nomenclature_history for full detail (reserved name, date standardized)
+  const nomenclatureHistory = orgData?.nomenclature_history || null;
+
+  // Fallback to simplified nomenclature format
   const nomenclatureStandard =
     orgData?.nomenclature?.standard || derived.fallbackStandard;
 
@@ -138,30 +145,111 @@ function History({ data, loading, error }) {
           <div className="history-block">
             <div className="history-block-title">Nomenclature History</div>
 
-            {/* Standard Name */}
-            {Array.isArray(nomenclatureStandard) && nomenclatureStandard.length > 0 ? (
+            {/* Reserved Name (if name is still reserved, not yet standardized) */}
+            {nomenclatureHistory?.reserved_name_info && (
               <table className="history-table">
                 <thead>
                   <tr>
-                    <th className="history-col-name">Standard Name</th>
+                    <th className="history-col-name">Reserved Name</th>
+                    <th>Contact</th>
+                    <th>Reservation Date</th>
+                    <th>Reservation Expires</th>
                     <th>Reference</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {nomenclatureStandard.map((row, idx) => (
-                    <tr key={`std-${idx}`}>
-                      <td className="history-name">{row?.name || '-'}</td>
-                      <td>{renderReference(row?.reference) || <span className="muted">-</span>}</td>
-                    </tr>
-                  ))}
+                  <tr>
+                    <td className="history-name">
+                      {nomenclatureHistory.reserved_name_info.reserved_name || '-'}
+                    </td>
+                    <td>
+                      {nomenclatureHistory.reserved_name_info.contacts?.length > 0 ? (
+                        nomenclatureHistory.reserved_name_info.contacts.map((contact, idx) => (
+                          <span key={idx}>
+                            {idx > 0 && <br />}
+                            <a href={`/colleague/${contact.colleague_no}`}>
+                              {contact.first_name} {contact.last_name}
+                            </a>
+                          </span>
+                        ))
+                      ) : (
+                        <span className="muted">-</span>
+                      )}
+                    </td>
+                    <td>
+                      {nomenclatureHistory.reserved_name_info.reservation_date
+                        ? formatDate(nomenclatureHistory.reserved_name_info.reservation_date)
+                        : '-'}
+                    </td>
+                    <td>
+                      {nomenclatureHistory.reserved_name_info.expiration_date
+                        ? formatDate(nomenclatureHistory.reserved_name_info.expiration_date)
+                        : '-'}
+                    </td>
+                    <td>
+                      {nomenclatureHistory.reserved_name_info.references?.length > 0
+                        ? renderReference(nomenclatureHistory.reserved_name_info.references)
+                        : <span className="muted">-</span>}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            )}
+
+            {/* Standard Name (if standardized) */}
+            {nomenclatureHistory?.standard_name_info ? (
+              <table className="history-table">
+                <thead>
+                  <tr>
+                    <th className="history-col-name">Standard Name</th>
+                    {nomenclatureHistory.standard_name_info.date_standardized && (
+                      <th>Date Standardized</th>
+                    )}
+                    <th>Reference</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="history-name">
+                      {nomenclatureHistory.standard_name_info.standard_name || '-'}
+                    </td>
+                    {nomenclatureHistory.standard_name_info.date_standardized && (
+                      <td>{formatDate(nomenclatureHistory.standard_name_info.date_standardized)}</td>
+                    )}
+                    <td>
+                      {nomenclatureHistory.standard_name_info.references?.length > 0
+                        ? renderReference(nomenclatureHistory.standard_name_info.references)
+                        : <span className="muted">-</span>}
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             ) : (
-              <div className="muted history-empty">No standard name history found</div>
+              /* Fallback to simplified nomenclature format if no nomenclature_history */
+              Array.isArray(nomenclatureStandard) && nomenclatureStandard.length > 0 ? (
+                <table className="history-table">
+                  <thead>
+                    <tr>
+                      <th className="history-col-name">Standard Name</th>
+                      <th>Reference</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {nomenclatureStandard.map((row, idx) => (
+                      <tr key={`std-${idx}`}>
+                        <td className="history-name">{row?.name || '-'}</td>
+                        <td>{renderReference(row?.reference) || <span className="muted">-</span>}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : !nomenclatureHistory?.reserved_name_info && (
+                <div className="muted history-empty">No standard name history found</div>
+              )
             )}
 
             {/* Alias Name(s) */}
-            {Array.isArray(nomenclatureAliases) && nomenclatureAliases.length > 0 ? (
+            {nomenclatureHistory?.alias_names?.length > 0 ? (
               <table className="history-table">
                 <thead>
                   <tr>
@@ -170,16 +258,40 @@ function History({ data, loading, error }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {nomenclatureAliases.map((row, idx) => (
+                  {nomenclatureHistory.alias_names.map((alias, idx) => (
                     <tr key={`alias-${idx}`}>
-                      <td className="history-name">{row?.name || '-'}</td>
-                      <td>{renderReference(row?.reference) || <span className="muted">-</span>}</td>
+                      <td className="history-name">{alias.alias_name || '-'}</td>
+                      <td>
+                        {alias.references?.length > 0
+                          ? renderReference(alias.references)
+                          : <span className="muted">-</span>}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             ) : (
-              <div className="muted history-empty">No alias history found</div>
+              /* Fallback to simplified nomenclature format */
+              Array.isArray(nomenclatureAliases) && nomenclatureAliases.length > 0 ? (
+                <table className="history-table">
+                  <thead>
+                    <tr>
+                      <th className="history-col-name">Alias Name(s)</th>
+                      <th>Reference</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {nomenclatureAliases.map((row, idx) => (
+                      <tr key={`alias-${idx}`}>
+                        <td className="history-name">{row?.name || '-'}</td>
+                        <td>{renderReference(row?.reference) || <span className="muted">-</span>}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <div className="muted history-empty">No alias history found</div>
+              )
             )}
           </div>
 
