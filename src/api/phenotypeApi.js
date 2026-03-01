@@ -39,6 +39,15 @@ export const phenotypeApi = {
   },
 
   /**
+   * Get summary of phenotype search results grouped by observable
+   * @param {string} query - Keyword to search for
+   */
+  searchPhenotypesSummary: async (query) => {
+    const response = await api.get(`/api/phenotype/search/summary?query=${encodeURIComponent(query)}`);
+    return response.data;
+  },
+
+  /**
    * Get hierarchical tree of observable CV terms
    */
   getObservableTree: async () => {

@@ -44,11 +44,13 @@ function PhenotypeSearchPage() {
 
   // Results state
   const [data, setData] = useState(null);
+  const [summaryData, setSummaryData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Track if we've performed a search
+  // Track if we've performed a search and what type
   const [hasSearched, setHasSearched] = useState(false);
+  const [showSummary, setShowSummary] = useState(false);
 
   // Show/hide advanced search
   const [showAdvanced, setShowAdvanced] = useState(false);
@@ -110,6 +112,8 @@ function PhenotypeSearchPage() {
     setLoading(true);
     setError(null);
     setHasSearched(true);
+    setSummaryData(null);
+    setData(null);
 
     try {
       // Clean params - remove empty values
@@ -118,47 +122,19 @@ function PhenotypeSearchPage() {
         if (value) cleanParams[key] = value;
       });
 
-      // Fetch all results by paginating through all pages (backend max limit is 100)
-      const PAGE_SIZE = 100;
-      let allResults = [];
-      let totalResults = 0;
-      let queryInfo = null;
+      // If only query is provided (keyword search), show summary first
+      const isKeywordSearchOnly = cleanParams.query && !cleanParams.observable;
 
-      // Fetch first page to get total count
-      const firstPage = await phenotypeApi.searchPhenotypes({
-        ...cleanParams,
-        page: 1,
-        limit: PAGE_SIZE,
-      });
-
-      totalResults = firstPage.total_results;
-      queryInfo = firstPage.query;
-      allResults = firstPage.results || [];
-
-      // Fetch remaining pages if needed
-      const totalPages = Math.ceil(totalResults / PAGE_SIZE);
-      if (totalPages > 1) {
-        const remainingPages = [];
-        for (let p = 2; p <= totalPages; p++) {
-          remainingPages.push(
-            phenotypeApi.searchPhenotypes({
-              ...cleanParams,
-              page: p,
-              limit: PAGE_SIZE,
-            })
-          );
-        }
-        const pageResults = await Promise.all(remainingPages);
-        for (const pr of pageResults) {
-          allResults = allResults.concat(pr.results || []);
-        }
+      if (isKeywordSearchOnly) {
+        // Fetch summary view
+        const summary = await phenotypeApi.searchPhenotypesSummary(cleanParams.query);
+        setSummaryData(summary);
+        setShowSummary(true);
+      } else {
+        // Fetch detailed results
+        setShowSummary(false);
+        await fetchDetailedResults(cleanParams);
       }
-
-      setData({
-        results: allResults,
-        total_results: totalResults,
-        query: queryInfo,
-      });
     } catch (err) {
       // Handle FastAPI validation errors (array of objects) or string errors
       let errorMsg = 'Failed to search phenotypes';
@@ -172,9 +148,54 @@ function PhenotypeSearchPage() {
       }
       setError(errorMsg);
       setData(null);
+      setSummaryData(null);
     } finally {
       setLoading(false);
     }
+  };
+
+  const fetchDetailedResults = async (cleanParams) => {
+    // Fetch all results by paginating through all pages (backend max limit is 100)
+    const PAGE_SIZE = 100;
+    let allResults = [];
+    let totalResults = 0;
+    let queryInfo = null;
+
+    // Fetch first page to get total count
+    const firstPage = await phenotypeApi.searchPhenotypes({
+      ...cleanParams,
+      page: 1,
+      limit: PAGE_SIZE,
+    });
+
+    totalResults = firstPage.total_results;
+    queryInfo = firstPage.query;
+    allResults = firstPage.results || [];
+
+    // Fetch remaining pages if needed
+    const totalPages = Math.ceil(totalResults / PAGE_SIZE);
+    if (totalPages > 1) {
+      const remainingPages = [];
+      for (let p = 2; p <= totalPages; p++) {
+        remainingPages.push(
+          phenotypeApi.searchPhenotypes({
+            ...cleanParams,
+            page: p,
+            limit: PAGE_SIZE,
+          })
+        );
+      }
+      const pageResults = await Promise.all(remainingPages);
+      for (const pr of pageResults) {
+        allResults = allResults.concat(pr.results || []);
+      }
+    }
+
+    setData({
+      results: allResults,
+      total_results: totalResults,
+      query: queryInfo,
+    });
   };
 
   const handleSubmit = (e) => {
@@ -623,6 +644,74 @@ function PhenotypeSearchPage() {
     );
   };
 
+  const renderSearchSummary = () => {
+    if (!summaryData) return null;
+
+    const handleObservableClick = (obs) => {
+      // Open detailed results for this observable in a new tab
+      window.open(`/phenotype/search?observable=${encodeURIComponent(obs)}`, '_blank');
+    };
+
+    return (
+      <div className="search-summary-container">
+        <div className="search-summary-header">
+          <h2>Expanded Phenotype Search Results Summary</h2>
+          <p>Your search for &apos;<strong>{summaryData.query}</strong>&apos; results in the following:</p>
+        </div>
+
+        {summaryData.direct_matches && summaryData.direct_matches.length > 0 && (
+          <div className="match-section">
+            <h3>Matches associated directly with the phenotype:</h3>
+            <ul className="match-list">
+              {summaryData.direct_matches.map((match, idx) => (
+                <li key={idx} className="match-item">
+                  <span className="match-count">{match.count} matches:</span>
+                  <button
+                    type="button"
+                    className="match-link"
+                    onClick={() => handleObservableClick(match.observable)}
+                  >
+                    {match.observable}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {summaryData.related_matches && summaryData.related_matches.length > 0 && (
+          <div className="match-section">
+            <h3>Matches in related data or details associated with the phenotype:</h3>
+            <ul className="match-list">
+              {summaryData.related_matches.map((match, idx) => (
+                <li key={idx} className="match-item">
+                  <span className="match-count">{match.count} matches:</span>
+                  <button
+                    type="button"
+                    className="match-link"
+                    onClick={() => handleObservableClick(match.observable)}
+                  >
+                    {match.observable}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {(!summaryData.direct_matches || summaryData.direct_matches.length === 0) &&
+         (!summaryData.related_matches || summaryData.related_matches.length === 0) && (
+          <div className="no-results">
+            <p>No phenotype annotations found matching &apos;{summaryData.query}&apos;.</p>
+            <p>
+              Try a different search term or <Link to="/phenotype/terms">browse observable terms</Link>.
+            </p>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   const renderResultsTable = () => {
     if (!data || !data.results || data.results.length === 0) {
       return (
@@ -775,7 +864,9 @@ function PhenotypeSearchPage() {
         </div>
       )}
 
-      {!loading && !error && hasSearched && (
+      {!loading && !error && hasSearched && showSummary && renderSearchSummary()}
+
+      {!loading && !error && hasSearched && !showSummary && (
         <>
           {renderResultsSummary()}
           {renderResultsTable()}
