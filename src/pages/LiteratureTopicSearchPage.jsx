@@ -211,41 +211,16 @@ function LiteratureTopicSearchPage() {
   // Check if we're in results mode (URL has topics param)
   const isResultsMode = searchParams.has('topics');
 
-  // Build flat data for AG Grid: one row per topic/reference/gene combination
-  const gridData = useMemo(() => {
-    if (!data || !data.results) return [];
-
-    const rows = [];
-    for (const topicResult of data.results) {
-      for (const ref of topicResult.references) {
-        // Get genes associated with this topic
-        const genes = topicResult.genes || [];
-        rows.push({
-          topic: topicResult.topic,
-          reference: ref,
-          genes: genes,
-        });
-      }
-    }
-    return rows;
-  }, [data]);
-
-  // AG Grid column definitions - Topic=20%, Reference=30%, Associated Genes=50%
+  // AG Grid column definitions - Reference=40%, Associated Genes=60%
   const columnDefs = useMemo(() => [
-    {
-      headerName: 'Topic',
-      field: 'topic',
-      flex: 2,  // 20%
-      minWidth: 120,
-    },
     {
       headerName: 'Reference',
       field: 'reference',
-      flex: 3,  // 30%
-      minWidth: 200,
+      flex: 4,  // 40%
+      minWidth: 250,
       autoHeight: true,
       cellRenderer: (params) => {
-        const ref = params.data.reference;
+        const ref = params.data;
         if (!ref) return '-';
         return (
           <div className="reference-cell">
@@ -257,8 +232,8 @@ function LiteratureTopicSearchPage() {
     {
       headerName: 'Associated Genes',
       field: 'genes',
-      flex: 5,  // 50%
-      minWidth: 300,
+      flex: 6,  // 60%
+      minWidth: 400,
       autoHeight: true,
       cellRenderer: (params) => {
         const genes = params.data.genes || [];
