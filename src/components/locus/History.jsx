@@ -136,9 +136,6 @@ function History({ data, loading, error }) {
 
       {selectedOrganism && orgData ? (
         <div className="organism-section">
-          <h3 className="organism-name">{selectedOrganism}</h3>
-          <p className="locus-display">Locus: {orgData.locus_display_name}</p>
-
           {/* =========================
            * 1) Nomenclature History
            * ========================= */}
