@@ -198,8 +198,18 @@ function LiteratureTopicSearchPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    performSearch([...selectedTopics.keys()]);
+    const topicIds = [...selectedTopics.keys()];
+    if (topicIds.length === 0) {
+      setError('Please select at least one topic');
+      return;
+    }
+    // Open results in a new tab
+    const url = `/literature-topic-search?topics=${topicIds.join(',')}`;
+    window.open(url, 'lit');
   };
+
+  // Check if we're in results mode (URL has topics param)
+  const isResultsMode = searchParams.has('topics');
 
   // Build flat data for AG Grid: one row per topic/reference/gene combination
   const gridData = useMemo(() => {
@@ -220,19 +230,19 @@ function LiteratureTopicSearchPage() {
     return rows;
   }, [data]);
 
-  // AG Grid column definitions
+  // AG Grid column definitions - Topic=20%, Reference=30%, Associated Genes=50%
   const columnDefs = useMemo(() => [
     {
       headerName: 'Topic',
       field: 'topic',
-      flex: 1,
-      minWidth: 150,
+      flex: 2,  // 20%
+      minWidth: 120,
     },
     {
       headerName: 'Reference',
       field: 'reference',
-      flex: 2,
-      minWidth: 300,
+      flex: 3,  // 30%
+      minWidth: 200,
       autoHeight: true,
       cellRenderer: (params) => {
         const ref = params.data.reference;
@@ -247,8 +257,8 @@ function LiteratureTopicSearchPage() {
     {
       headerName: 'Associated Genes',
       field: 'genes',
-      flex: 2,
-      minWidth: 200,
+      flex: 5,  // 50%
+      minWidth: 300,
       autoHeight: true,
       cellRenderer: (params) => {
         const genes = params.data.genes || [];
@@ -396,6 +406,60 @@ function LiteratureTopicSearchPage() {
     );
   };
 
+  // Results mode: show only results with title
+  if (isResultsMode) {
+    return (
+      <div className="literature-topic-search-page">
+        <header className="page-header">
+          <h1>Literature Topic Search Results</h1>
+          <p className="subtitle">References and genes associated with selected topics</p>
+        </header>
+
+        <nav className="page-nav">
+          <Link to="/literature-topic-search">New Search</Link>
+          {' | '}
+          <Link to="/literature">Literature Guide</Link>
+          {' | '}
+          <Link to="/help/literature-topics">Help</Link>
+        </nav>
+
+        <div className="divider" />
+
+        {loading && (
+          <div className="loading-section">
+            <div className="loading-spinner"></div>
+            <p>Searching...</p>
+          </div>
+        )}
+
+        {error && (
+          <div className="error-section">
+            <div className="error-icon">&#9888;</div>
+            <p className="error-message">{error}</p>
+          </div>
+        )}
+
+        {!loading && !error && hasSearched && (
+          <>
+            {renderResultsSummary()}
+            {renderResultsTable()}
+          </>
+        )}
+
+        <div className="divider" />
+
+        <div className="page-footer">
+          <p>
+            <strong>Note:</strong> Literature topics are assigned by CGD curators to indicate
+            the subject matter of each reference. Use this search to find papers and genes
+            associated with specific research topics.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Search mode: show form
   return (
     <div className="literature-topic-search-page">
       <header className="page-header">
@@ -492,33 +556,18 @@ function LiteratureTopicSearchPage() {
           <button
             type="submit"
             className="submit-btn"
-            disabled={selectedTopics.size === 0 || loading}
+            disabled={selectedTopics.size === 0}
           >
-            {loading ? (
-              <>
-                <span className="loading-spinner"></span>
-                Searching...
-              </>
-            ) : (
-              'Search'
-            )}
+            Search
           </button>
         </div>
       </form>
 
-      {/* Results */}
       {error && (
         <div className="error-section">
           <div className="error-icon">&#9888;</div>
           <p className="error-message">{error}</p>
         </div>
-      )}
-
-      {!loading && !error && hasSearched && (
-        <>
-          {renderResultsSummary()}
-          {renderResultsTable()}
-        </>
       )}
 
       <div className="divider" />

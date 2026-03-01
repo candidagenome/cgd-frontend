@@ -279,6 +279,25 @@
   }
 }
 
+/* Loading Section */
+.loading-section {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.loading-section .loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e0e0e0;
+  border-top-color: #1976d2;
+  margin: 0 auto 15px;
+}
+
+.loading-section p {
+  margin: 0;
+}
+
 /* Error Section */
 .error-section {
   background-color: #ffebee;
