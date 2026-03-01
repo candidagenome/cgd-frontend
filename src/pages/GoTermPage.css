@@ -488,6 +488,7 @@
 .evidence-cell {
   width: 15%;
   vertical-align: top;
+  white-space: nowrap;
 }
 
 .reference-item {
