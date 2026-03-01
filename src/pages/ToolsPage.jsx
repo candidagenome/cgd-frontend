@@ -23,11 +23,6 @@ const ToolsPage = () => {
       title: 'Restriction Mapper',
       url: '/restriction-mapper',
       description: 'Find restriction enzyme sites in Candida sequences'
-    },
-    {
-      title: 'Synteny Viewer',
-      url: '/synteny-viewer',
-      description: 'Visualize syntenic regions across Candida species'
     }
   ];
 

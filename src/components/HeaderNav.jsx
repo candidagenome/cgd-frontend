@@ -66,8 +66,7 @@ const HeaderNav = () => {
         { label: 'PatMatch', to: '/patmatch' },
         { label: 'Primers', to: '/webprimer' },
         { label: 'Phenotype Search', to: '/phenotype/search' },
-        { label: 'Restriction Mapper', to: '/restriction-mapper' },
-        { label: 'Synteny Viewer', to: '/synteny-viewer' }
+        { label: 'Restriction Mapper', to: '/restriction-mapper' }
       ]
     },
     {
@@ -75,7 +74,6 @@ const HeaderNav = () => {
       to: '/literature',
       submenu: [
         { label: 'Literature Search', to: '/literature-topic-search' },
-        { label: 'Seminal Papers', to: '/seminal-papers' },
         { label: 'CGD Public Wiki', href: 'http://publicwiki.candidagenome.org', external: true },
         { label: 'Genome-Wide Analysis Papers', to: '/genome-wide-analysis-papers' },
         { label: 'Disease-Related Papers', to: '/disease-related-papers' }
