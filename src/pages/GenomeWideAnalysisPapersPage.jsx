@@ -14,26 +14,54 @@ function GenomeWideAnalysisPapersPage() {
   const currentTopic = searchParams.get('topic') || null;
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchAllPages = async () => {
       try {
         setLoading(true);
-        // Fetch all results (large page size) for client-side filtering/sorting
-        const result = await referenceApi.getGenomeWideAnalysisPapers(
+        // Fetch first page to get total count
+        const firstPage = await referenceApi.getGenomeWideAnalysisPapers(
           currentTopic,
           1,
-          1000
+          100
         );
-        setData(result);
+
+        let allReferences = [...(firstPage.references || [])];
+
+        // Fetch remaining pages if needed
+        if (firstPage.total_pages > 1) {
+          const pagePromises = [];
+          for (let p = 2; p <= firstPage.total_pages; p++) {
+            pagePromises.push(
+              referenceApi.getGenomeWideAnalysisPapers(currentTopic, p, 100)
+            );
+          }
+          const pages = await Promise.all(pagePromises);
+          for (const page of pages) {
+            allReferences = allReferences.concat(page.references || []);
+          }
+        }
+
+        setData({
+          ...firstPage,
+          references: allReferences,
+        });
       } catch (err) {
-        setError(
-          err.response?.data?.detail || err.message || 'Failed to load genome-wide analysis papers'
-        );
+        // Handle FastAPI validation errors (array of objects) or string errors
+        let errorMsg = 'Failed to load genome-wide analysis papers';
+        const detail = err.response?.data?.detail;
+        if (typeof detail === 'string') {
+          errorMsg = detail;
+        } else if (Array.isArray(detail) && detail.length > 0) {
+          errorMsg = detail.map((d) => d.msg || JSON.stringify(d)).join('; ');
+        } else if (err.message) {
+          errorMsg = err.message;
+        }
+        setError(errorMsg);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
+    fetchAllPages();
   }, [currentTopic]);
 
   const handleTopicClick = (topic) => {

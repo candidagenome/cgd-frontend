@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { AgGridReact } from 'ag-grid-react';
 import referenceApi from '../api/referenceApi';
 import { renderCitationItem } from '../utils/formatCitation';
 import './GenomeWideAnalysisPapersPage.css';
-
-const PAGE_SIZE = 50;
 
 function DiseaseRelatedPapersPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -13,42 +12,148 @@ function DiseaseRelatedPapersPage() {
   const [error, setError] = useState(null);
 
   const currentTopic = searchParams.get('topic') || null;
-  const currentPage = parseInt(searchParams.get('page'), 10) || 1;
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchAllPages = async () => {
       try {
         setLoading(true);
-        const result = await referenceApi.getDiseaseRelatedPapers(
+        // Fetch first page to get total count
+        const firstPage = await referenceApi.getDiseaseRelatedPapers(
           currentTopic,
-          currentPage,
-          PAGE_SIZE
+          1,
+          100
         );
-        setData(result);
+
+        let allReferences = [...(firstPage.references || [])];
+
+        // Fetch remaining pages if needed
+        if (firstPage.total_pages > 1) {
+          const pagePromises = [];
+          for (let p = 2; p <= firstPage.total_pages; p++) {
+            pagePromises.push(
+              referenceApi.getDiseaseRelatedPapers(currentTopic, p, 100)
+            );
+          }
+          const pages = await Promise.all(pagePromises);
+          for (const page of pages) {
+            allReferences = allReferences.concat(page.references || []);
+          }
+        }
+
+        setData({
+          ...firstPage,
+          references: allReferences,
+        });
       } catch (err) {
-        setError(
-          err.response?.data?.detail || err.message || 'Failed to load disease-related papers'
-        );
+        // Handle FastAPI validation errors (array of objects) or string errors
+        let errorMsg = 'Failed to load disease-related papers';
+        const detail = err.response?.data?.detail;
+        if (typeof detail === 'string') {
+          errorMsg = detail;
+        } else if (Array.isArray(detail) && detail.length > 0) {
+          errorMsg = detail.map((d) => d.msg || JSON.stringify(d)).join('; ');
+        } else if (err.message) {
+          errorMsg = err.message;
+        }
+        setError(errorMsg);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
-  }, [currentTopic, currentPage]);
+    fetchAllPages();
+  }, [currentTopic]);
 
   const handleTopicClick = (topic) => {
     const params = new URLSearchParams();
     if (topic) params.set('topic', topic);
-    params.set('page', '1');
     setSearchParams(params);
   };
 
-  const handlePageChange = (newPage) => {
-    const params = new URLSearchParams(searchParams);
-    params.set('page', newPage.toString());
-    setSearchParams(params);
+  const formatSpecies = (species) => {
+    if (!species || species.length === 0) return '-';
+    return species.map((s) => {
+      const match = s.match(/^(\w)\w*\s+(.+)$/);
+      if (match) return `${match[1]}. ${match[2]}`;
+      return s;
+    }).join(', ');
   };
+
+  // AG Grid column definitions - Literature Topic first, then Reference
+  const columnDefs = useMemo(() => [
+    {
+      headerName: 'Literature Topic',
+      field: 'topics',
+      flex: 1,
+      minWidth: 180,
+      valueGetter: (params) => params.data.topics?.join(', ') || '-',
+      filter: 'agTextColumnFilter',
+    },
+    {
+      headerName: 'Reference',
+      field: 'citation',
+      flex: 2,
+      minWidth: 300,
+      autoHeight: true,
+      wrapText: true,
+      cellRenderer: (params) => {
+        const paper = params.data;
+        return (
+          <div className="reference-cell">
+            {renderCitationItem(paper, { itemClassName: '' })}
+          </div>
+        );
+      },
+      filter: 'agTextColumnFilter',
+      filterParams: {
+        filterOptions: ['contains'],
+        defaultOption: 'contains',
+      },
+    },
+    {
+      headerName: 'Species',
+      field: 'species',
+      flex: 1,
+      minWidth: 150,
+      valueGetter: (params) => formatSpecies(params.data.species),
+      filter: 'agTextColumnFilter',
+    },
+    {
+      headerName: 'Genes Addressed',
+      field: 'genes',
+      flex: 1.5,
+      minWidth: 200,
+      autoHeight: true,
+      cellRenderer: (params) => {
+        const genes = params.data.genes || [];
+        if (genes.length === 0) return '-';
+        return (
+          <div className="genes-cell">
+            {genes.map((g, idx) => (
+              <span key={idx}>
+                {idx > 0 && ' '}
+                <Link to={`/locus/${g.feature_name}`}>
+                  {g.gene_name || g.feature_name}
+                </Link>
+              </span>
+            ))}
+          </div>
+        );
+      },
+      valueGetter: (params) => {
+        const genes = params.data.genes || [];
+        return genes.map(g => g.gene_name || g.feature_name).join(', ');
+      },
+      filter: 'agTextColumnFilter',
+    },
+  ], []);
+
+  const defaultColDef = useMemo(() => ({
+    sortable: true,
+    filter: true,
+    resizable: true,
+    floatingFilter: true,
+  }), []);
 
   const renderTopicFilters = () => {
     if (!data?.available_topics) return null;
@@ -80,60 +185,6 @@ function DiseaseRelatedPapersPage() {
     );
   };
 
-  const renderPagination = () => {
-    if (!data || data.total_pages <= 1) return null;
-
-    const pages = [];
-    const maxVisible = 10;
-    let start = Math.max(1, currentPage - Math.floor(maxVisible / 2));
-    let end = Math.min(data.total_pages, start + maxVisible - 1);
-    if (end - start + 1 < maxVisible) {
-      start = Math.max(1, end - maxVisible + 1);
-    }
-
-    for (let i = start; i <= end; i++) {
-      pages.push(
-        <button
-          key={i}
-          className={`page-btn ${i === currentPage ? 'active' : ''}`}
-          onClick={() => handlePageChange(i)}
-        >
-          {i}
-        </button>
-      );
-    }
-
-    return (
-      <div className="pagination">
-        <span className="page-info">
-          Page {currentPage} of {data.total_pages} ({data.total_count} papers)
-        </span>
-        <div className="page-controls">
-          {currentPage > 1 && (
-            <button className="page-btn" onClick={() => handlePageChange(currentPage - 1)}>
-              Prev
-            </button>
-          )}
-          {pages}
-          {currentPage < data.total_pages && (
-            <button className="page-btn" onClick={() => handlePageChange(currentPage + 1)}>
-              Next
-            </button>
-          )}
-        </div>
-      </div>
-    );
-  };
-
-  const formatSpecies = (species) => {
-    if (!species || species.length === 0) return '-';
-    return species.map((s) => {
-      const match = s.match(/^(\w)\w*\s+(.+)$/);
-      if (match) return `${match[1]}. ${match[2]}`;
-      return s;
-    }).join(', ');
-  };
-
   if (loading) {
     return (
       <div className="genome-wide-papers-page">
@@ -161,51 +212,24 @@ function DiseaseRelatedPapersPage() {
 
       {renderTopicFilters()}
 
-      {renderPagination()}
-
       {data?.references?.length > 0 ? (
-        <div className="papers-table-wrapper">
-          <table className="papers-table">
-            <thead>
-              <tr>
-                <th>Reference</th>
-                <th>Literature Topic</th>
-                <th>Species</th>
-                <th>Genes Addressed</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.references.map((paper) => (
-                <tr key={paper.reference_no}>
-                  <td className="reference-cell">
-                    {renderCitationItem(paper, { itemClassName: '' })}
-                  </td>
-                  <td className="topics-cell">{paper.topics?.join(', ') || '-'}</td>
-                  <td className="species-cell">{formatSpecies(paper.species)}</td>
-                  <td className="genes-cell">
-                    {paper.genes?.length > 0
-                      ? paper.genes.map((g, idx) => (
-                          <span key={idx}>
-                            {idx > 0 && ' '}
-                            <Link to={`/locus/${g.feature_name}`}>
-                              {g.gene_name || g.feature_name}
-                            </Link>
-                          </span>
-                        ))
-                      : '-'}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="papers-grid-wrapper ag-theme-alpine">
+          <AgGridReact
+            rowData={data.references}
+            columnDefs={columnDefs}
+            defaultColDef={defaultColDef}
+            domLayout="autoHeight"
+            pagination={true}
+            paginationPageSize={10}
+            paginationPageSizeSelector={[10, 25, 50, 100]}
+            suppressCellFocus={true}
+          />
         </div>
       ) : (
         <div className="no-papers">
           <p>No disease-related papers found.</p>
         </div>
       )}
-
-      {renderPagination()}
 
       <div className="back-link">
         <Link to="/">Back to Home</Link>
