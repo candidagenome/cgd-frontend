@@ -166,10 +166,7 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
     resizable: true,
   }), []);
 
-  // Grid ready callback
-  const onGridReady = useCallback((params) => {
-    params.api.sizeColumnsToFit();
-  }, []);
+  // Grid ready callback - removed sizeColumnsToFit() which interferes with flex sizing
 
   // Download references as TSV
   const handleDownloadTSV = useCallback((refsToDownload) => {
@@ -491,7 +488,7 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
             Download TSV
           </button>
         </div>
-        <div className="references-grid-wrapper ag-theme-alpine">
+        <div className="references-grid-wrapper ag-theme-alpine" style={{ width: '100%' }}>
           <AgGridReact
             rowData={sortedRefs}
             columnDefs={columnDefs}
@@ -500,7 +497,6 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
             pagination={sortedRefs.length > 10}
             paginationPageSize={10}
             paginationPageSizeSelector={[10, 25, 50]}
-            onGridReady={onGridReady}
             suppressCellFocus={true}
           />
         </div>

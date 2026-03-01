@@ -1518,7 +1518,6 @@ a:hover {
 
 .references-grid-wrapper.ag-theme-alpine {
   --ag-grid-size: 4px;
-  --ag-row-height: auto;
 }
 
 .references-grid-wrapper .ag-header {

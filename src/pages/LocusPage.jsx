@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useSearchParams, Link } from 'react-router-dom';
 import useLocusData from '../hooks/useLocusData';
 import LocusSummary from '../components/locus/LocusSummary';
@@ -31,10 +31,6 @@ function LocusPage() {
 
   const { data, loading, errors, loaders } = useLocusData(name);
 
-  // Store loaders in ref to avoid dependency in useEffect
-  const loadersRef = useRef(loaders);
-  loadersRef.current = loaders;
-
   // Reset selected organism when locus name changes
   useEffect(() => {
     setSelectedOrganism(null);
@@ -51,13 +47,11 @@ function LocusPage() {
 
   // Load data when tab is selected or locus name changes
   useEffect(() => {
-    console.log('[LocusPage useEffect] activeTab or name changed:', activeTab, name);
     const tab = TABS.find(t => t.id === activeTab);
-    if (tab && tab.loader && loadersRef.current[tab.loader]) {
-      console.log('[LocusPage useEffect] Calling loader:', tab.loader);
-      loadersRef.current[tab.loader]();
+    if (tab && tab.loader && loaders[tab.loader]) {
+      loaders[tab.loader]();
     }
-  }, [activeTab, name]);
+  }, [activeTab, name, loaders]);
 
   // Set default organism when data loads - prefer "Candida albicans SC5314" if available
   useEffect(() => {
@@ -72,14 +66,14 @@ function LocusPage() {
 
   // Prefetch API data for Protein and Homology tabs in background
   useEffect(() => {
-    if (data.info && loadersRef.current) {
+    if (data.info && loaders) {
       const timer = setTimeout(() => {
-        loadersRef.current.loadProteinDetails?.();
-        loadersRef.current.loadHomologyDetails?.();
+        loaders.loadProteinDetails?.();
+        loaders.loadHomologyDetails?.();
       }, 200);
       return () => clearTimeout(timer);
     }
-  }, [data.info]);
+  }, [data.info, loaders]);
 
   const handleTabClick = (tabId) => {
     setActiveTab(tabId);
