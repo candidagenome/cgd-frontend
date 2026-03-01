@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import phenotypeApi from '../api/phenotypeApi';
@@ -24,7 +24,7 @@ const formatLocusName = (result) => {
 };
 
 function PhenotypeSearchPage() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   // Form state
   const [observable, setObservable] = useState(searchParams.get('observable') || '');
@@ -66,7 +66,6 @@ function PhenotypeSearchPage() {
       // Fetch all results by paginating through all pages (backend max limit is 100)
       const PAGE_SIZE = 100;
       let allResults = [];
-      let page = 1;
       let totalResults = 0;
       let query = null;
 
@@ -103,7 +102,7 @@ function PhenotypeSearchPage() {
       setData({
         results: allResults,
         total_results: totalResults,
-        query: query,
+        query,
       });
     } catch (err) {
       // Handle FastAPI validation errors (array of objects) or string errors
@@ -112,7 +111,7 @@ function PhenotypeSearchPage() {
       if (typeof detail === 'string') {
         errorMsg = detail;
       } else if (Array.isArray(detail) && detail.length > 0) {
-        errorMsg = detail.map(d => d.msg || JSON.stringify(d)).join('; ');
+        errorMsg = detail.map((d) => d.msg || JSON.stringify(d)).join('; ');
       } else if (err.message) {
         errorMsg = err.message;
       }
@@ -124,125 +123,136 @@ function PhenotypeSearchPage() {
   };
 
   // AG Grid column definitions
-  const columnDefs = useMemo(() => [
-    {
-      headerName: 'Gene',
-      field: 'gene',
-      flex: 1,
-      minWidth: 120,
-      valueGetter: (params) => formatLocusName(params.data),
-      cellRenderer: (params) => (
-        <Link to={`/locus/${params.data.feature_name}`} className="gene-link">
-          {formatLocusName(params.data)}
-        </Link>
-      ),
-    },
-    {
-      headerName: 'Organism',
-      field: 'organism',
-      flex: 0.4,
-      minWidth: 80,
-      valueGetter: (params) => getOrganismAbbrev(params.data.organism),
-      cellRenderer: (params) => <em>{getOrganismAbbrev(params.data.organism)}</em>,
-    },
-    {
-      headerName: 'Experiment Type',
-      field: 'experiment_type',
-      flex: 1,
-      minWidth: 120,
-      valueGetter: (params) => params.data.experiment_type || '-',
-      cellRenderer: (params) => (
-        <div>
-          {params.data.experiment_type || '-'}
-          {params.data.experiment_comment && (
-            <div className="experiment-comment">({params.data.experiment_comment})</div>
-          )}
-        </div>
-      ),
-    },
-    {
-      headerName: 'Mutant Info',
-      field: 'mutant_type',
-      flex: 1,
-      minWidth: 120,
-      autoHeight: true,
-      valueGetter: (params) => params.data.mutant_type || '-',
-      cellRenderer: (params) => {
-        const result = params.data;
-        if (!result.mutant_type) return '-';
-        return (
+  const columnDefs = useMemo(
+    () => [
+      {
+        headerName: 'Gene',
+        field: 'gene',
+        flex: 1,
+        minWidth: 120,
+        valueGetter: (params) => formatLocusName(params.data),
+        cellRenderer: (params) => (
+          <Link to={`/locus/${params.data.feature_name}`} className="gene-link">
+            {formatLocusName(params.data)}
+          </Link>
+        ),
+      },
+      {
+        headerName: 'Organism',
+        field: 'organism',
+        flex: 0.4,
+        minWidth: 80,
+        valueGetter: (params) => getOrganismAbbrev(params.data.organism),
+        cellRenderer: (params) => <em>{getOrganismAbbrev(params.data.organism)}</em>,
+      },
+      {
+        headerName: 'Experiment Type',
+        field: 'experiment_type',
+        flex: 1,
+        minWidth: 120,
+        valueGetter: (params) => params.data.experiment_type || '-',
+        cellRenderer: (params) => (
           <div>
-            <span>Description: {result.mutant_type}</span>
-            {result.strain && <div className="strain-info">Strain: {result.strain}</div>}
+            {params.data.experiment_type || '-'}
+            {params.data.experiment_comment && (
+              <div className="experiment-comment">({params.data.experiment_comment})</div>
+            )}
           </div>
-        );
+        ),
       },
-    },
-    {
-      headerName: 'Phenotype',
-      field: 'phenotype',
-      flex: 1,
-      minWidth: 120,
-      valueGetter: (params) => params.data.observable || '-',
-      cellRenderer: (params) => {
-        const result = params.data;
-        return (
-          <span>
-            <span className="observable-term">{result.observable}</span>
-            {result.qualifier && <span className="qualifier-info">: {result.qualifier}</span>}
-          </span>
-        );
+      {
+        headerName: 'Mutant Info',
+        field: 'mutant_type',
+        flex: 1,
+        minWidth: 120,
+        autoHeight: true,
+        valueGetter: (params) => params.data.mutant_type || '-',
+        cellRenderer: (params) => {
+          const result = params.data;
+          if (!result.mutant_type) return '-';
+          return (
+            <div>
+              <span>Description: {result.mutant_type}</span>
+              {result.strain && <div className="strain-info">Strain: {result.strain}</div>}
+            </div>
+          );
+        },
       },
-    },
-    {
-      headerName: 'References',
-      field: 'references',
-      flex: 2.25,
-      minWidth: 250,
-      autoHeight: true,
-      valueGetter: (params) => {
-        const refs = params.data.references || [];
-        return refs.map(r => r.display_name || r.pubmed_id || '').join('; ');
+      {
+        headerName: 'Phenotype',
+        field: 'phenotype',
+        flex: 1,
+        minWidth: 120,
+        valueGetter: (params) => params.data.observable || '-',
+        cellRenderer: (params) => {
+          const result = params.data;
+          return (
+            <span>
+              <span className="observable-term">{result.observable}</span>
+              {result.qualifier && <span className="qualifier-info">: {result.qualifier}</span>}
+            </span>
+          );
+        },
       },
-      cellRenderer: (params) => {
-        const refs = params.data.references || [];
-        if (refs.length === 0) return '-';
-        return (
-          <div>
-            {refs.map((ref, refIdx) => (
-              <React.Fragment key={refIdx}>
-                {renderCitationItem(ref, { itemClassName: 'reference-item' })}
-              </React.Fragment>
-            ))}
-          </div>
-        );
+      {
+        headerName: 'References',
+        field: 'references',
+        flex: 2.25,
+        minWidth: 250,
+        autoHeight: true,
+        valueGetter: (params) => {
+          const refs = params.data.references || [];
+          return refs.map((r) => r.display_name || r.pubmed_id || '').join('; ');
+        },
+        cellRenderer: (params) => {
+          const refs = params.data.references || [];
+          if (refs.length === 0) return '-';
+          return (
+            <div>
+              {refs.map((ref, refIdx) => (
+                <React.Fragment key={refIdx}>
+                  {renderCitationItem(ref, { itemClassName: 'reference-item' })}
+                </React.Fragment>
+              ))}
+            </div>
+          );
+        },
       },
-    },
-  ], []);
+    ],
+    []
+  );
 
   // Default column properties
-  const defaultColDef = useMemo(() => ({
-    sortable: true,
-    filter: true,
-    resizable: true,
-    wrapText: true,
-  }), []);
-
-  // Grid ready callback
-  const onGridReady = useCallback((params) => {
-    params.api.sizeColumnsToFit();
-  }, []);
+  const defaultColDef = useMemo(
+    () => ({
+      sortable: true,
+      filter: true,
+      resizable: true,
+      wrapText: true,
+    }),
+    []
+  );
 
   const handleDownload = () => {
     if (!data || !data.results || data.results.length === 0) return;
 
     // CSV headers
-    const headers = ['Gene', 'Organism', 'Experiment Type', 'Experiment Comment', 'Mutant Type', 'Strain', 'Phenotype', 'Qualifier', 'References'];
+    const headers = [
+      'Gene',
+      'Organism',
+      'Experiment Type',
+      'Experiment Comment',
+      'Mutant Type',
+      'Strain',
+      'Phenotype',
+      'Qualifier',
+      'References',
+    ];
 
     // Convert data to CSV rows
-    const rows = data.results.map(result => {
+    const rows = data.results.map((result) => {
       const refs = (result.references || [])
-        .map(ref => ref.display_name || ref.pubmed_id || '')
+        .map((ref) => ref.display_name || ref.pubmed_id || '')
         .join('; ');
 
       return [
@@ -268,17 +278,16 @@ function PhenotypeSearchPage() {
     };
 
     // Build CSV content
-    const csvContent = [
-      headers.map(escapeCSV).join(','),
-      ...rows.map(row => row.map(escapeCSV).join(','))
-    ].join('\n');
+    const csvContent = [headers.map(escapeCSV).join(','), ...rows.map((row) => row.map(escapeCSV).join(','))].join(
+      '\n'
+    );
 
     // Trigger download
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `phenotype_search_results.csv`;
+    link.download = 'phenotype_search_results.csv';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -299,11 +308,10 @@ function PhenotypeSearchPage() {
         <div className="results-summary-row">
           <div className="results-summary-left">
             <div className="results-count">
-              Found <strong>{data.total_results}</strong> phenotype annotation{data.total_results !== 1 ? 's' : ''}
+              Found <strong>{data.total_results}</strong> phenotype annotation
+              {data.total_results !== 1 ? 's' : ''}
             </div>
-            {queryParts.length > 0 && (
-              <div className="query-summary">Search criteria: {queryParts.join(', ')}</div>
-            )}
+            {queryParts.length > 0 && <div className="query-summary">Search criteria: {queryParts.join(', ')}</div>}
           </div>
           {data.results && data.results.length > 0 && (
             <button type="button" className="btn-download" onClick={handleDownload}>
@@ -320,13 +328,18 @@ function PhenotypeSearchPage() {
       return (
         <div className="no-results">
           <p>No phenotype annotations found matching your search criteria.</p>
-          <p>Try broadening your search or <Link to="/phenotype/terms">browse observable terms</Link>.</p>
+          <p>
+            Try broadening your search or <Link to="/phenotype/terms">browse observable terms</Link>.
+          </p>
         </div>
       );
     }
 
+    // Key fixes for flex sizing:
+    // 1) Ensure wrapper has a real width
+    // 2) DO NOT call api.sizeColumnsToFit() (it overrides flex)
     return (
-      <div className="results-grid-wrapper ag-theme-alpine">
+      <div className="results-grid-wrapper ag-theme-alpine" style={{ width: '100%' }}>
         <AgGridReact
           rowData={data.results}
           columnDefs={columnDefs}
@@ -335,7 +348,6 @@ function PhenotypeSearchPage() {
           pagination={true}
           paginationPageSize={10}
           paginationPageSizeSelector={[10, 25, 50, 100]}
-          onGridReady={onGridReady}
           suppressCellFocus={true}
         />
       </div>
@@ -346,13 +358,12 @@ function PhenotypeSearchPage() {
     if (!data || !data.results || data.results.length === 0) return null;
 
     // Get unique gene names for the gene list
-    const geneList = [...new Set(data.results.map(r => r.feature_name))];
+    const geneList = [...new Set(data.results.map((r) => r.feature_name))];
 
     // Helper to store gene list before navigating
-    const handleToolClick = (e) => {
+    const handleToolClick = () => {
       // Store gene list in localStorage (not sessionStorage, which isn't shared across tabs)
       localStorage.setItem('phenotypeSearchGeneList', JSON.stringify(geneList));
-      // Let the default anchor behavior handle navigation
     };
 
     return (
@@ -365,19 +376,37 @@ function PhenotypeSearchPage() {
             <tr>
               <td className="analyze-label">Further Analysis:</td>
               <td>
-                <a href="/go-term-finder" target="_blank" rel="noopener noreferrer" className="analyze-link" onClick={handleToolClick}>
+                <a
+                  href="/go-term-finder"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="analyze-link"
+                  onClick={handleToolClick}
+                >
                   GO Term Finder
                 </a>
                 <span className="analyze-desc">Find common features of genes in list</span>
               </td>
               <td>
-                <a href="/go-slim-mapper" target="_blank" rel="noopener noreferrer" className="analyze-link" onClick={handleToolClick}>
+                <a
+                  href="/go-slim-mapper"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="analyze-link"
+                  onClick={handleToolClick}
+                >
                   GO Slim Mapper
                 </a>
                 <span className="analyze-desc">Sort genes into broad categories</span>
               </td>
               <td>
-                <a href="/go-annotation-summary" target="_blank" rel="noopener noreferrer" className="analyze-link" onClick={handleToolClick}>
+                <a
+                  href="/go-annotation-summary"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="analyze-link"
+                  onClick={handleToolClick}
+                >
                   View GO Annotation Summary
                 </a>
                 <span className="analyze-desc">View all GO terms used to describe genes in list</span>
@@ -386,14 +415,25 @@ function PhenotypeSearchPage() {
             <tr>
               <td className="analyze-label">Download:</td>
               <td>
-                <button type="button" className="analyze-link-btn" onClick={handleDownload}>Download All Search Results</button>
+                <button type="button" className="analyze-link-btn" onClick={handleDownload}>
+                  Download All Search Results
+                </button>
                 <span className="analyze-desc">Download data for the entire gene list in a tab-delimited file</span>
               </td>
               <td colSpan="2">
-                <a href="/batch-download" target="_blank" rel="noopener noreferrer" className="analyze-link" onClick={handleToolClick}>
+                <a
+                  href="/batch-download"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="analyze-link"
+                  onClick={handleToolClick}
+                >
                   Batch Download
                 </a>
-                <span className="analyze-desc">Download selected information for entire gene list. Available information types include Sequence, Coordinates, Chromosomal Feature information, GO annotations, Phenotypes, and Ortholog or Best Hit.</span>
+                <span className="analyze-desc">
+                  Download selected information for entire gene list. Available information types include Sequence,
+                  Coordinates, Chromosomal Feature information, GO annotations, Phenotypes, and Ortholog or Best Hit.
+                </span>
               </td>
             </tr>
           </tbody>
@@ -443,13 +483,12 @@ function PhenotypeSearchPage() {
 
       <div className="page-footer">
         <p>
-          <strong>Note:</strong> To view phenotypes for a specific gene, visit the gene's locus page and
-          select the Phenotype tab.
+          <strong>Note:</strong> To view phenotypes for a specific gene, visit the gene&apos;s locus page and select the
+          Phenotype tab.
         </p>
         <p>
-          Curation of mutant phenotypes is an ongoing project at CGD. Please{' '}
-          <Link to="/contact">contact CGD curators</Link> to let us know of additional phenotype
-          information that should be incorporated.
+          Curation of mutant phenotypes is an ongoing project at CGD. Please <Link to="/contact">contact CGD curators</Link>{' '}
+          to let us know of additional phenotype information that should be incorporated.
         </p>
       </div>
     </div>
