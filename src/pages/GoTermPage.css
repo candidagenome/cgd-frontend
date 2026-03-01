@@ -366,6 +366,7 @@
   padding: 6px 10px;
   font-size: 0.9em;
   line-height: 1.4;
+  background: inherit;
 }
 
 .gene-grid-wrapper .ag-row {
@@ -483,17 +484,20 @@
 
 .references-cell {
   width: 100%;
+  background: transparent;
 }
 
 .evidence-cell {
   vertical-align: top;
   white-space: nowrap;
+  background: transparent;
 }
 
 .reference-item {
   margin-bottom: 12px;
   padding-bottom: 12px;
   border-bottom: 1px dotted #ddd;
+  background: transparent;
 }
 
 .reference-item:last-child {
@@ -507,6 +511,7 @@
   padding-bottom: 12px;
   border-bottom: 1px dotted #ddd;
   font-weight: bold;
+  background: transparent;
 }
 
 .evidence-item:last-child {
