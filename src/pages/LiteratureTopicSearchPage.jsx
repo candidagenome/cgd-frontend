@@ -275,6 +275,24 @@ function LiteratureTopicSearchPage() {
     wrapText: true,
   }), []);
 
+  // Calculate row height based on content
+  const getRowHeight = (params) => {
+    const baseHeight = 80;
+    const lineHeight = 24;
+
+    // Genes: ~3 per line, max 10 displayed
+    const genes = params.data.genes || [];
+    const displayGenes = Math.min(genes.length, 10);
+    const geneLines = Math.ceil(displayGenes / 3) + (genes.length > 10 ? 1 : 0);
+
+    // Citation: ~3 lines for text + 1 line for links
+    const citationLines = 4;
+
+    const maxLines = Math.max(citationLines, geneLines + 1);
+
+    return Math.min(300, Math.max(baseHeight, maxLines * lineHeight));
+  };
+
   // Transform data into grid rows
   const gridData = useMemo(() => {
     if (!data || !data.results) return [];
@@ -406,7 +424,7 @@ function LiteratureTopicSearchPage() {
                   paginationPageSizeSelector={[10, 25, 50, 100]}
                   onGridReady={onGridReady}
                   suppressCellFocus={true}
-                  rowHeight={200}
+                  getRowHeight={getRowHeight}
                 />
               </div>
             </div>

@@ -333,6 +333,25 @@ function PhenotypeSearchPage() {
     []
   );
 
+  // Calculate row height based on content
+  const getRowHeight = (params) => {
+    const baseHeight = 60;
+    const lineHeight = 24;
+
+    // Count references - each has citation (~2 lines) + links (~1 line)
+    const refs = params.data.references || [];
+    const refLines = refs.length * 3;
+
+    // Count details
+    const details = params.data.details || [];
+    const detailLines = details.length * 2;
+
+    // Get max lines needed
+    const maxLines = Math.max(2, refLines, detailLines);
+
+    return Math.min(400, Math.max(baseHeight, maxLines * lineHeight));
+  };
+
   const handleDownload = () => {
     if (!data || !data.results || data.results.length === 0) return;
 
@@ -580,7 +599,7 @@ function PhenotypeSearchPage() {
           paginationPageSize={10}
           paginationPageSizeSelector={[10, 25, 50, 100]}
           suppressCellFocus={true}
-          rowHeight={200}
+          getRowHeight={getRowHeight}
         />
       </div>
     );
