@@ -216,8 +216,8 @@ function LiteratureTopicSearchPage() {
     {
       headerName: 'Reference',
       field: 'reference',
-      flex: 4,  // 40%
-      minWidth: 250,
+      flex: 5,  // 50%
+      minWidth: 300,
       wrapText: true,
       cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
       cellRenderer: (params) => {
@@ -233,8 +233,8 @@ function LiteratureTopicSearchPage() {
     {
       headerName: 'Associated Genes',
       field: 'genes',
-      flex: 6,  // 60%
-      minWidth: 400,
+      flex: 5,  // 50%
+      minWidth: 300,
       wrapText: true,
       cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
       cellRenderer: (params) => {
@@ -277,16 +277,16 @@ function LiteratureTopicSearchPage() {
 
   // Calculate row height based on content
   const getRowHeight = useCallback((params) => {
-    const minHeight = 60;
+    const minHeight = 80;
     const lineHeight = 22;
 
-    // Estimate citation lines (approx 80 chars per line in Reference column)
+    // Estimate citation lines (approx 60 chars per line in Reference column at 50% width)
     const citation = params.data.citation || '';
-    const citationLines = Math.ceil(citation.length / 80) + 2; // +2 for PMID and links
+    const citationLines = Math.ceil(citation.length / 60) + 3; // +3 for PMID and links row
 
-    // Estimate gene lines (approx 3 genes per line)
+    // Estimate gene lines (approx 2 genes per line at 50% width)
     const genes = params.data.genes || [];
-    const geneLines = Math.ceil(Math.min(genes.length, 10) / 3) + (genes.length > 10 ? 1 : 0);
+    const geneLines = Math.ceil(Math.min(genes.length, 10) / 2) + (genes.length > 10 ? 1 : 0);
 
     const maxLines = Math.max(citationLines, geneLines);
     return Math.max(minHeight, maxLines * lineHeight + 20);
