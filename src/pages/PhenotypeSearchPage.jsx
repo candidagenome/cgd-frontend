@@ -574,12 +574,11 @@ function PhenotypeSearchPage() {
     }
 
     return (
-      <div className="results-grid-wrapper ag-theme-alpine" style={{ width: '100%' }}>
+      <div className="results-grid-wrapper ag-theme-alpine" style={{ width: '100%', height: '600px' }}>
         <AgGridReact
           rowData={data.results}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
-          domLayout="autoHeight"
           pagination={true}
           paginationPageSize={10}
           paginationPageSizeSelector={[10, 25, 50, 100]}

@@ -398,12 +398,11 @@ function LiteratureTopicSearchPage() {
           return (
             <div key={topicResult.cv_term_no} className="topic-section">
               <h3 className="topic-header">{topicResult.topic}</h3>
-              <div className="results-grid-wrapper ag-theme-alpine">
+              <div className="results-grid-wrapper ag-theme-alpine" style={{ height: '600px' }}>
                 <AgGridReact
                   rowData={topicRows}
                   columnDefs={columnDefs}
                   defaultColDef={defaultColDef}
-                  domLayout="autoHeight"
                   pagination={true}
                   paginationPageSize={10}
                   paginationPageSizeSelector={[10, 25, 50, 100]}
