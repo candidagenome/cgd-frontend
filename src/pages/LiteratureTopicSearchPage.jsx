@@ -218,8 +218,9 @@ function LiteratureTopicSearchPage() {
       field: 'reference',
       flex: 4,  // 40%
       minWidth: 250,
+      autoHeight: true,
       wrapText: true,
-      cellStyle: { whiteSpace: 'normal', lineHeight: '1.4', overflow: 'visible', padding: '8px' },
+      cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
       cellRenderer: (params) => {
         const ref = params.data;
         if (!ref) return '-';
@@ -235,8 +236,9 @@ function LiteratureTopicSearchPage() {
       field: 'genes',
       flex: 6,  // 60%
       minWidth: 400,
+      autoHeight: true,
       wrapText: true,
-      cellStyle: { whiteSpace: 'normal', lineHeight: '1.4', overflow: 'visible', padding: '8px' },
+      cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
       cellRenderer: (params) => {
         const genes = params.data.genes || [];
         if (genes.length === 0) return <span className="muted">-</span>;
@@ -274,26 +276,6 @@ function LiteratureTopicSearchPage() {
     resizable: true,
     wrapText: true,
   }), []);
-
-  // Calculate row height based on content
-  const getRowHeight = (params) => {
-    const baseHeight = 80;
-    const lineHeight = 26;
-
-    // Estimate lines needed for genes (main variable content)
-    // Each gene with organism takes ~20-25 chars, assume ~3 genes per line
-    const genes = params.data.genes || [];
-    const displayGenes = Math.min(genes.length, 10);
-    const geneLines = Math.ceil(displayGenes / 3) + (genes.length > 10 ? 1 : 0);
-
-    // Citation takes: text (~3 lines) + links line (~1 line) = ~4 lines
-    const citationLines = 5;
-
-    // Calculate total lines needed
-    const totalLines = Math.max(citationLines, geneLines + 2);
-
-    return Math.max(baseHeight, totalLines * lineHeight);
-  };
 
   // Transform data into grid rows
   const gridData = useMemo(() => {
@@ -427,7 +409,6 @@ function LiteratureTopicSearchPage() {
                   paginationPageSizeSelector={[10, 25, 50, 100]}
                   onGridReady={onGridReady}
                   suppressCellFocus={true}
-                  getRowHeight={getRowHeight}
                 />
               </div>
             </div>

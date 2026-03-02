@@ -227,6 +227,7 @@ function PhenotypeSearchPage() {
         field: 'mutant_type',
         flex: 1,
         minWidth: 120,
+        autoHeight: true,
         wrapText: true,
         cellStyle: { whiteSpace: 'normal', lineHeight: '1.5' },
         valueGetter: (params) => params.data.mutant_type || '-',
@@ -262,8 +263,9 @@ function PhenotypeSearchPage() {
         field: 'details',
         flex: 1.5,
         minWidth: 150,
+        autoHeight: true,
         wrapText: true,
-        cellStyle: { whiteSpace: 'normal', lineHeight: '1.4', overflow: 'visible', padding: '8px' },
+        cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
         valueGetter: (params) => {
           const details = params.data.details || [];
           return details.map((d) => `${d.property_type}: ${d.property_value}`).join('; ') || '-';
@@ -298,8 +300,9 @@ function PhenotypeSearchPage() {
         field: 'references',
         flex: 2,
         minWidth: 200,
+        autoHeight: true,
         wrapText: true,
-        cellStyle: { whiteSpace: 'normal', lineHeight: '1.4', overflow: 'visible', padding: '8px' },
+        cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
         valueGetter: (params) => {
           const refs = params.data.references || [];
           return refs.map((r) => r.display_name || r.pubmed_id || '').join('; ');
@@ -332,26 +335,6 @@ function PhenotypeSearchPage() {
     }),
     []
   );
-
-  // Calculate row height based on content
-  const getRowHeight = (params) => {
-    const baseHeight = 80;
-    const lineHeight = 26;
-
-    // Estimate lines needed for references (main variable content)
-    // Each reference has: citation text (~3 lines) + links line (~1 line) = ~4 lines
-    const refs = params.data.references || [];
-    const refLines = refs.length * 4;
-
-    // Estimate lines for details
-    const details = params.data.details || [];
-    const detailLines = details.length * 2;
-
-    // Calculate total lines needed
-    const totalLines = Math.max(3, refLines, detailLines);
-
-    return Math.max(baseHeight, totalLines * lineHeight);
-  };
 
   const handleDownload = () => {
     if (!data || !data.results || data.results.length === 0) return;
@@ -601,7 +584,6 @@ function PhenotypeSearchPage() {
           paginationPageSize={10}
           paginationPageSizeSelector={[10, 25, 50, 100]}
           suppressCellFocus={true}
-          getRowHeight={getRowHeight}
         />
       </div>
     );
