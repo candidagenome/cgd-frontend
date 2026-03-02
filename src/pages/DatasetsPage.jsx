@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import referenceApi from '../api/referenceApi';
@@ -71,8 +71,8 @@ const DatasetsPage = () => {
       field: 'citation',
       flex: 1,
       minWidth: 400,
-      autoHeight: true,
       wrapText: true,
+      cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
       cellRenderer: CitationCellRenderer,
       filter: 'agTextColumnFilter',
       filterParams: {
@@ -88,6 +88,18 @@ const DatasetsPage = () => {
     resizable: true,
     floatingFilter: true,
   }), []);
+
+  // Calculate row height based on citation content
+  const getRowHeight = useCallback((params) => {
+    const minHeight = 75;
+    const lineHeight = 20;
+
+    // Estimate citation lines
+    const citation = params.data.citation || '';
+    const citationLines = Math.ceil(citation.length / 100) + 2; // +2 for links
+
+    return Math.max(minHeight, citationLines * lineHeight + 15);
+  }, []);
 
   if (loading) {
     return (
@@ -168,6 +180,7 @@ const DatasetsPage = () => {
                 paginationPageSize={10}
                 paginationPageSizeSelector={[10, 25, 50, 100]}
                 suppressCellFocus={true}
+                getRowHeight={getRowHeight}
               />
             </div>
           </div>

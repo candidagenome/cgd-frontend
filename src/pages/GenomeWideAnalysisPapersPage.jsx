@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import referenceApi from '../api/referenceApi';
@@ -156,6 +156,23 @@ function GenomeWideAnalysisPapersPage() {
     floatingFilter: true,
   }), []);
 
+  // Calculate row height based on content
+  const getRowHeight = useCallback((params) => {
+    const minHeight = 75;
+    const lineHeight = 20;
+
+    // Estimate citation lines
+    const citation = params.data.citation || '';
+    const citationLines = Math.ceil(citation.length / 60) + 2;
+
+    // Estimate gene lines
+    const genes = params.data.genes || [];
+    const geneLines = Math.ceil(genes.length / 3);
+
+    const maxLines = Math.max(citationLines, geneLines);
+    return Math.max(minHeight, maxLines * lineHeight + 15);
+  }, []);
+
   const renderTopicFilters = () => {
     if (!data?.available_topics) return null;
 
@@ -235,8 +252,7 @@ function GenomeWideAnalysisPapersPage() {
             paginationPageSize={10}
             paginationPageSizeSelector={[10, 25, 50, 100]}
             suppressCellFocus={true}
-            rowHeight={80}
-            suppressRowVirtualisation={true}
+            getRowHeight={getRowHeight}
           />
         </div>
       ) : (
