@@ -94,8 +94,8 @@ function DiseaseRelatedPapersPage() {
       field: 'citation',
       flex: 2,
       minWidth: 300,
-      autoHeight: true,
       wrapText: true,
+      cellStyle: { whiteSpace: 'normal', lineHeight: '1.5' },
       cellRenderer: (params) => {
         const paper = params.data;
         return (
@@ -123,7 +123,8 @@ function DiseaseRelatedPapersPage() {
       field: 'genes',
       flex: 1.5,
       minWidth: 200,
-      autoHeight: true,
+      wrapText: true,
+      cellStyle: { whiteSpace: 'normal', lineHeight: '1.5' },
       cellRenderer: (params) => {
         const genes = params.data.genes || [];
         if (genes.length === 0) return '-';
@@ -233,6 +234,8 @@ function DiseaseRelatedPapersPage() {
             paginationPageSize={10}
             paginationPageSizeSelector={[10, 25, 50, 100]}
             suppressCellFocus={true}
+            rowHeight={80}
+            suppressRowVirtualisation={true}
           />
         </div>
       ) : (
