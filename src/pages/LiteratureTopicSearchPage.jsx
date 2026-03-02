@@ -270,7 +270,7 @@ function LiteratureTopicSearchPage() {
   // Default column properties
   const defaultColDef = useMemo(() => ({
     sortable: true,
-    filter: true,
+    filter: false,
     resizable: true,
     wrapText: true,
   }), []);
@@ -391,7 +391,7 @@ function LiteratureTopicSearchPage() {
           return (
             <div key={topicResult.cv_term_no} className="topic-section">
               <h3 className="topic-header">{topicResult.topic}</h3>
-              <div className="results-grid-wrapper ag-theme-alpine" style={{ height: '700px', width: '100%' }}>
+              <div className="results-grid-wrapper ag-theme-alpine" style={{ height: '500px', width: '100%' }}>
                 <AgGridReact
                   rowData={topicRows}
                   columnDefs={columnDefs}
@@ -401,7 +401,7 @@ function LiteratureTopicSearchPage() {
                   paginationPageSizeSelector={[10, 25, 50, 100]}
                   onGridReady={onGridReady}
                   suppressCellFocus={true}
-                  rowHeight={200}
+                  rowHeight={100}
                 />
               </div>
             </div>
