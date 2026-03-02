@@ -409,12 +409,6 @@ function LiteratureTopicSearchPage() {
                   paginationPageSizeSelector={[10, 25, 50, 100]}
                   onGridReady={onGridReady}
                   suppressCellFocus={true}
-                  suppressRowVirtualisation={true}
-                  onPaginationChanged={(params) => {
-                    if (params.api) {
-                      params.api.resetRowHeights();
-                    }
-                  }}
                 />
               </div>
             </div>
