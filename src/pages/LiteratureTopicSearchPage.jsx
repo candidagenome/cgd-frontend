@@ -275,40 +275,20 @@ function LiteratureTopicSearchPage() {
     wrapText: true,
   }), []);
 
-  // Calculate row height based on content
-  const getRowHeight = useCallback((params) => {
-    const baseHeight = 80;
-    const lineHeight = 24;
 
-    // Genes: ~3 per line, max 10 displayed
-    const genes = params.data.genes || [];
-    const displayGenes = Math.min(genes.length, 10);
-    const geneLines = Math.ceil(displayGenes / 3) + (genes.length > 10 ? 1 : 0);
+  // Transform data into grid rows - memoized per topic to prevent re-renders
+  const topicRowsMap = useMemo(() => {
+    if (!data || !data.results) return new Map();
 
-    // Citation: ~3 lines for text + 1 line for links
-    const citationLines = 4;
-
-    const maxLines = Math.max(citationLines, geneLines + 1);
-
-    return Math.min(300, Math.max(baseHeight, maxLines * lineHeight));
-  }, []);
-
-  // Transform data into grid rows
-  const gridData = useMemo(() => {
-    if (!data || !data.results) return [];
-
-    // Flatten results: each reference becomes a row with its associated genes
-    const rows = [];
+    const map = new Map();
     for (const topicResult of data.results) {
-      for (const ref of topicResult.references) {
-        rows.push({
-          ...ref,
-          genes: ref.genes || [],
-          topic: topicResult.topic,
-        });
-      }
+      const rows = topicResult.references.map((ref) => ({
+        ...ref,
+        genes: ref.genes || [],
+      }));
+      map.set(topicResult.cv_term_no, rows);
     }
-    return rows;
+    return map;
   }, [data]);
 
   // Grid ready callback
@@ -406,15 +386,12 @@ function LiteratureTopicSearchPage() {
     return (
       <div className="results-by-topic">
         {data.results.map((topicResult) => {
-          const topicRows = topicResult.references.map((ref) => ({
-            ...ref,
-            genes: ref.genes || [],
-          }));
+          const topicRows = topicRowsMap.get(topicResult.cv_term_no) || [];
 
           return (
             <div key={topicResult.cv_term_no} className="topic-section">
               <h3 className="topic-header">{topicResult.topic}</h3>
-              <div className="results-grid-wrapper ag-theme-alpine" style={{ height: '600px', width: '100%' }}>
+              <div className="results-grid-wrapper ag-theme-alpine" style={{ height: '700px', width: '100%' }}>
                 <AgGridReact
                   rowData={topicRows}
                   columnDefs={columnDefs}
@@ -424,7 +401,7 @@ function LiteratureTopicSearchPage() {
                   paginationPageSizeSelector={[10, 25, 50, 100]}
                   onGridReady={onGridReady}
                   suppressCellFocus={true}
-                  getRowHeight={getRowHeight}
+                  rowHeight={200}
                 />
               </div>
             </div>
