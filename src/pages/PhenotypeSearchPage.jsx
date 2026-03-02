@@ -349,7 +349,7 @@ function PhenotypeSearchPage() {
     // Get max lines needed
     const maxLines = Math.max(2, refLines, detailLines);
 
-    return Math.max(minHeight, maxLines * lineHeight + 70);
+    return Math.max(minHeight, maxLines * lineHeight + 90);
   }, []);
 
   const handleDownload = () => {
