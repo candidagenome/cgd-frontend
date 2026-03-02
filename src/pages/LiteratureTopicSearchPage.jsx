@@ -270,7 +270,7 @@ function LiteratureTopicSearchPage() {
   // Default column properties
   const defaultColDef = useMemo(() => ({
     sortable: true,
-    filter: false,
+    filter: true,
     resizable: true,
     wrapText: true,
   }), []);
