@@ -216,9 +216,10 @@ function LiteratureTopicSearchPage() {
     {
       headerName: 'Reference',
       field: 'reference',
-      flex: 4,  // 40%
-      minWidth: 250,
-      autoHeight: true,
+      flex: 5,  // 50%
+      minWidth: 300,
+      wrapText: true,
+      cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
       cellRenderer: (params) => {
         const ref = params.data;
         if (!ref) return '-';
@@ -232,9 +233,10 @@ function LiteratureTopicSearchPage() {
     {
       headerName: 'Associated Genes',
       field: 'genes',
-      flex: 6,  // 60%
-      minWidth: 400,
-      autoHeight: true,
+      flex: 5,  // 50%
+      minWidth: 300,
+      wrapText: true,
+      cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
       cellRenderer: (params) => {
         const genes = params.data.genes || [];
         if (genes.length === 0) return <span className="muted">-</span>;
@@ -273,22 +275,36 @@ function LiteratureTopicSearchPage() {
     wrapText: true,
   }), []);
 
-  // Transform data into grid rows
-  const gridData = useMemo(() => {
-    if (!data || !data.results) return [];
+  // Calculate row height based on content
+  const getRowHeight = useCallback((params) => {
+    const minHeight = 75;
+    const lineHeight = 20;
 
-    // Flatten results: each reference becomes a row with its associated genes
-    const rows = [];
+    // Estimate citation lines (approx 70 chars per line in Reference column at 50% width)
+    const citation = params.data.citation || '';
+    const citationLines = Math.ceil(citation.length / 70) + 2; // +2 for PMID and links
+
+    // Estimate gene lines (approx 2 genes per line at 50% width)
+    const genes = params.data.genes || [];
+    const geneLines = Math.ceil(Math.min(genes.length, 10) / 2);
+
+    const maxLines = Math.max(citationLines, geneLines);
+    return Math.max(minHeight, maxLines * lineHeight + 15);
+  }, []);
+
+  // Transform data into grid rows - memoized per topic to prevent re-renders
+  const topicRowsMap = useMemo(() => {
+    if (!data || !data.results) return new Map();
+
+    const map = new Map();
     for (const topicResult of data.results) {
-      for (const ref of topicResult.references) {
-        rows.push({
-          ...ref,
-          genes: ref.genes || [],
-          topic: topicResult.topic,
-        });
-      }
+      const rows = topicResult.references.map((ref) => ({
+        ...ref,
+        genes: ref.genes || [],
+      }));
+      map.set(topicResult.cv_term_no, rows);
     }
-    return rows;
+    return map;
   }, [data]);
 
   // Grid ready callback
@@ -362,7 +378,7 @@ function LiteratureTopicSearchPage() {
               Selected topics: {data.query.topic_names.join(', ')}
             </div>
           </div>
-          {gridData.length > 0 && (
+          {topicRowsMap.size > 0 && (
             <button type="button" className="btn-download" onClick={handleDownload}>
               Download CSV
             </button>
@@ -386,15 +402,12 @@ function LiteratureTopicSearchPage() {
     return (
       <div className="results-by-topic">
         {data.results.map((topicResult) => {
-          const topicRows = topicResult.references.map((ref) => ({
-            ...ref,
-            genes: ref.genes || [],
-          }));
+          const topicRows = topicRowsMap.get(topicResult.cv_term_no) || [];
 
           return (
             <div key={topicResult.cv_term_no} className="topic-section">
               <h3 className="topic-header">{topicResult.topic}</h3>
-              <div className="results-grid-wrapper ag-theme-alpine">
+              <div className="results-grid-wrapper ag-theme-alpine" style={{ width: '100%' }}>
                 <AgGridReact
                   rowData={topicRows}
                   columnDefs={columnDefs}
@@ -405,6 +418,7 @@ function LiteratureTopicSearchPage() {
                   paginationPageSizeSelector={[10, 25, 50, 100]}
                   onGridReady={onGridReady}
                   suppressCellFocus={true}
+                  getRowHeight={getRowHeight}
                 />
               </div>
             </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import phenotypeApi from '../api/phenotypeApi';
@@ -227,7 +227,8 @@ function PhenotypeSearchPage() {
         field: 'mutant_type',
         flex: 1,
         minWidth: 120,
-        autoHeight: true,
+        wrapText: true,
+        cellStyle: { whiteSpace: 'normal', lineHeight: '1.5' },
         valueGetter: (params) => params.data.mutant_type || '-',
         cellRenderer: (params) => {
           const result = params.data;
@@ -261,7 +262,8 @@ function PhenotypeSearchPage() {
         field: 'details',
         flex: 1.5,
         minWidth: 150,
-        autoHeight: true,
+        wrapText: true,
+        cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
         valueGetter: (params) => {
           const details = params.data.details || [];
           return details.map((d) => `${d.property_type}: ${d.property_value}`).join('; ') || '-';
@@ -296,7 +298,8 @@ function PhenotypeSearchPage() {
         field: 'references',
         flex: 2,
         minWidth: 200,
-        autoHeight: true,
+        wrapText: true,
+        cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
         valueGetter: (params) => {
           const refs = params.data.references || [];
           return refs.map((r) => r.display_name || r.pubmed_id || '').join('; ');
@@ -329,6 +332,25 @@ function PhenotypeSearchPage() {
     }),
     []
   );
+
+  // Calculate row height based on content
+  const getRowHeight = useCallback((params) => {
+    const minHeight = 75;
+    const lineHeight = 22;
+
+    // Count references - each has citation + links
+    const refs = params.data.references || [];
+    const refLines = refs.length * 3;
+
+    // Count details
+    const details = params.data.details || [];
+    const detailLines = details.length * 2;
+
+    // Get max lines needed
+    const maxLines = Math.max(2, refLines, detailLines);
+
+    return Math.max(minHeight, maxLines * lineHeight + 90);
+  }, []);
 
   const handleDownload = () => {
     if (!data || !data.results || data.results.length === 0) return;
@@ -578,6 +600,7 @@ function PhenotypeSearchPage() {
           paginationPageSize={10}
           paginationPageSizeSelector={[10, 25, 50, 100]}
           suppressCellFocus={true}
+          getRowHeight={getRowHeight}
         />
       </div>
     );

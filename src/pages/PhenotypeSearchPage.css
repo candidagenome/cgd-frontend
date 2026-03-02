@@ -328,6 +328,25 @@
   padding-bottom: 6px;
 }
 
+/* Critical styles for autoHeight to work properly with pagination */
+.results-grid-wrapper .ag-body-viewport {
+  min-height: auto !important;
+}
+
+.results-grid-wrapper .ag-layout-auto-height .ag-center-cols-viewport,
+.results-grid-wrapper .ag-layout-auto-height .ag-center-cols-container {
+  min-height: auto !important;
+}
+
+.results-grid-wrapper .ag-body-horizontal-scroll {
+  min-height: 0;
+}
+
+.results-grid-wrapper .ag-root-wrapper-body {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
 .gene-link {
   color: #0066cc;
   text-decoration: none;
