@@ -277,7 +277,7 @@ function LiteratureTopicSearchPage() {
 
   // Calculate row height based on content
   const getRowHeight = useCallback((params) => {
-    const minHeight = 70;
+    const minHeight = 80;
     const lineHeight = 20;
 
     // Estimate citation lines (approx 70 chars per line in Reference column at 50% width)
@@ -289,7 +289,7 @@ function LiteratureTopicSearchPage() {
     const geneLines = Math.ceil(Math.min(genes.length, 10) / 2);
 
     const maxLines = Math.max(citationLines, geneLines);
-    return Math.max(minHeight, maxLines * lineHeight);
+    return Math.max(minHeight, maxLines * lineHeight + 25);
   }, []);
 
   // Transform data into grid rows - memoized per topic to prevent re-renders
