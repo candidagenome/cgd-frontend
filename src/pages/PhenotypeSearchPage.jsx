@@ -326,7 +326,7 @@ function PhenotypeSearchPage() {
   const defaultColDef = useMemo(
     () => ({
       sortable: true,
-      filter: true,
+      filter: false,
       resizable: true,
       wrapText: true,
     }),
@@ -334,23 +334,23 @@ function PhenotypeSearchPage() {
   );
 
   // Calculate row height based on content
-  const getRowHeight = (params) => {
-    const baseHeight = 60;
-    const lineHeight = 24;
+  const getRowHeight = useCallback((params) => {
+    const minHeight = 60;
+    const lineHeight = 20;
 
-    // Count references - each has citation (~2 lines) + links (~1 line)
+    // Count references - each has citation + links
     const refs = params.data.references || [];
-    const refLines = refs.length * 3;
+    const refLines = refs.length * 2;
 
     // Count details
     const details = params.data.details || [];
-    const detailLines = details.length * 2;
+    const detailLines = details.length;
 
     // Get max lines needed
     const maxLines = Math.max(2, refLines, detailLines);
 
-    return Math.min(400, Math.max(baseHeight, maxLines * lineHeight));
-  };
+    return Math.max(minHeight, maxLines * lineHeight + 10);
+  }, []);
 
   const handleDownload = () => {
     if (!data || !data.results || data.results.length === 0) return;
@@ -590,11 +590,12 @@ function PhenotypeSearchPage() {
     }
 
     return (
-      <div className="results-grid-wrapper ag-theme-alpine" style={{ width: '100%', height: '600px' }}>
+      <div className="results-grid-wrapper ag-theme-alpine" style={{ width: '100%' }}>
         <AgGridReact
           rowData={data.results}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
+          domLayout="autoHeight"
           pagination={true}
           paginationPageSize={10}
           paginationPageSizeSelector={[10, 25, 50, 100]}
