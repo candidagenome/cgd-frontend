@@ -219,7 +219,6 @@ function LiteratureTopicSearchPage() {
       flex: 4,  // 40%
       minWidth: 250,
       wrapText: true,
-      autoHeight: true,
       cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
       cellRenderer: (params) => {
         const ref = params.data;
@@ -237,7 +236,6 @@ function LiteratureTopicSearchPage() {
       flex: 6,  // 60%
       minWidth: 400,
       wrapText: true,
-      autoHeight: true,
       cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
       cellRenderer: (params) => {
         const genes = params.data.genes || [];
@@ -277,6 +275,22 @@ function LiteratureTopicSearchPage() {
     wrapText: true,
   }), []);
 
+  // Calculate row height based on content
+  const getRowHeight = useCallback((params) => {
+    const minHeight = 60;
+    const lineHeight = 22;
+
+    // Estimate citation lines (approx 80 chars per line in Reference column)
+    const citation = params.data.citation || '';
+    const citationLines = Math.ceil(citation.length / 80) + 2; // +2 for PMID and links
+
+    // Estimate gene lines (approx 3 genes per line)
+    const genes = params.data.genes || [];
+    const geneLines = Math.ceil(Math.min(genes.length, 10) / 3) + (genes.length > 10 ? 1 : 0);
+
+    const maxLines = Math.max(citationLines, geneLines);
+    return Math.max(minHeight, maxLines * lineHeight + 20);
+  }, []);
 
   // Transform data into grid rows - memoized per topic to prevent re-renders
   const topicRowsMap = useMemo(() => {
@@ -404,6 +418,7 @@ function LiteratureTopicSearchPage() {
                   paginationPageSizeSelector={[10, 25, 50, 100]}
                   onGridReady={onGridReady}
                   suppressCellFocus={true}
+                  getRowHeight={getRowHeight}
                 />
               </div>
             </div>
