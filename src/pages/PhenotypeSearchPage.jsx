@@ -227,7 +227,8 @@ function PhenotypeSearchPage() {
         field: 'mutant_type',
         flex: 1,
         minWidth: 120,
-        autoHeight: true,
+        wrapText: true,
+        cellStyle: { whiteSpace: 'normal', lineHeight: '1.5' },
         valueGetter: (params) => params.data.mutant_type || '-',
         cellRenderer: (params) => {
           const result = params.data;
@@ -261,7 +262,8 @@ function PhenotypeSearchPage() {
         field: 'details',
         flex: 1.5,
         minWidth: 150,
-        autoHeight: true,
+        wrapText: true,
+        cellStyle: { whiteSpace: 'normal', lineHeight: '1.5' },
         valueGetter: (params) => {
           const details = params.data.details || [];
           return details.map((d) => `${d.property_type}: ${d.property_value}`).join('; ') || '-';
@@ -296,7 +298,8 @@ function PhenotypeSearchPage() {
         field: 'references',
         flex: 2,
         minWidth: 200,
-        autoHeight: true,
+        wrapText: true,
+        cellStyle: { whiteSpace: 'normal', lineHeight: '1.5' },
         valueGetter: (params) => {
           const refs = params.data.references || [];
           return refs.map((r) => r.display_name || r.pubmed_id || '').join('; ');
@@ -578,6 +581,8 @@ function PhenotypeSearchPage() {
           paginationPageSize={10}
           paginationPageSizeSelector={[10, 25, 50, 100]}
           suppressCellFocus={true}
+          rowHeight={80}
+          suppressRowVirtualisation={true}
         />
       </div>
     );
