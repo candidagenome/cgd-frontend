@@ -581,7 +581,7 @@ function PhenotypeSearchPage() {
           paginationPageSize={10}
           paginationPageSizeSelector={[10, 25, 50, 100]}
           suppressCellFocus={true}
-          rowHeight={80}
+          getRowHeight={() => null}
           suppressRowVirtualisation={true}
         />
       </div>
