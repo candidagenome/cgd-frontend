@@ -387,11 +387,14 @@ function LiteratureTopicSearchPage() {
       <div className="results-by-topic">
         {data.results.map((topicResult) => {
           const topicRows = topicRowsMap.get(topicResult.cv_term_no) || [];
+          // Calculate height: min of (rows * 130 + header/pagination) or max for 10 rows
+          const displayRows = Math.min(topicRows.length, 10);
+          const gridHeight = Math.min(1400, displayRows * 130 + 100);
 
           return (
             <div key={topicResult.cv_term_no} className="topic-section">
               <h3 className="topic-header">{topicResult.topic}</h3>
-              <div className="results-grid-wrapper ag-theme-alpine" style={{ height: '1400px', width: '100%' }}>
+              <div className="results-grid-wrapper ag-theme-alpine" style={{ height: `${gridHeight}px`, width: '100%' }}>
                 <AgGridReact
                   rowData={topicRows}
                   columnDefs={columnDefs}
