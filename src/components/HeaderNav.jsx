@@ -56,7 +56,7 @@ const HeaderNav = () => {
         { label: 'GO Slim Mapper', to: '/go-slim-mapper' },
         { label: 'GO Term Finder', to: '/go-term-finder' },
         { label: 'GO Consortium', href: 'http://www.geneontology.org/', external: true },
-        { label: 'GO File Downloads', to: '/download' }
+        { label: 'GO File Downloads', href: 'http://www.candidagenome.org/download/go/', external: true }
       ]
     },
     {
