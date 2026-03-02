@@ -219,7 +219,6 @@ function LiteratureTopicSearchPage() {
       flex: 4,  // 40%
       minWidth: 250,
       wrapText: true,
-      autoHeight: true,
       cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
       cellRenderer: (params) => {
         const ref = params.data;
@@ -237,7 +236,6 @@ function LiteratureTopicSearchPage() {
       flex: 6,  // 60%
       minWidth: 400,
       wrapText: true,
-      autoHeight: true,
       cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
       cellRenderer: (params) => {
         const genes = params.data.genes || [];
@@ -276,6 +274,24 @@ function LiteratureTopicSearchPage() {
     resizable: true,
     wrapText: true,
   }), []);
+
+  // Calculate row height based on content
+  const getRowHeight = useCallback((params) => {
+    const baseHeight = 80;
+    const lineHeight = 24;
+
+    // Genes: ~3 per line, max 10 displayed
+    const genes = params.data.genes || [];
+    const displayGenes = Math.min(genes.length, 10);
+    const geneLines = Math.ceil(displayGenes / 3) + (genes.length > 10 ? 1 : 0);
+
+    // Citation: ~3 lines for text + 1 line for links
+    const citationLines = 4;
+
+    const maxLines = Math.max(citationLines, geneLines + 1);
+
+    return Math.min(300, Math.max(baseHeight, maxLines * lineHeight));
+  }, []);
 
   // Transform data into grid rows
   const gridData = useMemo(() => {
@@ -398,17 +414,17 @@ function LiteratureTopicSearchPage() {
           return (
             <div key={topicResult.cv_term_no} className="topic-section">
               <h3 className="topic-header">{topicResult.topic}</h3>
-              <div className="results-grid-wrapper ag-theme-alpine" style={{ width: '100%' }}>
+              <div className="results-grid-wrapper ag-theme-alpine" style={{ height: '600px', width: '100%' }}>
                 <AgGridReact
                   rowData={topicRows}
                   columnDefs={columnDefs}
                   defaultColDef={defaultColDef}
-                  domLayout="autoHeight"
                   pagination={true}
                   paginationPageSize={10}
                   paginationPageSizeSelector={[10, 25, 50, 100]}
                   onGridReady={onGridReady}
                   suppressCellFocus={true}
+                  getRowHeight={getRowHeight}
                 />
               </div>
             </div>
