@@ -335,21 +335,22 @@ function PhenotypeSearchPage() {
 
   // Calculate row height based on content
   const getRowHeight = (params) => {
-    const baseHeight = 50;
-    const lineHeight = 22;
+    const baseHeight = 60;
+    const lineHeight = 24;
 
     // Estimate lines needed for references (main variable content)
+    // Each reference has: citation text (~2 lines) + links line (~1 line) = ~3 lines
     const refs = params.data.references || [];
-    const refLines = refs.length * 2; // ~2 lines per reference (citation + links)
+    const refLines = refs.length * 3;
 
     // Estimate lines for details
     const details = params.data.details || [];
-    const detailLines = details.length;
+    const detailLines = details.length * 1.5;
 
     // Calculate total lines needed
     const totalLines = Math.max(2, refLines, detailLines);
 
-    return Math.max(baseHeight, baseHeight + (totalLines - 1) * lineHeight);
+    return Math.max(baseHeight, totalLines * lineHeight);
   };
 
   const handleDownload = () => {

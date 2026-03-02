@@ -277,20 +277,22 @@ function LiteratureTopicSearchPage() {
 
   // Calculate row height based on content
   const getRowHeight = (params) => {
-    const baseHeight = 50;
-    const lineHeight = 22;
+    const baseHeight = 60;
+    const lineHeight = 24;
 
     // Estimate lines needed for genes (main variable content)
+    // Each gene with organism takes ~15-20 chars, assume ~4 genes per line
     const genes = params.data.genes || [];
-    const geneLines = Math.ceil(Math.min(genes.length, 10) / 3); // ~3 genes per line
+    const displayGenes = Math.min(genes.length, 10);
+    const geneLines = Math.ceil(displayGenes / 4) + (genes.length > 10 ? 1 : 0);
 
-    // Estimate lines for citation
-    const citationLines = 3; // typical citation takes ~3 lines
+    // Citation takes: text (~2 lines) + links line (~1 line) = ~3 lines
+    const citationLines = 4;
 
     // Calculate total lines needed
     const totalLines = Math.max(citationLines, geneLines + 1);
 
-    return Math.max(baseHeight, baseHeight + (totalLines - 1) * lineHeight);
+    return Math.max(baseHeight, totalLines * lineHeight);
   };
 
   // Transform data into grid rows
