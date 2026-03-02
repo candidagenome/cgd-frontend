@@ -362,7 +362,7 @@ function LiteratureTopicSearchPage() {
               Selected topics: {data.query.topic_names.join(', ')}
             </div>
           </div>
-          {gridData.length > 0 && (
+          {topicRowsMap.size > 0 && (
             <button type="button" className="btn-download" onClick={handleDownload}>
               Download CSV
             </button>
