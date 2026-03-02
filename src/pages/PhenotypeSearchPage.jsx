@@ -585,6 +585,14 @@ function PhenotypeSearchPage() {
           paginationPageSize={10}
           paginationPageSizeSelector={[10, 25, 50, 100]}
           suppressCellFocus={true}
+          onFirstDataRendered={(params) => {
+            params.api.resetRowHeights();
+          }}
+          onPaginationChanged={(params) => {
+            setTimeout(() => {
+              params.api.resetRowHeights();
+            }, 0);
+          }}
         />
       </div>
     );
