@@ -233,7 +233,6 @@ function GenomeWideAnalysisPapersPage() {
             paginationPageSize={10}
             paginationPageSizeSelector={[10, 25, 50, 100]}
             suppressCellFocus={true}
-            getRowId={(params) => params.data.reference_id || params.data.pmid}
           />
         </div>
       ) : (
