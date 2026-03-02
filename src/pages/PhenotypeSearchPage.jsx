@@ -326,7 +326,7 @@ function PhenotypeSearchPage() {
   const defaultColDef = useMemo(
     () => ({
       sortable: true,
-      filter: false,
+      filter: true,
       resizable: true,
       wrapText: true,
     }),
@@ -335,21 +335,21 @@ function PhenotypeSearchPage() {
 
   // Calculate row height based on content
   const getRowHeight = useCallback((params) => {
-    const minHeight = 60;
-    const lineHeight = 20;
+    const minHeight = 75;
+    const lineHeight = 22;
 
     // Count references - each has citation + links
     const refs = params.data.references || [];
-    const refLines = refs.length * 2;
+    const refLines = refs.length * 3;
 
     // Count details
     const details = params.data.details || [];
-    const detailLines = details.length;
+    const detailLines = details.length * 2;
 
     // Get max lines needed
     const maxLines = Math.max(2, refLines, detailLines);
 
-    return Math.max(minHeight, maxLines * lineHeight + 10);
+    return Math.max(minHeight, maxLines * lineHeight + 15);
   }, []);
 
   const handleDownload = () => {
