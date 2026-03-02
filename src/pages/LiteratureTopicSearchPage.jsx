@@ -289,7 +289,7 @@ function LiteratureTopicSearchPage() {
     const geneLines = Math.ceil(Math.min(genes.length, 10) / 2);
 
     const maxLines = Math.max(citationLines, geneLines);
-    return Math.max(minHeight, maxLines * lineHeight + 25);
+    return Math.max(minHeight, maxLines * lineHeight + 15);
   }, []);
 
   // Transform data into grid rows - memoized per topic to prevent re-renders
