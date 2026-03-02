@@ -391,7 +391,7 @@ function LiteratureTopicSearchPage() {
           return (
             <div key={topicResult.cv_term_no} className="topic-section">
               <h3 className="topic-header">{topicResult.topic}</h3>
-              <div className="results-grid-wrapper ag-theme-alpine" style={{ height: '600px', width: '100%' }}>
+              <div className="results-grid-wrapper ag-theme-alpine" style={{ height: '1400px', width: '100%' }}>
                 <AgGridReact
                   rowData={topicRows}
                   columnDefs={columnDefs}
