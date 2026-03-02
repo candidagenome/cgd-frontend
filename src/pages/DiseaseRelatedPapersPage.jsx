@@ -5,7 +5,7 @@ import referenceApi from '../api/referenceApi';
 import { renderCitationItem } from '../utils/formatCitation';
 import './GenomeWideAnalysisPapersPage.css';
 
-function GenomeWideAnalysisPapersPage() {
+function DiseaseRelatedPapersPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -18,7 +18,7 @@ function GenomeWideAnalysisPapersPage() {
       try {
         setLoading(true);
         // Fetch first page to get total count
-        const firstPage = await referenceApi.getGenomeWideAnalysisPapers(
+        const firstPage = await referenceApi.getDiseaseRelatedPapers(
           currentTopic,
           1,
           100
@@ -31,7 +31,7 @@ function GenomeWideAnalysisPapersPage() {
           const pagePromises = [];
           for (let p = 2; p <= firstPage.total_pages; p++) {
             pagePromises.push(
-              referenceApi.getGenomeWideAnalysisPapers(currentTopic, p, 100)
+              referenceApi.getDiseaseRelatedPapers(currentTopic, p, 100)
             );
           }
           const pages = await Promise.all(pagePromises);
@@ -46,7 +46,7 @@ function GenomeWideAnalysisPapersPage() {
         });
       } catch (err) {
         // Handle FastAPI validation errors (array of objects) or string errors
-        let errorMsg = 'Failed to load genome-wide analysis papers';
+        let errorMsg = 'Failed to load disease-related papers';
         const detail = err.response?.data?.detail;
         if (typeof detail === 'string') {
           errorMsg = detail;
@@ -161,15 +161,15 @@ function GenomeWideAnalysisPapersPage() {
 
     const topics = data.available_topics;
     const midpoint = Math.ceil(topics.length / 2);
-    const leftTopics = topics.slice(0, midpoint);
-    const rightTopics = topics.slice(midpoint);
+    const leftColumn = topics.slice(0, midpoint);
+    const rightColumn = topics.slice(midpoint);
 
     return (
       <div className="topic-filters">
         <p className="filter-instruction">Click on a topic to see papers for that topic:</p>
         <div className="topic-columns">
           <div className="topic-column">
-            {leftTopics.map((topic) => (
+            {leftColumn.map((topic) => (
               <button
                 key={topic}
                 className={`topic-btn ${currentTopic === topic ? 'selected' : ''}`}
@@ -180,7 +180,7 @@ function GenomeWideAnalysisPapersPage() {
             ))}
           </div>
           <div className="topic-column">
-            {rightTopics.map((topic) => (
+            {rightColumn.map((topic) => (
               <button
                 key={topic}
                 className={`topic-btn ${currentTopic === topic ? 'selected' : ''}`}
@@ -203,7 +203,7 @@ function GenomeWideAnalysisPapersPage() {
   if (loading) {
     return (
       <div className="genome-wide-papers-page">
-        <div className="loading">Loading genome-wide analysis papers...</div>
+        <div className="loading">Loading disease-related papers...</div>
       </div>
     );
   }
@@ -219,7 +219,7 @@ function GenomeWideAnalysisPapersPage() {
   return (
     <div className="genome-wide-papers-page">
       <header className="page-header">
-        <h1>Genome-wide Analysis Papers</h1>
+        <h1>Disease-Related Papers</h1>
       </header>
 
       {renderTopicFilters()}
@@ -241,7 +241,7 @@ function GenomeWideAnalysisPapersPage() {
         </div>
       ) : (
         <div className="no-papers">
-          <p>No genome-wide analysis papers found.</p>
+          <p>No disease-related papers found.</p>
         </div>
       )}
 
@@ -249,4 +249,4 @@ function GenomeWideAnalysisPapersPage() {
   );
 }
 
-export default GenomeWideAnalysisPapersPage;
+export default DiseaseRelatedPapersPage;

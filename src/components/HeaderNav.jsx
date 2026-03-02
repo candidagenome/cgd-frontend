@@ -13,13 +13,12 @@ const HeaderNav = () => {
       label: 'Search',
       to: '/search',
       submenu: [
-        { label: 'BLAST', to: '/blast' },
-        { label: 'GO Term Finder', to: '/go-term-finder' },
-        { label: 'GO Slim Mapper', to: '/go-slim-mapper' },
-        { label: 'Text Search', to: '/search' },
-        { label: 'Primers', to: '/webprimer' },
-        { label: 'PatMatch', to: '/patmatch' },
-        { label: 'Advanced Search', to: '/feature-search' }
+        { label: 'Advanced Feature Search', to: '/feature-search' },
+        { label: 'Literature Search', to: '/literature-topic-search' },
+        { label: 'Text Search', to: '/search/text' },
+        { label: 'Phenotype Search', to: '/phenotype/search' },
+        { label: 'Colleague Search', to: '/colleague' },
+        { label: 'External Resources', to: '/external-resources' }
       ]
     },
     {
@@ -37,12 +36,15 @@ const HeaderNav = () => {
       label: 'Sequence',
       to: '/seq-tools',
       submenu: [
+        { label: 'BLAST', to: '/blast' },
         { label: 'Gene/Seq Resources', to: '/seq-tools' },
         { label: 'PatMatch', to: '/patmatch' },
-        { label: 'Primers', to: '/webprimer' },
-        { label: 'Genome Versions', to: '/genome-version-history' },
-        { label: 'Download Sequence', to: '/download' },
-        { label: 'Restriction Mapper', to: '/restriction-mapper' }
+        { label: 'C. albicans Genome Snapshot', to: '/genome-snapshot/C_albicans_SC5314' },
+        { label: 'C. auris Genome Snapshot', to: '/genome-snapshot/C_auris_B8441' },
+        { label: 'C. dubliniensis Genome Snapshot', to: '/genome-snapshot/C_dubliniensis_CD36' },
+        { label: 'C. glabrata Genome Snapshot', to: '/genome-snapshot/C_glabrata_CBS138' },
+        { label: 'C. parapsilosis Genome Snapshot', to: '/genome-snapshot/C_parapsilosis_CDC317' },
+        { label: 'Genome Versions', to: '/genome-version-history' }
       ]
     },
     {
@@ -50,6 +52,7 @@ const HeaderNav = () => {
       to: '/go-resources',
       submenu: [
         { label: 'What is GO?', href: 'https://geneontology.org/docs/ontology-documentation/', external: true },
+        { label: 'Guide to Evidence Codes', href: 'https://geneontology.org/docs/guide-go-evidence-codes/', external: true },
         { label: 'GO Slim Mapper', to: '/go-slim-mapper' },
         { label: 'GO Term Finder', to: '/go-term-finder' },
         { label: 'GO Consortium', href: 'http://www.geneontology.org/', external: true },
@@ -60,22 +63,20 @@ const HeaderNav = () => {
       label: 'Tools',
       to: '/tools',
       submenu: [
-        { label: 'Batch Download', to: '/batch-download' },
+        { label: 'PatMatch', to: '/patmatch' },
+        { label: 'Primers', to: '/webprimer' },
         { label: 'Phenotype Search', to: '/phenotype/search' },
-        { label: 'BLAST', to: '/blast' },
-        { label: 'C. albicans Genome Snapshot', to: '/genome-snapshot/C_albicans_SC5314' },
-        { label: 'C. auris Genome Snapshot', to: '/genome-snapshot/C_auris_B8441' },
-        { label: 'C. dubliniensis Genome Snapshot', to: '/genome-snapshot/C_dubliniensis_CD36' },
-        { label: 'C. glabrata Genome Snapshot', to: '/genome-snapshot/C_glabrata_CBS138' },
-        { label: 'C. parapsilosis Genome Snapshot', to: '/genome-snapshot/C_parapsilosis_CDC317' }
+        { label: 'Restriction Mapper', to: '/restriction-mapper' }
       ]
     },
     {
       label: 'Literature',
       to: '/literature',
       submenu: [
-        { label: 'Highlighted Topics', to: '/topic-biblios' },
-        { label: 'Laboratory Strains', to: '/strains' }
+        { label: 'Literature Search', to: '/literature-topic-search' },
+        { label: 'CGD Public Wiki', href: 'http://publicwiki.candidagenome.org', external: true },
+        { label: 'Genome-Wide Analysis Papers', to: '/genome-wide-analysis-papers' },
+        { label: 'Disease-Related Papers', to: '/disease-related-papers' }
       ]
     },
     {
@@ -83,26 +84,22 @@ const HeaderNav = () => {
       to: '/download',
       submenu: [
         { label: 'Batch Download', to: '/batch-download' },
-        { label: 'GO Annotations', to: '/download' },
-        { label: 'Chromosomal Features', to: '/download' },
-        { label: 'Sequence', to: '/download' },
-        { label: 'Browse Downloads', to: '/download' }
+        { label: 'Sequence Downloads', href: 'http://www.candidagenome.org/download/sequence/', external: true },
+        { label: 'Datasets', to: '/datasets' },
+        { label: 'Chromosomal Features', href: 'http://www.candidagenome.org/download/chromosomal_feature_files/', external: true },
+        { label: 'GO Annotations', href: 'http://www.candidagenome.org/download/go/', external: true }
       ]
     },
     {
       label: 'Community',
       to: '/community',
       submenu: [
+        { label: 'Update Colleague Listing', to: '/colleague-update' },
         { label: 'Search CGD Colleagues', to: '/colleague' },
         { label: 'Find Candida Labs', to: '/labs' },
-        { label: 'Colleague Update', to: '/colleague-update' },
-        { label: 'CGD Public Wiki', href: 'http://publicwiki.candidagenome.org', external: true },
-        { label: 'Community News', to: '/community-news' },
-        { label: 'Job Opportunities', to: '/job-postings' },
-        { label: 'Meetings & Courses', to: '/meetings' },
         { label: 'Nomenclature Guide', to: '/nomenclature' },
-        { label: 'External Resources', to: '/external-resources' },
         { label: 'Gene Registry', to: '/gene-registry' },
+        { label: 'CGD Public Wiki', href: 'http://publicwiki.candidagenome.org', external: true },
         { label: 'Developer API', to: '/developer/api' }
       ]
     }

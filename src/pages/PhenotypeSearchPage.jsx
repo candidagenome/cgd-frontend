@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import phenotypeApi from '../api/phenotypeApi';
 import { renderCitationItem } from '../utils/formatCitation.jsx';
@@ -25,34 +25,50 @@ const formatLocusName = (result) => {
 
 function PhenotypeSearchPage() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
-  // Form state
-  const [observable, setObservable] = useState(searchParams.get('observable') || '');
-  const [qualifier, setQualifier] = useState(searchParams.get('qualifier') || '');
-  const [experimentType, setExperimentType] = useState(searchParams.get('experiment_type') || '');
-  const [mutantType, setMutantType] = useState(searchParams.get('mutant_type') || '');
+  // Form state - search query (simplified form only uses query)
+  const [query, setQuery] = useState('');
 
   // Results state
   const [data, setData] = useState(null);
+  const [summaryData, setSummaryData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Track if we've performed a search
+  // Track if we've performed a search and what type
   const [hasSearched, setHasSearched] = useState(false);
+  const [showSummary, setShowSummary] = useState(false);
 
+  // Parse URL parameters and perform search if present
   useEffect(() => {
-    const obs = searchParams.get('observable') || '';
-    const qual = searchParams.get('qualifier') || '';
-    const expType = searchParams.get('experiment_type') || '';
-    const mutType = searchParams.get('mutant_type') || '';
+    const params = {
+      query: searchParams.get('query') || '',
+      observable: searchParams.get('observable') || searchParams.get('obs') || '',
+      qualifier: searchParams.get('qualifier') || searchParams.get('qual') || '',
+      experiment_type: searchParams.get('experiment_type') || searchParams.get('expt') || '',
+      mutant_type: searchParams.get('mutant_type') || '',
+      property_value: searchParams.get('property_value') || searchParams.get('prop_val') || '',
+      property_type: searchParams.get('property_type') || searchParams.get('prop_type') || '',
+      pubmed: searchParams.get('pubmed') || searchParams.get('pmid') || '',
+      organism: searchParams.get('organism') || '',
+      type: searchParams.get('type') || '',
+    };
 
-    setObservable(obs);
-    setQualifier(qual);
-    setExperimentType(expType);
-    setMutantType(mutType);
+    // Update form state (only query is shown in simplified form)
+    setQuery(params.query);
 
-    if (obs || qual || expType || mutType) {
-      performSearch({ observable: obs, qualifier: qual, experiment_type: expType, mutant_type: mutType });
+    // Perform search if any parameter is present, otherwise reset to show form
+    const hasParams = Object.values(params).some((v) => v);
+    if (hasParams) {
+      performSearch(params);
+    } else {
+      // Reset state to show search form
+      setData(null);
+      setSummaryData(null);
+      setHasSearched(false);
+      setShowSummary(false);
+      setError(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
@@ -61,49 +77,29 @@ function PhenotypeSearchPage() {
     setLoading(true);
     setError(null);
     setHasSearched(true);
+    setSummaryData(null);
+    setData(null);
 
     try {
-      // Fetch all results by paginating through all pages (backend max limit is 100)
-      const PAGE_SIZE = 100;
-      let allResults = [];
-      let totalResults = 0;
-      let query = null;
-
-      // Fetch first page to get total count
-      const firstPage = await phenotypeApi.searchPhenotypes({
-        ...params,
-        page: 1,
-        limit: PAGE_SIZE,
+      // Clean params - remove empty values
+      const cleanParams = {};
+      Object.entries(params).forEach(([key, value]) => {
+        if (value) cleanParams[key] = value;
       });
 
-      totalResults = firstPage.total_results;
-      query = firstPage.query;
-      allResults = firstPage.results || [];
+      // If only query is provided (keyword search), show summary first
+      const isKeywordSearchOnly = cleanParams.query && !cleanParams.observable;
 
-      // Fetch remaining pages if needed
-      const totalPages = Math.ceil(totalResults / PAGE_SIZE);
-      if (totalPages > 1) {
-        const remainingPages = [];
-        for (let p = 2; p <= totalPages; p++) {
-          remainingPages.push(
-            phenotypeApi.searchPhenotypes({
-              ...params,
-              page: p,
-              limit: PAGE_SIZE,
-            })
-          );
-        }
-        const pageResults = await Promise.all(remainingPages);
-        for (const pr of pageResults) {
-          allResults = allResults.concat(pr.results || []);
-        }
+      if (isKeywordSearchOnly) {
+        // Fetch summary view
+        const summary = await phenotypeApi.searchPhenotypesSummary(cleanParams.query);
+        setSummaryData(summary);
+        setShowSummary(true);
+      } else {
+        // Fetch detailed results
+        setShowSummary(false);
+        await fetchDetailedResults(cleanParams);
       }
-
-      setData({
-        results: allResults,
-        total_results: totalResults,
-        query,
-      });
     } catch (err) {
       // Handle FastAPI validation errors (array of objects) or string errors
       let errorMsg = 'Failed to search phenotypes';
@@ -117,9 +113,75 @@ function PhenotypeSearchPage() {
       }
       setError(errorMsg);
       setData(null);
+      setSummaryData(null);
     } finally {
       setLoading(false);
     }
+  };
+
+  const fetchDetailedResults = async (cleanParams) => {
+    // Fetch all results by paginating through all pages (backend max limit is 100)
+    const PAGE_SIZE = 100;
+    let allResults = [];
+    let totalResults = 0;
+    let queryInfo = null;
+
+    // Fetch first page to get total count
+    const firstPage = await phenotypeApi.searchPhenotypes({
+      ...cleanParams,
+      page: 1,
+      limit: PAGE_SIZE,
+    });
+
+    totalResults = firstPage.total_results;
+    queryInfo = firstPage.query;
+    allResults = firstPage.results || [];
+
+    // Fetch remaining pages if needed
+    const totalPages = Math.ceil(totalResults / PAGE_SIZE);
+    if (totalPages > 1) {
+      const remainingPages = [];
+      for (let p = 2; p <= totalPages; p++) {
+        remainingPages.push(
+          phenotypeApi.searchPhenotypes({
+            ...cleanParams,
+            page: p,
+            limit: PAGE_SIZE,
+          })
+        );
+      }
+      const pageResults = await Promise.all(remainingPages);
+      for (const pr of pageResults) {
+        allResults = allResults.concat(pr.results || []);
+      }
+    }
+
+    setData({
+      results: allResults,
+      total_results: totalResults,
+      query: queryInfo,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Build query params (simplified form only uses query)
+    const params = new URLSearchParams();
+    if (query) params.set('query', query);
+
+    // Open results in a new tab
+    window.open(`/phenotype/search?${params.toString()}`, '_blank');
+  };
+
+  const handleReset = () => {
+    setQuery('');
+    setData(null);
+    setSummaryData(null);
+    setHasSearched(false);
+    setShowSummary(false);
+    setError(null);
+    navigate('/phenotype/search');
   };
 
   // AG Grid column definitions
@@ -195,10 +257,45 @@ function PhenotypeSearchPage() {
         },
       },
       {
+        headerName: 'Details',
+        field: 'details',
+        flex: 1.5,
+        minWidth: 150,
+        autoHeight: true,
+        valueGetter: (params) => {
+          const details = params.data.details || [];
+          return details.map((d) => `${d.property_type}: ${d.property_value}`).join('; ') || '-';
+        },
+        cellRenderer: (params) => {
+          const details = params.data.details || [];
+          if (details.length === 0) return '-';
+          const linkableTypes = ['Chemical', 'Allele'];
+          return (
+            <div className="details-cell">
+              {details.map((d, idx) => (
+                <div key={idx} className="detail-item">
+                  <span className="detail-type">{d.property_type}:</span>{' '}
+                  {linkableTypes.includes(d.property_type) ? (
+                    <Link
+                      to={`/phenotype/search?property_value=${encodeURIComponent(d.property_value)}`}
+                      className="detail-value-link"
+                    >
+                      {d.property_value}
+                    </Link>
+                  ) : (
+                    d.property_value
+                  )}
+                </div>
+              ))}
+            </div>
+          );
+        },
+      },
+      {
         headerName: 'References',
         field: 'references',
-        flex: 2.25,
-        minWidth: 250,
+        flex: 2,
+        minWidth: 200,
         autoHeight: true,
         valueGetter: (params) => {
           const refs = params.data.references || [];
@@ -246,6 +343,8 @@ function PhenotypeSearchPage() {
       'Strain',
       'Phenotype',
       'Qualifier',
+      'Chemicals',
+      'Conditions',
       'References',
     ];
 
@@ -254,6 +353,8 @@ function PhenotypeSearchPage() {
       const refs = (result.references || [])
         .map((ref) => ref.display_name || ref.pubmed_id || '')
         .join('; ');
+      const chemicals = (result.chemicals || []).join('; ');
+      const conditions = (result.conditions || []).join('; ');
 
       return [
         formatLocusName(result),
@@ -264,6 +365,8 @@ function PhenotypeSearchPage() {
         result.strain || '',
         result.observable || '',
         result.qualifier || '',
+        chemicals,
+        conditions,
         refs,
       ];
     });
@@ -294,14 +397,67 @@ function PhenotypeSearchPage() {
     URL.revokeObjectURL(url);
   };
 
+  const renderSearchForm = () => {
+    return (
+      <div className="search-form-container">
+        <div className="search-instructions">
+          <p>
+            Enter keywords associated with a phenotype (e.g. &apos;hyphal&apos;, &apos;virulence&apos;) or experimental
+            condition (e.g. &apos;Spider&apos;, &apos;mouse&apos;) to search for features with a specific phenotype.
+            To broaden your search, use one or more wildcard characters (*) to indicate the location(s) where any
+            text will be tolerated. Single words or short phrases are better search criteria than are longer phrases.
+          </p>
+          <p>
+            This search looks at the text associated with mutant phenotypes in CGD; it does not search gene names.
+            To search for mutant phenotypes for a particular gene, enter the gene or systematic name in the Search
+            box at the top of this page to go to the Locus Summary page for that gene; then click on the Phenotype tab.
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="phenotype-search-form simple-form">
+          <div className="simple-search-row">
+            <label htmlFor="query">Enter phenotype:</label>
+            <input
+              type="text"
+              id="query"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="form-input"
+              size="40"
+              placeholder="Enter search term..."
+            />
+            <button type="submit" className="btn-submit">Submit</button>
+            <button type="button" className="btn-reset" onClick={handleReset}>Reset</button>
+          </div>
+        </form>
+
+        <div className="browse-section">
+          <span>OR: </span>
+          <a
+            href="/phenotype/terms"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="browse-terms-link"
+          >
+            Browse phenotype terms
+          </a>
+        </div>
+      </div>
+    );
+  };
+
   const renderResultsSummary = () => {
     if (!data) return null;
 
     const queryParts = [];
+    if (data.query?.query) queryParts.push(`Keyword: "${data.query.query}"`);
     if (data.query?.observable) queryParts.push(`Observable: "${data.query.observable}"`);
     if (data.query?.qualifier) queryParts.push(`Qualifier: "${data.query.qualifier}"`);
     if (data.query?.experiment_type) queryParts.push(`Experiment Type: "${data.query.experiment_type}"`);
     if (data.query?.mutant_type) queryParts.push(`Mutant Type: "${data.query.mutant_type}"`);
+    if (data.query?.property_value) queryParts.push(`Chemical/Condition: "${data.query.property_value}"`);
+    if (data.query?.pubmed) queryParts.push(`PubMed: "${data.query.pubmed}"`);
+    if (data.query?.organism) queryParts.push(`Organism: "${data.query.organism}"`);
 
     return (
       <div className="results-summary">
@@ -323,6 +479,82 @@ function PhenotypeSearchPage() {
     );
   };
 
+  const renderSearchSummary = () => {
+    if (!summaryData) return null;
+
+    const handleDirectMatchClick = (obs) => {
+      // Direct match: observable contains the search term, just filter by observable
+      window.open(`/phenotype/search?observable=${encodeURIComponent(obs)}`, '_blank');
+    };
+
+    const handleRelatedMatchClick = (obs) => {
+      // Related match: include original query to filter by property_value/qualifier
+      const params = new URLSearchParams();
+      params.set('observable', obs);
+      params.set('property_value', summaryData.query);
+      window.open(`/phenotype/search?${params.toString()}`, '_blank');
+    };
+
+    return (
+      <div className="search-summary-container">
+        <div className="search-summary-header">
+          <h2>Expanded Phenotype Search Results Summary</h2>
+          <p>Your search for &apos;<strong>{summaryData.query}</strong>&apos; results in the following:</p>
+        </div>
+
+        {summaryData.direct_matches && summaryData.direct_matches.length > 0 && (
+          <div className="match-section">
+            <h3>Matches associated directly with the phenotype:</h3>
+            <ul className="match-list">
+              {summaryData.direct_matches.map((match, idx) => (
+                <li key={idx} className="match-item">
+                  <span className="match-count">{match.count} matches:</span>
+                  <button
+                    type="button"
+                    className="match-link"
+                    onClick={() => handleDirectMatchClick(match.observable)}
+                  >
+                    {match.observable}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {summaryData.related_matches && summaryData.related_matches.length > 0 && (
+          <div className="match-section">
+            <h3>Matches in related data or details associated with the phenotype:</h3>
+            <ul className="match-list">
+              {summaryData.related_matches.map((match, idx) => (
+                <li key={idx} className="match-item">
+                  <span className="match-count">{match.count} matches:</span>
+                  <button
+                    type="button"
+                    className="match-link"
+                    onClick={() => handleRelatedMatchClick(match.observable)}
+                  >
+                    {match.observable}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {(!summaryData.direct_matches || summaryData.direct_matches.length === 0) &&
+         (!summaryData.related_matches || summaryData.related_matches.length === 0) && (
+          <div className="no-results">
+            <p>No phenotype annotations found matching &apos;{summaryData.query}&apos;.</p>
+            <p>
+              Try a different search term or <Link to="/phenotype/terms">browse observable terms</Link>.
+            </p>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   const renderResultsTable = () => {
     if (!data || !data.results || data.results.length === 0) {
       return (
@@ -335,9 +567,6 @@ function PhenotypeSearchPage() {
       );
     }
 
-    // Key fixes for flex sizing:
-    // 1) Ensure wrapper has a real width
-    // 2) DO NOT call api.sizeColumnsToFit() (it overrides flex)
     return (
       <div className="results-grid-wrapper ag-theme-alpine" style={{ width: '100%' }}>
         <AgGridReact
@@ -362,7 +591,6 @@ function PhenotypeSearchPage() {
 
     // Helper to store gene list before navigating
     const handleToolClick = () => {
-      // Store gene list in localStorage (not sessionStorage, which isn't shared across tabs)
       localStorage.setItem('phenotypeSearchGeneList', JSON.stringify(geneList));
     };
 
@@ -445,17 +673,17 @@ function PhenotypeSearchPage() {
   return (
     <div className="phenotype-search-page">
       <header className="page-header">
-        <h1>Phenotype Search Results</h1>
-        <p className="subtitle">Search phenotype annotations across all genes in CGD</p>
+        <h1>Expanded Phenotype Search</h1>
+        <hr />
       </header>
 
-      <nav className="page-nav">
-        <Link to="/phenotype/terms">Browse Observable Terms</Link>
-        {' | '}
-        <Link to="/help/phenotype">Help</Link>
-      </nav>
+      {hasSearched && (
+        <nav className="page-nav">
+          <Link to="/phenotype/search">New Search</Link>
+        </nav>
+      )}
 
-      <div className="divider" />
+      {!hasSearched && renderSearchForm()}
 
       {loading && (
         <div className="loading-section">
@@ -471,26 +699,15 @@ function PhenotypeSearchPage() {
         </div>
       )}
 
-      {!loading && !error && hasSearched && (
+      {!loading && !error && hasSearched && showSummary && renderSearchSummary()}
+
+      {!loading && !error && hasSearched && !showSummary && (
         <>
           {renderResultsSummary()}
           {renderResultsTable()}
           {renderAnalyzeSection()}
         </>
       )}
-
-      <div className="divider" />
-
-      <div className="page-footer">
-        <p>
-          <strong>Note:</strong> To view phenotypes for a specific gene, visit the gene&apos;s locus page and select the
-          Phenotype tab.
-        </p>
-        <p>
-          Curation of mutant phenotypes is an ongoing project at CGD. Please <Link to="/contact">contact CGD curators</Link>{' '}
-          to let us know of additional phenotype information that should be incorporated.
-        </p>
-      </div>
     </div>
   );
 }

@@ -283,7 +283,7 @@ function LiteratureTopicSearchPage() {
       for (const ref of topicResult.references) {
         rows.push({
           ...ref,
-          genes: topicResult.genes || [],
+          genes: ref.genes || [],
           topic: topicResult.topic,
         });
       }
@@ -306,7 +306,7 @@ function LiteratureTopicSearchPage() {
     const rows = [];
     for (const topicResult of data.results) {
       for (const ref of topicResult.references) {
-        const geneList = (topicResult.genes || [])
+        const geneList = (ref.genes || [])
           .map(g => formatLocusName(g))
           .join('; ');
 
@@ -373,7 +373,7 @@ function LiteratureTopicSearchPage() {
   };
 
   const renderResultsTable = () => {
-    if (!data || gridData.length === 0) {
+    if (!data || !data.results || data.results.length === 0) {
       return (
         <div className="no-results">
           <p>No references found for the selected topics.</p>
@@ -382,19 +382,34 @@ function LiteratureTopicSearchPage() {
       );
     }
 
+    // Render one table per topic
     return (
-      <div className="results-grid-wrapper ag-theme-alpine">
-        <AgGridReact
-          rowData={gridData}
-          columnDefs={columnDefs}
-          defaultColDef={defaultColDef}
-          domLayout="autoHeight"
-          pagination={true}
-          paginationPageSize={10}
-          paginationPageSizeSelector={[10, 25, 50, 100]}
-          onGridReady={onGridReady}
-          suppressCellFocus={true}
-        />
+      <div className="results-by-topic">
+        {data.results.map((topicResult) => {
+          const topicRows = topicResult.references.map((ref) => ({
+            ...ref,
+            genes: ref.genes || [],
+          }));
+
+          return (
+            <div key={topicResult.cv_term_no} className="topic-section">
+              <h3 className="topic-header">{topicResult.topic}</h3>
+              <div className="results-grid-wrapper ag-theme-alpine">
+                <AgGridReact
+                  rowData={topicRows}
+                  columnDefs={columnDefs}
+                  defaultColDef={defaultColDef}
+                  domLayout="autoHeight"
+                  pagination={true}
+                  paginationPageSize={10}
+                  paginationPageSizeSelector={[10, 25, 50, 100]}
+                  onGridReady={onGridReady}
+                  suppressCellFocus={true}
+                />
+              </div>
+            </div>
+          );
+        })}
       </div>
     );
   };

@@ -9,6 +9,7 @@ import LocusPage from './pages/LocusPage';
 import ReferencePage from './pages/ReferencePage';
 import NewPapersThisWeekPage from './pages/NewPapersThisWeekPage';
 import GenomeWideAnalysisPapersPage from './pages/GenomeWideAnalysisPapersPage';
+import DiseaseRelatedPapersPage from './pages/DiseaseRelatedPapersPage';
 import ProteinPropertyPage from './pages/ProteinPropertyPage';
 import DomainPage from './pages/DomainPage';
 import GoTermPage from './pages/GoTermPage';
@@ -30,6 +31,7 @@ import SubmitDataPage from './pages/SubmitDataPage';
 import SearchPage from './pages/SearchPage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import TextSearchResultsPage from './pages/TextSearchResultsPage';
+import TextSearchPage from './pages/TextSearchPage';
 import MeetingsPage from './pages/MeetingsPage';
 import CommunityNewsPage from './pages/CommunityNewsPage';
 import NewsArchivePage from './pages/NewsArchivePage';
@@ -37,6 +39,7 @@ import JobPostingsPage from './pages/JobPostingsPage';
 import ExternalResourcesPage from './pages/ExternalResourcesPage';
 import NomenclaturePage from './pages/NomenclaturePage';
 import DownloadPage from './pages/DownloadPage';
+import DatasetsPage from './pages/DatasetsPage';
 import LiteraturePage from './pages/LiteraturePage';
 import TopicBibliosPage from './pages/TopicBibliosPage';
 import StrainsPage from './pages/StrainsPage';
@@ -154,6 +157,7 @@ function App() {
                   <Link to="/sitemap">Site Map</Link>
                   <Link to="/how-to-cite">How to Cite</Link>
                   <Link to="/help">Help</Link>
+                  <a href="http://publicwiki.candidagenome.org" target="_blank" rel="noopener noreferrer">CGD Public Wiki</a>
                 </nav>
 
                 <div className="header-icons">
@@ -194,6 +198,8 @@ function App() {
           <Route path="/locus/:name" element={<LocusPage />} />
           <Route path="/reference/NewPapersThisWeek" element={<NewPapersThisWeekPage />} />
           <Route path="/reference/GenomewideAnalysisPapers" element={<GenomeWideAnalysisPapersPage />} />
+          <Route path="/genome-wide-analysis-papers" element={<GenomeWideAnalysisPapersPage />} />
+          <Route path="/disease-related-papers" element={<DiseaseRelatedPapersPage />} />
           <Route path="/reference/:id" element={<ReferencePage />} />
           <Route path="/protein/:name/properties" element={<ProteinPropertyPage />} />
           <Route path="/protein/:name/domains" element={<DomainPage />} />
@@ -216,7 +222,8 @@ function App() {
           <Route path="/submit-data" element={<SubmitDataPage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/search/results" element={<SearchResultsPage />} />
-          <Route path="/search/text" element={<TextSearchResultsPage />} />
+          <Route path="/search/text" element={<TextSearchPage />} />
+          <Route path="/search/text/results" element={<TextSearchResultsPage />} />
           <Route path="/meetings" element={<MeetingsPage />} />
           <Route path="/community-news" element={<CommunityNewsPage />} />
           <Route path="/news/archive" element={<NewsArchivePage />} />
@@ -224,6 +231,7 @@ function App() {
           <Route path="/external-resources" element={<ExternalResourcesPage />} />
           <Route path="/nomenclature" element={<NomenclaturePage />} />
           <Route path="/download" element={<DownloadPage />} />
+          <Route path="/datasets" element={<DatasetsPage />} />
           <Route path="/literature" element={<LiteraturePage />} />
           <Route path="/literature-topic-search" element={<LiteratureTopicSearchPage />} />
           <Route path="/topic-biblios" element={<TopicBibliosPage />} />

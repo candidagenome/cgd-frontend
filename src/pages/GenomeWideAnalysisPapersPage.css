@@ -1,7 +1,7 @@
 /* Genome-wide Analysis Papers Page */
 
 .genome-wide-papers-page {
-  max-width: 1200px;
+  width: 1200px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -212,6 +212,39 @@
 }
 
 .genome-wide-papers-page .papers-table .citation-link:hover {
+  text-decoration: underline;
+}
+
+/* AG Grid styling */
+.genome-wide-papers-page .papers-grid-wrapper {
+  margin: 20px 0;
+}
+
+.genome-wide-papers-page .papers-grid-wrapper.ag-theme-alpine {
+  --ag-row-height: auto;
+  --ag-header-height: 40px;
+  --ag-cell-horizontal-padding: 12px;
+  --ag-row-border-color: #e0e0e0;
+  --ag-header-background-color: #f5f5f5;
+  font-size: 0.9rem;
+}
+
+.genome-wide-papers-page .ag-cell {
+  line-height: 1.5;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.genome-wide-papers-page .reference-cell {
+  line-height: 1.5;
+}
+
+.genome-wide-papers-page .genes-cell a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.genome-wide-papers-page .genes-cell a:hover {
   text-decoration: underline;
 }
 

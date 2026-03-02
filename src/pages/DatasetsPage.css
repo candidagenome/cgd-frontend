@@ -1,0 +1,96 @@
+.datasets-page .datasets-intro {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.datasets-page .year-nav {
+  margin: 20px 0;
+  padding: 10px;
+  background: #f5f5f5;
+  border-radius: 4px;
+}
+
+.datasets-page .year-nav a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+.datasets-page .year-nav a:hover {
+  text-decoration: underline;
+}
+
+.datasets-page .datasets-note {
+  margin: 20px 0;
+  padding: 10px;
+  background: #fff8e1;
+  border-left: 3px solid #ffc107;
+}
+
+.datasets-page .note-label {
+  color: #c00;
+  font-weight: bold;
+}
+
+.datasets-page .error-message {
+  color: #c00;
+}
+
+/* Year section styling */
+.datasets-page .year-section {
+  margin-bottom: 30px;
+}
+
+.datasets-page .year-section h3 {
+  margin: 0 0 10px 0;
+  padding: 8px 12px;
+  background: #e8e8e8;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+/* AG Grid styling */
+.datasets-page .datasets-grid {
+  margin-top: 20px;
+}
+
+.datasets-page .datasets-grid.ag-theme-alpine {
+  --ag-row-height: auto;
+  --ag-header-height: 40px;
+  --ag-cell-horizontal-padding: 12px;
+  --ag-row-border-color: #e0e0e0;
+  --ag-header-background-color: #f5f5f5;
+  font-size: 0.95rem;
+}
+
+.datasets-page .ag-cell {
+  line-height: 1.5;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+/* Citation cell styling */
+.datasets-page .citation-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.datasets-page .citation-text {
+  line-height: 1.5;
+}
+
+.datasets-page .citation-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.9em;
+}
+
+.datasets-page .citation-link a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+.datasets-page .citation-link a:hover {
+  text-decoration: underline;
+}
