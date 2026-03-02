@@ -224,16 +224,16 @@ function DiseaseRelatedPapersPage() {
       {renderTopicFilters()}
 
       {data?.references?.length > 0 ? (
-        <div className="papers-grid-wrapper ag-theme-alpine">
+        <div className="papers-grid-wrapper ag-theme-alpine" style={{ height: 600 }}>
           <AgGridReact
             rowData={data.references}
             columnDefs={columnDefs}
             defaultColDef={defaultColDef}
-            domLayout="autoHeight"
             pagination={true}
             paginationPageSize={10}
             paginationPageSizeSelector={[10, 25, 50, 100]}
             suppressCellFocus={true}
+            getRowId={(params) => params.data.reference_id || params.data.pmid}
           />
         </div>
       ) : (
