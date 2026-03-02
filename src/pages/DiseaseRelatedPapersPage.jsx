@@ -159,13 +159,27 @@ function DiseaseRelatedPapersPage() {
     if (!data?.available_topics) return null;
 
     const topics = data.available_topics;
+    const midpoint = Math.ceil(topics.length / 2);
+    const leftColumn = topics.slice(0, midpoint);
+    const rightColumn = topics.slice(midpoint);
 
     return (
       <div className="topic-filters">
         <p className="filter-instruction">Click on a topic to see papers for that topic:</p>
         <div className="topic-columns">
           <div className="topic-column">
-            {topics.map((topic) => (
+            {leftColumn.map((topic) => (
+              <button
+                key={topic}
+                className={`topic-btn ${currentTopic === topic ? 'selected' : ''}`}
+                onClick={() => handleTopicClick(topic)}
+              >
+                {topic}
+              </button>
+            ))}
+          </div>
+          <div className="topic-column">
+            {rightColumn.map((topic) => (
               <button
                 key={topic}
                 className={`topic-btn ${currentTopic === topic ? 'selected' : ''}`}
