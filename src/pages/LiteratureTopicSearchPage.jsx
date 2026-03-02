@@ -218,6 +218,7 @@ function LiteratureTopicSearchPage() {
       field: 'reference',
       flex: 4,  // 40%
       minWidth: 250,
+      autoHeight: true,
       wrapText: true,
       cellStyle: { whiteSpace: 'normal', lineHeight: '1.5' },
       cellRenderer: (params) => {
@@ -235,6 +236,7 @@ function LiteratureTopicSearchPage() {
       field: 'genes',
       flex: 6,  // 60%
       minWidth: 400,
+      autoHeight: true,
       wrapText: true,
       cellStyle: { whiteSpace: 'normal', lineHeight: '1.5' },
       cellRenderer: (params) => {
@@ -407,7 +409,6 @@ function LiteratureTopicSearchPage() {
                   paginationPageSizeSelector={[10, 25, 50, 100]}
                   onGridReady={onGridReady}
                   suppressCellFocus={true}
-                  rowHeight={120}
                   suppressRowVirtualisation={true}
                 />
               </div>
