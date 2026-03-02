@@ -277,7 +277,7 @@ function LiteratureTopicSearchPage() {
 
   // Calculate row height based on content
   const getRowHeight = useCallback((params) => {
-    const minHeight = 80;
+    const minHeight = 75;
     const lineHeight = 20;
 
     // Estimate citation lines (approx 70 chars per line in Reference column at 50% width)
