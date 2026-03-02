@@ -263,7 +263,7 @@ function PhenotypeSearchPage() {
         flex: 1.5,
         minWidth: 150,
         wrapText: true,
-        cellStyle: { whiteSpace: 'normal', lineHeight: '1.5' },
+        cellStyle: { whiteSpace: 'normal', lineHeight: '1.4', overflow: 'visible', padding: '8px' },
         valueGetter: (params) => {
           const details = params.data.details || [];
           return details.map((d) => `${d.property_type}: ${d.property_value}`).join('; ') || '-';
@@ -299,7 +299,7 @@ function PhenotypeSearchPage() {
         flex: 2,
         minWidth: 200,
         wrapText: true,
-        cellStyle: { whiteSpace: 'normal', lineHeight: '1.5' },
+        cellStyle: { whiteSpace: 'normal', lineHeight: '1.4', overflow: 'visible', padding: '8px' },
         valueGetter: (params) => {
           const refs = params.data.references || [];
           return refs.map((r) => r.display_name || r.pubmed_id || '').join('; ');
@@ -335,20 +335,20 @@ function PhenotypeSearchPage() {
 
   // Calculate row height based on content
   const getRowHeight = (params) => {
-    const baseHeight = 60;
-    const lineHeight = 24;
+    const baseHeight = 80;
+    const lineHeight = 26;
 
     // Estimate lines needed for references (main variable content)
-    // Each reference has: citation text (~2 lines) + links line (~1 line) = ~3 lines
+    // Each reference has: citation text (~3 lines) + links line (~1 line) = ~4 lines
     const refs = params.data.references || [];
-    const refLines = refs.length * 3;
+    const refLines = refs.length * 4;
 
     // Estimate lines for details
     const details = params.data.details || [];
-    const detailLines = details.length * 1.5;
+    const detailLines = details.length * 2;
 
     // Calculate total lines needed
-    const totalLines = Math.max(2, refLines, detailLines);
+    const totalLines = Math.max(3, refLines, detailLines);
 
     return Math.max(baseHeight, totalLines * lineHeight);
   };

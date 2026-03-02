@@ -219,7 +219,7 @@ function LiteratureTopicSearchPage() {
       flex: 4,  // 40%
       minWidth: 250,
       wrapText: true,
-      cellStyle: { whiteSpace: 'normal', lineHeight: '1.5' },
+      cellStyle: { whiteSpace: 'normal', lineHeight: '1.4', overflow: 'visible', padding: '8px' },
       cellRenderer: (params) => {
         const ref = params.data;
         if (!ref) return '-';
@@ -236,7 +236,7 @@ function LiteratureTopicSearchPage() {
       flex: 6,  // 60%
       minWidth: 400,
       wrapText: true,
-      cellStyle: { whiteSpace: 'normal', lineHeight: '1.5' },
+      cellStyle: { whiteSpace: 'normal', lineHeight: '1.4', overflow: 'visible', padding: '8px' },
       cellRenderer: (params) => {
         const genes = params.data.genes || [];
         if (genes.length === 0) return <span className="muted">-</span>;
@@ -277,20 +277,20 @@ function LiteratureTopicSearchPage() {
 
   // Calculate row height based on content
   const getRowHeight = (params) => {
-    const baseHeight = 60;
-    const lineHeight = 24;
+    const baseHeight = 80;
+    const lineHeight = 26;
 
     // Estimate lines needed for genes (main variable content)
-    // Each gene with organism takes ~15-20 chars, assume ~4 genes per line
+    // Each gene with organism takes ~20-25 chars, assume ~3 genes per line
     const genes = params.data.genes || [];
     const displayGenes = Math.min(genes.length, 10);
-    const geneLines = Math.ceil(displayGenes / 4) + (genes.length > 10 ? 1 : 0);
+    const geneLines = Math.ceil(displayGenes / 3) + (genes.length > 10 ? 1 : 0);
 
-    // Citation takes: text (~2 lines) + links line (~1 line) = ~3 lines
-    const citationLines = 4;
+    // Citation takes: text (~3 lines) + links line (~1 line) = ~4 lines
+    const citationLines = 5;
 
     // Calculate total lines needed
-    const totalLines = Math.max(citationLines, geneLines + 1);
+    const totalLines = Math.max(citationLines, geneLines + 2);
 
     return Math.max(baseHeight, totalLines * lineHeight);
   };
