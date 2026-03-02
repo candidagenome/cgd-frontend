@@ -212,7 +212,6 @@ function PhenotypeSearchPage() {
         field: 'experiment_type',
         flex: 1,
         minWidth: 120,
-        autoHeight: true,
         valueGetter: (params) => params.data.experiment_type || '-',
         cellRenderer: (params) => (
           <div>
@@ -228,7 +227,6 @@ function PhenotypeSearchPage() {
         field: 'mutant_type',
         flex: 1,
         minWidth: 120,
-        autoHeight: true,
         wrapText: true,
         cellStyle: { whiteSpace: 'normal', lineHeight: '1.5' },
         valueGetter: (params) => params.data.mutant_type || '-',
@@ -264,7 +262,6 @@ function PhenotypeSearchPage() {
         field: 'details',
         flex: 1.5,
         minWidth: 150,
-        autoHeight: true,
         wrapText: true,
         cellStyle: { whiteSpace: 'normal', lineHeight: '1.5' },
         valueGetter: (params) => {
@@ -301,7 +298,6 @@ function PhenotypeSearchPage() {
         field: 'references',
         flex: 2,
         minWidth: 200,
-        autoHeight: true,
         wrapText: true,
         cellStyle: { whiteSpace: 'normal', lineHeight: '1.5' },
         valueGetter: (params) => {
@@ -585,14 +581,7 @@ function PhenotypeSearchPage() {
           paginationPageSize={10}
           paginationPageSizeSelector={[10, 25, 50, 100]}
           suppressCellFocus={true}
-          onFirstDataRendered={(params) => {
-            params.api.resetRowHeights();
-          }}
-          onPaginationChanged={(params) => {
-            setTimeout(() => {
-              params.api.resetRowHeights();
-            }, 0);
-          }}
+          rowHeight={180}
         />
       </div>
     );
