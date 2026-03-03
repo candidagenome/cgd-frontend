@@ -493,8 +493,7 @@
   white-space: nowrap;
 }
 
-.hits-table th:nth-child(4),
-.hits-table th:nth-child(5) {
+.hits-table th:nth-child(4) {
   text-align: right;
 }
 
@@ -563,10 +562,14 @@
   font-style: italic;
 }
 
-.score-cell,
-.evalue-cell {
+.score-cell {
   white-space: nowrap;
   text-align: right;
+  width: 100px;
+}
+
+.evalue-cell {
+  white-space: nowrap;
   width: 100px;
 }
 
