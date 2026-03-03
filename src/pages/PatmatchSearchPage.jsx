@@ -72,7 +72,20 @@ function PatmatchSearchPage() {
         }
         groups[organism].push(ds);
       });
-      return Object.entries(groups).map(([label, datasets]) => ({
+
+      // Sort groups so newer assemblies appear first (A22 before A21/A19)
+      // Extract assembly number from organism label (e.g., "C. albicans SC5314 A22" -> 22)
+      const getAssemblyNumber = (label) => {
+        const match = label.match(/A(\d+)/);
+        return match ? parseInt(match[1], 10) : 0;
+      };
+
+      const sortedEntries = Object.entries(groups).sort((a, b) => {
+        // Sort by assembly number descending (newer first)
+        return getAssemblyNumber(b[0]) - getAssemblyNumber(a[0]);
+      });
+
+      return sortedEntries.map(([label, datasets]) => ({
         label,
         datasets,
       }));
@@ -264,16 +277,11 @@ function PatmatchSearchPage() {
                 ) : (
                   availableGroups.map((group) => (
                     <optgroup key={group.label} label={group.label}>
-                      {group.datasets.map((ds) => {
-                        // Extract just the type part from display_name
-                        const parts = ds.display_name.split(' - ');
-                        const typeLabel = parts[1] || ds.display_name;
-                        return (
-                          <option key={ds.name} value={ds.name}>
-                            {typeLabel}
-                          </option>
-                        );
-                      })}
+                      {group.datasets.map((ds) => (
+                        <option key={ds.name} value={ds.name}>
+                          {ds.display_name}
+                        </option>
+                      ))}
                     </optgroup>
                   ))
                 )}
