@@ -318,10 +318,15 @@ function LiteratureTopicSearchPage() {
     }
 
     // Filter by gene list (exact match on gene name, case-insensitive)
+    // Also respect species filter when matching genes
     if (geneFilterList.length > 0) {
       filtered = filtered.filter((ref) => {
         const genes = ref.genes || [];
         return genes.some((gene) => {
+          // If species filter is active, only match genes from that species
+          if (speciesFilter && gene.organism !== speciesFilter) {
+            return false;
+          }
           const geneName = (gene.gene_name || '').toLowerCase();
           const featureName = (gene.feature_name || '').toLowerCase();
           // Match exact gene name or feature name (not partial matches like CDC3 matching CDC37)
