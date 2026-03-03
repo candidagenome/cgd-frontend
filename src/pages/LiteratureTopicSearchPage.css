@@ -518,12 +518,23 @@
 /* Results Grid */
 .results-grid-wrapper {
   margin-bottom: 20px;
+  width: 100%;
 }
 
 .results-grid-wrapper.ag-theme-alpine {
   --ag-header-background-color: #e3f2fd;
   --ag-header-foreground-color: #1976d2;
   --ag-row-hover-color: #e3f2fd;
+  width: 100%;
+}
+
+.results-grid-wrapper .ag-root-wrapper {
+  width: 100% !important;
+}
+
+.results-grid-wrapper .ag-header-cell:last-child,
+.results-grid-wrapper .ag-cell:last-child {
+  border-right: none;
 }
 
 /* Critical styles for autoHeight to work properly with pagination */
