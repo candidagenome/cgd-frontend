@@ -393,7 +393,6 @@ function PhenotypeSearchPage() {
   const defaultColDef = useMemo(
     () => ({
       sortable: true,
-      filter: true,
       resizable: true,
       wrapText: true,
     }),

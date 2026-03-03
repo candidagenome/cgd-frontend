@@ -46,6 +46,7 @@ function GoTermPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [quickFilter, setQuickFilter] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -141,12 +142,26 @@ function GoTermPage() {
   const defaultColDef = useMemo(
     () => ({
       sortable: true,
-      filter: true,
       resizable: true,
       wrapText: true,
     }),
     []
   );
+
+  // Filter genes by quick filter text
+  const filterGenes = useCallback((genes) => {
+    if (!quickFilter.trim()) return genes;
+    const searchLower = quickFilter.toLowerCase().trim();
+    return genes.filter((g) => {
+      const searchFields = [
+        g.locus_name,
+        g.systematic_name,
+        g.species,
+        ...(g.references || []).map((r) => r.display_name || r.pubmed_id || ''),
+      ];
+      return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
+    });
+  }, [quickFilter]);
 
   // Build AmiGO URL
   const getAmigoUrl = (goidVal) => {
@@ -354,6 +369,7 @@ function GoTermPage() {
       return null;
     }
 
+    const filteredGenes = filterGenes(group.genes);
     const totalGenes = group.genes.length;
 
     return (
@@ -366,6 +382,7 @@ function GoTermPage() {
         <p className="qualifier-summary">
           {totalGenes} gene{totalGenes !== 1 ? 's have' : ' has'} been directly annotated to this term in the{' '}
           {ANNOTATION_TYPE_NAMES[annotationType]?.replace(' GO Annotations', '') || annotationType} set
+          {quickFilter && ` (showing ${filteredGenes.length} matching filter)`}
         </p>
 
         {/* Key fixes for flex sizing:
@@ -374,7 +391,7 @@ function GoTermPage() {
         */}
         <div className="gene-grid-wrapper ag-theme-alpine" style={{ width: '100%' }}>
           <AgGridReact
-            rowData={group.genes}
+            rowData={filteredGenes}
             columnDefs={geneColumnDefs}
             defaultColDef={defaultColDef}
             domLayout="autoHeight"
@@ -449,6 +466,29 @@ function GoTermPage() {
             or its variants containing one or more qualifiers (<em>NOT, contributes to, or colocalizes with</em>) in the
             manually curated set and any annotations made from high-throughput experiments or computational analysis.
           </p>
+
+          {/* Quick Filter Box */}
+          <div className="filter-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 15px', background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '4px', marginBottom: '15px' }}>
+            <label htmlFor="quick-filter" style={{ fontWeight: 500, color: '#333', whiteSpace: 'nowrap' }}>Filter results: </label>
+            <input
+              type="text"
+              id="quick-filter"
+              value={quickFilter}
+              onChange={(e) => setQuickFilter(e.target.value)}
+              placeholder="Type to filter..."
+              style={{ padding: '6px 10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px', width: '200px' }}
+            />
+            {quickFilter && (
+              <button
+                type="button"
+                onClick={() => setQuickFilter('')}
+                title="Clear filter"
+                style={{ padding: '4px 8px', border: 'none', background: '#e0e0e0', color: '#666', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px', lineHeight: 1 }}
+              >
+                ×
+              </button>
+            )}
+          </div>
 
           {ANNOTATION_TYPE_ORDER.map((type) => {
             const annotation = data.annotations.find((a) => a.annotation_type === type);

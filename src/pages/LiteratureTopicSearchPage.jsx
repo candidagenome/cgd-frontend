@@ -86,6 +86,7 @@ function LiteratureTopicSearchPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [hasSearched, setHasSearched] = useState(false);
+  const [quickFilter, setQuickFilter] = useState('');
 
   // Load topic tree on mount
   useEffect(() => {
@@ -270,10 +271,24 @@ function LiteratureTopicSearchPage() {
   // Default column properties
   const defaultColDef = useMemo(() => ({
     sortable: true,
-    filter: true,
     resizable: true,
     wrapText: true,
   }), []);
+
+  // Filter references by quick filter text
+  const filterRefs = useCallback((refs) => {
+    if (!quickFilter.trim()) return refs;
+    const searchLower = quickFilter.toLowerCase().trim();
+    return refs.filter((ref) => {
+      const searchFields = [
+        ref.citation,
+        ref.pubmed,
+        ref.year?.toString(),
+        ...(ref.genes || []).map(g => formatLocusName(g)),
+      ];
+      return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
+    });
+  }, [quickFilter]);
 
   // Calculate row height based on content
   const getRowHeight = useCallback((params) => {
@@ -401,15 +416,43 @@ function LiteratureTopicSearchPage() {
     // Render one table per topic
     return (
       <div className="results-by-topic">
+        {/* Quick Filter Box */}
+        <div className="filter-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 15px', background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '4px', marginBottom: '15px' }}>
+          <label htmlFor="quick-filter" style={{ fontWeight: 500, color: '#333', whiteSpace: 'nowrap' }}>Filter results: </label>
+          <input
+            type="text"
+            id="quick-filter"
+            value={quickFilter}
+            onChange={(e) => setQuickFilter(e.target.value)}
+            placeholder="Type to filter..."
+            style={{ padding: '6px 10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px', width: '200px' }}
+          />
+          {quickFilter && (
+            <button
+              type="button"
+              onClick={() => setQuickFilter('')}
+              title="Clear filter"
+              style={{ padding: '4px 8px', border: 'none', background: '#e0e0e0', color: '#666', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px', lineHeight: 1 }}
+            >
+              ×
+            </button>
+          )}
+        </div>
+
         {data.results.map((topicResult) => {
           const topicRows = topicRowsMap.get(topicResult.cv_term_no) || [];
+          const filteredRows = filterRefs(topicRows);
+          if (filteredRows.length === 0 && quickFilter) return null;
 
           return (
             <div key={topicResult.cv_term_no} className="topic-section">
-              <h3 className="topic-header">{topicResult.topic}</h3>
+              <h3 className="topic-header">
+                {topicResult.topic}
+                {quickFilter && ` (${filteredRows.length} of ${topicRows.length})`}
+              </h3>
               <div className="results-grid-wrapper ag-theme-alpine" style={{ width: '100%' }}>
                 <AgGridReact
-                  rowData={topicRows}
+                  rowData={filteredRows}
                   columnDefs={columnDefs}
                   defaultColDef={defaultColDef}
                   domLayout="autoHeight"

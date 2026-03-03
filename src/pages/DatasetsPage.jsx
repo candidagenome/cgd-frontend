@@ -9,6 +9,7 @@ const DatasetsPage = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [quickFilter, setQuickFilter] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -74,20 +75,23 @@ const DatasetsPage = () => {
       wrapText: true,
       cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
       cellRenderer: CitationCellRenderer,
-      filter: 'agTextColumnFilter',
-      filterParams: {
-        filterOptions: ['contains', 'startsWith'],
-        defaultOption: 'contains',
-      },
     },
   ], []);
 
   const defaultColDef = useMemo(() => ({
     sortable: true,
-    filter: true,
     resizable: true,
-    floatingFilter: true,
   }), []);
+
+  // Filter references by quick filter text
+  const getFilteredRefs = useCallback((refs) => {
+    if (!quickFilter.trim()) return refs;
+    const searchLower = quickFilter.toLowerCase().trim();
+    return refs.filter((ref) => {
+      const searchFields = [ref.citation, ref.year?.toString()];
+      return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
+    });
+  }, [quickFilter]);
 
   // Calculate row height based on citation content
   const getRowHeight = useCallback((params) => {
@@ -167,24 +171,51 @@ const DatasetsPage = () => {
           Arbour et al. (2009).
         </p>
 
-        {years.map((year) => (
-          <div key={year} className="year-section" id={`year-${year}`}>
-            <h3>{year}</h3>
-            <div className="datasets-grid ag-theme-alpine">
-              <AgGridReact
-                rowData={groupedRefs[year] || []}
-                columnDefs={columnDefs}
-                defaultColDef={defaultColDef}
-                domLayout="autoHeight"
-                pagination={true}
-                paginationPageSize={10}
-                paginationPageSizeSelector={[10, 25, 50, 100]}
-                suppressCellFocus={true}
-                getRowHeight={getRowHeight}
-              />
+        {/* Quick Filter Box */}
+        <div className="filter-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 15px', background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '4px', marginBottom: '10px' }}>
+          <label htmlFor="quick-filter" style={{ fontWeight: 500, color: '#333', whiteSpace: 'nowrap' }}>Filter results: </label>
+          <input
+            type="text"
+            id="quick-filter"
+            value={quickFilter}
+            onChange={(e) => setQuickFilter(e.target.value)}
+            placeholder="Type to filter..."
+            style={{ padding: '6px 10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px', width: '200px' }}
+          />
+          {quickFilter && (
+            <button
+              type="button"
+              onClick={() => setQuickFilter('')}
+              title="Clear filter"
+              style={{ padding: '4px 8px', border: 'none', background: '#e0e0e0', color: '#666', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px', lineHeight: 1 }}
+            >
+              ×
+            </button>
+          )}
+        </div>
+
+        {years.map((year) => {
+          const yearRefs = getFilteredRefs(groupedRefs[year] || []);
+          if (yearRefs.length === 0 && quickFilter) return null;
+          return (
+            <div key={year} className="year-section" id={`year-${year}`}>
+              <h3>{year}</h3>
+              <div className="datasets-grid ag-theme-alpine">
+                <AgGridReact
+                  rowData={yearRefs}
+                  columnDefs={columnDefs}
+                  defaultColDef={defaultColDef}
+                  domLayout="autoHeight"
+                  pagination={true}
+                  paginationPageSize={10}
+                  paginationPageSizeSelector={[10, 25, 50, 100]}
+                  suppressCellFocus={true}
+                  getRowHeight={getRowHeight}
+                />
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
 
         {data && data.total_count === 0 && (
           <p>No datasets found.</p>

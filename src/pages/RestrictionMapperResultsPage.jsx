@@ -25,6 +25,7 @@ function RestrictionMapperResultsPage() {
   const [selectedEnzyme, setSelectedEnzyme] = useState(null);
   const [showNonCutting, setShowNonCutting] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  const [quickFilter, setQuickFilter] = useState('');
 
   // Load results from sessionStorage
   useEffect(() => {
@@ -166,6 +167,20 @@ function RestrictionMapperResultsPage() {
     resizable: true,
   }), []);
 
+  // Filter cutting enzymes by quick filter text
+  const filteredCuttingEnzymes = useMemo(() => {
+    if (!results?.cutting_enzymes || !quickFilter.trim()) return results?.cutting_enzymes || [];
+    const searchLower = quickFilter.toLowerCase().trim();
+    return results.cutting_enzymes.filter((enzyme) => {
+      const searchFields = [
+        enzyme.enzyme_name,
+        enzyme.recognition_seq,
+        enzyme.enzyme_type,
+      ];
+      return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
+    });
+  }, [results?.cutting_enzymes, quickFilter]);
+
   // Row style based on enzyme type
   const getRowStyle = (params) => {
     const enzyme = params.data;
@@ -296,9 +311,38 @@ function RestrictionMapperResultsPage() {
         {cuttingEnzymes.length > 0 ? (
           <div className="enzymes-section">
             <h2>Cutting Enzymes ({cuttingEnzymes.length})</h2>
+
+            {/* Quick Filter Box */}
+            <div className="filter-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 15px', background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '4px', marginBottom: '10px' }}>
+              <label htmlFor="quick-filter" style={{ fontWeight: 500, color: '#333', whiteSpace: 'nowrap' }}>Filter results: </label>
+              <input
+                type="text"
+                id="quick-filter"
+                value={quickFilter}
+                onChange={(e) => setQuickFilter(e.target.value)}
+                placeholder="Type to filter..."
+                style={{ padding: '6px 10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px', width: '200px' }}
+              />
+              {quickFilter && (
+                <button
+                  type="button"
+                  onClick={() => setQuickFilter('')}
+                  title="Clear filter"
+                  style={{ padding: '4px 8px', border: 'none', background: '#e0e0e0', color: '#666', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px', lineHeight: 1 }}
+                >
+                  ×
+                </button>
+              )}
+              {quickFilter && (
+                <span style={{ fontSize: '0.9rem', color: '#555' }}>
+                  Showing {filteredCuttingEnzymes.length} of {cuttingEnzymes.length} results
+                </span>
+              )}
+            </div>
+
             <div className="ag-grid-wrapper" style={{ width: '100%' }}>
               <AgGridReact
-                rowData={cuttingEnzymes}
+                rowData={filteredCuttingEnzymes}
                 columnDefs={columnDefs}
                 defaultColDef={defaultColDef}
                 domLayout="autoHeight"

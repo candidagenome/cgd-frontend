@@ -143,13 +143,15 @@ const TextSearchResultsPage = () => {
   const [organismCounts, setOrganismCounts] = useState({});
   const [hasApiOrganismCounts, setHasApiOrganismCounts] = useState(false);
 
+  // Quick filter state
+  const [quickFilter, setQuickFilter] = useState('');
+
   // AG Grid column definitions - single combined column
   const columnDefs = useMemo(() => [
     {
       headerName: selectedCategory ? CATEGORY_LABELS[selectedCategory] : 'Results',
       field: 'name',
       cellRenderer: CombinedResultRenderer,
-      filter: 'agTextColumnFilter',
       sortable: true,
       flex: 1,
       wrapText: true,
@@ -161,8 +163,24 @@ const TextSearchResultsPage = () => {
   // AG Grid default column definitions
   const defaultColDef = useMemo(() => ({
     resizable: true,
-    floatingFilter: true,
   }), []);
+
+  // Filter results by quick filter text
+  const getFilteredResults = useCallback((results) => {
+    if (!quickFilter.trim()) return results;
+    const searchLower = quickFilter.toLowerCase().trim();
+    return results.filter((r) => {
+      const searchFields = [
+        r.name,
+        r.description,
+        r.id,
+        r.organism,
+        r.highlighted_name,
+        r.highlighted_description,
+      ];
+      return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
+    });
+  }, [quickFilter]);
 
   // Fetch all results for a category
   const fetchCategoryResults = useCallback(async (category) => {
@@ -390,24 +408,56 @@ const TextSearchResultsPage = () => {
 
     const results = categoryResults || [];
     // Filter results by selected organism
-    const filteredResults = selectedOrganism
+    const organismFiltered = selectedOrganism
       ? results.filter(r => r.organism === selectedOrganism)
       : results;
+    // Apply quick filter
+    const filteredResults = getFilteredResults(organismFiltered);
 
     return (
-      <div className="ag-grid-wrapper">
-        <AgGridReact
-          rowData={filteredResults}
-          columnDefs={columnDefs}
-          defaultColDef={defaultColDef}
-          domLayout="autoHeight"
-          suppressCellFocus={true}
-          enableCellTextSelection={true}
-          pagination={true}
-          paginationPageSize={10}
-          paginationPageSizeSelector={[10, 25, 50, 100]}
-          getRowId={(params) => `${params.data.category}-${params.data.id}`}
-        />
+      <div>
+        {/* Quick Filter Box */}
+        <div className="filter-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 15px', background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '4px', marginBottom: '10px' }}>
+          <label htmlFor="quick-filter" style={{ fontWeight: 500, color: '#333', whiteSpace: 'nowrap' }}>Filter results: </label>
+          <input
+            type="text"
+            id="quick-filter"
+            value={quickFilter}
+            onChange={(e) => setQuickFilter(e.target.value)}
+            placeholder="Type to filter..."
+            style={{ padding: '6px 10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px', width: '200px' }}
+          />
+          {quickFilter && (
+            <button
+              type="button"
+              onClick={() => setQuickFilter('')}
+              title="Clear filter"
+              style={{ padding: '4px 8px', border: 'none', background: '#e0e0e0', color: '#666', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px', lineHeight: 1 }}
+            >
+              ×
+            </button>
+          )}
+          {quickFilter && (
+            <span style={{ fontSize: '0.9rem', color: '#555' }}>
+              Showing {filteredResults.length} of {organismFiltered.length} results
+            </span>
+          )}
+        </div>
+
+        <div className="ag-grid-wrapper">
+          <AgGridReact
+            rowData={filteredResults}
+            columnDefs={columnDefs}
+            defaultColDef={defaultColDef}
+            domLayout="autoHeight"
+            suppressCellFocus={true}
+            enableCellTextSelection={true}
+            pagination={true}
+            paginationPageSize={10}
+            paginationPageSizeSelector={[10, 25, 50, 100]}
+            getRowId={(params) => `${params.data.category}-${params.data.id}`}
+          />
+        </div>
       </div>
     );
   };

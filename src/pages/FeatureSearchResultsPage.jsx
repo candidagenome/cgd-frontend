@@ -23,13 +23,15 @@ function FeatureSearchResultsPage() {
   const [downloading, setDownloading] = useState(false);
   const [sortBy, setSortBy] = useState('orf');
 
+  // Quick filter state
+  const [quickFilter, setQuickFilter] = useState('');
+
   // AG Grid column definitions
   const columnDefs = useMemo(() => [
     {
       headerName: 'ORF',
       field: 'orf',
       cellRenderer: OrfLinkRenderer,
-      filter: 'agTextColumnFilter',
       sortable: true,
       minWidth: 120,
       flex: 1,
@@ -37,7 +39,6 @@ function FeatureSearchResultsPage() {
     {
       headerName: 'Gene',
       field: 'gene',
-      filter: 'agTextColumnFilter',
       sortable: true,
       minWidth: 100,
       flex: 1,
@@ -47,7 +48,6 @@ function FeatureSearchResultsPage() {
     {
       headerName: 'Feature Type',
       field: 'feature_type',
-      filter: 'agTextColumnFilter',
       sortable: true,
       minWidth: 130,
       flex: 1,
@@ -55,7 +55,6 @@ function FeatureSearchResultsPage() {
     {
       headerName: 'Qualifier',
       field: 'qualifier',
-      filter: 'agTextColumnFilter',
       sortable: true,
       minWidth: 100,
       flex: 1,
@@ -64,7 +63,6 @@ function FeatureSearchResultsPage() {
     {
       headerName: 'Description',
       field: 'description',
-      filter: 'agTextColumnFilter',
       sortable: true,
       minWidth: 250,
       flex: 2,
@@ -78,8 +76,17 @@ function FeatureSearchResultsPage() {
   // AG Grid default column definitions
   const defaultColDef = useMemo(() => ({
     resizable: true,
-    floatingFilter: true,
   }), []);
+
+  // Filter results by quick filter text
+  const filteredFeatures = useMemo(() => {
+    if (!results?.features || !quickFilter.trim()) return results?.features || [];
+    const searchLower = quickFilter.toLowerCase().trim();
+    return results.features.filter((f) => {
+      const searchFields = [f.orf, f.gene, f.feature_type, f.qualifier, f.description];
+      return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
+    });
+  }, [results?.features, quickFilter]);
 
   // Fetch search params from sessionStorage on mount
   useEffect(() => {
@@ -283,9 +290,37 @@ function FeatureSearchResultsPage() {
           </div>
         ) : (
           <>
+            {/* Quick Filter Box */}
+            <div className="filter-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 15px', background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '4px', marginBottom: '10px' }}>
+              <label htmlFor="quick-filter" style={{ fontWeight: 500, color: '#333', whiteSpace: 'nowrap' }}>Filter results: </label>
+              <input
+                type="text"
+                id="quick-filter"
+                value={quickFilter}
+                onChange={(e) => setQuickFilter(e.target.value)}
+                placeholder="Type to filter..."
+                style={{ padding: '6px 10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px', width: '200px' }}
+              />
+              {quickFilter && (
+                <button
+                  type="button"
+                  onClick={() => setQuickFilter('')}
+                  title="Clear filter"
+                  style={{ padding: '4px 8px', border: 'none', background: '#e0e0e0', color: '#666', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px', lineHeight: 1 }}
+                >
+                  ×
+                </button>
+              )}
+              {quickFilter && (
+                <span style={{ fontSize: '0.9rem', color: '#555' }}>
+                  Showing {filteredFeatures.length} of {results?.features?.length || 0} results
+                </span>
+              )}
+            </div>
+
             <div className="ag-grid-container">
               <AgGridReact
-                rowData={results?.features || []}
+                rowData={filteredFeatures}
                 columnDefs={columnDefs}
                 defaultColDef={defaultColDef}
                 domLayout="autoHeight"

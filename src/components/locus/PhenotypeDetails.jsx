@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
@@ -7,6 +7,7 @@ import './LocusComponents.css';
 
 function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
   const [collapsedSections, setCollapsedSections] = useState({});
+  const [quickFilter, setQuickFilter] = useState('');
 
   // Get available organisms from the data - memoize to prevent new array reference each render
   const organisms = useMemo(() => {
@@ -233,12 +234,31 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
   const defaultColDef = useMemo(
     () => ({
       sortable: true,
-      filter: true,
       resizable: true,
       wrapText: true,
     }),
     []
   );
+
+  // Filter annotations by quick filter text
+  const filterAnnotations = useCallback((annotations) => {
+    if (!quickFilter.trim()) return annotations;
+    const searchLower = quickFilter.toLowerCase().trim();
+    return annotations.filter((ann) => {
+      const searchFields = [
+        ann.experiment_type,
+        ann.experiment_comment,
+        ann.mutant_type,
+        ann.strain,
+        ann.phenotype?.display_name,
+        ann.qualifier,
+        ...(ann.chemicals || []).map(c => c.property_value),
+        ...(ann.details || []).map(d => `${d.property_type} ${d.property_value}`),
+        ...(ann.references || []).map(r => r.display_name || r.pubmed_id || ''),
+      ];
+      return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
+    });
+  }, [quickFilter]);
 
   return (
     <div className="phenotype-details">
@@ -266,6 +286,29 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
         <div className="phenotype-container">
           {grouped && Object.keys(grouped).length > 0 ? (
             <div className="phenotype-groups">
+              {/* Quick Filter Box */}
+              <div className="filter-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 15px', background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '4px', marginBottom: '15px' }}>
+                <label htmlFor="quick-filter" style={{ fontWeight: 500, color: '#333', whiteSpace: 'nowrap' }}>Filter results: </label>
+                <input
+                  type="text"
+                  id="quick-filter"
+                  value={quickFilter}
+                  onChange={(e) => setQuickFilter(e.target.value)}
+                  placeholder="Type to filter..."
+                  style={{ padding: '6px 10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px', width: '200px' }}
+                />
+                {quickFilter && (
+                  <button
+                    type="button"
+                    onClick={() => setQuickFilter('')}
+                    title="Clear filter"
+                    style={{ padding: '4px 8px', border: 'none', background: '#e0e0e0', color: '#666', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px', lineHeight: 1 }}
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+
               {Object.entries(grouped).map(([category, expTypes]) => (
                 <div key={category} className="phenotype-category">
                   <h4
@@ -281,8 +324,11 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
                   {Object.entries(expTypes).map(([expType, annotations]) => {
                     const sectionKey = `${selectedOrganism}-${category}-${expType}`;
                     const isCollapsed = collapsedSections[sectionKey];
+                    const filteredAnnotations = filterAnnotations(annotations);
 
                     const showHeader = expType !== 'Unspecified';
+
+                    if (filteredAnnotations.length === 0 && quickFilter) return null;
 
                     return (
                       <div key={expType} className="experiment-type-section">
@@ -295,18 +341,20 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
                           >
                             <span className="collapse-icon">{isCollapsed ? '▶' : '▼'}</span>
                             <span className="experiment-type-name">{expType}</span>
-                            <span className="annotation-count">({annotations.length})</span>
+                            <span className="annotation-count">
+                              ({filteredAnnotations.length}{quickFilter && ` of ${annotations.length}`})
+                            </span>
                           </div>
                         )}
 
                         {!isCollapsed && (
                           <div className="phenotype-grid-wrapper ag-theme-alpine" style={{ width: '100%' }}>
                             <AgGridReact
-                              rowData={annotations}
+                              rowData={filteredAnnotations}
                               columnDefs={columnDefs}
                               defaultColDef={defaultColDef}
                               domLayout="autoHeight"
-                              pagination={annotations.length > 10}
+                              pagination={filteredAnnotations.length > 10}
                               paginationPageSize={10}
                               paginationPageSizeSelector={[10, 25, 50]}
                               suppressCellFocus={true}
