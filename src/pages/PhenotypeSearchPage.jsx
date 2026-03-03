@@ -226,7 +226,7 @@ function PhenotypeSearchPage() {
           r.qualifier,
           ...(r.details || []).map((d) => `${d.property_type} ${d.property_value}`),
           // Search citation fields: full citation, display name, title, journal, pubmed, authors
-          ...(r.references || []).flatMap((ref) => [
+          ...(r.references || []).filter(Boolean).flatMap((ref) => [
             ref.citation,
             ref.display_name,
             ref.title,
@@ -234,7 +234,7 @@ function PhenotypeSearchPage() {
             ref.pubmed_id || ref.pubmed,
             // Extract author names
             ...(Array.isArray(ref.authors)
-              ? ref.authors.map((a) => (typeof a === 'string' ? a : a.author_name))
+              ? ref.authors.filter(Boolean).map((a) => (typeof a === 'string' ? a : a?.author_name))
               : []),
           ]),
         ];
