@@ -643,6 +643,9 @@ function LiteratureTopicSearchPage() {
 
   // Results mode: show only results with title
   if (isResultsMode) {
+    // Determine if we're still initializing (waiting for topic tree to load)
+    const isInitializing = topicTreeLoading || (!hasSearched && !loading && !error && !topicTreeError);
+
     return (
       <div className="literature-topic-search-page">
         <header className="page-header">
@@ -660,21 +663,34 @@ function LiteratureTopicSearchPage() {
 
         <div className="divider" />
 
-        {loading && (
+        {/* Show loading while topic tree loads or search runs */}
+        {(loading || isInitializing) && (
           <div className="loading-section">
             <div className="loading-spinner"></div>
-            <p>Searching...</p>
+            <p>{topicTreeLoading ? 'Loading topics...' : 'Searching...'}</p>
           </div>
         )}
 
-        {error && (
+        {/* Show topic tree error if it failed to load */}
+        {topicTreeError && (
+          <div className="error-section">
+            <div className="error-icon">&#9888;</div>
+            <p className="error-message">{topicTreeError}</p>
+            <p style={{ marginTop: '10px' }}>
+              <Link to="/literature-topic-search">Try a new search</Link>
+            </p>
+          </div>
+        )}
+
+        {/* Show search error */}
+        {error && !topicTreeError && (
           <div className="error-section">
             <div className="error-icon">&#9888;</div>
             <p className="error-message">{error}</p>
           </div>
         )}
 
-        {!loading && !error && hasSearched && (
+        {!loading && !error && !topicTreeError && hasSearched && (
           <>
             {renderInstructions()}
             {renderResultsSummary()}
