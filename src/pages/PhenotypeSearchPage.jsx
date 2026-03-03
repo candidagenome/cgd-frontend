@@ -225,7 +225,18 @@ function PhenotypeSearchPage() {
           r.observable,
           r.qualifier,
           ...(r.details || []).map((d) => `${d.property_type} ${d.property_value}`),
-          ...(r.references || []).map((ref) => ref.display_name || ref.pubmed_id || ''),
+          // Search citation fields: full citation, display name, title, journal, pubmed, authors
+          ...(r.references || []).flatMap((ref) => [
+            ref.citation,
+            ref.display_name,
+            ref.title,
+            ref.journal_name || ref.journal,
+            ref.pubmed_id || ref.pubmed,
+            // Extract author names
+            ...(Array.isArray(ref.authors)
+              ? ref.authors.map((a) => (typeof a === 'string' ? a : a.author_name))
+              : []),
+          ]),
         ];
         return searchFields.some((field) => field && field.toLowerCase().includes(searchLower));
       });
