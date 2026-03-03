@@ -87,6 +87,9 @@ function LiteratureTopicSearchPage() {
   const [error, setError] = useState(null);
   const [hasSearched, setHasSearched] = useState(false);
   const [quickFilter, setQuickFilter] = useState('');
+  const [speciesFilter, setSpeciesFilter] = useState(''); // empty = all species
+  const [geneFilter, setGeneFilter] = useState(''); // comma-separated gene names
+  const [showInstructions, setShowInstructions] = useState(true);
 
   // Load topic tree on mount
   useEffect(() => {
@@ -275,20 +278,75 @@ function LiteratureTopicSearchPage() {
     wrapText: true,
   }), []);
 
-  // Filter references by quick filter text
+  // Extract unique organisms from results for the species filter
+  const availableOrganisms = useMemo(() => {
+    if (!data || !data.results) return [];
+
+    const organismSet = new Set();
+    for (const topicResult of data.results) {
+      for (const ref of topicResult.references) {
+        for (const gene of ref.genes || []) {
+          if (gene.organism) {
+            organismSet.add(gene.organism);
+          }
+        }
+      }
+    }
+
+    return Array.from(organismSet).sort();
+  }, [data]);
+
+  // Parse gene filter into normalized array
+  const geneFilterList = useMemo(() => {
+    if (!geneFilter.trim()) return [];
+    return geneFilter
+      .split(/[,;\s]+/)
+      .map((g) => g.trim().toLowerCase())
+      .filter(Boolean);
+  }, [geneFilter]);
+
+  // Filter references by species, gene list, and quick filter text
   const filterRefs = useCallback((refs) => {
-    if (!quickFilter.trim()) return refs;
-    const searchLower = quickFilter.toLowerCase().trim();
-    return refs.filter((ref) => {
-      const searchFields = [
-        ref.citation,
-        ref.pubmed,
-        ref.year?.toString(),
-        ...(ref.genes || []).map(g => formatLocusName(g)),
-      ];
-      return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
-    });
-  }, [quickFilter]);
+    let filtered = refs;
+
+    // Filter by species
+    if (speciesFilter) {
+      filtered = filtered.filter((ref) => {
+        const genes = ref.genes || [];
+        return genes.some((gene) => gene.organism === speciesFilter);
+      });
+    }
+
+    // Filter by gene list
+    if (geneFilterList.length > 0) {
+      filtered = filtered.filter((ref) => {
+        const genes = ref.genes || [];
+        return genes.some((gene) => {
+          const geneName = (gene.gene_name || '').toLowerCase();
+          const featureName = (gene.feature_name || '').toLowerCase();
+          return geneFilterList.some(
+            (g) => geneName.includes(g) || featureName.includes(g)
+          );
+        });
+      });
+    }
+
+    // Filter by quick filter text
+    if (quickFilter.trim()) {
+      const searchLower = quickFilter.toLowerCase().trim();
+      filtered = filtered.filter((ref) => {
+        const searchFields = [
+          ref.citation,
+          ref.pubmed,
+          ref.year?.toString(),
+          ...(ref.genes || []).map((g) => formatLocusName(g)),
+        ];
+        return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
+      });
+    }
+
+    return filtered;
+  }, [quickFilter, speciesFilter, geneFilterList]);
 
   // Calculate row height based on content
   const getRowHeight = useCallback((params) => {
@@ -378,6 +436,123 @@ function LiteratureTopicSearchPage() {
     URL.revokeObjectURL(url);
   };
 
+  // Calculate total filtered count
+  const filteredStats = useMemo(() => {
+    if (!data || !data.results) return { totalFiltered: 0, totalOriginal: 0 };
+
+    let totalFiltered = 0;
+    let totalOriginal = 0;
+
+    for (const topicResult of data.results) {
+      const topicRows = topicRowsMap.get(topicResult.cv_term_no) || [];
+      totalOriginal += topicRows.length;
+      totalFiltered += filterRefs(topicRows).length;
+    }
+
+    return { totalFiltered, totalOriginal };
+  }, [data, topicRowsMap, filterRefs]);
+
+  const hasActiveFilters = speciesFilter || geneFilterList.length > 0 || quickFilter.trim();
+
+  const clearAllFilters = () => {
+    setSpeciesFilter('');
+    setGeneFilter('');
+    setQuickFilter('');
+  };
+
+  const renderInstructions = () => (
+    <div className="instructions-section">
+      <button
+        type="button"
+        className="instructions-toggle"
+        onClick={() => setShowInstructions(!showInstructions)}
+      >
+        {showInstructions ? '▼' : '▶'} How to Use This Page
+      </button>
+      {showInstructions && (
+        <div className="instructions-content">
+          <p><strong>Narrow your results using the filters below:</strong></p>
+          <ul>
+            <li><strong>Species Filter:</strong> Select a species to show only references with genes from that organism.</li>
+            <li><strong>Gene Filter:</strong> Enter gene names (comma-separated) to show only references associated with those specific genes. Partial matches are supported (e.g., "CDC" will match CDC3, CDC28, etc.).</li>
+            <li><strong>Quick Filter:</strong> Search across all fields including citation text, PubMed IDs, and gene names.</li>
+          </ul>
+          <p>All filters work together - results must match all active filters.</p>
+        </div>
+      )}
+    </div>
+  );
+
+  const renderFilters = () => (
+    <div className="advanced-filters">
+      <div className="filters-row">
+        {/* Species Filter */}
+        <div className="filter-group">
+          <label htmlFor="species-filter">Species:</label>
+          <select
+            id="species-filter"
+            value={speciesFilter}
+            onChange={(e) => setSpeciesFilter(e.target.value)}
+            className="species-select"
+          >
+            <option value="">All species</option>
+            {availableOrganisms.map((org) => (
+              <option key={org} value={org}>
+                {getOrganismAbbrev(org)}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Gene Filter */}
+        <div className="filter-group gene-filter-group">
+          <label htmlFor="gene-filter">Genes:</label>
+          <input
+            type="text"
+            id="gene-filter"
+            value={geneFilter}
+            onChange={(e) => setGeneFilter(e.target.value)}
+            placeholder="e.g., CDC3, HWP1, ALS1"
+            className="gene-filter-input"
+          />
+        </div>
+
+        {/* Quick Filter */}
+        <div className="filter-group">
+          <label htmlFor="quick-filter">Search:</label>
+          <input
+            type="text"
+            id="quick-filter"
+            value={quickFilter}
+            onChange={(e) => setQuickFilter(e.target.value)}
+            placeholder="Filter all fields..."
+            className="quick-filter-input"
+          />
+        </div>
+
+        {/* Clear Filters */}
+        {hasActiveFilters && (
+          <button
+            type="button"
+            className="clear-filters-btn"
+            onClick={clearAllFilters}
+          >
+            Clear All Filters
+          </button>
+        )}
+      </div>
+
+      {/* Filter Status */}
+      {hasActiveFilters && (
+        <div className="filter-status">
+          Showing {filteredStats.totalFiltered} of {filteredStats.totalOriginal} references
+          {speciesFilter && <span className="active-filter"> | Species: {getOrganismAbbrev(speciesFilter)}</span>}
+          {geneFilterList.length > 0 && <span className="active-filter"> | Genes: {geneFilterList.join(', ')}</span>}
+        </div>
+      )}
+    </div>
+  );
+
   const renderResultsSummary = () => {
     if (!data) return null;
 
@@ -413,42 +588,37 @@ function LiteratureTopicSearchPage() {
       );
     }
 
+    // Check if all results are filtered out
+    const hasVisibleResults = data.results.some((topicResult) => {
+      const topicRows = topicRowsMap.get(topicResult.cv_term_no) || [];
+      return filterRefs(topicRows).length > 0;
+    });
+
+    if (!hasVisibleResults && hasActiveFilters) {
+      return (
+        <div className="no-results">
+          <p>No references match the current filters.</p>
+          <p>Try adjusting or clearing your filters.</p>
+          <button type="button" className="clear-filters-btn" onClick={clearAllFilters}>
+            Clear All Filters
+          </button>
+        </div>
+      );
+    }
+
     // Render one table per topic
     return (
       <div className="results-by-topic">
-        {/* Quick Filter Box */}
-        <div className="filter-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 15px', background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '4px', marginBottom: '15px' }}>
-          <label htmlFor="quick-filter" style={{ fontWeight: 500, color: '#333', whiteSpace: 'nowrap' }}>Filter results: </label>
-          <input
-            type="text"
-            id="quick-filter"
-            value={quickFilter}
-            onChange={(e) => setQuickFilter(e.target.value)}
-            placeholder="Type to filter..."
-            style={{ padding: '6px 10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px', width: '200px' }}
-          />
-          {quickFilter && (
-            <button
-              type="button"
-              onClick={() => setQuickFilter('')}
-              title="Clear filter"
-              style={{ padding: '4px 8px', border: 'none', background: '#e0e0e0', color: '#666', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px', lineHeight: 1 }}
-            >
-              ×
-            </button>
-          )}
-        </div>
-
         {data.results.map((topicResult) => {
           const topicRows = topicRowsMap.get(topicResult.cv_term_no) || [];
           const filteredRows = filterRefs(topicRows);
-          if (filteredRows.length === 0 && quickFilter) return null;
+          if (filteredRows.length === 0) return null;
 
           return (
             <div key={topicResult.cv_term_no} className="topic-section">
               <h3 className="topic-header">
                 {topicResult.topic}
-                {quickFilter && ` (${filteredRows.length} of ${topicRows.length})`}
+                {hasActiveFilters && ` (${filteredRows.length} of ${topicRows.length})`}
               </h3>
               <div className="results-grid-wrapper ag-theme-alpine" style={{ width: '100%' }}>
                 <AgGridReact
@@ -506,7 +676,9 @@ function LiteratureTopicSearchPage() {
 
         {!loading && !error && hasSearched && (
           <>
+            {renderInstructions()}
             {renderResultsSummary()}
+            {renderFilters()}
             {renderResultsTable()}
           </>
         )}
