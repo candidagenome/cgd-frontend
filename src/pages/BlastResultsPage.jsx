@@ -328,11 +328,15 @@ function BlastResultsPage() {
                 </thead>
                 <tbody>
                   {results.hits.map((hit, index) => {
-                    // Extract gene name from description if available
-                    // Description format is often "gene_name | systematic_name | description"
-                    const descParts = (hit.description || '').split('|').map(s => s.trim());
-                    const geneName = descParts[0] || null;
-                    const systematicName = descParts[1] || hit.accession;
+                    // Extract gene name and ORF from description
+                    // Format: "ACT1 CGDID:... (orf19.5007) description..."
+                    const desc = hit.description || '';
+                    // Gene name is first word (before space or CGDID)
+                    const geneMatch = desc.match(/^(\S+)/);
+                    const geneName = geneMatch ? geneMatch[1] : null;
+                    // ORF is in parentheses like (orf19.XXXX)
+                    const orfMatch = desc.match(/\((orf\d+\.\d+)\)/i);
+                    const orfName = orfMatch ? orfMatch[1] : null;
 
                     return (
                       <tr
@@ -345,11 +349,9 @@ function BlastResultsPage() {
                             className="sequence-link"
                             onClick={(e) => {
                               e.preventDefault();
-                              // Expand this hit and scroll to it
                               const newExpanded = new Set(expandedHits);
                               newExpanded.add(index);
                               setExpandedHits(newExpanded);
-                              // Scroll after a brief delay to allow expansion
                               setTimeout(() => {
                                 document.getElementById(`hit-${index}`)?.scrollIntoView({ behavior: 'smooth' });
                               }, 100);
@@ -361,25 +363,33 @@ function BlastResultsPage() {
                         <td className="locus-cell">
                           {hit.locus_link ? (
                             <Link to={hit.locus_link} className="locus-link">
-                              {geneName && geneName !== systematicName ? (
-                                <><strong>{geneName}</strong> / {systematicName}</>
+                              {geneName && orfName && geneName !== orfName ? (
+                                <><strong>{geneName}</strong> / {orfName}</>
+                              ) : geneName ? (
+                                <strong>{geneName}</strong>
+                              ) : orfName ? (
+                                orfName
                               ) : (
-                                systematicName
+                                hit.accession
                               )}
                             </Link>
                           ) : (
-                            geneName && geneName !== systematicName ? (
-                              <><strong>{geneName}</strong> / {systematicName}</>
-                            ) : (
-                              <span className="no-locus">{systematicName || '-'}</span>
-                            )
+                            <span className="no-locus">
+                              {geneName && orfName && geneName !== orfName ? (
+                                <><strong>{geneName}</strong> / {orfName}</>
+                              ) : geneName ? (
+                                geneName
+                              ) : (
+                                '-'
+                              )}
+                            </span>
                           )}
                         </td>
                         <td className="organism-cell">
                           {hit.organism_name || '-'}
                         </td>
-                        <td>{hit.best_bit_score.toFixed(0)}</td>
-                        <td>{hit.best_evalue === 0 ? '0.0e+00' : formatEvalue(hit.best_evalue)}</td>
+                        <td className="score-cell">{hit.best_bit_score.toFixed(0)}</td>
+                        <td className="evalue-cell">{hit.best_evalue === 0 ? '0.0e+00' : formatEvalue(hit.best_evalue)}</td>
                       </tr>
                     );
                   })}

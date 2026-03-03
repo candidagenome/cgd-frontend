@@ -476,6 +476,7 @@
   border-collapse: collapse;
   margin-bottom: 25px;
   font-size: 0.9em;
+  table-layout: auto;
 }
 
 .hits-table th,
@@ -490,6 +491,11 @@
   font-weight: 600;
   color: #333;
   white-space: nowrap;
+}
+
+.hits-table th:nth-child(4),
+.hits-table th:nth-child(5) {
+  text-align: right;
 }
 
 .hits-table tbody tr {
@@ -513,6 +519,7 @@
 
 .accession-cell {
   white-space: nowrap;
+  width: 120px;
 }
 
 .sequence-link {
@@ -526,7 +533,8 @@
 }
 
 .locus-cell {
-  max-width: 300px;
+  width: 180px;
+  white-space: nowrap;
 }
 
 .locus-cell .locus-link {
@@ -546,10 +554,20 @@
   color: #666;
 }
 
+.locus-cell .no-locus strong {
+  color: #333;
+}
+
 .organism-cell {
   color: #555;
   font-style: italic;
+}
+
+.score-cell,
+.evalue-cell {
   white-space: nowrap;
+  text-align: right;
+  width: 100px;
 }
 
 .expand-icon {
