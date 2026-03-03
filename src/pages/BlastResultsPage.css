@@ -493,9 +493,6 @@
   white-space: nowrap;
 }
 
-.hits-table th:nth-child(4) {
-  text-align: right;
-}
 
 .hits-table tbody tr {
   transition: background-color 0.2s;
@@ -564,7 +561,6 @@
 
 .score-cell {
   white-space: nowrap;
-  text-align: right;
   width: 100px;
 }
 
