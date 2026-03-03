@@ -480,7 +480,7 @@ function LiteratureTopicSearchPage() {
           <p><strong>Narrow your results using the filters below:</strong></p>
           <ul>
             <li><strong>Species Filter:</strong> Select a species to show only references with genes from that organism.</li>
-            <li><strong>Gene Filter:</strong> Enter gene names (comma-separated) to show only references associated with those specific genes. Partial matches are supported (e.g., "CDC" will match CDC3, CDC28, etc.).</li>
+            <li><strong>Gene Filter:</strong> Enter gene names (comma-separated) to show only references associated with those specific genes.</li>
             <li><strong>Quick Filter:</strong> Search across all fields including citation text, PubMed IDs, and gene names.</li>
           </ul>
           <p>All filters work together - results must match all active filters.</p>
