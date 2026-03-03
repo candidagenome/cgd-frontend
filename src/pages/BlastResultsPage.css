@@ -511,8 +511,8 @@
   font-style: italic;
 }
 
-.description-cell {
-  display: block;
+.accession-cell {
+  white-space: nowrap;
 }
 
 .sequence-link {
@@ -525,9 +525,31 @@
   text-decoration: underline;
 }
 
-.organism-name {
+.locus-cell {
+  max-width: 300px;
+}
+
+.locus-cell .locus-link {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.locus-cell .locus-link:hover {
+  text-decoration: underline;
+}
+
+.locus-cell .locus-link strong {
+  color: #0d47a1;
+}
+
+.locus-cell .no-locus {
   color: #666;
-  margin-left: 8px;
+}
+
+.organism-cell {
+  color: #555;
+  font-style: italic;
+  white-space: nowrap;
 }
 
 .expand-icon {

@@ -319,43 +319,70 @@ function BlastResultsPage() {
               <table className="hits-table">
                 <thead>
                   <tr>
-                    <th>Sequence Hits in Target Database</th>
+                    <th>Sequence ID</th>
+                    <th>Gene / Locus</th>
+                    <th>Organism</th>
                     <th>Score (bits)</th>
                     <th>E value</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {results.hits.map((hit, index) => (
-                    <tr
-                      key={index}
-                      className={expandedHits.has(index) ? 'expanded' : ''}
-                    >
-                      <td className="description-cell">
-                        <a
-                          href={`#hit-${index}`}
-                          className="sequence-link"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            // Expand this hit and scroll to it
-                            const newExpanded = new Set(expandedHits);
-                            newExpanded.add(index);
-                            setExpandedHits(newExpanded);
-                            // Scroll after a brief delay to allow expansion
-                            setTimeout(() => {
-                              document.getElementById(`hit-${index}`)?.scrollIntoView({ behavior: 'smooth' });
-                            }, 100);
-                          }}
-                        >
-                          {hit.accession}
-                        </a>
-                        {hit.organism_name && (
-                          <span className="organism-name"> {hit.organism_name}</span>
-                        )}
-                      </td>
-                      <td>{hit.best_bit_score.toFixed(0)}</td>
-                      <td>{hit.best_evalue === 0 ? '0.0e+00' : formatEvalue(hit.best_evalue)}</td>
-                    </tr>
-                  ))}
+                  {results.hits.map((hit, index) => {
+                    // Extract gene name from description if available
+                    // Description format is often "gene_name | systematic_name | description"
+                    const descParts = (hit.description || '').split('|').map(s => s.trim());
+                    const geneName = descParts[0] || null;
+                    const systematicName = descParts[1] || hit.accession;
+
+                    return (
+                      <tr
+                        key={index}
+                        className={expandedHits.has(index) ? 'expanded' : ''}
+                      >
+                        <td className="accession-cell">
+                          <a
+                            href={`#hit-${index}`}
+                            className="sequence-link"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              // Expand this hit and scroll to it
+                              const newExpanded = new Set(expandedHits);
+                              newExpanded.add(index);
+                              setExpandedHits(newExpanded);
+                              // Scroll after a brief delay to allow expansion
+                              setTimeout(() => {
+                                document.getElementById(`hit-${index}`)?.scrollIntoView({ behavior: 'smooth' });
+                              }, 100);
+                            }}
+                          >
+                            {hit.accession}
+                          </a>
+                        </td>
+                        <td className="locus-cell">
+                          {hit.locus_link ? (
+                            <Link to={hit.locus_link} className="locus-link">
+                              {geneName && geneName !== systematicName ? (
+                                <><strong>{geneName}</strong> / {systematicName}</>
+                              ) : (
+                                systematicName
+                              )}
+                            </Link>
+                          ) : (
+                            geneName && geneName !== systematicName ? (
+                              <><strong>{geneName}</strong> / {systematicName}</>
+                            ) : (
+                              <span className="no-locus">{systematicName || '-'}</span>
+                            )
+                          )}
+                        </td>
+                        <td className="organism-cell">
+                          {hit.organism_name || '-'}
+                        </td>
+                        <td>{hit.best_bit_score.toFixed(0)}</td>
+                        <td>{hit.best_evalue === 0 ? '0.0e+00' : formatEvalue(hit.best_evalue)}</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
 
