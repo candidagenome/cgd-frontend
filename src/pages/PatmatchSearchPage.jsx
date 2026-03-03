@@ -39,8 +39,11 @@ function PatmatchSearchPage() {
 
         // Set default dataset if none selected
         if (!dataset && config.datasets?.length > 0) {
-          // Find first DNA dataset as default
-          const defaultDs = config.datasets.find((ds) => ds.pattern_type === 'dna');
+          // Find DNA dataset, preferring Assembly 22 (newest)
+          const dnaDatasets = config.datasets.filter((ds) => ds.pattern_type === 'dna');
+          // Prefer A22 dataset, fall back to first available
+          const defaultDs = dnaDatasets.find((ds) => ds.display_name?.includes('A22'))
+            || dnaDatasets[0];
           if (defaultDs) {
             setDataset(defaultDs.name);
           }
@@ -103,8 +106,10 @@ function PatmatchSearchPage() {
 
     const currentDs = allDatasets.find((ds) => ds.name === dataset);
     if (currentDs && currentDs.pattern_type !== patternType) {
-      // Need to switch to a dataset of the correct type
-      const newDs = allDatasets.find((ds) => ds.pattern_type === patternType);
+      // Need to switch to a dataset of the correct type, preferring A22
+      const datasetsOfType = allDatasets.filter((ds) => ds.pattern_type === patternType);
+      const newDs = datasetsOfType.find((ds) => ds.display_name?.includes('A22'))
+        || datasetsOfType[0];
       if (newDs) {
         setDataset(newDs.name);
       }
