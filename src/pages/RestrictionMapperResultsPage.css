@@ -91,6 +91,21 @@
   border: 1px solid;
 }
 
+.legend-btn {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.legend-btn:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+.legend-btn.active {
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
 /* Restriction Map Visualization */
 .restriction-map-section {
   margin-bottom: 25px;
@@ -133,11 +148,31 @@
   z-index: 10;
 }
 
+.map-controls {
+  margin-top: 10px;
+}
+
 .map-note {
   font-size: 0.85em;
   color: #666;
   margin: 0;
   text-align: center;
+}
+
+.show-toggle-btn {
+  margin-left: 10px;
+  padding: 3px 10px;
+  background-color: #e3f2fd;
+  color: #1976d2;
+  border: 1px solid #90caf9;
+  border-radius: 3px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.show-toggle-btn:hover {
+  background-color: #bbdefb;
 }
 
 /* Download Section */
