@@ -238,7 +238,7 @@ function PhenotypeSearchPage() {
               : []),
           ]),
         ];
-        return searchFields.some((field) => field && field.toLowerCase().includes(searchLower));
+        return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
       });
     }
 
