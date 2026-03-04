@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
 import { renderCitationItem } from '../../utils/formatCitation.jsx';
@@ -60,6 +60,7 @@ const EVIDENCE_DESCRIPTIONS = {
 
 function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
   const [collapsedSections, setCollapsedSections] = useState({});
+  const [quickFilter, setQuickFilter] = useState('');
 
   // Get available organisms from the data - memoize to prevent new array reference each render
   const organisms = useMemo(() => {
@@ -224,12 +225,28 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
   const defaultColDef = useMemo(
     () => ({
       sortable: true,
-      filter: true,
       resizable: true,
       wrapText: true,
     }),
     []
   );
+
+  // Filter annotations by quick filter text
+  const filterAnnotations = useCallback((annotations) => {
+    if (!quickFilter.trim()) return annotations;
+    const searchLower = quickFilter.toLowerCase().trim();
+    return annotations.filter((ann) => {
+      const searchFields = [
+        ann.term?.display_name,
+        ann.term?.goid,
+        ann.qualifier,
+        ann.evidence?.code,
+        ann.source,
+        ...(ann.references || []).map(r => r.display_name || r.pubmed_id || ''),
+      ];
+      return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
+    });
+  }, [quickFilter]);
 
   // Render a single GO annotation table for an aspect
   const renderAspectTable = (annotations, aspectKey, typeKey) => {
@@ -237,13 +254,18 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
 
     const sectionKey = `${selectedOrganism}-${typeKey}-${aspectKey}`;
     const isCollapsed = collapsedSections[sectionKey];
+    const filteredAnnotations = filterAnnotations(annotations);
+
+    if (filteredAnnotations.length === 0 && quickFilter) return null;
 
     return (
       <div key={aspectKey} className="go-aspect-section">
         <h5 className="aspect-subheader" onClick={() => toggleSection(sectionKey)}>
           <span className="collapse-icon">{isCollapsed ? '>' : 'v'}</span>
           {ASPECT_LABELS[aspectKey]}
-          <span className="count-badge">{annotations.length}</span>
+          <span className="count-badge">
+            {filteredAnnotations.length}{quickFilter && ` of ${annotations.length}`}
+          </span>
         </h5>
 
         {!isCollapsed && (
@@ -252,7 +274,7 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
           // - DO NOT call sizeColumnsToFit(), which overrides flex sizing
           <div className="go-grid-wrapper ag-theme-alpine" style={{ width: '100%' }}>
             <AgGridReact
-              rowData={annotations}
+              rowData={filteredAnnotations}
               columnDefs={columnDefs}
               defaultColDef={defaultColDef}
               domLayout="autoHeight"
@@ -305,6 +327,31 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
           </li>
         </ul>
       </div>
+
+      {/* Quick Filter Box */}
+      {selectedOrganism && orgData && orgData.annotations && orgData.annotations.length > 0 && (
+        <div className="filter-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 15px', background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '4px', marginBottom: '15px' }}>
+          <label htmlFor="quick-filter" style={{ fontWeight: 500, color: '#333', whiteSpace: 'nowrap' }}>Filter results: </label>
+          <input
+            type="text"
+            id="quick-filter"
+            value={quickFilter}
+            onChange={(e) => setQuickFilter(e.target.value)}
+            placeholder="Type to filter..."
+            style={{ padding: '6px 10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px', width: '200px' }}
+          />
+          {quickFilter && (
+            <button
+              type="button"
+              onClick={() => setQuickFilter('')}
+              title="Clear filter"
+              style={{ padding: '4px 8px', border: 'none', background: '#e0e0e0', color: '#666', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px', lineHeight: 1 }}
+            >
+              ×
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Display data for selected organism */}
       {selectedOrganism && orgData ? (

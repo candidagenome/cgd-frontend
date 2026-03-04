@@ -133,6 +133,7 @@ function GoTermFinderResultsPage() {
   const [graphLoading, setGraphLoading] = useState(false);
   const [showGraph, setShowGraph] = useState(false);
   const [graphGeneratedDate, setGraphGeneratedDate] = useState(null);
+  const [quickFilter, setQuickFilter] = useState('');
 
 
   // Load results from session storage
@@ -262,6 +263,21 @@ function GoTermFinderResultsPage() {
     // Filter out terms with only one gene
     return terms.filter(term => term.query_count > 1);
   };
+
+  // Filter terms by quick filter text
+  const filteredCurrentTerms = useMemo(() => {
+    const terms = getFilteredTerms();
+    if (!quickFilter.trim()) return terms;
+    const searchLower = quickFilter.toLowerCase().trim();
+    return terms.filter((term) => {
+      const searchFields = [
+        term.goid,
+        term.go_term,
+        ...(term.genes || []).map(g => g.gene_name || g.systematic_name),
+      ];
+      return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
+    });
+  }, [results, request, quickFilter]);
 
   // Load graph data from backend API
   const loadGraph = async () => {
@@ -692,14 +708,42 @@ function GoTermFinderResultsPage() {
               </h2>
             </div>
 
+            {/* Quick Filter Box */}
+            <div className="filter-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 15px', background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '4px', marginBottom: '10px' }}>
+              <label htmlFor="quick-filter" style={{ fontWeight: 500, color: '#333', whiteSpace: 'nowrap' }}>Filter results: </label>
+              <input
+                type="text"
+                id="quick-filter"
+                value={quickFilter}
+                onChange={(e) => setQuickFilter(e.target.value)}
+                placeholder="Type to filter..."
+                style={{ padding: '6px 10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px', width: '200px' }}
+              />
+              {quickFilter && (
+                <button
+                  type="button"
+                  onClick={() => setQuickFilter('')}
+                  title="Clear filter"
+                  style={{ padding: '4px 8px', border: 'none', background: '#e0e0e0', color: '#666', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px', lineHeight: 1 }}
+                >
+                  ×
+                </button>
+              )}
+              {quickFilter && (
+                <span style={{ fontSize: '0.9rem', color: '#555' }}>
+                  Showing {filteredCurrentTerms.length} of {currentTerms.length} results
+                </span>
+              )}
+            </div>
+
             {/* AG Grid Results Table */}
             <div className="results-table-container">
-              {currentTerms.length === 0 ? (
-                <p className="no-results">No enriched terms in this category.</p>
+              {filteredCurrentTerms.length === 0 ? (
+                <p className="no-results">No enriched terms match your filter.</p>
               ) : (
                 <div className="ag-grid-wrapper" style={{ width: '100%' }}>
                   <AgGridReact
-                    rowData={currentTerms}
+                    rowData={filteredCurrentTerms}
                     columnDefs={columnDefs}
                     defaultColDef={defaultColDef}
                     context={gridContext}

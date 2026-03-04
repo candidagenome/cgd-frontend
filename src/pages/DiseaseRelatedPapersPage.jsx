@@ -10,6 +10,7 @@ function DiseaseRelatedPapersPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [quickFilter, setQuickFilter] = useState('');
 
   const currentTopic = searchParams.get('topic') || null;
 
@@ -87,7 +88,6 @@ function DiseaseRelatedPapersPage() {
       flex: 1,
       minWidth: 180,
       valueGetter: (params) => params.data.topics?.join(', ') || '-',
-      filter: 'agTextColumnFilter',
     },
     {
       headerName: 'Reference',
@@ -104,11 +104,6 @@ function DiseaseRelatedPapersPage() {
           </div>
         );
       },
-      filter: 'agTextColumnFilter',
-      filterParams: {
-        filterOptions: ['contains'],
-        defaultOption: 'contains',
-      },
     },
     {
       headerName: 'Species',
@@ -116,7 +111,6 @@ function DiseaseRelatedPapersPage() {
       flex: 1,
       minWidth: 150,
       valueGetter: (params) => formatSpecies(params.data.species),
-      filter: 'agTextColumnFilter',
     },
     {
       headerName: 'Genes Addressed',
@@ -145,16 +139,28 @@ function DiseaseRelatedPapersPage() {
         const genes = params.data.genes || [];
         return genes.map(g => g.gene_name || g.feature_name).join(', ');
       },
-      filter: 'agTextColumnFilter',
     },
   ], []);
 
   const defaultColDef = useMemo(() => ({
     sortable: true,
-    filter: true,
     resizable: true,
-    floatingFilter: true,
   }), []);
+
+  // Filter references by quick filter text
+  const filteredReferences = useMemo(() => {
+    if (!data?.references || !quickFilter.trim()) return data?.references || [];
+    const searchLower = quickFilter.toLowerCase().trim();
+    return data.references.filter((ref) => {
+      const searchFields = [
+        ref.citation,
+        ref.topics?.join(' '),
+        formatSpecies(ref.species),
+        ...(ref.genes || []).map(g => g.gene_name || g.feature_name),
+      ];
+      return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
+    });
+  }, [data?.references, quickFilter]);
 
   // Calculate row height based on content
   const getRowHeight = useCallback((params) => {
@@ -242,19 +248,49 @@ function DiseaseRelatedPapersPage() {
       {renderTopicFilters()}
 
       {data?.references?.length > 0 ? (
-        <div className="papers-grid-wrapper ag-theme-alpine">
-          <AgGridReact
-            rowData={data.references}
-            columnDefs={columnDefs}
-            defaultColDef={defaultColDef}
-            domLayout="autoHeight"
-            pagination={true}
-            paginationPageSize={10}
-            paginationPageSizeSelector={[10, 25, 50, 100]}
-            suppressCellFocus={true}
-            getRowHeight={getRowHeight}
-          />
-        </div>
+        <>
+          {/* Quick Filter Box */}
+          <div className="filter-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 15px', background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '4px', marginBottom: '10px' }}>
+            <label htmlFor="quick-filter" style={{ fontWeight: 500, color: '#333', whiteSpace: 'nowrap' }}>Filter results: </label>
+            <input
+              type="text"
+              id="quick-filter"
+              value={quickFilter}
+              onChange={(e) => setQuickFilter(e.target.value)}
+              placeholder="Type to filter..."
+              style={{ padding: '6px 10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px', width: '200px' }}
+            />
+            {quickFilter && (
+              <button
+                type="button"
+                onClick={() => setQuickFilter('')}
+                title="Clear filter"
+                style={{ padding: '4px 8px', border: 'none', background: '#e0e0e0', color: '#666', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px', lineHeight: 1 }}
+              >
+                ×
+              </button>
+            )}
+            {quickFilter && (
+              <span style={{ fontSize: '0.9rem', color: '#555' }}>
+                Showing {filteredReferences.length} of {data.references.length} results
+              </span>
+            )}
+          </div>
+
+          <div className="papers-grid-wrapper ag-theme-alpine">
+            <AgGridReact
+              rowData={filteredReferences}
+              columnDefs={columnDefs}
+              defaultColDef={defaultColDef}
+              domLayout="autoHeight"
+              pagination={true}
+              paginationPageSize={10}
+              paginationPageSizeSelector={[10, 25, 50, 100]}
+              suppressCellFocus={true}
+              getRowHeight={getRowHeight}
+            />
+          </div>
+        </>
       ) : (
         <div className="no-papers">
           <p>No disease-related papers found.</p>

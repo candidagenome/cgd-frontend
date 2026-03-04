@@ -15,6 +15,7 @@ function WebPrimerSearchPage() {
   const [inputMode, setInputMode] = useState('sequence'); // 'sequence' or 'locus'
   const [locus, setLocus] = useState('');
   const [sequence, setSequence] = useState('');
+  const [sequenceForLocus, setSequenceForLocus] = useState(''); // Track which locus the sequence is for
 
   // Purpose
   const [purpose, setPurpose] = useState('PCR');
@@ -66,6 +67,7 @@ function WebPrimerSearchPage() {
       const data = await webprimerApi.getSequence(locusName);
       if (data.success) {
         setSequence(data.sequence);
+        setSequenceForLocus(locusName); // Track which locus this sequence is for
       } else {
         setError(data.error || 'Failed to fetch sequence');
       }
@@ -86,12 +88,14 @@ function WebPrimerSearchPage() {
     setError(null);
 
     try {
-      // Fetch sequence if using locus mode and sequence is empty
+      // Fetch sequence if using locus mode and sequence is empty or for a different locus
       let seq = sequence;
-      if (inputMode === 'locus' && !seq && locus) {
+      if (inputMode === 'locus' && locus && (!seq || sequenceForLocus !== locus)) {
         const data = await webprimerApi.getSequence(locus);
         if (data.success) {
           seq = data.sequence;
+          setSequence(data.sequence);
+          setSequenceForLocus(locus);
         } else {
           throw new Error(data.error || 'Failed to fetch sequence');
         }
@@ -174,7 +178,14 @@ function WebPrimerSearchPage() {
                   <input
                     type="text"
                     value={locus}
-                    onChange={(e) => setLocus(e.target.value)}
+                    onChange={(e) => {
+                      setLocus(e.target.value);
+                      // Clear sequence if locus changes to prevent stale data
+                      if (e.target.value !== sequenceForLocus) {
+                        setSequence('');
+                        setSequenceForLocus('');
+                      }
+                    }}
                     placeholder="e.g., ACT1, C1_01070W_A"
                   />
                   <button

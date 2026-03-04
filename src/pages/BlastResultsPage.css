@@ -476,6 +476,7 @@
   border-collapse: collapse;
   margin-bottom: 25px;
   font-size: 0.9em;
+  table-layout: auto;
 }
 
 .hits-table th,
@@ -491,6 +492,7 @@
   color: #333;
   white-space: nowrap;
 }
+
 
 .hits-table tbody tr {
   transition: background-color 0.2s;
@@ -511,8 +513,9 @@
   font-style: italic;
 }
 
-.description-cell {
-  display: block;
+.accession-cell {
+  white-space: nowrap;
+  width: 120px;
 }
 
 .sequence-link {
@@ -525,9 +528,45 @@
   text-decoration: underline;
 }
 
-.organism-name {
+.locus-cell {
+  width: 180px;
+  white-space: nowrap;
+}
+
+.locus-cell .locus-link {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.locus-cell .locus-link:hover {
+  text-decoration: underline;
+}
+
+.locus-cell .locus-link strong {
+  color: #0d47a1;
+}
+
+.locus-cell .no-locus {
   color: #666;
-  margin-left: 8px;
+}
+
+.locus-cell .no-locus strong {
+  color: #333;
+}
+
+.organism-cell {
+  color: #555;
+  font-style: italic;
+}
+
+.score-cell {
+  white-space: nowrap;
+  width: 100px;
+}
+
+.evalue-cell {
+  white-space: nowrap;
+  width: 100px;
 }
 
 .expand-icon {

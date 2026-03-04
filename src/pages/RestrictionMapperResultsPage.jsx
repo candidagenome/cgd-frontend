@@ -25,6 +25,9 @@ function RestrictionMapperResultsPage() {
   const [selectedEnzyme, setSelectedEnzyme] = useState(null);
   const [showNonCutting, setShowNonCutting] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  const [quickFilter, setQuickFilter] = useState('');
+  const [showAllCutSites, setShowAllCutSites] = useState(false);
+  const [enzymeTypeFilter, setEnzymeTypeFilter] = useState(null); // null = all types
 
   // Load results from sessionStorage
   useEffect(() => {
@@ -166,6 +169,51 @@ function RestrictionMapperResultsPage() {
     resizable: true,
   }), []);
 
+  // Filter cutting enzymes by quick filter text and enzyme type
+  const filteredCuttingEnzymes = useMemo(() => {
+    if (!results?.cutting_enzymes) return [];
+    let filtered = results.cutting_enzymes;
+
+    // Filter by enzyme type
+    if (enzymeTypeFilter) {
+      filtered = filtered.filter((enzyme) => enzyme.enzyme_type === enzymeTypeFilter);
+    }
+
+    // Filter by quick filter text
+    if (quickFilter.trim()) {
+      const searchLower = quickFilter.toLowerCase().trim();
+      filtered = filtered.filter((enzyme) => {
+        const searchFields = [
+          enzyme.enzyme_name,
+          enzyme.recognition_seq,
+          enzyme.enzyme_type,
+        ];
+        return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
+      });
+    }
+
+    return filtered;
+  }, [results?.cutting_enzymes, quickFilter, enzymeTypeFilter]);
+
+  // Filter cut positions by enzyme type for the map
+  const filteredCutPositions = useMemo(() => {
+    if (!allCutPositions.length) return [];
+
+    let positions = allCutPositions;
+
+    // Filter by enzyme type if selected
+    if (enzymeTypeFilter) {
+      positions = positions
+        .map(({ position, enzymes }) => ({
+          position,
+          enzymes: enzymes.filter((e) => e.type === enzymeTypeFilter),
+        }))
+        .filter(({ enzymes }) => enzymes.length > 0);
+    }
+
+    return positions;
+  }, [allCutPositions, enzymeTypeFilter]);
+
   // Row style based on enzyme type
   const getRowStyle = (params) => {
     const enzyme = params.data;
@@ -220,17 +268,34 @@ function RestrictionMapperResultsPage() {
           </Link>
         </div>
 
-        {/* Enzyme Type Legend */}
+        {/* Enzyme Type Filter */}
         <div className="enzyme-legend">
-          <span className="legend-title">Enzyme Types:</span>
+          <span className="legend-title">Filter by Type:</span>
+          <button
+            type="button"
+            className={`legend-item legend-btn ${enzymeTypeFilter === null ? 'active' : ''}`}
+            style={{
+              backgroundColor: enzymeTypeFilter === null ? '#e0e0e0' : '#fff',
+              borderColor: '#999',
+            }}
+            onClick={() => setEnzymeTypeFilter(null)}
+          >
+            All Types
+          </button>
           {Object.entries(ENZYME_TYPE_COLORS).map(([type, colors]) => (
-            <span
+            <button
+              type="button"
               key={type}
-              className="legend-item"
-              style={{ backgroundColor: colors.bg, borderColor: colors.border }}
+              className={`legend-item legend-btn ${enzymeTypeFilter === type ? 'active' : ''}`}
+              style={{
+                backgroundColor: enzymeTypeFilter === type ? colors.border : colors.bg,
+                borderColor: colors.border,
+                color: enzymeTypeFilter === type ? '#fff' : 'inherit',
+              }}
+              onClick={() => setEnzymeTypeFilter(enzymeTypeFilter === type ? null : type)}
             >
               {colors.label}
-            </span>
+            </button>
           ))}
         </div>
 
@@ -248,7 +313,7 @@ function RestrictionMapperResultsPage() {
               </div>
               <div className="map-sequence-bar" style={{ width: mapScale.width }}>
                 {/* Cut site markers */}
-                {allCutPositions.slice(0, 100).map(({ position, enzymes }) => {
+                {(showAllCutSites ? filteredCutPositions : filteredCutPositions.slice(0, 100)).map(({ position, enzymes }) => {
                   const left = (position / results.seq_length) * 100;
                   const primaryEnzyme = enzymes[0];
                   const color = ENZYME_TYPE_COLORS[primaryEnzyme.type]?.border || '#666';
@@ -265,9 +330,36 @@ function RestrictionMapperResultsPage() {
                   );
                 })}
               </div>
-              {allCutPositions.length > 100 && (
+              {filteredCutPositions.length > 100 && (
+                <div className="map-controls">
+                  {showAllCutSites ? (
+                    <p className="map-note">
+                      Showing all {filteredCutPositions.length} cut sites
+                      <button
+                        type="button"
+                        className="show-toggle-btn"
+                        onClick={() => setShowAllCutSites(false)}
+                      >
+                        Show fewer
+                      </button>
+                    </p>
+                  ) : (
+                    <p className="map-note">
+                      Showing first 100 of {filteredCutPositions.length} cut sites
+                      <button
+                        type="button"
+                        className="show-toggle-btn"
+                        onClick={() => setShowAllCutSites(true)}
+                      >
+                        Show all
+                      </button>
+                    </p>
+                  )}
+                </div>
+              )}
+              {filteredCutPositions.length <= 100 && filteredCutPositions.length > 0 && (
                 <p className="map-note">
-                  Showing first 100 of {allCutPositions.length} cut sites
+                  Showing {filteredCutPositions.length} cut site{filteredCutPositions.length !== 1 ? 's' : ''}
                 </p>
               )}
             </div>
@@ -296,9 +388,38 @@ function RestrictionMapperResultsPage() {
         {cuttingEnzymes.length > 0 ? (
           <div className="enzymes-section">
             <h2>Cutting Enzymes ({cuttingEnzymes.length})</h2>
+
+            {/* Quick Filter Box */}
+            <div className="filter-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 15px', background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '4px', marginBottom: '10px' }}>
+              <label htmlFor="quick-filter" style={{ fontWeight: 500, color: '#333', whiteSpace: 'nowrap' }}>Filter results: </label>
+              <input
+                type="text"
+                id="quick-filter"
+                value={quickFilter}
+                onChange={(e) => setQuickFilter(e.target.value)}
+                placeholder="Type to filter..."
+                style={{ padding: '6px 10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px', width: '200px' }}
+              />
+              {quickFilter && (
+                <button
+                  type="button"
+                  onClick={() => setQuickFilter('')}
+                  title="Clear filter"
+                  style={{ padding: '4px 8px', border: 'none', background: '#e0e0e0', color: '#666', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px', lineHeight: 1 }}
+                >
+                  ×
+                </button>
+              )}
+              {quickFilter && (
+                <span style={{ fontSize: '0.9rem', color: '#555' }}>
+                  Showing {filteredCuttingEnzymes.length} of {cuttingEnzymes.length} results
+                </span>
+              )}
+            </div>
+
             <div className="ag-grid-wrapper" style={{ width: '100%' }}>
               <AgGridReact
-                rowData={cuttingEnzymes}
+                rowData={filteredCuttingEnzymes}
                 columnDefs={columnDefs}
                 defaultColDef={defaultColDef}
                 domLayout="autoHeight"

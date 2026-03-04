@@ -10,6 +10,7 @@ function GoSlimMapperResultsPage() {
   const [results, setResults] = useState(null);
   const [request, setRequest] = useState(null);
   const [expandedTerms, setExpandedTerms] = useState(new Set());
+  const [quickFilter, setQuickFilter] = useState('');
 
   // Load results from localStorage
   useEffect(() => {
@@ -161,6 +162,20 @@ function GoSlimMapperResultsPage() {
     wrapText: true,
   }), []);
 
+  // Filter mapped terms by quick filter text
+  const filteredMappedTerms = useMemo(() => {
+    if (!results?.result?.mapped_terms || !quickFilter.trim()) return results?.result?.mapped_terms || [];
+    const searchLower = quickFilter.toLowerCase().trim();
+    return results.result.mapped_terms.filter((term) => {
+      const searchFields = [
+        term.goid,
+        term.go_term,
+        ...(term.genes || []).map(g => g.gene_name || g.systematic_name),
+      ];
+      return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
+    });
+  }, [results?.result?.mapped_terms, quickFilter]);
+
   // Grid ready callback
   const onGridReady = useCallback((params) => {
     params.api.sizeColumnsToFit();
@@ -273,19 +288,49 @@ function GoSlimMapperResultsPage() {
               No genes were mapped to any GO Slim terms in this set.
             </p>
           ) : (
-            <div className="ag-grid-wrapper ag-theme-alpine">
-              <AgGridReact
-                rowData={result.mapped_terms}
-                columnDefs={columnDefs}
-                defaultColDef={defaultColDef}
-                domLayout="autoHeight"
-                pagination={true}
-                paginationPageSize={10}
-                paginationPageSizeSelector={[10, 25, 50]}
-                onGridReady={onGridReady}
-                suppressCellFocus={true}
-              />
-            </div>
+            <>
+              {/* Quick Filter Box */}
+              <div className="filter-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 15px', background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '4px', marginBottom: '10px' }}>
+                <label htmlFor="quick-filter" style={{ fontWeight: 500, color: '#333', whiteSpace: 'nowrap' }}>Filter results: </label>
+                <input
+                  type="text"
+                  id="quick-filter"
+                  value={quickFilter}
+                  onChange={(e) => setQuickFilter(e.target.value)}
+                  placeholder="Type to filter..."
+                  style={{ padding: '6px 10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px', width: '200px' }}
+                />
+                {quickFilter && (
+                  <button
+                    type="button"
+                    onClick={() => setQuickFilter('')}
+                    title="Clear filter"
+                    style={{ padding: '4px 8px', border: 'none', background: '#e0e0e0', color: '#666', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px', lineHeight: 1 }}
+                  >
+                    ×
+                  </button>
+                )}
+                {quickFilter && (
+                  <span style={{ fontSize: '0.9rem', color: '#555' }}>
+                    Showing {filteredMappedTerms.length} of {result.mapped_terms.length} results
+                  </span>
+                )}
+              </div>
+
+              <div className="ag-grid-wrapper ag-theme-alpine">
+                <AgGridReact
+                  rowData={filteredMappedTerms}
+                  columnDefs={columnDefs}
+                  defaultColDef={defaultColDef}
+                  domLayout="autoHeight"
+                  pagination={true}
+                  paginationPageSize={10}
+                  paginationPageSizeSelector={[10, 25, 50]}
+                  onGridReady={onGridReady}
+                  suppressCellFocus={true}
+                />
+              </div>
+            </>
           )}
         </div>
 

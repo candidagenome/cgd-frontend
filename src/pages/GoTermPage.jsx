@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import goApi from '../api/goApi';
@@ -46,6 +46,8 @@ function GoTermPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [quickFilter, setQuickFilter] = useState('');
+  const [selectedOrganism, setSelectedOrganism] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,6 +65,21 @@ function GoTermPage() {
 
     fetchData();
   }, [goid]);
+
+  // Extract unique species from all annotations
+  const availableSpecies = useMemo(() => {
+    const speciesSet = new Set();
+    if (data?.annotations) {
+      data.annotations.forEach((annotation) => {
+        annotation.qualifier_groups?.forEach((group) => {
+          group.genes?.forEach((gene) => {
+            if (gene.species) speciesSet.add(gene.species);
+          });
+        });
+      });
+    }
+    return Array.from(speciesSet).sort();
+  }, [data?.annotations]);
 
   // AG Grid column definitions for gene table
   // Locus=22%, Species=13%, Reference(s)=57%, Evidence=8%
@@ -141,12 +158,44 @@ function GoTermPage() {
   const defaultColDef = useMemo(
     () => ({
       sortable: true,
-      filter: true,
       resizable: true,
       wrapText: true,
     }),
     []
   );
+
+  // Filter genes by quick filter text and selected organism
+  const filterGenes = useCallback((genes) => {
+    let filtered = genes;
+
+    // Filter by selected organism
+    if (selectedOrganism) {
+      filtered = filtered.filter((g) => g.species === selectedOrganism);
+    }
+
+    // Filter by quick filter text
+    if (quickFilter.trim()) {
+      const searchLower = quickFilter.toLowerCase().trim();
+      filtered = filtered.filter((g) => {
+        const searchFields = [
+          g.locus_name,
+          g.systematic_name,
+          g.species,
+          // Include citation, title, and display_name from references
+          ...(g.references || []).flatMap((r) => [
+            r.citation,
+            r.title,
+            r.display_name,
+            r.pubmed_id,
+            r.pubmed,
+          ]),
+        ];
+        return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
+      });
+    }
+
+    return filtered;
+  }, [quickFilter, selectedOrganism]);
 
   // Build AmiGO URL
   const getAmigoUrl = (goidVal) => {
@@ -354,6 +403,7 @@ function GoTermPage() {
       return null;
     }
 
+    const filteredGenes = filterGenes(group.genes);
     const totalGenes = group.genes.length;
 
     return (
@@ -366,6 +416,7 @@ function GoTermPage() {
         <p className="qualifier-summary">
           {totalGenes} gene{totalGenes !== 1 ? 's have' : ' has'} been directly annotated to this term in the{' '}
           {ANNOTATION_TYPE_NAMES[annotationType]?.replace(' GO Annotations', '') || annotationType} set
+          {(quickFilter || selectedOrganism) && ` (showing ${filteredGenes.length} matching filter)`}
         </p>
 
         {/* Key fixes for flex sizing:
@@ -374,7 +425,7 @@ function GoTermPage() {
         */}
         <div className="gene-grid-wrapper ag-theme-alpine" style={{ width: '100%' }}>
           <AgGridReact
-            rowData={group.genes}
+            rowData={filteredGenes}
             columnDefs={geneColumnDefs}
             defaultColDef={defaultColDef}
             domLayout="autoHeight"
@@ -449,6 +500,48 @@ function GoTermPage() {
             or its variants containing one or more qualifiers (<em>NOT, contributes to, or colocalizes with</em>) in the
             manually curated set and any annotations made from high-throughput experiments or computational analysis.
           </p>
+
+          {/* Filter Controls */}
+          <div className="filter-controls" style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '12px 15px', background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '4px', marginBottom: '15px', flexWrap: 'wrap' }}>
+            {/* Organism Dropdown */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <label htmlFor="organism-filter" style={{ fontWeight: 500, color: '#333', whiteSpace: 'nowrap' }}>Organism: </label>
+              <select
+                id="organism-filter"
+                value={selectedOrganism}
+                onChange={(e) => setSelectedOrganism(e.target.value)}
+                style={{ padding: '6px 10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px', minWidth: '180px' }}
+              >
+                <option value="">All Organisms</option>
+                {availableSpecies.map((species) => (
+                  <option key={species} value={species}>{species}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Quick Filter */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <label htmlFor="quick-filter" style={{ fontWeight: 500, color: '#333', whiteSpace: 'nowrap' }}>Filter results: </label>
+              <input
+                type="text"
+                id="quick-filter"
+                value={quickFilter}
+                onChange={(e) => setQuickFilter(e.target.value)}
+                placeholder="Type to filter..."
+                style={{ padding: '6px 10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px', width: '200px' }}
+              />
+              {(quickFilter || selectedOrganism) && (
+                <button
+                  type="button"
+                  onClick={() => { setQuickFilter(''); setSelectedOrganism(''); }}
+                  title="Clear all filters"
+                  style={{ padding: '4px 8px', border: 'none', background: '#e0e0e0', color: '#666', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px', lineHeight: 1 }}
+                >
+                  ×
+                </button>
+              )}
+            </div>
+          </div>
 
           {ANNOTATION_TYPE_ORDER.map((type) => {
             const annotation = data.annotations.find((a) => a.annotation_type === type);

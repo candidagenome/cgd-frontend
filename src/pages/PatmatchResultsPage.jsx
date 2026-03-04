@@ -18,6 +18,7 @@ function PatmatchResultsPage() {
   const [error, setError] = useState(null);
   const [downloading, setDownloading] = useState(false);
   const [selectedHit, setSelectedHit] = useState(null);
+  const [quickFilter, setQuickFilter] = useState('');
 
   // Extract search parameters from URL
   const pattern = searchParams.get('pattern') || '';
@@ -260,6 +261,21 @@ function PatmatchResultsPage() {
     resizable: true,
   }), []);
 
+  // Filter hits by quick filter text
+  const filteredHits = useMemo(() => {
+    if (!results?.hits || !quickFilter.trim()) return results?.hits || [];
+    const searchLower = quickFilter.toLowerCase().trim();
+    return results.hits.filter((hit) => {
+      const searchFields = [
+        hit.sequence_name,
+        hit.sequence_description,
+        hit.matched_sequence,
+        hit.strand,
+      ];
+      return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
+    });
+  }, [results?.hits, quickFilter]);
+
   if (loading) {
     return (
       <div className="patmatch-results-page">
@@ -343,20 +359,50 @@ function PatmatchResultsPage() {
             </p>
           </div>
         ) : (
-          <div className="ag-grid-wrapper" style={{ width: '100%' }}>
-            <AgGridReact
-              rowData={results.hits}
-              columnDefs={columnDefs}
-              defaultColDef={defaultColDef}
-              domLayout="autoHeight"
-              suppressCellFocus={true}
-              enableCellTextSelection={true}
-              pagination={true}
-              paginationPageSize={10}
-              paginationPageSizeSelector={[10, 25, 50, 100]}
-              getRowId={(params) => `${params.data.sequence_name}-${params.data.match_start}-${params.data.match_end}`}
-            />
-          </div>
+          <>
+            {/* Quick Filter Box */}
+            <div className="filter-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 15px', background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '4px', marginBottom: '10px' }}>
+              <label htmlFor="quick-filter" style={{ fontWeight: 500, color: '#333', whiteSpace: 'nowrap' }}>Filter results: </label>
+              <input
+                type="text"
+                id="quick-filter"
+                value={quickFilter}
+                onChange={(e) => setQuickFilter(e.target.value)}
+                placeholder="Type to filter..."
+                style={{ padding: '6px 10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px', width: '200px' }}
+              />
+              {quickFilter && (
+                <button
+                  type="button"
+                  onClick={() => setQuickFilter('')}
+                  title="Clear filter"
+                  style={{ padding: '4px 8px', border: 'none', background: '#e0e0e0', color: '#666', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px', lineHeight: 1 }}
+                >
+                  ×
+                </button>
+              )}
+              {quickFilter && (
+                <span style={{ fontSize: '0.9rem', color: '#555' }}>
+                  Showing {filteredHits.length} of {results.hits.length} results
+                </span>
+              )}
+            </div>
+
+            <div className="ag-grid-wrapper" style={{ width: '100%' }}>
+              <AgGridReact
+                rowData={filteredHits}
+                columnDefs={columnDefs}
+                defaultColDef={defaultColDef}
+                domLayout="autoHeight"
+                suppressCellFocus={true}
+                enableCellTextSelection={true}
+                pagination={true}
+                paginationPageSize={10}
+                paginationPageSizeSelector={[10, 25, 50, 100]}
+                getRowId={(params) => `${params.data.sequence_name}-${params.data.match_start}-${params.data.match_end}`}
+              />
+            </div>
+          </>
         )}
 
         {renderSequenceModal()}

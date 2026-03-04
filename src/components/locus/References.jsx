@@ -26,6 +26,7 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [localSelectedOrganism, setLocalSelectedOrganism] = useState(null);
   const [expandedGeneRows, setExpandedGeneRows] = useState(new Set()); // Track which rows have expanded gene lists
+  const [quickFilter, setQuickFilter] = useState('');
 
   // Use either the prop or local state for organism selection
   const currentOrganism = selectedOrganism || localSelectedOrganism;
@@ -67,7 +68,6 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
       autoHeight: true,
       wrapText: true,
       sortable: true,
-      filter: true,
       valueGetter: (params) => {
         const ref = params.data;
         const authors = ref.authors || '';
@@ -85,7 +85,6 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
       flex: 0.5,
       minWidth: 100,
       sortable: true,
-      filter: true,
       valueGetter: (params) => {
         return params.data.species || currentOrganism?.split(' ').slice(0, 2).join(' ') || 'C. albicans';
       },
@@ -98,7 +97,6 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
       autoHeight: true,
       wrapText: true,
       sortable: true,
-      filter: true,
       valueGetter: (params) => {
         const otherGenesInRef = params.data.other_genes
           ? params.data.other_genes.filter(g => g !== displayName)
@@ -162,9 +160,25 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
   // Default column properties
   const defaultColDef = useMemo(() => ({
     sortable: true,
-    filter: true,
     resizable: true,
   }), []);
+
+  // Filter references by quick filter text
+  const filterReferences = useCallback((refsToFilter) => {
+    if (!quickFilter.trim()) return refsToFilter;
+    const searchLower = quickFilter.toLowerCase().trim();
+    return refsToFilter.filter((ref) => {
+      const searchFields = [
+        ref.authors,
+        ref.title,
+        ref.journal,
+        ref.year?.toString(),
+        ref.pubmed_id,
+        ...(ref.other_genes || []),
+      ];
+      return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
+    });
+  }, [quickFilter]);
 
   // Grid ready callback - removed sizeColumnsToFit() which interferes with flex sizing
 
@@ -474,15 +488,46 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
     // Sort by year descending
     const sortedRefs = [...refsToShow].sort((a, b) => (b?.year || 0) - (a?.year || 0));
 
+    // Apply quick filter
+    const filteredRefs = filterReferences(sortedRefs);
+
     return (
       <div className="references-table-container">
+        {/* Quick Filter Box */}
+        <div className="filter-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 15px', background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '4px', marginBottom: '10px' }}>
+          <label htmlFor="quick-filter" style={{ fontWeight: 500, color: '#333', whiteSpace: 'nowrap' }}>Filter results: </label>
+          <input
+            type="text"
+            id="quick-filter"
+            value={quickFilter}
+            onChange={(e) => setQuickFilter(e.target.value)}
+            placeholder="Type to filter..."
+            style={{ padding: '6px 10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px', width: '200px' }}
+          />
+          {quickFilter && (
+            <button
+              type="button"
+              onClick={() => setQuickFilter('')}
+              title="Clear filter"
+              style={{ padding: '4px 8px', border: 'none', background: '#e0e0e0', color: '#666', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px', lineHeight: 1 }}
+            >
+              ×
+            </button>
+          )}
+          {quickFilter && (
+            <span style={{ fontSize: '0.9rem', color: '#555' }}>
+              Showing {filteredRefs.length} of {sortedRefs.length} results
+            </span>
+          )}
+        </div>
+
         <div className="references-table-header">
           <p className="results-count">
-            {sortedRefs.length} reference{sortedRefs.length !== 1 ? 's' : ''}
+            {filteredRefs.length} reference{filteredRefs.length !== 1 ? 's' : ''}
           </p>
           <button
             className="download-btn"
-            onClick={() => handleDownloadTSV(sortedRefs)}
+            onClick={() => handleDownloadTSV(filteredRefs)}
             title="Download as TSV"
           >
             Download TSV
@@ -490,11 +535,11 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
         </div>
         <div className="references-grid-wrapper ag-theme-alpine" style={{ width: '100%' }}>
           <AgGridReact
-            rowData={sortedRefs}
+            rowData={filteredRefs}
             columnDefs={columnDefs}
             defaultColDef={defaultColDef}
             domLayout="autoHeight"
-            pagination={sortedRefs.length > 10}
+            pagination={filteredRefs.length > 10}
             paginationPageSize={10}
             paginationPageSizeSelector={[10, 25, 50]}
             suppressCellFocus={true}

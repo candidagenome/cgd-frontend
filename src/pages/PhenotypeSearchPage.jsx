@@ -40,6 +40,10 @@ function PhenotypeSearchPage() {
   const [hasSearched, setHasSearched] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
 
+  // Filtering state
+  const [selectedOrganism, setSelectedOrganism] = useState('');
+  const [quickFilter, setQuickFilter] = useState('');
+
   // Parse URL parameters and perform search if present
   useEffect(() => {
     const params = {
@@ -184,6 +188,69 @@ function PhenotypeSearchPage() {
     navigate('/phenotype/search');
   };
 
+  // Extract unique organisms from results and compute counts
+  const organismData = useMemo(() => {
+    if (!data?.results) return { organisms: [], counts: {} };
+    const counts = {};
+    data.results.forEach((r) => {
+      const org = r.organism || 'Unknown';
+      counts[org] = (counts[org] || 0) + 1;
+    });
+    const organisms = Object.keys(counts).sort();
+    return { organisms, counts };
+  }, [data?.results]);
+
+  // Filter results by organism and quick filter text
+  const filteredResults = useMemo(() => {
+    if (!data?.results) return [];
+    let results = data.results;
+
+    // Filter by organism
+    if (selectedOrganism) {
+      results = results.filter((r) => r.organism === selectedOrganism);
+    }
+
+    // Filter by quick search text (case-insensitive)
+    if (quickFilter.trim()) {
+      const searchLower = quickFilter.toLowerCase().trim();
+      results = results.filter((r) => {
+        const searchFields = [
+          r.gene_name,
+          r.feature_name,
+          r.organism,
+          r.experiment_type,
+          r.experiment_comment,
+          r.mutant_type,
+          r.strain,
+          r.observable,
+          r.qualifier,
+          ...(r.details || []).map((d) => `${d.property_type} ${d.property_value}`),
+          // Search citation fields: full citation, display name, title, journal, pubmed, authors
+          ...(r.references || []).filter(Boolean).flatMap((ref) => [
+            ref.citation,
+            ref.display_name,
+            ref.title,
+            ref.journal_name || ref.journal,
+            ref.pubmed_id || ref.pubmed,
+            // Extract author names
+            ...(Array.isArray(ref.authors)
+              ? ref.authors.filter(Boolean).map((a) => (typeof a === 'string' ? a : a?.author_name))
+              : []),
+          ]),
+        ];
+        return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
+      });
+    }
+
+    return results;
+  }, [data?.results, selectedOrganism, quickFilter]);
+
+  // Reset filters when data changes
+  useEffect(() => {
+    setSelectedOrganism('');
+    setQuickFilter('');
+  }, [data]);
+
   // AG Grid column definitions
   const columnDefs = useMemo(
     () => [
@@ -326,7 +393,6 @@ function PhenotypeSearchPage() {
   const defaultColDef = useMemo(
     () => ({
       sortable: true,
-      filter: true,
       resizable: true,
       wrapText: true,
     }),
@@ -577,6 +643,74 @@ function PhenotypeSearchPage() {
     );
   };
 
+  const renderFilterControls = () => {
+    if (!data?.results || data.results.length === 0) return null;
+
+    return (
+      <div className="filter-controls">
+        {/* Organism Selector */}
+        <div className="filter-group">
+          <label htmlFor="organism-filter">Select Organism: </label>
+          <select
+            id="organism-filter"
+            value={selectedOrganism}
+            onChange={(e) => setSelectedOrganism(e.target.value)}
+            className="organism-dropdown"
+          >
+            <option value="">All Organisms ({data.results.length})</option>
+            {organismData.organisms.map((org) => (
+              <option key={org} value={org}>
+                {org} ({organismData.counts[org]})
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Quick Search */}
+        <div className="filter-group">
+          <label htmlFor="quick-filter">Filter results: </label>
+          <input
+            type="text"
+            id="quick-filter"
+            value={quickFilter}
+            onChange={(e) => setQuickFilter(e.target.value)}
+            placeholder="Type to filter..."
+            className="quick-filter-input"
+          />
+          {quickFilter && (
+            <button
+              type="button"
+              className="clear-filter-btn"
+              onClick={() => setQuickFilter('')}
+              title="Clear filter"
+            >
+              ×
+            </button>
+          )}
+        </div>
+
+        {/* Filter status */}
+        {(selectedOrganism || quickFilter) && (
+          <div className="filter-status">
+            Showing {filteredResults.length} of {data.results.length} results
+            {selectedOrganism && <span className="filter-tag">Organism: {getOrganismAbbrev(selectedOrganism)}</span>}
+            {quickFilter && <span className="filter-tag">Search: &quot;{quickFilter}&quot;</span>}
+            <button
+              type="button"
+              className="clear-all-filters-btn"
+              onClick={() => {
+                setSelectedOrganism('');
+                setQuickFilter('');
+              }}
+            >
+              Clear All Filters
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   const renderResultsTable = () => {
     if (!data || !data.results || data.results.length === 0) {
       return (
@@ -589,10 +723,28 @@ function PhenotypeSearchPage() {
       );
     }
 
+    if (filteredResults.length === 0) {
+      return (
+        <div className="no-results">
+          <p>No results match your current filters.</p>
+          <button
+            type="button"
+            className="btn-reset"
+            onClick={() => {
+              setSelectedOrganism('');
+              setQuickFilter('');
+            }}
+          >
+            Clear Filters
+          </button>
+        </div>
+      );
+    }
+
     return (
       <div className="results-grid-wrapper ag-theme-alpine" style={{ width: '100%' }}>
         <AgGridReact
-          rowData={data.results}
+          rowData={filteredResults}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
           domLayout="autoHeight"
@@ -727,6 +879,7 @@ function PhenotypeSearchPage() {
       {!loading && !error && hasSearched && !showSummary && (
         <>
           {renderResultsSummary()}
+          {renderFilterControls()}
           {renderResultsTable()}
           {renderAnalyzeSection()}
         </>

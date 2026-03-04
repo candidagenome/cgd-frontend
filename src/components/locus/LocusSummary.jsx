@@ -523,7 +523,11 @@ function LocusSummary({
                 <div className="ortholog-list">
                   {feature.candida_orthologs.map((orth, idx) => (
                     <div key={idx} className="ortholog-item">
-                      <a href={`/locus/${orth.feature_name}`}>{orth.gene_name || orth.feature_name}</a>
+                      <a href={`/locus/${orth.feature_name}`}>
+                        {orth.gene_name && orth.gene_name !== orth.feature_name
+                          ? `${orth.gene_name}/${orth.feature_name}`
+                          : orth.feature_name}
+                      </a>
                       <span className="organism-name">
                         {' '}
                         (<em>{orth.organism_name}</em>)
@@ -550,6 +554,7 @@ function LocusSummary({
                 {feature.external_orthologs.map((orth, idx) => (
                   <span key={idx}>
                     <em>{orth.species_name || orth.source}</em>
+                    {orth.gene_name && ` ${orth.gene_name}`}
                     {' ('}
                     {orth.url ? (
                       <a href={orth.url} target="_blank" rel="noopener noreferrer">
