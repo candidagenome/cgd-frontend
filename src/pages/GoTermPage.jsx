@@ -181,7 +181,14 @@ function GoTermPage() {
           g.locus_name,
           g.systematic_name,
           g.species,
-          ...(g.references || []).map((r) => r.display_name || r.pubmed_id || ''),
+          // Include citation, title, and display_name from references
+          ...(g.references || []).flatMap((r) => [
+            r.citation,
+            r.title,
+            r.display_name,
+            r.pubmed_id,
+            r.pubmed,
+          ]),
         ];
         return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
       });
