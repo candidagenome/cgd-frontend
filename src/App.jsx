@@ -523,7 +523,7 @@ function App() {
           />
 
           {/* Help documentation pages */}
-	  <Route path="/help/what-is-go" element={<WhatIsGoPage />} />  
+	  <Route path="/help/what-is-go" element={<WhatIsGOPage />} />  
           <Route path="/help/getting-started" element={<GettingStartedHelp />} />
           <Route path="/help/sequence" element={<SequenceHelp />} />
           <Route path="/help/search-form" element={<SearchFormHelp />} />
