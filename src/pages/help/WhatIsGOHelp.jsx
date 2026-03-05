@@ -49,10 +49,10 @@ const WhatIsGOPage = () => {
           </p>
 
           <img
-  src="/images/go_annotations.png"
-  alt="Example of GO annotations"
-  className="go-image"
-/>
+            src="/images/go_annotations.png"
+            alt="Example of GO annotations"
+            className="go-image"
+         />
         </div>
 
         <div className="info-section">
