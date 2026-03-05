@@ -51,7 +51,7 @@ const HeaderNav = () => {
       label: 'GO',
       to: '/go-resources',
       submenu: [
-        { label: 'What is GO?', href: 'https://geneontology.org/docs/ontology-documentation/', external: true },
+        { label: 'What is GO?', to: '/help/what-is-go' },
         { label: 'Guide to Evidence Codes', href: 'https://geneontology.org/docs/guide-go-evidence-codes/', external: true },
         { label: 'GO Slim Mapper', to: '/go-slim-mapper' },
         { label: 'GO Term Finder', to: '/go-term-finder' },

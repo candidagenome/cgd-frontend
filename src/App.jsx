@@ -100,6 +100,7 @@ import CoordinateCurationPage from './pages/curation/CoordinateCurationPage';
 import SeqAlignmentPage from './pages/curation/SeqAlignmentPage';
 
 // Help documentation pages
+import WhatIsGOPage from './pages/help/WhatIsGOPage';
 import GettingStartedHelp from './pages/help/GettingStartedHelp';
 import SequenceHelp from './pages/help/SequenceHelp';
 import SearchFormHelp from './pages/help/SearchFormHelp';
@@ -522,6 +523,7 @@ function App() {
           />
 
           {/* Help documentation pages */}
+	  <Route path="/help/what-is-go" element={<WhatIsGOPage />} />  
           <Route path="/help/getting-started" element={<GettingStartedHelp />} />
           <Route path="/help/sequence" element={<SequenceHelp />} />
           <Route path="/help/search-form" element={<SearchFormHelp />} />

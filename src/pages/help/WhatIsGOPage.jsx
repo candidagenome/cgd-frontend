@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 const WhatIsGOPage = () => {
@@ -70,7 +71,7 @@ const WhatIsGOPage = () => {
           </ul>
 
           {/* Example place to add an image */}
-          {/* <img src="/images/go-ontology.png" alt="Gene Ontology overview" className="info-image" /> */}
+          <img src="/images/go_annotations.png" alt="Gene Ontology overview" className="info-image" />
         </section>
 
         {/* Evidence Codes */}
