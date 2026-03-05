@@ -48,8 +48,7 @@ const WhatIsGOPage = () => {
             <em>phospholipid binding</em>.
           </p>
 
-          {/* Image placeholder */}
-          {/* <img src={goDiagram} alt="Gene Ontology hierarchical structure diagram" className="go-image" /> */}
+           <img src="images/go_annotations.png" alt="Gene Ontology hierarchical structure diagram" className="go-image" /> 
         </div>
 
         <div className="info-section">
