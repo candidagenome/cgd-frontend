@@ -9,35 +9,6 @@ function BlastResultsPage() {
   const [params, setParams] = useState(null);
   const [expandedHits, setExpandedHits] = useState(new Set());
   const [downloading, setDownloading] = useState(null);
-  const [displayedSequences, setDisplayedSequences] = useState(new Set());
-
-  // Toggle sequence display for a hit
-  const toggleSequenceDisplay = (index) => {
-    setDisplayedSequences((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(index)) {
-        newSet.delete(index);
-      } else {
-        newSet.add(index);
-      }
-      return newSet;
-    });
-  };
-
-  // Format sequence for display (60 chars per line)
-  const formatSequence = (hit) => {
-    // Use the first HSP's hit sequence as an approximation
-    // In a real implementation, this would fetch the full sequence from the server
-    const hsp = hit.hsps[0];
-    if (!hsp) return '';
-
-    const seq = hsp.hit_seq.replace(/-/g, ''); // Remove gaps
-    const lines = [];
-    for (let i = 0; i < seq.length; i += 80) {
-      lines.push(seq.substring(i, i + 80));
-    }
-    return lines.join('\n');
-  };
 
   // Load results from session storage
   useEffect(() => {
@@ -459,21 +430,7 @@ function BlastResultsPage() {
                                 CGD Genome Browser
                               </a>
                             )}
-                            <button
-                              type="button"
-                              className="display-seq-btn"
-                              onClick={() => toggleSequenceDisplay(hitIndex)}
-                            >
-                              {displayedSequences.has(hitIndex) ? 'Hide Sequence' : 'Display Sequence'}
-                            </button>
                           </div>
-                          {displayedSequences.has(hitIndex) && (
-                            <div className="sequence-display">
-                              <pre className="sequence-fasta">
-                                {`>${hit.accession}:${hit.hsps[0]?.hit_start}-${hit.hsps[0]?.hit_end} (${hit.length} nucleotides)\n${formatSequence(hit)}`}
-                              </pre>
-                            </div>
-                          )}
                         </div>
 
                         {hit.hsps.map((hsp, hspIndex) => (
