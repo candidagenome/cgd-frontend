@@ -14,12 +14,12 @@ if (!ModuleRegistry.__cgdGoTermFinderRegistered) {
 
 // P-value color scheme for the graph (matching Perl/SGD style)
 const PVALUE_COLORS = {
-  level1: '#FFCCCC',  // Light red/pink: <=1e-10
+  level1: '#FFCC66',  // Orange/tan: <=1e-10
   level2: '#FFFF00',  // Yellow: 1e-10 to 1e-8
   level3: '#00FF00',  // Green: 1e-8 to 1e-6
   level4: '#00FFFF',  // Cyan: 1e-6 to 1e-4
   level5: '#6699FF',  // Blue: 1e-4 to 0.05
-  level6: '#FFFFFF',  // White: >0.05
+  level6: '#DDCCAA',  // Tan/beige: >0.05
   gene: '#B8D4E8',    // Light blue for gene nodes
   edge: '#333333',
   textDark: '#000000',
