@@ -125,7 +125,6 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                       <thead>
                         <tr style={{ backgroundColor: '#f5f5f5', borderBottom: '2px solid #ddd' }}>
                           <th style={{ padding: '8px', textAlign: 'left', fontWeight: '600' }}>Sequence ID</th>
-                          <th style={{ padding: '8px', textAlign: 'left', fontWeight: '600' }}>Gene Name</th>
                           <th style={{ padding: '8px', textAlign: 'left', fontWeight: '600' }}>Organism</th>
                           <th style={{ padding: '8px', textAlign: 'left', fontWeight: '600' }}>Source</th>
                           <th style={{ padding: '8px', textAlign: 'left', fontWeight: '600' }}>Status</th>
@@ -157,9 +156,6 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                                   (query)
                                 </span>
                               )}
-                            </td>
-                            <td style={{ padding: '8px' }}>
-                              {orth.gene_name || '-'}
                             </td>
                             <td style={{ padding: '8px' }}>
                               <em>{orth.organism_name}</em>
