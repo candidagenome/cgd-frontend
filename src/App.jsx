@@ -100,7 +100,7 @@ import CoordinateCurationPage from './pages/curation/CoordinateCurationPage';
 import SeqAlignmentPage from './pages/curation/SeqAlignmentPage';
 
 // Help documentation pages
-import WhatIsGOPage from './pages/help/WhatIsGOPage';
+import WhatIsGOPage from './pages/help/WhatIsGOHelp';
 import GettingStartedHelp from './pages/help/GettingStartedHelp';
 import SequenceHelp from './pages/help/SequenceHelp';
 import SearchFormHelp from './pages/help/SearchFormHelp';

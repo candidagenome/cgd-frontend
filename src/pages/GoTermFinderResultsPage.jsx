@@ -12,26 +12,26 @@ if (!ModuleRegistry.__cgdGoTermFinderRegistered) {
   ModuleRegistry.__cgdGoTermFinderRegistered = true;
 }
 
-// P-value color scheme for the graph (matching SGD style)
+// P-value color scheme for the graph (matching Perl/SGD style)
 const PVALUE_COLORS = {
-  level1: '#00FFFF',  // Cyan: ≤1e-10
-  level2: '#00BFFF',  // Light blue: 1e-10 to 1e-8
+  level1: '#FFCC66',  // Orange/tan: <=1e-10
+  level2: '#FFFF00',  // Yellow: 1e-10 to 1e-8
   level3: '#00FF00',  // Green: 1e-8 to 1e-6
-  level4: '#FFA500',  // Orange: 1e-6 to 1e-4
-  level5: '#FFD700',  // Gold/Yellow: 1e-4 to 1e-2
-  level6: '#C0C0C0',  // Gray: >0.01
+  level4: '#00FFFF',  // Cyan: 1e-6 to 1e-4
+  level5: '#6699FF',  // Blue: 1e-4 to 0.05
+  level6: '#DDCCAA',  // Tan/beige: >0.05
   gene: '#B8D4E8',    // Light blue for gene nodes
   edge: '#333333',
   textDark: '#000000',
 };
 
-// Get color based on p-value
+// Get color based on p-value (matching Perl thresholds)
 const getPvalueColor = (pValue) => {
   if (pValue <= 1e-10) return PVALUE_COLORS.level1;
   if (pValue <= 1e-8) return PVALUE_COLORS.level2;
   if (pValue <= 1e-6) return PVALUE_COLORS.level3;
   if (pValue <= 1e-4) return PVALUE_COLORS.level4;
-  if (pValue <= 1e-2) return PVALUE_COLORS.level5;
+  if (pValue <= 0.05) return PVALUE_COLORS.level5;
   return PVALUE_COLORS.level6;
 };
 
@@ -125,6 +125,7 @@ function GoTermFinderResultsPage() {
   const navigate = useNavigate();
   const graphContainerRef = useRef(null);
   const cyRef = useRef(null);
+  const gridRef = useRef(null);
 
   const [results, setResults] = useState(null);
   const [request, setRequest] = useState(null);
@@ -164,6 +165,12 @@ function GoTermFinderResultsPage() {
       }
       return newSet;
     });
+    // Refresh the grid cells to update the genes display
+    setTimeout(() => {
+      if (gridRef.current?.api) {
+        gridRef.current.api.refreshCells({ columns: ['genes'], force: true });
+      }
+    }, 0);
   };
 
   // AG Grid context for cell renderers
@@ -657,10 +664,9 @@ function GoTermFinderResultsPage() {
             <div className="graph-container" ref={graphContainerRef}></div>
             <div className="graph-footer">
               <div className="pvalue-legend">
-                <span className="legend-label">p-value:</span>
                 <span className="legend-item">
                   <span className="legend-color" style={{ backgroundColor: PVALUE_COLORS.level1 }}></span>
-                  ≤1e-10
+                  &lt;=1e-10
                 </span>
                 <span className="legend-item">
                   <span className="legend-color" style={{ backgroundColor: PVALUE_COLORS.level2 }}></span>
@@ -676,11 +682,11 @@ function GoTermFinderResultsPage() {
                 </span>
                 <span className="legend-item">
                   <span className="legend-color" style={{ backgroundColor: PVALUE_COLORS.level5 }}></span>
-                  1e-4 to 1e-2
+                  1e-4 to 0.05
                 </span>
                 <span className="legend-item">
                   <span className="legend-color" style={{ backgroundColor: PVALUE_COLORS.level6 }}></span>
-                  &gt;0.01
+                  &gt;0.05
                 </span>
               </div>
               <div className="graph-date">
@@ -743,6 +749,7 @@ function GoTermFinderResultsPage() {
               ) : (
                 <div className="ag-grid-wrapper" style={{ width: '100%' }}>
                   <AgGridReact
+                    ref={gridRef}
                     rowData={filteredCurrentTerms}
                     columnDefs={columnDefs}
                     defaultColDef={defaultColDef}
