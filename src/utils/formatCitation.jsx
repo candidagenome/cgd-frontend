@@ -14,9 +14,10 @@ import { Link } from 'react-router-dom';
  * Format a citation string with proper styling (bold author/year, italic journal)
  * @param {string} citation - The raw citation string
  * @param {string} journal - Optional journal name to italicize
+ * @param {string} authorYearLinkUrl - Optional URL to link the author/year portion (like SGD)
  * @returns {React.ReactNode} Formatted citation as JSX
  */
-export function formatCitationString(citation, journal = null) {
+export function formatCitationString(citation, journal = null, authorYearLinkUrl = null) {
   if (!citation) return null;
 
   // Pattern: "Author(s) (Year) Rest of citation"
@@ -40,9 +41,18 @@ export function formatCitationString(citation, journal = null) {
   // Italicize journal name in the rest
   const formattedRest = journal ? italicizeJournal(rest, journal) : rest;
 
+  // Wrap author/year in link if URL provided (SGD-style)
+  const authorYearElement = authorYearLinkUrl ? (
+    <Link to={authorYearLinkUrl} className="citation-author-year-link">
+      {formattedAuthorYear}
+    </Link>
+  ) : (
+    <strong>{formattedAuthorYear}</strong>
+  );
+
   return (
     <>
-      <strong>{formattedAuthorYear}</strong>
+      {authorYearElement}
       {typeof formattedRest === 'string' ? formattedRest : formattedRest}
     </>
   );
@@ -399,10 +409,17 @@ export function renderCitationItem(ref, options = {}) {
             urls: ref.urls,
           });
 
+    // Build CGD Paper link URL for author/year (SGD-style)
+    const cgdPaperUrl = ref.dbxref_id
+      ? `/reference/${ref.dbxref_id}`
+      : ref.reference_id
+        ? `/reference/${ref.reference_id}`
+        : null;
+
     return (
       <div className={`${itemClassName} ${className}`.trim()}>
         <div className="citation-line">
-          {formatCitationString(citation, journal)}
+          {formatCitationString(citation, journal, cgdPaperUrl)}
           {showPmid && ref.pubmed ? (
             <span className="citation-pmid"> PMID: {ref.pubmed}</span>
           ) : null}
@@ -584,10 +601,17 @@ function formatSingleReference(ref, idx = 0) {
             urls: ref.urls,
           });
 
+    // Build CGD Paper link URL for author/year (SGD-style)
+    const cgdPaperUrl = ref.dbxref_id
+      ? `/reference/${ref.dbxref_id}`
+      : ref.reference_id
+        ? `/reference/${ref.reference_id}`
+        : null;
+
     return (
       <div key={idx} className="go-reference-item">
         <div className="citation-line">
-          {formatCitationString(citation, journal)}
+          {formatCitationString(citation, journal, cgdPaperUrl)}
           {ref.pubmed ? <span className="citation-pmid"> PMID: {ref.pubmed}</span> : null}
         </div>
 
@@ -819,10 +843,17 @@ export function formatCitationWithLinks(ref) {
   const links =
     ref.links && ref.links.length > 0 ? ref.links : buildCitationLinks(ref);
 
+  // Build CGD Paper link URL for author/year (SGD-style)
+  const cgdPaperUrl = ref.dbxref_id
+    ? `/reference/${ref.dbxref_id}`
+    : ref.reference_id
+      ? `/reference/${ref.reference_id}`
+      : null;
+
   return (
     <span className="citation-with-links">
       <span className="citation-line">
-        {formatCitationString(ref.citation, ref.journal_name || ref.journal)}
+        {formatCitationString(ref.citation, ref.journal_name || ref.journal, cgdPaperUrl)}
         {ref.pubmed ? <span className="citation-pmid"> PMID: {ref.pubmed}</span> : null}
       </span>
       <CitationLinksBelow links={links} />
