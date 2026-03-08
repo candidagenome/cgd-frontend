@@ -296,6 +296,22 @@
   color: #777;
 }
 
+/* Author-year link (SGD-style muted blue) */
+.citation-author-year-link {
+  color: #5d7a99;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.citation-author-year-link:hover {
+  text-decoration: underline;
+  color: #3d5a79;
+}
+
+.citation-author-year-link em {
+  font-style: italic;
+}
+
 .citation-links-below {
   display: block;
   margin-top: 4px;
