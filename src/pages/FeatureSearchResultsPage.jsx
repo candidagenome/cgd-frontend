@@ -23,8 +23,20 @@ function FeatureSearchResultsPage() {
   const [downloading, setDownloading] = useState(false);
   const [sortBy, setSortBy] = useState('orf');
 
-  // Quick filter state
-  const [quickFilter, setQuickFilter] = useState('');
+  // Quick filter state: pending (what user types) vs applied (what filters)
+  const [pendingQuickFilter, setPendingQuickFilter] = useState('');
+  const [appliedQuickFilter, setAppliedQuickFilter] = useState('');
+
+  const applyFilter = useCallback(() => {
+    setAppliedQuickFilter(pendingQuickFilter);
+  }, [pendingQuickFilter]);
+
+  const clearFilter = useCallback(() => {
+    setPendingQuickFilter('');
+    setAppliedQuickFilter('');
+  }, []);
+
+  const hasPendingChanges = pendingQuickFilter !== appliedQuickFilter;
 
   // AG Grid column definitions
   const columnDefs = useMemo(() => [
@@ -78,15 +90,15 @@ function FeatureSearchResultsPage() {
     resizable: true,
   }), []);
 
-  // Filter results by quick filter text
+  // Filter results by applied quick filter text
   const filteredFeatures = useMemo(() => {
-    if (!results?.features || !quickFilter.trim()) return results?.features || [];
-    const searchLower = quickFilter.toLowerCase().trim();
+    if (!results?.features || !appliedQuickFilter.trim()) return results?.features || [];
+    const searchLower = appliedQuickFilter.toLowerCase().trim();
     return results.features.filter((f) => {
       const searchFields = [f.orf, f.gene, f.feature_type, f.qualifier, f.description];
       return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
     });
-  }, [results?.features, quickFilter]);
+  }, [results?.features, appliedQuickFilter]);
 
   // Fetch search params from sessionStorage on mount
   useEffect(() => {
@@ -296,22 +308,30 @@ function FeatureSearchResultsPage() {
               <input
                 type="text"
                 id="quick-filter"
-                value={quickFilter}
-                onChange={(e) => setQuickFilter(e.target.value)}
+                value={pendingQuickFilter}
+                onChange={(e) => setPendingQuickFilter(e.target.value)}
                 placeholder="Type to filter..."
                 style={{ padding: '6px 10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px', width: '200px' }}
               />
-              {quickFilter && (
+              <button
+                type="button"
+                onClick={applyFilter}
+                disabled={!hasPendingChanges}
+                style={{ padding: '6px 12px', border: 'none', background: hasPendingChanges ? '#1976d2' : '#90caf9', color: 'white', fontWeight: 500, cursor: hasPendingChanges ? 'pointer' : 'not-allowed', borderRadius: '4px', fontSize: '14px' }}
+              >
+                Apply
+              </button>
+              {(appliedQuickFilter || pendingQuickFilter) && (
                 <button
                   type="button"
-                  onClick={() => setQuickFilter('')}
+                  onClick={clearFilter}
                   title="Clear filter"
                   style={{ padding: '4px 8px', border: 'none', background: '#e0e0e0', color: '#666', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px', lineHeight: 1 }}
                 >
                   ×
                 </button>
               )}
-              {quickFilter && (
+              {appliedQuickFilter && (
                 <span style={{ fontSize: '0.9rem', color: '#555' }}>
                   Showing {filteredFeatures.length} of {results?.features?.length || 0} results
                 </span>

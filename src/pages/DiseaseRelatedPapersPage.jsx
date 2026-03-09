@@ -10,7 +10,20 @@ function DiseaseRelatedPapersPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [quickFilter, setQuickFilter] = useState('');
+  // Quick filter state: pending (what user types) vs applied (what filters)
+  const [pendingQuickFilter, setPendingQuickFilter] = useState('');
+  const [appliedQuickFilter, setAppliedQuickFilter] = useState('');
+
+  const applyFilter = useCallback(() => {
+    setAppliedQuickFilter(pendingQuickFilter);
+  }, [pendingQuickFilter]);
+
+  const clearFilter = useCallback(() => {
+    setPendingQuickFilter('');
+    setAppliedQuickFilter('');
+  }, []);
+
+  const hasPendingChanges = pendingQuickFilter !== appliedQuickFilter;
 
   const currentTopic = searchParams.get('topic') || null;
 
@@ -149,8 +162,8 @@ function DiseaseRelatedPapersPage() {
 
   // Filter references by quick filter text
   const filteredReferences = useMemo(() => {
-    if (!data?.references || !quickFilter.trim()) return data?.references || [];
-    const searchLower = quickFilter.toLowerCase().trim();
+    if (!data?.references || !appliedQuickFilter.trim()) return data?.references || [];
+    const searchLower = appliedQuickFilter.toLowerCase().trim();
     return data.references.filter((ref) => {
       const searchFields = [
         ref.citation,
@@ -160,7 +173,7 @@ function DiseaseRelatedPapersPage() {
       ];
       return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
     });
-  }, [data?.references, quickFilter]);
+  }, [data?.references, appliedQuickFilter]);
 
   // Calculate row height based on content
   const getRowHeight = useCallback((params) => {
@@ -255,22 +268,30 @@ function DiseaseRelatedPapersPage() {
             <input
               type="text"
               id="quick-filter"
-              value={quickFilter}
-              onChange={(e) => setQuickFilter(e.target.value)}
+              value={pendingQuickFilter}
+              onChange={(e) => setPendingQuickFilter(e.target.value)}
               placeholder="Type to filter..."
               style={{ padding: '6px 10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px', width: '200px' }}
             />
-            {quickFilter && (
+            <button
+              type="button"
+              onClick={applyFilter}
+              disabled={!hasPendingChanges}
+              style={{ padding: '6px 12px', border: 'none', background: hasPendingChanges ? '#1976d2' : '#90caf9', color: 'white', fontWeight: 500, cursor: hasPendingChanges ? 'pointer' : 'not-allowed', borderRadius: '4px', fontSize: '14px' }}
+            >
+              Apply
+            </button>
+            {(appliedQuickFilter || pendingQuickFilter) && (
               <button
                 type="button"
-                onClick={() => setQuickFilter('')}
+                onClick={clearFilter}
                 title="Clear filter"
                 style={{ padding: '4px 8px', border: 'none', background: '#e0e0e0', color: '#666', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px', lineHeight: 1 }}
               >
                 ×
               </button>
             )}
-            {quickFilter && (
+            {appliedQuickFilter && (
               <span style={{ fontSize: '0.9rem', color: '#555' }}>
                 Showing {filteredReferences.length} of {data.references.length} results
               </span>

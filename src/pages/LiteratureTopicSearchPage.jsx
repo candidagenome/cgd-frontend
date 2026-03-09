@@ -86,10 +86,15 @@ function LiteratureTopicSearchPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [hasSearched, setHasSearched] = useState(false);
-  const [quickFilter, setQuickFilter] = useState('');
-  const [speciesFilter, setSpeciesFilter] = useState(''); // empty = all species
-  const [geneFilter, setGeneFilter] = useState(''); // comma-separated gene names
   const [showInstructions, setShowInstructions] = useState(true);
+
+  // Filter state: pending (what user is typing) vs applied (what's filtering)
+  const [pendingSpeciesFilter, setPendingSpeciesFilter] = useState('');
+  const [pendingGeneFilter, setPendingGeneFilter] = useState('');
+  const [pendingQuickFilter, setPendingQuickFilter] = useState('');
+  const [appliedSpeciesFilter, setAppliedSpeciesFilter] = useState('');
+  const [appliedGeneFilter, setAppliedGeneFilter] = useState('');
+  const [appliedQuickFilter, setAppliedQuickFilter] = useState('');
 
   // Load topic tree on mount
   useEffect(() => {
@@ -296,41 +301,41 @@ function LiteratureTopicSearchPage() {
     return Array.from(organismSet).sort();
   }, [data]);
 
-  // Parse gene filter into normalized array
-  const geneFilterList = useMemo(() => {
-    if (!geneFilter.trim()) return [];
-    return geneFilter
+  // Parse applied gene filter into normalized array
+  const appliedGeneFilterList = useMemo(() => {
+    if (!appliedGeneFilter.trim()) return [];
+    return appliedGeneFilter
       .split(/[,;\s]+/)
       .map((g) => g.trim().toLowerCase())
       .filter(Boolean);
-  }, [geneFilter]);
+  }, [appliedGeneFilter]);
 
-  // Filter references by species, gene list, and quick filter text
+  // Filter references by applied filters (species, gene list, quick filter text)
   const filterRefs = useCallback((refs) => {
     let filtered = refs;
 
     // Filter by species
-    if (speciesFilter) {
+    if (appliedSpeciesFilter) {
       filtered = filtered.filter((ref) => {
         const genes = ref.genes || [];
-        return genes.some((gene) => gene.organism === speciesFilter);
+        return genes.some((gene) => gene.organism === appliedSpeciesFilter);
       });
     }
 
     // Filter by gene list (exact match on gene name, case-insensitive)
     // Also respect species filter when matching genes
-    if (geneFilterList.length > 0) {
+    if (appliedGeneFilterList.length > 0) {
       filtered = filtered.filter((ref) => {
         const genes = ref.genes || [];
         return genes.some((gene) => {
           // If species filter is active, only match genes from that species
-          if (speciesFilter && gene.organism !== speciesFilter) {
+          if (appliedSpeciesFilter && gene.organism !== appliedSpeciesFilter) {
             return false;
           }
           const geneName = (gene.gene_name || '').toLowerCase();
           const featureName = (gene.feature_name || '').toLowerCase();
           // Match exact gene name or feature name (not partial matches like CDC3 matching CDC37)
-          return geneFilterList.some(
+          return appliedGeneFilterList.some(
             (g) => geneName === g || featureName === g
           );
         });
@@ -338,8 +343,8 @@ function LiteratureTopicSearchPage() {
     }
 
     // Filter by quick filter text
-    if (quickFilter.trim()) {
-      const searchLower = quickFilter.toLowerCase().trim();
+    if (appliedQuickFilter.trim()) {
+      const searchLower = appliedQuickFilter.toLowerCase().trim();
       filtered = filtered.filter((ref) => {
         const searchFields = [
           ref.citation,
@@ -352,7 +357,21 @@ function LiteratureTopicSearchPage() {
     }
 
     return filtered;
-  }, [quickFilter, speciesFilter, geneFilterList]);
+  }, [appliedQuickFilter, appliedSpeciesFilter, appliedGeneFilterList]);
+
+  // Apply filters handler
+  const applyFilters = useCallback(() => {
+    setAppliedSpeciesFilter(pendingSpeciesFilter);
+    setAppliedGeneFilter(pendingGeneFilter);
+    setAppliedQuickFilter(pendingQuickFilter);
+  }, [pendingSpeciesFilter, pendingGeneFilter, pendingQuickFilter]);
+
+  // Check if pending filters differ from applied filters
+  const hasPendingChanges = useMemo(() => {
+    return pendingSpeciesFilter !== appliedSpeciesFilter ||
+           pendingGeneFilter !== appliedGeneFilter ||
+           pendingQuickFilter !== appliedQuickFilter;
+  }, [pendingSpeciesFilter, appliedSpeciesFilter, pendingGeneFilter, appliedGeneFilter, pendingQuickFilter, appliedQuickFilter]);
 
   // Calculate row height based on content
   const getRowHeight = useCallback((params) => {
@@ -458,12 +477,15 @@ function LiteratureTopicSearchPage() {
     return { totalFiltered, totalOriginal };
   }, [data, topicRowsMap, filterRefs]);
 
-  const hasActiveFilters = speciesFilter || geneFilterList.length > 0 || quickFilter.trim();
+  const hasActiveFilters = appliedSpeciesFilter || appliedGeneFilterList.length > 0 || appliedQuickFilter.trim();
 
   const clearAllFilters = () => {
-    setSpeciesFilter('');
-    setGeneFilter('');
-    setQuickFilter('');
+    setPendingSpeciesFilter('');
+    setPendingGeneFilter('');
+    setPendingQuickFilter('');
+    setAppliedSpeciesFilter('');
+    setAppliedGeneFilter('');
+    setAppliedQuickFilter('');
   };
 
   const renderInstructions = () => (
@@ -483,7 +505,7 @@ function LiteratureTopicSearchPage() {
             <li><strong>Gene Filter:</strong> Enter gene names (comma-separated) to show only references associated with those specific genes.</li>
             <li><strong>Quick Filter:</strong> Search across all fields including citation text, PubMed IDs, and gene names.</li>
           </ul>
-          <p>All filters work together - results must match all active filters.</p>
+          <p>All filters work together - results must match all active filters. Click <strong>Apply Filters</strong> to update results.</p>
         </div>
       )}
     </div>
@@ -497,8 +519,8 @@ function LiteratureTopicSearchPage() {
           <label htmlFor="species-filter">Species:</label>
           <select
             id="species-filter"
-            value={speciesFilter}
-            onChange={(e) => setSpeciesFilter(e.target.value)}
+            value={pendingSpeciesFilter}
+            onChange={(e) => setPendingSpeciesFilter(e.target.value)}
             className="species-select"
           >
             <option value="">All species</option>
@@ -516,8 +538,8 @@ function LiteratureTopicSearchPage() {
           <input
             type="text"
             id="gene-filter"
-            value={geneFilter}
-            onChange={(e) => setGeneFilter(e.target.value)}
+            value={pendingGeneFilter}
+            onChange={(e) => setPendingGeneFilter(e.target.value)}
             placeholder="e.g., CDC3, HWP1, ALS1"
             className="gene-filter-input"
           />
@@ -529,15 +551,25 @@ function LiteratureTopicSearchPage() {
           <input
             type="text"
             id="quick-filter"
-            value={quickFilter}
-            onChange={(e) => setQuickFilter(e.target.value)}
+            value={pendingQuickFilter}
+            onChange={(e) => setPendingQuickFilter(e.target.value)}
             placeholder="Filter all fields..."
             className="quick-filter-input"
           />
         </div>
 
+        {/* Apply Filters Button */}
+        <button
+          type="button"
+          className="apply-filters-btn"
+          onClick={applyFilters}
+          disabled={!hasPendingChanges}
+        >
+          Apply Filters
+        </button>
+
         {/* Clear Filters */}
-        {hasActiveFilters && (
+        {(hasActiveFilters || hasPendingChanges) && (
           <button
             type="button"
             className="clear-filters-btn"
@@ -552,8 +584,8 @@ function LiteratureTopicSearchPage() {
       {hasActiveFilters && (
         <div className="filter-status">
           Showing {filteredStats.totalFiltered} of {filteredStats.totalOriginal} references
-          {speciesFilter && <span className="active-filter"> | Species: {getOrganismAbbrev(speciesFilter)}</span>}
-          {geneFilterList.length > 0 && <span className="active-filter"> | Genes: {geneFilterList.join(', ')}</span>}
+          {appliedSpeciesFilter && <span className="active-filter"> | Species: {getOrganismAbbrev(appliedSpeciesFilter)}</span>}
+          {appliedGeneFilterList.length > 0 && <span className="active-filter"> | Genes: {appliedGeneFilterList.join(', ')}</span>}
         </div>
       )}
     </div>

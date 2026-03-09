@@ -443,6 +443,28 @@
   box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
 }
 
+.apply-filters-btn {
+  padding: 8px 16px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background-color 0.2s;
+}
+
+.apply-filters-btn:hover:not(:disabled) {
+  background-color: #1565c0;
+}
+
+.apply-filters-btn:disabled {
+  background-color: #90caf9;
+  cursor: not-allowed;
+}
+
 .clear-filters-btn {
   padding: 8px 16px;
   background-color: #e0e0e0;
@@ -687,6 +709,7 @@
     width: 100%;
   }
 
+  .apply-filters-btn,
   .clear-filters-btn {
     width: 100%;
   }

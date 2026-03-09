@@ -42,7 +42,20 @@ function PhenotypeSearchPage() {
 
   // Filtering state
   const [selectedOrganism, setSelectedOrganism] = useState('');
-  const [quickFilter, setQuickFilter] = useState('');
+  // Quick filter state: pending (what user types) vs applied (what filters)
+  const [pendingQuickFilter, setPendingQuickFilter] = useState('');
+  const [appliedQuickFilter, setAppliedQuickFilter] = useState('');
+
+  const applyFilter = () => {
+    setAppliedQuickFilter(pendingQuickFilter);
+  };
+
+  const clearQuickFilter = () => {
+    setPendingQuickFilter('');
+    setAppliedQuickFilter('');
+  };
+
+  const hasPendingChanges = pendingQuickFilter !== appliedQuickFilter;
 
   // Parse URL parameters and perform search if present
   useEffect(() => {
@@ -211,8 +224,8 @@ function PhenotypeSearchPage() {
     }
 
     // Filter by quick search text (case-insensitive)
-    if (quickFilter.trim()) {
-      const searchLower = quickFilter.toLowerCase().trim();
+    if (appliedQuickFilter.trim()) {
+      const searchLower = appliedQuickFilter.toLowerCase().trim();
       results = results.filter((r) => {
         const searchFields = [
           r.gene_name,
@@ -243,12 +256,13 @@ function PhenotypeSearchPage() {
     }
 
     return results;
-  }, [data?.results, selectedOrganism, quickFilter]);
+  }, [data?.results, selectedOrganism, appliedQuickFilter]);
 
   // Reset filters when data changes
   useEffect(() => {
     setSelectedOrganism('');
-    setQuickFilter('');
+    setPendingQuickFilter('');
+    setAppliedQuickFilter('');
   }, [data]);
 
   // AG Grid column definitions
@@ -672,16 +686,25 @@ function PhenotypeSearchPage() {
           <input
             type="text"
             id="quick-filter"
-            value={quickFilter}
-            onChange={(e) => setQuickFilter(e.target.value)}
+            value={pendingQuickFilter}
+            onChange={(e) => setPendingQuickFilter(e.target.value)}
             placeholder="Type to filter..."
             className="quick-filter-input"
           />
-          {quickFilter && (
+          <button
+            type="button"
+            className="apply-filter-btn"
+            onClick={applyFilter}
+            disabled={!hasPendingChanges}
+            style={{ padding: '6px 12px', border: 'none', background: hasPendingChanges ? '#1976d2' : '#90caf9', color: 'white', fontWeight: 500, cursor: hasPendingChanges ? 'pointer' : 'not-allowed', borderRadius: '4px', fontSize: '14px', marginLeft: '4px' }}
+          >
+            Apply
+          </button>
+          {(appliedQuickFilter || pendingQuickFilter) && (
             <button
               type="button"
               className="clear-filter-btn"
-              onClick={() => setQuickFilter('')}
+              onClick={clearQuickFilter}
               title="Clear filter"
             >
               ×
@@ -690,17 +713,18 @@ function PhenotypeSearchPage() {
         </div>
 
         {/* Filter status */}
-        {(selectedOrganism || quickFilter) && (
+        {(selectedOrganism || appliedQuickFilter) && (
           <div className="filter-status">
             Showing {filteredResults.length} of {data.results.length} results
             {selectedOrganism && <span className="filter-tag">Organism: {getOrganismAbbrev(selectedOrganism)}</span>}
-            {quickFilter && <span className="filter-tag">Search: &quot;{quickFilter}&quot;</span>}
+            {appliedQuickFilter && <span className="filter-tag">Search: &quot;{appliedQuickFilter}&quot;</span>}
             <button
               type="button"
               className="clear-all-filters-btn"
               onClick={() => {
                 setSelectedOrganism('');
-                setQuickFilter('');
+                setPendingQuickFilter('');
+                setAppliedQuickFilter('');
               }}
             >
               Clear All Filters
@@ -732,7 +756,8 @@ function PhenotypeSearchPage() {
             className="btn-reset"
             onClick={() => {
               setSelectedOrganism('');
-              setQuickFilter('');
+              setPendingQuickFilter('');
+              setAppliedQuickFilter('');
             }}
           >
             Clear Filters
