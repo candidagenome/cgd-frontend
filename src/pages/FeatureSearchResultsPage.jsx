@@ -126,7 +126,7 @@ function FeatureSearchResultsPage() {
         if (featureType.toLowerCase().includes('orf')) {
           params.feature_types = ['ORF'];
         } else if (featureType.toLowerCase() === 'trna') {
-          params.feature_types = ['tRNA gene'];
+          params.feature_types = ['tRNA'];
         } else {
           params.feature_types = [featureType];
         }
