@@ -24,12 +24,13 @@ const HeaderNav = () => {
     {
       label: 'JBrowse',
       href: '/jbrowse/index.html',
+      external: true,
       submenu: [
-        { label: 'C. albicans', href: '/jbrowse/index.html?data=cgd_data%2FC_albicans_SC5314' },
-        { label: 'C. auris', href: '/jbrowse/index.html?data=cgd_data%2FC_auris_B8441' },
-        { label: 'C. dubliniensis', href: '/jbrowse/index.html?data=cgd_data%2FC_dubliniensis_CD36' },
-        { label: 'C. glabrata', href: '/jbrowse/index.html?data=cgd_data%2FC_glabrata_CBS138' },
-        { label: 'C. parapsilosis', href: '/jbrowse/index.html?data=cgd_data%2FC_parapsilosis_CDC317' }
+        { label: 'C. albicans', href: '/jbrowse/index.html?data=cgd_data%2FC_albicans_SC5314', external: true },
+        { label: 'C. auris', href: '/jbrowse/index.html?data=cgd_data%2FC_auris_B8441', external: true },
+        { label: 'C. dubliniensis', href: '/jbrowse/index.html?data=cgd_data%2FC_dubliniensis_CD36', external: true },
+        { label: 'C. glabrata', href: '/jbrowse/index.html?data=cgd_data%2FC_glabrata_CBS138', external: true },
+        { label: 'C. parapsilosis', href: '/jbrowse/index.html?data=cgd_data%2FC_parapsilosis_CDC317', external: true }
       ]
     },
     {
