@@ -112,6 +112,15 @@ function GenomeSnapshotPage() {
   const { organism } = useParams();
   const orgData = ORGANISMS[organism];
 
+  // Handle hash link scrolling (React Router doesn't handle these well)
+  const scrollToSection = (e, sectionId) => {
+    e.preventDefault();
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   if (!orgData) {
     return (
       <div className="info-page">
@@ -167,10 +176,10 @@ function GenomeSnapshotPage() {
         <section className="info-section">
           <h2>Contents</h2>
           <ol className="toc-list">
-            <li><a href="#pieChart">Graphical View of Protein Coding Genes</a></li>
-            <li><a href="#genomeInventory">Genome Inventory</a></li>
-            <li><a href="#goAnnotations">Summary of GO annotations</a></li>
-            <li><a href="#barCharts">Distribution of Gene Products by Process, Function, and Component</a></li>
+            <li><a href="#pieChart" onClick={(e) => scrollToSection(e, 'pieChart')}>Graphical View of Protein Coding Genes</a></li>
+            <li><a href="#genomeInventory" onClick={(e) => scrollToSection(e, 'genomeInventory')}>Genome Inventory</a></li>
+            <li><a href="#goAnnotations" onClick={(e) => scrollToSection(e, 'goAnnotations')}>Summary of GO annotations</a></li>
+            <li><a href="#barCharts" onClick={(e) => scrollToSection(e, 'barCharts')}>Distribution of Gene Products by Process, Function, and Component</a></li>
           </ol>
         </section>
 
@@ -224,36 +233,36 @@ function GenomeSnapshotPage() {
               </tr>
               <tr>
                 <td>
-                  <a href={`/feature-search?featuretype=Verified ORFs&organism=${organism}&qualifier=Verified`}>
+                  <Link to={`/feature-search/results?organism=${organism}&qualifier=Verified&featuretype=ORF`}>
                     Verified ORFs
-                  </a>
+                  </Link>
                 </td>
                 <td>{orgData.verifiedORFs.toLocaleString()}</td>
                 <td>{Math.round(orgData.verifiedORFs / (organism.includes('albicans') ? 2 : 1)).toLocaleString()}</td>
               </tr>
               <tr>
                 <td>
-                  <a href={`/feature-search?featuretype=Uncharacterized ORFs&organism=${organism}&qualifier=Uncharacterized`}>
+                  <Link to={`/feature-search/results?organism=${organism}&qualifier=Uncharacterized&featuretype=ORF`}>
                     Uncharacterized ORFs
-                  </a>
+                  </Link>
                 </td>
                 <td>{orgData.uncharacterizedORFs.toLocaleString()}</td>
                 <td>{Math.round(orgData.uncharacterizedORFs / (organism.includes('albicans') ? 2 : 1)).toLocaleString()}</td>
               </tr>
               <tr>
                 <td>
-                  <a href={`/feature-search?featuretype=Dubious ORFs&organism=${organism}&qualifier=Dubious`}>
+                  <Link to={`/feature-search/results?organism=${organism}&qualifier=Dubious&featuretype=ORF`}>
                     Dubious ORFs
-                  </a>
+                  </Link>
                 </td>
                 <td>{orgData.dubiousORFs.toLocaleString()}</td>
                 <td>{Math.round(orgData.dubiousORFs / (organism.includes('albicans') ? 2 : 1)).toLocaleString()}</td>
               </tr>
               <tr>
                 <td>
-                  <a href={`/feature-search?featuretype=tRNA&organism=${organism}`}>
+                  <Link to={`/feature-search/results?organism=${organism}&featuretype=tRNA`}>
                     tRNA
-                  </a>
+                  </Link>
                 </td>
                 <td>{orgData.tRNA.toLocaleString()}</td>
                 <td>{Math.round(orgData.tRNA / (organism.includes('albicans') ? 2 : 1)).toLocaleString()}</td>
@@ -292,17 +301,17 @@ function GenomeSnapshotPage() {
               <tr>
                 <td>Molecular Function</td>
                 <td>{orgData.goAnnotations.molecularFunction.toLocaleString()}</td>
-                <td><a href="#function">Go to Molecular Function Graph</a></td>
+                <td><a href="#function" onClick={(e) => scrollToSection(e, 'function')}>Go to Molecular Function Graph</a></td>
               </tr>
               <tr>
                 <td>Cellular Component</td>
                 <td>{orgData.goAnnotations.cellularComponent.toLocaleString()}</td>
-                <td><a href="#component">Go to Cellular Component Graph</a></td>
+                <td><a href="#component" onClick={(e) => scrollToSection(e, 'component')}>Go to Cellular Component Graph</a></td>
               </tr>
               <tr>
                 <td>Biological Process</td>
                 <td>{orgData.goAnnotations.biologicalProcess.toLocaleString()}</td>
-                <td><a href="#process">Go to Biological Process Graph</a></td>
+                <td><a href="#process" onClick={(e) => scrollToSection(e, 'process')}>Go to Biological Process Graph</a></td>
               </tr>
               <tr className="total-row">
                 <th>All Ontologies</th>

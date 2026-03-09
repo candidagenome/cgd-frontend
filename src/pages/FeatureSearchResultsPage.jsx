@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import featureSearchApi from '../api/featureSearchApi';
@@ -15,6 +15,9 @@ const OrfLinkRenderer = (props) => {
 };
 
 function FeatureSearchResultsPage() {
+  // URL search params hook
+  const [urlSearchParams] = useSearchParams();
+
   // State
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -100,8 +103,44 @@ function FeatureSearchResultsPage() {
     });
   }, [results?.features, appliedQuickFilter]);
 
-  // Fetch search params from sessionStorage on mount
+  // Fetch search params from URL query params or sessionStorage on mount
   useEffect(() => {
+    // First, check if we have URL query parameters (for direct links like from Genome Snapshot)
+    const organism = urlSearchParams.get('organism');
+    const qualifier = urlSearchParams.get('qualifier');
+    const featureType = urlSearchParams.get('featuretype');
+
+    if (organism && (qualifier || featureType)) {
+      // Build search params from URL
+      const params = {
+        organism: organism.replace(/_/g, ' '),
+      };
+
+      // Handle qualifiers (Verified, Uncharacterized, Dubious)
+      if (qualifier) {
+        params.qualifiers = [qualifier];
+      }
+
+      // Handle feature types - map from URL param to actual feature type
+      if (featureType) {
+        if (featureType.toLowerCase().includes('orf')) {
+          params.feature_types = ['ORF'];
+        } else if (featureType.toLowerCase() === 'trna') {
+          params.feature_types = ['tRNA gene'];
+        } else {
+          params.feature_types = [featureType];
+        }
+      } else if (qualifier) {
+        // If we have a qualifier but no feature type, default to ORF
+        params.feature_types = ['ORF'];
+      }
+
+      setSearchParams(params);
+      setSortBy('orf');
+      return;
+    }
+
+    // Fallback: check sessionStorage (for searches from the form)
     const storedParams = sessionStorage.getItem('featureSearchParams');
     if (!storedParams) {
       setError('No search parameters found. Please start a new search.');
@@ -117,7 +156,7 @@ function FeatureSearchResultsPage() {
       setError('Invalid search parameters');
       setLoading(false);
     }
-  }, []);
+  }, [urlSearchParams]);
 
   // Fetch results when params change
   const fetchResults = useCallback(async () => {
