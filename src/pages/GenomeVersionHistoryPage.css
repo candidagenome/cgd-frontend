@@ -122,6 +122,33 @@
   min-width: 250px;
 }
 
+/* Version Type Filter */
+.version-filter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 12px 20px;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+}
+
+.version-filter label {
+  font-weight: 500;
+  color: #333;
+}
+
+.version-filter select {
+  padding: 6px 12px;
+  font-size: 0.95rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background: #fff;
+  min-width: 180px;
+}
+
 /* Version Table */
 .version-table {
   width: 100%;
