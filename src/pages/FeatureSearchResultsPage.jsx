@@ -113,7 +113,7 @@ function FeatureSearchResultsPage() {
     if (organism && (qualifier || featureType)) {
       // Build search params from URL
       const params = {
-        organism: organism.replace(/_/g, ' '),
+        organism: organism,
       };
 
       // Handle qualifiers (Verified, Uncharacterized, Dubious)
