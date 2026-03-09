@@ -86,7 +86,7 @@ const NEWS_ITEMS = [
           </Link>
         </li>
         <li>
-          <Link to="/reference/NewPapersThisWeek">New papers</Link> added to CGD this week.
+          <a href="/reference/NewPapersThisWeek" target="_blank" rel="noopener noreferrer">New papers</a> added to CGD this week.
         </li>
         <li>
           View <Link to="/reference/GenomewideAnalysisPapers">Genome-wide Analysis papers</Link> in
