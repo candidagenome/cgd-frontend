@@ -92,6 +92,9 @@ const NEWS_ITEMS = [
           View <Link to="/reference/GenomewideAnalysisPapers">Genome-wide Analysis papers</Link> in
           CGD.
         </li>
+        <li>
+          View <Link to="/disease-related-papers">Disease-Related papers</Link> in CGD.
+        </li>
       </ul>
     ),
     date: null,
