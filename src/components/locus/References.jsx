@@ -187,7 +187,11 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
   // Grid ready callback - removed sizeColumnsToFit() which interferes with flex sizing
 
   // Helper to format authors as plain string for TSV export
-  const formatAuthorsForTSV = (authors) => {
+  const formatAuthorsForTSV = (ref) => {
+    // Try author_list first (pre-formatted string)
+    if (ref.author_list) return ref.author_list;
+    // Try authors array
+    const authors = ref.authors;
     if (!authors) return '';
     if (typeof authors === 'string') return authors;
     if (Array.isArray(authors)) {
@@ -201,23 +205,30 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
     return '';
   };
 
+  // Helper to get journal name for TSV export
+  const getJournalForTSV = (ref) => {
+    return ref.journal_name || ref.journal || ref.journal_abbrev || '';
+  };
+
   // Download references as TSV
   const handleDownloadTSV = useCallback((refsToDownload) => {
     if (!refsToDownload || refsToDownload.length === 0) return;
 
     // Build TSV content
-    const headers = ['Authors', 'Year', 'Title', 'Journal', 'PubMed ID', 'Species', 'Other Genes'];
+    const headers = ['Citation', 'Year', 'Title', 'Journal', 'PubMed ID', 'Species', 'Other Genes'];
     const rows = refsToDownload.map(ref => {
       const otherGenesInRef = ref.other_genes
         ? ref.other_genes.filter(g => g !== displayName)
         : [];
       const species = ref.species || currentOrganism?.split(' ').slice(0, 2).join(' ') || 'C. albicans';
+      // Use citation field if available (contains full formatted reference)
+      const citation = ref.citation || ref.display_name || formatAuthorsForTSV(ref);
 
       return [
-        formatAuthorsForTSV(ref.authors),
+        citation,
         ref.year || '',
         ref.title || '',
-        ref.journal_name || ref.journal || '',
+        getJournalForTSV(ref),
         ref.pubmed || '',
         species,
         otherGenesInRef.join(', '),
