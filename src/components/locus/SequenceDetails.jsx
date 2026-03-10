@@ -13,7 +13,6 @@ const getSeqTypeParam = (seqType) => {
 
 function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
   const [expandedSequences, setExpandedSequences] = useState({});
-  const [showArchivedLocations, setShowArchivedLocations] = useState(false);
 
   // Get available organisms from the data - memoize to prevent new array reference each render
   const organisms = useMemo(() => {
@@ -104,7 +103,6 @@ function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismCha
 
   // Get locations and sequences for selected organism
   const currentLocations = orgData?.locations?.filter(l => l.is_current) || [];
-  const archivedLocations = orgData?.locations?.filter(l => !l.is_current) || [];
   const sequenceGroups = orgData ? groupSequencesByType(orgData.sequences || []) : {};
 
   return (
@@ -144,40 +142,6 @@ function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismCha
                   </div>
                 </div>
               ))}
-            </div>
-          )}
-
-          {/* Archived Locations - Collapsible */}
-          {archivedLocations.length > 0 && (
-            <div className="archived-locations">
-              <div
-                className="archived-header"
-                onClick={() => setShowArchivedLocations(!showArchivedLocations)}
-              >
-                <span className="collapse-icon">{showArchivedLocations ? '▼' : '▶'}</span>
-                <span>Archived Locations</span>
-                <span className="count-badge">{archivedLocations.length}</span>
-              </div>
-              {showArchivedLocations && (
-                <table className="data-table archived-table">
-                  <thead>
-                    <tr>
-                      <th>Chromosome</th>
-                      <th>Coordinates</th>
-                      <th>Strand</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {archivedLocations.map((loc, idx) => (
-                      <tr key={idx}>
-                        <td>{loc.chromosome || '-'}</td>
-                        <td>{formatCoordinates(loc.start_coord, loc.stop_coord)}</td>
-                        <td>{formatStrand(loc.strand)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
             </div>
           )}
 
