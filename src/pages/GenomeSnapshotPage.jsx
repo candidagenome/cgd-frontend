@@ -342,15 +342,16 @@ function GenomeSnapshotPage() {
     );
   }
 
-  // Calculate percentages
-  const verifiedPercent = data.haploid_orfs > 0
-    ? ((data.verified_orfs / data.haploid_orfs) * 100).toFixed(2)
+  // Calculate percentages using the same total as the pie chart
+  const orfTotal = data.verified_orfs + data.uncharacterized_orfs + data.dubious_orfs;
+  const verifiedPercent = orfTotal > 0
+    ? ((data.verified_orfs / orfTotal) * 100).toFixed(2)
     : '0.00';
-  const uncharPercent = data.haploid_orfs > 0
-    ? ((data.uncharacterized_orfs / data.haploid_orfs) * 100).toFixed(2)
+  const uncharPercent = orfTotal > 0
+    ? ((data.uncharacterized_orfs / orfTotal) * 100).toFixed(2)
     : '0.00';
-  const dubiousPercent = data.haploid_orfs > 0
-    ? ((data.dubious_orfs / data.haploid_orfs) * 100).toFixed(2)
+  const dubiousPercent = orfTotal > 0
+    ? ((data.dubious_orfs / orfTotal) * 100).toFixed(2)
     : '0.00';
 
   // Determine if diploid for haploid column calculations
