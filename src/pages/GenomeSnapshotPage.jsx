@@ -446,40 +446,36 @@ function GenomeSnapshotPage() {
               </tr>
               <tr>
                 <td>
-                  {/* Link temporarily disabled while feature-search counts are being fixed */}
-                  {/* <Link to={`/feature-search/results?organism=${organism}&qualifier=Verified&featuretype=ORF`}> */}
+                  <Link to={`/feature-search/results?organism=${organism}&qualifier=Verified&featuretype=ORF`}>
                     Verified ORFs
-                  {/* </Link> */}
+                  </Link>
                 </td>
                 <td>{data.verified_orfs.toLocaleString()}</td>
                 <td>{Math.round(data.verified_orfs / divisor).toLocaleString()}</td>
               </tr>
               <tr>
                 <td>
-                  {/* Link temporarily disabled while feature-search counts are being fixed */}
-                  {/* <Link to={`/feature-search/results?organism=${organism}&qualifier=Uncharacterized&featuretype=ORF`}> */}
+                  <Link to={`/feature-search/results?organism=${organism}&qualifier=Uncharacterized&featuretype=ORF`}>
                     Uncharacterized ORFs
-                  {/* </Link> */}
+                  </Link>
                 </td>
                 <td>{data.uncharacterized_orfs.toLocaleString()}</td>
                 <td>{Math.round(data.uncharacterized_orfs / divisor).toLocaleString()}</td>
               </tr>
               <tr>
                 <td>
-                  {/* Link temporarily disabled while feature-search counts are being fixed */}
-                  {/* <Link to={`/feature-search/results?organism=${organism}&qualifier=Dubious&featuretype=ORF`}> */}
+                  <Link to={`/feature-search/results?organism=${organism}&qualifier=Dubious&featuretype=ORF`}>
                     Dubious ORFs
-                  {/* </Link> */}
+                  </Link>
                 </td>
                 <td>{data.dubious_orfs.toLocaleString()}</td>
                 <td>{Math.round(data.dubious_orfs / divisor).toLocaleString()}</td>
               </tr>
               <tr>
                 <td>
-                  {/* Link temporarily disabled while feature-search counts are being fixed */}
-                  {/* <Link to={`/feature-search/results?organism=${organism}&featuretype=tRNA`}> */}
+                  <Link to={`/feature-search/results?organism=${organism}&featuretype=tRNA`}>
                     tRNA
-                  {/* </Link> */}
+                  </Link>
                 </td>
                 <td>{data.trna_count.toLocaleString()}</td>
                 <td>{Math.round(data.trna_count / divisor).toLocaleString()}</td>
