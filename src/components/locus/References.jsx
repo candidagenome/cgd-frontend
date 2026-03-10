@@ -205,17 +205,12 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
     return '';
   };
 
-  // Helper to get journal name for TSV export
-  const getJournalForTSV = (ref) => {
-    return ref.journal_name || ref.journal || ref.journal_abbrev || '';
-  };
-
   // Download references as TSV
   const handleDownloadTSV = useCallback((refsToDownload) => {
     if (!refsToDownload || refsToDownload.length === 0) return;
 
     // Build TSV content
-    const headers = ['Citation', 'Year', 'Title', 'Journal', 'PubMed ID', 'Species', 'Other Genes'];
+    const headers = ['Citation', 'Year', 'Title', 'PubMed ID', 'Species', 'Other Genes'];
     const rows = refsToDownload.map(ref => {
       const otherGenesInRef = ref.other_genes
         ? ref.other_genes.filter(g => g !== displayName)
@@ -228,7 +223,6 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
         citation,
         ref.year || '',
         ref.title || '',
-        getJournalForTSV(ref),
         ref.pubmed || '',
         species,
         otherGenesInRef.join(', '),
