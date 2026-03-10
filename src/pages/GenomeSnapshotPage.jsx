@@ -4,6 +4,79 @@ import genomeSnapshotApi from '../api/genomeSnapshotApi';
 import './InfoPages.css';
 
 /**
+ * Horizontal Bar Chart component for GO Slim distribution visualization.
+ */
+function GoSlimBarChart({ data, title, organismName, color = '#4169E1' }) {
+  if (!data || !data.categories || data.categories.length === 0) {
+    return (
+      <div className="go-slim-bar-chart">
+        <p style={{ color: '#666', fontStyle: 'italic' }}>No data available</p>
+      </div>
+    );
+  }
+
+  const maxCount = Math.max(...data.categories.map(c => c.count));
+  const chartWidth = 700;
+  const barHeight = 22;
+  const labelWidth = 280;
+  const countWidth = 60;
+  const barAreaWidth = chartWidth - labelWidth - countWidth - 20;
+  const padding = 4;
+
+  // Calculate chart height based on number of categories
+  const chartHeight = data.categories.length * (barHeight + padding) + 40;
+
+  return (
+    <div className="go-slim-bar-chart">
+      <h4 style={{ textAlign: 'center', marginBottom: '15px' }}>
+        <em>{organismName}</em> {title}
+      </h4>
+      <svg width={chartWidth} height={chartHeight} viewBox={`0 0 ${chartWidth} ${chartHeight}`}>
+        {data.categories.map((category, index) => {
+          const y = index * (barHeight + padding) + 10;
+          const barWidth = maxCount > 0 ? (category.count / maxCount) * barAreaWidth : 0;
+
+          return (
+            <g key={category.goid}>
+              {/* Category label */}
+              <text
+                x={labelWidth - 10}
+                y={y + barHeight / 2 + 4}
+                textAnchor="end"
+                fontSize="11"
+                fill="#333"
+              >
+                {category.go_term.length > 40
+                  ? category.go_term.substring(0, 37) + '...'
+                  : category.go_term}
+              </text>
+              {/* Bar */}
+              <rect
+                x={labelWidth}
+                y={y}
+                width={barWidth}
+                height={barHeight}
+                fill={color}
+                rx="2"
+              />
+              {/* Count label */}
+              <text
+                x={labelWidth + barWidth + 8}
+                y={y + barHeight / 2 + 4}
+                fontSize="11"
+                fill="#333"
+              >
+                {category.count.toLocaleString()}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
+/**
  * SVG Pie Chart component for ORF distribution visualization.
  */
 function OrfPieChart({ verified, uncharacterized, dubious, organismName }) {
@@ -121,6 +194,8 @@ function GenomeSnapshotPage() {
   const [organisms, setOrganisms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [goSlimData, setGoSlimData] = useState(null);
+  const [goSlimLoading, setGoSlimLoading] = useState(false);
 
   // Handle hash link scrolling (React Router doesn't handle these well)
   const scrollToSection = (e, sectionId) => {
@@ -171,6 +246,28 @@ function GenomeSnapshotPage() {
       }
     };
     fetchData();
+  }, [organism]);
+
+  // Fetch GO Slim distribution data when organism changes
+  useEffect(() => {
+    if (!organism) {
+      return;
+    }
+
+    const fetchGoSlimData = async () => {
+      setGoSlimLoading(true);
+      try {
+        const response = await genomeSnapshotApi.getGoSlimDistribution(organism);
+        if (response.success) {
+          setGoSlimData(response);
+        }
+      } catch (err) {
+        console.error('Failed to fetch GO Slim distribution:', err);
+      } finally {
+        setGoSlimLoading(false);
+      }
+    };
+    fetchGoSlimData();
   }, [organism]);
 
   // Show organism selection if no organism specified
@@ -370,10 +467,6 @@ function GenomeSnapshotPage() {
                 <td>{data.trna_count.toLocaleString()}</td>
                 <td>{Math.round(data.trna_count / divisor).toLocaleString()}</td>
               </tr>
-              <tr className="total-row">
-                <th>Genome length</th>
-                <td colSpan="2">{data.genome_length}</td>
-              </tr>
             </tbody>
           </table>
 
@@ -450,33 +543,54 @@ function GenomeSnapshotPage() {
           <div id="function" className="chart-section">
             <h4>Distribution of Gene Products among Molecular Function Categories</h4>
             <div className="chart-container">
-              <img
-                src={`/images/genome_snapshot/function_${organism}.png`}
-                alt={`${data.organism_name} Molecular Function Distribution`}
-                className="snapshot-chart bar-chart"
-              />
+              {goSlimLoading ? (
+                <p>Loading chart...</p>
+              ) : goSlimData?.molecular_function ? (
+                <GoSlimBarChart
+                  data={goSlimData.molecular_function}
+                  title="Molecular Function Distribution"
+                  organismName={`${data.organism_name} ${data.strain}`}
+                  color="#4169E1"
+                />
+              ) : (
+                <p style={{ color: '#666', fontStyle: 'italic' }}>No data available</p>
+              )}
             </div>
           </div>
 
           <div id="component" className="chart-section">
             <h4>Distribution of Gene Products among Cellular Component Categories</h4>
             <div className="chart-container">
-              <img
-                src={`/images/genome_snapshot/component_${organism}.png`}
-                alt={`${data.organism_name} Cellular Component Distribution`}
-                className="snapshot-chart bar-chart"
-              />
+              {goSlimLoading ? (
+                <p>Loading chart...</p>
+              ) : goSlimData?.cellular_component ? (
+                <GoSlimBarChart
+                  data={goSlimData.cellular_component}
+                  title="Cellular Component Distribution"
+                  organismName={`${data.organism_name} ${data.strain}`}
+                  color="#228B22"
+                />
+              ) : (
+                <p style={{ color: '#666', fontStyle: 'italic' }}>No data available</p>
+              )}
             </div>
           </div>
 
           <div id="process" className="chart-section">
             <h4>Distribution of Gene Products among Biological Process Categories</h4>
             <div className="chart-container">
-              <img
-                src={`/images/genome_snapshot/process_${organism}.png`}
-                alt={`${data.organism_name} Biological Process Distribution`}
-                className="snapshot-chart bar-chart"
-              />
+              {goSlimLoading ? (
+                <p>Loading chart...</p>
+              ) : goSlimData?.biological_process ? (
+                <GoSlimBarChart
+                  data={goSlimData.biological_process}
+                  title="Biological Process Distribution"
+                  organismName={`${data.organism_name} ${data.strain}`}
+                  color="#DC143C"
+                />
+              ) : (
+                <p style={{ color: '#666', fontStyle: 'italic' }}>No data available</p>
+              )}
             </div>
           </div>
         </section>
