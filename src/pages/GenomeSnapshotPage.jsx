@@ -485,10 +485,6 @@ function GenomeSnapshotPage() {
               </tr>
             </tbody>
           </table>
-
-          <p style={{ marginTop: '15px' }}>
-            <strong>Chromosomes:</strong> {data.chromosomes.join(', ')}
-          </p>
         </section>
 
         {/* GO Annotations Section */}
