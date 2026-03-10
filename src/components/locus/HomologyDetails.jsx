@@ -211,33 +211,41 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
               )}
 
               {/* Orthologs in Model Fungi Section */}
-              {orgData.orthologs_fungal && Object.keys(orgData.orthologs_fungal.by_source || {}).length > 0 && (
-                <tr className="section-with-divider section-grey-bg">
-                  <th style={{ verticalAlign: 'top' }}>Orthologs in model fungi</th>
-                  <td>
-                    {Object.entries(orgData.orthologs_fungal.by_source).map(([source, homologs], srcIdx) => (
-                      <span key={source}>
-                        {srcIdx > 0 && ' ; '}
-                        <em>{homologs[0]?.organism_name || source}</em>
-                        {' ('}
-                        {homologs.map((h, idx) => (
-                          <span key={idx}>
-                            {idx > 0 && ', '}
-                            {h.url ? (
-                              <a href={h.url} target="_blank" rel="noopener noreferrer">
-                                {h.display_name}
-                              </a>
-                            ) : (
-                              <span>{h.display_name}</span>
-                            )}
-                          </span>
-                        ))}
-                        {')'}
-                      </span>
-                    ))}
-                  </td>
-                </tr>
-              )}
+              {/* Filter out A. nidulans entries */}
+              {orgData.orthologs_fungal && (() => {
+                const filteredEntries = Object.entries(orgData.orthologs_fungal.by_source || {})
+                  .filter(([, homologs]) => {
+                    const orgName = homologs[0]?.organism_name || '';
+                    return !orgName.toLowerCase().includes('nidulans');
+                  });
+                return filteredEntries.length > 0 ? (
+                  <tr className="section-with-divider section-grey-bg">
+                    <th style={{ verticalAlign: 'top' }}>Orthologs in model fungi</th>
+                    <td>
+                      {filteredEntries.map(([source, homologs], srcIdx) => (
+                        <span key={source}>
+                          {srcIdx > 0 && ' ; '}
+                          <em>{homologs[0]?.organism_name || source}</em>
+                          {' ('}
+                          {homologs.map((h, idx) => (
+                            <span key={idx}>
+                              {idx > 0 && ', '}
+                              {h.url ? (
+                                <a href={h.url} target="_blank" rel="noopener noreferrer">
+                                  {h.display_name}
+                                </a>
+                              ) : (
+                                <span>{h.display_name}</span>
+                              )}
+                            </span>
+                          ))}
+                          {')'}
+                        </span>
+                      ))}
+                    </td>
+                  </tr>
+                ) : null;
+              })()}
 
               {/* Reciprocal Best Hits in Other Species Section */}
               {orgData.reciprocal_best_hits && Object.keys(orgData.reciprocal_best_hits.by_source || {}).length > 0 && (
@@ -444,8 +452,8 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                 </tr>
               )}
 
-              {/* Best Hits in Fungal Species Section */}
-              {orgData.best_hits_fungal && Object.keys(orgData.best_hits_fungal.by_source || {}).length > 0 && (
+              {/* Best Hits in Fungal Species Section - temporarily disabled */}
+              {/* {orgData.best_hits_fungal && Object.keys(orgData.best_hits_fungal.by_source || {}).length > 0 && (
                 <tr className="section-with-divider section-grey-bg">
                   <th style={{ verticalAlign: 'top' }}>Best hits in fungal species</th>
                   <td>
@@ -471,7 +479,7 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                     ))}
                   </td>
                 </tr>
-              )}
+              )} */}
             </tbody>
           </table>
         </>
