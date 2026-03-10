@@ -112,7 +112,7 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
           return <span className="no-other-genes">-</span>;
         }
 
-        const rowId = params.data.pubmed_id || params.rowIndex;
+        const rowId = params.data.pubmed || params.rowIndex;
         const isExpanded = expandedGeneRows.has(rowId);
         const genesToShow = isExpanded ? otherGenesInRef : otherGenesInRef.slice(0, 10);
         const hasMore = otherGenesInRef.length > 10;
@@ -173,7 +173,7 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
         ref.title,
         ref.journal,
         ref.year?.toString(),
-        ref.pubmed_id,
+        ref.pubmed,
         ...(ref.other_genes || []),
       ];
       return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
@@ -199,7 +199,7 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
         ref.year || '',
         ref.title || '',
         ref.journal || '',
-        ref.pubmed_id || '',
+        ref.pubmed || '',
         species,
         otherGenesInRef.join(', '),
       ].map(field => `"${String(field).replace(/"/g, '""')}"`).join('\t');
