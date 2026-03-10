@@ -46,8 +46,22 @@ function GoTermPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [quickFilter, setQuickFilter] = useState('');
+  // Quick filter state: pending (what user types) vs applied (what filters)
+  const [pendingQuickFilter, setPendingQuickFilter] = useState('');
+  const [appliedQuickFilter, setAppliedQuickFilter] = useState('');
   const [selectedOrganism, setSelectedOrganism] = useState('');
+
+  const applyFilter = useCallback(() => {
+    setAppliedQuickFilter(pendingQuickFilter);
+  }, [pendingQuickFilter]);
+
+  const clearAllFilters = useCallback(() => {
+    setPendingQuickFilter('');
+    setAppliedQuickFilter('');
+    setSelectedOrganism('');
+  }, []);
+
+  const hasPendingChanges = pendingQuickFilter !== appliedQuickFilter;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -174,8 +188,8 @@ function GoTermPage() {
     }
 
     // Filter by quick filter text
-    if (quickFilter.trim()) {
-      const searchLower = quickFilter.toLowerCase().trim();
+    if (appliedQuickFilter.trim()) {
+      const searchLower = appliedQuickFilter.toLowerCase().trim();
       filtered = filtered.filter((g) => {
         const searchFields = [
           g.locus_name,
@@ -195,7 +209,7 @@ function GoTermPage() {
     }
 
     return filtered;
-  }, [quickFilter, selectedOrganism]);
+  }, [appliedQuickFilter, selectedOrganism]);
 
   // Build AmiGO URL
   const getAmigoUrl = (goidVal) => {
@@ -416,7 +430,7 @@ function GoTermPage() {
         <p className="qualifier-summary">
           {totalGenes} gene{totalGenes !== 1 ? 's have' : ' has'} been directly annotated to this term in the{' '}
           {ANNOTATION_TYPE_NAMES[annotationType]?.replace(' GO Annotations', '') || annotationType} set
-          {(quickFilter || selectedOrganism) && ` (showing ${filteredGenes.length} matching filter)`}
+          {(appliedQuickFilter || selectedOrganism) && ` (showing ${filteredGenes.length} matching filter)`}
         </p>
 
         {/* Key fixes for flex sizing:
@@ -525,15 +539,23 @@ function GoTermPage() {
               <input
                 type="text"
                 id="quick-filter"
-                value={quickFilter}
-                onChange={(e) => setQuickFilter(e.target.value)}
+                value={pendingQuickFilter}
+                onChange={(e) => setPendingQuickFilter(e.target.value)}
                 placeholder="Type to filter..."
                 style={{ padding: '6px 10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px', width: '200px' }}
               />
-              {(quickFilter || selectedOrganism) && (
+              <button
+                type="button"
+                onClick={applyFilter}
+                disabled={!hasPendingChanges}
+                style={{ padding: '6px 12px', border: 'none', background: hasPendingChanges ? '#1976d2' : '#90caf9', color: 'white', fontWeight: 500, cursor: hasPendingChanges ? 'pointer' : 'not-allowed', borderRadius: '4px', fontSize: '14px' }}
+              >
+                Apply
+              </button>
+              {(appliedQuickFilter || pendingQuickFilter || selectedOrganism) && (
                 <button
                   type="button"
-                  onClick={() => { setQuickFilter(''); setSelectedOrganism(''); }}
+                  onClick={clearAllFilters}
                   title="Clear all filters"
                   style={{ padding: '4px 8px', border: 'none', background: '#e0e0e0', color: '#666', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px', lineHeight: 1 }}
                 >

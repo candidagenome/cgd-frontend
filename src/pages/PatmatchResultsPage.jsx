@@ -18,7 +18,20 @@ function PatmatchResultsPage() {
   const [error, setError] = useState(null);
   const [downloading, setDownloading] = useState(false);
   const [selectedHit, setSelectedHit] = useState(null);
-  const [quickFilter, setQuickFilter] = useState('');
+  // Quick filter state: pending (what user types) vs applied (what filters)
+  const [pendingQuickFilter, setPendingQuickFilter] = useState('');
+  const [appliedQuickFilter, setAppliedQuickFilter] = useState('');
+
+  const applyFilter = () => {
+    setAppliedQuickFilter(pendingQuickFilter);
+  };
+
+  const clearFilter = () => {
+    setPendingQuickFilter('');
+    setAppliedQuickFilter('');
+  };
+
+  const hasPendingChanges = pendingQuickFilter !== appliedQuickFilter;
 
   // Extract search parameters from URL
   const pattern = searchParams.get('pattern') || '';
@@ -263,8 +276,8 @@ function PatmatchResultsPage() {
 
   // Filter hits by quick filter text
   const filteredHits = useMemo(() => {
-    if (!results?.hits || !quickFilter.trim()) return results?.hits || [];
-    const searchLower = quickFilter.toLowerCase().trim();
+    if (!results?.hits || !appliedQuickFilter.trim()) return results?.hits || [];
+    const searchLower = appliedQuickFilter.toLowerCase().trim();
     return results.hits.filter((hit) => {
       const searchFields = [
         hit.sequence_name,
@@ -274,7 +287,7 @@ function PatmatchResultsPage() {
       ];
       return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
     });
-  }, [results?.hits, quickFilter]);
+  }, [results?.hits, appliedQuickFilter]);
 
   if (loading) {
     return (
@@ -366,22 +379,30 @@ function PatmatchResultsPage() {
               <input
                 type="text"
                 id="quick-filter"
-                value={quickFilter}
-                onChange={(e) => setQuickFilter(e.target.value)}
+                value={pendingQuickFilter}
+                onChange={(e) => setPendingQuickFilter(e.target.value)}
                 placeholder="Type to filter..."
                 style={{ padding: '6px 10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px', width: '200px' }}
               />
-              {quickFilter && (
+              <button
+                type="button"
+                onClick={applyFilter}
+                disabled={!hasPendingChanges}
+                style={{ padding: '6px 12px', border: 'none', background: hasPendingChanges ? '#1976d2' : '#90caf9', color: 'white', fontWeight: 500, cursor: hasPendingChanges ? 'pointer' : 'not-allowed', borderRadius: '4px', fontSize: '14px' }}
+              >
+                Apply
+              </button>
+              {(appliedQuickFilter || pendingQuickFilter) && (
                 <button
                   type="button"
-                  onClick={() => setQuickFilter('')}
+                  onClick={clearFilter}
                   title="Clear filter"
                   style={{ padding: '4px 8px', border: 'none', background: '#e0e0e0', color: '#666', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px', lineHeight: 1 }}
                 >
                   ×
                 </button>
               )}
-              {quickFilter && (
+              {appliedQuickFilter && (
                 <span style={{ fontSize: '0.9rem', color: '#555' }}>
                   Showing {filteredHits.length} of {results.hits.length} results
                 </span>

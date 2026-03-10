@@ -25,9 +25,22 @@ function RestrictionMapperResultsPage() {
   const [selectedEnzyme, setSelectedEnzyme] = useState(null);
   const [showNonCutting, setShowNonCutting] = useState(false);
   const [downloading, setDownloading] = useState(false);
-  const [quickFilter, setQuickFilter] = useState('');
+  // Quick filter state: pending (what user types) vs applied (what filters)
+  const [pendingQuickFilter, setPendingQuickFilter] = useState('');
+  const [appliedQuickFilter, setAppliedQuickFilter] = useState('');
   const [showAllCutSites, setShowAllCutSites] = useState(false);
   const [enzymeTypeFilter, setEnzymeTypeFilter] = useState(null); // null = all types
+
+  const applyFilter = () => {
+    setAppliedQuickFilter(pendingQuickFilter);
+  };
+
+  const clearFilter = () => {
+    setPendingQuickFilter('');
+    setAppliedQuickFilter('');
+  };
+
+  const hasPendingChanges = pendingQuickFilter !== appliedQuickFilter;
 
   // Load results from sessionStorage
   useEffect(() => {
@@ -180,8 +193,8 @@ function RestrictionMapperResultsPage() {
     }
 
     // Filter by quick filter text
-    if (quickFilter.trim()) {
-      const searchLower = quickFilter.toLowerCase().trim();
+    if (appliedQuickFilter.trim()) {
+      const searchLower = appliedQuickFilter.toLowerCase().trim();
       filtered = filtered.filter((enzyme) => {
         const searchFields = [
           enzyme.enzyme_name,
@@ -193,7 +206,7 @@ function RestrictionMapperResultsPage() {
     }
 
     return filtered;
-  }, [results?.cutting_enzymes, quickFilter, enzymeTypeFilter]);
+  }, [results?.cutting_enzymes, appliedQuickFilter, enzymeTypeFilter]);
 
   // Filter cut positions by enzyme type for the map
   const filteredCutPositions = useMemo(() => {
@@ -395,22 +408,30 @@ function RestrictionMapperResultsPage() {
               <input
                 type="text"
                 id="quick-filter"
-                value={quickFilter}
-                onChange={(e) => setQuickFilter(e.target.value)}
+                value={pendingQuickFilter}
+                onChange={(e) => setPendingQuickFilter(e.target.value)}
                 placeholder="Type to filter..."
                 style={{ padding: '6px 10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px', width: '200px' }}
               />
-              {quickFilter && (
+              <button
+                type="button"
+                onClick={applyFilter}
+                disabled={!hasPendingChanges}
+                style={{ padding: '6px 12px', border: 'none', background: hasPendingChanges ? '#1976d2' : '#90caf9', color: 'white', fontWeight: 500, cursor: hasPendingChanges ? 'pointer' : 'not-allowed', borderRadius: '4px', fontSize: '14px' }}
+              >
+                Apply
+              </button>
+              {(appliedQuickFilter || pendingQuickFilter) && (
                 <button
                   type="button"
-                  onClick={() => setQuickFilter('')}
+                  onClick={clearFilter}
                   title="Clear filter"
                   style={{ padding: '4px 8px', border: 'none', background: '#e0e0e0', color: '#666', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px', lineHeight: 1 }}
                 >
                   ×
                 </button>
               )}
-              {quickFilter && (
+              {appliedQuickFilter && (
                 <span style={{ fontSize: '0.9rem', color: '#555' }}>
                   Showing {filteredCuttingEnzymes.length} of {cuttingEnzymes.length} results
                 </span>

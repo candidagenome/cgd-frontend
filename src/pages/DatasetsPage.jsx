@@ -9,7 +9,20 @@ const DatasetsPage = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [quickFilter, setQuickFilter] = useState('');
+  // Quick filter state: pending (what user types) vs applied (what filters)
+  const [pendingQuickFilter, setPendingQuickFilter] = useState('');
+  const [appliedQuickFilter, setAppliedQuickFilter] = useState('');
+
+  const applyFilter = useCallback(() => {
+    setAppliedQuickFilter(pendingQuickFilter);
+  }, [pendingQuickFilter]);
+
+  const clearFilter = useCallback(() => {
+    setPendingQuickFilter('');
+    setAppliedQuickFilter('');
+  }, []);
+
+  const hasPendingChanges = pendingQuickFilter !== appliedQuickFilter;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -85,13 +98,13 @@ const DatasetsPage = () => {
 
   // Filter references by quick filter text
   const getFilteredRefs = useCallback((refs) => {
-    if (!quickFilter.trim()) return refs;
-    const searchLower = quickFilter.toLowerCase().trim();
+    if (!appliedQuickFilter.trim()) return refs;
+    const searchLower = appliedQuickFilter.toLowerCase().trim();
     return refs.filter((ref) => {
       const searchFields = [ref.citation, ref.year?.toString()];
       return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
     });
-  }, [quickFilter]);
+  }, [appliedQuickFilter]);
 
   // Calculate row height based on citation content
   const getRowHeight = useCallback((params) => {
@@ -177,15 +190,23 @@ const DatasetsPage = () => {
           <input
             type="text"
             id="quick-filter"
-            value={quickFilter}
-            onChange={(e) => setQuickFilter(e.target.value)}
+            value={pendingQuickFilter}
+            onChange={(e) => setPendingQuickFilter(e.target.value)}
             placeholder="Type to filter..."
             style={{ padding: '6px 10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px', width: '200px' }}
           />
-          {quickFilter && (
+          <button
+            type="button"
+            onClick={applyFilter}
+            disabled={!hasPendingChanges}
+            style={{ padding: '6px 12px', border: 'none', background: hasPendingChanges ? '#1976d2' : '#90caf9', color: 'white', fontWeight: 500, cursor: hasPendingChanges ? 'pointer' : 'not-allowed', borderRadius: '4px', fontSize: '14px' }}
+          >
+            Apply
+          </button>
+          {(appliedQuickFilter || pendingQuickFilter) && (
             <button
               type="button"
-              onClick={() => setQuickFilter('')}
+              onClick={clearFilter}
               title="Clear filter"
               style={{ padding: '4px 8px', border: 'none', background: '#e0e0e0', color: '#666', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px', lineHeight: 1 }}
             >
@@ -196,7 +217,7 @@ const DatasetsPage = () => {
 
         {years.map((year) => {
           const yearRefs = getFilteredRefs(groupedRefs[year] || []);
-          if (yearRefs.length === 0 && quickFilter) return null;
+          if (yearRefs.length === 0 && appliedQuickFilter) return null;
           return (
             <div key={year} className="year-section" id={`year-${year}`}>
               <h3>{year}</h3>

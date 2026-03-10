@@ -13,6 +13,9 @@ function GenomeVersionHistoryPage() {
   const [error, setError] = useState(null);
   const [selectedSeqSource, setSelectedSeqSource] = useState('');
 
+  // Filter state
+  const [versionType, setVersionType] = useState('all'); // 'all', 'major', or 'minor'
+
   // Pagination state
   const [page, setPage] = useState(1);
   const [pageSize] = useState(20);
@@ -40,7 +43,7 @@ function GenomeVersionHistoryPage() {
     loadConfig();
   }, [searchParams]);
 
-  // Load history when seq_source or page changes
+  // Load history when seq_source, page, or versionType changes
   useEffect(() => {
     if (!selectedSeqSource) return;
 
@@ -49,7 +52,7 @@ function GenomeVersionHistoryPage() {
       setError(null);
 
       try {
-        const data = await genomeVersionApi.getHistory(selectedSeqSource, page, pageSize);
+        const data = await genomeVersionApi.getHistory(selectedSeqSource, page, pageSize, versionType);
         if (data.success) {
           setHistory(data);
         } else {
@@ -64,7 +67,7 @@ function GenomeVersionHistoryPage() {
     };
 
     loadHistory();
-  }, [selectedSeqSource, page, pageSize]);
+  }, [selectedSeqSource, page, pageSize, versionType]);
 
   // Handle seq_source change
   const handleSeqSourceChange = (e) => {
@@ -72,6 +75,13 @@ function GenomeVersionHistoryPage() {
     setSelectedSeqSource(value);
     setPage(1); // Reset to first page
     setSearchParams({ seq_source: value });
+  };
+
+  // Handle version type filter change
+  const handleVersionTypeChange = (e) => {
+    const value = e.target.value;
+    setVersionType(value);
+    setPage(1); // Reset to first page
   };
 
   // Pagination handlers
@@ -164,6 +174,20 @@ function GenomeVersionHistoryPage() {
               ))}
             </select>
           </div>
+        </div>
+
+        {/* Version Type Filter */}
+        <div className="version-filter">
+          <label htmlFor="version-type">Show:</label>
+          <select
+            id="version-type"
+            value={versionType}
+            onChange={handleVersionTypeChange}
+          >
+            <option value="all">All versions</option>
+            <option value="major">Major releases only</option>
+            <option value="minor">Minor releases only</option>
+          </select>
         </div>
 
         {/* Loading Overlay */}

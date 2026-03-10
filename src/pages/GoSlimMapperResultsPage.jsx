@@ -10,7 +10,20 @@ function GoSlimMapperResultsPage() {
   const [results, setResults] = useState(null);
   const [request, setRequest] = useState(null);
   const [expandedTerms, setExpandedTerms] = useState(new Set());
-  const [quickFilter, setQuickFilter] = useState('');
+  // Quick filter state: pending (what user types) vs applied (what filters)
+  const [pendingQuickFilter, setPendingQuickFilter] = useState('');
+  const [appliedQuickFilter, setAppliedQuickFilter] = useState('');
+
+  const applyFilter = useCallback(() => {
+    setAppliedQuickFilter(pendingQuickFilter);
+  }, [pendingQuickFilter]);
+
+  const clearFilter = useCallback(() => {
+    setPendingQuickFilter('');
+    setAppliedQuickFilter('');
+  }, []);
+
+  const hasPendingChanges = pendingQuickFilter !== appliedQuickFilter;
 
   // Load results from localStorage
   useEffect(() => {
@@ -164,8 +177,8 @@ function GoSlimMapperResultsPage() {
 
   // Filter mapped terms by quick filter text
   const filteredMappedTerms = useMemo(() => {
-    if (!results?.result?.mapped_terms || !quickFilter.trim()) return results?.result?.mapped_terms || [];
-    const searchLower = quickFilter.toLowerCase().trim();
+    if (!results?.result?.mapped_terms || !appliedQuickFilter.trim()) return results?.result?.mapped_terms || [];
+    const searchLower = appliedQuickFilter.toLowerCase().trim();
     return results.result.mapped_terms.filter((term) => {
       const searchFields = [
         term.goid,
@@ -174,7 +187,7 @@ function GoSlimMapperResultsPage() {
       ];
       return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
     });
-  }, [results?.result?.mapped_terms, quickFilter]);
+  }, [results?.result?.mapped_terms, appliedQuickFilter]);
 
   // Grid ready callback
   const onGridReady = useCallback((params) => {
@@ -295,22 +308,30 @@ function GoSlimMapperResultsPage() {
                 <input
                   type="text"
                   id="quick-filter"
-                  value={quickFilter}
-                  onChange={(e) => setQuickFilter(e.target.value)}
+                  value={pendingQuickFilter}
+                  onChange={(e) => setPendingQuickFilter(e.target.value)}
                   placeholder="Type to filter..."
                   style={{ padding: '6px 10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px', width: '200px' }}
                 />
-                {quickFilter && (
+                <button
+                  type="button"
+                  onClick={applyFilter}
+                  disabled={!hasPendingChanges}
+                  style={{ padding: '6px 12px', border: 'none', background: hasPendingChanges ? '#1976d2' : '#90caf9', color: 'white', fontWeight: 500, cursor: hasPendingChanges ? 'pointer' : 'not-allowed', borderRadius: '4px', fontSize: '14px' }}
+                >
+                  Apply
+                </button>
+                {(appliedQuickFilter || pendingQuickFilter) && (
                   <button
                     type="button"
-                    onClick={() => setQuickFilter('')}
+                    onClick={clearFilter}
                     title="Clear filter"
                     style={{ padding: '4px 8px', border: 'none', background: '#e0e0e0', color: '#666', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px', lineHeight: 1 }}
                   >
                     ×
                   </button>
                 )}
-                {quickFilter && (
+                {appliedQuickFilter && (
                   <span style={{ fontSize: '0.9rem', color: '#555' }}>
                     Showing {filteredMappedTerms.length} of {result.mapped_terms.length} results
                   </span>

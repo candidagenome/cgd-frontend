@@ -19,11 +19,16 @@ const genomeVersionApi = {
    * @param {string} seqSource - Organism abbreviation (e.g., C_albicans_SC5314)
    * @param {number} page - Page number (1-indexed)
    * @param {number} pageSize - Results per page
+   * @param {string} versionType - Filter by version type: 'all', 'major', or 'minor'
    * @returns {Promise<Object>} Genome version history with pagination
    */
-  getHistory: async (seqSource, page = 1, pageSize = 20) => {
+  getHistory: async (seqSource, page = 1, pageSize = 20, versionType = 'all') => {
+    const params = { page, page_size: pageSize };
+    if (versionType && versionType !== 'all') {
+      params.version_type = versionType;
+    }
     const response = await api.get(`/api/genome-version/history/${encodeURIComponent(seqSource)}`, {
-      params: { page, page_size: pageSize },
+      params,
     });
     return response.data;
   },

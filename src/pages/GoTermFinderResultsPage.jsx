@@ -134,7 +134,20 @@ function GoTermFinderResultsPage() {
   const [graphLoading, setGraphLoading] = useState(false);
   const [showGraph, setShowGraph] = useState(false);
   const [graphGeneratedDate, setGraphGeneratedDate] = useState(null);
-  const [quickFilter, setQuickFilter] = useState('');
+  // Quick filter state: pending (what user types) vs applied (what filters)
+  const [pendingQuickFilter, setPendingQuickFilter] = useState('');
+  const [appliedQuickFilter, setAppliedQuickFilter] = useState('');
+
+  const applyFilter = () => {
+    setAppliedQuickFilter(pendingQuickFilter);
+  };
+
+  const clearFilter = () => {
+    setPendingQuickFilter('');
+    setAppliedQuickFilter('');
+  };
+
+  const hasPendingChanges = pendingQuickFilter !== appliedQuickFilter;
 
 
   // Load results from session storage
@@ -274,8 +287,8 @@ function GoTermFinderResultsPage() {
   // Filter terms by quick filter text
   const filteredCurrentTerms = useMemo(() => {
     const terms = getFilteredTerms();
-    if (!quickFilter.trim()) return terms;
-    const searchLower = quickFilter.toLowerCase().trim();
+    if (!appliedQuickFilter.trim()) return terms;
+    const searchLower = appliedQuickFilter.toLowerCase().trim();
     return terms.filter((term) => {
       const searchFields = [
         term.goid,
@@ -284,7 +297,7 @@ function GoTermFinderResultsPage() {
       ];
       return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
     });
-  }, [results, request, quickFilter]);
+  }, [results, request, appliedQuickFilter]);
 
   // Load graph data from backend API
   const loadGraph = async () => {
@@ -720,22 +733,30 @@ function GoTermFinderResultsPage() {
               <input
                 type="text"
                 id="quick-filter"
-                value={quickFilter}
-                onChange={(e) => setQuickFilter(e.target.value)}
+                value={pendingQuickFilter}
+                onChange={(e) => setPendingQuickFilter(e.target.value)}
                 placeholder="Type to filter..."
                 style={{ padding: '6px 10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px', width: '200px' }}
               />
-              {quickFilter && (
+              <button
+                type="button"
+                onClick={applyFilter}
+                disabled={!hasPendingChanges}
+                style={{ padding: '6px 12px', border: 'none', background: hasPendingChanges ? '#1976d2' : '#90caf9', color: 'white', fontWeight: 500, cursor: hasPendingChanges ? 'pointer' : 'not-allowed', borderRadius: '4px', fontSize: '14px' }}
+              >
+                Apply
+              </button>
+              {(appliedQuickFilter || pendingQuickFilter) && (
                 <button
                   type="button"
-                  onClick={() => setQuickFilter('')}
+                  onClick={clearFilter}
                   title="Clear filter"
                   style={{ padding: '4px 8px', border: 'none', background: '#e0e0e0', color: '#666', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px', lineHeight: 1 }}
                 >
                   ×
                 </button>
               )}
-              {quickFilter && (
+              {appliedQuickFilter && (
                 <span style={{ fontSize: '0.9rem', color: '#555' }}>
                   Showing {filteredCurrentTerms.length} of {currentTerms.length} results
                 </span>
