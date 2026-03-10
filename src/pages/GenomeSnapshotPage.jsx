@@ -446,36 +446,36 @@ function GenomeSnapshotPage() {
               </tr>
               <tr>
                 <td>
-                  <Link to={`/feature-search/results?organism=${organism}&qualifier=Verified&featuretype=ORF`}>
+                  <a href={`/feature-search/results?organism=${organism}&qualifier=Verified&featuretype=ORF`} target="feature-search">
                     Verified ORFs
-                  </Link>
+                  </a>
                 </td>
                 <td>{data.verified_orfs.toLocaleString()}</td>
                 <td>{Math.round(data.verified_orfs / divisor).toLocaleString()}</td>
               </tr>
               <tr>
                 <td>
-                  <Link to={`/feature-search/results?organism=${organism}&qualifier=Uncharacterized&featuretype=ORF`}>
+                  <a href={`/feature-search/results?organism=${organism}&qualifier=Uncharacterized&featuretype=ORF`} target="feature-search">
                     Uncharacterized ORFs
-                  </Link>
+                  </a>
                 </td>
                 <td>{data.uncharacterized_orfs.toLocaleString()}</td>
                 <td>{Math.round(data.uncharacterized_orfs / divisor).toLocaleString()}</td>
               </tr>
               <tr>
                 <td>
-                  <Link to={`/feature-search/results?organism=${organism}&qualifier=Dubious&featuretype=ORF`}>
+                  <a href={`/feature-search/results?organism=${organism}&qualifier=Dubious&featuretype=ORF`} target="feature-search">
                     Dubious ORFs
-                  </Link>
+                  </a>
                 </td>
                 <td>{data.dubious_orfs.toLocaleString()}</td>
                 <td>{Math.round(data.dubious_orfs / divisor).toLocaleString()}</td>
               </tr>
               <tr>
                 <td>
-                  <Link to={`/feature-search/results?organism=${organism}&featuretype=tRNA`}>
+                  <a href={`/feature-search/results?organism=${organism}&featuretype=tRNA`} target="feature-search">
                     tRNA
-                  </Link>
+                  </a>
                 </td>
                 <td>{data.trna_count.toLocaleString()}</td>
                 <td>{Math.round(data.trna_count / divisor).toLocaleString()}</td>
