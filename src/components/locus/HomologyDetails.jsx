@@ -1,7 +1,18 @@
 import React, { useState, useEffect, useMemo, Suspense, lazy } from 'react';
 import { Link } from 'react-router-dom';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
+import { API_BASE_URL } from '../../api/config';
 import './LocusComponents.css';
+
+// Helper to resolve download URLs that may be relative to the API
+const resolveDownloadUrl = (url) => {
+  if (!url) return null;
+  // If URL starts with /api, prepend the API base URL
+  if (url.startsWith('/api')) {
+    return `${API_BASE_URL}${url}`;
+  }
+  return url;
+};
 
 // Lazy load heavy visualization components
 const PhylogeneticTreeViewer = lazy(() => import('./PhylogeneticTreeViewer'));
@@ -104,11 +115,14 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                       </th>
                       <td>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                          {orgData.ortholog_cluster.download_links.map((link, idx) => (
-                            <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer">
-                              {link.label}
-                            </a>
-                          ))}
+                          {orgData.ortholog_cluster.download_links.map((link, idx) => {
+                            const url = resolveDownloadUrl(link.url);
+                            return url ? (
+                              <a key={idx} href={url} target="_blank" rel="noopener noreferrer">
+                                {link.label}
+                              </a>
+                            ) : null;
+                          })}
                         </div>
                       </td>
                     </tr>
@@ -118,7 +132,7 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
               {orgData.ortholog_cluster?.orthologs && orgData.ortholog_cluster.orthologs.length > 0 && (
                 <tr>
                   <th style={{ paddingLeft: '20px', fontWeight: 'normal', verticalAlign: 'top' }}>
-                    Orthologs
+                    Orthologs in fungal species
                   </th>
                   <td>
                     <table className="ortholog-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
@@ -141,9 +155,9 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                           >
                             <td style={{ padding: '8px' }}>
                               {orth.source === 'CGD' ? (
-                                <Link to={`/locus/${orth.feature_name}`}>
+                                <a href={`/locus/${orth.feature_name}`} target="_blank" rel="noopener noreferrer">
                                   {orth.sequence_id}
-                                </Link>
+                                </a>
                               ) : orth.url ? (
                                 <a href={orth.url} target="_blank" rel="noopener noreferrer">
                                   {orth.sequence_id}
@@ -177,7 +191,7 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
               {/* Show message if no orthologs in cluster */}
               {orgData.ortholog_cluster && (!orgData.ortholog_cluster.orthologs || orgData.ortholog_cluster.orthologs.length === 0) && (
                 <tr>
-                  <th style={{ paddingLeft: '20px', fontWeight: 'normal' }}>Orthologs</th>
+                  <th style={{ paddingLeft: '20px', fontWeight: 'normal' }}>Orthologs in fungal species</th>
                   <td>
                     <em style={{ color: '#666' }}>No orthologs found in CGOB cluster</em>
                   </td>
@@ -196,10 +210,10 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                 </tr>
               )}
 
-              {/* Orthologs in Fungal Species Section */}
+              {/* Orthologs in Model Fungi Section */}
               {orgData.orthologs_fungal && Object.keys(orgData.orthologs_fungal.by_source || {}).length > 0 && (
                 <tr className="section-with-divider section-grey-bg">
-                  <th style={{ verticalAlign: 'top' }}>Orthologs in fungal species</th>
+                  <th style={{ verticalAlign: 'top' }}>Orthologs in model fungi</th>
                   <td>
                     {Object.entries(orgData.orthologs_fungal.by_source).map(([source, homologs], srcIdx) => (
                       <span key={source}>
@@ -301,11 +315,14 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                       </th>
                       <td>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                          {orgData.phylogenetic_tree.download_links.map((link, idx) => (
-                            <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer">
-                              {link.label}
-                            </a>
-                          ))}
+                          {orgData.phylogenetic_tree.download_links.map((link, idx) => {
+                            const url = resolveDownloadUrl(link.url);
+                            return url ? (
+                              <a key={idx} href={url} target="_blank" rel="noopener noreferrer">
+                                {link.label}
+                              </a>
+                            ) : null;
+                          })}
                         </div>
                       </td>
                     </tr>
@@ -345,11 +362,14 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                     {orgData.protein_alignment.download_links && orgData.protein_alignment.download_links.length > 0 && (
                       <div style={{ marginTop: '10px', display: 'flex', gap: '15px', fontSize: '13px' }}>
                         <span style={{ color: '#666' }}>Download:</span>
-                        {orgData.protein_alignment.download_links.map((link, idx) => (
-                          <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer">
-                            {link.label}
-                          </a>
-                        ))}
+                        {orgData.protein_alignment.download_links.map((link, idx) => {
+                          const url = resolveDownloadUrl(link.url);
+                          return url ? (
+                            <a key={idx} href={url} target="_blank" rel="noopener noreferrer">
+                              {link.label}
+                            </a>
+                          ) : null;
+                        })}
                       </div>
                     )}
                   </td>
@@ -388,11 +408,14 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                     {orgData.coding_alignment.download_links && orgData.coding_alignment.download_links.length > 0 && (
                       <div style={{ marginTop: '10px', display: 'flex', gap: '15px', fontSize: '13px' }}>
                         <span style={{ color: '#666' }}>Download:</span>
-                        {orgData.coding_alignment.download_links.map((link, idx) => (
-                          <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer">
-                            {link.label}
-                          </a>
-                        ))}
+                        {orgData.coding_alignment.download_links.map((link, idx) => {
+                          const url = resolveDownloadUrl(link.url);
+                          return url ? (
+                            <a key={idx} href={url} target="_blank" rel="noopener noreferrer">
+                              {link.label}
+                            </a>
+                          ) : null;
+                        })}
                       </div>
                     )}
                   </td>
