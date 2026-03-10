@@ -168,10 +168,14 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
     if (!quickFilter.trim()) return refsToFilter;
     const searchLower = quickFilter.toLowerCase().trim();
     return refsToFilter.filter((ref) => {
+      // Extract author names from array if needed
+      const authorNames = Array.isArray(ref.authors)
+        ? ref.authors.map(a => a.author_name || a).filter(Boolean)
+        : [ref.authors];
       const searchFields = [
-        ref.authors,
+        ...authorNames,
         ref.title,
-        ref.journal,
+        ref.journal_name || ref.journal,
         ref.year?.toString(),
         ref.pubmed,
         ...(ref.other_genes || []),
@@ -181,6 +185,21 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
   }, [quickFilter]);
 
   // Grid ready callback - removed sizeColumnsToFit() which interferes with flex sizing
+
+  // Helper to format authors as plain string for TSV export
+  const formatAuthorsForTSV = (authors) => {
+    if (!authors) return '';
+    if (typeof authors === 'string') return authors;
+    if (Array.isArray(authors)) {
+      // Array of objects with author_name
+      if (authors[0]?.author_name) {
+        return authors.map(a => a.author_name).join(', ');
+      }
+      // Array of strings
+      return authors.join(', ');
+    }
+    return '';
+  };
 
   // Download references as TSV
   const handleDownloadTSV = useCallback((refsToDownload) => {
@@ -195,10 +214,10 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
       const species = ref.species || currentOrganism?.split(' ').slice(0, 2).join(' ') || 'C. albicans';
 
       return [
-        ref.authors || '',
+        formatAuthorsForTSV(ref.authors),
         ref.year || '',
         ref.title || '',
-        ref.journal || '',
+        ref.journal_name || ref.journal || '',
         ref.pubmed || '',
         species,
         otherGenesInRef.join(', '),
