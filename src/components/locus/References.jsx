@@ -227,16 +227,12 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
 
   // Calculate reference counts
   const curatedRefs = refs.filter(ref => ref.topics && ref.topics.length > 0 && !ref.topics.includes('Not yet curated'));
-  const notYetCuratedRefs = refs.filter(ref => !ref.topics || ref.topics.length === 0 || ref.topics.includes('Not yet curated'));
   const highPriorityRefs = refs.filter(ref => ref.topics && ref.topics.includes('High Priority'));
 
   // Get references by topic
   const getRefsByTopic = (topic) => {
     if (topic === 'curated') {
       return curatedRefs;
-    }
-    if (topic === 'Not yet curated') {
-      return notYetCuratedRefs;
     }
     return refs.filter(ref => ref.topics && ref.topics.includes(topic));
   };
@@ -375,7 +371,6 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
         {/* Additional Information section (always shown) */}
         <div className="topic-group">
           <div className="topic-group-header">Additional Information</div>
-          {renderTopicEntry('References Not Yet Curated', 'References Not Yet Curated', 'Not yet curated', true)}
           {renderTopicEntry('References for Curation', 'References for Curation', 'High Priority', true)}
           {renderTopicEntry('Literature Curation Summary', 'Literature Curation Summary')}
 
@@ -428,19 +423,6 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
               }}
             >
               {curatedRefs.length}
-            </a>
-          </p>
-          <p>
-            <strong>References Not Yet Curated: </strong>
-            <a
-              href="#not-curated"
-              onClick={(e) => {
-                e.preventDefault();
-                setSelectedTopic('Not yet curated');
-                setViewMode('topic');
-              }}
-            >
-              {notYetCuratedRefs.length}
             </a>
           </p>
           {highPriorityRefs.length > 0 && (
@@ -556,14 +538,25 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
 
     if (selectedTopic === 'curated') {
       topicTitle = 'Curated References';
-    } else if (selectedTopic === 'Not yet curated') {
-      topicTitle = 'References Not Yet Curated';
     } else if (selectedTopic === 'High Priority') {
       topicTitle = 'References for Curation';
     }
 
     return (
       <div className="literature-topic-view">
+        <div className="topic-view-header">
+          <a
+            href="#back"
+            className="back-to-summary-link"
+            onClick={(e) => {
+              e.preventDefault();
+              setSelectedTopic(null);
+              setViewMode('summary');
+            }}
+          >
+            &larr; Back to Literature Summary
+          </a>
+        </div>
         <h4>
           <span className="gene-name-highlight">{displayName}</span>
           {' '}- {topicTitle}

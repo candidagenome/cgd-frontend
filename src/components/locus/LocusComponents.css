@@ -2871,6 +2871,20 @@ a:hover {
 }
 
 /* Topic view */
+.topic-view-header {
+  margin-bottom: 10px;
+}
+
+.back-to-summary-link {
+  color: #1976d2;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.back-to-summary-link:hover {
+  text-decoration: underline;
+}
+
 .literature-topic-view h4 {
   margin: 0 0 15px 0;
   color: #333;
