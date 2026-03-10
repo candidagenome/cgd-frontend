@@ -5,6 +5,7 @@ import './InfoPages.css';
 
 /**
  * Horizontal Bar Chart component for GO Slim distribution visualization.
+ * Shows percentage of genes annotated to each GO Slim term (like original Perl).
  */
 function GoSlimBarChart({ data, title, organismName, color = '#4169E1' }) {
   if (!data || !data.categories || data.categories.length === 0) {
@@ -15,16 +16,20 @@ function GoSlimBarChart({ data, title, organismName, color = '#4169E1' }) {
     );
   }
 
-  const maxCount = Math.max(...data.categories.map(c => c.count));
-  const chartWidth = 700;
-  const barHeight = 22;
-  const labelWidth = 280;
-  const countWidth = 60;
-  const barAreaWidth = chartWidth - labelWidth - countWidth - 20;
-  const padding = 4;
+  const maxPercentage = Math.max(...data.categories.map(c => c.percentage || 0));
+  const chartWidth = 750;
+  const barHeight = 20;
+  const labelWidth = 250;
+  const percentWidth = 50;
+  const barAreaWidth = chartWidth - labelWidth - percentWidth - 30;
+  const padding = 3;
 
   // Calculate chart height based on number of categories
-  const chartHeight = data.categories.length * (barHeight + padding) + 40;
+  const chartHeight = data.categories.length * (barHeight + padding) + 50;
+
+  // Calculate max value for Y-axis (round up to nice number like original Perl)
+  let yMax = Math.ceil(maxPercentage / 5) * 5;
+  if (yMax < 5) yMax = 5;
 
   return (
     <div className="go-slim-bar-chart">
@@ -32,9 +37,20 @@ function GoSlimBarChart({ data, title, organismName, color = '#4169E1' }) {
         <em>{organismName}</em> {title}
       </h4>
       <svg width={chartWidth} height={chartHeight} viewBox={`0 0 ${chartWidth} ${chartHeight}`}>
+        {/* Y-axis label */}
+        <text
+          x={chartWidth - 10}
+          y={20}
+          textAnchor="end"
+          fontSize="11"
+          fill="#666"
+        >
+          % genes annotated
+        </text>
         {data.categories.map((category, index) => {
-          const y = index * (barHeight + padding) + 10;
-          const barWidth = maxCount > 0 ? (category.count / maxCount) * barAreaWidth : 0;
+          const y = index * (barHeight + padding) + 35;
+          const percentage = category.percentage || 0;
+          const barWidth = yMax > 0 ? (percentage / yMax) * barAreaWidth : 0;
 
           return (
             <g key={category.goid}>
@@ -46,8 +62,8 @@ function GoSlimBarChart({ data, title, organismName, color = '#4169E1' }) {
                 fontSize="11"
                 fill="#333"
               >
-                {category.go_term.length > 40
-                  ? category.go_term.substring(0, 37) + '...'
+                {category.go_term.length > 35
+                  ? category.go_term.substring(0, 32) + '...'
                   : category.go_term}
               </text>
               {/* Bar */}
@@ -59,14 +75,14 @@ function GoSlimBarChart({ data, title, organismName, color = '#4169E1' }) {
                 fill={color}
                 rx="2"
               />
-              {/* Count label */}
+              {/* Percentage label */}
               <text
                 x={labelWidth + barWidth + 8}
                 y={y + barHeight / 2 + 4}
                 fontSize="11"
                 fill="#333"
               >
-                {category.count.toLocaleString()}
+                {percentage.toFixed(1)}%
               </text>
             </g>
           );
