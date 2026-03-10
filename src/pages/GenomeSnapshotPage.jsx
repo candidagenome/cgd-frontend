@@ -1,116 +1,126 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import genomeSnapshotApi from '../api/genomeSnapshotApi';
 import './InfoPages.css';
 
-const ORGANISMS = {
-  'C_albicans_SC5314': {
-    name: 'Candida albicans',
-    strain: 'SC5314',
-    description: 'The most commonly isolated human fungal pathogen and the best-studied Candida species.',
-    lastUpdated: 'January 22, 2026',
-    totalORFs: 12405,
-    haploidORFs: 6198,
-    verifiedORFs: 4032,
-    uncharacterizedORFs: 8070,
-    dubiousORFs: 303,
-    tRNA: 282,
-    chromosomes: [
-      'chr1A', 'chr1B', 'chr2A', 'chr2B', 'chr3A', 'chr3B', 'chr4A', 'chr4B',
-      'chr5A', 'chr5B', 'chr6A', 'chr6B', 'chr7A', 'chr7B', 'chrRA', 'chrRB', 'chrM'
-    ],
-    genomeLength: '28,605,416 bp',
-    goAnnotations: {
-      molecularFunction: 3092,
-      cellularComponent: 2332,
-      biologicalProcess: 3297,
-      total: 8721
-    }
-  },
-  'C_auris_B8441': {
-    name: 'Candida auris',
-    strain: 'B8441',
-    description: 'An emerging multidrug-resistant pathogen causing healthcare-associated infections worldwide.',
-    lastUpdated: 'January 22, 2026',
-    totalORFs: 5397,
-    haploidORFs: 5397,
-    verifiedORFs: 773,
-    uncharacterizedORFs: 4581,
-    dubiousORFs: 43,
-    tRNA: 128,
-    chromosomes: ['Chr1', 'Chr2', 'Chr3', 'Chr4', 'Chr5', 'Chr6', 'Chr7'],
-    genomeLength: '12,373,041 bp',
-    goAnnotations: {
-      molecularFunction: 1067,
-      cellularComponent: 889,
-      biologicalProcess: 1138,
-      total: 3094
-    }
-  },
-  'C_dubliniensis_CD36': {
-    name: 'Candida dubliniensis',
-    strain: 'CD36',
-    description: 'A closely related species to C. albicans, often associated with oral candidiasis in immunocompromised patients.',
-    lastUpdated: 'January 22, 2026',
-    totalORFs: 5983,
-    haploidORFs: 5983,
-    verifiedORFs: 816,
-    uncharacterizedORFs: 5100,
-    dubiousORFs: 67,
-    tRNA: 131,
-    chromosomes: ['Chr1', 'Chr2', 'Chr3', 'Chr4', 'Chr5', 'Chr6', 'Chr7', 'ChrR'],
-    genomeLength: '14,618,422 bp',
-    goAnnotations: {
-      molecularFunction: 1091,
-      cellularComponent: 901,
-      biologicalProcess: 1149,
-      total: 3141
-    }
-  },
-  'C_glabrata_CBS138': {
-    name: 'Candida glabrata',
-    strain: 'CBS138',
-    description: 'The second most common cause of candidiasis, more closely related to Saccharomyces cerevisiae than to C. albicans.',
-    lastUpdated: 'January 22, 2026',
-    totalORFs: 5283,
-    haploidORFs: 5283,
-    verifiedORFs: 3283,
-    uncharacterizedORFs: 1918,
-    dubiousORFs: 82,
-    tRNA: 207,
-    chromosomes: ['ChrA', 'ChrB', 'ChrC', 'ChrD', 'ChrE', 'ChrF', 'ChrG', 'ChrH', 'ChrI', 'ChrJ', 'ChrK', 'ChrL', 'ChrM', 'Mito'],
-    genomeLength: '12,338,433 bp',
-    goAnnotations: {
-      molecularFunction: 3565,
-      cellularComponent: 3212,
-      biologicalProcess: 3730,
-      total: 10507
-    }
-  },
-  'C_parapsilosis_CDC317': {
-    name: 'Candida parapsilosis',
-    strain: 'CDC317',
-    description: 'A significant cause of bloodstream infections, particularly in neonates and patients with indwelling catheters.',
-    lastUpdated: 'January 22, 2026',
-    totalORFs: 5836,
-    haploidORFs: 5836,
-    verifiedORFs: 828,
-    uncharacterizedORFs: 4936,
-    dubiousORFs: 72,
-    tRNA: 131,
-    chromosomes: ['Contig005809', 'Contig005805', 'Contig005806', 'Contig005807', 'Contig005808', 'Contig005569', 'Contig005570', 'Contig005571'],
-    genomeLength: '13,030,522 bp',
-    goAnnotations: {
-      molecularFunction: 1105,
-      cellularComponent: 918,
-      biologicalProcess: 1168,
-      total: 3191
-    }
-  },
-};
+/**
+ * SVG Pie Chart component for ORF distribution visualization.
+ */
+function OrfPieChart({ verified, uncharacterized, dubious, organismName }) {
+  const total = verified + uncharacterized + dubious;
+  if (total === 0) return null;
+
+  const size = 300;
+  const radius = 120;
+  const centerX = size / 2;
+  const centerY = size / 2;
+
+  // Calculate percentages
+  const verifiedPct = (verified / total) * 100;
+  const uncharPct = (uncharacterized / total) * 100;
+  const dubiousPct = (dubious / total) * 100;
+
+  // Colors matching the legend
+  const colors = {
+    verified: '#4169E1',      // Royal Blue
+    uncharacterized: '#228B22', // Forest Green
+    dubious: '#DC143C',       // Crimson
+  };
+
+  // Calculate pie slice paths
+  const slices = [
+    { label: 'Verified', value: verified, color: colors.verified, pct: verifiedPct },
+    { label: 'Uncharacterized', value: uncharacterized, color: colors.uncharacterized, pct: uncharPct },
+    { label: 'Dubious', value: dubious, color: colors.dubious, pct: dubiousPct },
+  ].filter(s => s.value > 0);
+
+  // Generate SVG path for each slice
+  let currentAngle = -90; // Start at top (12 o'clock)
+  const paths = slices.map((slice, index) => {
+    const angle = (slice.value / total) * 360;
+    const startAngle = currentAngle;
+    const endAngle = currentAngle + angle;
+
+    // Convert angles to radians
+    const startRad = (startAngle * Math.PI) / 180;
+    const endRad = (endAngle * Math.PI) / 180;
+
+    // Calculate arc points
+    const x1 = centerX + radius * Math.cos(startRad);
+    const y1 = centerY + radius * Math.sin(startRad);
+    const x2 = centerX + radius * Math.cos(endRad);
+    const y2 = centerY + radius * Math.sin(endRad);
+
+    // Large arc flag (1 if angle > 180)
+    const largeArc = angle > 180 ? 1 : 0;
+
+    // SVG path
+    const path = `M ${centerX} ${centerY} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2} Z`;
+
+    // Calculate label position (middle of the slice, at 70% radius for better positioning)
+    const midAngle = startAngle + angle / 2;
+    const midRad = (midAngle * Math.PI) / 180;
+    const labelRadius = radius * 0.65;
+    const labelX = centerX + labelRadius * Math.cos(midRad);
+    const labelY = centerY + labelRadius * Math.sin(midRad);
+
+    currentAngle = endAngle;
+
+    return {
+      ...slice,
+      path,
+      labelX,
+      labelY,
+      key: index,
+    };
+  });
+
+  return (
+    <div className="orf-pie-chart">
+      <h4 style={{ textAlign: 'center', marginBottom: '10px' }}>
+        <em>{organismName}</em> ORF Distribution
+      </h4>
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+        {/* Pie slices */}
+        {paths.map((slice) => (
+          <path
+            key={slice.key}
+            d={slice.path}
+            fill={slice.color}
+            stroke="#fff"
+            strokeWidth="2"
+          />
+        ))}
+        {/* Labels inside slices */}
+        {paths.map((slice) => (
+          slice.pct >= 5 && (
+            <text
+              key={`label-${slice.key}`}
+              x={slice.labelX}
+              y={slice.labelY}
+              textAnchor="middle"
+              dominantBaseline="middle"
+              fill="#fff"
+              fontSize="12"
+              fontWeight="bold"
+            >
+              {slice.pct.toFixed(1)}%
+            </text>
+          )
+        ))}
+      </svg>
+    </div>
+  );
+}
 
 function GenomeSnapshotPage() {
   const { organism } = useParams();
-  const orgData = ORGANISMS[organism];
+
+  // State for data fetching
+  const [data, setData] = useState(null);
+  const [organisms, setOrganisms] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Handle hash link scrolling (React Router doesn't handle these well)
   const scrollToSection = (e, sectionId) => {
@@ -121,7 +131,50 @@ function GenomeSnapshotPage() {
     }
   };
 
-  if (!orgData) {
+  // Fetch available organisms on mount
+  useEffect(() => {
+    const fetchOrganisms = async () => {
+      try {
+        const response = await genomeSnapshotApi.getOrganisms();
+        if (response.success) {
+          setOrganisms(response.organisms);
+        }
+      } catch (err) {
+        console.error('Failed to fetch organisms:', err);
+      }
+    };
+    fetchOrganisms();
+  }, []);
+
+  // Fetch genome snapshot data when organism changes
+  useEffect(() => {
+    if (!organism) {
+      setLoading(false);
+      return;
+    }
+
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await genomeSnapshotApi.getSnapshot(organism);
+        if (response.success) {
+          setData(response);
+        } else {
+          setError(response.error || 'Failed to load genome snapshot');
+        }
+      } catch (err) {
+        console.error('Failed to fetch genome snapshot:', err);
+        setError(err.response?.data?.detail || err.message || 'Failed to load genome snapshot');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [organism]);
+
+  // Show organism selection if no organism specified
+  if (!organism) {
     return (
       <div className="info-page">
         <div className="info-page-content">
@@ -129,10 +182,10 @@ function GenomeSnapshotPage() {
           <hr />
           <p>Select a genome to view its snapshot:</p>
           <ul>
-            {Object.entries(ORGANISMS).map(([key, data]) => (
-              <li key={key}>
-                <Link to={`/genome-snapshot/${key}`}>
-                  <em>{data.name}</em> {data.strain}
+            {organisms.map((org) => (
+              <li key={org.organism_abbrev}>
+                <Link to={`/genome-snapshot/${org.organism_abbrev}`}>
+                  <em>{org.organism_name}</em>
                 </Link>
               </li>
             ))}
@@ -142,16 +195,61 @@ function GenomeSnapshotPage() {
     );
   }
 
-  const verifiedPercent = ((orgData.verifiedORFs / orgData.haploidORFs) * 100).toFixed(2);
-  const uncharPercent = ((orgData.uncharacterizedORFs / orgData.haploidORFs) * 100).toFixed(2);
-  const dubiousPercent = ((orgData.dubiousORFs / orgData.haploidORFs) * 100).toFixed(2);
+  // Loading state
+  if (loading) {
+    return (
+      <div className="info-page">
+        <div className="info-page-content">
+          <h1>Genome Snapshot</h1>
+          <hr />
+          <div className="loading-state">
+            <span className="loading-spinner"></span>
+            Loading genome snapshot...
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error || !data) {
+    return (
+      <div className="info-page">
+        <div className="info-page-content">
+          <h1>Genome Snapshot</h1>
+          <hr />
+          <div className="error-state">
+            <p>{error || 'Failed to load genome snapshot'}</p>
+          </div>
+          <p>
+            <Link to="/genome-snapshot">View available genomes</Link>
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Calculate percentages
+  const verifiedPercent = data.haploid_orfs > 0
+    ? ((data.verified_orfs / data.haploid_orfs) * 100).toFixed(2)
+    : '0.00';
+  const uncharPercent = data.haploid_orfs > 0
+    ? ((data.uncharacterized_orfs / data.haploid_orfs) * 100).toFixed(2)
+    : '0.00';
+  const dubiousPercent = data.haploid_orfs > 0
+    ? ((data.dubious_orfs / data.haploid_orfs) * 100).toFixed(2)
+    : '0.00';
+
+  // Determine if diploid for haploid column calculations
+  const isDiploid = organism.toLowerCase().includes('albicans');
+  const divisor = isDiploid ? 2 : 1;
 
   return (
     <div className="info-page genome-snapshot-page">
       <div className="info-page-content">
         <div className="snapshot-header">
           <h1>
-            <em>{orgData.name} {orgData.strain}</em> Genome Snapshot/Overview
+            <em>{data.organism_name} {data.strain}</em> Genome Snapshot/Overview
           </h1>
           <Link to="/help/genome-snapshot" className="help-button">
             <img src="/images/help-button.png" alt="Help" width="30" height="30" />
@@ -160,12 +258,12 @@ function GenomeSnapshotPage() {
         <hr />
 
         <p style={{ textAlign: 'right', color: '#666', fontSize: '0.9em', marginBottom: '15px' }}>
-          <strong>Last updated:</strong> {orgData.lastUpdated}
+          <strong>Last updated:</strong> {data.last_updated}
         </p>
 
         <p>
-          This page provides information on the status of the <em>{orgData.name} {orgData.strain}</em> genome.
-          Data on this page are updated periodically. All the data displayed on this page are available in one
+          This page provides information on the status of the <em>{data.organism_name} {data.strain}</em> genome.
+          Data on this page are updated in real-time from the database. All the data displayed on this page are available in one
           or more files (Chromosomal Feature File; GO Annotations File; Candida Go Slim Annotations File) on the
           CGD <Link to="/download">Download Data</Link> page. The{' '}
           <a href="/feature-search">Advanced Search</a> tool can also be used to retrieve
@@ -187,24 +285,25 @@ function GenomeSnapshotPage() {
         <section className="info-section" id="pieChart">
           <h3>Graphical View of Protein Coding Genes</h3>
           <div className="chart-container">
-            <img
-              src={`http://www.candidagenome.org/images/genome_snapshot/pieChart_${organism}.png`}
-              alt={`${orgData.name} ORF Distribution Pie Chart`}
-              className="snapshot-chart"
+            <OrfPieChart
+              verified={data.verified_orfs}
+              uncharacterized={data.uncharacterized_orfs}
+              dubious={data.dubious_orfs}
+              organismName={`${data.organism_name} ${data.strain}`}
             />
           </div>
           <div className="legend-container">
             <span className="legend-item">
               <span className="legend-color" style={{ backgroundColor: '#4169E1' }}></span>
-              {orgData.verifiedORFs} ORFs, {verifiedPercent}% Verified
+              {data.verified_orfs.toLocaleString()} ORFs, {verifiedPercent}% Verified
             </span>
             <span className="legend-item">
               <span className="legend-color" style={{ backgroundColor: '#228B22' }}></span>
-              {orgData.uncharacterizedORFs} ORFs, {uncharPercent}% Uncharacterized
+              {data.uncharacterized_orfs.toLocaleString()} ORFs, {uncharPercent}% Uncharacterized
             </span>
             <span className="legend-item">
               <span className="legend-color" style={{ backgroundColor: '#DC143C' }}></span>
-              {orgData.dubiousORFs} ORFs, {dubiousPercent}% Dubious
+              {data.dubious_orfs.toLocaleString()} ORFs, {dubiousPercent}% Dubious
             </span>
           </div>
         </section>
@@ -228,54 +327,58 @@ function GenomeSnapshotPage() {
             <tbody>
               <tr>
                 <td>Total ORFs</td>
-                <td>{orgData.totalORFs.toLocaleString()}</td>
-                <td>{orgData.haploidORFs.toLocaleString()}</td>
+                <td>{data.total_orfs.toLocaleString()}</td>
+                <td>{data.haploid_orfs.toLocaleString()}</td>
               </tr>
               <tr>
                 <td>
-                  <Link to={`/feature-search/results?organism=${organism}&qualifier=Verified&featuretype=ORF`}>
+                  {/* Link temporarily disabled while feature-search counts are being fixed */}
+                  {/* <Link to={`/feature-search/results?organism=${organism}&qualifier=Verified&featuretype=ORF`}> */}
                     Verified ORFs
-                  </Link>
+                  {/* </Link> */}
                 </td>
-                <td>{orgData.verifiedORFs.toLocaleString()}</td>
-                <td>{Math.round(orgData.verifiedORFs / (organism.includes('albicans') ? 2 : 1)).toLocaleString()}</td>
+                <td>{data.verified_orfs.toLocaleString()}</td>
+                <td>{Math.round(data.verified_orfs / divisor).toLocaleString()}</td>
               </tr>
               <tr>
                 <td>
-                  <Link to={`/feature-search/results?organism=${organism}&qualifier=Uncharacterized&featuretype=ORF`}>
+                  {/* Link temporarily disabled while feature-search counts are being fixed */}
+                  {/* <Link to={`/feature-search/results?organism=${organism}&qualifier=Uncharacterized&featuretype=ORF`}> */}
                     Uncharacterized ORFs
-                  </Link>
+                  {/* </Link> */}
                 </td>
-                <td>{orgData.uncharacterizedORFs.toLocaleString()}</td>
-                <td>{Math.round(orgData.uncharacterizedORFs / (organism.includes('albicans') ? 2 : 1)).toLocaleString()}</td>
+                <td>{data.uncharacterized_orfs.toLocaleString()}</td>
+                <td>{Math.round(data.uncharacterized_orfs / divisor).toLocaleString()}</td>
               </tr>
               <tr>
                 <td>
-                  <Link to={`/feature-search/results?organism=${organism}&qualifier=Dubious&featuretype=ORF`}>
+                  {/* Link temporarily disabled while feature-search counts are being fixed */}
+                  {/* <Link to={`/feature-search/results?organism=${organism}&qualifier=Dubious&featuretype=ORF`}> */}
                     Dubious ORFs
-                  </Link>
+                  {/* </Link> */}
                 </td>
-                <td>{orgData.dubiousORFs.toLocaleString()}</td>
-                <td>{Math.round(orgData.dubiousORFs / (organism.includes('albicans') ? 2 : 1)).toLocaleString()}</td>
+                <td>{data.dubious_orfs.toLocaleString()}</td>
+                <td>{Math.round(data.dubious_orfs / divisor).toLocaleString()}</td>
               </tr>
               <tr>
                 <td>
-                  <Link to={`/feature-search/results?organism=${organism}&featuretype=tRNA`}>
+                  {/* Link temporarily disabled while feature-search counts are being fixed */}
+                  {/* <Link to={`/feature-search/results?organism=${organism}&featuretype=tRNA`}> */}
                     tRNA
-                  </Link>
+                  {/* </Link> */}
                 </td>
-                <td>{orgData.tRNA.toLocaleString()}</td>
-                <td>{Math.round(orgData.tRNA / (organism.includes('albicans') ? 2 : 1)).toLocaleString()}</td>
+                <td>{data.trna_count.toLocaleString()}</td>
+                <td>{Math.round(data.trna_count / divisor).toLocaleString()}</td>
               </tr>
               <tr className="total-row">
                 <th>Genome length</th>
-                <td colSpan="2">{orgData.genomeLength}</td>
+                <td colSpan="2">{data.genome_length}</td>
               </tr>
             </tbody>
           </table>
 
           <p style={{ marginTop: '15px' }}>
-            <strong>Chromosomes:</strong> {orgData.chromosomes.join(', ')}
+            <strong>Chromosomes:</strong> {data.chromosomes.join(', ')}
           </p>
         </section>
 
@@ -283,7 +386,7 @@ function GenomeSnapshotPage() {
         <section className="info-section" id="goAnnotations">
           <h3>Summary of Gene Ontology (GO) annotations</h3>
           <p>
-            This table displays the current total number of <em>{orgData.name} {orgData.strain}</em> gene
+            This table displays the current total number of <em>{data.organism_name} {data.strain}</em> gene
             products that have been annotated to one or more terms in each GO aspect (Process, Function,
             Component). These counts include GO annotations made for ORFs classified as either "Verified"
             or "Uncharacterized", transposable element genes, and all RNA gene products.
@@ -300,22 +403,22 @@ function GenomeSnapshotPage() {
             <tbody>
               <tr>
                 <td>Molecular Function</td>
-                <td>{orgData.goAnnotations.molecularFunction.toLocaleString()}</td>
+                <td>{data.go_annotations.molecular_function.toLocaleString()}</td>
                 <td><a href="#function" onClick={(e) => scrollToSection(e, 'function')}>Go to Molecular Function Graph</a></td>
               </tr>
               <tr>
                 <td>Cellular Component</td>
-                <td>{orgData.goAnnotations.cellularComponent.toLocaleString()}</td>
+                <td>{data.go_annotations.cellular_component.toLocaleString()}</td>
                 <td><a href="#component" onClick={(e) => scrollToSection(e, 'component')}>Go to Cellular Component Graph</a></td>
               </tr>
               <tr>
                 <td>Biological Process</td>
-                <td>{orgData.goAnnotations.biologicalProcess.toLocaleString()}</td>
+                <td>{data.go_annotations.biological_process.toLocaleString()}</td>
                 <td><a href="#process" onClick={(e) => scrollToSection(e, 'process')}>Go to Biological Process Graph</a></td>
               </tr>
               <tr className="total-row">
                 <th>All Ontologies</th>
-                <td>{orgData.goAnnotations.total.toLocaleString()}</td>
+                <td>{data.go_annotations.total.toLocaleString()}</td>
                 <td></td>
               </tr>
             </tbody>
@@ -348,8 +451,8 @@ function GenomeSnapshotPage() {
             <h4>Distribution of Gene Products among Molecular Function Categories</h4>
             <div className="chart-container">
               <img
-                src={`http://www.candidagenome.org/images/genome_snapshot/function_${organism}.png`}
-                alt={`${orgData.name} Molecular Function Distribution`}
+                src={`/images/genome_snapshot/function_${organism}.png`}
+                alt={`${data.organism_name} Molecular Function Distribution`}
                 className="snapshot-chart bar-chart"
               />
             </div>
@@ -359,8 +462,8 @@ function GenomeSnapshotPage() {
             <h4>Distribution of Gene Products among Cellular Component Categories</h4>
             <div className="chart-container">
               <img
-                src={`http://www.candidagenome.org/images/genome_snapshot/component_${organism}.png`}
-                alt={`${orgData.name} Cellular Component Distribution`}
+                src={`/images/genome_snapshot/component_${organism}.png`}
+                alt={`${data.organism_name} Cellular Component Distribution`}
                 className="snapshot-chart bar-chart"
               />
             </div>
@@ -370,8 +473,8 @@ function GenomeSnapshotPage() {
             <h4>Distribution of Gene Products among Biological Process Categories</h4>
             <div className="chart-container">
               <img
-                src={`http://www.candidagenome.org/images/genome_snapshot/process_${organism}.png`}
-                alt={`${orgData.name} Biological Process Distribution`}
+                src={`/images/genome_snapshot/process_${organism}.png`}
+                alt={`${data.organism_name} Biological Process Distribution`}
                 className="snapshot-chart bar-chart"
               />
             </div>
@@ -384,12 +487,12 @@ function GenomeSnapshotPage() {
         <section className="info-section">
           <h3>Other Genome Snapshots</h3>
           <ul>
-            {Object.entries(ORGANISMS)
-              .filter(([key]) => key !== organism)
-              .map(([key, data]) => (
-                <li key={key}>
-                  <Link to={`/genome-snapshot/${key}`}>
-                    <em>{data.name}</em> {data.strain}
+            {organisms
+              .filter((org) => org.organism_abbrev !== organism)
+              .map((org) => (
+                <li key={org.organism_abbrev}>
+                  <Link to={`/genome-snapshot/${org.organism_abbrev}`}>
+                    <em>{org.organism_name}</em>
                   </Link>
                 </li>
               ))}

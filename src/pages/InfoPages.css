@@ -660,6 +660,16 @@
   margin: 20px 0;
 }
 
+.orf-pie-chart {
+  display: inline-block;
+}
+
+.orf-pie-chart h4 {
+  color: #333;
+  font-size: 1.1em;
+  margin: 0 0 10px 0;
+}
+
 .snapshot-chart {
   max-width: 100%;
   height: auto;
