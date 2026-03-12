@@ -74,7 +74,7 @@ function TextSearchPage() {
           <p>
             Use a keyword to simultaneously search all of the categories of information
             in CGD that are included in the Quick Search, plus locus history notes,
-            paper abstracts, gene name descriptions, and more.
+            gene name descriptions, and more.
           </p>
         </div>
 
@@ -119,26 +119,19 @@ function TextSearchPage() {
                   className="option-select"
                 >
                   <option value="all">All Categories</option>
-                  <optgroup label="Categories">
-                    <option value="genes">Genes / Loci</option>
-                    <option value="descriptions">Locus Descriptions</option>
-                    <option value="go_terms">GO Terms</option>
-                    <option value="colleagues">Colleagues</option>
-                    <option value="authors">Authors</option>
-                    <option value="pathways">Pathways</option>
-                    <option value="paragraphs">Locus Summary Notes</option>
-                    <option value="name_descriptions">Gene Name Descriptions</option>
-                    <option value="phenotypes">Phenotypes</option>
-                    <option value="notes">History Notes</option>
-                    <option value="external_ids">External Database IDs</option>
-                    <option value="orthologs">Orthologs / Best Hits</option>
-                    <option value="literature_topics">Literature Topics</option>
-                  </optgroup>
-                  <optgroup label="Papers">
-                    <option value="abstracts">Papers (Title & Abstract)</option>
-                    <option value="title">Papers (Title Only)</option>
-                    <option value="abstract">Papers (Abstract Only)</option>
-                  </optgroup>
+                  <option value="genes">Genes / Loci</option>
+                  <option value="descriptions">Locus Descriptions</option>
+                  <option value="go_terms">GO Terms</option>
+                  <option value="colleagues">Colleagues</option>
+                  <option value="authors">Authors</option>
+                  <option value="pathways">Pathways</option>
+                  <option value="paragraphs">Locus Summary Notes</option>
+                  <option value="name_descriptions">Gene Name Descriptions</option>
+                  <option value="phenotypes">Phenotypes</option>
+                  <option value="notes">History Notes</option>
+                  <option value="external_ids">External Database IDs</option>
+                  <option value="orthologs">Orthologs / Best Hits</option>
+                  <option value="literature_topics">Literature Topics</option>
                 </select>
               </div>
 

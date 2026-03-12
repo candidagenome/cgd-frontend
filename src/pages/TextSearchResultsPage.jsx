@@ -125,7 +125,7 @@ const CATEGORY_LABELS = {
 // Order in which categories are displayed
 const CATEGORY_ORDER = [
   'genes', 'descriptions', 'go_terms', 'colleagues', 'authors',
-  'pathways', 'paragraphs', 'abstracts', 'name_descriptions',
+  'pathways', 'paragraphs', 'name_descriptions',
   'phenotypes', 'notes', 'external_ids', 'orthologs', 'literature_topics'
 ];
 

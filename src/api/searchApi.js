@@ -3,10 +3,10 @@ import api from './config';
 export const searchApi = {
   /**
    * Get list of organisms for search filtering
-   * @returns {Promise<Object>} List of organisms
+   * @returns {Promise<Object>} List of organisms with organism_abbrev and organism_name
    */
   getOrganisms: async () => {
-    const response = await api.get('/api/organisms');
+    const response = await api.get('/api/genome-snapshot/organisms');
     return response.data;
   },
 
