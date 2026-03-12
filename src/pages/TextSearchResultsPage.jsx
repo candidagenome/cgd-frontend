@@ -103,8 +103,8 @@ const CATEGORY_LABELS = {
   colleagues: 'Colleagues',
   authors: 'Authors',
   pathways: 'Pathways',
-  paragraphs: 'Locus Summary Paragraphs',
-  abstracts: 'Paper Abstracts',
+  paragraphs: 'Locus Summary Notes',
+  abstracts: 'Papers',
   name_descriptions: 'Gene Name Descriptions',
   phenotypes: 'Phenotypes',
   notes: 'History Notes',
@@ -125,8 +125,8 @@ const TextSearchResultsPage = () => {
   const navigate = useNavigate();
   const query = searchParams.get('query') || '';
   const type = searchParams.get('type') || null; // 'homolog' for ortholog-only search
-  const searchField = searchParams.get('search_field') || 'both';
-  const matchMode = searchParams.get('match_mode') || 'all';
+  const searchField = searchParams.get('search_field') || 'all';
+  const matchMode = searchParams.get('match_mode') || 'any'; // Default to OR
 
   // Initial search results (for category counts)
   const [initialResults, setInitialResults] = useState(null);
@@ -139,7 +139,8 @@ const TextSearchResultsPage = () => {
   const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  // Organism filtering state
+  // Organism filtering state - allOrganisms is the full list, availableOrganisms has results
+  const [allOrganisms, setAllOrganisms] = useState([]);
   const [availableOrganisms, setAvailableOrganisms] = useState([]);
   const [selectedOrganism, setSelectedOrganism] = useState(null);
   const [organismCounts, setOrganismCounts] = useState({});
@@ -159,6 +160,19 @@ const TextSearchResultsPage = () => {
   }, []);
 
   const hasPendingChanges = pendingQuickFilter !== appliedQuickFilter;
+
+  // Fetch all organisms on mount for facet display
+  useEffect(() => {
+    const fetchOrganisms = async () => {
+      try {
+        const data = await searchApi.getOrganisms();
+        setAllOrganisms(data.organisms || []);
+      } catch (err) {
+        console.error('Failed to fetch organisms:', err);
+      }
+    };
+    fetchOrganisms();
+  }, []);
 
   // AG Grid column definitions - single combined column
   const columnDefs = useMemo(() => [
@@ -345,10 +359,15 @@ const TextSearchResultsPage = () => {
       : results;
     const displayCount = selectedOrganism ? filteredResults.length : totalCount;
 
+    // Build organism list: use allOrganisms if available, showing counts (including 0)
+    const organismsToShow = allOrganisms.length > 0
+      ? allOrganisms.map(org => org.organism_name)
+      : availableOrganisms;
+
     return (
       <div className="text-search-facets">
-        {/* Organism filter facet */}
-        {availableOrganisms.length > 0 && (
+        {/* Organism filter facet - show all organisms with counts */}
+        {organismsToShow.length > 0 && (
           <div className="organism-facet">
             <h3>Organism</h3>
             <ul className="facet-list">
@@ -359,16 +378,20 @@ const TextSearchResultsPage = () => {
                 <span className="facet-label">All Organisms</span>
                 <span className="facet-count">{totalCount}</span>
               </li>
-              {availableOrganisms.map(organism => (
-                <li
-                  key={organism}
-                  className={`facet-item ${selectedOrganism === organism ? 'selected' : ''}`}
-                  onClick={() => setSelectedOrganism(organism)}
-                >
-                  <span className="facet-label">{organism}</span>
-                  <span className="facet-count">{organismCounts[organism] || 0}</span>
-                </li>
-              ))}
+              {organismsToShow.map(organism => {
+                const count = organismCounts[organism] || 0;
+                const hasResults = count > 0;
+                return (
+                  <li
+                    key={organism}
+                    className={`facet-item ${selectedOrganism === organism ? 'selected' : ''} ${!hasResults ? 'zero-count' : ''}`}
+                    onClick={() => hasResults && setSelectedOrganism(organism)}
+                  >
+                    <span className="facet-label">{organism}</span>
+                    <span className="facet-count">{count}</span>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         )}
@@ -497,16 +520,16 @@ const TextSearchResultsPage = () => {
           <p className="search-query-info">
             Results for: <strong>"{query}"</strong>
             {initialResults && ` - ${totalResults} total results found`}
-            {(searchField !== 'both' || matchMode !== 'all') && (
+            {(searchField !== 'all' && searchField !== 'both') || matchMode === 'all' ? (
               <span className="search-options-summary">
                 {' '}(
                 {searchField === 'title' && 'Paper titles only'}
                 {searchField === 'abstract' && 'Paper abstracts only'}
-                {searchField !== 'both' && matchMode !== 'all' && ', '}
-                {matchMode === 'any' && 'Match ANY term'}
+                {(searchField === 'title' || searchField === 'abstract') && matchMode === 'all' && ', '}
+                {matchMode === 'all' && 'Match ALL terms'}
                 )
               </span>
-            )}
+            ) : null}
           </p>
         )}
 

@@ -178,6 +178,21 @@
   color: #888;
 }
 
+/* Zero count items - show but muted */
+.text-search-facets .facet-item.zero-count {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.text-search-facets .facet-item.zero-count:hover {
+  background-color: transparent;
+}
+
+.text-search-facets .facet-item.zero-count .facet-count {
+  background-color: #e8e8e8;
+  color: #999;
+}
+
 /* Category labels */
 .text-search-facets .facet-label {
   font-size: 0.9em;

@@ -1,5 +1,5 @@
 .text-search-page {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -70,25 +70,45 @@
   border-radius: 4px;
 }
 
-.option-group {
-  margin-bottom: 12px;
+.option-row {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  flex-wrap: wrap;
 }
 
-.option-group:last-child {
-  margin-bottom: 0;
+.option-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .option-label {
-  display: block;
   font-weight: 500;
   color: #333;
-  margin-bottom: 8px;
-  font-size: 14px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.option-select {
+  padding: 6px 10px;
+  font-size: 13px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  min-width: 160px;
+  cursor: pointer;
+}
+
+.option-select:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 3px rgba(0, 102, 204, 0.3);
 }
 
 .option-buttons {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
