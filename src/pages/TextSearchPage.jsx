@@ -3,6 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { searchApi } from '../api/searchApi';
 import './TextSearchPage.css';
 
+// Default organisms to show if API doesn't return them
+const DEFAULT_ORGANISMS = [
+  { organism_abbrev: 'C_albicans_SC5314', organism_name: 'Candida albicans SC5314' },
+  { organism_abbrev: 'C_glabrata_CBS138', organism_name: 'Candida glabrata CBS138' },
+  { organism_abbrev: 'C_parapsilosis_CDC317', organism_name: 'Candida parapsilosis CDC317' },
+  { organism_abbrev: 'C_tropicalis_MYA-3404', organism_name: 'Candida tropicalis MYA-3404' },
+  { organism_abbrev: 'C_auris_B8441', organism_name: 'Candida auris B8441' },
+];
+
 function TextSearchPage() {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
@@ -12,14 +21,23 @@ function TextSearchPage() {
   const [organisms, setOrganisms] = useState([]);
   const [error, setError] = useState('');
 
-  // Fetch organisms on mount
+  // Fetch organisms on mount, merge with defaults
   useEffect(() => {
     const fetchOrganisms = async () => {
       try {
         const data = await searchApi.getOrganisms();
-        setOrganisms(data.organisms || []);
+        const apiOrganisms = data.organisms || [];
+        // Merge API organisms with defaults, avoiding duplicates
+        const existingAbbrevs = new Set(apiOrganisms.map(o => o.organism_abbrev));
+        const mergedOrganisms = [
+          ...apiOrganisms,
+          ...DEFAULT_ORGANISMS.filter(o => !existingAbbrevs.has(o.organism_abbrev))
+        ];
+        setOrganisms(mergedOrganisms);
       } catch (err) {
         console.error('Failed to fetch organisms:', err);
+        // Use defaults on error
+        setOrganisms(DEFAULT_ORGANISMS);
       }
     };
     fetchOrganisms();
@@ -100,9 +118,27 @@ function TextSearchPage() {
                   onChange={(e) => setSearchField(e.target.value)}
                   className="option-select"
                 >
-                  <option value="all">All Fields</option>
-                  <option value="title">Paper Titles Only</option>
-                  <option value="abstract">Paper Abstracts Only</option>
+                  <option value="all">All Categories</option>
+                  <optgroup label="Categories">
+                    <option value="genes">Genes / Loci</option>
+                    <option value="descriptions">Locus Descriptions</option>
+                    <option value="go_terms">GO Terms</option>
+                    <option value="colleagues">Colleagues</option>
+                    <option value="authors">Authors</option>
+                    <option value="pathways">Pathways</option>
+                    <option value="paragraphs">Locus Summary Notes</option>
+                    <option value="name_descriptions">Gene Name Descriptions</option>
+                    <option value="phenotypes">Phenotypes</option>
+                    <option value="notes">History Notes</option>
+                    <option value="external_ids">External Database IDs</option>
+                    <option value="orthologs">Orthologs / Best Hits</option>
+                    <option value="literature_topics">Literature Topics</option>
+                  </optgroup>
+                  <optgroup label="Papers">
+                    <option value="abstracts">Papers (Title & Abstract)</option>
+                    <option value="title">Papers (Title Only)</option>
+                    <option value="abstract">Papers (Abstract Only)</option>
+                  </optgroup>
                 </select>
               </div>
 

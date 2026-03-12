@@ -12,6 +12,15 @@ if (!ModuleRegistry.__cgdRegistered) {
   ModuleRegistry.__cgdRegistered = true;
 }
 
+// Default organisms to show in facet
+const DEFAULT_ORGANISMS = [
+  { organism_abbrev: 'C_albicans_SC5314', organism_name: 'Candida albicans SC5314' },
+  { organism_abbrev: 'C_glabrata_CBS138', organism_name: 'Candida glabrata CBS138' },
+  { organism_abbrev: 'C_parapsilosis_CDC317', organism_name: 'Candida parapsilosis CDC317' },
+  { organism_abbrev: 'C_tropicalis_MYA-3404', organism_name: 'Candida tropicalis MYA-3404' },
+  { organism_abbrev: 'C_auris_B8441', organism_name: 'Candida auris B8441' },
+];
+
 // Combined cell renderer for identifier + description
 const CombinedResultRenderer = (props) => {
   const data = props.data;
@@ -120,13 +129,22 @@ const CATEGORY_ORDER = [
   'phenotypes', 'notes', 'external_ids', 'orthologs', 'literature_topics'
 ];
 
+// Paper search field options (vs category filters)
+const PAPER_SEARCH_FIELDS = ['all', 'both', 'title', 'abstract', 'abstracts'];
+
 const TextSearchResultsPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const query = searchParams.get('query') || '';
   const type = searchParams.get('type') || null; // 'homolog' for ortholog-only search
-  const searchField = searchParams.get('search_field') || 'all';
+  const searchFieldParam = searchParams.get('search_field') || 'all';
   const matchMode = searchParams.get('match_mode') || 'any'; // Default to OR
+
+  // Determine if searchField is a category filter or paper search option
+  const isCategory = !PAPER_SEARCH_FIELDS.includes(searchFieldParam);
+  const categoryFilter = isCategory ? searchFieldParam : null;
+  // For paper search field, map 'abstracts' to 'both' (title+abstract)
+  const searchField = isCategory ? 'both' : (searchFieldParam === 'abstracts' ? 'both' : searchFieldParam);
 
   // Initial search results (for category counts)
   const [initialResults, setInitialResults] = useState(null);
@@ -161,14 +179,23 @@ const TextSearchResultsPage = () => {
 
   const hasPendingChanges = pendingQuickFilter !== appliedQuickFilter;
 
-  // Fetch all organisms on mount for facet display
+  // Fetch all organisms on mount for facet display, merge with defaults
   useEffect(() => {
     const fetchOrganisms = async () => {
       try {
         const data = await searchApi.getOrganisms();
-        setAllOrganisms(data.organisms || []);
+        const apiOrganisms = data.organisms || [];
+        // Merge API organisms with defaults, avoiding duplicates
+        const existingAbbrevs = new Set(apiOrganisms.map(o => o.organism_abbrev));
+        const mergedOrganisms = [
+          ...apiOrganisms,
+          ...DEFAULT_ORGANISMS.filter(o => !existingAbbrevs.has(o.organism_abbrev))
+        ];
+        setAllOrganisms(mergedOrganisms);
       } catch (err) {
         console.error('Failed to fetch organisms:', err);
+        // Use defaults on error
+        setAllOrganisms(DEFAULT_ORGANISMS);
       }
     };
     fetchOrganisms();
@@ -262,10 +289,18 @@ const TextSearchResultsPage = () => {
         const data = await searchApi.textSearch(query, 10, type, searchField, matchMode);
         setInitialResults(data);
 
-        // Determine which categories to show (only orthologs if type=homolog)
-        const categoriesToShow = type === 'homolog' ? ['orthologs'] : CATEGORY_ORDER;
+        // Determine which categories to show
+        let categoriesToShow;
+        if (type === 'homolog') {
+          categoriesToShow = ['orthologs'];
+        } else if (categoryFilter) {
+          // If a specific category was selected from search page, only show that
+          categoriesToShow = [categoryFilter];
+        } else {
+          categoriesToShow = CATEGORY_ORDER;
+        }
 
-        // Auto-select first category with results
+        // Auto-select first category with results (or the filtered category)
         const firstCategoryWithResults = categoriesToShow.find(cat => {
           const categoryData = data.categories.find(c => c.category === cat);
           return categoryData && categoryData.count > 0;
@@ -275,6 +310,11 @@ const TextSearchResultsPage = () => {
           setSelectedCategory(firstCategoryWithResults);
           // Fetch all results for this category
           await fetchCategoryResults(firstCategoryWithResults);
+        } else if (categoryFilter) {
+          // Even if no results, select the filtered category
+          setSelectedCategory(categoryFilter);
+          setCategoryResults([]);
+          setTotalCount(0);
         } else {
           setSelectedCategory(null);
           setCategoryResults(null);
@@ -289,7 +329,7 @@ const TextSearchResultsPage = () => {
     };
 
     fetchResults();
-  }, [query, type, searchField, matchMode, navigate, fetchCategoryResults]);
+  }, [query, type, searchField, matchMode, categoryFilter, navigate, fetchCategoryResults]);
 
   // Extract organisms and calculate counts when category results change (fallback when API doesn't provide counts)
   useEffect(() => {
@@ -359,15 +399,10 @@ const TextSearchResultsPage = () => {
       : results;
     const displayCount = selectedOrganism ? filteredResults.length : totalCount;
 
-    // Build organism list: use allOrganisms if available, showing counts (including 0)
-    const organismsToShow = allOrganisms.length > 0
-      ? allOrganisms.map(org => org.organism_name)
-      : availableOrganisms;
-
     return (
       <div className="text-search-facets">
         {/* Organism filter facet - show all organisms with counts */}
-        {organismsToShow.length > 0 && (
+        {(availableOrganisms.length > 0 || allOrganisms.length > 0) && (
           <div className="organism-facet">
             <h3>Organism</h3>
             <ul className="facet-list">
@@ -378,20 +413,32 @@ const TextSearchResultsPage = () => {
                 <span className="facet-label">All Organisms</span>
                 <span className="facet-count">{totalCount}</span>
               </li>
-              {organismsToShow.map(organism => {
+              {/* First show organisms from counts (exact key match) */}
+              {availableOrganisms.map(organism => {
                 const count = organismCounts[organism] || 0;
-                const hasResults = count > 0;
                 return (
                   <li
                     key={organism}
-                    className={`facet-item ${selectedOrganism === organism ? 'selected' : ''} ${!hasResults ? 'zero-count' : ''}`}
-                    onClick={() => hasResults && setSelectedOrganism(organism)}
+                    className={`facet-item ${selectedOrganism === organism ? 'selected' : ''}`}
+                    onClick={() => setSelectedOrganism(organism)}
                   >
                     <span className="facet-label">{organism}</span>
                     <span className="facet-count">{count}</span>
                   </li>
                 );
               })}
+              {/* Then show remaining organisms from allOrganisms with 0 count */}
+              {allOrganisms
+                .filter(org => !availableOrganisms.includes(org.organism_name))
+                .map(org => (
+                  <li
+                    key={org.organism_abbrev}
+                    className="facet-item zero-count"
+                  >
+                    <span className="facet-label">{org.organism_name}</span>
+                    <span className="facet-count">0</span>
+                  </li>
+                ))}
             </ul>
           </div>
         )}
