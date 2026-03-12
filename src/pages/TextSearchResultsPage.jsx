@@ -114,6 +114,7 @@ const CATEGORY_LABELS = {
   pathways: 'Pathways',
   paragraphs: 'Locus Summary Notes',
   abstracts: 'Papers',
+  paper_titles: 'Paper Titles',
   name_descriptions: 'Gene Name Descriptions',
   phenotypes: 'Phenotypes',
   notes: 'History Notes',
@@ -125,7 +126,7 @@ const CATEGORY_LABELS = {
 // Order in which categories are displayed
 const CATEGORY_ORDER = [
   'genes', 'descriptions', 'go_terms', 'colleagues', 'authors',
-  'pathways', 'paragraphs', 'name_descriptions',
+  'pathways', 'paragraphs', 'paper_titles', 'name_descriptions',
   'phenotypes', 'notes', 'external_ids', 'orthologs', 'literature_topics'
 ];
 

@@ -126,6 +126,7 @@ function TextSearchPage() {
                   <option value="authors">Authors</option>
                   <option value="pathways">Pathways</option>
                   <option value="paragraphs">Locus Summary Notes</option>
+                  <option value="paper_titles">Paper Titles</option>
                   <option value="name_descriptions">Gene Name Descriptions</option>
                   <option value="phenotypes">Phenotypes</option>
                   <option value="notes">History Notes</option>
