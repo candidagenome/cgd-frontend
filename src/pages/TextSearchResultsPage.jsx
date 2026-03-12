@@ -3,7 +3,7 @@ import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { searchApi } from '../api/searchApi';
-import { CitationLinksBelow } from '../utils/formatCitation.jsx';
+import { CitationLinksBelow, formatCitationString } from '../utils/formatCitation.jsx';
 import './TextSearchResultsPage.css';
 
 // Register AG Grid modules once
@@ -44,6 +44,13 @@ const CombinedResultRenderer = (props) => {
   // - links = citation links from API
   const isAbstracts = data.category === 'abstracts';
 
+  // For paper_titles category (Paper Titles):
+  // - name = paper title (with highlighting)
+  // - citation = full citation "Author (Year) Title. Journal..."
+  // - links = citation links from API
+  // - link = link to reference page
+  const isPaperTitles = data.category === 'paper_titles';
+
   const renderNameLink = () => {
     if (!link) {
       return <span className="result-name" dangerouslySetInnerHTML={{ __html: displayName }} />;
@@ -82,6 +89,33 @@ const CombinedResultRenderer = (props) => {
             className="result-abstract"
             dangerouslySetInnerHTML={{ __html: displayDesc }}
           />
+        )}
+      </div>
+    );
+  }
+
+  if (isPaperTitles) {
+    // For paper_titles: show citation with author/year linked to CGD Paper, then links below
+    // citation field contains "Author (Year) Title. Journal..." format
+    // link field contains the reference page URL (e.g., /reference/CAL0000001)
+    const citation = data.citation || data.name;
+    const referenceLink = data.link;
+
+    return (
+      <div className="combined-result-cell paper-titles-cell">
+        <div className="result-header">
+          {/* Citation with author/year linked to CGD Paper */}
+          <span className="result-citation">
+            {referenceLink ? (
+              formatCitationString(citation, data.journal, referenceLink)
+            ) : (
+              <span dangerouslySetInnerHTML={{ __html: citation }} />
+            )}
+          </span>
+        </div>
+        {/* Links right below the citation */}
+        {data.links && data.links.length > 0 && (
+          <CitationLinksBelow links={data.links} className="search-result-links" target="search_result" />
         )}
       </div>
     );
@@ -412,7 +446,11 @@ const TextSearchResultsPage = () => {
                 onClick={() => setSelectedOrganism(null)}
               >
                 <span className="facet-label">All Organisms</span>
-                <span className="facet-count">{totalCount}</span>
+                <span className="facet-count">
+                  {hasApiOrganismCounts
+                    ? Object.values(organismCounts).reduce((sum, count) => sum + count, 0)
+                    : totalCount}
+                </span>
               </li>
               {/* First show organisms from counts (exact key match) */}
               {availableOrganisms.map(organism => {

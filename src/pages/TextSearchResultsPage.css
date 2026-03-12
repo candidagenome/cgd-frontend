@@ -400,6 +400,38 @@
   font-style: italic;
 }
 
+/* Styling for paper_titles category (Paper Titles) */
+.combined-result-cell.paper-titles-cell .result-citation {
+  font-size: 1em;
+  color: #333;
+  line-height: 1.4;
+}
+
+.combined-result-cell.paper-titles-cell .result-citation a {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.combined-result-cell.paper-titles-cell .result-citation a:hover {
+  text-decoration: underline;
+}
+
+.combined-result-cell.paper-titles-cell .search-result-links {
+  margin-top: 4px;
+  font-size: 0.9em;
+}
+
+.combined-result-cell.paper-titles-cell .search-result-links .citation-link {
+  color: #1976d2;
+  text-decoration: none;
+  margin-right: 12px;
+}
+
+.combined-result-cell.paper-titles-cell .search-result-links .citation-link:hover {
+  text-decoration: underline;
+}
+
 /* Result items */
 .text-search-result-item {
   padding: 15px 18px;
