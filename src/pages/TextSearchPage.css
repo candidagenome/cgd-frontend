@@ -60,3 +60,62 @@
   color: #c00;
   margin-top: 10px;
 }
+
+/* Search options styling */
+.search-options {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+.option-group {
+  margin-bottom: 12px;
+}
+
+.option-group:last-child {
+  margin-bottom: 0;
+}
+
+.option-label {
+  display: block;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.option-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.option-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #444;
+  transition: all 0.15s ease;
+}
+
+.option-btn:hover {
+  border-color: #0066cc;
+  background-color: #f0f7ff;
+}
+
+.option-btn.selected {
+  background-color: #0066cc;
+  border-color: #0066cc;
+  color: white;
+}
+
+.option-btn input[type="radio"] {
+  display: none;
+}

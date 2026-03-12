@@ -57,10 +57,12 @@ export const searchApi = {
    * @param {string} query - Search query string
    * @param {number} limit - Max results per category (default 10)
    * @param {string} type - Optional filter: 'homolog' for orthologs only
+   * @param {string} searchField - For abstracts: 'title', 'abstract', or 'both' (default)
+   * @param {string} matchMode - For multi-term: 'all' (AND) or 'any' (OR)
    * @returns {Promise<Object>} Text search response with results grouped by category
    */
-  textSearch: async (query, limit = 10, type = null) => {
-    const params = { query, limit };
+  textSearch: async (query, limit = 10, type = null, searchField = 'both', matchMode = 'all') => {
+    const params = { query, limit, search_field: searchField, match_mode: matchMode };
     if (type) params.type = type;
     const response = await api.get('/api/search/text', { params });
     return response.data;
@@ -70,11 +72,13 @@ export const searchApi = {
    * Text search within a specific category (returns all results)
    * @param {string} query - Search query string
    * @param {string} category - Category to search
+   * @param {string} searchField - For abstracts: 'title', 'abstract', or 'both' (default)
+   * @param {string} matchMode - For multi-term: 'all' (AND) or 'any' (OR)
    * @returns {Promise<Object>} Text search response with all results and total_count
    */
-  textSearchCategory: async (query, category) => {
+  textSearchCategory: async (query, category, searchField = 'both', matchMode = 'all') => {
     const response = await api.get('/api/search/text/category', {
-      params: { query, category },
+      params: { query, category, search_field: searchField, match_mode: matchMode },
     });
     return response.data;
   },

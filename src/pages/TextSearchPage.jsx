@@ -5,6 +5,8 @@ import './TextSearchPage.css';
 function TextSearchPage() {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
+  const [searchField, setSearchField] = useState('both');
+  const [matchMode, setMatchMode] = useState('all');
   const [error, setError] = useState('');
 
   const handleSubmit = (e) => {
@@ -16,8 +18,13 @@ function TextSearchPage() {
       return;
     }
 
-    // Navigate to results page with search term
-    navigate(`/search/text/results?query=${encodeURIComponent(query.trim())}`);
+    // Build URL with search options
+    const params = new URLSearchParams({
+      query: query.trim(),
+      search_field: searchField,
+      match_mode: matchMode,
+    });
+    navigate(`/search/text/results?${params.toString()}`);
   };
 
   return (
@@ -45,6 +52,70 @@ function TextSearchPage() {
               size="40"
             />
             <button type="submit" className="search-btn">Submit</button>
+          </div>
+
+          <div className="search-options">
+            <div className="option-group">
+              <label className="option-label">Paper search in:</label>
+              <div className="option-buttons">
+                <label className={`option-btn ${searchField === 'both' ? 'selected' : ''}`}>
+                  <input
+                    type="radio"
+                    name="searchField"
+                    value="both"
+                    checked={searchField === 'both'}
+                    onChange={(e) => setSearchField(e.target.value)}
+                  />
+                  Title & Abstract
+                </label>
+                <label className={`option-btn ${searchField === 'title' ? 'selected' : ''}`}>
+                  <input
+                    type="radio"
+                    name="searchField"
+                    value="title"
+                    checked={searchField === 'title'}
+                    onChange={(e) => setSearchField(e.target.value)}
+                  />
+                  Title Only
+                </label>
+                <label className={`option-btn ${searchField === 'abstract' ? 'selected' : ''}`}>
+                  <input
+                    type="radio"
+                    name="searchField"
+                    value="abstract"
+                    checked={searchField === 'abstract'}
+                    onChange={(e) => setSearchField(e.target.value)}
+                  />
+                  Abstract Only
+                </label>
+              </div>
+            </div>
+
+            <div className="option-group">
+              <label className="option-label">Multiple terms:</label>
+              <div className="option-buttons">
+                <label className={`option-btn ${matchMode === 'all' ? 'selected' : ''}`}>
+                  <input
+                    type="radio"
+                    name="matchMode"
+                    value="all"
+                    checked={matchMode === 'all'}
+                    onChange={(e) => setMatchMode(e.target.value)}
+                  />
+                  Match ALL (AND)
+                </label>
+                <label className={`option-btn ${matchMode === 'any' ? 'selected' : ''}`}>
+                  <input
+                    type="radio"
+                    name="matchMode"
+                    value="any"
+                    checked={matchMode === 'any'}
+                    onChange={(e) => setMatchMode(e.target.value)}
+                  />
+                  Match ANY (OR)
+                </label>
+              </div>
+            </div>
           </div>
 
           {error && (

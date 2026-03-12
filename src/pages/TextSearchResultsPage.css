@@ -36,6 +36,12 @@
   color: #333;
 }
 
+.search-options-summary {
+  color: #666;
+  font-size: 0.9em;
+  font-style: italic;
+}
+
 /* Loading and error states */
 .text-search-loading,
 .text-search-error,

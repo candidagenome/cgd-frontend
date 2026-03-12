@@ -125,6 +125,8 @@ const TextSearchResultsPage = () => {
   const navigate = useNavigate();
   const query = searchParams.get('query') || '';
   const type = searchParams.get('type') || null; // 'homolog' for ortholog-only search
+  const searchField = searchParams.get('search_field') || 'both';
+  const matchMode = searchParams.get('match_mode') || 'all';
 
   // Initial search results (for category counts)
   const [initialResults, setInitialResults] = useState(null);
@@ -200,7 +202,7 @@ const TextSearchResultsPage = () => {
 
     setCategoryLoading(true);
     try {
-      const data = await searchApi.textSearchCategory(query, category);
+      const data = await searchApi.textSearchCategory(query, category, searchField, matchMode);
       setCategoryResults(data.results);
       setTotalCount(data.total_count || data.results?.length || 0);
       // Use organism counts from API if provided
@@ -225,7 +227,7 @@ const TextSearchResultsPage = () => {
     } finally {
       setCategoryLoading(false);
     }
-  }, [query]);
+  }, [query, searchField, matchMode]);
 
   // Initial search effect
   useEffect(() => {
@@ -242,8 +244,8 @@ const TextSearchResultsPage = () => {
       setError(null);
 
       try {
-        // Perform text search (with type filter if specified)
-        const data = await searchApi.textSearch(query, 10, type);
+        // Perform text search (with type filter and search options)
+        const data = await searchApi.textSearch(query, 10, type, searchField, matchMode);
         setInitialResults(data);
 
         // Determine which categories to show (only orthologs if type=homolog)
@@ -273,7 +275,7 @@ const TextSearchResultsPage = () => {
     };
 
     fetchResults();
-  }, [query, type, navigate, fetchCategoryResults]);
+  }, [query, type, searchField, matchMode, navigate, fetchCategoryResults]);
 
   // Extract organisms and calculate counts when category results change (fallback when API doesn't provide counts)
   useEffect(() => {
@@ -495,6 +497,16 @@ const TextSearchResultsPage = () => {
           <p className="search-query-info">
             Results for: <strong>"{query}"</strong>
             {initialResults && ` - ${totalResults} total results found`}
+            {(searchField !== 'both' || matchMode !== 'all') && (
+              <span className="search-options-summary">
+                {' '}(
+                {searchField === 'title' && 'Paper titles only'}
+                {searchField === 'abstract' && 'Paper abstracts only'}
+                {searchField !== 'both' && matchMode !== 'all' && ', '}
+                {matchMode === 'any' && 'Match ANY term'}
+                )
+              </span>
+            )}
           </p>
         )}
 
