@@ -401,6 +401,40 @@
 }
 
 /* Styling for paper_titles category (Paper Titles) */
+.combined-result-cell.paper-titles-cell .result-title {
+  font-size: 1.05em;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+
+.combined-result-cell.paper-titles-cell .result-meta {
+  font-size: 0.9em;
+  color: #555;
+  line-height: 1.4;
+}
+
+.combined-result-cell.paper-titles-cell .author-year-link {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.combined-result-cell.paper-titles-cell .author-year-link:hover {
+  text-decoration: underline;
+}
+
+.combined-result-cell.paper-titles-cell .author-year {
+  font-weight: 500;
+  color: #333;
+}
+
+.combined-result-cell.paper-titles-cell .journal-info {
+  font-style: italic;
+  color: #666;
+}
+
 .combined-result-cell.paper-titles-cell .result-citation {
   font-size: 1em;
   color: #333;

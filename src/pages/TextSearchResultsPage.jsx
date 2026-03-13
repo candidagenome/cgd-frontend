@@ -95,25 +95,45 @@ const CombinedResultRenderer = (props) => {
   }
 
   if (isPaperTitles) {
-    // For paper_titles: show citation with author/year linked to CGD Paper, then links below
-    // citation field contains "Author (Year) Title. Journal..." format
-    // link field contains the reference page URL (e.g., /reference/CAL0000001)
-    const citation = data.citation || data.name;
+    // For paper_titles: show highlighted title prominently, then author/year/journal below
+    // highlighted_name = title with <mark> tags for search highlighting
+    // citation = "Author (Year) Title. Journal..." format
+    // link = reference page URL (e.g., /reference/CAL0000001)
+    const highlightedTitle = data.highlighted_name || data.name;
+    const citation = data.citation || '';
     const referenceLink = data.link;
+
+    // Extract author/year and journal from citation
+    // Pattern: "Author(s) (Year) Title. Journal Volume(Issue):Pages"
+    const authorYearMatch = citation.match(/^([^(]+\([0-9]{4}\))/);
+    const authorYear = authorYearMatch ? authorYearMatch[1].trim() : '';
+
+    // Extract journal info (everything after title, which ends with a period before journal)
+    // The title is in highlighted_name, so look for journal after a period followed by space and capital
+    const journalMatch = citation.match(/\.\s+([A-Z][^.]+)$/);
+    const journalInfo = journalMatch ? journalMatch[1].trim() : '';
 
     return (
       <div className="combined-result-cell paper-titles-cell">
-        <div className="result-header">
-          {/* Citation with author/year linked to CGD Paper */}
-          <span className="result-citation">
+        {/* Highlighted title prominently displayed */}
+        <div
+          className="result-title"
+          dangerouslySetInnerHTML={{ __html: highlightedTitle }}
+        />
+        {/* Author/year linked to CGD Paper + journal info */}
+        {authorYear && (
+          <div className="result-meta">
             {referenceLink ? (
-              formatCitationString(citation, data.journal, referenceLink)
+              <a href={referenceLink} target="search_result" className="author-year-link">
+                {authorYear}
+              </a>
             ) : (
-              <span dangerouslySetInnerHTML={{ __html: citation }} />
+              <span className="author-year">{authorYear}</span>
             )}
-          </span>
-        </div>
-        {/* Links right below the citation */}
+            {journalInfo && <span className="journal-info"> {journalInfo}</span>}
+          </div>
+        )}
+        {/* Links right below */}
         {data.links && data.links.length > 0 && (
           <CitationLinksBelow links={data.links} className="search-result-links" target="search_result" />
         )}
