@@ -187,6 +187,14 @@ const CATEGORY_ORDER = [
 // Paper search field options (vs category filters)
 const PAPER_SEARCH_FIELDS = ['all', 'both', 'title', 'abstract', 'abstracts'];
 
+// Helper to extract year from a paper result
+const extractYearFromResult = (r) => {
+  if (r.year) return String(r.year);
+  const textToSearch = r.citation || r.name || '';
+  const yearMatch = textToSearch.match(/\((\d{4})\)/);
+  return yearMatch ? yearMatch[1] : null;
+};
+
 const TextSearchResultsPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -428,10 +436,8 @@ const TextSearchResultsPage = () => {
     if (selectedCategory === 'paper_titles' && categoryResults && categoryResults.length > 0) {
       const counts = {};
       categoryResults.forEach(r => {
-        // Extract year from citation "Author (Year) Title..."
-        const yearMatch = r.citation?.match(/\((\d{4})\)/);
-        if (yearMatch) {
-          const year = yearMatch[1];
+        const year = extractYearFromResult(r);
+        if (year) {
           counts[year] = (counts[year] || 0) + 1;
         }
       });
@@ -477,10 +483,7 @@ const TextSearchResultsPage = () => {
     const isPaperTitles = selectedCategory === 'paper_titles';
     let filteredResults = results;
     if (isPaperTitles && selectedYear) {
-      filteredResults = results.filter(r => {
-        const yearMatch = r.citation?.match(/\((\d{4})\)/);
-        return yearMatch && yearMatch[1] === selectedYear;
-      });
+      filteredResults = results.filter(r => extractYearFromResult(r) === selectedYear);
     } else if (selectedOrganism) {
       filteredResults = results.filter(r => r.organism === selectedOrganism);
     }
