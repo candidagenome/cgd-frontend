@@ -219,6 +219,10 @@ const TextSearchResultsPage = () => {
   const [organismCounts, setOrganismCounts] = useState({});
   const [hasApiOrganismCounts, setHasApiOrganismCounts] = useState(false);
 
+  // Year filtering state (for paper_titles category)
+  const [selectedYear, setSelectedYear] = useState(null);
+  const [yearCounts, setYearCounts] = useState({});
+
   // Quick filter state: pending (what user types) vs applied (what filters)
   const [pendingQuickFilter, setPendingQuickFilter] = useState('');
   const [appliedQuickFilter, setAppliedQuickFilter] = useState('');
@@ -419,6 +423,25 @@ const TextSearchResultsPage = () => {
     }
   }, [categoryResults, hasApiOrganismCounts]);
 
+  // Calculate year counts for paper_titles category
+  useEffect(() => {
+    if (selectedCategory === 'paper_titles' && categoryResults && categoryResults.length > 0) {
+      const counts = {};
+      categoryResults.forEach(r => {
+        // Extract year from citation "Author (Year) Title..."
+        const yearMatch = r.citation?.match(/\((\d{4})\)/);
+        if (yearMatch) {
+          const year = yearMatch[1];
+          counts[year] = (counts[year] || 0) + 1;
+        }
+      });
+      setYearCounts(counts);
+    } else {
+      setYearCounts({});
+      setSelectedYear(null);
+    }
+  }, [categoryResults, selectedCategory]);
+
   // Handle category change
   const handleCategoryChange = async (category) => {
     if (category === selectedCategory) return;
@@ -426,11 +449,13 @@ const TextSearchResultsPage = () => {
     setSelectedCategory(category);
     setCategoryResults(null);
     setTotalCount(0);
-    // Reset organism selection when changing category
+    // Reset organism and year selection when changing category
     setAvailableOrganisms([]);
     setOrganismCounts({});
     setSelectedOrganism(null);
     setHasApiOrganismCounts(false);
+    setYearCounts({});
+    setSelectedYear(null);
     await fetchCategoryResults(category);
   };
 
@@ -447,17 +472,56 @@ const TextSearchResultsPage = () => {
     // Filter categories if type=homolog
     const categoriesToShow = type === 'homolog' ? ['orthologs'] : CATEGORY_ORDER;
 
-    // Filter results by selected organism for display count
+    // Filter results by selected organism or year for display count
     const results = categoryResults || [];
-    const filteredResults = selectedOrganism
-      ? results.filter(r => r.organism === selectedOrganism)
-      : results;
-    const displayCount = selectedOrganism ? filteredResults.length : totalCount;
+    const isPaperTitles = selectedCategory === 'paper_titles';
+    let filteredResults = results;
+    if (isPaperTitles && selectedYear) {
+      filteredResults = results.filter(r => {
+        const yearMatch = r.citation?.match(/\((\d{4})\)/);
+        return yearMatch && yearMatch[1] === selectedYear;
+      });
+    } else if (selectedOrganism) {
+      filteredResults = results.filter(r => r.organism === selectedOrganism);
+    }
+    const displayCount = (selectedOrganism || selectedYear) ? filteredResults.length : totalCount;
+
+    // Get sorted years (descending - most recent first)
+    const sortedYears = Object.keys(yearCounts).sort((a, b) => parseInt(b) - parseInt(a));
 
     return (
       <div className="text-search-facets">
-        {/* Organism filter facet - show all organisms with counts */}
-        {(availableOrganisms.length > 0 || allOrganisms.length > 0) && (
+        {/* Year filter facet - only for paper_titles category */}
+        {isPaperTitles && sortedYears.length > 0 && (
+          <div className="year-facet">
+            <h3>Year</h3>
+            <ul className="facet-list">
+              <li
+                className={`facet-item ${selectedYear === null ? 'selected' : ''}`}
+                onClick={() => setSelectedYear(null)}
+              >
+                <span className="facet-label">All Years</span>
+                <span className="facet-count">{totalCount}</span>
+              </li>
+              {sortedYears.map(year => {
+                const count = yearCounts[year] || 0;
+                return (
+                  <li
+                    key={year}
+                    className={`facet-item ${selectedYear === year ? 'selected' : ''}`}
+                    onClick={() => setSelectedYear(year)}
+                  >
+                    <span className="facet-label">{year}</span>
+                    <span className="facet-count">{count}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
+
+        {/* Organism filter facet - hide for paper_titles category */}
+        {!isPaperTitles && (availableOrganisms.length > 0 || allOrganisms.length > 0) && (
           <div className="organism-facet">
             <h3>Organism</h3>
             <ul className="facet-list">
@@ -550,12 +614,20 @@ const TextSearchResultsPage = () => {
     }
 
     const results = categoryResults || [];
-    // Filter results by selected organism
-    const organismFiltered = selectedOrganism
-      ? results.filter(r => r.organism === selectedOrganism)
-      : results;
+    const isPaperTitles = selectedCategory === 'paper_titles';
+
+    // Filter results by selected year (for paper_titles) or organism (for other categories)
+    let facetFiltered = results;
+    if (isPaperTitles && selectedYear) {
+      facetFiltered = results.filter(r => {
+        const yearMatch = r.citation?.match(/\((\d{4})\)/);
+        return yearMatch && yearMatch[1] === selectedYear;
+      });
+    } else if (selectedOrganism) {
+      facetFiltered = results.filter(r => r.organism === selectedOrganism);
+    }
     // Apply quick filter
-    const filteredResults = getFilteredResults(organismFiltered);
+    const filteredResults = getFilteredResults(facetFiltered);
 
     return (
       <div>
@@ -590,7 +662,7 @@ const TextSearchResultsPage = () => {
           )}
           {appliedQuickFilter && (
             <span style={{ fontSize: '0.9rem', color: '#555' }}>
-              Showing {filteredResults.length} of {organismFiltered.length} results
+              Showing {filteredResults.length} of {facetFiltered.length} results
             </span>
           )}
         </div>

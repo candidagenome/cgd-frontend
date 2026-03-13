@@ -225,9 +225,9 @@
 
 /* Organism facet section */
 .organism-facet {
-  margin-top: 20px;
-  padding-top: 15px;
-  border-top: 1px solid #ddd;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #ddd;
 }
 
 .organism-facet h3 {
@@ -251,6 +251,32 @@
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 140px;
+}
+
+/* Year facet section (for Paper Titles) */
+.year-facet {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.year-facet h3 {
+  margin: 0 0 12px 0;
+  font-size: 1em;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.year-facet .facet-list {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.year-facet .facet-label {
+  font-size: 0.9em;
 }
 
 /* ===========================================
