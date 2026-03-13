@@ -200,6 +200,18 @@ function LocusSummary({
     return groups;
   };
 
+  // Helper to fix malformed dictyBase URLs
+  // Backend returns: http://dictybase.org/gene/DDB_G0272520/feature/DDB0185015
+  // Should be: http://dictybase.org/gene/DDB0185015
+  const fixExternalUrl = (url) => {
+    if (!url) return url;
+    const dictyMatch = url.match(/^(https?:\/\/dictybase\.org)\/gene\/[^/]+\/feature\/([^/]+)$/);
+    if (dictyMatch) {
+      return `${dictyMatch[1]}/gene/${dictyMatch[2]}`;
+    }
+    return url;
+  };
+
   const linkGroups = groupLinksByLabel(feature.external_links);
 
   // ---------- Sequence helpers (NEW "nice" tables) ----------
@@ -546,11 +558,11 @@ function LocusSummary({
             </tr>
           )}
 
-          {/* External orthologs - filter out A. nidulans */}
+          {/* External orthologs - filter out A. nidulans and N. crassa */}
           {feature.external_orthologs && (() => {
             const filteredOrthologs = feature.external_orthologs.filter(orth => {
               const speciesName = (orth.species_name || orth.source || '').toLowerCase();
-              return !speciesName.includes('nidulans');
+              return !speciesName.includes('nidulans') && !speciesName.includes('crassa');
             });
             return filteredOrthologs.length > 0 ? (
               <tr>
@@ -562,7 +574,7 @@ function LocusSummary({
                       {orth.gene_name && ` ${orth.gene_name}`}
                       {' ('}
                       {orth.url ? (
-                        <a href={orth.url} target="_blank" rel="noopener noreferrer">
+                        <a href={fixExternalUrl(orth.url)} target="_blank" rel="noopener noreferrer">
                           {orth.description || orth.dbxref_id}
                         </a>
                       ) : (
