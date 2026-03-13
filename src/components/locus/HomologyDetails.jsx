@@ -14,18 +14,6 @@ const resolveDownloadUrl = (url) => {
   return url;
 };
 
-// Helper to fix malformed dictyBase URLs
-// Backend returns: http://dictybase.org/gene/DDB_G0272520/feature/DDB0185015
-// Should be: http://dictybase.org/gene/DDB0185015
-const fixExternalUrl = (url) => {
-  if (!url) return url;
-  const dictyMatch = url.match(/^(https?:\/\/dictybase\.org)\/gene\/[^/]+\/feature\/([^/]+)$/);
-  if (dictyMatch) {
-    return `${dictyMatch[1]}/gene/${dictyMatch[2]}`;
-  }
-  return url;
-};
-
 // Lazy load heavy visualization components
 const PhylogeneticTreeViewer = lazy(() => import('./PhylogeneticTreeViewer'));
 const AlignmentViewer = lazy(() => import('./AlignmentViewer'));
@@ -171,7 +159,7 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                                   {orth.sequence_id}
                                 </a>
                               ) : orth.url ? (
-                                <a href={fixExternalUrl(orth.url)} target="_blank" rel="noopener noreferrer">
+                                <a href={orth.url} target="_blank" rel="noopener noreferrer">
                                   {orth.sequence_id}
                                 </a>
                               ) : (
@@ -223,12 +211,12 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
               )}
 
               {/* Orthologs in Model Fungi Section */}
-              {/* Filter out A. nidulans and N. crassa entries */}
+              {/* Filter out A. nidulans entries */}
               {orgData.orthologs_fungal && (() => {
                 const filteredEntries = Object.entries(orgData.orthologs_fungal.by_source || {})
                   .filter(([, homologs]) => {
                     const orgName = homologs[0]?.organism_name || '';
-                    return !orgName.toLowerCase().includes('nidulans') && !orgName.toLowerCase().includes('crassa');
+                    return !orgName.toLowerCase().includes('nidulans');
                   });
                 return filteredEntries.length > 0 ? (
                   <tr className="section-with-divider section-grey-bg">
@@ -243,7 +231,7 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                             <span key={idx}>
                               {idx > 0 && ', '}
                               {h.url ? (
-                                <a href={fixExternalUrl(h.url)} target="_blank" rel="noopener noreferrer">
+                                <a href={h.url} target="_blank" rel="noopener noreferrer">
                                   {h.display_name}
                                 </a>
                               ) : (
@@ -273,7 +261,7 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                           <span key={idx}>
                             {idx > 0 && ', '}
                             {h.url ? (
-                              <a href={fixExternalUrl(h.url)} target="_blank" rel="noopener noreferrer">
+                              <a href={h.url} target="_blank" rel="noopener noreferrer">
                                 {h.display_name}
                               </a>
                             ) : (
