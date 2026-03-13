@@ -5,6 +5,25 @@ import literatureTopicApi from '../api/literatureTopicApi';
 import { renderCitationItem } from '../utils/formatCitation.jsx';
 import './LiteratureTopicSearchPage.css';
 
+// Filter tree to remove nodes with zero papers (and no children with papers)
+const filterTreeByCount = (nodes) => {
+  if (!nodes || nodes.length === 0) return [];
+
+  return nodes
+    .map((node) => {
+      // Recursively filter children first
+      const filteredChildren = filterTreeByCount(node.children || []);
+      // Keep node if it has papers OR has children with papers
+      const hasContent = node.count > 0 || filteredChildren.length > 0;
+      if (!hasContent) return null;
+      return {
+        ...node,
+        children: filteredChildren,
+      };
+    })
+    .filter(Boolean);
+};
+
 // Abbreviate organism name
 const getOrganismAbbrev = (organismName) => {
   if (!organismName) return '';
@@ -102,7 +121,8 @@ function LiteratureTopicSearchPage() {
       try {
         setTopicTreeLoading(true);
         const response = await literatureTopicApi.getTopicTree();
-        setTopicTree(response.tree || []);
+        // Filter out topics with zero papers
+        setTopicTree(filterTreeByCount(response.tree || []));
       } catch (err) {
         setTopicTreeError('Failed to load topic tree');
         console.error(err);
