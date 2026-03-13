@@ -622,10 +622,7 @@ const TextSearchResultsPage = () => {
     // Filter results by selected year (for paper_titles) or organism (for other categories)
     let facetFiltered = results;
     if (isPaperTitles && selectedYear) {
-      facetFiltered = results.filter(r => {
-        const yearMatch = r.citation?.match(/\((\d{4})\)/);
-        return yearMatch && yearMatch[1] === selectedYear;
-      });
+      facetFiltered = results.filter(r => extractYearFromResult(r) === selectedYear);
     } else if (selectedOrganism) {
       facetFiltered = results.filter(r => r.organism === selectedOrganism);
     }
