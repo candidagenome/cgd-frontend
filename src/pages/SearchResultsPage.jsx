@@ -36,7 +36,7 @@ const CombinedResultRenderer = (props) => {
         <div className="result-header">
           <a
             href={data.link}
-            target="search_result"
+            target="_blank"
             rel={isExternal ? "noopener noreferrer" : undefined}
             className="result-name"
             dangerouslySetInnerHTML={{ __html: displayName }}
@@ -50,7 +50,7 @@ const CombinedResultRenderer = (props) => {
           />
         )}
         {data.links && data.links.length > 0 && (
-          <CitationLinksBelow links={data.links} className="search-result-links" target="search_result" />
+          <CitationLinksBelow links={data.links} className="search-result-links" target="_blank" />
         )}
       </div>
     );
@@ -68,7 +68,7 @@ const CombinedResultRenderer = (props) => {
       <div className="result-header">
         <a
           href={linkUrl}
-          target="search_result"
+          target="_blank"
           rel={isExternal ? "noopener noreferrer" : undefined}
           className="result-name"
           dangerouslySetInnerHTML={{ __html: displayName }}

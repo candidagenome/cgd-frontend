@@ -342,15 +342,16 @@ function GenomeSnapshotPage() {
     );
   }
 
-  // Calculate percentages
-  const verifiedPercent = data.haploid_orfs > 0
-    ? ((data.verified_orfs / data.haploid_orfs) * 100).toFixed(2)
+  // Calculate percentages using the same total as the pie chart
+  const orfTotal = data.verified_orfs + data.uncharacterized_orfs + data.dubious_orfs;
+  const verifiedPercent = orfTotal > 0
+    ? ((data.verified_orfs / orfTotal) * 100).toFixed(2)
     : '0.00';
-  const uncharPercent = data.haploid_orfs > 0
-    ? ((data.uncharacterized_orfs / data.haploid_orfs) * 100).toFixed(2)
+  const uncharPercent = orfTotal > 0
+    ? ((data.uncharacterized_orfs / orfTotal) * 100).toFixed(2)
     : '0.00';
-  const dubiousPercent = data.haploid_orfs > 0
-    ? ((data.dubious_orfs / data.haploid_orfs) * 100).toFixed(2)
+  const dubiousPercent = orfTotal > 0
+    ? ((data.dubious_orfs / orfTotal) * 100).toFixed(2)
     : '0.00';
 
   // Determine if diploid for haploid column calculations
@@ -445,44 +446,164 @@ function GenomeSnapshotPage() {
               </tr>
               <tr>
                 <td>
-                  {/* Link temporarily disabled while feature-search counts are being fixed */}
-                  {/* <Link to={`/feature-search/results?organism=${organism}&qualifier=Verified&featuretype=ORF`}> */}
+                  <a href={`/feature-search/results?organism=${organism}&qualifier=Verified&featuretype=ORF`} target="feature-search">
                     Verified ORFs
-                  {/* </Link> */}
+                  </a>
                 </td>
                 <td>{data.verified_orfs.toLocaleString()}</td>
                 <td>{Math.round(data.verified_orfs / divisor).toLocaleString()}</td>
               </tr>
               <tr>
                 <td>
-                  {/* Link temporarily disabled while feature-search counts are being fixed */}
-                  {/* <Link to={`/feature-search/results?organism=${organism}&qualifier=Uncharacterized&featuretype=ORF`}> */}
+                  <a href={`/feature-search/results?organism=${organism}&qualifier=Uncharacterized&featuretype=ORF`} target="feature-search">
                     Uncharacterized ORFs
-                  {/* </Link> */}
+                  </a>
                 </td>
                 <td>{data.uncharacterized_orfs.toLocaleString()}</td>
                 <td>{Math.round(data.uncharacterized_orfs / divisor).toLocaleString()}</td>
               </tr>
               <tr>
                 <td>
-                  {/* Link temporarily disabled while feature-search counts are being fixed */}
-                  {/* <Link to={`/feature-search/results?organism=${organism}&qualifier=Dubious&featuretype=ORF`}> */}
+                  <a href={`/feature-search/results?organism=${organism}&qualifier=Dubious&featuretype=ORF`} target="feature-search">
                     Dubious ORFs
-                  {/* </Link> */}
+                  </a>
                 </td>
                 <td>{data.dubious_orfs.toLocaleString()}</td>
                 <td>{Math.round(data.dubious_orfs / divisor).toLocaleString()}</td>
               </tr>
               <tr>
                 <td>
-                  {/* Link temporarily disabled while feature-search counts are being fixed */}
-                  {/* <Link to={`/feature-search/results?organism=${organism}&featuretype=tRNA`}> */}
+                  <a href={`/feature-search/results?organism=${organism}&featuretype=tRNA`} target="feature-search">
                     tRNA
-                  {/* </Link> */}
+                  </a>
                 </td>
                 <td>{data.trna_count.toLocaleString()}</td>
                 <td>{Math.round(data.trna_count / divisor).toLocaleString()}</td>
               </tr>
+              {data.ltr_count > 0 && (
+                <tr>
+                  <td>
+                    <a href={`/feature-search/results?organism=${organism}&featuretype=long_terminal_repeat`} target="feature-search">
+                      Long_terminal_repeat
+                    </a>
+                  </td>
+                  <td>{data.ltr_count.toLocaleString()}</td>
+                  <td>{Math.round(data.ltr_count / divisor).toLocaleString()}</td>
+                </tr>
+              )}
+              {data.snorna_count > 0 && (
+                <tr>
+                  <td>
+                    <a href={`/feature-search/results?organism=${organism}&featuretype=snoRNA`} target="feature-search">
+                      snoRNA
+                    </a>
+                  </td>
+                  <td>{data.snorna_count.toLocaleString()}</td>
+                  <td>{Math.round(data.snorna_count / divisor).toLocaleString()}</td>
+                </tr>
+              )}
+              {data.repeat_region_count > 0 && (
+                <tr>
+                  <td>
+                    <a href={`/feature-search/results?organism=${organism}&featuretype=repeat_region`} target="feature-search">
+                      Repeat_region
+                    </a>
+                  </td>
+                  <td>{data.repeat_region_count.toLocaleString()}</td>
+                  <td>{Math.round(data.repeat_region_count / divisor).toLocaleString()}</td>
+                </tr>
+              )}
+              {data.retrotransposon_count > 0 && (
+                <tr>
+                  <td>
+                    <a href={`/feature-search/results?organism=${organism}&featuretype=retrotransposon`} target="feature-search">
+                      Retrotransposon
+                    </a>
+                  </td>
+                  <td>{data.retrotransposon_count.toLocaleString()}</td>
+                  <td>{Math.round(data.retrotransposon_count / divisor).toLocaleString()}</td>
+                </tr>
+              )}
+              {data.centromere_count > 0 && (
+                <tr>
+                  <td>
+                    <a href={`/feature-search/results?organism=${organism}&featuretype=centromere`} target="feature-search">
+                      Centromere
+                    </a>
+                  </td>
+                  <td>{data.centromere_count.toLocaleString()}</td>
+                  <td>{Math.round(data.centromere_count / divisor).toLocaleString()}</td>
+                </tr>
+              )}
+              {data.pseudogene_count > 0 && (
+                <tr>
+                  <td>
+                    <a href={`/feature-search/results?organism=${organism}&featuretype=pseudogene`} target="feature-search">
+                      Pseudogenes
+                    </a>
+                  </td>
+                  <td>{data.pseudogene_count.toLocaleString()}</td>
+                  <td>{Math.round(data.pseudogene_count / divisor).toLocaleString()}</td>
+                </tr>
+              )}
+              {data.blocked_reading_frame_count > 0 && (
+                <tr>
+                  <td>
+                    <a href={`/feature-search/results?organism=${organism}&featuretype=blocked_reading_frame`} target="feature-search">
+                      Blocked_reading_frame
+                    </a>
+                  </td>
+                  <td>{data.blocked_reading_frame_count.toLocaleString()}</td>
+                  <td>{Math.round(data.blocked_reading_frame_count / divisor).toLocaleString()}</td>
+                </tr>
+              )}
+              {data.snrna_count > 0 && (
+                <tr>
+                  <td>
+                    <a href={`/feature-search/results?organism=${organism}&featuretype=snRNA`} target="feature-search">
+                      snRNA
+                    </a>
+                  </td>
+                  <td>{data.snrna_count.toLocaleString()}</td>
+                  <td>{Math.round(data.snrna_count / divisor).toLocaleString()}</td>
+                </tr>
+              )}
+              {data.rrna_count > 0 && (
+                <tr>
+                  <td>
+                    <a href={`/feature-search/results?organism=${organism}&featuretype=rRNA`} target="feature-search">
+                      rRNA
+                    </a>
+                  </td>
+                  <td>{data.rrna_count.toLocaleString()}</td>
+                  <td>{Math.round(data.rrna_count / divisor).toLocaleString()}</td>
+                </tr>
+              )}
+              {data.ncrna_count > 0 && (
+                <tr>
+                  <td>
+                    <a href={`/feature-search/results?organism=${organism}&featuretype=ncRNA`} target="feature-search">
+                      ncRNA
+                    </a>
+                  </td>
+                  <td>{data.ncrna_count.toLocaleString()}</td>
+                  <td>{Math.round(data.ncrna_count / divisor).toLocaleString()}</td>
+                </tr>
+              )}
+              {data.total_features > 0 && (
+                <tr className="total-row">
+                  <td><strong>Total</strong></td>
+                  <td><strong>{data.total_features.toLocaleString()}</strong></td>
+                  <td><strong>{Math.round(data.total_features / divisor).toLocaleString()}</strong></td>
+                </tr>
+              )}
+              {data.chromosome_length > 0 && (
+                <tr>
+                  <td><strong>Chromosome length (bp)</strong></td>
+                  <td>{data.chromosome_length.toLocaleString()}</td>
+                  <td>{data.haploid_chromosome_length ? data.haploid_chromosome_length.toLocaleString() : Math.round(data.chromosome_length / divisor).toLocaleString()}</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </section>

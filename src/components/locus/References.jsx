@@ -112,7 +112,7 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
           return <span className="no-other-genes">-</span>;
         }
 
-        const rowId = params.data.pubmed_id || params.rowIndex;
+        const rowId = params.data.pubmed || params.rowIndex;
         const isExpanded = expandedGeneRows.has(rowId);
         const genesToShow = isExpanded ? otherGenesInRef : otherGenesInRef.slice(0, 10);
         const hasMore = otherGenesInRef.length > 10;
@@ -168,12 +168,16 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
     if (!quickFilter.trim()) return refsToFilter;
     const searchLower = quickFilter.toLowerCase().trim();
     return refsToFilter.filter((ref) => {
+      // Extract author names from array if needed
+      const authorNames = Array.isArray(ref.authors)
+        ? ref.authors.map(a => a.author_name || a).filter(Boolean)
+        : [ref.authors];
       const searchFields = [
-        ref.authors,
+        ...authorNames,
         ref.title,
-        ref.journal,
+        ref.journal_name || ref.journal,
         ref.year?.toString(),
-        ref.pubmed_id,
+        ref.pubmed,
         ...(ref.other_genes || []),
       ];
       return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
@@ -182,24 +186,44 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
 
   // Grid ready callback - removed sizeColumnsToFit() which interferes with flex sizing
 
+  // Helper to format authors as plain string for TSV export
+  const formatAuthorsForTSV = (ref) => {
+    // Try author_list first (pre-formatted string)
+    if (ref.author_list) return ref.author_list;
+    // Try authors array
+    const authors = ref.authors;
+    if (!authors) return '';
+    if (typeof authors === 'string') return authors;
+    if (Array.isArray(authors)) {
+      // Array of objects with author_name
+      if (authors[0]?.author_name) {
+        return authors.map(a => a.author_name).join(', ');
+      }
+      // Array of strings
+      return authors.join(', ');
+    }
+    return '';
+  };
+
   // Download references as TSV
   const handleDownloadTSV = useCallback((refsToDownload) => {
     if (!refsToDownload || refsToDownload.length === 0) return;
 
     // Build TSV content
-    const headers = ['Authors', 'Year', 'Title', 'Journal', 'PubMed ID', 'Species', 'Other Genes'];
+    const headers = ['Citation', 'Year', 'Title', 'PubMed ID', 'Species', 'Other Genes'];
     const rows = refsToDownload.map(ref => {
       const otherGenesInRef = ref.other_genes
         ? ref.other_genes.filter(g => g !== displayName)
         : [];
       const species = ref.species || currentOrganism?.split(' ').slice(0, 2).join(' ') || 'C. albicans';
+      // Use citation field if available (contains full formatted reference)
+      const citation = ref.citation || ref.display_name || formatAuthorsForTSV(ref);
 
       return [
-        ref.authors || '',
+        citation,
         ref.year || '',
         ref.title || '',
-        ref.journal || '',
-        ref.pubmed_id || '',
+        ref.pubmed || '',
         species,
         otherGenesInRef.join(', '),
       ].map(field => `"${String(field).replace(/"/g, '""')}"`).join('\t');
@@ -227,16 +251,12 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
 
   // Calculate reference counts
   const curatedRefs = refs.filter(ref => ref.topics && ref.topics.length > 0 && !ref.topics.includes('Not yet curated'));
-  const notYetCuratedRefs = refs.filter(ref => !ref.topics || ref.topics.length === 0 || ref.topics.includes('Not yet curated'));
   const highPriorityRefs = refs.filter(ref => ref.topics && ref.topics.includes('High Priority'));
 
   // Get references by topic
   const getRefsByTopic = (topic) => {
     if (topic === 'curated') {
       return curatedRefs;
-    }
-    if (topic === 'Not yet curated') {
-      return notYetCuratedRefs;
     }
     return refs.filter(ref => ref.topics && ref.topics.includes(topic));
   };
@@ -375,7 +395,6 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
         {/* Additional Information section (always shown) */}
         <div className="topic-group">
           <div className="topic-group-header">Additional Information</div>
-          {renderTopicEntry('References Not Yet Curated', 'References Not Yet Curated', 'Not yet curated', true)}
           {renderTopicEntry('References for Curation', 'References for Curation', 'High Priority', true)}
           {renderTopicEntry('Literature Curation Summary', 'Literature Curation Summary')}
 
@@ -428,19 +447,6 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
               }}
             >
               {curatedRefs.length}
-            </a>
-          </p>
-          <p>
-            <strong>References Not Yet Curated: </strong>
-            <a
-              href="#not-curated"
-              onClick={(e) => {
-                e.preventDefault();
-                setSelectedTopic('Not yet curated');
-                setViewMode('topic');
-              }}
-            >
-              {notYetCuratedRefs.length}
             </a>
           </p>
           {highPriorityRefs.length > 0 && (
@@ -556,14 +562,25 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
 
     if (selectedTopic === 'curated') {
       topicTitle = 'Curated References';
-    } else if (selectedTopic === 'Not yet curated') {
-      topicTitle = 'References Not Yet Curated';
     } else if (selectedTopic === 'High Priority') {
       topicTitle = 'References for Curation';
     }
 
     return (
       <div className="literature-topic-view">
+        <div className="topic-view-header">
+          <a
+            href="#back"
+            className="back-to-summary-link"
+            onClick={(e) => {
+              e.preventDefault();
+              setSelectedTopic(null);
+              setViewMode('summary');
+            }}
+          >
+            &larr; Back to Literature Summary
+          </a>
+        </div>
         <h4>
           <span className="gene-name-highlight">{displayName}</span>
           {' '}- {topicTitle}

@@ -7,6 +7,92 @@ import './LocusComponents.css';
 // Lazy load heavy 3D viewer component
 const AlphaFoldViewer = lazy(() => import('./AlphaFoldViewer'));
 
+/**
+ * Generate external URL for a domain accession based on its source database.
+ * @param {string} accession - The domain accession ID (e.g., "IPR000719", "PF00069")
+ * @param {string} source - The source database (e.g., "InterPro", "Pfam", "SMART")
+ * @returns {string|null} - URL to the external database entry, or null if unknown
+ */
+function getDomainUrl(accession, source) {
+  if (!accession) return null;
+
+  const acc = accession.trim();
+  const src = (source || '').toLowerCase();
+
+  // Match by accession prefix first (more reliable)
+  if (acc.startsWith('IPR')) {
+    return `https://www.ebi.ac.uk/interpro/entry/InterPro/${acc}/`;
+  }
+  if (acc.startsWith('PF') && /^PF\d+$/.test(acc)) {
+    return `https://www.ebi.ac.uk/interpro/entry/pfam/${acc}/`;
+  }
+  if (acc.startsWith('PS') && /^PS\d+$/.test(acc)) {
+    return `https://prosite.expasy.org/${acc}`;
+  }
+  if (acc.startsWith('SM') && /^SM\d+$/.test(acc)) {
+    return `https://smart.embl.de/smart/do_annotation.pl?DOMAIN=${acc}`;
+  }
+  if (acc.startsWith('cd') && /^cd\d+$/.test(acc)) {
+    return `https://www.ncbi.nlm.nih.gov/Structure/cdd/cddsrv.cgi?uid=${acc}`;
+  }
+  if (acc.startsWith('G3DSA:')) {
+    // CATH-Gene3D - format like G3DSA:1.10.10.10
+    return `https://www.cathdb.info/version/latest/superfamily/${acc.replace('G3DSA:', '')}`;
+  }
+  if (acc.startsWith('SSF') && /^SSF\d+$/.test(acc)) {
+    // SUPERFAMILY
+    return `https://supfam.org/SUPERFAMILY/cgi-bin/scop.cgi?ipid=${acc.replace('SSF', '')}`;
+  }
+  if (acc.startsWith('PTHR') && /^PTHR\d+/.test(acc)) {
+    // PANTHER
+    return `https://www.pantherdb.org/panther/family.do?clsAccession=${acc}`;
+  }
+  if (acc.startsWith('TIGR') && /^TIGR\d+$/.test(acc)) {
+    // TIGRFAMs (now in InterPro)
+    return `https://www.ebi.ac.uk/interpro/entry/tigrfams/${acc}/`;
+  }
+  if (acc.startsWith('MF_') && /^MF_\d+$/.test(acc)) {
+    // HAMAP
+    return `https://hamap.expasy.org/rule/${acc}`;
+  }
+  if (acc.startsWith('PIRSF') && /^PIRSF\d+$/.test(acc)) {
+    // PIRSF
+    return `https://proteininformationresource.org/cgi-bin/ipcSF?id=${acc}`;
+  }
+  if (acc.startsWith('PR') && /^PR\d+$/.test(acc)) {
+    // PRINTS
+    return `https://www.ebi.ac.uk/interpro/entry/prints/${acc}/`;
+  }
+
+  // Fallback: match by source name
+  if (src.includes('interpro')) {
+    return `https://www.ebi.ac.uk/interpro/entry/InterPro/${acc}/`;
+  }
+  if (src.includes('pfam')) {
+    return `https://www.ebi.ac.uk/interpro/entry/pfam/${acc}/`;
+  }
+  if (src.includes('prosite')) {
+    return `https://prosite.expasy.org/${acc}`;
+  }
+  if (src.includes('smart')) {
+    return `https://smart.embl.de/smart/do_annotation.pl?DOMAIN=${acc}`;
+  }
+  if (src.includes('cdd') || src.includes('ncbi')) {
+    return `https://www.ncbi.nlm.nih.gov/Structure/cdd/cddsrv.cgi?uid=${acc}`;
+  }
+  if (src.includes('gene3d') || src.includes('cath')) {
+    return `https://www.cathdb.info/version/latest/superfamily/${acc}`;
+  }
+  if (src.includes('superfamily')) {
+    return `https://supfam.org/SUPERFAMILY/cgi-bin/scop.cgi?ipid=${acc}`;
+  }
+  if (src.includes('panther')) {
+    return `https://www.pantherdb.org/panther/family.do?clsAccession=${acc}`;
+  }
+
+  return null;
+}
+
 function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
   const { name: locusName } = useParams();
   const [showAlphaFold, setShowAlphaFold] = useState(false);
@@ -209,17 +295,30 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                           </tr>
                         </thead>
                         <tbody>
-                          {orgData.conserved_domains.map((domain, idx) => (
-                            <tr key={idx}>
-                              <td>
-                                {domain.start_coord && domain.stop_coord
-                                  ? `${domain.start_coord}-${domain.stop_coord}`
-                                  : '-'}
-                              </td>
-                              <td>{domain.domain_name || '-'}</td>
-                              <td>{domain.domain_type || '-'}</td>
-                            </tr>
-                          ))}
+                          {orgData.conserved_domains.map((domain, idx) => {
+                            const domainUrl = getDomainUrl(domain.domain_name, domain.domain_type);
+                            return (
+                              <tr key={idx}>
+                                <td>
+                                  {domain.start_coord && domain.stop_coord
+                                    ? `${domain.start_coord}-${domain.stop_coord}`
+                                    : '-'}
+                                </td>
+                                <td>
+                                  {domain.domain_name ? (
+                                    domainUrl ? (
+                                      <a href={domainUrl} target="_blank" rel="noopener noreferrer">
+                                        {domain.domain_name}
+                                      </a>
+                                    ) : (
+                                      domain.domain_name
+                                    )
+                                  ) : '-'}
+                                </td>
+                                <td>{domain.domain_type || '-'}</td>
+                              </tr>
+                            );
+                          })}
                         </tbody>
                       </table>
                     </div>
@@ -276,7 +375,7 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
               )}
 
               {/* Homologs Section - only show BLAST link */}
-              {orgData.blast_url && (
+              {(orgData.blast_url || orgData.sequence_detail?.protein_sequence_fasta) && (
                 <>
                   <tr className="section-with-divider section-grey-bg">
                     <th>Homologs</th>
@@ -285,9 +384,11 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                   <tr>
                     <th style={{ paddingLeft: '20px', fontWeight: 'normal' }}>BLAST Search</th>
                     <td>
-                      <a href={orgData.blast_url} target="_blank" rel="noopener noreferrer">
+                      <Link
+                        to={`/blast?program=blastp&qtype=locus&locus=${encodeURIComponent(orgData.systematic_name || orgData.feature_name || locusName)}&dataset=PROTEIN`}
+                      >
                         BLAST {orgData.protein_standard_name || orgData.locus_display_name} against other Candida sequences
-                      </a>
+                      </Link>
                     </td>
                   </tr>
                 </>

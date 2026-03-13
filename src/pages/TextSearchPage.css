@@ -1,5 +1,5 @@
 .text-search-page {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -59,4 +59,83 @@
 .error-message {
   color: #c00;
   margin-top: 10px;
+}
+
+/* Search options styling */
+.search-options {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+.option-row {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.option-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.option-label {
+  font-weight: 500;
+  color: #333;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.option-select {
+  padding: 6px 10px;
+  font-size: 13px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  min-width: 160px;
+  cursor: pointer;
+}
+
+.option-select:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 3px rgba(0, 102, 204, 0.3);
+}
+
+.option-buttons {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.option-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #444;
+  transition: all 0.15s ease;
+}
+
+.option-btn:hover {
+  border-color: #0066cc;
+  background-color: #f0f7ff;
+}
+
+.option-btn.selected {
+  background-color: #0066cc;
+  border-color: #0066cc;
+  color: white;
+}
+
+.option-btn input[type="radio"] {
+  display: none;
 }

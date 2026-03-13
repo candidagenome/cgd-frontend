@@ -36,6 +36,12 @@
   color: #333;
 }
 
+.search-options-summary {
+  color: #666;
+  font-size: 0.9em;
+  font-style: italic;
+}
+
 /* Loading and error states */
 .text-search-loading,
 .text-search-error,
@@ -143,7 +149,7 @@
 .text-search-facets .facet-item.selected {
   background-color: #e3f2fd;
   color: #1565c0;
-  border-left-color: transparent;
+  border-left-color: #1976d2;
 }
 
 .text-search-facets .facet-item.selected .facet-label {
@@ -170,6 +176,21 @@
 .text-search-facets .facet-item.disabled .facet-count {
   background-color: #e8e8e8;
   color: #888;
+}
+
+/* Zero count items - show but muted */
+.text-search-facets .facet-item.zero-count {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.text-search-facets .facet-item.zero-count:hover {
+  background-color: transparent;
+}
+
+.text-search-facets .facet-item.zero-count .facet-count {
+  background-color: #e8e8e8;
+  color: #999;
 }
 
 /* Category labels */
@@ -204,9 +225,9 @@
 
 /* Organism facet section */
 .organism-facet {
-  margin-top: 20px;
-  padding-top: 15px;
-  border-top: 1px solid #ddd;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #ddd;
 }
 
 .organism-facet h3 {
@@ -230,6 +251,32 @@
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 140px;
+}
+
+/* Year facet section (for Paper Titles) */
+.year-facet {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.year-facet h3 {
+  margin: 0 0 12px 0;
+  font-size: 1em;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.year-facet .facet-list {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.year-facet .facet-label {
+  font-size: 0.9em;
 }
 
 /* ===========================================
@@ -377,6 +424,72 @@
   color: #555;
   line-height: 1.5;
   font-style: italic;
+}
+
+/* Styling for paper_titles category (Paper Titles) */
+.combined-result-cell.paper-titles-cell .result-title {
+  font-size: 1.05em;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+
+.combined-result-cell.paper-titles-cell .result-meta {
+  font-size: 0.9em;
+  color: #555;
+  line-height: 1.4;
+}
+
+.combined-result-cell.paper-titles-cell .author-year-link {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.combined-result-cell.paper-titles-cell .author-year-link:hover {
+  text-decoration: underline;
+}
+
+.combined-result-cell.paper-titles-cell .author-year {
+  font-weight: 500;
+  color: #333;
+}
+
+.combined-result-cell.paper-titles-cell .journal-info {
+  font-style: italic;
+  color: #666;
+}
+
+.combined-result-cell.paper-titles-cell .result-citation {
+  font-size: 1em;
+  color: #333;
+  line-height: 1.4;
+}
+
+.combined-result-cell.paper-titles-cell .result-citation a {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.combined-result-cell.paper-titles-cell .result-citation a:hover {
+  text-decoration: underline;
+}
+
+.combined-result-cell.paper-titles-cell .search-result-links {
+  margin-top: 4px;
+  font-size: 0.9em;
+}
+
+.combined-result-cell.paper-titles-cell .search-result-links .citation-link {
+  color: #1976d2;
+  text-decoration: none;
+  margin-right: 12px;
+}
+
+.combined-result-cell.paper-titles-cell .search-result-links .citation-link:hover {
+  text-decoration: underline;
 }
 
 /* Result items */

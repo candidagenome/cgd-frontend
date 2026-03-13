@@ -3,7 +3,7 @@ import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { searchApi } from '../api/searchApi';
-import { CitationLinksBelow } from '../utils/formatCitation.jsx';
+import { CitationLinksBelow, formatCitationString } from '../utils/formatCitation.jsx';
 import './TextSearchResultsPage.css';
 
 // Register AG Grid modules once
@@ -11,6 +11,15 @@ if (!ModuleRegistry.__cgdRegistered) {
   ModuleRegistry.registerModules([AllCommunityModule]);
   ModuleRegistry.__cgdRegistered = true;
 }
+
+// Default organisms to show in facet
+const DEFAULT_ORGANISMS = [
+  { organism_abbrev: 'C_albicans_SC5314', organism_name: 'Candida albicans SC5314' },
+  { organism_abbrev: 'C_glabrata_CBS138', organism_name: 'Candida glabrata CBS138' },
+  { organism_abbrev: 'C_parapsilosis_CDC317', organism_name: 'Candida parapsilosis CDC317' },
+  { organism_abbrev: 'C_tropicalis_MYA-3404', organism_name: 'Candida tropicalis MYA-3404' },
+  { organism_abbrev: 'C_auris_B8441', organism_name: 'Candida auris B8441' },
+];
 
 // Combined cell renderer for identifier + description
 const CombinedResultRenderer = (props) => {
@@ -35,6 +44,13 @@ const CombinedResultRenderer = (props) => {
   // - links = citation links from API
   const isAbstracts = data.category === 'abstracts';
 
+  // For paper_titles category (Paper Titles):
+  // - name = paper title (with highlighting)
+  // - citation = full citation "Author (Year) Title. Journal..."
+  // - links = citation links from API
+  // - link = link to reference page
+  const isPaperTitles = data.category === 'paper_titles';
+
   const renderNameLink = () => {
     if (!link) {
       return <span className="result-name" dangerouslySetInnerHTML={{ __html: displayName }} />;
@@ -45,7 +61,7 @@ const CombinedResultRenderer = (props) => {
     return (
       <a
         href={link}
-        target="search_result"
+        target="_blank"
         rel={isExternal ? "noopener noreferrer" : undefined}
         className="result-name"
         dangerouslySetInnerHTML={{ __html: displayName }}
@@ -65,7 +81,7 @@ const CombinedResultRenderer = (props) => {
         </div>
         {/* Links right below the citation */}
         {data.links && data.links.length > 0 && (
-          <CitationLinksBelow links={data.links} className="search-result-links" target="search_result" />
+          <CitationLinksBelow links={data.links} className="search-result-links" target="_blank" />
         )}
         {/* Abstract snippet below the links */}
         {displayDesc && (
@@ -73,6 +89,53 @@ const CombinedResultRenderer = (props) => {
             className="result-abstract"
             dangerouslySetInnerHTML={{ __html: displayDesc }}
           />
+        )}
+      </div>
+    );
+  }
+
+  if (isPaperTitles) {
+    // For paper_titles: show highlighted title prominently, then author/year/journal below
+    // highlighted_name = title with <mark> tags for search highlighting
+    // citation = "Author (Year) Title. Journal..." format
+    // link = reference page URL (e.g., /reference/CAL0000001)
+    const highlightedTitle = data.highlighted_name || data.name;
+    const citation = data.citation || '';
+    const referenceLink = data.link;
+
+    // Extract author/year and journal from citation
+    // Pattern: "Author(s) (Year) Title. Journal Volume(Issue):Pages"
+    const authorYearMatch = citation.match(/^([^(]+\([0-9]{4}\))/);
+    const authorYear = authorYearMatch ? authorYearMatch[1].trim() : '';
+
+    // Extract journal info (everything after title, which ends with a period before journal)
+    // The title is in highlighted_name, so look for journal after a period followed by space and capital
+    const journalMatch = citation.match(/\.\s+([A-Z][^.]+)$/);
+    const journalInfo = journalMatch ? journalMatch[1].trim() : '';
+
+    return (
+      <div className="combined-result-cell paper-titles-cell">
+        {/* Highlighted title prominently displayed */}
+        <div
+          className="result-title"
+          dangerouslySetInnerHTML={{ __html: highlightedTitle }}
+        />
+        {/* Author/year linked to CGD Paper + journal info */}
+        {authorYear && (
+          <div className="result-meta">
+            {referenceLink ? (
+              <a href={referenceLink} target="_blank" className="author-year-link">
+                {authorYear}
+              </a>
+            ) : (
+              <span className="author-year">{authorYear}</span>
+            )}
+            {journalInfo && <span className="journal-info"> {journalInfo}</span>}
+          </div>
+        )}
+        {/* Links right below */}
+        {data.links && data.links.length > 0 && (
+          <CitationLinksBelow links={data.links} className="search-result-links" target="_blank" />
         )}
       </div>
     );
@@ -103,8 +166,9 @@ const CATEGORY_LABELS = {
   colleagues: 'Colleagues',
   authors: 'Authors',
   pathways: 'Pathways',
-  paragraphs: 'Locus Summary Paragraphs',
-  abstracts: 'Paper Abstracts',
+  paragraphs: 'Locus Summary Notes',
+  abstracts: 'Papers',
+  paper_titles: 'Paper Titles',
   name_descriptions: 'Gene Name Descriptions',
   phenotypes: 'Phenotypes',
   notes: 'History Notes',
@@ -116,15 +180,34 @@ const CATEGORY_LABELS = {
 // Order in which categories are displayed
 const CATEGORY_ORDER = [
   'genes', 'descriptions', 'go_terms', 'colleagues', 'authors',
-  'pathways', 'paragraphs', 'abstracts', 'name_descriptions',
+  'pathways', 'paragraphs', 'paper_titles', 'name_descriptions',
   'phenotypes', 'notes', 'external_ids', 'orthologs', 'literature_topics'
 ];
+
+// Paper search field options (vs category filters)
+const PAPER_SEARCH_FIELDS = ['all', 'both', 'title', 'abstract', 'abstracts'];
+
+// Helper to extract year from a paper result
+const extractYearFromResult = (r) => {
+  if (r.year) return String(r.year);
+  const textToSearch = r.citation || r.name || '';
+  const yearMatch = textToSearch.match(/\((\d{4})\)/);
+  return yearMatch ? yearMatch[1] : null;
+};
 
 const TextSearchResultsPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const query = searchParams.get('query') || '';
   const type = searchParams.get('type') || null; // 'homolog' for ortholog-only search
+  const searchFieldParam = searchParams.get('search_field') || 'all';
+  const matchMode = searchParams.get('match_mode') || 'any'; // Default to OR
+
+  // Determine if searchField is a category filter or paper search option
+  const isCategory = !PAPER_SEARCH_FIELDS.includes(searchFieldParam);
+  const categoryFilter = isCategory ? searchFieldParam : null;
+  // For paper search field, map 'abstracts' to 'both' (title+abstract)
+  const searchField = isCategory ? 'both' : (searchFieldParam === 'abstracts' ? 'both' : searchFieldParam);
 
   // Initial search results (for category counts)
   const [initialResults, setInitialResults] = useState(null);
@@ -137,11 +220,16 @@ const TextSearchResultsPage = () => {
   const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  // Organism filtering state
+  // Organism filtering state - allOrganisms is the full list, availableOrganisms has results
+  const [allOrganisms, setAllOrganisms] = useState([]);
   const [availableOrganisms, setAvailableOrganisms] = useState([]);
   const [selectedOrganism, setSelectedOrganism] = useState(null);
   const [organismCounts, setOrganismCounts] = useState({});
   const [hasApiOrganismCounts, setHasApiOrganismCounts] = useState(false);
+
+  // Year filtering state (for paper_titles category)
+  const [selectedYear, setSelectedYear] = useState(null);
+  const [yearCounts, setYearCounts] = useState({});
 
   // Quick filter state: pending (what user types) vs applied (what filters)
   const [pendingQuickFilter, setPendingQuickFilter] = useState('');
@@ -157,6 +245,28 @@ const TextSearchResultsPage = () => {
   }, []);
 
   const hasPendingChanges = pendingQuickFilter !== appliedQuickFilter;
+
+  // Fetch all organisms on mount for facet display, merge with defaults
+  useEffect(() => {
+    const fetchOrganisms = async () => {
+      try {
+        const data = await searchApi.getOrganisms();
+        const apiOrganisms = data.organisms || [];
+        // Merge API organisms with defaults, avoiding duplicates
+        const existingAbbrevs = new Set(apiOrganisms.map(o => o.organism_abbrev));
+        const mergedOrganisms = [
+          ...apiOrganisms,
+          ...DEFAULT_ORGANISMS.filter(o => !existingAbbrevs.has(o.organism_abbrev))
+        ];
+        setAllOrganisms(mergedOrganisms);
+      } catch (err) {
+        console.error('Failed to fetch organisms:', err);
+        // Use defaults on error
+        setAllOrganisms(DEFAULT_ORGANISMS);
+      }
+    };
+    fetchOrganisms();
+  }, []);
 
   // AG Grid column definitions - single combined column
   const columnDefs = useMemo(() => [
@@ -200,7 +310,7 @@ const TextSearchResultsPage = () => {
 
     setCategoryLoading(true);
     try {
-      const data = await searchApi.textSearchCategory(query, category);
+      const data = await searchApi.textSearchCategory(query, category, searchField, matchMode);
       setCategoryResults(data.results);
       setTotalCount(data.total_count || data.results?.length || 0);
       // Use organism counts from API if provided
@@ -225,7 +335,7 @@ const TextSearchResultsPage = () => {
     } finally {
       setCategoryLoading(false);
     }
-  }, [query]);
+  }, [query, searchField, matchMode]);
 
   // Initial search effect
   useEffect(() => {
@@ -242,14 +352,22 @@ const TextSearchResultsPage = () => {
       setError(null);
 
       try {
-        // Perform text search (with type filter if specified)
-        const data = await searchApi.textSearch(query, 10, type);
+        // Perform text search (with type filter and search options)
+        const data = await searchApi.textSearch(query, 10, type, searchField, matchMode);
         setInitialResults(data);
 
-        // Determine which categories to show (only orthologs if type=homolog)
-        const categoriesToShow = type === 'homolog' ? ['orthologs'] : CATEGORY_ORDER;
+        // Determine which categories to show
+        let categoriesToShow;
+        if (type === 'homolog') {
+          categoriesToShow = ['orthologs'];
+        } else if (categoryFilter) {
+          // If a specific category was selected from search page, only show that
+          categoriesToShow = [categoryFilter];
+        } else {
+          categoriesToShow = CATEGORY_ORDER;
+        }
 
-        // Auto-select first category with results
+        // Auto-select first category with results (or the filtered category)
         const firstCategoryWithResults = categoriesToShow.find(cat => {
           const categoryData = data.categories.find(c => c.category === cat);
           return categoryData && categoryData.count > 0;
@@ -259,6 +377,11 @@ const TextSearchResultsPage = () => {
           setSelectedCategory(firstCategoryWithResults);
           // Fetch all results for this category
           await fetchCategoryResults(firstCategoryWithResults);
+        } else if (categoryFilter) {
+          // Even if no results, select the filtered category
+          setSelectedCategory(categoryFilter);
+          setCategoryResults([]);
+          setTotalCount(0);
         } else {
           setSelectedCategory(null);
           setCategoryResults(null);
@@ -273,7 +396,7 @@ const TextSearchResultsPage = () => {
     };
 
     fetchResults();
-  }, [query, type, navigate, fetchCategoryResults]);
+  }, [query, type, searchField, matchMode, categoryFilter, navigate, fetchCategoryResults]);
 
   // Extract organisms and calculate counts when category results change (fallback when API doesn't provide counts)
   useEffect(() => {
@@ -308,6 +431,23 @@ const TextSearchResultsPage = () => {
     }
   }, [categoryResults, hasApiOrganismCounts]);
 
+  // Calculate year counts for paper_titles category
+  useEffect(() => {
+    if (selectedCategory === 'paper_titles' && categoryResults && categoryResults.length > 0) {
+      const counts = {};
+      categoryResults.forEach(r => {
+        const year = extractYearFromResult(r);
+        if (year) {
+          counts[year] = (counts[year] || 0) + 1;
+        }
+      });
+      setYearCounts(counts);
+    } else {
+      setYearCounts({});
+      setSelectedYear(null);
+    }
+  }, [categoryResults, selectedCategory]);
+
   // Handle category change
   const handleCategoryChange = async (category) => {
     if (category === selectedCategory) return;
@@ -315,11 +455,13 @@ const TextSearchResultsPage = () => {
     setSelectedCategory(category);
     setCategoryResults(null);
     setTotalCount(0);
-    // Reset organism selection when changing category
+    // Reset organism and year selection when changing category
     setAvailableOrganisms([]);
     setOrganismCounts({});
     setSelectedOrganism(null);
     setHasApiOrganismCounts(false);
+    setYearCounts({});
+    setSelectedYear(null);
     await fetchCategoryResults(category);
   };
 
@@ -336,17 +478,53 @@ const TextSearchResultsPage = () => {
     // Filter categories if type=homolog
     const categoriesToShow = type === 'homolog' ? ['orthologs'] : CATEGORY_ORDER;
 
-    // Filter results by selected organism for display count
+    // Filter results by selected organism or year for display count
     const results = categoryResults || [];
-    const filteredResults = selectedOrganism
-      ? results.filter(r => r.organism === selectedOrganism)
-      : results;
-    const displayCount = selectedOrganism ? filteredResults.length : totalCount;
+    const isPaperTitles = selectedCategory === 'paper_titles';
+    let filteredResults = results;
+    if (isPaperTitles && selectedYear) {
+      filteredResults = results.filter(r => extractYearFromResult(r) === selectedYear);
+    } else if (selectedOrganism) {
+      filteredResults = results.filter(r => r.organism === selectedOrganism);
+    }
+    const displayCount = (selectedOrganism || selectedYear) ? filteredResults.length : totalCount;
+
+    // Get sorted years (descending - most recent first)
+    const sortedYears = Object.keys(yearCounts).sort((a, b) => parseInt(b) - parseInt(a));
 
     return (
       <div className="text-search-facets">
-        {/* Organism filter facet */}
-        {availableOrganisms.length > 0 && (
+        {/* Year filter facet - only for paper_titles category */}
+        {isPaperTitles && sortedYears.length > 0 && (
+          <div className="year-facet">
+            <h3>Year</h3>
+            <ul className="facet-list">
+              <li
+                className={`facet-item ${selectedYear === null ? 'selected' : ''}`}
+                onClick={() => setSelectedYear(null)}
+              >
+                <span className="facet-label">All Years</span>
+                <span className="facet-count">{totalCount}</span>
+              </li>
+              {sortedYears.map(year => {
+                const count = yearCounts[year] || 0;
+                return (
+                  <li
+                    key={year}
+                    className={`facet-item ${selectedYear === year ? 'selected' : ''}`}
+                    onClick={() => setSelectedYear(year)}
+                  >
+                    <span className="facet-label">{year}</span>
+                    <span className="facet-count">{count}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
+
+        {/* Organism filter facet - hide for paper_titles category */}
+        {!isPaperTitles && (availableOrganisms.length > 0 || allOrganisms.length > 0) && (
           <div className="organism-facet">
             <h3>Organism</h3>
             <ul className="facet-list">
@@ -355,18 +533,38 @@ const TextSearchResultsPage = () => {
                 onClick={() => setSelectedOrganism(null)}
               >
                 <span className="facet-label">All Organisms</span>
-                <span className="facet-count">{totalCount}</span>
+                <span className="facet-count">
+                  {hasApiOrganismCounts
+                    ? Object.values(organismCounts).reduce((sum, count) => sum + count, 0)
+                    : totalCount}
+                </span>
               </li>
-              {availableOrganisms.map(organism => (
-                <li
-                  key={organism}
-                  className={`facet-item ${selectedOrganism === organism ? 'selected' : ''}`}
-                  onClick={() => setSelectedOrganism(organism)}
-                >
-                  <span className="facet-label">{organism}</span>
-                  <span className="facet-count">{organismCounts[organism] || 0}</span>
-                </li>
-              ))}
+              {/* First show organisms from counts (exact key match) */}
+              {availableOrganisms.map(organism => {
+                const count = organismCounts[organism] || 0;
+                return (
+                  <li
+                    key={organism}
+                    className={`facet-item ${selectedOrganism === organism ? 'selected' : ''}`}
+                    onClick={() => setSelectedOrganism(organism)}
+                  >
+                    <span className="facet-label">{organism}</span>
+                    <span className="facet-count">{count}</span>
+                  </li>
+                );
+              })}
+              {/* Then show remaining organisms from allOrganisms with 0 count */}
+              {allOrganisms
+                .filter(org => !availableOrganisms.includes(org.organism_name))
+                .map(org => (
+                  <li
+                    key={org.organism_abbrev}
+                    className="facet-item zero-count"
+                  >
+                    <span className="facet-label">{org.organism_name}</span>
+                    <span className="facet-count">0</span>
+                  </li>
+                ))}
             </ul>
           </div>
         )}
@@ -419,12 +617,17 @@ const TextSearchResultsPage = () => {
     }
 
     const results = categoryResults || [];
-    // Filter results by selected organism
-    const organismFiltered = selectedOrganism
-      ? results.filter(r => r.organism === selectedOrganism)
-      : results;
+    const isPaperTitles = selectedCategory === 'paper_titles';
+
+    // Filter results by selected year (for paper_titles) or organism (for other categories)
+    let facetFiltered = results;
+    if (isPaperTitles && selectedYear) {
+      facetFiltered = results.filter(r => extractYearFromResult(r) === selectedYear);
+    } else if (selectedOrganism) {
+      facetFiltered = results.filter(r => r.organism === selectedOrganism);
+    }
     // Apply quick filter
-    const filteredResults = getFilteredResults(organismFiltered);
+    const filteredResults = getFilteredResults(facetFiltered);
 
     return (
       <div>
@@ -459,7 +662,7 @@ const TextSearchResultsPage = () => {
           )}
           {appliedQuickFilter && (
             <span style={{ fontSize: '0.9rem', color: '#555' }}>
-              Showing {filteredResults.length} of {organismFiltered.length} results
+              Showing {filteredResults.length} of {facetFiltered.length} results
             </span>
           )}
         </div>
@@ -495,6 +698,16 @@ const TextSearchResultsPage = () => {
           <p className="search-query-info">
             Results for: <strong>"{query}"</strong>
             {initialResults && ` - ${totalResults} total results found`}
+            {(searchField !== 'all' && searchField !== 'both') || matchMode === 'all' ? (
+              <span className="search-options-summary">
+                {' '}(
+                {searchField === 'title' && 'Paper titles only'}
+                {searchField === 'abstract' && 'Paper abstracts only'}
+                {(searchField === 'title' || searchField === 'abstract') && matchMode === 'all' && ', '}
+                {matchMode === 'all' && 'Match ALL terms'}
+                )
+              </span>
+            ) : null}
           </p>
         )}
 

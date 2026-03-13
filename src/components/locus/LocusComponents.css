@@ -392,36 +392,6 @@
   color: #1976d2;
 }
 
-/* Archived locations */
-.archived-locations {
-  margin: 15px 0;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.archived-header {
-  padding: 10px 15px;
-  background-color: #f5f9ff;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #666;
-}
-
-.archived-header:hover {
-  background-color: #eeeeee;
-}
-
-.archived-table {
-  margin: 0;
-}
-
-.archived-table td {
-  color: #888;
-}
-
 /* Sequence type groups */
 .sequences-section h4 {
   color: #1976d2;
@@ -2901,6 +2871,20 @@ a:hover {
 }
 
 /* Topic view */
+.topic-view-header {
+  margin-bottom: 10px;
+}
+
+.back-to-summary-link {
+  color: #1976d2;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.back-to-summary-link:hover {
+  text-decoration: underline;
+}
+
 .literature-topic-view h4 {
   margin: 0 0 15px 0;
   color: #333;

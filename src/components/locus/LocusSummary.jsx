@@ -546,30 +546,36 @@ function LocusSummary({
             </tr>
           )}
 
-          {/* External orthologs */}
-          {feature.external_orthologs && feature.external_orthologs.length > 0 && (
-            <tr>
-              <th>Ortholog(s) in non-CGD species</th>
-              <td>
-                {feature.external_orthologs.map((orth, idx) => (
-                  <span key={idx}>
-                    <em>{orth.species_name || orth.source}</em>
-                    {orth.gene_name && ` ${orth.gene_name}`}
-                    {' ('}
-                    {orth.url ? (
-                      <a href={orth.url} target="_blank" rel="noopener noreferrer">
-                        {orth.description || orth.dbxref_id}
-                      </a>
-                    ) : (
-                      <span>{orth.description || orth.dbxref_id}</span>
-                    )}
-                    {')'}
-                    {idx < feature.external_orthologs.length - 1 ? ' ; ' : ''}
-                  </span>
-                ))}
-              </td>
-            </tr>
-          )}
+          {/* External orthologs - filter out A. nidulans */}
+          {feature.external_orthologs && (() => {
+            const filteredOrthologs = feature.external_orthologs.filter(orth => {
+              const speciesName = (orth.species_name || orth.source || '').toLowerCase();
+              return !speciesName.includes('nidulans');
+            });
+            return filteredOrthologs.length > 0 ? (
+              <tr>
+                <th>Ortholog(s) in non-CGD species</th>
+                <td>
+                  {filteredOrthologs.map((orth, idx) => (
+                    <span key={idx}>
+                      <em>{orth.species_name || orth.source}</em>
+                      {orth.gene_name && ` ${orth.gene_name}`}
+                      {' ('}
+                      {orth.url ? (
+                        <a href={orth.url} target="_blank" rel="noopener noreferrer">
+                          {orth.description || orth.dbxref_id}
+                        </a>
+                      ) : (
+                        <span>{orth.description || orth.dbxref_id}</span>
+                      )}
+                      {')'}
+                      {idx < filteredOrthologs.length - 1 ? ' ; ' : ''}
+                    </span>
+                  ))}
+                </td>
+              </tr>
+            ) : null;
+          })()}
 
           {/* JBrowse */}
           {sequenceData && sequenceData.jbrowse_info && (
