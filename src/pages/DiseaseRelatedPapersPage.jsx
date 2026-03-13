@@ -196,13 +196,22 @@ function DiseaseRelatedPapersPage() {
     if (!data?.available_topics) return null;
 
     // Filter out topics with zero papers
-    const topicsWithPapers = new Set();
-    for (const ref of data.references || []) {
-      for (const topic of ref.topics || []) {
-        topicsWithPapers.add(topic);
+    // Use topic_counts from API if available, otherwise calculate from references
+    let topics;
+    if (data.topic_counts) {
+      topics = data.available_topics.filter(topic => (data.topic_counts[topic] || 0) > 0);
+    } else {
+      // Build Set of normalized topic names from references
+      const topicsWithPapers = new Set();
+      for (const ref of data.references || []) {
+        for (const topic of ref.topics || []) {
+          topicsWithPapers.add(topic.trim().toLowerCase());
+        }
       }
+      topics = data.available_topics.filter(topic =>
+        topicsWithPapers.has(topic.trim().toLowerCase())
+      );
     }
-    const topics = data.available_topics.filter(topic => topicsWithPapers.has(topic));
     const midpoint = Math.ceil(topics.length / 2);
     const leftColumn = topics.slice(0, midpoint);
     const rightColumn = topics.slice(midpoint);
