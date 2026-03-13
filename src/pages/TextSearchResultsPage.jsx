@@ -61,7 +61,7 @@ const CombinedResultRenderer = (props) => {
     return (
       <a
         href={link}
-        target="search_result"
+        target="txtSearch"
         rel={isExternal ? "noopener noreferrer" : undefined}
         className="result-name"
         dangerouslySetInnerHTML={{ __html: displayName }}
@@ -81,7 +81,7 @@ const CombinedResultRenderer = (props) => {
         </div>
         {/* Links right below the citation */}
         {data.links && data.links.length > 0 && (
-          <CitationLinksBelow links={data.links} className="search-result-links" target="search_result" />
+          <CitationLinksBelow links={data.links} className="search-result-links" target="txtSearch" />
         )}
         {/* Abstract snippet below the links */}
         {displayDesc && (
@@ -124,7 +124,7 @@ const CombinedResultRenderer = (props) => {
         {authorYear && (
           <div className="result-meta">
             {referenceLink ? (
-              <a href={referenceLink} target="search_result" className="author-year-link">
+              <a href={referenceLink} target="txtSearch" className="author-year-link">
                 {authorYear}
               </a>
             ) : (
@@ -135,7 +135,7 @@ const CombinedResultRenderer = (props) => {
         )}
         {/* Links right below */}
         {data.links && data.links.length > 0 && (
-          <CitationLinksBelow links={data.links} className="search-result-links" target="search_result" />
+          <CitationLinksBelow links={data.links} className="search-result-links" target="txtSearch" />
         )}
       </div>
     );
