@@ -195,7 +195,14 @@ function DiseaseRelatedPapersPage() {
   const renderTopicFilters = () => {
     if (!data?.available_topics) return null;
 
-    const topics = data.available_topics;
+    // Filter out topics with zero papers
+    const topicsWithPapers = new Set();
+    for (const ref of data.references || []) {
+      for (const topic of ref.topics || []) {
+        topicsWithPapers.add(topic);
+      }
+    }
+    const topics = data.available_topics.filter(topic => topicsWithPapers.has(topic));
     const midpoint = Math.ceil(topics.length / 2);
     const leftColumn = topics.slice(0, midpoint);
     const rightColumn = topics.slice(midpoint);
