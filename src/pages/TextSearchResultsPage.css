@@ -149,7 +149,7 @@
 .text-search-facets .facet-item.selected {
   background-color: #e3f2fd;
   color: #1565c0;
-  border-left-color: transparent;
+  border-left-color: #1976d2;
 }
 
 .text-search-facets .facet-item.selected .facet-label {
