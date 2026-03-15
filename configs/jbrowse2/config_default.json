@@ -1,0 +1,6849 @@
+{
+  "assemblies": [
+    {
+      "name": "C_albicans_SC5314",
+      "sequence": {
+        "type": "ReferenceSequenceTrack",
+        "trackId": "DNA",
+        "adapter": {
+          "type": "IndexedFastaAdapter",
+          "fastaLocation": {
+            "uri": "C_albicans_SC5314_A22_current_chromosomes.fasta",
+            "locationType": "UriLocation"
+          },
+          "faiLocation": {
+            "uri": "C_albicans_SC5314_A22_current_chromosomes.fasta.fai",
+            "locationType": "UriLocation"
+          }
+        }
+      }
+    },
+    {
+      "name": "C_auris_B8441",
+      "sequence": {
+        "type": "ReferenceSequenceTrack",
+        "trackId": "C_auris_B8441-ReferenceSequenceTrack",
+        "adapter": {
+          "type": "IndexedFastaAdapter",
+          "fastaLocation": {
+            "uri": "C_auris_B8441_current_chromosomes.fasta",
+            "locationType": "UriLocation"
+          },
+          "faiLocation": {
+            "uri": "C_auris_B8441_current_chromosomes.fasta.fai",
+            "locationType": "UriLocation"
+          }
+        }
+      }
+    },
+    {
+      "name": "C_dubliniensis_CD36",
+      "sequence": {
+        "type": "ReferenceSequenceTrack",
+        "trackId": "C_dubliniensis_CD36-ReferenceSequenceTrack",
+        "adapter": {
+          "type": "IndexedFastaAdapter",
+          "fastaLocation": {
+            "uri": "C_dubliniensis_CD36_current_chromosomes.fasta",
+            "locationType": "UriLocation"
+          },
+          "faiLocation": {
+            "uri": "C_dubliniensis_CD36_current_chromosomes.fasta.fai",
+            "locationType": "UriLocation"
+          }
+        }
+      }
+    },
+    {
+      "name": "C_parapsilosis_CDC317",
+      "sequence": {
+        "type": "ReferenceSequenceTrack",
+        "trackId": "C_parapsilosis_CDC317-ReferenceSequenceTrack",
+        "adapter": {
+          "type": "IndexedFastaAdapter",
+          "fastaLocation": {
+            "uri": "C_parapsilosis_CDC317_current_chromosomes.fasta",
+            "locationType": "UriLocation"
+          },
+          "faiLocation": {
+            "uri": "C_parapsilosis_CDC317_current_chromosomes.fasta.fai",
+            "locationType": "UriLocation"
+          }
+        }
+      }
+    },
+    {
+      "name": "C_glabrata_CBS138",
+      "sequence": {
+        "type": "ReferenceSequenceTrack",
+        "trackId": "C_glabrata_CBS138-ReferenceSequenceTrack",
+        "adapter": {
+          "type": "IndexedFastaAdapter",
+          "fastaLocation": {
+            "uri": "C_glabrata_CBS138_current_chromosomes.fasta",
+            "locationType": "UriLocation"
+          },
+          "faiLocation": {
+            "uri": "C_glabrata_CBS138_current_chromosomes.fasta.fai",
+            "locationType": "UriLocation"
+          }
+        }
+      }
+    }
+  ],
+  "configuration": {
+    "updateUrl": false
+  },
+  "connections": [],
+  "defaultSession": {
+    "name": "CGD JBrowse 2"
+  },
+  "tracks": [
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_albicans_SC5314_lncRNA.sorted.bed",
+      "name": "lncRNA",
+      "adapter": {
+        "type": "BedTabixAdapter",
+        "bedGzLocation": {
+          "uri": "C_albicans_SC5314_lncRNA.sorted.bed.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "C_albicans_SC5314_lncRNA.sorted.bed.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Annotations"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "TranscribedFeatures",
+      "name": "Gene Features",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "C_albicans_SC5314_A22_features.sorted.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "C_albicans_SC5314_A22_features.sorted.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Annotations"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_auris_B8441_features.sorted.gff",
+      "name": "Gene Features",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "C_auris_B8441_features.sorted.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "C_auris_B8441_features.sorted.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Annotations"
+      ],
+      "assemblyNames": [
+        "C_auris_B8441"
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_dubliniensis_CD36_features.sorted.gff",
+      "name": "Gene Features",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "C_dubliniensis_CD36_features.sorted.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "C_dubliniensis_CD36_features.sorted.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Annotations"
+      ],
+      "assemblyNames": [
+        "C_dubliniensis_CD36"
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_parapsilosis_CDC317_features.sorted.gff",
+      "name": "Gene Features",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "C_parapsilosis_CDC317_features.sorted.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "C_parapsilosis_CDC317_features.sorted.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Annotations"
+      ],
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_glabrata_CBS138_features.sorted.gff",
+      "name": "Gene Features",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "C_glabrata_CBS138_features.sorted.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "C_glabrata_CBS138_features.sorted.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Annotations"
+      ],
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "hapA_Sacc_phyloP_scores",
+      "name": "Conservation: Saccharomycetales (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Saccharomycetales_C_albicans_SC5314_phyloP.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "category": [
+        "Conservation"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "hapA_CTG_phyloP_scores",
+      "name": "Conservation: Debaryomycetaceae (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "CTG_C_albicans_SC5314_phyloP.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "category": [
+        "Conservation"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "hapA_CanLod_phyloP_scores",
+      "name": "Conservation: Candida/Lodderomyces (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "CanLod_C_albicans_SC5314_phyloP.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "category": [
+        "Conservation"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "hapA_alb_dub_phyloP_scores",
+      "name": "Conservation: C.albicans/C.dubliniensis (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "alb_dub_C_albicans_SC5314_phyloP.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "category": [
+        "Conservation"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "HapB_Saccharomycetales_phyloP",
+      "name": "Conservation: Saccharomycetales (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "HapB_Saccharomycetales_phyloP.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "category": [
+        "Conservation"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "HapB_CTG_phyloP",
+      "name": "Conservation: Debaryomycetaceae (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "HapB_CTG_phyloP.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "category": [
+        "Conservation"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "HapB_CanLod_phyloP",
+      "name": "Conservation: Candida/Lodderomyces (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "HapB_CanLod_phyloP.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "category": [
+        "Conservation"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "HapB_alb_dub_phyloP",
+      "name": "Conservation: C.albicans/C.dubliniensis (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "HapB_alb_dub_phyloP.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "category": [
+        "Conservation"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "segal_hapA_transposon_hits",
+      "name": "Segal Transposon Hits (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Lib_3_7_11_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "category": [
+        "Mutagenesis"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "segal_hapA_transposon_reads",
+      "name": "Segal Transposon Reads (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Lib_3_7_11_reads.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "category": [
+        "Mutagenesis"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "HapB_Segal_hits",
+      "name": "Segal Transposon Hits (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "HapB_Segal_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "category": [
+        "Mutagenesis"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "HapB_Segal_reads",
+      "name": "Segal Transposon Reads (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "HapB_Segal_reads.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "category": [
+        "Mutagenesis"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "SC5314",
+      "name": "Muzzey 2013 SC5314 Alignments (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "SC5314.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "SC5314.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "VariantTrack",
+      "trackId": "Muzzey_SC5314_HapA.vcf",
+      "name": "Muzzey 2013 SC5314 Variants (HapA)",
+      "adapter": {
+        "type": "VcfTabixAdapter",
+        "vcfGzLocation": {
+          "uri": "Muzzey_SC5314_HapA.vcf.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_SC5314_HapA.vcf.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Variants",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Bruno_HapA_ypd_ss",
+      "name": "Bruno 2010 ypd_ss (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "sorted_hits.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "sorted_hits.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Bruno_HapA_ph4",
+      "name": "Bruno 2010 ph4 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Bruno_HapA_ph4.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Bruno_HapA_ph4.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Bruno_HapA_ph8",
+      "name": "Bruno 2010 ph8 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Bruno_HapA_ph8.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Bruno_HapA_ph8.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Bruno_HapA_hOxi",
+      "name": "Bruno 2010 hOxi (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Bruno_HapA_hOxi.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Bruno_HapA_hOxi.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Bruno_HapA_lOxi",
+      "name": "Bruno 2010 lOxi (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Bruno_HapA_lOxi.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Bruno_HapA_lOxi.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "bruno_nOxi_hapA_coverage",
+      "name": "Bruno 2010 nOxi (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Bruno_HapA_nOxi.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Bruno_HapA_nOxi.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "VariantTrack",
+      "trackId": "A22A_WO1.vcf",
+      "name": "WO-1 Variants (HapA)",
+      "adapter": {
+        "type": "VcfTabixAdapter",
+        "vcfGzLocation": {
+          "uri": "A22A_WO1.vcf.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "A22A_WO1.vcf.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Variants",
+        "WO-1"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "VariantTrack",
+      "trackId": "WO1_HapB.vcf",
+      "name": "WO-1 Variants (HapB)",
+      "adapter": {
+        "type": "VcfTabixAdapter",
+        "vcfGzLocation": {
+          "uri": "WO1_HapB.vcf.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "WO1_HapB.vcf.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Variants",
+        "WO-1"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Lohse_HapA_wt_con",
+      "name": "Lohse 2016 wt_con (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Lohse_HapA_wt_con.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Lohse_HapA_wt_con.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Lohse_2016"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Lohse_HapA_wt_gfp",
+      "name": "Lohse 2016 wt_gfp (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Lohse_HapA_wt_gfp.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Lohse_HapA_wt_gfp.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Lohse_2016"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Lohse_HapA_op_con",
+      "name": "Lohse 2016 op_con (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Lohse_HapA_op_con.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Lohse_HapA_op_con.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Lohse_2016"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Lohse_HapA_op_gfp",
+      "name": "Lohse 2016 op_gfp (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Lohse_HapA_op_gfp.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Lohse_HapA_op_gfp.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Lohse_2016"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "VariantTrack",
+      "trackId": "Muzzey_HapA_chr1A.vcf",
+      "name": "Muzzey 2013 chr1A Variants (HapA)",
+      "adapter": {
+        "type": "VcfTabixAdapter",
+        "vcfGzLocation": {
+          "uri": "Muzzey_HapA_chr1A.vcf.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapA_chr1A.vcf.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Variants",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "VariantTrack",
+      "trackId": "Muzzey_HapA_chr2A.vcf",
+      "name": "Muzzey 2013 chr2A Variants (HapA)",
+      "adapter": {
+        "type": "VcfTabixAdapter",
+        "vcfGzLocation": {
+          "uri": "Muzzey_HapA_chr2A.vcf.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapA_chr2A.vcf.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Variants",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "VariantTrack",
+      "trackId": "Muzzey_HapA_chr3A.vcf",
+      "name": "Muzzey 2013 chr3A Variants (HapA)",
+      "adapter": {
+        "type": "VcfTabixAdapter",
+        "vcfGzLocation": {
+          "uri": "Muzzey_HapA_chr3A.vcf.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapA_chr3A.vcf.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Variants",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Bruno_2010_HapA_cwdm",
+      "name": "Bruno_2010 cwdm (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Bruno_2010_HapA_cwdm.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Bruno_2010_HapA_cwdm.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Bruno_2010_HapA_cwdp",
+      "name": "Bruno_2010 cwdp (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Bruno_2010_HapA_cwdp.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Bruno_2010_HapA_cwdp.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Bruno_2010_HapA_nitroSm",
+      "name": "Bruno_2010 nitroSm (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Bruno_2010_HapA_nitroSm.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Bruno_2010_HapA_nitroSm.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Bruno_2010_HapA_nitroSp",
+      "name": "Bruno_2010 nitroSp (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Bruno_2010_HapA_nitroSp.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Bruno_2010_HapA_nitroSp.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Bruno_2010_HapA_ypd_serum_ss",
+      "name": "Bruno_2010 ypd_serum_ss (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Bruno_2010_HapA_ypd_serum_ss.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Bruno_2010_HapA_ypd_serum_ss.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Bruno_2010_HapB_cwdm",
+      "name": "Bruno_2010 cwdm (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Bruno_2010_HapB_cwdm.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Bruno_2010_HapB_cwdm.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Bruno_2010_HapB_cwdp",
+      "name": "Bruno_2010 cwdp (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Bruno_2010_HapB_cwdp.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Bruno_2010_HapB_cwdp.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Bruno_2010_HapB_nitroSm",
+      "name": "Bruno_2010 nitroSm (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Bruno_2010_HapB_nitroSm.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Bruno_2010_HapB_nitroSm.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Bruno_2010_HapB_nitroSp",
+      "name": "Bruno_2010 nitroSp (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Bruno_2010_HapB_nitroSp.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Bruno_2010_HapB_nitroSp.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Bruno_2010_HapB_ypd_serum_ss",
+      "name": "Bruno_2010 ypd_serum_ss (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Bruno_2010_HapB_ypd_serum_ss.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Bruno_2010_HapB_ypd_serum_ss.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Desai_2013_HapA_rhr2C_1",
+      "name": "Desai_2013 rhr2C_1 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Desai_2013_HapA_rhr2C_1.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Desai_2013_HapA_rhr2C_1.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Desai_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Desai_2013_HapA_rhr2C_2",
+      "name": "Desai_2013 rhr2C_2 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Desai_2013_HapA_rhr2C_2.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Desai_2013_HapA_rhr2C_2.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Desai_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Desai_2013_HapA_rhr2D_1",
+      "name": "Desai_2013 rhr2D_1 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Desai_2013_HapA_rhr2D_1.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Desai_2013_HapA_rhr2D_1.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Desai_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Desai_2013_HapA_rhr2D_2",
+      "name": "Desai_2013 rhr2D_2 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Desai_2013_HapA_rhr2D_2.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Desai_2013_HapA_rhr2D_2.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Desai_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Desai_2013_HapA_sc_film",
+      "name": "Desai_2013 sc_film (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Desai_2013_HapA_sc_film.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Desai_2013_HapA_sc_film.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Desai_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Desai_2013_HapA_sc_plnk",
+      "name": "Desai_2013 sc_plnk (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Desai_2013_HapA_sc_plnk.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Desai_2013_HapA_sc_plnk.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Desai_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Desai_2013_HapA_woO_film",
+      "name": "Desai_2013 woO_film (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Desai_2013_HapA_woO_film.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Desai_2013_HapA_woO_film.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Desai_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Desai_2013_HapA_woO_plnk",
+      "name": "Desai_2013 woO_plnk (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Desai_2013_HapA_woO_plnk.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Desai_2013_HapA_woO_plnk.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Desai_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Desai_2013_HapA_woW_film",
+      "name": "Desai_2013 woW_film (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Desai_2013_HapA_woW_film.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Desai_2013_HapA_woW_film.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Desai_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Desai_2013_HapA_woW_plnk",
+      "name": "Desai_2013 woW_plnk (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Desai_2013_HapA_woW_plnk.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Desai_2013_HapA_woW_plnk.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Desai_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Desai_2013_HapB_rhr2C_1",
+      "name": "Desai_2013 rhr2C_1 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Desai_2013_HapB_rhr2C_1.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Desai_2013_HapB_rhr2C_1.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Desai_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Desai_2013_HapB_rhr2C_2",
+      "name": "Desai_2013 rhr2C_2 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Desai_2013_HapB_rhr2C_2.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Desai_2013_HapB_rhr2C_2.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Desai_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Desai_2013_HapB_rhr2D_1",
+      "name": "Desai_2013 rhr2D_1 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Desai_2013_HapB_rhr2D_1.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Desai_2013_HapB_rhr2D_1.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Desai_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Desai_2013_HapB_rhr2D_2",
+      "name": "Desai_2013 rhr2D_2 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Desai_2013_HapB_rhr2D_2.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Desai_2013_HapB_rhr2D_2.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Desai_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Desai_2013_HapB_sc_film",
+      "name": "Desai_2013 sc_film (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Desai_2013_HapB_sc_film.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Desai_2013_HapB_sc_film.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Desai_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Desai_2013_HapB_sc_plnk",
+      "name": "Desai_2013 sc_plnk (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Desai_2013_HapB_sc_plnk.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Desai_2013_HapB_sc_plnk.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Desai_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Desai_2013_HapB_woO_film",
+      "name": "Desai_2013 woO_film (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Desai_2013_HapB_woO_film.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Desai_2013_HapB_woO_film.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Desai_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Desai_2013_HapB_woO_plnk",
+      "name": "Desai_2013 woO_plnk (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Desai_2013_HapB_woO_plnk.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Desai_2013_HapB_woO_plnk.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Desai_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Desai_2013_HapB_woW_film",
+      "name": "Desai_2013 woW_film (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Desai_2013_HapB_woW_film.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Desai_2013_HapB_woW_film.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Desai_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Desai_2013_HapB_woW_plnk",
+      "name": "Desai_2013 woW_plnk (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Desai_2013_HapB_woW_plnk.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Desai_2013_HapB_woW_plnk.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Desai_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Niemiec_2017_HapA_chg_69",
+      "name": "Niemiec_2017 chg_69 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Niemiec_2017_HapA_chg_69.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Niemiec_2017_HapA_chg_69.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Niemiec_2017"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Niemiec_2017_HapA_chg_70",
+      "name": "Niemiec_2017 chg_70 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Niemiec_2017_HapA_chg_70.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Niemiec_2017_HapA_chg_70.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Niemiec_2017"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Niemiec_2017_HapA_chg_71",
+      "name": "Niemiec_2017 chg_71 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Niemiec_2017_HapA_chg_71.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Niemiec_2017_HapA_chg_71.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Niemiec_2017"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Niemiec_2017_HapA_chg_72",
+      "name": "Niemiec_2017 chg_72 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Niemiec_2017_HapA_chg_72.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Niemiec_2017_HapA_chg_72.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Niemiec_2017"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Niemiec_2017_HapA_chg_73",
+      "name": "Niemiec_2017 chg_73 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Niemiec_2017_HapA_chg_73.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Niemiec_2017_HapA_chg_73.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Niemiec_2017"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Niemiec_2017_HapA_chg_74",
+      "name": "Niemiec_2017 chg_74 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Niemiec_2017_HapA_chg_74.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Niemiec_2017_HapA_chg_74.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Niemiec_2017"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Niemiec_2017_HapA_chg_75",
+      "name": "Niemiec_2017 chg_75 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Niemiec_2017_HapA_chg_75.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Niemiec_2017_HapA_chg_75.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Niemiec_2017"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Niemiec_2017_HapA_chg_76",
+      "name": "Niemiec_2017 chg_76 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Niemiec_2017_HapA_chg_76.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Niemiec_2017_HapA_chg_76.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Niemiec_2017"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Niemiec_2017_HapA_chg_77",
+      "name": "Niemiec_2017 chg_77 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Niemiec_2017_HapA_chg_77.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Niemiec_2017_HapA_chg_77.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Niemiec_2017"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Niemiec_2017_HapA_chg_79",
+      "name": "Niemiec_2017 chg_79 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Niemiec_2017_HapA_chg_79.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Niemiec_2017_HapA_chg_79.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Niemiec_2017"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Niemiec_2017_HapA_chg_80",
+      "name": "Niemiec_2017 chg_80 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Niemiec_2017_HapA_chg_80.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Niemiec_2017_HapA_chg_80.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Niemiec_2017"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Niemiec_2017_HapA_chg_81",
+      "name": "Niemiec_2017 chg_81 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Niemiec_2017_HapA_chg_81.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Niemiec_2017_HapA_chg_81.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Niemiec_2017"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Niemiec_2017_HapB_chg_69",
+      "name": "Niemiec_2017 chg_69 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Niemiec_2017_HapB_chg_69.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Niemiec_2017_HapB_chg_69.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Niemiec_2017"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Niemiec_2017_HapB_chg_70",
+      "name": "Niemiec_2017 chg_70 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Niemiec_2017_HapB_chg_70.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Niemiec_2017_HapB_chg_70.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Niemiec_2017"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Niemiec_2017_HapB_chg_71",
+      "name": "Niemiec_2017 chg_71 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Niemiec_2017_HapB_chg_71.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Niemiec_2017_HapB_chg_71.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Niemiec_2017"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Niemiec_2017_HapB_chg_72",
+      "name": "Niemiec_2017 chg_72 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Niemiec_2017_HapB_chg_72.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Niemiec_2017_HapB_chg_72.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Niemiec_2017"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Niemiec_2017_HapB_chg_73",
+      "name": "Niemiec_2017 chg_73 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Niemiec_2017_HapB_chg_73.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Niemiec_2017_HapB_chg_73.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Niemiec_2017"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Niemiec_2017_HapB_chg_74",
+      "name": "Niemiec_2017 chg_74 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Niemiec_2017_HapB_chg_74.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Niemiec_2017_HapB_chg_74.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Niemiec_2017"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Niemiec_2017_HapB_chg_75",
+      "name": "Niemiec_2017 chg_75 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Niemiec_2017_HapB_chg_75.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Niemiec_2017_HapB_chg_75.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Niemiec_2017"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Niemiec_2017_HapB_chg_76",
+      "name": "Niemiec_2017 chg_76 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Niemiec_2017_HapB_chg_76.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Niemiec_2017_HapB_chg_76.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Niemiec_2017"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Niemiec_2017_HapB_chg_77",
+      "name": "Niemiec_2017 chg_77 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Niemiec_2017_HapB_chg_77.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Niemiec_2017_HapB_chg_77.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Niemiec_2017"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Niemiec_2017_HapB_chg_79",
+      "name": "Niemiec_2017 chg_79 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Niemiec_2017_HapB_chg_79.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Niemiec_2017_HapB_chg_79.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Niemiec_2017"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Niemiec_2017_HapB_chg_80",
+      "name": "Niemiec_2017 chg_80 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Niemiec_2017_HapB_chg_80.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Niemiec_2017_HapB_chg_80.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Niemiec_2017"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Niemiec_2017_HapB_chg_81",
+      "name": "Niemiec_2017 chg_81 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Niemiec_2017_HapB_chg_81.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Niemiec_2017_HapB_chg_81.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Niemiec_2017"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Xie_2013_HapA_CY110op",
+      "name": "Xie_2013 CY110op (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Xie_2013_HapA_CY110op.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Xie_2013_HapA_CY110op.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Xie_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Xie_2013_HapA_CY110wh",
+      "name": "Xie_2013 CY110wh (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Xie_2013_HapA_CY110wh.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Xie_2013_HapA_CY110wh.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Xie_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Xie_2013_HapB_CY110op",
+      "name": "Xie_2013 CY110op (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Xie_2013_HapB_CY110op.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Xie_2013_HapB_CY110op.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Xie_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Xie_2013_HapB_CY110wh",
+      "name": "Xie_2013 CY110wh (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Xie_2013_HapB_CY110wh.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Xie_2013_HapB_CY110wh.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Xie_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Glazier_2023_HapA_SRR25396039",
+      "name": "Glazier_2023 SRR25396039 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Glazier_2023_HapA_SRR25396039.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Glazier_2023_HapA_SRR25396039.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Glazier_2023"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Glazier_2023_HapA_SRR25396040",
+      "name": "Glazier_2023 SRR25396040 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Glazier_2023_HapA_SRR25396040.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Glazier_2023_HapA_SRR25396040.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Glazier_2023"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Glazier_2023_HapA_SRR25396041",
+      "name": "Glazier_2023 SRR25396041 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Glazier_2023_HapA_SRR25396041.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Glazier_2023_HapA_SRR25396041.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Glazier_2023"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Glazier_2023_HapA_SRR25396042",
+      "name": "Glazier_2023 SRR25396042 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Glazier_2023_HapA_SRR25396042.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Glazier_2023_HapA_SRR25396042.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Glazier_2023"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Glazier_2023_HapA_SRR25396043",
+      "name": "Glazier_2023 SRR25396043 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Glazier_2023_HapA_SRR25396043.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Glazier_2023_HapA_SRR25396043.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Glazier_2023"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Glazier_2023_HapA_SRR25396044",
+      "name": "Glazier_2023 SRR25396044 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Glazier_2023_HapA_SRR25396044.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Glazier_2023_HapA_SRR25396044.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Glazier_2023"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Glazier_2023_HapA_SRR25396045",
+      "name": "Glazier_2023 SRR25396045 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Glazier_2023_HapA_SRR25396045.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Glazier_2023_HapA_SRR25396045.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Glazier_2023"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Glazier_2023_HapA_SRR25396046",
+      "name": "Glazier_2023 SRR25396046 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Glazier_2023_HapA_SRR25396046.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Glazier_2023_HapA_SRR25396046.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Glazier_2023"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Glazier_2023_HapA_SRR25396047",
+      "name": "Glazier_2023 SRR25396047 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Glazier_2023_HapA_SRR25396047.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Glazier_2023_HapA_SRR25396047.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Glazier_2023"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Glazier_2023_HapA_SRR25396048",
+      "name": "Glazier_2023 SRR25396048 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Glazier_2023_HapA_SRR25396048.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Glazier_2023_HapA_SRR25396048.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Glazier_2023"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Glazier_2023_HapA_SRR25396049",
+      "name": "Glazier_2023 SRR25396049 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Glazier_2023_HapA_SRR25396049.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Glazier_2023_HapA_SRR25396049.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Glazier_2023"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Glazier_2023_HapA_SRR25396050",
+      "name": "Glazier_2023 SRR25396050 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Glazier_2023_HapA_SRR25396050.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Glazier_2023_HapA_SRR25396050.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Glazier_2023"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Glazier_2023_HapB_SRR25396039",
+      "name": "Glazier_2023 SRR25396039 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Glazier_2023_HapB_SRR25396039.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Glazier_2023_HapB_SRR25396039.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Glazier_2023"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Glazier_2023_HapB_SRR25396040",
+      "name": "Glazier_2023 SRR25396040 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Glazier_2023_HapB_SRR25396040.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Glazier_2023_HapB_SRR25396040.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Glazier_2023"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Glazier_2023_HapB_SRR25396041",
+      "name": "Glazier_2023 SRR25396041 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Glazier_2023_HapB_SRR25396041.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Glazier_2023_HapB_SRR25396041.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Glazier_2023"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Glazier_2023_HapB_SRR25396042",
+      "name": "Glazier_2023 SRR25396042 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Glazier_2023_HapB_SRR25396042.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Glazier_2023_HapB_SRR25396042.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Glazier_2023"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Glazier_2023_HapB_SRR25396043",
+      "name": "Glazier_2023 SRR25396043 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Glazier_2023_HapB_SRR25396043.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Glazier_2023_HapB_SRR25396043.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Glazier_2023"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Glazier_2023_HapB_SRR25396044",
+      "name": "Glazier_2023 SRR25396044 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Glazier_2023_HapB_SRR25396044.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Glazier_2023_HapB_SRR25396044.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Glazier_2023"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Glazier_2023_HapB_SRR25396045",
+      "name": "Glazier_2023 SRR25396045 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Glazier_2023_HapB_SRR25396045.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Glazier_2023_HapB_SRR25396045.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Glazier_2023"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Glazier_2023_HapB_SRR25396046",
+      "name": "Glazier_2023 SRR25396046 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Glazier_2023_HapB_SRR25396046.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Glazier_2023_HapB_SRR25396046.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Glazier_2023"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Glazier_2023_HapB_SRR25396047",
+      "name": "Glazier_2023 SRR25396047 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Glazier_2023_HapB_SRR25396047.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Glazier_2023_HapB_SRR25396047.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Glazier_2023"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Glazier_2023_HapB_SRR25396048",
+      "name": "Glazier_2023 SRR25396048 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Glazier_2023_HapB_SRR25396048.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Glazier_2023_HapB_SRR25396048.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Glazier_2023"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Glazier_2023_HapB_SRR25396049",
+      "name": "Glazier_2023 SRR25396049 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Glazier_2023_HapB_SRR25396049.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Glazier_2023_HapB_SRR25396049.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Glazier_2023"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Glazier_2023_HapB_SRR25396050",
+      "name": "Glazier_2023 SRR25396050 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Glazier_2023_HapB_SRR25396050.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Glazier_2023_HapB_SRR25396050.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Glazier_2023"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapA_SRR8285058",
+      "name": "Shivarathri_2019 SRR8285058 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapA_SRR8285058.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapA_SRR8285058.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapA_SRR8285059",
+      "name": "Shivarathri_2019 SRR8285059 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapA_SRR8285059.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapA_SRR8285059.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapA_SRR8285060",
+      "name": "Shivarathri_2019 SRR8285060 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapA_SRR8285060.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapA_SRR8285060.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapA_SRR8285061",
+      "name": "Shivarathri_2019 SRR8285061 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapA_SRR8285061.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapA_SRR8285061.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapA_SRR8285062",
+      "name": "Shivarathri_2019 SRR8285062 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapA_SRR8285062.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapA_SRR8285062.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapA_SRR8285063",
+      "name": "Shivarathri_2019 SRR8285063 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapA_SRR8285063.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapA_SRR8285063.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapA_SRR8285064",
+      "name": "Shivarathri_2019 SRR8285064 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapA_SRR8285064.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapA_SRR8285064.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapA_SRR8285065",
+      "name": "Shivarathri_2019 SRR8285065 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapA_SRR8285065.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapA_SRR8285065.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapA_SRR8285066",
+      "name": "Shivarathri_2019 SRR8285066 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapA_SRR8285066.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapA_SRR8285066.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapA_SRR8285067",
+      "name": "Shivarathri_2019 SRR8285067 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapA_SRR8285067.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapA_SRR8285067.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapA_SRR8285068",
+      "name": "Shivarathri_2019 SRR8285068 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapA_SRR8285068.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapA_SRR8285068.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapA_SRR8285069",
+      "name": "Shivarathri_2019 SRR8285069 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapA_SRR8285069.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapA_SRR8285069.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapA_SRR8285070",
+      "name": "Shivarathri_2019 SRR8285070 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapA_SRR8285070.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapA_SRR8285070.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapA_SRR8285071",
+      "name": "Shivarathri_2019 SRR8285071 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapA_SRR8285071.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapA_SRR8285071.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapA_SRR8285072",
+      "name": "Shivarathri_2019 SRR8285072 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapA_SRR8285072.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapA_SRR8285072.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapA_SRR8285073",
+      "name": "Shivarathri_2019 SRR8285073 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapA_SRR8285073.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapA_SRR8285073.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapB_SRR8285058",
+      "name": "Shivarathri_2019 SRR8285058 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapB_SRR8285058.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapB_SRR8285058.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapB_SRR8285059",
+      "name": "Shivarathri_2019 SRR8285059 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapB_SRR8285059.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapB_SRR8285059.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapB_SRR8285060",
+      "name": "Shivarathri_2019 SRR8285060 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapB_SRR8285060.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapB_SRR8285060.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapB_SRR8285061",
+      "name": "Shivarathri_2019 SRR8285061 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapB_SRR8285061.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapB_SRR8285061.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapB_SRR8285062",
+      "name": "Shivarathri_2019 SRR8285062 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapB_SRR8285062.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapB_SRR8285062.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapB_SRR8285063",
+      "name": "Shivarathri_2019 SRR8285063 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapB_SRR8285063.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapB_SRR8285063.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapB_SRR8285064",
+      "name": "Shivarathri_2019 SRR8285064 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapB_SRR8285064.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapB_SRR8285064.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapB_SRR8285065",
+      "name": "Shivarathri_2019 SRR8285065 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapB_SRR8285065.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapB_SRR8285065.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapB_SRR8285066",
+      "name": "Shivarathri_2019 SRR8285066 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapB_SRR8285066.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapB_SRR8285066.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapB_SRR8285067",
+      "name": "Shivarathri_2019 SRR8285067 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapB_SRR8285067.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapB_SRR8285067.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapB_SRR8285068",
+      "name": "Shivarathri_2019 SRR8285068 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapB_SRR8285068.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapB_SRR8285068.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapB_SRR8285069",
+      "name": "Shivarathri_2019 SRR8285069 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapB_SRR8285069.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapB_SRR8285069.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapB_SRR8285070",
+      "name": "Shivarathri_2019 SRR8285070 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapB_SRR8285070.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapB_SRR8285070.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapB_SRR8285071",
+      "name": "Shivarathri_2019 SRR8285071 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapB_SRR8285071.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapB_SRR8285071.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapB_SRR8285072",
+      "name": "Shivarathri_2019 SRR8285072 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapB_SRR8285072.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapB_SRR8285072.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Shivarathri_2019_HapB_SRR8285073",
+      "name": "Shivarathri_2019 SRR8285073 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Shivarathri_2019_HapB_SRR8285073.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Shivarathri_2019_HapB_SRR8285073.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Shivarathri_2019"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Iracane_2024_HapA_SRR27912204",
+      "name": "Iracane_2024 SRR27912204 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Iracane_2024_HapA_SRR27912204.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Iracane_2024_HapA_SRR27912204.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Iracane_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapA_ERR8278346",
+      "name": "Rai_2024 ERR8278346 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapA_ERR8278346.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapA_ERR8278346.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapA_ERR8278347",
+      "name": "Rai_2024 ERR8278347 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapA_ERR8278347.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapA_ERR8278347.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapA_ERR8278348",
+      "name": "Rai_2024 ERR8278348 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapA_ERR8278348.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapA_ERR8278348.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapA_ERR8278349",
+      "name": "Rai_2024 ERR8278349 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapA_ERR8278349.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapA_ERR8278349.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapA_ERR8278350",
+      "name": "Rai_2024 ERR8278350 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapA_ERR8278350.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapA_ERR8278350.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapA_ERR8278351",
+      "name": "Rai_2024 ERR8278351 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapA_ERR8278351.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapA_ERR8278351.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapA_ERR8278352",
+      "name": "Rai_2024 ERR8278352 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapA_ERR8278352.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapA_ERR8278352.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapA_ERR8278353",
+      "name": "Rai_2024 ERR8278353 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapA_ERR8278353.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapA_ERR8278353.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapA_ERR8278354",
+      "name": "Rai_2024 ERR8278354 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapA_ERR8278354.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapA_ERR8278354.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapA_ERR8278355",
+      "name": "Rai_2024 ERR8278355 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapA_ERR8278355.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapA_ERR8278355.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapA_ERR8278356",
+      "name": "Rai_2024 ERR8278356 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapA_ERR8278356.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapA_ERR8278356.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapA_ERR8278357",
+      "name": "Rai_2024 ERR8278357 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapA_ERR8278357.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapA_ERR8278357.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapA_ERR8278358",
+      "name": "Rai_2024 ERR8278358 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapA_ERR8278358.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapA_ERR8278358.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapA_ERR8278359",
+      "name": "Rai_2024 ERR8278359 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapA_ERR8278359.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapA_ERR8278359.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapA_ERR8278360",
+      "name": "Rai_2024 ERR8278360 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapA_ERR8278360.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapA_ERR8278360.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapA_ERR8278361",
+      "name": "Rai_2024 ERR8278361 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapA_ERR8278361.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapA_ERR8278361.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapA_ERR8278362",
+      "name": "Rai_2024 ERR8278362 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapA_ERR8278362.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapA_ERR8278362.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapA_ERR8278363",
+      "name": "Rai_2024 ERR8278363 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapA_ERR8278363.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapA_ERR8278363.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapB_ERR8278346",
+      "name": "Rai_2024 ERR8278346 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapB_ERR8278346.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapB_ERR8278346.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapB_ERR8278347",
+      "name": "Rai_2024 ERR8278347 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapB_ERR8278347.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapB_ERR8278347.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapB_ERR8278348",
+      "name": "Rai_2024 ERR8278348 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapB_ERR8278348.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapB_ERR8278348.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapB_ERR8278349",
+      "name": "Rai_2024 ERR8278349 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapB_ERR8278349.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapB_ERR8278349.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapB_ERR8278350",
+      "name": "Rai_2024 ERR8278350 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapB_ERR8278350.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapB_ERR8278350.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapB_ERR8278351",
+      "name": "Rai_2024 ERR8278351 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapB_ERR8278351.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapB_ERR8278351.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapB_ERR8278352",
+      "name": "Rai_2024 ERR8278352 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapB_ERR8278352.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapB_ERR8278352.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapB_ERR8278353",
+      "name": "Rai_2024 ERR8278353 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapB_ERR8278353.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapB_ERR8278353.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapB_ERR8278354",
+      "name": "Rai_2024 ERR8278354 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapB_ERR8278354.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapB_ERR8278354.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapB_ERR8278355",
+      "name": "Rai_2024 ERR8278355 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapB_ERR8278355.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapB_ERR8278355.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapB_ERR8278356",
+      "name": "Rai_2024 ERR8278356 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapB_ERR8278356.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapB_ERR8278356.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapB_ERR8278357",
+      "name": "Rai_2024 ERR8278357 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapB_ERR8278357.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapB_ERR8278357.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapB_ERR8278358",
+      "name": "Rai_2024 ERR8278358 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapB_ERR8278358.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapB_ERR8278358.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapB_ERR8278359",
+      "name": "Rai_2024 ERR8278359 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapB_ERR8278359.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapB_ERR8278359.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapB_ERR8278360",
+      "name": "Rai_2024 ERR8278360 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapB_ERR8278360.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapB_ERR8278360.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapB_ERR8278361",
+      "name": "Rai_2024 ERR8278361 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapB_ERR8278361.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapB_ERR8278361.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapB_ERR8278362",
+      "name": "Rai_2024 ERR8278362 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapB_ERR8278362.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapB_ERR8278362.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Rai_2024_HapB_ERR8278363",
+      "name": "Rai_2024 ERR8278363 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Rai_2024_HapB_ERR8278363.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Rai_2024_HapB_ERR8278363.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Rai_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Zhang_2024_HapA_SRR18188695",
+      "name": "Zhang_2024 SRR18188695 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Zhang_2024_HapA_SRR18188695.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Zhang_2024_HapA_SRR18188695.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Zhang_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Zhang_2024_HapA_SRR18188696",
+      "name": "Zhang_2024 SRR18188696 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Zhang_2024_HapA_SRR18188696.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Zhang_2024_HapA_SRR18188696.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Zhang_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Zhang_2024_HapA_SRR18188697",
+      "name": "Zhang_2024 SRR18188697 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Zhang_2024_HapA_SRR18188697.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Zhang_2024_HapA_SRR18188697.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Zhang_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Zhang_2024_HapA_SRR18188698",
+      "name": "Zhang_2024 SRR18188698 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Zhang_2024_HapA_SRR18188698.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Zhang_2024_HapA_SRR18188698.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Zhang_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Zhang_2024_HapA_SRR18188699",
+      "name": "Zhang_2024 SRR18188699 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Zhang_2024_HapA_SRR18188699.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Zhang_2024_HapA_SRR18188699.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Zhang_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Zhang_2024_HapA_SRR18188700",
+      "name": "Zhang_2024 SRR18188700 (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Zhang_2024_HapA_SRR18188700.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Zhang_2024_HapA_SRR18188700.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Zhang_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Zhang_2024_HapB_SRR18188695",
+      "name": "Zhang_2024 SRR18188695 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Zhang_2024_HapB_SRR18188695.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Zhang_2024_HapB_SRR18188695.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Zhang_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Zhang_2024_HapB_SRR18188696",
+      "name": "Zhang_2024 SRR18188696 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Zhang_2024_HapB_SRR18188696.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Zhang_2024_HapB_SRR18188696.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Zhang_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Zhang_2024_HapB_SRR18188697",
+      "name": "Zhang_2024 SRR18188697 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Zhang_2024_HapB_SRR18188697.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Zhang_2024_HapB_SRR18188697.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Zhang_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Zhang_2024_HapB_SRR18188698",
+      "name": "Zhang_2024 SRR18188698 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Zhang_2024_HapB_SRR18188698.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Zhang_2024_HapB_SRR18188698.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Zhang_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Zhang_2024_HapB_SRR18188699",
+      "name": "Zhang_2024 SRR18188699 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Zhang_2024_HapB_SRR18188699.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Zhang_2024_HapB_SRR18188699.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Zhang_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Zhang_2024_HapB_SRR18188700",
+      "name": "Zhang_2024 SRR18188700 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Zhang_2024_HapB_SRR18188700.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Zhang_2024_HapB_SRR18188700.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Zhang_2024"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Muzzey_HapA_SC5314_bam",
+      "name": "Muzzey 2013 SC5314 Alignments (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Muzzey_HapA_SC5314_bam.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapA_SC5314_bam.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "VariantTrack",
+      "trackId": "Muzzey_HapA_SC5314.vcf",
+      "name": "Muzzey 2013 SC5314 Variants (HapA)",
+      "adapter": {
+        "type": "VcfTabixAdapter",
+        "vcfGzLocation": {
+          "uri": "Muzzey_HapA_SC5314.vcf.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapA_SC5314.vcf.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Variants",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Muzzey_HapA_chr1A_bam",
+      "name": "Muzzey 2013 chr1A Alignments (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Muzzey_HapA_chr1A_bam.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapA_chr1A_bam.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Muzzey_HapA_chr2A_bam",
+      "name": "Muzzey 2013 chr2A Alignments (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Muzzey_HapA_chr2A_bam.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapA_chr2A_bam.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Muzzey_HapA_chr3A_bam",
+      "name": "Muzzey 2013 chr3A Alignments (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Muzzey_HapA_chr3A_bam.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapA_chr3A_bam.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Muzzey_HapA_chr4A_bam",
+      "name": "Muzzey 2013 chr4A Alignments (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Muzzey_HapA_chr4A_bam.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapA_chr4A_bam.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "VariantTrack",
+      "trackId": "Muzzey_HapA_chr4A.vcf",
+      "name": "Muzzey 2013 chr4A Variants (HapA)",
+      "adapter": {
+        "type": "VcfTabixAdapter",
+        "vcfGzLocation": {
+          "uri": "Muzzey_HapA_chr4A.vcf.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapA_chr4A.vcf.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Variants",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Muzzey_HapA_chr5A_bam",
+      "name": "Muzzey 2013 chr5A Alignments (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Muzzey_HapA_chr5A_bam.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapA_chr5A_bam.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "VariantTrack",
+      "trackId": "Muzzey_HapA_chr5A.vcf",
+      "name": "Muzzey 2013 chr5A Variants (HapA)",
+      "adapter": {
+        "type": "VcfTabixAdapter",
+        "vcfGzLocation": {
+          "uri": "Muzzey_HapA_chr5A.vcf.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapA_chr5A.vcf.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Variants",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Muzzey_HapA_chr6A_bam",
+      "name": "Muzzey 2013 chr6A Alignments (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Muzzey_HapA_chr6A_bam.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapA_chr6A_bam.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "VariantTrack",
+      "trackId": "Muzzey_HapA_chr6A.vcf",
+      "name": "Muzzey 2013 chr6A Variants (HapA)",
+      "adapter": {
+        "type": "VcfTabixAdapter",
+        "vcfGzLocation": {
+          "uri": "Muzzey_HapA_chr6A.vcf.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapA_chr6A.vcf.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Variants",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Muzzey_HapA_chr7A_bam",
+      "name": "Muzzey 2013 chr7A Alignments (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Muzzey_HapA_chr7A_bam.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapA_chr7A_bam.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "VariantTrack",
+      "trackId": "Muzzey_HapA_chr7A.vcf",
+      "name": "Muzzey 2013 chr7A Variants (HapA)",
+      "adapter": {
+        "type": "VcfTabixAdapter",
+        "vcfGzLocation": {
+          "uri": "Muzzey_HapA_chr7A.vcf.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapA_chr7A.vcf.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Variants",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Muzzey_HapA_chrRA_bam",
+      "name": "Muzzey 2013 chrRA Alignments (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Muzzey_HapA_chrRA_bam.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapA_chrRA_bam.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "VariantTrack",
+      "trackId": "Muzzey_HapA_chrRA.vcf",
+      "name": "Muzzey 2013 chrRA Variants (HapA)",
+      "adapter": {
+        "type": "VcfTabixAdapter",
+        "vcfGzLocation": {
+          "uri": "Muzzey_HapA_chrRA.vcf.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapA_chrRA.vcf.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Variants",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Muzzey_HapA_chrRB_bam",
+      "name": "Muzzey 2013 chrRB Alignments (HapA)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Muzzey_HapA_chrRB_bam.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapA_chrRB_bam.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "VariantTrack",
+      "trackId": "Muzzey_HapA_chrRB.vcf",
+      "name": "Muzzey 2013 chrRB Variants (HapA)",
+      "adapter": {
+        "type": "VcfTabixAdapter",
+        "vcfGzLocation": {
+          "uri": "Muzzey_HapA_chrRB.vcf.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapA_chrRB.vcf.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Variants",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Muzzey_HapB_SC5314_bam",
+      "name": "Muzzey 2013 SC5314 Alignments (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Muzzey_HapB_SC5314_bam.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapB_SC5314_bam.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "VariantTrack",
+      "trackId": "Muzzey_HapB_SC5314.vcf",
+      "name": "Muzzey 2013 SC5314 Variants (HapB)",
+      "adapter": {
+        "type": "VcfTabixAdapter",
+        "vcfGzLocation": {
+          "uri": "Muzzey_HapB_SC5314.vcf.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapB_SC5314.vcf.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Variants",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Muzzey_HapB_chr1A_bam",
+      "name": "Muzzey 2013 chr1A Alignments (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Muzzey_HapB_chr1A_bam.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapB_chr1A_bam.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "VariantTrack",
+      "trackId": "Muzzey_HapB_chr1A.vcf",
+      "name": "Muzzey 2013 chr1A Variants (HapB)",
+      "adapter": {
+        "type": "VcfTabixAdapter",
+        "vcfGzLocation": {
+          "uri": "Muzzey_HapB_chr1A.vcf.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapB_chr1A.vcf.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Variants",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Muzzey_HapB_chr2A_bam",
+      "name": "Muzzey 2013 chr2A Alignments (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Muzzey_HapB_chr2A_bam.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapB_chr2A_bam.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "VariantTrack",
+      "trackId": "Muzzey_HapB_chr2A.vcf",
+      "name": "Muzzey 2013 chr2A Variants (HapB)",
+      "adapter": {
+        "type": "VcfTabixAdapter",
+        "vcfGzLocation": {
+          "uri": "Muzzey_HapB_chr2A.vcf.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapB_chr2A.vcf.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Variants",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Muzzey_HapB_chr3A_bam",
+      "name": "Muzzey 2013 chr3A Alignments (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Muzzey_HapB_chr3A_bam.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapB_chr3A_bam.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "VariantTrack",
+      "trackId": "Muzzey_HapB_chr3A.vcf",
+      "name": "Muzzey 2013 chr3A Variants (HapB)",
+      "adapter": {
+        "type": "VcfTabixAdapter",
+        "vcfGzLocation": {
+          "uri": "Muzzey_HapB_chr3A.vcf.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapB_chr3A.vcf.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Variants",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Muzzey_HapB_chr4A_bam",
+      "name": "Muzzey 2013 chr4A Alignments (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Muzzey_HapB_chr4A_bam.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapB_chr4A_bam.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "VariantTrack",
+      "trackId": "Muzzey_HapB_chr4A.vcf",
+      "name": "Muzzey 2013 chr4A Variants (HapB)",
+      "adapter": {
+        "type": "VcfTabixAdapter",
+        "vcfGzLocation": {
+          "uri": "Muzzey_HapB_chr4A.vcf.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapB_chr4A.vcf.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Variants",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Muzzey_HapB_chr5A_bam",
+      "name": "Muzzey 2013 chr5A Alignments (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Muzzey_HapB_chr5A_bam.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapB_chr5A_bam.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "VariantTrack",
+      "trackId": "Muzzey_HapB_chr5A.vcf",
+      "name": "Muzzey 2013 chr5A Variants (HapB)",
+      "adapter": {
+        "type": "VcfTabixAdapter",
+        "vcfGzLocation": {
+          "uri": "Muzzey_HapB_chr5A.vcf.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapB_chr5A.vcf.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Variants",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Muzzey_HapB_chr6A_bam",
+      "name": "Muzzey 2013 chr6A Alignments (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Muzzey_HapB_chr6A_bam.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapB_chr6A_bam.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "VariantTrack",
+      "trackId": "Muzzey_HapB_chr6A.vcf",
+      "name": "Muzzey 2013 chr6A Variants (HapB)",
+      "adapter": {
+        "type": "VcfTabixAdapter",
+        "vcfGzLocation": {
+          "uri": "Muzzey_HapB_chr6A.vcf.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapB_chr6A.vcf.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Variants",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Muzzey_HapB_chr7A_bam",
+      "name": "Muzzey 2013 chr7A Alignments (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Muzzey_HapB_chr7A_bam.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapB_chr7A_bam.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "VariantTrack",
+      "trackId": "Muzzey_HapB_chr7A.vcf",
+      "name": "Muzzey 2013 chr7A Variants (HapB)",
+      "adapter": {
+        "type": "VcfTabixAdapter",
+        "vcfGzLocation": {
+          "uri": "Muzzey_HapB_chr7A.vcf.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapB_chr7A.vcf.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Variants",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Muzzey_HapB_chrRA_bam",
+      "name": "Muzzey 2013 chrRA Alignments (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Muzzey_HapB_chrRA_bam.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapB_chrRA_bam.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "VariantTrack",
+      "trackId": "Muzzey_HapB_chrRA.vcf",
+      "name": "Muzzey 2013 chrRA Variants (HapB)",
+      "adapter": {
+        "type": "VcfTabixAdapter",
+        "vcfGzLocation": {
+          "uri": "Muzzey_HapB_chrRA.vcf.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapB_chrRA.vcf.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Variants",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Muzzey_HapB_chrRB_bam",
+      "name": "Muzzey 2013 chrRB Alignments (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Muzzey_HapB_chrRB_bam.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapB_chrRB_bam.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "VariantTrack",
+      "trackId": "Muzzey_HapB_chrRB.vcf",
+      "name": "Muzzey 2013 chrRB Variants (HapB)",
+      "adapter": {
+        "type": "VcfTabixAdapter",
+        "vcfGzLocation": {
+          "uri": "Muzzey_HapB_chrRB.vcf.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Muzzey_HapB_chrRB.vcf.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "category": [
+        "Variants",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Bruno_HapB_ypd_ss",
+      "name": "Bruno 2010 ypd_ss (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Bruno_HapB_ypd_ss.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Bruno_HapB_ypd_ss.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Bruno_HapB_ph4",
+      "name": "Bruno 2010 ph4 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Bruno_HapB_ph4.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Bruno_HapB_ph4.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Bruno_HapB_ph8",
+      "name": "Bruno 2010 ph8 (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Bruno_HapB_ph8.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Bruno_HapB_ph8.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Bruno_HapB_hOxi",
+      "name": "Bruno 2010 hOxi (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Bruno_HapB_hOxi.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Bruno_HapB_hOxi.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Bruno_HapB_lOxi",
+      "name": "Bruno 2010 lOxi (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Bruno_HapB_lOxi.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Bruno_HapB_lOxi.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Bruno_HapB_nOxi",
+      "name": "Bruno 2010 nOxi (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Bruno_HapB_nOxi.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Bruno_HapB_nOxi.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Lohse_HapB_wt_con",
+      "name": "Lohse 2016 wt_con (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Lohse_HapB_wt_con.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Lohse_HapB_wt_con.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Lohse_2016"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Lohse_HapB_wt_gfp",
+      "name": "Lohse 2016 wt_gfp (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Lohse_HapB_wt_gfp.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Lohse_HapB_wt_gfp.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Lohse_2016"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Lohse_HapB_op_con",
+      "name": "Lohse 2016 op_con (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Lohse_HapB_op_con.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Lohse_HapB_op_con.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Lohse_2016"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "AlignmentsTrack",
+      "trackId": "Lohse_HapB_op_gfp",
+      "name": "Lohse 2016 op_gfp (HapB)",
+      "adapter": {
+        "type": "BamAdapter",
+        "bamLocation": {
+          "uri": "Lohse_HapB_op_gfp.bam",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "Lohse_HapB_op_gfp.bam.bai",
+            "locationType": "UriLocation"
+          },
+          "indexType": "BAI"
+        }
+      },
+      "category": [
+        "Alignments",
+        "Lohse_2016"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno_HapA_ypd_ss_coverage",
+      "name": "Bruno 2010 ypd_ss Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno_HapA_ypd_ss_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno_HapA_ph4_coverage",
+      "name": "Bruno 2010 ph4 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno_HapA_ph4_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno_HapA_ph8_coverage",
+      "name": "Bruno 2010 ph8 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno_HapA_ph8_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno_HapA_hOxi_coverage",
+      "name": "Bruno 2010 hOxi Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno_HapA_hOxi_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno_HapB_ypd_ss_coverage",
+      "name": "Bruno 2010 ypd_ss Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno_HapB_ypd_ss_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno_HapB_ph4_coverage",
+      "name": "Bruno 2010 ph4 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno_HapB_ph4_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno_HapB_ph8_coverage",
+      "name": "Bruno 2010 ph8 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno_HapB_ph8_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno_HapB_hOxi_coverage",
+      "name": "Bruno 2010 hOxi Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno_HapB_hOxi_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Muzzey_HapA_SC5314_coverage",
+      "name": "Muzzey 2013 SC5314 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Muzzey_HapA_SC5314_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "category": [
+        "Coverage",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Muzzey_HapB_SC5314_coverage",
+      "name": "Muzzey 2013 SC5314 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Muzzey_HapB_SC5314_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "category": [
+        "Coverage",
+        "Muzzey_2013"
+      ],
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "auris_phyloP_scores",
+      "name": "C. auris phyloP Conservation",
+      "category": [
+        "Conservation"
+      ],
+      "assemblyNames": [
+        "C_auris_B8441"
+      ],
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "auris_C_auris_B8441_phyloP.bigwig",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "AurLus_phyloP_scores",
+      "name": "C. auris/lusitaniae phyloP Conservation",
+      "category": [
+        "Conservation"
+      ],
+      "assemblyNames": [
+        "C_auris_B8441"
+      ],
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "AurLus_C_auris_B8441_phyloP.bigwig",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "CTG_C_auris_phyloP_scores",
+      "name": "CTG Clade phyloP Conservation",
+      "category": [
+        "Conservation"
+      ],
+      "assemblyNames": [
+        "C_auris_B8441"
+      ],
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "CTG_C_auris_B8441_phyloP.bigwig",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Sacc_C_auris_phyloP_scores",
+      "name": "Saccharomycetales phyloP Conservation",
+      "category": [
+        "Conservation"
+      ],
+      "assemblyNames": [
+        "C_auris_B8441"
+      ],
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Saccharomycetales_C_auris_B8441_phyloP.bigwig",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "alb_dub_C_dub_phyloP_scores",
+      "name": "C. albicans/dubliniensis phyloP Conservation",
+      "category": [
+        "Conservation"
+      ],
+      "assemblyNames": [
+        "C_dubliniensis_CD36"
+      ],
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "alb_dub_C_dubliniensis_CD36_phyloP.bigwig",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "CanLod_C_dub_phyloP_scores",
+      "name": "Candida/Lodderomyces phyloP Conservation",
+      "category": [
+        "Conservation"
+      ],
+      "assemblyNames": [
+        "C_dubliniensis_CD36"
+      ],
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "CanLod_C_dubliniensis_CD36_phyloP.bigwig",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "CTG_C_dub_phyloP_scores",
+      "name": "CTG Clade phyloP Conservation",
+      "category": [
+        "Conservation"
+      ],
+      "assemblyNames": [
+        "C_dubliniensis_CD36"
+      ],
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "CTG_C_dubliniensis_CD36_phyloP.bigwig",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Sacc_C_dub_phyloP_scores",
+      "name": "Saccharomycetales phyloP Conservation",
+      "category": [
+        "Conservation"
+      ],
+      "assemblyNames": [
+        "C_dubliniensis_CD36"
+      ],
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Saccharomycetales_C_dubliniensis_CD36_phyloP.bigwig",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "para_phyloP_scores",
+      "name": "C. parapsilosis phyloP Conservation",
+      "category": [
+        "Conservation"
+      ],
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "para_C_parapsilosis_CDC317_phyloP.bigwig",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "CanLod_C_para_phyloP_scores",
+      "name": "Candida/Lodderomyces phyloP Conservation",
+      "category": [
+        "Conservation"
+      ],
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "CanLod_C_parapsilosis_CDC317_phyloP.bigwig",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "CTG_C_para_phyloP_scores",
+      "name": "CTG Clade phyloP Conservation",
+      "category": [
+        "Conservation"
+      ],
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "CTG_C_parapsilosis_CDC317_phyloP.bigwig",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Sacc_C_para_phyloP_scores",
+      "name": "Saccharomycetales phyloP Conservation",
+      "category": [
+        "Conservation"
+      ],
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Saccharomycetales_C_parapsilosis_CDC317_phyloP.bigwig",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "glab_phyloP_scores",
+      "name": "C. glabrata phyloP Conservation",
+      "category": [
+        "Conservation"
+      ],
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "glab_C_glabrata_CBS138_phyloP.bigwig",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "CanNak_C_glab_phyloP_scores",
+      "name": "Candida/Nakaseomyces phyloP Conservation",
+      "category": [
+        "Conservation"
+      ],
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "CanNak_C_glabrata_CBS138_phyloP.bigwig",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "WGD_C_glab_phyloP_scores",
+      "name": "WGD Clade phyloP Conservation",
+      "category": [
+        "Conservation"
+      ],
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "WGD_C_glabrata_CBS138_phyloP.bigwig",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Sacc_C_glab_phyloP_scores",
+      "name": "Saccharomycetales phyloP Conservation",
+      "category": [
+        "Conservation"
+      ],
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Saccharomycetales_C_glabrata_CBS138_phyloP.bigwig",
+          "locationType": "UriLocation"
+        }
+      }
+    }
+  ]
+}
