@@ -117,25 +117,12 @@
           "indexType": "TBI"
         }
       },
-      "category": [
-        "Annotations"
-      ],
       "assemblyNames": [
         "C_albicans_SC5314"
       ],
-      "displays": [
-        {
-          "type": "LinearBasicDisplay",
-          "displayId": "C_albicans_SC5314_lncRNA.sorted.bed-LinearBasicDisplay",
-          "renderer": {
-            "type": "SvgFeatureRenderer",
-            "color1": "#3F6DB5",
-            "color2": "#3F6DB5",
-            "height": 8
-          }
-        }
-      ],
-      "filterFeature": "[\"mRNA\",\"transcript\",\"CDS\",\"exon\",\"tRNA\",\"rRNA\",\"snoRNA\",\"snRNA\",\"ncRNA\",\"five_prime_UTR\",\"three_prime_UTR\"].includes(feature.type)"
+      "category": [
+        "Annotations"
+      ]
     },
     {
       "type": "FeatureTrack",
@@ -155,11 +142,11 @@
           "indexType": "TBI"
         }
       },
-      "category": [
-        "Annotations"
-      ],
       "assemblyNames": [
         "C_albicans_SC5314"
+      ],
+      "category": [
+        "Annotations"
       ],
       "displays": [
         {
@@ -167,9 +154,16 @@
           "displayId": "TranscribedFeatures-LinearBasicDisplay",
           "renderer": {
             "type": "SvgFeatureRenderer",
-            "color1": "#3F6DB5",
-            "color2": "#3F6DB5",
-            "height": 8
+            "color1": "jexl:get(feature,\"type\").includes(\"pseudo\")?\"gray\":get(feature,\"strand\")==1?\"red\":get(feature,\"strand\")==-1?\"blue\":\"gray\"",
+            "color2": "jexl:get(feature,\"type\").includes(\"pseudo\")?\"gray\":get(feature,\"strand\")==1?\"red\":get(feature,\"strand\")==-1?\"blue\":\"gray\"",
+            "color3": "black",
+            "height": 12,
+            "showLabels": true,
+            "showDescriptions": true,
+            "displayMode": "normal",
+            "labels": {
+              "name": "jexl:get(feature,\"Gene\") || get(feature,\"gene\") || get(feature,\"Name\")"
+            }
           }
         }
       ]
@@ -192,11 +186,11 @@
           "indexType": "TBI"
         }
       },
-      "category": [
-        "Annotations"
-      ],
       "assemblyNames": [
         "C_auris_B8441"
+      ],
+      "category": [
+        "Annotations"
       ],
       "displays": [
         {
@@ -204,9 +198,16 @@
           "displayId": "C_auris_B8441_features.sorted.gff-LinearBasicDisplay",
           "renderer": {
             "type": "SvgFeatureRenderer",
-            "color1": "#3F6DB5",
-            "color2": "#3F6DB5",
-            "height": 8
+            "color1": "jexl:get(feature,\"type\").includes(\"pseudo\")?\"gray\":get(feature,\"strand\")==1?\"red\":get(feature,\"strand\")==-1?\"blue\":\"gray\"",
+            "color2": "jexl:get(feature,\"type\").includes(\"pseudo\")?\"gray\":get(feature,\"strand\")==1?\"red\":get(feature,\"strand\")==-1?\"blue\":\"gray\"",
+            "color3": "black",
+            "height": 12,
+            "showLabels": true,
+            "showDescriptions": true,
+            "displayMode": "normal",
+            "labels": {
+              "name": "jexl:get(feature,\"Gene\") || get(feature,\"gene\") || get(feature,\"Name\")"
+            }
           }
         }
       ]
@@ -229,11 +230,11 @@
           "indexType": "TBI"
         }
       },
-      "category": [
-        "Annotations"
-      ],
       "assemblyNames": [
         "C_dubliniensis_CD36"
+      ],
+      "category": [
+        "Annotations"
       ],
       "displays": [
         {
@@ -241,9 +242,16 @@
           "displayId": "C_dubliniensis_CD36_features.sorted.gff-LinearBasicDisplay",
           "renderer": {
             "type": "SvgFeatureRenderer",
-            "color1": "#3F6DB5",
-            "color2": "#3F6DB5",
-            "height": 8
+            "color1": "jexl:get(feature,\"type\").includes(\"pseudo\")?\"gray\":get(feature,\"strand\")==1?\"red\":get(feature,\"strand\")==-1?\"blue\":\"gray\"",
+            "color2": "jexl:get(feature,\"type\").includes(\"pseudo\")?\"gray\":get(feature,\"strand\")==1?\"red\":get(feature,\"strand\")==-1?\"blue\":\"gray\"",
+            "color3": "black",
+            "height": 12,
+            "showLabels": true,
+            "showDescriptions": true,
+            "displayMode": "normal",
+            "labels": {
+              "name": "jexl:get(feature,\"Gene\") || get(feature,\"gene\") || get(feature,\"Name\")"
+            }
           }
         }
       ]
@@ -266,11 +274,11 @@
           "indexType": "TBI"
         }
       },
-      "category": [
-        "Annotations"
-      ],
       "assemblyNames": [
         "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Annotations"
       ],
       "displays": [
         {
@@ -278,9 +286,16 @@
           "displayId": "C_parapsilosis_CDC317_features.sorted.gff-LinearBasicDisplay",
           "renderer": {
             "type": "SvgFeatureRenderer",
-            "color1": "#3F6DB5",
-            "color2": "#3F6DB5",
-            "height": 8
+            "color1": "jexl:get(feature,\"type\").includes(\"pseudo\")?\"gray\":get(feature,\"strand\")==1?\"red\":get(feature,\"strand\")==-1?\"blue\":\"gray\"",
+            "color2": "jexl:get(feature,\"type\").includes(\"pseudo\")?\"gray\":get(feature,\"strand\")==1?\"red\":get(feature,\"strand\")==-1?\"blue\":\"gray\"",
+            "color3": "black",
+            "height": 12,
+            "showLabels": true,
+            "showDescriptions": true,
+            "displayMode": "normal",
+            "labels": {
+              "name": "jexl:get(feature,\"Gene\") || get(feature,\"gene\") || get(feature,\"Name\")"
+            }
           }
         }
       ]
@@ -303,11 +318,11 @@
           "indexType": "TBI"
         }
       },
-      "category": [
-        "Annotations"
-      ],
       "assemblyNames": [
         "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Annotations"
       ],
       "displays": [
         {
@@ -315,9 +330,16 @@
           "displayId": "C_glabrata_CBS138_features.sorted.gff-LinearBasicDisplay",
           "renderer": {
             "type": "SvgFeatureRenderer",
-            "color1": "#3F6DB5",
-            "color2": "#3F6DB5",
-            "height": 8
+            "color1": "jexl:get(feature,\"type\").includes(\"pseudo\")?\"gray\":get(feature,\"strand\")==1?\"red\":get(feature,\"strand\")==-1?\"blue\":\"gray\"",
+            "color2": "jexl:get(feature,\"type\").includes(\"pseudo\")?\"gray\":get(feature,\"strand\")==1?\"red\":get(feature,\"strand\")==-1?\"blue\":\"gray\"",
+            "color3": "black",
+            "height": 12,
+            "showLabels": true,
+            "showDescriptions": true,
+            "displayMode": "normal",
+            "labels": {
+              "name": "jexl:get(feature,\"Gene\") || get(feature,\"gene\") || get(feature,\"Name\")"
+            }
           }
         }
       ]
@@ -333,11 +355,21 @@
           "locationType": "UriLocation"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Conservation"
       ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "hapA_Sacc_phyloP_scores-LinearWiggleDisplay",
+          "defaultRendering": "density",
+          "height": 20,
+          "posColor": "black",
+          "negColor": "white"
+        }
       ]
     },
     {
@@ -351,11 +383,21 @@
           "locationType": "UriLocation"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Conservation"
       ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "hapA_CTG_phyloP_scores-LinearWiggleDisplay",
+          "defaultRendering": "density",
+          "height": 20,
+          "posColor": "black",
+          "negColor": "white"
+        }
       ]
     },
     {
@@ -369,11 +411,21 @@
           "locationType": "UriLocation"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Conservation"
       ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "hapA_CanLod_phyloP_scores-LinearWiggleDisplay",
+          "defaultRendering": "density",
+          "height": 20,
+          "posColor": "black",
+          "negColor": "white"
+        }
       ]
     },
     {
@@ -387,11 +439,21 @@
           "locationType": "UriLocation"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Conservation"
       ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "hapA_alb_dub_phyloP_scores-LinearWiggleDisplay",
+          "defaultRendering": "density",
+          "height": 20,
+          "posColor": "black",
+          "negColor": "white"
+        }
       ]
     },
     {
@@ -405,11 +467,21 @@
           "locationType": "UriLocation"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Conservation"
       ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "HapB_Saccharomycetales_phyloP-LinearWiggleDisplay",
+          "defaultRendering": "density",
+          "height": 20,
+          "posColor": "black",
+          "negColor": "white"
+        }
       ]
     },
     {
@@ -423,11 +495,21 @@
           "locationType": "UriLocation"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Conservation"
       ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "HapB_CTG_phyloP-LinearWiggleDisplay",
+          "defaultRendering": "density",
+          "height": 20,
+          "posColor": "black",
+          "negColor": "white"
+        }
       ]
     },
     {
@@ -441,11 +523,21 @@
           "locationType": "UriLocation"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Conservation"
       ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "HapB_CanLod_phyloP-LinearWiggleDisplay",
+          "defaultRendering": "density",
+          "height": 20,
+          "posColor": "black",
+          "negColor": "white"
+        }
       ]
     },
     {
@@ -459,11 +551,21 @@
           "locationType": "UriLocation"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Conservation"
       ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "HapB_alb_dub_phyloP-LinearWiggleDisplay",
+          "defaultRendering": "density",
+          "height": 20,
+          "posColor": "black",
+          "negColor": "white"
+        }
       ]
     },
     {
@@ -477,11 +579,11 @@
           "locationType": "UriLocation"
         }
       },
-      "category": [
-        "Mutagenesis"
-      ],
       "assemblyNames": [
         "C_albicans_SC5314"
+      ],
+      "category": [
+        "Mutagenesis"
       ]
     },
     {
@@ -495,11 +597,11 @@
           "locationType": "UriLocation"
         }
       },
-      "category": [
-        "Mutagenesis"
-      ],
       "assemblyNames": [
         "C_albicans_SC5314"
+      ],
+      "category": [
+        "Mutagenesis"
       ]
     },
     {
@@ -513,11 +615,11 @@
           "locationType": "UriLocation"
         }
       },
-      "category": [
-        "Mutagenesis"
-      ],
       "assemblyNames": [
         "C_albicans_SC5314"
+      ],
+      "category": [
+        "Mutagenesis"
       ]
     },
     {
@@ -531,11 +633,11 @@
           "locationType": "UriLocation"
         }
       },
-      "category": [
-        "Mutagenesis"
-      ],
       "assemblyNames": [
         "C_albicans_SC5314"
+      ],
+      "category": [
+        "Mutagenesis"
       ]
     },
     {
@@ -556,12 +658,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -582,12 +684,12 @@
           "indexType": "TBI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Variants",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -608,12 +710,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -634,12 +736,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -660,12 +762,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -686,12 +788,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -712,12 +814,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -738,12 +840,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -764,12 +866,12 @@
           "indexType": "TBI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Variants",
         "WO-1"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -790,12 +892,12 @@
           "indexType": "TBI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Variants",
         "WO-1"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -816,12 +918,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Lohse_2016"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -842,12 +944,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Lohse_2016"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -868,12 +970,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Lohse_2016"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -894,12 +996,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Lohse_2016"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -920,12 +1022,12 @@
           "indexType": "TBI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Variants",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -946,12 +1048,12 @@
           "indexType": "TBI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Variants",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -972,12 +1074,12 @@
           "indexType": "TBI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Variants",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -998,12 +1100,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1024,12 +1126,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1050,12 +1152,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1076,12 +1178,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1102,12 +1204,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1128,12 +1230,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1154,12 +1256,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1180,12 +1282,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1206,12 +1308,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1232,12 +1334,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1258,12 +1360,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Desai_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1284,12 +1386,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Desai_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1310,12 +1412,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Desai_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1336,12 +1438,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Desai_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1362,12 +1464,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Desai_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1388,12 +1490,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Desai_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1414,12 +1516,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Desai_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1440,12 +1542,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Desai_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1466,12 +1568,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Desai_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1492,12 +1594,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Desai_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1518,12 +1620,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Desai_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1544,12 +1646,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Desai_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1570,12 +1672,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Desai_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1596,12 +1698,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Desai_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1622,12 +1724,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Desai_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1648,12 +1750,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Desai_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1674,12 +1776,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Desai_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1700,12 +1802,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Desai_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1726,12 +1828,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Desai_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1752,12 +1854,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Desai_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1778,12 +1880,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Niemiec_2017"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1804,12 +1906,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Niemiec_2017"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1830,12 +1932,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Niemiec_2017"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1856,12 +1958,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Niemiec_2017"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1882,12 +1984,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Niemiec_2017"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1908,12 +2010,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Niemiec_2017"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1934,12 +2036,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Niemiec_2017"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1960,12 +2062,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Niemiec_2017"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -1986,12 +2088,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Niemiec_2017"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2012,12 +2114,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Niemiec_2017"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2038,12 +2140,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Niemiec_2017"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2064,12 +2166,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Niemiec_2017"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2090,12 +2192,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Niemiec_2017"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2116,12 +2218,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Niemiec_2017"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2142,12 +2244,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Niemiec_2017"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2168,12 +2270,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Niemiec_2017"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2194,12 +2296,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Niemiec_2017"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2220,12 +2322,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Niemiec_2017"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2246,12 +2348,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Niemiec_2017"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2272,12 +2374,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Niemiec_2017"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2298,12 +2400,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Niemiec_2017"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2324,12 +2426,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Niemiec_2017"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2350,12 +2452,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Niemiec_2017"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2376,12 +2478,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Niemiec_2017"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2402,12 +2504,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Xie_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2428,12 +2530,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Xie_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2454,12 +2556,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Xie_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2480,12 +2582,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Xie_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2506,12 +2608,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Glazier_2023"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2532,12 +2634,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Glazier_2023"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2558,12 +2660,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Glazier_2023"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2584,12 +2686,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Glazier_2023"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2610,12 +2712,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Glazier_2023"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2636,12 +2738,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Glazier_2023"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2662,12 +2764,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Glazier_2023"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2688,12 +2790,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Glazier_2023"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2714,12 +2816,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Glazier_2023"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2740,12 +2842,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Glazier_2023"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2766,12 +2868,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Glazier_2023"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2792,12 +2894,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Glazier_2023"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2818,12 +2920,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Glazier_2023"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2844,12 +2946,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Glazier_2023"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2870,12 +2972,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Glazier_2023"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2896,12 +2998,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Glazier_2023"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2922,12 +3024,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Glazier_2023"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2948,12 +3050,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Glazier_2023"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -2974,12 +3076,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Glazier_2023"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3000,12 +3102,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Glazier_2023"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3026,12 +3128,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Glazier_2023"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3052,12 +3154,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Glazier_2023"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3078,12 +3180,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Glazier_2023"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3104,12 +3206,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Glazier_2023"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3130,12 +3232,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3156,12 +3258,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3182,12 +3284,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3208,12 +3310,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3234,12 +3336,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3260,12 +3362,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3286,12 +3388,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3312,12 +3414,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3338,12 +3440,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3364,12 +3466,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3390,12 +3492,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3416,12 +3518,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3442,12 +3544,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3468,12 +3570,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3494,12 +3596,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3520,12 +3622,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3546,12 +3648,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3572,12 +3674,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3598,12 +3700,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3624,12 +3726,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3650,12 +3752,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3676,12 +3778,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3702,12 +3804,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3728,12 +3830,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3754,12 +3856,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3780,12 +3882,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3806,12 +3908,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3832,12 +3934,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3858,12 +3960,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3884,12 +3986,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3910,12 +4012,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3936,12 +4038,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Shivarathri_2019"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3962,12 +4064,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Iracane_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -3988,12 +4090,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4014,12 +4116,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4040,12 +4142,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4066,12 +4168,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4092,12 +4194,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4118,12 +4220,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4144,12 +4246,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4170,12 +4272,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4196,12 +4298,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4222,12 +4324,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4248,12 +4350,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4274,12 +4376,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4300,12 +4402,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4326,12 +4428,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4352,12 +4454,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4378,12 +4480,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4404,12 +4506,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4430,12 +4532,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4456,12 +4558,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4482,12 +4584,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4508,12 +4610,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4534,12 +4636,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4560,12 +4662,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4586,12 +4688,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4612,12 +4714,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4638,12 +4740,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4664,12 +4766,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4690,12 +4792,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4716,12 +4818,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4742,12 +4844,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4768,12 +4870,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4794,12 +4896,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4820,12 +4922,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4846,12 +4948,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4872,12 +4974,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4898,12 +5000,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Rai_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4924,12 +5026,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Zhang_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4950,12 +5052,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Zhang_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -4976,12 +5078,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Zhang_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5002,12 +5104,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Zhang_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5028,12 +5130,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Zhang_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5054,12 +5156,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Zhang_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5080,12 +5182,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Zhang_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5106,12 +5208,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Zhang_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5132,12 +5234,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Zhang_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5158,12 +5260,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Zhang_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5184,12 +5286,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Zhang_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5210,12 +5312,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Zhang_2024"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5236,12 +5338,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5262,12 +5364,12 @@
           "indexType": "TBI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Variants",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5288,12 +5390,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5314,12 +5416,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5340,12 +5442,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5366,12 +5468,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5392,12 +5494,12 @@
           "indexType": "TBI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Variants",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5418,12 +5520,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5444,12 +5546,12 @@
           "indexType": "TBI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Variants",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5470,12 +5572,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5496,12 +5598,12 @@
           "indexType": "TBI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Variants",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5522,12 +5624,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5548,12 +5650,12 @@
           "indexType": "TBI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Variants",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5574,12 +5676,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5600,12 +5702,12 @@
           "indexType": "TBI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Variants",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5626,12 +5728,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5652,12 +5754,12 @@
           "indexType": "TBI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Variants",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5678,12 +5780,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5704,12 +5806,12 @@
           "indexType": "TBI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Variants",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5730,12 +5832,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5756,12 +5858,12 @@
           "indexType": "TBI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Variants",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5782,12 +5884,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5808,12 +5910,12 @@
           "indexType": "TBI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Variants",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5834,12 +5936,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5860,12 +5962,12 @@
           "indexType": "TBI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Variants",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5886,12 +5988,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5912,12 +6014,12 @@
           "indexType": "TBI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Variants",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5938,12 +6040,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5964,12 +6066,12 @@
           "indexType": "TBI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Variants",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -5990,12 +6092,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6016,12 +6118,12 @@
           "indexType": "TBI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Variants",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6042,12 +6144,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6068,12 +6170,12 @@
           "indexType": "TBI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Variants",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6094,12 +6196,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6120,12 +6222,12 @@
           "indexType": "TBI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Variants",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6146,12 +6248,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6172,12 +6274,12 @@
           "indexType": "TBI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Variants",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6198,12 +6300,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6224,12 +6326,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6250,12 +6352,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6276,12 +6378,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6302,12 +6404,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6328,12 +6430,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6354,12 +6456,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Lohse_2016"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6380,12 +6482,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Lohse_2016"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6406,12 +6508,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Lohse_2016"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6432,12 +6534,12 @@
           "indexType": "BAI"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Alignments",
         "Lohse_2016"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6451,12 +6553,12 @@
           "locationType": "UriLocation"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Coverage",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6470,12 +6572,12 @@
           "locationType": "UriLocation"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Coverage",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6489,12 +6591,12 @@
           "locationType": "UriLocation"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Coverage",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6508,12 +6610,12 @@
           "locationType": "UriLocation"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Coverage",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6527,12 +6629,12 @@
           "locationType": "UriLocation"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Coverage",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6546,12 +6648,12 @@
           "locationType": "UriLocation"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Coverage",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6565,12 +6667,12 @@
           "locationType": "UriLocation"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Coverage",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6584,12 +6686,12 @@
           "locationType": "UriLocation"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Coverage",
         "Bruno_2010"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6603,12 +6705,12 @@
           "locationType": "UriLocation"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Coverage",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
@@ -6622,301 +6724,558 @@
           "locationType": "UriLocation"
         }
       },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
       "category": [
         "Coverage",
         "Muzzey_2013"
-      ],
-      "assemblyNames": [
-        "C_albicans_SC5314"
       ]
     },
     {
       "type": "QuantitativeTrack",
       "trackId": "auris_phyloP_scores",
       "name": "C. auris phyloP Conservation",
-      "category": [
-        "Conservation"
-      ],
-      "assemblyNames": [
-        "C_auris_B8441"
-      ],
       "adapter": {
         "type": "BigWigAdapter",
         "bigWigLocation": {
           "uri": "auris_C_auris_B8441_phyloP.bigwig",
           "locationType": "UriLocation"
         }
-      }
+      },
+      "assemblyNames": [
+        "C_auris_B8441"
+      ],
+      "category": [
+        "Conservation"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "auris_phyloP_scores-LinearWiggleDisplay",
+          "defaultRendering": "density",
+          "height": 20,
+          "posColor": "black",
+          "negColor": "white"
+        }
+      ]
     },
     {
       "type": "QuantitativeTrack",
       "trackId": "AurLus_phyloP_scores",
       "name": "C. auris/lusitaniae phyloP Conservation",
-      "category": [
-        "Conservation"
-      ],
-      "assemblyNames": [
-        "C_auris_B8441"
-      ],
       "adapter": {
         "type": "BigWigAdapter",
         "bigWigLocation": {
           "uri": "AurLus_C_auris_B8441_phyloP.bigwig",
           "locationType": "UriLocation"
         }
-      }
+      },
+      "assemblyNames": [
+        "C_auris_B8441"
+      ],
+      "category": [
+        "Conservation"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "AurLus_phyloP_scores-LinearWiggleDisplay",
+          "defaultRendering": "density",
+          "height": 20,
+          "posColor": "black",
+          "negColor": "white"
+        }
+      ]
     },
     {
       "type": "QuantitativeTrack",
       "trackId": "CTG_C_auris_phyloP_scores",
       "name": "CTG Clade phyloP Conservation",
-      "category": [
-        "Conservation"
-      ],
-      "assemblyNames": [
-        "C_auris_B8441"
-      ],
       "adapter": {
         "type": "BigWigAdapter",
         "bigWigLocation": {
           "uri": "CTG_C_auris_B8441_phyloP.bigwig",
           "locationType": "UriLocation"
         }
-      }
+      },
+      "assemblyNames": [
+        "C_auris_B8441"
+      ],
+      "category": [
+        "Conservation"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "CTG_C_auris_phyloP_scores-LinearWiggleDisplay",
+          "defaultRendering": "density",
+          "height": 20,
+          "posColor": "black",
+          "negColor": "white"
+        }
+      ]
     },
     {
       "type": "QuantitativeTrack",
       "trackId": "Sacc_C_auris_phyloP_scores",
       "name": "Saccharomycetales phyloP Conservation",
-      "category": [
-        "Conservation"
-      ],
-      "assemblyNames": [
-        "C_auris_B8441"
-      ],
       "adapter": {
         "type": "BigWigAdapter",
         "bigWigLocation": {
           "uri": "Saccharomycetales_C_auris_B8441_phyloP.bigwig",
           "locationType": "UriLocation"
         }
-      }
+      },
+      "assemblyNames": [
+        "C_auris_B8441"
+      ],
+      "category": [
+        "Conservation"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Sacc_C_auris_phyloP_scores-LinearWiggleDisplay",
+          "defaultRendering": "density",
+          "height": 20,
+          "posColor": "black",
+          "negColor": "white"
+        }
+      ]
     },
     {
       "type": "QuantitativeTrack",
       "trackId": "alb_dub_C_dub_phyloP_scores",
       "name": "C. albicans/dubliniensis phyloP Conservation",
-      "category": [
-        "Conservation"
-      ],
-      "assemblyNames": [
-        "C_dubliniensis_CD36"
-      ],
       "adapter": {
         "type": "BigWigAdapter",
         "bigWigLocation": {
           "uri": "alb_dub_C_dubliniensis_CD36_phyloP.bigwig",
           "locationType": "UriLocation"
         }
-      }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36"
+      ],
+      "category": [
+        "Conservation"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "alb_dub_C_dub_phyloP_scores-LinearWiggleDisplay",
+          "defaultRendering": "density",
+          "height": 20,
+          "posColor": "black",
+          "negColor": "white"
+        }
+      ]
     },
     {
       "type": "QuantitativeTrack",
       "trackId": "CanLod_C_dub_phyloP_scores",
       "name": "Candida/Lodderomyces phyloP Conservation",
-      "category": [
-        "Conservation"
-      ],
-      "assemblyNames": [
-        "C_dubliniensis_CD36"
-      ],
       "adapter": {
         "type": "BigWigAdapter",
         "bigWigLocation": {
           "uri": "CanLod_C_dubliniensis_CD36_phyloP.bigwig",
           "locationType": "UriLocation"
         }
-      }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36"
+      ],
+      "category": [
+        "Conservation"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "CanLod_C_dub_phyloP_scores-LinearWiggleDisplay",
+          "defaultRendering": "density",
+          "height": 20,
+          "posColor": "black",
+          "negColor": "white"
+        }
+      ]
     },
     {
       "type": "QuantitativeTrack",
       "trackId": "CTG_C_dub_phyloP_scores",
       "name": "CTG Clade phyloP Conservation",
-      "category": [
-        "Conservation"
-      ],
-      "assemblyNames": [
-        "C_dubliniensis_CD36"
-      ],
       "adapter": {
         "type": "BigWigAdapter",
         "bigWigLocation": {
           "uri": "CTG_C_dubliniensis_CD36_phyloP.bigwig",
           "locationType": "UriLocation"
         }
-      }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36"
+      ],
+      "category": [
+        "Conservation"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "CTG_C_dub_phyloP_scores-LinearWiggleDisplay",
+          "defaultRendering": "density",
+          "height": 20,
+          "posColor": "black",
+          "negColor": "white"
+        }
+      ]
     },
     {
       "type": "QuantitativeTrack",
       "trackId": "Sacc_C_dub_phyloP_scores",
       "name": "Saccharomycetales phyloP Conservation",
-      "category": [
-        "Conservation"
-      ],
-      "assemblyNames": [
-        "C_dubliniensis_CD36"
-      ],
       "adapter": {
         "type": "BigWigAdapter",
         "bigWigLocation": {
           "uri": "Saccharomycetales_C_dubliniensis_CD36_phyloP.bigwig",
           "locationType": "UriLocation"
         }
-      }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36"
+      ],
+      "category": [
+        "Conservation"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Sacc_C_dub_phyloP_scores-LinearWiggleDisplay",
+          "defaultRendering": "density",
+          "height": 20,
+          "posColor": "black",
+          "negColor": "white"
+        }
+      ]
     },
     {
       "type": "QuantitativeTrack",
       "trackId": "para_phyloP_scores",
       "name": "C. parapsilosis phyloP Conservation",
-      "category": [
-        "Conservation"
-      ],
-      "assemblyNames": [
-        "C_parapsilosis_CDC317"
-      ],
       "adapter": {
         "type": "BigWigAdapter",
         "bigWigLocation": {
           "uri": "para_C_parapsilosis_CDC317_phyloP.bigwig",
           "locationType": "UriLocation"
         }
-      }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Conservation"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "para_phyloP_scores-LinearWiggleDisplay",
+          "defaultRendering": "density",
+          "height": 20,
+          "posColor": "black",
+          "negColor": "white"
+        }
+      ]
     },
     {
       "type": "QuantitativeTrack",
       "trackId": "CanLod_C_para_phyloP_scores",
       "name": "Candida/Lodderomyces phyloP Conservation",
-      "category": [
-        "Conservation"
-      ],
-      "assemblyNames": [
-        "C_parapsilosis_CDC317"
-      ],
       "adapter": {
         "type": "BigWigAdapter",
         "bigWigLocation": {
           "uri": "CanLod_C_parapsilosis_CDC317_phyloP.bigwig",
           "locationType": "UriLocation"
         }
-      }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Conservation"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "CanLod_C_para_phyloP_scores-LinearWiggleDisplay",
+          "defaultRendering": "density",
+          "height": 20,
+          "posColor": "black",
+          "negColor": "white"
+        }
+      ]
     },
     {
       "type": "QuantitativeTrack",
       "trackId": "CTG_C_para_phyloP_scores",
       "name": "CTG Clade phyloP Conservation",
-      "category": [
-        "Conservation"
-      ],
-      "assemblyNames": [
-        "C_parapsilosis_CDC317"
-      ],
       "adapter": {
         "type": "BigWigAdapter",
         "bigWigLocation": {
           "uri": "CTG_C_parapsilosis_CDC317_phyloP.bigwig",
           "locationType": "UriLocation"
         }
-      }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Conservation"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "CTG_C_para_phyloP_scores-LinearWiggleDisplay",
+          "defaultRendering": "density",
+          "height": 20,
+          "posColor": "black",
+          "negColor": "white"
+        }
+      ]
     },
     {
       "type": "QuantitativeTrack",
       "trackId": "Sacc_C_para_phyloP_scores",
       "name": "Saccharomycetales phyloP Conservation",
-      "category": [
-        "Conservation"
-      ],
-      "assemblyNames": [
-        "C_parapsilosis_CDC317"
-      ],
       "adapter": {
         "type": "BigWigAdapter",
         "bigWigLocation": {
           "uri": "Saccharomycetales_C_parapsilosis_CDC317_phyloP.bigwig",
           "locationType": "UriLocation"
         }
-      }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Conservation"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Sacc_C_para_phyloP_scores-LinearWiggleDisplay",
+          "defaultRendering": "density",
+          "height": 20,
+          "posColor": "black",
+          "negColor": "white"
+        }
+      ]
     },
     {
       "type": "QuantitativeTrack",
       "trackId": "glab_phyloP_scores",
       "name": "C. glabrata phyloP Conservation",
-      "category": [
-        "Conservation"
-      ],
-      "assemblyNames": [
-        "C_glabrata_CBS138"
-      ],
       "adapter": {
         "type": "BigWigAdapter",
         "bigWigLocation": {
           "uri": "glab_C_glabrata_CBS138_phyloP.bigwig",
           "locationType": "UriLocation"
         }
-      }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Conservation"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "glab_phyloP_scores-LinearWiggleDisplay",
+          "defaultRendering": "density",
+          "height": 20,
+          "posColor": "black",
+          "negColor": "white"
+        }
+      ]
     },
     {
       "type": "QuantitativeTrack",
       "trackId": "CanNak_C_glab_phyloP_scores",
       "name": "Candida/Nakaseomyces phyloP Conservation",
-      "category": [
-        "Conservation"
-      ],
-      "assemblyNames": [
-        "C_glabrata_CBS138"
-      ],
       "adapter": {
         "type": "BigWigAdapter",
         "bigWigLocation": {
           "uri": "CanNak_C_glabrata_CBS138_phyloP.bigwig",
           "locationType": "UriLocation"
         }
-      }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Conservation"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "CanNak_C_glab_phyloP_scores-LinearWiggleDisplay",
+          "defaultRendering": "density",
+          "height": 20,
+          "posColor": "black",
+          "negColor": "white"
+        }
+      ]
     },
     {
       "type": "QuantitativeTrack",
       "trackId": "WGD_C_glab_phyloP_scores",
       "name": "WGD Clade phyloP Conservation",
-      "category": [
-        "Conservation"
-      ],
-      "assemblyNames": [
-        "C_glabrata_CBS138"
-      ],
       "adapter": {
         "type": "BigWigAdapter",
         "bigWigLocation": {
           "uri": "WGD_C_glabrata_CBS138_phyloP.bigwig",
           "locationType": "UriLocation"
         }
-      }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Conservation"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "WGD_C_glab_phyloP_scores-LinearWiggleDisplay",
+          "defaultRendering": "density",
+          "height": 20,
+          "posColor": "black",
+          "negColor": "white"
+        }
+      ]
     },
     {
       "type": "QuantitativeTrack",
       "trackId": "Sacc_C_glab_phyloP_scores",
       "name": "Saccharomycetales phyloP Conservation",
-      "category": [
-        "Conservation"
-      ],
-      "assemblyNames": [
-        "C_glabrata_CBS138"
-      ],
       "adapter": {
         "type": "BigWigAdapter",
         "bigWigLocation": {
           "uri": "Saccharomycetales_C_glabrata_CBS138_phyloP.bigwig",
           "locationType": "UriLocation"
         }
-      }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Conservation"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Sacc_C_glab_phyloP_scores-LinearWiggleDisplay",
+          "defaultRendering": "density",
+          "height": 20,
+          "posColor": "black",
+          "negColor": "white"
+        }
+      ]
+    }
+  ],
+  "aggregateTextSearchAdapters": [
+    {
+      "type": "TrixTextSearchAdapter",
+      "textSearchAdapterId": "C_albicans_SC5314-index",
+      "ixFilePath": {
+        "uri": "trix/C_albicans_SC5314.ix",
+        "locationType": "UriLocation"
+      },
+      "ixxFilePath": {
+        "uri": "trix/C_albicans_SC5314.ixx",
+        "locationType": "UriLocation"
+      },
+      "metaFilePath": {
+        "uri": "trix/C_albicans_SC5314_meta.json",
+        "locationType": "UriLocation"
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ]
+    },
+    {
+      "type": "TrixTextSearchAdapter",
+      "textSearchAdapterId": "C_auris_B8441-index",
+      "ixFilePath": {
+        "uri": "trix/C_auris_B8441.ix",
+        "locationType": "UriLocation"
+      },
+      "ixxFilePath": {
+        "uri": "trix/C_auris_B8441.ixx",
+        "locationType": "UriLocation"
+      },
+      "metaFilePath": {
+        "uri": "trix/C_auris_B8441_meta.json",
+        "locationType": "UriLocation"
+      },
+      "assemblyNames": [
+        "C_auris_B8441"
+      ]
+    },
+    {
+      "type": "TrixTextSearchAdapter",
+      "textSearchAdapterId": "C_dubliniensis_CD36-index",
+      "ixFilePath": {
+        "uri": "trix/C_dubliniensis_CD36.ix",
+        "locationType": "UriLocation"
+      },
+      "ixxFilePath": {
+        "uri": "trix/C_dubliniensis_CD36.ixx",
+        "locationType": "UriLocation"
+      },
+      "metaFilePath": {
+        "uri": "trix/C_dubliniensis_CD36_meta.json",
+        "locationType": "UriLocation"
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36"
+      ]
+    },
+    {
+      "type": "TrixTextSearchAdapter",
+      "textSearchAdapterId": "C_parapsilosis_CDC317-index",
+      "ixFilePath": {
+        "uri": "trix/C_parapsilosis_CDC317.ix",
+        "locationType": "UriLocation"
+      },
+      "ixxFilePath": {
+        "uri": "trix/C_parapsilosis_CDC317.ixx",
+        "locationType": "UriLocation"
+      },
+      "metaFilePath": {
+        "uri": "trix/C_parapsilosis_CDC317_meta.json",
+        "locationType": "UriLocation"
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ]
+    },
+    {
+      "type": "TrixTextSearchAdapter",
+      "textSearchAdapterId": "C_glabrata_CBS138-index",
+      "ixFilePath": {
+        "uri": "trix/C_glabrata_CBS138.ix",
+        "locationType": "UriLocation"
+      },
+      "ixxFilePath": {
+        "uri": "trix/C_glabrata_CBS138.ixx",
+        "locationType": "UriLocation"
+      },
+      "metaFilePath": {
+        "uri": "trix/C_glabrata_CBS138_meta.json",
+        "locationType": "UriLocation"
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ]
     }
   ]
 }
