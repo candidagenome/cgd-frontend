@@ -1,8 +1,225 @@
 import React, { useState } from 'react';
 import './ApiDocPage.css';
 
+// API Playground Component
+const ApiPlayground = ({ endpoint, baseUrl, onClose }) => {
+  const [pathParams, setPathParams] = useState({});
+  const [queryParams, setQueryParams] = useState({});
+  const [response, setResponse] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [activeTab, setActiveTab] = useState('response');
+
+  // Extract path parameters from endpoint path (e.g., {name}, {id})
+  const pathParamMatches = endpoint.path.match(/\{([^}]+)\}/g) || [];
+  const pathParamNames = pathParamMatches.map(p => p.slice(1, -1));
+
+  // Extract query parameters from endpoint params string
+  const queryParamNames = endpoint.params
+    ? endpoint.params.split(',').map(p => p.trim())
+    : [];
+
+  // Build the actual URL with parameters
+  const buildUrl = () => {
+    let url = endpoint.path;
+    // Replace path parameters
+    pathParamNames.forEach(param => {
+      url = url.replace(`{${param}}`, encodeURIComponent(pathParams[param] || ''));
+    });
+    // Add query parameters
+    const queryString = queryParamNames
+      .filter(param => queryParams[param])
+      .map(param => `${param}=${encodeURIComponent(queryParams[param])}`)
+      .join('&');
+    if (queryString) {
+      url += '?' + queryString;
+    }
+    return url;
+  };
+
+  const executeRequest = async () => {
+    setLoading(true);
+    setError(null);
+    setResponse(null);
+
+    const url = baseUrl + buildUrl();
+
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      setResponse({
+        status: res.status,
+        statusText: res.statusText,
+        data: data
+      });
+      setActiveTab('response');
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Generate code snippets
+  const fullUrl = baseUrl + buildUrl();
+
+  const curlSnippet = `curl -X GET "${fullUrl}"`;
+
+  const pythonSnippet = `import requests
+
+url = "${fullUrl}"
+response = requests.get(url)
+data = response.json()
+print(data)`;
+
+  const rSnippet = `library(httr)
+library(jsonlite)
+
+url <- "${fullUrl}"
+response <- GET(url)
+data <- fromJSON(content(response, "text"))
+print(data)`;
+
+  return (
+    <div className="api-playground">
+      <div className="playground-header">
+        <h4>API Playground</h4>
+        <button className="close-btn" onClick={onClose}>×</button>
+      </div>
+
+      <div className="playground-content">
+        {/* Path Parameters */}
+        {pathParamNames.length > 0 && (
+          <div className="param-section">
+            <h5>Path Parameters</h5>
+            {pathParamNames.map(param => (
+              <div key={param} className="param-input">
+                <label>{param}</label>
+                <input
+                  type="text"
+                  placeholder={`Enter ${param}`}
+                  value={pathParams[param] || ''}
+                  onChange={(e) => setPathParams({...pathParams, [param]: e.target.value})}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Query Parameters */}
+        {queryParamNames.length > 0 && (
+          <div className="param-section">
+            <h5>Query Parameters</h5>
+            {queryParamNames.map(param => (
+              <div key={param} className="param-input">
+                <label>{param}</label>
+                <input
+                  type="text"
+                  placeholder={`Enter ${param}`}
+                  value={queryParams[param] || ''}
+                  onChange={(e) => setQueryParams({...queryParams, [param]: e.target.value})}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* URL Preview */}
+        <div className="url-preview">
+          <strong>Request URL:</strong>
+          <code>{fullUrl}</code>
+        </div>
+
+        {/* Execute Button */}
+        <button
+          className="execute-btn"
+          onClick={executeRequest}
+          disabled={loading}
+        >
+          {loading ? 'Loading...' : 'Execute'}
+        </button>
+
+        {/* Tabs */}
+        <div className="playground-tabs">
+          <button
+            className={`tab-btn ${activeTab === 'response' ? 'active' : ''}`}
+            onClick={() => setActiveTab('response')}
+          >
+            Response
+          </button>
+          <button
+            className={`tab-btn ${activeTab === 'curl' ? 'active' : ''}`}
+            onClick={() => setActiveTab('curl')}
+          >
+            cURL
+          </button>
+          <button
+            className={`tab-btn ${activeTab === 'python' ? 'active' : ''}`}
+            onClick={() => setActiveTab('python')}
+          >
+            Python
+          </button>
+          <button
+            className={`tab-btn ${activeTab === 'r' ? 'active' : ''}`}
+            onClick={() => setActiveTab('r')}
+          >
+            R
+          </button>
+        </div>
+
+        {/* Tab Content */}
+        <div className="tab-content">
+          {activeTab === 'response' && (
+            <div className="response-panel">
+              {error && <div className="error-msg">Error: {error}</div>}
+              {response && (
+                <>
+                  <div className={`status-badge ${response.status < 400 ? 'success' : 'error'}`}>
+                    {response.status} {response.statusText}
+                  </div>
+                  <pre className="json-response">
+                    {JSON.stringify(response.data, null, 2)}
+                  </pre>
+                </>
+              )}
+              {!response && !error && !loading && (
+                <div className="placeholder">Click "Execute" to send the request</div>
+              )}
+            </div>
+          )}
+          {activeTab === 'curl' && (
+            <div className="code-panel">
+              <button className="copy-btn" onClick={() => navigator.clipboard.writeText(curlSnippet)}>
+                Copy
+              </button>
+              <pre>{curlSnippet}</pre>
+            </div>
+          )}
+          {activeTab === 'python' && (
+            <div className="code-panel">
+              <button className="copy-btn" onClick={() => navigator.clipboard.writeText(pythonSnippet)}>
+                Copy
+              </button>
+              <pre>{pythonSnippet}</pre>
+            </div>
+          )}
+          {activeTab === 'r' && (
+            <div className="code-panel">
+              <button className="copy-btn" onClick={() => navigator.clipboard.writeText(rSnippet)}>
+                Copy
+              </button>
+              <pre>{rSnippet}</pre>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const ApiDocPage = () => {
   const [expandedGroups, setExpandedGroups] = useState({});
+  const [activePlayground, setActivePlayground] = useState(null);
 
   // Get base URL from environment or use default
   const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://backend.dev.candidagenome.org';
@@ -12,6 +229,14 @@ const ApiDocPage = () => {
       ...prev,
       [groupName]: !prev[groupName]
     }));
+  };
+
+  const openPlayground = (endpoint, groupIndex, endpointIndex) => {
+    setActivePlayground({ endpoint, key: `${groupIndex}-${endpointIndex}` });
+  };
+
+  const closePlayground = () => {
+    setActivePlayground(null);
   };
 
   const apiGroups = [
@@ -280,6 +505,9 @@ const ApiDocPage = () => {
           <p>
             <strong>Response Format:</strong> All endpoints return JSON unless otherwise noted.
           </p>
+          <p>
+            <strong>Try it out:</strong> Click the "Try it" button on any GET endpoint to test it interactively.
+          </p>
         </div>
 
         <div className="api-groups">
@@ -308,6 +536,17 @@ const ApiDocPage = () => {
                           {endpoint.method}
                         </span>
                         <code className="endpoint-path">{endpoint.path}</code>
+                        {endpoint.method === 'GET' && (
+                          <button
+                            className="try-it-btn"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openPlayground(endpoint, groupIndex, endpointIndex);
+                            }}
+                          >
+                            Try it
+                          </button>
+                        )}
                       </div>
                       <p className="endpoint-description">{endpoint.description}</p>
                       {endpoint.params && (
@@ -327,6 +566,15 @@ const ApiDocPage = () => {
                             {API_BASE_URL}{endpoint.example}
                           </a>
                         </div>
+                      )}
+
+                      {/* Show playground inline when active */}
+                      {activePlayground?.key === `${groupIndex}-${endpointIndex}` && (
+                        <ApiPlayground
+                          endpoint={endpoint}
+                          baseUrl={API_BASE_URL}
+                          onClose={closePlayground}
+                        />
                       )}
                     </div>
                   ))}
