@@ -19,6 +19,29 @@ function LocusSummary({
 
   const feature = data;
 
+  // ---------- JBrowse2 URL helpers ----------
+  const getAssemblyName = (orgName) => {
+    // Convert organism name to assembly name format
+    // e.g., "Candida albicans SC5314" -> "C_albicans_SC5314"
+    const assemblyMap = {
+      'Candida albicans SC5314': 'C_albicans_SC5314',
+      'Candida auris B8441': 'C_auris_B8441',
+      'Candida dubliniensis CD36': 'C_dubliniensis_CD36',
+      'Candida glabrata CBS138': 'C_glabrata_CBS138',
+      'Candida parapsilosis CDC317': 'C_parapsilosis_CDC317',
+    };
+    return assemblyMap[orgName] || orgName?.replace(/\s+/g, '_');
+  };
+
+  const buildJBrowse2Url = (jbrowseInfo, orgName) => {
+    if (!jbrowseInfo || !jbrowseInfo.chromosome) return null;
+    const assembly = getAssemblyName(orgName);
+    const loc = `${jbrowseInfo.chromosome}:${jbrowseInfo.start_coord}..${jbrowseInfo.stop_coord}`;
+    // Default tracks: DNA reference and Gene Features
+    const tracks = 'DNA,TranscribedFeatures';
+    return `/jbrowse2/?assembly=${assembly}&loc=${encodeURIComponent(loc)}&tracks=${tracks}`;
+  };
+
   // ---------- Formatting helpers ----------
   const fmtInt = (v) => {
     if (v === null || v === undefined || v === '') return '';
@@ -577,57 +600,61 @@ function LocusSummary({
             ) : null;
           })()}
 
-          {/* JBrowse */}
-          {sequenceData && sequenceData.jbrowse_info && (
-            <tr className="jbrowse-section">
-              <th style={{ verticalAlign: 'top' }}>JBrowse</th>
-              <td>
-                <div className="jbrowse-viewer-container">
-                  <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <button
-                      onClick={() => setShowJBrowseViewer(!showJBrowseViewer)}
-                      style={{
-                        padding: '4px 10px',
-                        backgroundColor: '#f5f5f5',
-                        border: '1px solid #ddd',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontSize: '12px'
-                      }}
-                    >
-                      {showJBrowseViewer ? '▼ Hide' : '▶ Show'} JBrowse Viewer
-                    </button>
-                    <a
-                      href={sequenceData.jbrowse_info.full_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ fontSize: '13px' }}
-                    >
-                      Open in Full JBrowse ↗
-                    </a>
-                    <span className="jbrowse-location" style={{ fontSize: '13px', color: '#666' }}>
-                      {sequenceData.jbrowse_info.chromosome}:{fmtInt(sequenceData.jbrowse_info.start_coord)}..
-                      {fmtInt(sequenceData.jbrowse_info.stop_coord)}
-                    </span>
-                  </div>
-                  {showJBrowseViewer && (
-                    <div className="jbrowse-iframe-container" style={{ marginBottom: '12px' }}>
-                      <iframe
-                        src={sequenceData.jbrowse_info.full_url}
-                        title="JBrowse Viewer"
+          {/* JBrowse2 */}
+          {sequenceData && sequenceData.jbrowse_info && (() => {
+            const jbrowse2Url = buildJBrowse2Url(sequenceData.jbrowse_info, organismName);
+            if (!jbrowse2Url) return null;
+            return (
+              <tr className="jbrowse-section">
+                <th style={{ verticalAlign: 'top' }}>JBrowse</th>
+                <td>
+                  <div className="jbrowse-viewer-container">
+                    <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <button
+                        onClick={() => setShowJBrowseViewer(!showJBrowseViewer)}
                         style={{
-                          width: '100%',
-                          height: '350px',
+                          padding: '4px 10px',
+                          backgroundColor: '#f5f5f5',
                           border: '1px solid #ddd',
-                          borderRadius: '4px'
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontSize: '12px'
                         }}
-                      />
+                      >
+                        {showJBrowseViewer ? '▼ Hide' : '▶ Show'} JBrowse Viewer
+                      </button>
+                      <a
+                        href={jbrowse2Url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ fontSize: '13px' }}
+                      >
+                        Open in Full JBrowse ↗
+                      </a>
+                      <span className="jbrowse-location" style={{ fontSize: '13px', color: '#666' }}>
+                        {sequenceData.jbrowse_info.chromosome}:{fmtInt(sequenceData.jbrowse_info.start_coord)}..
+                        {fmtInt(sequenceData.jbrowse_info.stop_coord)}
+                      </span>
                     </div>
-                  )}
-                </div>
-              </td>
-            </tr>
-          )}
+                    {showJBrowseViewer && (
+                      <div className="jbrowse-iframe-container" style={{ marginBottom: '12px' }}>
+                        <iframe
+                          src={jbrowse2Url}
+                          title="JBrowse2 Viewer"
+                          style={{
+                            width: '100%',
+                            height: '400px',
+                            border: '1px solid #ddd',
+                            borderRadius: '4px'
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            );
+          })()}
 
           {/* GO */}
           {goLoading ? (

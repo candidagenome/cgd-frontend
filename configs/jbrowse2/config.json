@@ -154,15 +154,15 @@
           "displayId": "TranscribedFeatures-LinearBasicDisplay",
           "renderer": {
             "type": "SvgFeatureRenderer",
-            "color1": "jexl:get(feature,\"type\").includes(\"pseudo\")?\"gray\":get(feature,\"strand\")==1?\"red\":get(feature,\"strand\")==-1?\"blue\":\"gray\"",
-            "color2": "jexl:get(feature,\"type\").includes(\"pseudo\")?\"gray\":get(feature,\"strand\")==1?\"red\":get(feature,\"strand\")==-1?\"blue\":\"gray\"",
+            "color1": "jexl:get(feature,'strand')==1?'red':get(feature,'strand')==-1?'blue':'gray'",
+            "color2": "jexl:get(feature,'strand')==1?'red':get(feature,'strand')==-1?'blue':'gray'",
             "color3": "black",
             "height": 12,
             "showLabels": true,
             "showDescriptions": true,
             "displayMode": "normal",
             "labels": {
-              "name": "jexl:get(feature,\"Gene\") || get(feature,\"gene\") || get(feature,\"Name\")"
+              "name": "jexl:get(feature,'Gene') || get(feature,'gene') || get(feature,'Name')"
             }
           }
         }
@@ -198,15 +198,15 @@
           "displayId": "C_auris_B8441_features.sorted.gff-LinearBasicDisplay",
           "renderer": {
             "type": "SvgFeatureRenderer",
-            "color1": "jexl:get(feature,\"type\").includes(\"pseudo\")?\"gray\":get(feature,\"strand\")==1?\"red\":get(feature,\"strand\")==-1?\"blue\":\"gray\"",
-            "color2": "jexl:get(feature,\"type\").includes(\"pseudo\")?\"gray\":get(feature,\"strand\")==1?\"red\":get(feature,\"strand\")==-1?\"blue\":\"gray\"",
+            "color1": "jexl:get(feature,'strand')==1?'red':get(feature,'strand')==-1?'blue':'gray'",
+            "color2": "jexl:get(feature,'strand')==1?'red':get(feature,'strand')==-1?'blue':'gray'",
             "color3": "black",
             "height": 12,
             "showLabels": true,
             "showDescriptions": true,
             "displayMode": "normal",
             "labels": {
-              "name": "jexl:get(feature,\"Gene\") || get(feature,\"gene\") || get(feature,\"Name\")"
+              "name": "jexl:get(feature,'Gene') || get(feature,'gene') || get(feature,'Name')"
             }
           }
         }
@@ -242,15 +242,15 @@
           "displayId": "C_dubliniensis_CD36_features.sorted.gff-LinearBasicDisplay",
           "renderer": {
             "type": "SvgFeatureRenderer",
-            "color1": "jexl:get(feature,\"type\").includes(\"pseudo\")?\"gray\":get(feature,\"strand\")==1?\"red\":get(feature,\"strand\")==-1?\"blue\":\"gray\"",
-            "color2": "jexl:get(feature,\"type\").includes(\"pseudo\")?\"gray\":get(feature,\"strand\")==1?\"red\":get(feature,\"strand\")==-1?\"blue\":\"gray\"",
+            "color1": "jexl:get(feature,'strand')==1?'red':get(feature,'strand')==-1?'blue':'gray'",
+            "color2": "jexl:get(feature,'strand')==1?'red':get(feature,'strand')==-1?'blue':'gray'",
             "color3": "black",
             "height": 12,
             "showLabels": true,
             "showDescriptions": true,
             "displayMode": "normal",
             "labels": {
-              "name": "jexl:get(feature,\"Gene\") || get(feature,\"gene\") || get(feature,\"Name\")"
+              "name": "jexl:get(feature,'Gene') || get(feature,'gene') || get(feature,'Name')"
             }
           }
         }
@@ -286,15 +286,15 @@
           "displayId": "C_parapsilosis_CDC317_features.sorted.gff-LinearBasicDisplay",
           "renderer": {
             "type": "SvgFeatureRenderer",
-            "color1": "jexl:get(feature,\"type\").includes(\"pseudo\")?\"gray\":get(feature,\"strand\")==1?\"red\":get(feature,\"strand\")==-1?\"blue\":\"gray\"",
-            "color2": "jexl:get(feature,\"type\").includes(\"pseudo\")?\"gray\":get(feature,\"strand\")==1?\"red\":get(feature,\"strand\")==-1?\"blue\":\"gray\"",
+            "color1": "jexl:get(feature,'strand')==1?'red':get(feature,'strand')==-1?'blue':'gray'",
+            "color2": "jexl:get(feature,'strand')==1?'red':get(feature,'strand')==-1?'blue':'gray'",
             "color3": "black",
             "height": 12,
             "showLabels": true,
             "showDescriptions": true,
             "displayMode": "normal",
             "labels": {
-              "name": "jexl:get(feature,\"Gene\") || get(feature,\"gene\") || get(feature,\"Name\")"
+              "name": "jexl:get(feature,'Gene') || get(feature,'gene') || get(feature,'Name')"
             }
           }
         }
@@ -330,15 +330,15 @@
           "displayId": "C_glabrata_CBS138_features.sorted.gff-LinearBasicDisplay",
           "renderer": {
             "type": "SvgFeatureRenderer",
-            "color1": "jexl:get(feature,\"type\").includes(\"pseudo\")?\"gray\":get(feature,\"strand\")==1?\"red\":get(feature,\"strand\")==-1?\"blue\":\"gray\"",
-            "color2": "jexl:get(feature,\"type\").includes(\"pseudo\")?\"gray\":get(feature,\"strand\")==1?\"red\":get(feature,\"strand\")==-1?\"blue\":\"gray\"",
+            "color1": "jexl:get(feature,'strand')==1?'red':get(feature,'strand')==-1?'blue':'gray'",
+            "color2": "jexl:get(feature,'strand')==1?'red':get(feature,'strand')==-1?'blue':'gray'",
             "color3": "black",
             "height": 12,
             "showLabels": true,
             "showDescriptions": true,
             "displayMode": "normal",
             "labels": {
-              "name": "jexl:get(feature,\"Gene\") || get(feature,\"gene\") || get(feature,\"Name\")"
+              "name": "jexl:get(feature,'Gene') || get(feature,'gene') || get(feature,'Name')"
             }
           }
         }
