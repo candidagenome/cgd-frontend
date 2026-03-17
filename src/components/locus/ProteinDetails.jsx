@@ -243,8 +243,11 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                     const proteinName = orgData.systematic_name || orgData.feature_name;
                     const proteinLength = orgData.sequence_detail?.protein_length || orgData.protein_info?.protein_length;
 
-                    // Use backend-provided pbrowse_url (JBrowse2 URL for protein domains)
+                    // Use backend-provided pbrowse_url for protein domains
                     if (orgData.pbrowse_url) {
+                      // Convert jbrowse URL to jbrowse2 URL for the full view link
+                      const jbrowse2FullUrl = orgData.pbrowse_url.replace('/jbrowse/', '/jbrowse2/');
+
                       return (
                         <div className="domain-viewer-container">
                           <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -262,7 +265,7 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                               {showDomainViewer ? '▼ Hide' : '▶ Show'} Domain Viewer
                             </button>
                             <a
-                              href={orgData.pbrowse_url}
+                              href={jbrowse2FullUrl}
                               target="_blank"
                               rel="noopener noreferrer"
                               style={{ fontSize: '13px' }}
