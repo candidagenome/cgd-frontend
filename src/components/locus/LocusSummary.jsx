@@ -21,31 +21,52 @@ function LocusSummary({
 
   // ---------- JBrowse2 URL helpers ----------
   const assemblyConfig = {
-    'Candida albicans SC5314': {
+    'C_albicans_SC5314': {
       assembly: 'C_albicans_SC5314',
       geneTrack: 'TranscribedFeatures',
     },
-    'Candida auris B8441': {
+    'C_auris_B8441': {
       assembly: 'C_auris_B8441',
       geneTrack: 'C_auris_B8441_features.sorted.gff',
     },
-    'Candida dubliniensis CD36': {
+    'C_dubliniensis_CD36': {
       assembly: 'C_dubliniensis_CD36',
       geneTrack: 'C_dubliniensis_CD36_features.sorted.gff',
     },
-    'Candida glabrata CBS138': {
+    'C_glabrata_CBS138': {
       assembly: 'C_glabrata_CBS138',
       geneTrack: 'C_glabrata_CBS138_features.sorted.gff',
     },
-    'Candida parapsilosis CDC317': {
+    'C_parapsilosis_CDC317': {
       assembly: 'C_parapsilosis_CDC317',
       geneTrack: 'C_parapsilosis_CDC317_features.sorted.gff',
     },
   };
 
+  const getAssemblyKey = (orgName) => {
+    if (!orgName) return null;
+    // Normalize organism name to assembly key format
+    // Handle variations like "Candida albicans SC5314", "[Candida] auris B8441", etc.
+    const normalized = orgName
+      .replace(/^\[|\]$/g, '') // Remove brackets
+      .replace(/\s+/g, '_')    // Replace spaces with underscores
+      .replace(/^Candida_/, 'C_') // Shorten Candida to C
+      .replace(/^_*Candida_/, 'C_'); // Handle [Candida] case
+
+    // Try exact match first
+    if (assemblyConfig[normalized]) return normalized;
+
+    // Try partial match
+    for (const key of Object.keys(assemblyConfig)) {
+      if (normalized.includes(key) || key.includes(normalized)) return key;
+    }
+    return null;
+  };
+
   const buildJBrowse2Url = (jbrowseInfo, orgName) => {
     if (!jbrowseInfo || !jbrowseInfo.chromosome) return null;
-    const config = assemblyConfig[orgName];
+    const assemblyKey = getAssemblyKey(orgName);
+    const config = assemblyKey ? assemblyConfig[assemblyKey] : null;
     if (!config) return null;
     // Add padding to show more context around the gene (similar to JBrowse1 view)
     const geneLength = jbrowseInfo.stop_coord - jbrowseInfo.start_coord;
