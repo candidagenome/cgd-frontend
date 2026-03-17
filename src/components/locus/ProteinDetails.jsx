@@ -7,6 +7,67 @@ import './LocusComponents.css';
 // Lazy load heavy 3D viewer component
 const AlphaFoldViewer = lazy(() => import('./AlphaFoldViewer'));
 
+// JBrowse2 assembly configuration for protein domains
+const proteinAssemblyConfig = {
+  'C_albicans_SC5314': {
+    assembly: 'C_albicans_SC5314_proteins',
+    domainTrack: 'ProteinDomains',
+  },
+  'C_auris_B8441': {
+    assembly: 'C_auris_B8441_proteins',
+    domainTrack: 'ProteinDomains',
+  },
+  'C_dubliniensis_CD36': {
+    assembly: 'C_dubliniensis_CD36_proteins',
+    domainTrack: 'ProteinDomains',
+  },
+  'C_glabrata_CBS138': {
+    assembly: 'C_glabrata_CBS138_proteins',
+    domainTrack: 'ProteinDomains',
+  },
+  'C_parapsilosis_CDC317': {
+    assembly: 'C_parapsilosis_CDC317_proteins',
+    domainTrack: 'ProteinDomains',
+  },
+};
+
+const getProteinAssemblyKey = (orgName) => {
+  if (!orgName) return null;
+  // Normalize organism name to assembly key format
+  const normalized = orgName
+    .replace(/^\[|\]$/g, '') // Remove brackets
+    .replace(/\s+/g, '_')    // Replace spaces with underscores
+    .replace(/^Candida_/, 'C_') // Shorten Candida to C
+    .replace(/^_*Candida_/, 'C_'); // Handle [Candida] case
+
+  // Try exact match first
+  if (proteinAssemblyConfig[normalized]) return normalized;
+
+  // Try partial match
+  for (const key of Object.keys(proteinAssemblyConfig)) {
+    if (normalized.includes(key) || key.includes(normalized)) return key;
+  }
+  return null;
+};
+
+const buildProteinJBrowse2Url = (proteinName, proteinLength, orgName, options = {}) => {
+  if (!proteinName || !proteinLength) return null;
+
+  const assemblyKey = getProteinAssemblyKey(orgName);
+  const config = assemblyKey ? proteinAssemblyConfig[assemblyKey] : null;
+  if (!config) return null;
+
+  // Build location for the entire protein with some padding
+  const start = 1;
+  const stop = proteinLength;
+  const loc = `${proteinName}:${start}..${stop}`;
+
+  if (options.fullView) {
+    return `/jbrowse2/?assembly=${config.assembly}&loc=${encodeURIComponent(loc)}&tracks=${config.domainTrack}`;
+  }
+  return `/jbrowse2/?assembly=${config.assembly}&loc=${encodeURIComponent(loc)}&tracks=${config.domainTrack}`;
+};
+
 /**
  * Generate external URL for a domain accession based on its source database.
  * @param {string} accession - The domain accession ID (e.g., "IPR000719", "PF00069")
@@ -239,47 +300,107 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
               <tr className="section-with-divider section-grey-bg">
                 <th style={{ verticalAlign: 'top' }}>Conserved Domains</th>
                 <td>
-                  {orgData.pbrowse_url ? (
-                    <div className="domain-viewer-container">
-                      <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <button
-                          onClick={() => setShowDomainViewer(!showDomainViewer)}
-                          style={{
-                            padding: '4px 10px',
-                            backgroundColor: '#f5f5f5',
-                            border: '1px solid #ddd',
-                            borderRadius: '4px',
-                            cursor: 'pointer',
-                            fontSize: '12px'
-                          }}
-                        >
-                          {showDomainViewer ? '▼ Hide' : '▶ Show'} Domain Viewer
-                        </button>
-                        <a
-                          href={orgData.pbrowse_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{ fontSize: '13px' }}
-                        >
-                          Open in Full JBrowse ↗
-                        </a>
-                      </div>
-                      {showDomainViewer && (
-                        <div className="domain-viewer-iframe-container" style={{ marginBottom: '12px' }}>
-                          <iframe
-                            src={orgData.pbrowse_url}
-                            title="Domain Viewer"
-                            style={{
-                              width: '100%',
-                              height: '350px',
-                              border: '1px solid #ddd',
-                              borderRadius: '4px'
-                            }}
-                          />
+                  {(() => {
+                    // Build JBrowse2 URL for protein domains
+                    const proteinName = orgData.systematic_name || orgData.feature_name;
+                    const proteinLength = orgData.sequence_detail?.protein_length || orgData.protein_info?.protein_length;
+                    const jbrowse2Url = buildProteinJBrowse2Url(proteinName, proteinLength, selectedOrganism);
+                    const jbrowse2FullUrl = buildProteinJBrowse2Url(proteinName, proteinLength, selectedOrganism, { fullView: true });
+
+                    // Show JBrowse2 viewer if we have protein info
+                    if (jbrowse2Url && orgData.conserved_domains && orgData.conserved_domains.length > 0) {
+                      return (
+                        <div className="domain-viewer-container">
+                          <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <button
+                              onClick={() => setShowDomainViewer(!showDomainViewer)}
+                              style={{
+                                padding: '4px 10px',
+                                backgroundColor: '#f5f5f5',
+                                border: '1px solid #ddd',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                fontSize: '12px'
+                              }}
+                            >
+                              {showDomainViewer ? '▼ Hide' : '▶ Show'} Domain Viewer
+                            </button>
+                            <a
+                              href={jbrowse2FullUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{ fontSize: '13px' }}
+                            >
+                              Open in Full JBrowse ↗
+                            </a>
+                            <span className="protein-coords" style={{ fontSize: '13px', color: '#666' }}>
+                              {proteinName}: 1..{proteinLength?.toLocaleString()} aa
+                            </span>
+                          </div>
+                          {showDomainViewer && (
+                            <div className="domain-viewer-iframe-container" style={{ marginBottom: '12px' }}>
+                              <iframe
+                                key={`jbrowse2-protein-${selectedOrganism}`}
+                                src={jbrowse2Url}
+                                title="JBrowse2 Protein Domain Viewer"
+                                style={{
+                                  width: '100%',
+                                  height: '280px',
+                                  border: '1px solid #ddd',
+                                  borderRadius: '4px'
+                                }}
+                              />
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                  ) : null}
+                      );
+                    }
+                    // Fallback to pbrowse_url if JBrowse2 URL cannot be built
+                    if (orgData.pbrowse_url) {
+                      return (
+                        <div className="domain-viewer-container">
+                          <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <button
+                              onClick={() => setShowDomainViewer(!showDomainViewer)}
+                              style={{
+                                padding: '4px 10px',
+                                backgroundColor: '#f5f5f5',
+                                border: '1px solid #ddd',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                fontSize: '12px'
+                              }}
+                            >
+                              {showDomainViewer ? '▼ Hide' : '▶ Show'} Domain Viewer
+                            </button>
+                            <a
+                              href={orgData.pbrowse_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{ fontSize: '13px' }}
+                            >
+                              Open in Full JBrowse ↗
+                            </a>
+                          </div>
+                          {showDomainViewer && (
+                            <div className="domain-viewer-iframe-container" style={{ marginBottom: '12px' }}>
+                              <iframe
+                                src={orgData.pbrowse_url}
+                                title="Domain Viewer"
+                                style={{
+                                  width: '100%',
+                                  height: '280px',
+                                  border: '1px solid #ddd',
+                                  borderRadius: '4px'
+                                }}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      );
+                    }
+                    return null;
+                  })()}
                   {orgData.conserved_domains && orgData.conserved_domains.length > 0 ? (
                     <div className="domains-table-container">
                       <p style={{ margin: '0 0 8px 0', fontSize: '13px', color: '#666' }}>
