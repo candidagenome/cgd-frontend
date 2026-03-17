@@ -89,6 +89,96 @@
           }
         }
       }
+    },
+    {
+      "name": "C_albicans_SC5314_prot",
+      "sequence": {
+        "type": "ReferenceSequenceTrack",
+        "trackId": "C_albicans_SC5314_prot-ReferenceSequenceTrack",
+        "adapter": {
+          "type": "IndexedFastaAdapter",
+          "fastaLocation": {
+            "uri": "protein_data/C_albicans_SC5314_proteins.fasta",
+            "locationType": "UriLocation"
+          },
+          "faiLocation": {
+            "uri": "protein_data/C_albicans_SC5314_proteins.fasta.fai",
+            "locationType": "UriLocation"
+          }
+        }
+      }
+    },
+    {
+      "name": "C_auris_B8441_prot",
+      "sequence": {
+        "type": "ReferenceSequenceTrack",
+        "trackId": "C_auris_B8441_prot-ReferenceSequenceTrack",
+        "adapter": {
+          "type": "IndexedFastaAdapter",
+          "fastaLocation": {
+            "uri": "protein_data/C_auris_B8441_proteins.fasta",
+            "locationType": "UriLocation"
+          },
+          "faiLocation": {
+            "uri": "protein_data/C_auris_B8441_proteins.fasta.fai",
+            "locationType": "UriLocation"
+          }
+        }
+      }
+    },
+    {
+      "name": "C_dubliniensis_CD36_prot",
+      "sequence": {
+        "type": "ReferenceSequenceTrack",
+        "trackId": "C_dubliniensis_CD36_prot-ReferenceSequenceTrack",
+        "adapter": {
+          "type": "IndexedFastaAdapter",
+          "fastaLocation": {
+            "uri": "protein_data/C_dubliniensis_CD36_proteins.fasta",
+            "locationType": "UriLocation"
+          },
+          "faiLocation": {
+            "uri": "protein_data/C_dubliniensis_CD36_proteins.fasta.fai",
+            "locationType": "UriLocation"
+          }
+        }
+      }
+    },
+    {
+      "name": "C_glabrata_CBS138_prot",
+      "sequence": {
+        "type": "ReferenceSequenceTrack",
+        "trackId": "C_glabrata_CBS138_prot-ReferenceSequenceTrack",
+        "adapter": {
+          "type": "IndexedFastaAdapter",
+          "fastaLocation": {
+            "uri": "protein_data/C_glabrata_CBS138_proteins.fasta",
+            "locationType": "UriLocation"
+          },
+          "faiLocation": {
+            "uri": "protein_data/C_glabrata_CBS138_proteins.fasta.fai",
+            "locationType": "UriLocation"
+          }
+        }
+      }
+    },
+    {
+      "name": "C_parapsilosis_CDC317_prot",
+      "sequence": {
+        "type": "ReferenceSequenceTrack",
+        "trackId": "C_parapsilosis_CDC317_prot-ReferenceSequenceTrack",
+        "adapter": {
+          "type": "IndexedFastaAdapter",
+          "fastaLocation": {
+            "uri": "protein_data/C_parapsilosis_CDC317_proteins.fasta",
+            "locationType": "UriLocation"
+          },
+          "faiLocation": {
+            "uri": "protein_data/C_parapsilosis_CDC317_proteins.fasta.fai",
+            "locationType": "UriLocation"
+          }
+        }
+      }
     }
   ],
   "configuration": {
@@ -7177,6 +7267,2506 @@
           "height": 20,
           "posColor": "black",
           "negColor": "white"
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_albicans_SC5314_Pfam",
+      "name": "Pfam",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_albicans_SC5314_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_albicans_SC5314_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_albicans_SC5314_Pfam-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "orange",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_albicans_SC5314_PANTHER",
+      "name": "PANTHER",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_albicans_SC5314_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_albicans_SC5314_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_albicans_SC5314_PANTHER-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "aquamarine",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_albicans_SC5314_SUPERFAMILY",
+      "name": "SUPERFAMILY",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_albicans_SC5314_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_albicans_SC5314_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_albicans_SC5314_SUPERFAMILY-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "magenta",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_albicans_SC5314_CATH",
+      "name": "CATH",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_albicans_SC5314_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_albicans_SC5314_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_albicans_SC5314_CATH-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "purple",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_albicans_SC5314_SMART",
+      "name": "SMART",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_albicans_SC5314_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_albicans_SC5314_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_albicans_SC5314_SMART-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "saddlebrown",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_albicans_SC5314_CDD",
+      "name": "CDD",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_albicans_SC5314_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_albicans_SC5314_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_albicans_SC5314_CDD-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "navy",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_albicans_SC5314_PRINTS",
+      "name": "PRINTS",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_albicans_SC5314_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_albicans_SC5314_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_albicans_SC5314_PRINTS-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "red",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_albicans_SC5314_ProSitePatterns",
+      "name": "ProSite Patterns",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_albicans_SC5314_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_albicans_SC5314_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_albicans_SC5314_ProSitePatterns-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "dodgerblue",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_albicans_SC5314_ProSiteProfiles",
+      "name": "ProSite Profiles",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_albicans_SC5314_ProSiteProfiles.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_albicans_SC5314_ProSiteProfiles.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_albicans_SC5314_ProSiteProfiles-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "greenyellow",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_albicans_SC5314_NCBIfam",
+      "name": "NCBIfam",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_albicans_SC5314_NCBIfam.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_albicans_SC5314_NCBIfam.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_albicans_SC5314_NCBIfam-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "cyan",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_albicans_SC5314_PIRSF",
+      "name": "PIRSF",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_albicans_SC5314_PIRSF.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_albicans_SC5314_PIRSF.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_albicans_SC5314_PIRSF-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "bisque",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_albicans_SC5314_Hamap",
+      "name": "Hamap",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_albicans_SC5314_Hamap.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_albicans_SC5314_Hamap.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_albicans_SC5314_Hamap-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "plum",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_auris_B8441_Pfam",
+      "name": "Pfam",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_auris_B8441_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_auris_B8441_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_auris_B8441_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_auris_B8441_Pfam-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "orange",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_auris_B8441_PANTHER",
+      "name": "PANTHER",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_auris_B8441_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_auris_B8441_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_auris_B8441_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_auris_B8441_PANTHER-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "aquamarine",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_auris_B8441_SUPERFAMILY",
+      "name": "SUPERFAMILY",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_auris_B8441_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_auris_B8441_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_auris_B8441_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_auris_B8441_SUPERFAMILY-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "magenta",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_auris_B8441_CATH",
+      "name": "CATH",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_auris_B8441_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_auris_B8441_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_auris_B8441_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_auris_B8441_CATH-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "purple",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_auris_B8441_SMART",
+      "name": "SMART",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_auris_B8441_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_auris_B8441_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_auris_B8441_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_auris_B8441_SMART-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "saddlebrown",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_auris_B8441_CDD",
+      "name": "CDD",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_auris_B8441_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_auris_B8441_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_auris_B8441_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_auris_B8441_CDD-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "navy",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_auris_B8441_PRINTS",
+      "name": "PRINTS",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_auris_B8441_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_auris_B8441_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_auris_B8441_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_auris_B8441_PRINTS-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "red",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_auris_B8441_ProSitePatterns",
+      "name": "ProSite Patterns",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_auris_B8441_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_auris_B8441_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_auris_B8441_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_auris_B8441_ProSitePatterns-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "dodgerblue",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_auris_B8441_ProSiteProfiles",
+      "name": "ProSite Profiles",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_auris_B8441_ProSiteProfiles.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_auris_B8441_ProSiteProfiles.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_auris_B8441_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_auris_B8441_ProSiteProfiles-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "greenyellow",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_auris_B8441_NCBIfam",
+      "name": "NCBIfam",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_auris_B8441_NCBIfam.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_auris_B8441_NCBIfam.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_auris_B8441_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_auris_B8441_NCBIfam-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "cyan",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_auris_B8441_PIRSF",
+      "name": "PIRSF",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_auris_B8441_PIRSF.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_auris_B8441_PIRSF.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_auris_B8441_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_auris_B8441_PIRSF-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "bisque",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_auris_B8441_Hamap",
+      "name": "Hamap",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_auris_B8441_Hamap.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_auris_B8441_Hamap.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_auris_B8441_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_auris_B8441_Hamap-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "plum",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_dubliniensis_CD36_Pfam",
+      "name": "Pfam",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_dubliniensis_CD36_Pfam-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "orange",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_dubliniensis_CD36_PANTHER",
+      "name": "PANTHER",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_dubliniensis_CD36_PANTHER-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "aquamarine",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_dubliniensis_CD36_SUPERFAMILY",
+      "name": "SUPERFAMILY",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_dubliniensis_CD36_SUPERFAMILY-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "magenta",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_dubliniensis_CD36_CATH",
+      "name": "CATH",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_dubliniensis_CD36_CATH-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "purple",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_dubliniensis_CD36_SMART",
+      "name": "SMART",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_dubliniensis_CD36_SMART-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "saddlebrown",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_dubliniensis_CD36_CDD",
+      "name": "CDD",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_dubliniensis_CD36_CDD-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "navy",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_dubliniensis_CD36_PRINTS",
+      "name": "PRINTS",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_dubliniensis_CD36_PRINTS-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "red",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_dubliniensis_CD36_ProSitePatterns",
+      "name": "ProSite Patterns",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_dubliniensis_CD36_ProSitePatterns-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "dodgerblue",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_dubliniensis_CD36_ProSiteProfiles",
+      "name": "ProSite Profiles",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_dubliniensis_CD36_ProSiteProfiles.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_dubliniensis_CD36_ProSiteProfiles.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_dubliniensis_CD36_ProSiteProfiles-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "greenyellow",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_dubliniensis_CD36_NCBIfam",
+      "name": "NCBIfam",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_dubliniensis_CD36_NCBIfam.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_dubliniensis_CD36_NCBIfam.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_dubliniensis_CD36_NCBIfam-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "cyan",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_dubliniensis_CD36_PIRSF",
+      "name": "PIRSF",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_dubliniensis_CD36_PIRSF.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_dubliniensis_CD36_PIRSF.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_dubliniensis_CD36_PIRSF-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "bisque",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_dubliniensis_CD36_Hamap",
+      "name": "Hamap",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_dubliniensis_CD36_Hamap.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_dubliniensis_CD36_Hamap.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_dubliniensis_CD36_Hamap-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "plum",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_glabrata_CBS138_Pfam",
+      "name": "Pfam",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_glabrata_CBS138_Pfam-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "orange",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_glabrata_CBS138_PANTHER",
+      "name": "PANTHER",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_glabrata_CBS138_PANTHER-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "aquamarine",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_glabrata_CBS138_SUPERFAMILY",
+      "name": "SUPERFAMILY",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_glabrata_CBS138_SUPERFAMILY-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "magenta",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_glabrata_CBS138_CATH",
+      "name": "CATH",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_glabrata_CBS138_CATH-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "purple",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_glabrata_CBS138_SMART",
+      "name": "SMART",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_glabrata_CBS138_SMART-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "saddlebrown",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_glabrata_CBS138_CDD",
+      "name": "CDD",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_glabrata_CBS138_CDD-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "navy",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_glabrata_CBS138_PRINTS",
+      "name": "PRINTS",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_glabrata_CBS138_PRINTS-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "red",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_glabrata_CBS138_ProSitePatterns",
+      "name": "ProSite Patterns",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_glabrata_CBS138_ProSitePatterns-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "dodgerblue",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_glabrata_CBS138_ProSiteProfiles",
+      "name": "ProSite Profiles",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_glabrata_CBS138_ProSiteProfiles.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_glabrata_CBS138_ProSiteProfiles.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_glabrata_CBS138_ProSiteProfiles-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "greenyellow",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_glabrata_CBS138_NCBIfam",
+      "name": "NCBIfam",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_glabrata_CBS138_NCBIfam.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_glabrata_CBS138_NCBIfam.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_glabrata_CBS138_NCBIfam-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "cyan",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_glabrata_CBS138_PIRSF",
+      "name": "PIRSF",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_glabrata_CBS138_PIRSF.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_glabrata_CBS138_PIRSF.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_glabrata_CBS138_PIRSF-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "bisque",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_glabrata_CBS138_Hamap",
+      "name": "Hamap",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_glabrata_CBS138_Hamap.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_glabrata_CBS138_Hamap.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_glabrata_CBS138_Hamap-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "plum",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_parapsilosis_CDC317_Pfam",
+      "name": "Pfam",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_parapsilosis_CDC317_Pfam-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "orange",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_parapsilosis_CDC317_PANTHER",
+      "name": "PANTHER",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_parapsilosis_CDC317_PANTHER-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "aquamarine",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_parapsilosis_CDC317_SUPERFAMILY",
+      "name": "SUPERFAMILY",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_parapsilosis_CDC317_SUPERFAMILY-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "magenta",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_parapsilosis_CDC317_CATH",
+      "name": "CATH",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_parapsilosis_CDC317_CATH-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "purple",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_parapsilosis_CDC317_SMART",
+      "name": "SMART",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_parapsilosis_CDC317_SMART-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "saddlebrown",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_parapsilosis_CDC317_CDD",
+      "name": "CDD",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_parapsilosis_CDC317_CDD-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "navy",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_parapsilosis_CDC317_PRINTS",
+      "name": "PRINTS",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_parapsilosis_CDC317_PRINTS-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "red",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_parapsilosis_CDC317_ProSitePatterns",
+      "name": "ProSite Patterns",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_parapsilosis_CDC317_ProSitePatterns-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "dodgerblue",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20,
+            "showDescriptions": false
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_parapsilosis_CDC317_ProSiteProfiles",
+      "name": "ProSite Profiles",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_parapsilosis_CDC317_ProSiteProfiles.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_parapsilosis_CDC317_ProSiteProfiles.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_parapsilosis_CDC317_ProSiteProfiles-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "greenyellow",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_parapsilosis_CDC317_NCBIfam",
+      "name": "NCBIfam",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_parapsilosis_CDC317_NCBIfam.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_parapsilosis_CDC317_NCBIfam.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_parapsilosis_CDC317_NCBIfam-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "cyan",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_parapsilosis_CDC317_PIRSF",
+      "name": "PIRSF",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_parapsilosis_CDC317_PIRSF.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_parapsilosis_CDC317_PIRSF.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_parapsilosis_CDC317_PIRSF-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "bisque",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20
+          },
+          "height": 25,
+          "minHeight": 20
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_parapsilosis_CDC317_Hamap",
+      "name": "Hamap",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_parapsilosis_CDC317_Hamap.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_parapsilosis_CDC317_Hamap.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_parapsilosis_CDC317_Hamap-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "plum",
+            "height": 8,
+            "showLabels": false,
+            "displayMode": "collapse",
+            "maxHeight": 20
+          },
+          "height": 25,
+          "minHeight": 20
         }
       ]
     }
