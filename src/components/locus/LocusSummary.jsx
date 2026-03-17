@@ -36,7 +36,12 @@ function LocusSummary({
   const buildJBrowse2Url = (jbrowseInfo, orgName) => {
     if (!jbrowseInfo || !jbrowseInfo.chromosome) return null;
     const assembly = getAssemblyName(orgName);
-    const loc = `${jbrowseInfo.chromosome}:${jbrowseInfo.start_coord}..${jbrowseInfo.stop_coord}`;
+    // Add padding to show more context around the gene (similar to JBrowse1 view)
+    const geneLength = jbrowseInfo.stop_coord - jbrowseInfo.start_coord;
+    const padding = Math.max(2000, Math.round(geneLength * 1.0)); // At least 2kb or 100% of gene length
+    const start = Math.max(1, jbrowseInfo.start_coord - padding);
+    const stop = jbrowseInfo.stop_coord + padding;
+    const loc = `${jbrowseInfo.chromosome}:${start}..${stop}`;
     // Default tracks: DNA reference and Gene Features
     const tracks = 'DNA,TranscribedFeatures';
     return `/jbrowse2/?assembly=${assembly}&loc=${encodeURIComponent(loc)}&tracks=${tracks}`;
