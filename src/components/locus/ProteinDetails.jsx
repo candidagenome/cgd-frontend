@@ -8,26 +8,24 @@ import './LocusComponents.css';
 const AlphaFoldViewer = lazy(() => import('./AlphaFoldViewer'));
 
 // JBrowse2 protein assembly configuration
+// Domain track types to display
+const domainTrackTypes = ['Pfam', 'PANTHER', 'SUPERFAMILY', 'CATH', 'SMART', 'CDD', 'PRINTS', 'ProSitePatterns'];
+
 const proteinAssemblyConfig = {
   'C_albicans_SC5314': {
     assembly: 'C_albicans_SC5314_prot',
-    tracks: 'C_albicans_SC5314_protein_domains',
   },
   'C_auris_B8441': {
     assembly: 'C_auris_B8441_prot',
-    tracks: 'C_auris_B8441_protein_domains',
   },
   'C_dubliniensis_CD36': {
     assembly: 'C_dubliniensis_CD36_prot',
-    tracks: 'C_dubliniensis_CD36_protein_domains',
   },
   'C_glabrata_CBS138': {
     assembly: 'C_glabrata_CBS138_prot',
-    tracks: 'C_glabrata_CBS138_protein_domains',
   },
   'C_parapsilosis_CDC317': {
     assembly: 'C_parapsilosis_CDC317_prot',
-    tracks: 'C_parapsilosis_CDC317_protein_domains',
   },
 };
 
@@ -54,8 +52,10 @@ const buildProteinJBrowse2Url = (proteinName, proteinLength, orgName) => {
   const config = assemblyKey ? proteinAssemblyConfig[assemblyKey] : null;
   if (!config) return null;
 
+  // Build track list with species prefix
+  const tracks = domainTrackTypes.map(t => `${assemblyKey}_${t}`).join(',');
   const loc = `${proteinName}:1..${proteinLength}`;
-  return `/jbrowse2/?assembly=${config.assembly}&loc=${encodeURIComponent(loc)}&tracks=${config.tracks}`;
+  return `/jbrowse2/?assembly=${config.assembly}&loc=${encodeURIComponent(loc)}&tracks=${tracks}`;
 };
 
 /**
