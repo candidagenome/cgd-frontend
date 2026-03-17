@@ -11,23 +11,23 @@ const AlphaFoldViewer = lazy(() => import('./AlphaFoldViewer'));
 const proteinAssemblyConfig = {
   'C_albicans_SC5314': {
     assembly: 'C_albicans_SC5314_prot',
-    tracks: 'Pfam,PANTHER,SUPERFAMILY,CATH,SMART,CDD,PRINTS,ProSitePatterns',
+    tracks: 'C_albicans_SC5314_protein_domains',
   },
   'C_auris_B8441': {
     assembly: 'C_auris_B8441_prot',
-    tracks: 'Pfam,PANTHER,SUPERFAMILY,CATH,SMART,CDD,PRINTS,ProSitePatterns',
+    tracks: 'C_auris_B8441_protein_domains',
   },
   'C_dubliniensis_CD36': {
     assembly: 'C_dubliniensis_CD36_prot',
-    tracks: 'Pfam,PANTHER,SUPERFAMILY,CATH,SMART,CDD,PRINTS,ProSitePatterns',
+    tracks: 'C_dubliniensis_CD36_protein_domains',
   },
   'C_glabrata_CBS138': {
     assembly: 'C_glabrata_CBS138_prot',
-    tracks: 'Pfam,PANTHER,SUPERFAMILY,CATH,SMART,CDD,PRINTS,ProSitePatterns',
+    tracks: 'C_glabrata_CBS138_protein_domains',
   },
   'C_parapsilosis_CDC317': {
     assembly: 'C_parapsilosis_CDC317_prot',
-    tracks: 'Pfam,PANTHER,SUPERFAMILY,CATH,SMART,CDD,PRINTS,ProSitePatterns',
+    tracks: 'C_parapsilosis_CDC317_protein_domains',
   },
 };
 
