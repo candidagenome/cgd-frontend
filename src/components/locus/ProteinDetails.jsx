@@ -7,6 +7,57 @@ import './LocusComponents.css';
 // Lazy load heavy 3D viewer component
 const AlphaFoldViewer = lazy(() => import('./AlphaFoldViewer'));
 
+// JBrowse2 protein assembly configuration
+const proteinAssemblyConfig = {
+  'C_albicans_SC5314': {
+    assembly: 'C_albicans_SC5314_prot',
+    tracks: 'Pfam,PANTHER,SUPERFAMILY,CATH,SMART,CDD,PRINTS,ProSitePatterns',
+  },
+  'C_auris_B8441': {
+    assembly: 'C_auris_B8441_prot',
+    tracks: 'Pfam,PANTHER,SUPERFAMILY,CATH,SMART,CDD,PRINTS,ProSitePatterns',
+  },
+  'C_dubliniensis_CD36': {
+    assembly: 'C_dubliniensis_CD36_prot',
+    tracks: 'Pfam,PANTHER,SUPERFAMILY,CATH,SMART,CDD,PRINTS,ProSitePatterns',
+  },
+  'C_glabrata_CBS138': {
+    assembly: 'C_glabrata_CBS138_prot',
+    tracks: 'Pfam,PANTHER,SUPERFAMILY,CATH,SMART,CDD,PRINTS,ProSitePatterns',
+  },
+  'C_parapsilosis_CDC317': {
+    assembly: 'C_parapsilosis_CDC317_prot',
+    tracks: 'Pfam,PANTHER,SUPERFAMILY,CATH,SMART,CDD,PRINTS,ProSitePatterns',
+  },
+};
+
+const getProteinAssemblyKey = (orgName) => {
+  if (!orgName) return null;
+  const normalized = orgName
+    .replace(/^\[|\]$/g, '')
+    .replace(/\s+/g, '_')
+    .replace(/^Candida_/, 'C_')
+    .replace(/^_*Candida_/, 'C_');
+
+  if (proteinAssemblyConfig[normalized]) return normalized;
+
+  for (const key of Object.keys(proteinAssemblyConfig)) {
+    if (normalized.includes(key) || key.includes(normalized)) return key;
+  }
+  return null;
+};
+
+const buildProteinJBrowse2Url = (proteinName, proteinLength, orgName) => {
+  if (!proteinName || !proteinLength) return null;
+
+  const assemblyKey = getProteinAssemblyKey(orgName);
+  const config = assemblyKey ? proteinAssemblyConfig[assemblyKey] : null;
+  if (!config) return null;
+
+  const loc = `${proteinName}:1..${proteinLength}`;
+  return `/jbrowse2/?assembly=${config.assembly}&loc=${encodeURIComponent(loc)}&tracks=${config.tracks}`;
+};
+
 /**
  * Generate external URL for a domain accession based on its source database.
  * @param {string} accession - The domain accession ID (e.g., "IPR000719", "PF00069")
@@ -243,11 +294,10 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                     const proteinName = orgData.systematic_name || orgData.feature_name;
                     const proteinLength = orgData.sequence_detail?.protein_length || orgData.protein_info?.protein_length;
 
-                    // Use backend-provided pbrowse_url for protein domains
-                    if (orgData.pbrowse_url) {
-                      // Convert jbrowse URL to jbrowse2 URL for the full view link
-                      const jbrowse2FullUrl = orgData.pbrowse_url.replace('/jbrowse/', '/jbrowse2/');
+                    // Build JBrowse2 URL for protein domains
+                    const jbrowse2Url = buildProteinJBrowse2Url(proteinName, proteinLength, selectedOrganism);
 
+                    if (jbrowse2Url) {
                       return (
                         <div className="domain-viewer-container">
                           <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -265,7 +315,7 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                               {showDomainViewer ? '▼ Hide' : '▶ Show'} Domain Viewer
                             </button>
                             <a
-                              href={jbrowse2FullUrl}
+                              href={jbrowse2Url}
                               target="_blank"
                               rel="noopener noreferrer"
                               style={{ fontSize: '13px' }}
@@ -282,7 +332,7 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                             <div className="domain-viewer-iframe-container" style={{ marginBottom: '12px' }}>
                               <iframe
                                 key={`jbrowse2-protein-${selectedOrganism}`}
-                                src={orgData.pbrowse_url}
+                                src={jbrowse2Url}
                                 title="JBrowse2 Protein Domain Viewer"
                                 style={{
                                   width: '100%',
