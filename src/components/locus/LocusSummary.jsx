@@ -63,7 +63,7 @@ function LocusSummary({
     return null;
   };
 
-  const buildJBrowse2Url = (jbrowseInfo, orgName) => {
+  const buildJBrowse2Url = (jbrowseInfo, orgName, options = {}) => {
     if (!jbrowseInfo || !jbrowseInfo.chromosome) return null;
     const assemblyKey = getAssemblyKey(orgName);
     const config = assemblyKey ? assemblyConfig[assemblyKey] : null;
@@ -74,7 +74,10 @@ function LocusSummary({
     const start = Math.max(1, jbrowseInfo.start_coord - padding);
     const stop = jbrowseInfo.stop_coord + padding;
     const loc = `${jbrowseInfo.chromosome}:${start}..${stop}`;
-    // Use assembly-specific tracks
+    // For embedded view, use minimal tracks; for full view, omit tracks to use defaults
+    if (options.fullView) {
+      return `/jbrowse2/?assembly=${config.assembly}&loc=${encodeURIComponent(loc)}`;
+    }
     const tracks = `${config.geneTrack}`;
     return `/jbrowse2/?assembly=${config.assembly}&loc=${encodeURIComponent(loc)}&tracks=${tracks}`;
   };
@@ -653,6 +656,7 @@ function LocusSummary({
             }
             if (!jbrowseInfo) return null;
             const jbrowse2Url = buildJBrowse2Url(jbrowseInfo, organismName);
+            const jbrowse2FullUrl = buildJBrowse2Url(jbrowseInfo, organismName, { fullView: true });
             if (!jbrowse2Url) return null;
             return (
               <tr className="jbrowse-section">
@@ -674,7 +678,7 @@ function LocusSummary({
                         {showJBrowseViewer ? '▼ Hide' : '▶ Show'} JBrowse Viewer
                       </button>
                       <a
-                        href={jbrowse2Url}
+                        href={jbrowse2FullUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{ fontSize: '13px' }}
