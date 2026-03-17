@@ -46,30 +46,6 @@ const HeaderNav = () => {
       ]
     },
     {
-      label: 'JBrowse Latest',
-      href: '/jbrowse_latest/',
-      external: true,
-      submenu: [
-        { label: 'C. albicans', href: '/jbrowse_latest/?assembly=C_albicans_SC5314&loc=Ca22chr1A_C_albicans_SC5314:115518..129521&tracks=DNA,TranscribedFeatures,segal_hapA_transposon_hits,segal_hapA_transposon_reads,hapA_alb_dub_phyloP_scores,hapA_CanLod_phyloP_scores,hapA_CTG_phyloP_scores,hapA_Sacc_phyloP_scores,bruno_nOxi_hapA_coverage', external: true },
-        { label: 'C. auris', href: '/jbrowse_latest/?assembly=C_auris_B8441&loc=Chr4_C_auris_B8441:120307..131992&tracks=C_auris_B8441_features.sorted.gff,auris_phyloP_scores,AurLus_phyloP_scores,CTG_C_auris_phyloP_scores,Sacc_C_auris_phyloP_scores', external: true },
-        { label: 'C. dubliniensis', href: '/jbrowse_latest/?assembly=C_dubliniensis_CD36&loc=Chr1_C_dubliniensis_CD36:131096..145475&tracks=C_dubliniensis_CD36_features.sorted.gff,alb_dub_C_dub_phyloP_scores,CanLod_C_dub_phyloP_scores,CTG_C_dub_phyloP_scores,Sacc_C_dub_phyloP_scores', external: true },
-        { label: 'C. glabrata', href: '/jbrowse_latest/?assembly=C_glabrata_CBS138&loc=ChrA_C_glabrata_CBS138:1..100000&tracks=C_glabrata_CBS138_features.sorted.gff,glab_phyloP_scores,CanNak_C_glab_phyloP_scores,WGD_C_glab_phyloP_scores,Sacc_C_glab_phyloP_scores', external: true },
-        { label: 'C. parapsilosis', href: '/jbrowse_latest/?assembly=C_parapsilosis_CDC317&loc=Contig005504_C_parapsilosis_CDC317:1..100000&tracks=C_parapsilosis_CDC317_features.sorted.gff,para_phyloP_scores,CanLod_C_para_phyloP_scores,CTG_C_para_phyloP_scores,Sacc_C_para_phyloP_scores', external: true }
-      ]
-    },
-    {
-      label: 'JBrowse Latest (Classic)',
-      href: '/jbrowse_latest_v1_style/',
-      external: true,
-      submenu: [
-        { label: 'C. albicans', href: '/jbrowse_latest_v1_style/?assembly=C_albicans_SC5314&loc=Ca22chr1A_C_albicans_SC5314:115518..129521&tracks=DNA,TranscribedFeatures,segal_hapA_transposon_hits,segal_hapA_transposon_reads,hapA_alb_dub_phyloP_scores,hapA_CanLod_phyloP_scores,hapA_CTG_phyloP_scores,hapA_Sacc_phyloP_scores,bruno_nOxi_hapA_coverage', external: true },
-        { label: 'C. auris', href: '/jbrowse_latest_v1_style/?assembly=C_auris_B8441&loc=Chr4_C_auris_B8441:120307..131992&tracks=C_auris_B8441_features.sorted.gff,auris_phyloP_scores,AurLus_phyloP_scores,CTG_C_auris_phyloP_scores,Sacc_C_auris_phyloP_scores', external: true },
-        { label: 'C. dubliniensis', href: '/jbrowse_latest_v1_style/?assembly=C_dubliniensis_CD36&loc=Chr1_C_dubliniensis_CD36:131096..145475&tracks=C_dubliniensis_CD36_features.sorted.gff,alb_dub_C_dub_phyloP_scores,CanLod_C_dub_phyloP_scores,CTG_C_dub_phyloP_scores,Sacc_C_dub_phyloP_scores', external: true },
-        { label: 'C. glabrata', href: '/jbrowse_latest_v1_style/?assembly=C_glabrata_CBS138&loc=ChrA_C_glabrata_CBS138:1..100000&tracks=C_glabrata_CBS138_features.sorted.gff,glab_phyloP_scores,CanNak_C_glab_phyloP_scores,WGD_C_glab_phyloP_scores,Sacc_C_glab_phyloP_scores', external: true },
-        { label: 'C. parapsilosis', href: '/jbrowse_latest_v1_style/?assembly=C_parapsilosis_CDC317&loc=Contig005504_C_parapsilosis_CDC317:1..100000&tracks=C_parapsilosis_CDC317_features.sorted.gff,para_phyloP_scores,CanLod_C_para_phyloP_scores,CTG_C_para_phyloP_scores,Sacc_C_para_phyloP_scores', external: true }
-      ]
-    },
-    {
       label: 'Sequence',
       to: '/seq-tools',
       submenu: [
