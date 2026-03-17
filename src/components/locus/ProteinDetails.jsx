@@ -336,7 +336,7 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                                 title="JBrowse2 Protein Domain Viewer"
                                 style={{
                                   width: '100%',
-                                  height: '280px',
+                                  height: '450px',
                                   border: '1px solid #ddd',
                                   borderRadius: '4px'
                                 }}
