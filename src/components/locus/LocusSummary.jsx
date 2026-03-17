@@ -640,6 +640,8 @@ function LocusSummary({
           {/* JBrowse2 */}
           {sequenceData && sequenceData.jbrowse_info && (() => {
             const jbrowse2Url = buildJBrowse2Url(sequenceData.jbrowse_info, organismName);
+            // Debug: log organism name and URL
+            console.log('JBrowse2 Debug:', { organismName, jbrowse2Url, jbrowseInfo: sequenceData.jbrowse_info });
             if (!jbrowse2Url) return null;
             return (
               <tr className="jbrowse-section">
