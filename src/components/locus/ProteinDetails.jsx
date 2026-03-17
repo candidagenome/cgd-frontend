@@ -7,6 +7,57 @@ import './LocusComponents.css';
 // Lazy load heavy 3D viewer component
 const AlphaFoldViewer = lazy(() => import('./AlphaFoldViewer'));
 
+// JBrowse2 protein assembly configuration
+// Domain track types to display
+const domainTrackTypes = ['Pfam', 'PANTHER', 'SUPERFAMILY', 'CATH', 'SMART', 'CDD', 'PRINTS', 'ProSitePatterns'];
+
+const proteinAssemblyConfig = {
+  'C_albicans_SC5314': {
+    assembly: 'C_albicans_SC5314_prot',
+  },
+  'C_auris_B8441': {
+    assembly: 'C_auris_B8441_prot',
+  },
+  'C_dubliniensis_CD36': {
+    assembly: 'C_dubliniensis_CD36_prot',
+  },
+  'C_glabrata_CBS138': {
+    assembly: 'C_glabrata_CBS138_prot',
+  },
+  'C_parapsilosis_CDC317': {
+    assembly: 'C_parapsilosis_CDC317_prot',
+  },
+};
+
+const getProteinAssemblyKey = (orgName) => {
+  if (!orgName) return null;
+  const normalized = orgName
+    .replace(/^\[|\]$/g, '')
+    .replace(/\s+/g, '_')
+    .replace(/^Candida_/, 'C_')
+    .replace(/^_*Candida_/, 'C_');
+
+  if (proteinAssemblyConfig[normalized]) return normalized;
+
+  for (const key of Object.keys(proteinAssemblyConfig)) {
+    if (normalized.includes(key) || key.includes(normalized)) return key;
+  }
+  return null;
+};
+
+const buildProteinJBrowse2Url = (proteinName, proteinLength, orgName) => {
+  if (!proteinName || !proteinLength) return null;
+
+  const assemblyKey = getProteinAssemblyKey(orgName);
+  const config = assemblyKey ? proteinAssemblyConfig[assemblyKey] : null;
+  if (!config) return null;
+
+  // Build track list with species prefix
+  const tracks = domainTrackTypes.map(t => `${assemblyKey}_${t}`).join(',');
+  const loc = `${proteinName}:1..${proteinLength}`;
+  return `/jbrowse2/?assembly=${config.assembly}&loc=${encodeURIComponent(loc)}&tracks=${tracks}`;
+};
+
 /**
  * Generate external URL for a domain accession based on its source database.
  * @param {string} accession - The domain accession ID (e.g., "IPR000719", "PF00069")
@@ -239,47 +290,64 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
               <tr className="section-with-divider section-grey-bg">
                 <th style={{ verticalAlign: 'top' }}>Conserved Domains</th>
                 <td>
-                  {orgData.pbrowse_url ? (
-                    <div className="domain-viewer-container">
-                      <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <button
-                          onClick={() => setShowDomainViewer(!showDomainViewer)}
-                          style={{
-                            padding: '4px 10px',
-                            backgroundColor: '#f5f5f5',
-                            border: '1px solid #ddd',
-                            borderRadius: '4px',
-                            cursor: 'pointer',
-                            fontSize: '12px'
-                          }}
-                        >
-                          {showDomainViewer ? '▼ Hide' : '▶ Show'} Domain Viewer
-                        </button>
-                        <a
-                          href={orgData.pbrowse_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{ fontSize: '13px' }}
-                        >
-                          Open in Full JBrowse ↗
-                        </a>
-                      </div>
-                      {showDomainViewer && (
-                        <div className="domain-viewer-iframe-container" style={{ marginBottom: '12px' }}>
-                          <iframe
-                            src={orgData.pbrowse_url}
-                            title="Domain Viewer"
-                            style={{
-                              width: '100%',
-                              height: '350px',
-                              border: '1px solid #ddd',
-                              borderRadius: '4px'
-                            }}
-                          />
+                  {(() => {
+                    const proteinName = orgData.systematic_name || orgData.feature_name;
+                    const proteinLength = orgData.sequence_detail?.protein_length || orgData.protein_info?.protein_length;
+
+                    // Build JBrowse2 URL for protein domains
+                    const jbrowse2Url = buildProteinJBrowse2Url(proteinName, proteinLength, selectedOrganism);
+
+                    if (jbrowse2Url) {
+                      return (
+                        <div className="domain-viewer-container">
+                          <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <button
+                              onClick={() => setShowDomainViewer(!showDomainViewer)}
+                              style={{
+                                padding: '4px 10px',
+                                backgroundColor: '#f5f5f5',
+                                border: '1px solid #ddd',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                fontSize: '12px'
+                              }}
+                            >
+                              {showDomainViewer ? '▼ Hide' : '▶ Show'} Domain Viewer
+                            </button>
+                            <a
+                              href={jbrowse2Url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{ fontSize: '13px' }}
+                            >
+                              Open in Full JBrowse ↗
+                            </a>
+                            {proteinLength && (
+                              <span className="protein-coords" style={{ fontSize: '13px', color: '#666' }}>
+                                {proteinName}: 1..{proteinLength.toLocaleString()} aa
+                              </span>
+                            )}
+                          </div>
+                          {showDomainViewer && (
+                            <div className="domain-viewer-iframe-container" style={{ marginBottom: '12px' }}>
+                              <iframe
+                                key={`jbrowse2-protein-${selectedOrganism}`}
+                                src={jbrowse2Url}
+                                title="JBrowse2 Protein Domain Viewer"
+                                style={{
+                                  width: '100%',
+                                  height: '450px',
+                                  border: '1px solid #ddd',
+                                  borderRadius: '4px'
+                                }}
+                              />
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                  ) : null}
+                      );
+                    }
+                    return null;
+                  })()}
                   {orgData.conserved_domains && orgData.conserved_domains.length > 0 ? (
                     <div className="domains-table-container">
                       <p style={{ margin: '0 0 8px 0', fontSize: '13px', color: '#666' }}>

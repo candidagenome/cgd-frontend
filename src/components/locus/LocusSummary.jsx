@@ -19,6 +19,73 @@ function LocusSummary({
 
   const feature = data;
 
+  // ---------- JBrowse2 URL helpers ----------
+  const assemblyConfig = {
+    'C_albicans_SC5314': {
+      assembly: 'C_albicans_SC5314',
+      geneTrack: 'TranscribedFeatures',
+      defaultTracks: 'DNA,TranscribedFeatures,segal_hapA_transposon_hits,segal_hapA_transposon_reads,hapA_alb_dub_phyloP_scores,hapA_CanLod_phyloP_scores,hapA_CTG_phyloP_scores,hapA_Sacc_phyloP_scores,bruno_nOxi_hapA_coverage',
+    },
+    'C_auris_B8441': {
+      assembly: 'C_auris_B8441',
+      geneTrack: 'C_auris_B8441_features.sorted.gff',
+      defaultTracks: 'C_auris_B8441_features.sorted.gff,auris_phyloP_scores,AurLus_phyloP_scores,CTG_C_auris_phyloP_scores,Sacc_C_auris_phyloP_scores',
+    },
+    'C_dubliniensis_CD36': {
+      assembly: 'C_dubliniensis_CD36',
+      geneTrack: 'C_dubliniensis_CD36_features.sorted.gff',
+      defaultTracks: 'C_dubliniensis_CD36_features.sorted.gff,alb_dub_C_dub_phyloP_scores,CanLod_C_dub_phyloP_scores,CTG_C_dub_phyloP_scores,Sacc_C_dub_phyloP_scores',
+    },
+    'C_glabrata_CBS138': {
+      assembly: 'C_glabrata_CBS138',
+      geneTrack: 'C_glabrata_CBS138_features.sorted.gff',
+      defaultTracks: 'C_glabrata_CBS138_features.sorted.gff,glab_phyloP_scores,CanNak_C_glab_phyloP_scores,WGD_C_glab_phyloP_scores,Sacc_C_glab_phyloP_scores',
+    },
+    'C_parapsilosis_CDC317': {
+      assembly: 'C_parapsilosis_CDC317',
+      geneTrack: 'C_parapsilosis_CDC317_features.sorted.gff',
+      defaultTracks: 'C_parapsilosis_CDC317_features.sorted.gff,para_phyloP_scores,CanLod_C_para_phyloP_scores,CTG_C_para_phyloP_scores,Sacc_C_para_phyloP_scores',
+    },
+  };
+
+  const getAssemblyKey = (orgName) => {
+    if (!orgName) return null;
+    // Normalize organism name to assembly key format
+    // Handle variations like "Candida albicans SC5314", "[Candida] auris B8441", etc.
+    const normalized = orgName
+      .replace(/^\[|\]$/g, '') // Remove brackets
+      .replace(/\s+/g, '_')    // Replace spaces with underscores
+      .replace(/^Candida_/, 'C_') // Shorten Candida to C
+      .replace(/^_*Candida_/, 'C_'); // Handle [Candida] case
+
+    // Try exact match first
+    if (assemblyConfig[normalized]) return normalized;
+
+    // Try partial match
+    for (const key of Object.keys(assemblyConfig)) {
+      if (normalized.includes(key) || key.includes(normalized)) return key;
+    }
+    return null;
+  };
+
+  const buildJBrowse2Url = (jbrowseInfo, orgName, options = {}) => {
+    if (!jbrowseInfo || !jbrowseInfo.chromosome) return null;
+    const assemblyKey = getAssemblyKey(orgName);
+    const config = assemblyKey ? assemblyConfig[assemblyKey] : null;
+    if (!config) return null;
+    // Add padding to show more context around the gene (similar to JBrowse1 view)
+    const geneLength = jbrowseInfo.stop_coord - jbrowseInfo.start_coord;
+    const padding = Math.max(2000, Math.round(geneLength * 1.0)); // At least 2kb or 100% of gene length
+    const start = Math.max(1, jbrowseInfo.start_coord - padding);
+    const stop = jbrowseInfo.stop_coord + padding;
+    const loc = `${jbrowseInfo.chromosome}:${start}..${stop}`;
+    // For embedded view, use minimal tracks; for full view, use all default tracks
+    if (options.fullView) {
+      return `/jbrowse2/?assembly=${config.assembly}&loc=${encodeURIComponent(loc)}&tracks=${config.defaultTracks}`;
+    }
+    return `/jbrowse2/?assembly=${config.assembly}&loc=${encodeURIComponent(loc)}&tracks=${config.geneTrack}`;
+  };
+
   // ---------- Formatting helpers ----------
   const fmtInt = (v) => {
     if (v === null || v === undefined || v === '') return '';
@@ -577,57 +644,76 @@ function LocusSummary({
             ) : null;
           })()}
 
-          {/* JBrowse */}
-          {sequenceData && sequenceData.jbrowse_info && (
-            <tr className="jbrowse-section">
-              <th style={{ verticalAlign: 'top' }}>JBrowse</th>
-              <td>
-                <div className="jbrowse-viewer-container">
-                  <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <button
-                      onClick={() => setShowJBrowseViewer(!showJBrowseViewer)}
-                      style={{
-                        padding: '4px 10px',
-                        backgroundColor: '#f5f5f5',
-                        border: '1px solid #ddd',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontSize: '12px'
-                      }}
-                    >
-                      {showJBrowseViewer ? '▼ Hide' : '▶ Show'} JBrowse Viewer
-                    </button>
-                    <a
-                      href={sequenceData.jbrowse_info.full_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ fontSize: '13px' }}
-                    >
-                      Open in Full JBrowse ↗
-                    </a>
-                    <span className="jbrowse-location" style={{ fontSize: '13px', color: '#666' }}>
-                      {sequenceData.jbrowse_info.chromosome}:{fmtInt(sequenceData.jbrowse_info.start_coord)}..
-                      {fmtInt(sequenceData.jbrowse_info.stop_coord)}
-                    </span>
-                  </div>
-                  {showJBrowseViewer && (
-                    <div className="jbrowse-iframe-container" style={{ marginBottom: '12px' }}>
-                      <iframe
-                        src={sequenceData.jbrowse_info.full_url}
-                        title="JBrowse Viewer"
+          {/* JBrowse2 */}
+          {sequenceData && (() => {
+            // Use jbrowse_info if available, otherwise try to build from location data
+            let jbrowseInfo = sequenceData.jbrowse_info;
+            if (!jbrowseInfo && sequenceData.locations) {
+              const loc = sequenceData.locations.find(l => l.is_current) || sequenceData.locations[0];
+              if (loc && loc.chromosome) {
+                jbrowseInfo = {
+                  chromosome: loc.chromosome,
+                  start_coord: loc.start_coord,
+                  stop_coord: loc.stop_coord,
+                };
+              }
+            }
+            if (!jbrowseInfo) return null;
+            const jbrowse2Url = buildJBrowse2Url(jbrowseInfo, organismName);
+            const jbrowse2FullUrl = buildJBrowse2Url(jbrowseInfo, organismName, { fullView: true });
+            if (!jbrowse2Url) return null;
+            return (
+              <tr className="jbrowse-section">
+                <th style={{ verticalAlign: 'top' }}>JBrowse</th>
+                <td>
+                  <div className="jbrowse-viewer-container">
+                    <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <button
+                        onClick={() => setShowJBrowseViewer(!showJBrowseViewer)}
                         style={{
-                          width: '100%',
-                          height: '350px',
+                          padding: '4px 10px',
+                          backgroundColor: '#f5f5f5',
                           border: '1px solid #ddd',
-                          borderRadius: '4px'
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontSize: '12px'
                         }}
-                      />
+                      >
+                        {showJBrowseViewer ? '▼ Hide' : '▶ Show'} JBrowse Viewer
+                      </button>
+                      <a
+                        href={jbrowse2FullUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ fontSize: '13px' }}
+                      >
+                        Open in Full JBrowse ↗
+                      </a>
+                      <span className="jbrowse-location" style={{ fontSize: '13px', color: '#666' }}>
+                        {jbrowseInfo.chromosome}:{fmtInt(jbrowseInfo.start_coord)}..
+                        {fmtInt(jbrowseInfo.stop_coord)}
+                      </span>
                     </div>
-                  )}
-                </div>
-              </td>
-            </tr>
-          )}
+                    {showJBrowseViewer && (
+                      <div className="jbrowse-iframe-container" style={{ marginBottom: '12px' }}>
+                        <iframe
+                          key={`jbrowse2-${organismName}`}
+                          src={jbrowse2Url}
+                          title="JBrowse2 Viewer"
+                          style={{
+                            width: '100%',
+                            height: '280px',
+                            border: '1px solid #ddd',
+                            borderRadius: '4px'
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            );
+          })()}
 
           {/* GO */}
           {goLoading ? (
