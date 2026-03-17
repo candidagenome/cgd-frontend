@@ -638,10 +638,21 @@ function LocusSummary({
           })()}
 
           {/* JBrowse2 */}
-          {sequenceData && sequenceData.jbrowse_info && (() => {
-            const jbrowse2Url = buildJBrowse2Url(sequenceData.jbrowse_info, organismName);
-            // Debug: log organism name and URL
-            console.log('JBrowse2 Debug:', { organismName, jbrowse2Url, jbrowseInfo: sequenceData.jbrowse_info });
+          {sequenceData && (() => {
+            // Use jbrowse_info if available, otherwise try to build from location data
+            let jbrowseInfo = sequenceData.jbrowse_info;
+            if (!jbrowseInfo && sequenceData.locations) {
+              const loc = sequenceData.locations.find(l => l.is_current) || sequenceData.locations[0];
+              if (loc && loc.chromosome) {
+                jbrowseInfo = {
+                  chromosome: loc.chromosome,
+                  start_coord: loc.start_coord,
+                  stop_coord: loc.stop_coord,
+                };
+              }
+            }
+            if (!jbrowseInfo) return null;
+            const jbrowse2Url = buildJBrowse2Url(jbrowseInfo, organismName);
             if (!jbrowse2Url) return null;
             return (
               <tr className="jbrowse-section">
@@ -671,8 +682,8 @@ function LocusSummary({
                         Open in Full JBrowse ↗
                       </a>
                       <span className="jbrowse-location" style={{ fontSize: '13px', color: '#666' }}>
-                        {sequenceData.jbrowse_info.chromosome}:{fmtInt(sequenceData.jbrowse_info.start_coord)}..
-                        {fmtInt(sequenceData.jbrowse_info.stop_coord)}
+                        {jbrowseInfo.chromosome}:{fmtInt(jbrowseInfo.start_coord)}..
+                        {fmtInt(jbrowseInfo.stop_coord)}
                       </span>
                     </div>
                     {showJBrowseViewer && (
