@@ -20,31 +20,42 @@ function LocusSummary({
   const feature = data;
 
   // ---------- JBrowse2 URL helpers ----------
-  const getAssemblyName = (orgName) => {
-    // Convert organism name to assembly name format
-    // e.g., "Candida albicans SC5314" -> "C_albicans_SC5314"
-    const assemblyMap = {
-      'Candida albicans SC5314': 'C_albicans_SC5314',
-      'Candida auris B8441': 'C_auris_B8441',
-      'Candida dubliniensis CD36': 'C_dubliniensis_CD36',
-      'Candida glabrata CBS138': 'C_glabrata_CBS138',
-      'Candida parapsilosis CDC317': 'C_parapsilosis_CDC317',
-    };
-    return assemblyMap[orgName] || orgName?.replace(/\s+/g, '_');
+  const assemblyConfig = {
+    'Candida albicans SC5314': {
+      assembly: 'C_albicans_SC5314',
+      geneTrack: 'TranscribedFeatures',
+    },
+    'Candida auris B8441': {
+      assembly: 'C_auris_B8441',
+      geneTrack: 'C_auris_B8441_features.sorted.gff',
+    },
+    'Candida dubliniensis CD36': {
+      assembly: 'C_dubliniensis_CD36',
+      geneTrack: 'C_dubliniensis_CD36_features.sorted.gff',
+    },
+    'Candida glabrata CBS138': {
+      assembly: 'C_glabrata_CBS138',
+      geneTrack: 'C_glabrata_CBS138_features.sorted.gff',
+    },
+    'Candida parapsilosis CDC317': {
+      assembly: 'C_parapsilosis_CDC317',
+      geneTrack: 'C_parapsilosis_CDC317_features.sorted.gff',
+    },
   };
 
   const buildJBrowse2Url = (jbrowseInfo, orgName) => {
     if (!jbrowseInfo || !jbrowseInfo.chromosome) return null;
-    const assembly = getAssemblyName(orgName);
+    const config = assemblyConfig[orgName];
+    if (!config) return null;
     // Add padding to show more context around the gene (similar to JBrowse1 view)
     const geneLength = jbrowseInfo.stop_coord - jbrowseInfo.start_coord;
     const padding = Math.max(2000, Math.round(geneLength * 1.0)); // At least 2kb or 100% of gene length
     const start = Math.max(1, jbrowseInfo.start_coord - padding);
     const stop = jbrowseInfo.stop_coord + padding;
     const loc = `${jbrowseInfo.chromosome}:${start}..${stop}`;
-    // Default tracks: DNA reference and Gene Features
-    const tracks = 'DNA,TranscribedFeatures';
-    return `/jbrowse2/?assembly=${assembly}&loc=${encodeURIComponent(loc)}&tracks=${tracks}`;
+    // Use assembly-specific tracks
+    const tracks = `${config.geneTrack}`;
+    return `/jbrowse2/?assembly=${config.assembly}&loc=${encodeURIComponent(loc)}&tracks=${tracks}`;
   };
 
   // ---------- Formatting helpers ----------
