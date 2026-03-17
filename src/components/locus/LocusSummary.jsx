@@ -655,6 +655,7 @@ function LocusSummary({
                     {showJBrowseViewer && (
                       <div className="jbrowse-iframe-container" style={{ marginBottom: '12px' }}>
                         <iframe
+                          key={`jbrowse2-${organismName}`}
                           src={jbrowse2Url}
                           title="JBrowse2 Viewer"
                           style={{
