@@ -9769,6 +9769,3863 @@
           "minHeight": 20
         }
       ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno2010_HapA_cwdm_coverage",
+      "name": "Bruno 2010 cwdm Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno2010_HapA_cwdm_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno2010_HapA_cwdp_coverage",
+      "name": "Bruno 2010 cwdp Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno2010_HapA_cwdp_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno2010_HapA_hOxi_coverage",
+      "name": "Bruno 2010 hOxi Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno2010_HapA_hOxi_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno2010_HapA_lOxi_coverage",
+      "name": "Bruno 2010 lOxi Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno2010_HapA_lOxi_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno2010_HapA_nOxi_coverage",
+      "name": "Bruno 2010 nOxi Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno2010_HapA_nOxi_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno2010_HapA_nitroSm_coverage",
+      "name": "Bruno 2010 nitroSm Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno2010_HapA_nitroSm_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno2010_HapA_nitroSp_coverage",
+      "name": "Bruno 2010 nitroSp Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno2010_HapA_nitroSp_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno2010_HapA_ph4_coverage",
+      "name": "Bruno 2010 ph4 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno2010_HapA_ph4_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno2010_HapA_ph8_coverage",
+      "name": "Bruno 2010 ph8 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno2010_HapA_ph8_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno2010_HapA_ypd_serum_ss_coverage",
+      "name": "Bruno 2010 ypd_serum_ss Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno2010_HapA_ypd_serum_ss_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno2010_HapA_ypd_ss_coverage",
+      "name": "Bruno 2010 ypd_ss Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno2010_HapA_ypd_ss_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno2010_HapB_cwdm_coverage",
+      "name": "Bruno 2010 cwdm Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno2010_HapB_cwdm_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno2010_HapB_cwdp_coverage",
+      "name": "Bruno 2010 cwdp Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno2010_HapB_cwdp_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno2010_HapB_hOxi_coverage",
+      "name": "Bruno 2010 hOxi Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno2010_HapB_hOxi_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno2010_HapB_lOxi_coverage",
+      "name": "Bruno 2010 lOxi Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno2010_HapB_lOxi_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno2010_HapB_nOxi_coverage",
+      "name": "Bruno 2010 nOxi Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno2010_HapB_nOxi_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno2010_HapB_nitroSm_coverage",
+      "name": "Bruno 2010 nitroSm Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno2010_HapB_nitroSm_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno2010_HapB_nitroSp_coverage",
+      "name": "Bruno 2010 nitroSp Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno2010_HapB_nitroSp_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno2010_HapB_ph4_coverage",
+      "name": "Bruno 2010 ph4 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno2010_HapB_ph4_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno2010_HapB_ph8_coverage",
+      "name": "Bruno 2010 ph8 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno2010_HapB_ph8_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno2010_HapB_ypd_serum_ss_coverage",
+      "name": "Bruno 2010 ypd_serum_ss Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno2010_HapB_ypd_serum_ss_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Bruno2010_HapB_ypd_ss_coverage",
+      "name": "Bruno 2010 ypd_ss Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Bruno2010_HapB_ypd_ss_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Bruno_2010"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Desai2013_HapA_rhr2C_1_coverage",
+      "name": "Desai 2013 rhr2C_1 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Desai2013_HapA_rhr2C_1_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Desai_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Desai2013_HapA_rhr2C_2_coverage",
+      "name": "Desai 2013 rhr2C_2 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Desai2013_HapA_rhr2C_2_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Desai_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Desai2013_HapA_rhr2D_1_coverage",
+      "name": "Desai 2013 rhr2D_1 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Desai2013_HapA_rhr2D_1_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Desai_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Desai2013_HapA_rhr2D_2_coverage",
+      "name": "Desai 2013 rhr2D_2 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Desai2013_HapA_rhr2D_2_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Desai_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Desai2013_HapA_sc_film_coverage",
+      "name": "Desai 2013 sc_film Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Desai2013_HapA_sc_film_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Desai_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Desai2013_HapA_sc_plnk_coverage",
+      "name": "Desai 2013 sc_plnk Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Desai2013_HapA_sc_plnk_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Desai_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Desai2013_HapA_woO_film_coverage",
+      "name": "Desai 2013 woO_film Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Desai2013_HapA_woO_film_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Desai_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Desai2013_HapA_woO_plnk_coverage",
+      "name": "Desai 2013 woO_plnk Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Desai2013_HapA_woO_plnk_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Desai_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Desai2013_HapA_woW_film_coverage",
+      "name": "Desai 2013 woW_film Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Desai2013_HapA_woW_film_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Desai_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Desai2013_HapA_woW_plnk_coverage",
+      "name": "Desai 2013 woW_plnk Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Desai2013_HapA_woW_plnk_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Desai_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Desai2013_HapB_rhr2C_1_coverage",
+      "name": "Desai 2013 rhr2C_1 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Desai2013_HapB_rhr2C_1_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Desai_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Desai2013_HapB_rhr2C_2_coverage",
+      "name": "Desai 2013 rhr2C_2 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Desai2013_HapB_rhr2C_2_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Desai_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Desai2013_HapB_rhr2D_1_coverage",
+      "name": "Desai 2013 rhr2D_1 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Desai2013_HapB_rhr2D_1_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Desai_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Desai2013_HapB_rhr2D_2_coverage",
+      "name": "Desai 2013 rhr2D_2 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Desai2013_HapB_rhr2D_2_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Desai_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Desai2013_HapB_sc_film_coverage",
+      "name": "Desai 2013 sc_film Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Desai2013_HapB_sc_film_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Desai_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Desai2013_HapB_sc_plnk_coverage",
+      "name": "Desai 2013 sc_plnk Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Desai2013_HapB_sc_plnk_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Desai_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Desai2013_HapB_woO_film_coverage",
+      "name": "Desai 2013 woO_film Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Desai2013_HapB_woO_film_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Desai_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Desai2013_HapB_woO_plnk_coverage",
+      "name": "Desai 2013 woO_plnk Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Desai2013_HapB_woO_plnk_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Desai_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Desai2013_HapB_woW_film_coverage",
+      "name": "Desai 2013 woW_film Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Desai2013_HapB_woW_film_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Desai_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Desai2013_HapB_woW_plnk_coverage",
+      "name": "Desai 2013 woW_plnk Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Desai2013_HapB_woW_plnk_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Desai_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Glazier2023_HapA_SRR25396039_coverage",
+      "name": "Glazier 2023 SRR25396039 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Glazier2023_HapA_SRR25396039_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Glazier_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Glazier2023_HapA_SRR25396040_coverage",
+      "name": "Glazier 2023 SRR25396040 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Glazier2023_HapA_SRR25396040_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Glazier_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Glazier2023_HapA_SRR25396041_coverage",
+      "name": "Glazier 2023 SRR25396041 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Glazier2023_HapA_SRR25396041_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Glazier_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Glazier2023_HapA_SRR25396042_coverage",
+      "name": "Glazier 2023 SRR25396042 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Glazier2023_HapA_SRR25396042_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Glazier_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Glazier2023_HapA_SRR25396043_coverage",
+      "name": "Glazier 2023 SRR25396043 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Glazier2023_HapA_SRR25396043_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Glazier_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Glazier2023_HapA_SRR25396044_coverage",
+      "name": "Glazier 2023 SRR25396044 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Glazier2023_HapA_SRR25396044_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Glazier_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Glazier2023_HapA_SRR25396045_coverage",
+      "name": "Glazier 2023 SRR25396045 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Glazier2023_HapA_SRR25396045_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Glazier_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Glazier2023_HapA_SRR25396046_coverage",
+      "name": "Glazier 2023 SRR25396046 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Glazier2023_HapA_SRR25396046_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Glazier_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Glazier2023_HapA_SRR25396047_coverage",
+      "name": "Glazier 2023 SRR25396047 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Glazier2023_HapA_SRR25396047_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Glazier_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Glazier2023_HapA_SRR25396048_coverage",
+      "name": "Glazier 2023 SRR25396048 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Glazier2023_HapA_SRR25396048_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Glazier_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Glazier2023_HapA_SRR25396049_coverage",
+      "name": "Glazier 2023 SRR25396049 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Glazier2023_HapA_SRR25396049_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Glazier_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Glazier2023_HapA_SRR25396050_coverage",
+      "name": "Glazier 2023 SRR25396050 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Glazier2023_HapA_SRR25396050_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Glazier_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Glazier2023_HapB_SRR25396039_coverage",
+      "name": "Glazier 2023 SRR25396039 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Glazier2023_HapB_SRR25396039_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Glazier_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Glazier2023_HapB_SRR25396040_coverage",
+      "name": "Glazier 2023 SRR25396040 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Glazier2023_HapB_SRR25396040_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Glazier_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Glazier2023_HapB_SRR25396041_coverage",
+      "name": "Glazier 2023 SRR25396041 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Glazier2023_HapB_SRR25396041_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Glazier_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Glazier2023_HapB_SRR25396042_coverage",
+      "name": "Glazier 2023 SRR25396042 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Glazier2023_HapB_SRR25396042_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Glazier_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Glazier2023_HapB_SRR25396043_coverage",
+      "name": "Glazier 2023 SRR25396043 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Glazier2023_HapB_SRR25396043_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Glazier_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Glazier2023_HapB_SRR25396044_coverage",
+      "name": "Glazier 2023 SRR25396044 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Glazier2023_HapB_SRR25396044_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Glazier_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Glazier2023_HapB_SRR25396045_coverage",
+      "name": "Glazier 2023 SRR25396045 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Glazier2023_HapB_SRR25396045_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Glazier_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Glazier2023_HapB_SRR25396046_coverage",
+      "name": "Glazier 2023 SRR25396046 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Glazier2023_HapB_SRR25396046_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Glazier_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Glazier2023_HapB_SRR25396047_coverage",
+      "name": "Glazier 2023 SRR25396047 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Glazier2023_HapB_SRR25396047_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Glazier_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Glazier2023_HapB_SRR25396048_coverage",
+      "name": "Glazier 2023 SRR25396048 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Glazier2023_HapB_SRR25396048_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Glazier_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Glazier2023_HapB_SRR25396049_coverage",
+      "name": "Glazier 2023 SRR25396049 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Glazier2023_HapB_SRR25396049_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Glazier_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Glazier2023_HapB_SRR25396050_coverage",
+      "name": "Glazier 2023 SRR25396050 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Glazier2023_HapB_SRR25396050_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Glazier_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Iracane2024_HapA_SRR27912204_coverage",
+      "name": "Iracane 2024 SRR27912204 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Iracane2024_HapA_SRR27912204_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Iracane_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Lohse2016_HapA_op_con_coverage",
+      "name": "Lohse 2016 op_con Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Lohse2016_HapA_op_con_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Lohse_2016"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Lohse2016_HapA_op_gfp_coverage",
+      "name": "Lohse 2016 op_gfp Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Lohse2016_HapA_op_gfp_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Lohse_2016"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Lohse2016_HapA_wt_con_coverage",
+      "name": "Lohse 2016 wt_con Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Lohse2016_HapA_wt_con_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Lohse_2016"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Lohse2016_HapA_wt_gfp_coverage",
+      "name": "Lohse 2016 wt_gfp Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Lohse2016_HapA_wt_gfp_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Lohse_2016"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Lohse2016_HapB_op_con_coverage",
+      "name": "Lohse 2016 op_con Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Lohse2016_HapB_op_con_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Lohse_2016"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Lohse2016_HapB_op_gfp_coverage",
+      "name": "Lohse 2016 op_gfp Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Lohse2016_HapB_op_gfp_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Lohse_2016"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Lohse2016_HapB_wt_con_coverage",
+      "name": "Lohse 2016 wt_con Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Lohse2016_HapB_wt_con_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Lohse_2016"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Lohse2016_HapB_wt_gfp_coverage",
+      "name": "Lohse 2016 wt_gfp Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Lohse2016_HapB_wt_gfp_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Lohse_2016"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Muzzey2013_HapA_SC5314_coverage",
+      "name": "Muzzey 2013 SC5314 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Muzzey2013_HapA_SC5314_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Muzzey_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Muzzey2013_HapA_chr1A_coverage",
+      "name": "Muzzey 2013 chr1A Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Muzzey2013_HapA_chr1A_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Muzzey_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Muzzey2013_HapA_chr2A_coverage",
+      "name": "Muzzey 2013 chr2A Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Muzzey2013_HapA_chr2A_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Muzzey_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Muzzey2013_HapA_chr3A_coverage",
+      "name": "Muzzey 2013 chr3A Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Muzzey2013_HapA_chr3A_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Muzzey_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Muzzey2013_HapA_chr4A_coverage",
+      "name": "Muzzey 2013 chr4A Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Muzzey2013_HapA_chr4A_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Muzzey_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Muzzey2013_HapA_chr5A_coverage",
+      "name": "Muzzey 2013 chr5A Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Muzzey2013_HapA_chr5A_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Muzzey_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Muzzey2013_HapA_chr6A_coverage",
+      "name": "Muzzey 2013 chr6A Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Muzzey2013_HapA_chr6A_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Muzzey_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Muzzey2013_HapA_chr7A_coverage",
+      "name": "Muzzey 2013 chr7A Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Muzzey2013_HapA_chr7A_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Muzzey_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Muzzey2013_HapA_chrRA_coverage",
+      "name": "Muzzey 2013 chrRA Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Muzzey2013_HapA_chrRA_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Muzzey_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Muzzey2013_HapA_chrRB_coverage",
+      "name": "Muzzey 2013 chrRB Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Muzzey2013_HapA_chrRB_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Muzzey_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Muzzey2013_HapB_SC5314_coverage",
+      "name": "Muzzey 2013 SC5314 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Muzzey2013_HapB_SC5314_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Muzzey_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Muzzey2013_HapB_chr1A_coverage",
+      "name": "Muzzey 2013 chr1A Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Muzzey2013_HapB_chr1A_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Muzzey_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Muzzey2013_HapB_chr2A_coverage",
+      "name": "Muzzey 2013 chr2A Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Muzzey2013_HapB_chr2A_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Muzzey_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Muzzey2013_HapB_chr3A_coverage",
+      "name": "Muzzey 2013 chr3A Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Muzzey2013_HapB_chr3A_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Muzzey_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Muzzey2013_HapB_chr4A_coverage",
+      "name": "Muzzey 2013 chr4A Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Muzzey2013_HapB_chr4A_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Muzzey_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Muzzey2013_HapB_chr5A_coverage",
+      "name": "Muzzey 2013 chr5A Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Muzzey2013_HapB_chr5A_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Muzzey_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Muzzey2013_HapB_chr6A_coverage",
+      "name": "Muzzey 2013 chr6A Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Muzzey2013_HapB_chr6A_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Muzzey_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Muzzey2013_HapB_chr7A_coverage",
+      "name": "Muzzey 2013 chr7A Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Muzzey2013_HapB_chr7A_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Muzzey_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Muzzey2013_HapB_chrRA_coverage",
+      "name": "Muzzey 2013 chrRA Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Muzzey2013_HapB_chrRA_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Muzzey_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Muzzey2013_HapB_chrRB_coverage",
+      "name": "Muzzey 2013 chrRB Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Muzzey2013_HapB_chrRB_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Muzzey_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Niemiec2017_HapA_chg_69_coverage",
+      "name": "Niemiec 2017 chg_69 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Niemiec2017_HapA_chg_69_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Niemiec_2017"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Niemiec2017_HapA_chg_70_coverage",
+      "name": "Niemiec 2017 chg_70 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Niemiec2017_HapA_chg_70_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Niemiec_2017"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Niemiec2017_HapA_chg_71_coverage",
+      "name": "Niemiec 2017 chg_71 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Niemiec2017_HapA_chg_71_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Niemiec_2017"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Niemiec2017_HapA_chg_72_coverage",
+      "name": "Niemiec 2017 chg_72 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Niemiec2017_HapA_chg_72_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Niemiec_2017"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Niemiec2017_HapA_chg_73_coverage",
+      "name": "Niemiec 2017 chg_73 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Niemiec2017_HapA_chg_73_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Niemiec_2017"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Niemiec2017_HapA_chg_74_coverage",
+      "name": "Niemiec 2017 chg_74 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Niemiec2017_HapA_chg_74_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Niemiec_2017"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Niemiec2017_HapA_chg_75_coverage",
+      "name": "Niemiec 2017 chg_75 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Niemiec2017_HapA_chg_75_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Niemiec_2017"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Niemiec2017_HapA_chg_76_coverage",
+      "name": "Niemiec 2017 chg_76 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Niemiec2017_HapA_chg_76_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Niemiec_2017"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Niemiec2017_HapA_chg_77_coverage",
+      "name": "Niemiec 2017 chg_77 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Niemiec2017_HapA_chg_77_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Niemiec_2017"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Niemiec2017_HapA_chg_79_coverage",
+      "name": "Niemiec 2017 chg_79 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Niemiec2017_HapA_chg_79_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Niemiec_2017"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Niemiec2017_HapA_chg_80_coverage",
+      "name": "Niemiec 2017 chg_80 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Niemiec2017_HapA_chg_80_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Niemiec_2017"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Niemiec2017_HapA_chg_81_coverage",
+      "name": "Niemiec 2017 chg_81 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Niemiec2017_HapA_chg_81_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Niemiec_2017"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Niemiec2017_HapB_chg_69_coverage",
+      "name": "Niemiec 2017 chg_69 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Niemiec2017_HapB_chg_69_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Niemiec_2017"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Niemiec2017_HapB_chg_70_coverage",
+      "name": "Niemiec 2017 chg_70 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Niemiec2017_HapB_chg_70_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Niemiec_2017"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Niemiec2017_HapB_chg_71_coverage",
+      "name": "Niemiec 2017 chg_71 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Niemiec2017_HapB_chg_71_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Niemiec_2017"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Niemiec2017_HapB_chg_72_coverage",
+      "name": "Niemiec 2017 chg_72 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Niemiec2017_HapB_chg_72_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Niemiec_2017"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Niemiec2017_HapB_chg_73_coverage",
+      "name": "Niemiec 2017 chg_73 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Niemiec2017_HapB_chg_73_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Niemiec_2017"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Niemiec2017_HapB_chg_74_coverage",
+      "name": "Niemiec 2017 chg_74 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Niemiec2017_HapB_chg_74_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Niemiec_2017"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Niemiec2017_HapB_chg_75_coverage",
+      "name": "Niemiec 2017 chg_75 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Niemiec2017_HapB_chg_75_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Niemiec_2017"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Niemiec2017_HapB_chg_76_coverage",
+      "name": "Niemiec 2017 chg_76 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Niemiec2017_HapB_chg_76_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Niemiec_2017"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Niemiec2017_HapB_chg_77_coverage",
+      "name": "Niemiec 2017 chg_77 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Niemiec2017_HapB_chg_77_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Niemiec_2017"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Niemiec2017_HapB_chg_79_coverage",
+      "name": "Niemiec 2017 chg_79 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Niemiec2017_HapB_chg_79_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Niemiec_2017"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Niemiec2017_HapB_chg_80_coverage",
+      "name": "Niemiec 2017 chg_80 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Niemiec2017_HapB_chg_80_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Niemiec_2017"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Niemiec2017_HapB_chg_81_coverage",
+      "name": "Niemiec 2017 chg_81 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Niemiec2017_HapB_chg_81_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Niemiec_2017"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapA_ERR8278346_coverage",
+      "name": "Rai 2024 ERR8278346 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapA_ERR8278346_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapA_ERR8278347_coverage",
+      "name": "Rai 2024 ERR8278347 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapA_ERR8278347_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapA_ERR8278348_coverage",
+      "name": "Rai 2024 ERR8278348 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapA_ERR8278348_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapA_ERR8278349_coverage",
+      "name": "Rai 2024 ERR8278349 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapA_ERR8278349_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapA_ERR8278350_coverage",
+      "name": "Rai 2024 ERR8278350 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapA_ERR8278350_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapA_ERR8278351_coverage",
+      "name": "Rai 2024 ERR8278351 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapA_ERR8278351_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapA_ERR8278352_coverage",
+      "name": "Rai 2024 ERR8278352 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapA_ERR8278352_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapA_ERR8278353_coverage",
+      "name": "Rai 2024 ERR8278353 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapA_ERR8278353_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapA_ERR8278354_coverage",
+      "name": "Rai 2024 ERR8278354 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapA_ERR8278354_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapA_ERR8278355_coverage",
+      "name": "Rai 2024 ERR8278355 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapA_ERR8278355_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapA_ERR8278356_coverage",
+      "name": "Rai 2024 ERR8278356 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapA_ERR8278356_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapA_ERR8278357_coverage",
+      "name": "Rai 2024 ERR8278357 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapA_ERR8278357_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapA_ERR8278358_coverage",
+      "name": "Rai 2024 ERR8278358 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapA_ERR8278358_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapA_ERR8278359_coverage",
+      "name": "Rai 2024 ERR8278359 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapA_ERR8278359_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapA_ERR8278360_coverage",
+      "name": "Rai 2024 ERR8278360 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapA_ERR8278360_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapA_ERR8278361_coverage",
+      "name": "Rai 2024 ERR8278361 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapA_ERR8278361_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapA_ERR8278362_coverage",
+      "name": "Rai 2024 ERR8278362 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapA_ERR8278362_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapA_ERR8278363_coverage",
+      "name": "Rai 2024 ERR8278363 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapA_ERR8278363_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapB_ERR8278346_coverage",
+      "name": "Rai 2024 ERR8278346 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapB_ERR8278346_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapB_ERR8278347_coverage",
+      "name": "Rai 2024 ERR8278347 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapB_ERR8278347_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapB_ERR8278348_coverage",
+      "name": "Rai 2024 ERR8278348 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapB_ERR8278348_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapB_ERR8278349_coverage",
+      "name": "Rai 2024 ERR8278349 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapB_ERR8278349_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapB_ERR8278350_coverage",
+      "name": "Rai 2024 ERR8278350 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapB_ERR8278350_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapB_ERR8278351_coverage",
+      "name": "Rai 2024 ERR8278351 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapB_ERR8278351_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapB_ERR8278352_coverage",
+      "name": "Rai 2024 ERR8278352 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapB_ERR8278352_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapB_ERR8278353_coverage",
+      "name": "Rai 2024 ERR8278353 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapB_ERR8278353_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapB_ERR8278354_coverage",
+      "name": "Rai 2024 ERR8278354 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapB_ERR8278354_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapB_ERR8278355_coverage",
+      "name": "Rai 2024 ERR8278355 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapB_ERR8278355_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapB_ERR8278356_coverage",
+      "name": "Rai 2024 ERR8278356 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapB_ERR8278356_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapB_ERR8278357_coverage",
+      "name": "Rai 2024 ERR8278357 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapB_ERR8278357_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapB_ERR8278358_coverage",
+      "name": "Rai 2024 ERR8278358 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapB_ERR8278358_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapB_ERR8278359_coverage",
+      "name": "Rai 2024 ERR8278359 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapB_ERR8278359_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapB_ERR8278360_coverage",
+      "name": "Rai 2024 ERR8278360 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapB_ERR8278360_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapB_ERR8278361_coverage",
+      "name": "Rai 2024 ERR8278361 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapB_ERR8278361_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapB_ERR8278362_coverage",
+      "name": "Rai 2024 ERR8278362 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapB_ERR8278362_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Rai2024_HapB_ERR8278363_coverage",
+      "name": "Rai 2024 ERR8278363 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Rai2024_HapB_ERR8278363_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Rai_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapA_SRR8285058_coverage",
+      "name": "Shivarathri 2019 SRR8285058 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapA_SRR8285058_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapA_SRR8285059_coverage",
+      "name": "Shivarathri 2019 SRR8285059 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapA_SRR8285059_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapA_SRR8285060_coverage",
+      "name": "Shivarathri 2019 SRR8285060 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapA_SRR8285060_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapA_SRR8285061_coverage",
+      "name": "Shivarathri 2019 SRR8285061 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapA_SRR8285061_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapA_SRR8285062_coverage",
+      "name": "Shivarathri 2019 SRR8285062 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapA_SRR8285062_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapA_SRR8285063_coverage",
+      "name": "Shivarathri 2019 SRR8285063 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapA_SRR8285063_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapA_SRR8285064_coverage",
+      "name": "Shivarathri 2019 SRR8285064 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapA_SRR8285064_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapA_SRR8285065_coverage",
+      "name": "Shivarathri 2019 SRR8285065 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapA_SRR8285065_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapA_SRR8285066_coverage",
+      "name": "Shivarathri 2019 SRR8285066 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapA_SRR8285066_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapA_SRR8285067_coverage",
+      "name": "Shivarathri 2019 SRR8285067 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapA_SRR8285067_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapA_SRR8285068_coverage",
+      "name": "Shivarathri 2019 SRR8285068 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapA_SRR8285068_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapA_SRR8285069_coverage",
+      "name": "Shivarathri 2019 SRR8285069 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapA_SRR8285069_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapA_SRR8285070_coverage",
+      "name": "Shivarathri 2019 SRR8285070 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapA_SRR8285070_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapA_SRR8285071_coverage",
+      "name": "Shivarathri 2019 SRR8285071 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapA_SRR8285071_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapA_SRR8285072_coverage",
+      "name": "Shivarathri 2019 SRR8285072 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapA_SRR8285072_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapA_SRR8285073_coverage",
+      "name": "Shivarathri 2019 SRR8285073 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapA_SRR8285073_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapB_SRR8285058_coverage",
+      "name": "Shivarathri 2019 SRR8285058 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapB_SRR8285058_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapB_SRR8285059_coverage",
+      "name": "Shivarathri 2019 SRR8285059 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapB_SRR8285059_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapB_SRR8285060_coverage",
+      "name": "Shivarathri 2019 SRR8285060 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapB_SRR8285060_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapB_SRR8285061_coverage",
+      "name": "Shivarathri 2019 SRR8285061 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapB_SRR8285061_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapB_SRR8285062_coverage",
+      "name": "Shivarathri 2019 SRR8285062 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapB_SRR8285062_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapB_SRR8285063_coverage",
+      "name": "Shivarathri 2019 SRR8285063 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapB_SRR8285063_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapB_SRR8285064_coverage",
+      "name": "Shivarathri 2019 SRR8285064 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapB_SRR8285064_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapB_SRR8285065_coverage",
+      "name": "Shivarathri 2019 SRR8285065 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapB_SRR8285065_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapB_SRR8285066_coverage",
+      "name": "Shivarathri 2019 SRR8285066 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapB_SRR8285066_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapB_SRR8285067_coverage",
+      "name": "Shivarathri 2019 SRR8285067 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapB_SRR8285067_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapB_SRR8285068_coverage",
+      "name": "Shivarathri 2019 SRR8285068 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapB_SRR8285068_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapB_SRR8285069_coverage",
+      "name": "Shivarathri 2019 SRR8285069 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapB_SRR8285069_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapB_SRR8285070_coverage",
+      "name": "Shivarathri 2019 SRR8285070 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapB_SRR8285070_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapB_SRR8285071_coverage",
+      "name": "Shivarathri 2019 SRR8285071 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapB_SRR8285071_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapB_SRR8285072_coverage",
+      "name": "Shivarathri 2019 SRR8285072 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapB_SRR8285072_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Shivarathri2019_HapB_SRR8285073_coverage",
+      "name": "Shivarathri 2019 SRR8285073 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Shivarathri2019_HapB_SRR8285073_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Shivarathri_2019"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Xie2013_HapA_CY110op_coverage",
+      "name": "Xie 2013 CY110op Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Xie2013_HapA_CY110op_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Xie_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Xie2013_HapA_CY110wh_coverage",
+      "name": "Xie 2013 CY110wh Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Xie2013_HapA_CY110wh_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Xie_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Xie2013_HapB_CY110op_coverage",
+      "name": "Xie 2013 CY110op Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Xie2013_HapB_CY110op_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Xie_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Xie2013_HapB_CY110wh_coverage",
+      "name": "Xie 2013 CY110wh Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Xie2013_HapB_CY110wh_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Xie_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Zhang2024_HapA_SRR18188695_coverage",
+      "name": "Zhang 2024 SRR18188695 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Zhang2024_HapA_SRR18188695_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Zhang_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Zhang2024_HapA_SRR18188696_coverage",
+      "name": "Zhang 2024 SRR18188696 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Zhang2024_HapA_SRR18188696_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Zhang_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Zhang2024_HapA_SRR18188697_coverage",
+      "name": "Zhang 2024 SRR18188697 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Zhang2024_HapA_SRR18188697_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Zhang_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Zhang2024_HapA_SRR18188698_coverage",
+      "name": "Zhang 2024 SRR18188698 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Zhang2024_HapA_SRR18188698_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Zhang_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Zhang2024_HapA_SRR18188699_coverage",
+      "name": "Zhang 2024 SRR18188699 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Zhang2024_HapA_SRR18188699_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Zhang_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Zhang2024_HapA_SRR18188700_coverage",
+      "name": "Zhang 2024 SRR18188700 Coverage (HapA)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Zhang2024_HapA_SRR18188700_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Zhang_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Zhang2024_HapB_SRR18188695_coverage",
+      "name": "Zhang 2024 SRR18188695 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Zhang2024_HapB_SRR18188695_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Zhang_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Zhang2024_HapB_SRR18188696_coverage",
+      "name": "Zhang 2024 SRR18188696 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Zhang2024_HapB_SRR18188696_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Zhang_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Zhang2024_HapB_SRR18188697_coverage",
+      "name": "Zhang 2024 SRR18188697 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Zhang2024_HapB_SRR18188697_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Zhang_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Zhang2024_HapB_SRR18188698_coverage",
+      "name": "Zhang 2024 SRR18188698 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Zhang2024_HapB_SRR18188698_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Zhang_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Zhang2024_HapB_SRR18188699_coverage",
+      "name": "Zhang 2024 SRR18188699 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Zhang2024_HapB_SRR18188699_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Zhang_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Zhang2024_HapB_SRR18188700_coverage",
+      "name": "Zhang 2024 SRR18188700 Coverage (HapB)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Zhang2024_HapB_SRR18188700_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "Coverage",
+        "Zhang_2024"
+      ]
     }
   ],
   "aggregateTextSearchAdapters": [
