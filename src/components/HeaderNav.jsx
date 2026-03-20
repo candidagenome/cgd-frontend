@@ -57,7 +57,7 @@ const HeaderNav = () => {
         { label: 'GO Slim Mapper', to: '/go-slim-mapper' },
         { label: 'GO Term Finder', to: '/go-term-finder' },
         { label: 'GO Consortium', href: 'http://www.geneontology.org/', external: true },
-        { label: 'GO File Downloads', href: 'http://www.candidagenome.org/download/go/', external: true }
+        { label: 'GO File Downloads', href: '/download/go/', external: true }
       ]
     },
     {
@@ -85,10 +85,10 @@ const HeaderNav = () => {
       to: '/download',
       submenu: [
         { label: 'Batch Download', to: '/batch-download' },
-        { label: 'Sequence Downloads', href: 'http://www.candidagenome.org/download/sequence/', external: true },
+        { label: 'Sequence Downloads', href: '/download/sequence/', external: true },
         { label: 'Datasets', to: '/datasets' },
-        { label: 'Chromosomal Features', href: 'http://www.candidagenome.org/download/chromosomal_feature_files/', external: true },
-        { label: 'GO Annotations', href: 'http://www.candidagenome.org/download/go/', external: true }
+        { label: 'Chromosomal Features', href: '/download/chromosomal_feature_files/', external: true },
+        { label: 'GO Annotations', href: '/download/go/', external: true }
       ]
     },
     {
