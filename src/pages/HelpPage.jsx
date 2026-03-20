@@ -180,9 +180,9 @@ function HelpPage() {
             the <Link to="/download">Download Index</Link> page):
           </p>
           <div className="help-links">
-            <a href="http://www.candidagenome.org/download/go/gene_association_README.txt">Gene Ontology (GO) Annotations File</a>
-            <a href="http://www.candidagenome.org/download/chromosomal_feature_files/README">Chromosomal Feature File</a>
-            <a href="http://www.candidagenome.org/download/sequence/README">Sequence Files</a>
+            <a href="/download/go/gene_association_README.txt">Gene Ontology (GO) Annotations File</a>
+            <a href="/download/chromosomal_feature_files/README">Chromosomal Feature File</a>
+            <a href="/download/sequence/README">Sequence Files</a>
           </div>
         </div>
 

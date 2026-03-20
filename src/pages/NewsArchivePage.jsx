@@ -200,7 +200,7 @@ const NEWS_BY_YEAR = {
             <li>
               <em>C. auris</em> genome and annotation is available in the{' '}
               <a
-                href="https://www.candidagenome.org/jbrowse/index.html?data=cgd_data%2FC_auris_B8441&loc=PEKT02000010_C_auris_B8441%3A118601..133000&tracks=DNA%2CTranscribed%20Features"
+                href="/jbrowse2/?assembly=C_auris_B8441&loc=PEKT02000010_C_auris_B8441%3A118601..133000&tracks=DNA%2CTranscribed%20Features"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -312,7 +312,7 @@ const NEWS_BY_YEAR = {
           </a>
           , has been made available at CGD. We provide downloads for{' '}
           <a
-            href="http://www.candidagenome.org/download/sequence/C_lusitaniae_CBS6936/current/"
+            href="/download/sequence/C_lusitaniae_CBS6936/current/"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -320,7 +320,7 @@ const NEWS_BY_YEAR = {
           </a>
           ,{' '}
           <a
-            href="http://www.candidagenome.org/download/chromosomal_feature_files/C_lusitaniae_CBS6936/"
+            href="/download/chromosomal_feature_files/C_lusitaniae_CBS6936/"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -328,7 +328,7 @@ const NEWS_BY_YEAR = {
           </a>
           ,{' '}
           <a
-            href="http://www.candidagenome.org/download/gff/C_lusitaniae_CBS6936/"
+            href="/download/gff/C_lusitaniae_CBS6936/"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -336,7 +336,7 @@ const NEWS_BY_YEAR = {
           </a>{' '}
           and{' '}
           <a
-            href="http://www.candidagenome.org/download/domains/C_lusitaniae_CBS6936/"
+            href="/download/domains/C_lusitaniae_CBS6936/"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -357,7 +357,7 @@ const NEWS_BY_YEAR = {
           CGD has added tracks in JBrowse showing the evolutionary conservation of genomic features
           for{' '}
           <a
-            href="https://www.candidagenome.org/jbrowse/index.html?data=cgd_data%2FC_albicans_SC5314&loc=Ca22chr1A_C_albicans_SC5314%3A120521..134790&tracks=DNA%2CTranscribed%20Features"
+            href="/jbrowse2/?assembly=C_albicans_SC5314&loc=Ca22chr1A_C_albicans_SC5314%3A120521..134790&tracks=DNA%2CTranscribed%20Features"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -365,7 +365,7 @@ const NEWS_BY_YEAR = {
           </a>
           ,{' '}
           <a
-            href="https://www.candidagenome.org/jbrowse/index.html?data=cgd_data%2FC_glabrata_CBS138&loc=ChrL_C_glabrata_CBS138%3A1176131..1190400&tracks=DNA%2CTranscribed%20Features"
+            href="/jbrowse2/?assembly=C_glabrata_CBS138&loc=ChrL_C_glabrata_CBS138%3A1176131..1190400&tracks=DNA%2CTranscribed%20Features"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -373,7 +373,7 @@ const NEWS_BY_YEAR = {
           </a>
           ,{' '}
           <a
-            href="https://www.candidagenome.org/jbrowse/index.html?data=cgd_data%2FC_dubliniensis_CD36&loc=Chr1_C_dubliniensis_CD36%3A131101..145480&tracks=DNA%2CTranscribed%20Features"
+            href="/jbrowse2/?assembly=C_dubliniensis_CD36&loc=Chr1_C_dubliniensis_CD36%3A131101..145480&tracks=DNA%2CTranscribed%20Features"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -381,7 +381,7 @@ const NEWS_BY_YEAR = {
           </a>
           , and{' '}
           <a
-            href="https://www.candidagenome.org/jbrowse/index.html?data=cgd_data%2FC_parapsilosis_CDC317&loc=Contig005569_C_parapsilosis_CDC317%3A2164961..2179340&tracks=DNA%2CTranscribed%20Features"
+            href="/jbrowse2/?assembly=C_parapsilosis_CDC317&loc=Contig005569_C_parapsilosis_CDC317%3A2164961..2179340&tracks=DNA%2CTranscribed%20Features"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -391,7 +391,7 @@ const NEWS_BY_YEAR = {
           levels of evolutionary diversity. Conservation scores and their underlying alignments are
           available for download in the{' '}
           <a
-            href="http://www.candidagenome.org/download/genome_alignments/"
+            href="/download/genome_alignments/"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -458,7 +458,7 @@ const NEWS_BY_YEAR = {
           </a>{' '}
           for the seven <em>Candida</em>-related strains for which we provide{' '}
           <a
-            href="http://www.candidagenome.org/download/sequence/"
+            href="/download/sequence/"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -466,7 +466,7 @@ const NEWS_BY_YEAR = {
           </a>{' '}
           and{' '}
           <a
-            href="http://www.candidagenome.org/download/gff/"
+            href="/download/gff/"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -509,7 +509,7 @@ const NEWS_BY_YEAR = {
           added, including 49 protein-coding genes and 58 non-coding RNAs; 4 ORFs were deleted; the
           sequences for 132 features were extended and 10 shortened. For a list of updates, see the{' '}
           <a
-            href="http://www.candidagenome.org/download/systematic_results/Linde_2015/"
+            href="/download/systematic_results/Linde_2015/"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -610,7 +610,7 @@ const NEWS_BY_YEAR = {
           </a>{' '}
           site, and these data are now available from our{' '}
           <a
-            href="http://www.candidagenome.org/download/sequence/NCBI/TraceDB/"
+            href="/download/sequence/NCBI/TraceDB/"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -657,7 +657,7 @@ const NEWS_BY_YEAR = {
           <Link to="/locus/Cd36_01180">Cd36_01180</Link>), <Link to="/blast">BLAST</Link>, and the
           full suite of{' '}
           <a
-            href="http://www.candidagenome.org/download/"
+            href="/download/"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -731,7 +731,7 @@ const NEWS_BY_YEAR = {
           <em>Candida</em> species and <em>S. cerevisiae</em>. The ortholog mappings between each
           pair of species are also available in our{' '}
           <a
-            href="http://www.candidagenome.org/download/homology/"
+            href="/download/homology/"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -863,7 +863,7 @@ const NEWS_BY_YEAR = {
           (2010) has been added to CGD. Displayed as a GBrowse track are 2,172 previously unknown
           transcribed regions. All datafiles are available at the{' '}
           <a
-            href="http://www.candidagenome.org/download/systematic_results/Sellam_2010/"
+            href="/download/systematic_results/Sellam_2010/"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -919,7 +919,7 @@ const NEWS_BY_YEAR = {
           <em>Candida</em>-related species and strains in addition to <em>C. albicans</em> SC5314.
           All sequences are available on the{' '}
           <a
-            href="http://candidagenome.org/download/sequence/"
+            href="/download/sequence/"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -1200,7 +1200,7 @@ const NEWS_BY_YEAR = {
         <>
           We have added an archive of large-scale datasets to our{' '}
           <a
-            href="http://www.candidagenome.org/download/"
+            href="/download/"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -1290,7 +1290,7 @@ const NEWS_BY_YEAR = {
           We are pleased to announce that all of the CGD Gene Ontology (GO) curation is now
           available for{' '}
           <a
-            href="http://www.candidagenome.org/download/go/"
+            href="/download/go/"
             target="_blank"
             rel="noopener noreferrer"
           >

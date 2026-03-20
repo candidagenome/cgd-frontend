@@ -149,11 +149,11 @@ function SiteMapPage() {
             <tr>
               <td>
                 JBrowse Genome Browser<br />
-                <a href="/jbrowse/index.html?data=cgd_data%2FC_albicans_SC5314"><em>C. albicans</em> A22</a> |{' '}
-                <a href="/jbrowse/index.html?data=cgd_data%2FC_auris_B8441"><em>C. auris</em></a> |{' '}
-                <a href="/jbrowse/index.html?data=cgd_data%2FC_dubliniensis_CD36"><em>C. dubliniensis</em></a> |{' '}
-                <a href="/jbrowse/index.html?data=cgd_data%2FC_glabrata_CBS138"><em>C. glabrata</em></a> |{' '}
-                <a href="/jbrowse/index.html?data=cgd_data%2FC_parapsilosis_CDC317"><em>C. parapsilosis</em></a>
+                <a href="/jbrowse2/?assembly=C_albicans_SC5314"><em>C. albicans</em> A22</a> |{' '}
+                <a href="/jbrowse2/?assembly=C_auris_B8441"><em>C. auris</em></a> |{' '}
+                <a href="/jbrowse2/?assembly=C_dubliniensis_CD36"><em>C. dubliniensis</em></a> |{' '}
+                <a href="/jbrowse2/?assembly=C_glabrata_CBS138"><em>C. glabrata</em></a> |{' '}
+                <a href="/jbrowse2/?assembly=C_parapsilosis_CDC317"><em>C. parapsilosis</em></a>
               </td>
               <td>JBrowse allows viewing and navigation of genomic sequence and high-throughput genomics data.</td>
               <td>Viewing large-scale data sets, such as RNA-Seq, DNA-Seq, ChIP-Seq, etc.</td>
@@ -316,34 +316,34 @@ function SiteMapPage() {
               <td className="check-icon"><Link to="/help/batch-download">✓</Link></td>
             </tr>
             <tr>
-              <td><a href="http://www.candidagenome.org/download/go/gene_association.cgd.gz">Gene Ontology (GO) Annotations File</a></td>
+              <td><a href="/download/go/gene_association.cgd.gz">Gene Ontology (GO) Annotations File</a></td>
               <td>The gene_association.cgd file contains the Gene Ontology (GO) curation from CGD.</td>
               <td>Download tab-delimited files of GO information from CGD.</td>
-              <td className="check-icon"><a href="http://www.candidagenome.org/download/go/gene_association_README.txt">✓</a></td>
+              <td className="check-icon"><a href="/download/go/gene_association_README.txt">✓</a></td>
             </tr>
             <tr>
-              <td><a href="http://www.candidagenome.org/download/chromosomal_feature_files/">Chromosomal Feature Files</a></td>
+              <td><a href="/download/chromosomal_feature_files/">Chromosomal Feature Files</a></td>
               <td>Tab-delimited files of information about current chromosomal features in CGD.</td>
               <td>Download feature (gene) names, aliases, descriptions, and other information.</td>
-              <td className="check-icon"><a href="http://www.candidagenome.org/download/chromosomal_feature_files/README">✓</a></td>
+              <td className="check-icon"><a href="/download/chromosomal_feature_files/README">✓</a></td>
             </tr>
             <tr>
-              <td><a href="http://www.candidagenome.org/download/sequence/">Sequence Files</a></td>
+              <td><a href="/download/sequence/">Sequence Files</a></td>
               <td>The sequence download directory contains sequence from the <em>Candida</em> sequencing projects.</td>
               <td>Download current or archived sequence data.</td>
-              <td className="check-icon"><a href="http://www.candidagenome.org/download/sequence/README">✓</a></td>
+              <td className="check-icon"><a href="/download/sequence/README">✓</a></td>
             </tr>
             <tr>
-              <td><a href="http://www.candidagenome.org/download/phenotype/">Phenotypes</a></td>
+              <td><a href="/download/phenotype/">Phenotypes</a></td>
               <td>Tab-delimited files containing the CGD phenotype curation.</td>
               <td>Download phenotype data.</td>
-              <td className="check-icon"><a href="http://www.candidagenome.org/download/phenotype/README">✓</a></td>
+              <td className="check-icon"><a href="/download/phenotype/README">✓</a></td>
             </tr>
             <tr>
-              <td><a href="http://www.candidagenome.org/download/homology/">Orthologs and Best Hits</a></td>
+              <td><a href="/download/homology/">Orthologs and Best Hits</a></td>
               <td>This directory contains the mappings among <em>Candida</em> genes and predicted orthologs.</td>
               <td>Download homolog data.</td>
-              <td className="check-icon"><a href="http://www.candidagenome.org/download/homology/README">✓</a></td>
+              <td className="check-icon"><a href="/download/homology/README">✓</a></td>
             </tr>
             <tr>
               <td><Link to="/download-datasets">Datasets archived at CGD</Link></td>
@@ -400,7 +400,7 @@ function SiteMapPage() {
         <hr style={{ marginTop: '30px' }} />
 
         <p>
-          A complete list of genes may be found <a href="http://www.candidagenome.org/cache/genelist.shtml">here</a>.
+          A complete list of genes may be found <a href="/cache/genelist.shtml">here</a>.
         </p>
       </div>
     </div>

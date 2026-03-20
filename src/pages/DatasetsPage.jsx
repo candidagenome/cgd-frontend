@@ -158,7 +158,7 @@ const DatasetsPage = () => {
 
         <p>
           <a
-            href="http://www.candidagenome.org/download/systematic_results/"
+            href="/download/systematic_results/"
             target="_blank"
             rel="noopener noreferrer"
           >
