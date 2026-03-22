@@ -58,8 +58,8 @@ function GenomeSyntenyBrowser() {
   const [zoomLevel, setZoomLevel] = useState(1);
   const [panOffset, setPanOffset] = useState(0);
   const [visibleSpecies, setVisibleSpecies] = useState({});
-  const [baseFlankingCount, setBaseFlankingCount] = useState(15);
-  const [currentFlankingCount, setCurrentFlankingCount] = useState(15);
+  const [baseFlankingCount, setBaseFlankingCount] = useState(5);
+  const [currentFlankingCount, setCurrentFlankingCount] = useState(5);
   const [needsInitialCenter, setNeedsInitialCenter] = useState(false);
 
   // Refs
