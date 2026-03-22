@@ -53,6 +53,7 @@ function GenomeSyntenyBrowser() {
   const [error, setError] = useState(null);
   const [tooltip, setTooltip] = useState({ show: false, x: 0, y: 0, content: null });
   const [zoomLevel, setZoomLevel] = useState(1);
+  const [panOffset, setPanOffset] = useState(0);
   const [visibleSpecies, setVisibleSpecies] = useState({});
   const [flankingCount, setFlankingCount] = useState(15);
 
@@ -60,6 +61,7 @@ function GenomeSyntenyBrowser() {
   const containerRef = useRef(null);
   const svgRef = useRef(null);
   const zoomRef = useRef(null);
+  const transformRef = useRef({ k: 1, x: 0 });
 
   const dateStamp = new Date().toISOString().split('T')[0];
 
@@ -74,6 +76,11 @@ function GenomeSyntenyBrowser() {
     try {
       const data = await locusApi.getSyntenyData(geneName, flankingCount);
       setSyntenyData(data);
+
+      // Reset zoom when loading new data
+      transformRef.current = { k: 1, x: 0 };
+      setZoomLevel(1);
+      setPanOffset(0);
 
       // Initialize all species as visible
       const visible = {};
@@ -155,14 +162,21 @@ function GenomeSyntenyBrowser() {
 
     if (visibleRegions.length === 0) return;
 
-    // Layout configuration
-    const margin = { top: 40, right: 40, bottom: 40, left: 160 };
-    const trackHeight = 50;
-    const trackSpacing = 80;
-    const geneHeight = 30;
+    // Layout configuration - these stay constant regardless of zoom
+    const margin = { top: 20, right: 40, bottom: 20, left: 120 };
+    const trackHeight = 40;
+    const trackSpacing = 60;
+    const geneHeight = 24;
     const containerWidth = containerRef.current.clientWidth;
-    const width = containerWidth - margin.left - margin.right;
-    const height = visibleRegions.length * (trackHeight + trackSpacing) + margin.top + margin.bottom;
+    const baseWidth = containerWidth - margin.left - margin.right;
+    const height = visibleRegions.length * (trackHeight + trackSpacing) + margin.top + margin.bottom - trackSpacing;
+
+    // Get current zoom transform
+    const currentZoom = transformRef.current.k;
+    const currentPan = transformRef.current.x;
+
+    // Calculate effective width based on zoom (for x-scale calculation)
+    const effectiveWidth = baseWidth * currentZoom;
 
     // Create SVG
     const svg = d3.select(containerRef.current)
@@ -173,10 +187,30 @@ function GenomeSyntenyBrowser() {
 
     svgRef.current = svg.node();
 
-    // Create main group for zoom/pan
+    // Create clip path for the content area
+    svg.append('defs')
+      .append('clipPath')
+      .attr('id', 'content-clip')
+      .append('rect')
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('width', baseWidth)
+      .attr('height', height);
+
+    // Create main group
     const g = svg.append('g')
       .attr('class', 'main-group')
       .attr('transform', `translate(${margin.left},${margin.top})`);
+
+    // Create content group with clipping
+    const contentGroup = g.append('g')
+      .attr('class', 'content-group')
+      .attr('clip-path', 'url(#content-clip)');
+
+    // Create group for panned content
+    const pannedGroup = contentGroup.append('g')
+      .attr('class', 'panned-group')
+      .attr('transform', `translate(${currentPan},0)`);
 
     // Create scales for each species track (each has its own coordinate range)
     const speciesData = visibleRegions.map((region, idx) => {
@@ -193,35 +227,36 @@ function GenomeSyntenyBrowser() {
       };
     });
 
-    // Create x scales for each track
+    // Create x scales for each track - scaled by zoom level
     const xScales = {};
     speciesData.forEach(sd => {
       xScales[sd.species] = d3.scaleLinear()
         .domain([sd.minCoord, sd.maxCoord])
-        .range([0, width]);
+        .range([0, effectiveWidth]);
     });
 
     // Draw each species track
     speciesData.forEach(sd => {
-      const trackGroup = g.append('g')
-        .attr('class', 'species-track')
-        .attr('data-organism', sd.species)
-        .attr('transform', `translate(0,${sd.yPosition})`);
-
-      // Species label
-      trackGroup.append('text')
+      // Species label (outside clipped area, doesn't move with pan)
+      g.append('text')
         .attr('x', -10)
-        .attr('y', trackHeight / 2)
+        .attr('y', sd.yPosition + trackHeight / 2)
         .attr('text-anchor', 'end')
         .attr('dominant-baseline', 'middle')
         .attr('class', 'species-label')
         .style('font-style', 'italic')
+        .style('font-size', '12px')
         .text(SPECIES_ABBREV[sd.species] || sd.species);
+
+      const trackGroup = pannedGroup.append('g')
+        .attr('class', 'species-track')
+        .attr('data-organism', sd.species)
+        .attr('transform', `translate(0,${sd.yPosition})`);
 
       // Chromosome line
       trackGroup.append('line')
         .attr('x1', 0)
-        .attr('x2', width)
+        .attr('x2', effectiveWidth)
         .attr('y1', trackHeight / 2)
         .attr('y2', trackHeight / 2)
         .attr('class', 'chromosome-line');
@@ -252,21 +287,24 @@ function GenomeSyntenyBrowser() {
           fillColor = COLORS.singletonGene;
         }
 
+        // Arrow point size stays constant
+        const arrowSize = 6;
+
         // Gene shape with direction indicator
         const points = gene.strand === 'W' || gene.strand === '+'
           ? [
               [x, y],
-              [x + geneWidth - 6, y],
+              [x + geneWidth - arrowSize, y],
               [x + geneWidth, y + geneHeight / 2],
-              [x + geneWidth - 6, y + geneHeight],
+              [x + geneWidth - arrowSize, y + geneHeight],
               [x, y + geneHeight],
             ]
           : [
               [x, y + geneHeight / 2],
-              [x + 6, y],
+              [x + arrowSize, y],
               [x + geneWidth, y],
               [x + geneWidth, y + geneHeight],
-              [x + 6, y + geneHeight],
+              [x + arrowSize, y + geneHeight],
             ];
 
         geneGroup.append('polygon')
@@ -276,22 +314,21 @@ function GenomeSyntenyBrowser() {
           .attr('stroke-width', gene.is_query ? 2 : 1)
           .attr('class', 'gene-shape');
 
-        // Gene label
-        const label = geneGroup.append('text')
-          .attr('x', x + geneWidth / 2)
-          .attr('y', y + geneHeight / 2)
-          .attr('text-anchor', 'middle')
-          .attr('dominant-baseline', 'middle')
-          .attr('class', 'gene-label')
-          .style('font-size', '10px')
-          .style('fill', '#fff')
-          .style('pointer-events', 'none')
-          .style('opacity', 0)
-          .text(gene.gene_name || gene.feature_name?.substring(0, 8) || '');
+        // Gene label - font size stays constant at 9px
+        const labelText = gene.gene_name || gene.feature_name?.substring(0, 10) || '';
+        const showLabel = gene.is_query || geneWidth > 40;
 
-        // Show label for query gene or if enough space
-        if (gene.is_query || geneWidth > 50) {
-          label.style('opacity', 1);
+        if (showLabel) {
+          geneGroup.append('text')
+            .attr('x', x + geneWidth / 2)
+            .attr('y', y + geneHeight / 2)
+            .attr('text-anchor', 'middle')
+            .attr('dominant-baseline', 'middle')
+            .attr('class', 'gene-label')
+            .style('font-size', '9px')
+            .style('fill', '#fff')
+            .style('pointer-events', 'none')
+            .text(labelText);
         }
 
         // Click handler
@@ -324,7 +361,7 @@ function GenomeSyntenyBrowser() {
     });
 
     // Draw ortholog connections between tracks
-    const connectionsGroup = g.append('g').attr('class', 'connections-group');
+    const connectionsGroup = pannedGroup.append('g').attr('class', 'connections-group');
 
     connections.forEach(conn => {
       const connColor = colorScale(conn.ortholog_id);
@@ -363,62 +400,49 @@ function GenomeSyntenyBrowser() {
       }
     });
 
-    // Zoom behavior
+    // Zoom behavior - horizontal only
     const zoom = d3.zoom()
       .scaleExtent([0.5, 10])
       .on('zoom', (event) => {
+        // Store transform for re-render
+        transformRef.current = { k: event.transform.k, x: event.transform.x };
         setZoomLevel(event.transform.k);
-        g.attr('transform', `translate(${event.transform.x + margin.left},${event.transform.y + margin.top}) scale(${event.transform.k})`);
-
-        // Update label visibility based on zoom
-        const currentZoom = event.transform.k;
-        g.selectAll('.gene-label').each(function() {
-          const label = d3.select(this);
-          const parent = d3.select(this.parentNode);
-          const polygon = parent.select('.gene-shape');
-          const isQuery = parent.select('.gene-shape').attr('stroke') === '#c0392b';
-
-          const points = polygon.attr('points').split(' ').map(p => p.split(',').map(Number));
-          const geneWidth = (Math.max(...points.map(p => p[0])) - Math.min(...points.map(p => p[0]))) * currentZoom;
-
-          if (isQuery || (currentZoom >= ZOOM_LEVELS.MEDIUM.min && geneWidth > 30)) {
-            label.style('opacity', 1);
-          } else {
-            label.style('opacity', 0);
-          }
-        });
+        setPanOffset(event.transform.x);
       });
 
     zoomRef.current = zoom;
+
+    // Apply current transform to SVG
+    if (transformRef.current.k !== 1 || transformRef.current.x !== 0) {
+      svg.call(zoom.transform, d3.zoomIdentity.scale(transformRef.current.k).translate(transformRef.current.x / transformRef.current.k, 0));
+    }
+
     svg.call(zoom);
 
-  }, [syntenyData, visibleSpecies, handleGeneClick, colorScale, geneToOrtholog]);
+  }, [syntenyData, visibleSpecies, handleGeneClick, colorScale, geneToOrtholog, zoomLevel, panOffset]);
 
   // Zoom controls
   const handleZoomIn = () => {
     if (svgRef.current && zoomRef.current) {
-      d3.select(svgRef.current)
-        .transition()
-        .duration(300)
-        .call(zoomRef.current.scaleBy, 1.5);
+      const newK = Math.min(transformRef.current.k * 1.5, 10);
+      transformRef.current = { k: newK, x: transformRef.current.x };
+      setZoomLevel(newK);
     }
   };
 
   const handleZoomOut = () => {
     if (svgRef.current && zoomRef.current) {
-      d3.select(svgRef.current)
-        .transition()
-        .duration(300)
-        .call(zoomRef.current.scaleBy, 0.67);
+      const newK = Math.max(transformRef.current.k * 0.67, 0.5);
+      transformRef.current = { k: newK, x: transformRef.current.x };
+      setZoomLevel(newK);
     }
   };
 
   const handleZoomReset = () => {
     if (svgRef.current && zoomRef.current) {
-      d3.select(svgRef.current)
-        .transition()
-        .duration(300)
-        .call(zoomRef.current.transform, d3.zoomIdentity);
+      transformRef.current = { k: 1, x: 0 };
+      setZoomLevel(1);
+      setPanOffset(0);
     }
   };
 
