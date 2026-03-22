@@ -58,7 +58,8 @@ function GenomeSyntenyBrowser() {
   const [zoomLevel, setZoomLevel] = useState(1);
   const [panOffset, setPanOffset] = useState(0);
   const [visibleSpecies, setVisibleSpecies] = useState({});
-  const [flankingCount, setFlankingCount] = useState(15);
+  const [baseFlankingCount, setBaseFlankingCount] = useState(15);
+  const [currentFlankingCount, setCurrentFlankingCount] = useState(15);
   const [needsInitialCenter, setNeedsInitialCenter] = useState(false);
 
   // Refs
@@ -73,21 +74,26 @@ function GenomeSyntenyBrowser() {
   const dateStamp = new Date().toISOString().split('T')[0];
 
   // Load synteny data for a gene
-  const loadSyntenyData = useCallback(async (geneName) => {
+  const loadSyntenyData = useCallback(async (geneName, flankingOverride = null, preserveZoom = false) => {
     if (!geneName) return;
 
     setLoading(true);
     setError(null);
     setQueryGeneName(geneName);
 
-    try {
-      const data = await locusApi.getSyntenyData(geneName, flankingCount);
-      setSyntenyData(data);
+    const flankingToUse = flankingOverride !== null ? flankingOverride : baseFlankingCount;
 
-      // Reset zoom when loading new data
-      transformRef.current = { k: 1, x: 0 };
-      setZoomLevel(1);
-      setPanOffset(0);
+    try {
+      const data = await locusApi.getSyntenyData(geneName, flankingToUse);
+      setSyntenyData(data);
+      setCurrentFlankingCount(flankingToUse);
+
+      if (!preserveZoom) {
+        // Reset zoom when loading new data (not when expanding region)
+        transformRef.current = { k: 1, x: 0 };
+        setZoomLevel(1);
+        setPanOffset(0);
+      }
       setNeedsInitialCenter(true); // Flag to center after first render
 
       // Initialize all species as visible
@@ -102,7 +108,7 @@ function GenomeSyntenyBrowser() {
     } finally {
       setLoading(false);
     }
-  }, [flankingCount]);
+  }, [baseFlankingCount]);
 
   // Check for gene parameter in URL on mount
   useEffect(() => {
@@ -187,7 +193,9 @@ function GenomeSyntenyBrowser() {
     const currentPan = panOffset;
 
     // Calculate effective width based on zoom
-    const effectiveWidth = baseWidth * currentZoom;
+    // When zoomed out (zoomLevel < 1), we fetch more data instead of compressing
+    // So effectiveWidth should never be less than baseWidth
+    const effectiveWidth = currentZoom >= 1 ? baseWidth * currentZoom : baseWidth;
 
     // Create SVG
     const svg = d3.select(containerRef.current)
@@ -429,8 +437,8 @@ function GenomeSyntenyBrowser() {
       }
     });
 
-    // Setup drag behavior for panning (only when zoomed in)
-    if (effectiveWidth > baseWidth) {
+    // Setup drag behavior for panning (only when zoomed in beyond 100%)
+    if (currentZoom > 1 && effectiveWidth > baseWidth) {
       const drag = d3.drag()
         .on('drag', (event) => {
           const newPan = panOffset + event.dx;
@@ -454,10 +462,12 @@ function GenomeSyntenyBrowser() {
     const baseWidth = baseWidthRef.current;
     if (!baseWidth) return 0;
 
-    const effectiveWidth = baseWidth * targetZoom;
+    // When zoomed out, we fetch more data instead of compressing
+    // So effectiveWidth = baseWidth when targetZoom < 1
+    const effectiveWidth = targetZoom >= 1 ? baseWidth * targetZoom : baseWidth;
 
     if (effectiveWidth <= baseWidth) {
-      // Zoomed out: content fits in viewport, center the entire content
+      // Zoomed out or at 100%: content fits in viewport, center the entire content
       return (baseWidth - effectiveWidth) / 2;
     } else {
       // Zoomed in: content larger than viewport, center on query gene
@@ -479,32 +489,68 @@ function GenomeSyntenyBrowser() {
     }
   }, [needsInitialCenter, zoomLevel, calculateCenterOffset]);
 
+  // Calculate required flanking count based on zoom level
+  // When zoomed out, we need more genes to fill the view
+  const calculateFlankingForZoom = useCallback((targetZoom) => {
+    if (targetZoom >= 1) {
+      // Zoomed in or normal: use base flanking count
+      return baseFlankingCount;
+    }
+    // Zoomed out: increase flanking count inversely proportional to zoom
+    // At zoom 0.5, we need 2x the genes; at zoom 0.3, we need ~3x
+    const multiplier = 1 / targetZoom;
+    const newFlanking = Math.min(50, Math.round(baseFlankingCount * multiplier));
+    return newFlanking;
+  }, [baseFlankingCount]);
+
   // Zoom controls
   const handleZoomIn = () => {
     const newK = Math.min(zoomLevel * 1.5, 5);
     const newPan = calculateCenterOffset(newK);
     setZoomLevel(newK);
     setPanOffset(newPan);
+
+    // Check if we can reduce data when zooming in significantly
+    const requiredFlanking = calculateFlankingForZoom(newK);
+    if (requiredFlanking < currentFlankingCount && queryGeneName) {
+      // We could reload with less data, but it's not necessary for UX
+      // Just keep the current data for smooth zooming
+    }
   };
 
   const handleZoomOut = () => {
     const newK = Math.max(zoomLevel * 0.67, 0.3);
-    const newPan = calculateCenterOffset(newK);
-    setZoomLevel(newK);
-    setPanOffset(newPan);
+    const requiredFlanking = calculateFlankingForZoom(newK);
+
+    // If we need more genes than currently loaded, reload with more data
+    if (requiredFlanking > currentFlankingCount && queryGeneName) {
+      // Reload with more flanking genes to expand the region
+      loadSyntenyData(queryGeneName, requiredFlanking, true);
+      setZoomLevel(newK);
+      // Pan offset will be set by needsInitialCenter effect
+    } else {
+      const newPan = calculateCenterOffset(newK);
+      setZoomLevel(newK);
+      setPanOffset(newPan);
+    }
   };
 
   const handleZoomReset = () => {
     setZoomLevel(1);
     const centerOffset = calculateCenterOffset(1);
     setPanOffset(centerOffset);
+    // Optionally reload with base flanking count if currently expanded
+    if (currentFlankingCount > baseFlankingCount && queryGeneName) {
+      loadSyntenyData(queryGeneName, baseFlankingCount, false);
+    }
   };
 
   // Navigation controls
   const handlePanLeft = () => {
     const baseWidth = baseWidthRef.current;
-    const effectiveWidth = baseWidth * zoomLevel;
-    if (effectiveWidth <= baseWidth) return; // Can't pan when zoomed out
+    // When zoomed out, effectiveWidth = baseWidth (no panning needed)
+    const effectiveWidth = zoomLevel >= 1 ? baseWidth * zoomLevel : baseWidth;
+    if (effectiveWidth <= baseWidth) return; // Can't pan when zoomed out or at 100%
 
     const step = baseWidth * PAN_STEP;
     const minPan = baseWidth - effectiveWidth;
@@ -514,16 +560,17 @@ function GenomeSyntenyBrowser() {
 
   const handlePanRight = () => {
     const baseWidth = baseWidthRef.current;
-    const effectiveWidth = baseWidth * zoomLevel;
-    if (effectiveWidth <= baseWidth) return; // Can't pan when zoomed out
+    // When zoomed out, effectiveWidth = baseWidth (no panning needed)
+    const effectiveWidth = zoomLevel >= 1 ? baseWidth * zoomLevel : baseWidth;
+    if (effectiveWidth <= baseWidth) return; // Can't pan when zoomed out or at 100%
 
     const step = baseWidth * PAN_STEP;
     const newPan = Math.min(0, panOffset + step);
     setPanOffset(newPan);
   };
 
-  // Check if can pan in each direction (only when zoomed in)
-  const effectiveWidth = baseWidthRef.current * zoomLevel;
+  // Check if can pan in each direction (only when zoomed in beyond 100%)
+  const effectiveWidth = zoomLevel >= 1 ? baseWidthRef.current * zoomLevel : baseWidthRef.current;
   const canPanLeft = effectiveWidth > baseWidthRef.current && panOffset > (baseWidthRef.current - effectiveWidth);
   const canPanRight = effectiveWidth > baseWidthRef.current && panOffset < 0;
 
@@ -531,7 +578,7 @@ function GenomeSyntenyBrowser() {
   const handleFlankingChange = (e) => {
     const value = parseInt(e.target.value, 10);
     if (value >= 5 && value <= 50) {
-      setFlankingCount(value);
+      setBaseFlankingCount(value);
     }
   };
 
@@ -584,6 +631,10 @@ function GenomeSyntenyBrowser() {
 
   // Get zoom level label
   const getZoomLabel = () => {
+    if (zoomLevel < 1) {
+      // Zoomed out - show expanded region info
+      return `${currentFlankingCount} genes`;
+    }
     if (zoomLevel < ZOOM_LEVELS.MEDIUM.min) return 'Overview';
     if (zoomLevel < ZOOM_LEVELS.DETAIL.min) return 'Medium';
     return 'Detail';
@@ -606,7 +657,7 @@ function GenomeSyntenyBrowser() {
               type="number"
               min="5"
               max="50"
-              value={flankingCount}
+              value={baseFlankingCount}
               onChange={handleFlankingChange}
               disabled={loading}
             />
