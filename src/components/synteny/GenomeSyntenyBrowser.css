@@ -1,0 +1,641 @@
+/* ===========================================
+   GENOME SYNTENY BROWSER STYLES
+   =========================================== */
+
+.genome-synteny-browser {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+  overflow: hidden;
+}
+
+/* Header controls */
+.browser-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 16px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #eee;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.header-left,
+.header-center,
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-left {
+  flex: 1;
+  min-width: 200px;
+  max-width: 350px;
+}
+
+.header-center {
+  flex: 2;
+  justify-content: center;
+}
+
+.header-right {
+  flex: 1;
+  justify-content: flex-end;
+  min-width: 200px;
+}
+
+/* Chromosome selector */
+.chromosome-selector {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.selector-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.selector-group label {
+  font-weight: 500;
+  color: #555;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.selector-group select {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  background: #fff;
+  min-width: 150px;
+}
+
+.selector-group select:focus {
+  border-color: #3498db;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.selector-loading,
+.selector-error {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.selector-error {
+  color: #c62828;
+}
+
+/* Gene search */
+.gene-search {
+  position: relative;
+  width: 100%;
+}
+
+.gene-search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.gene-search-input {
+  width: 100%;
+  padding: 8px 12px;
+  padding-right: 32px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.gene-search-input:focus {
+  border-color: #3498db;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.gene-search-input:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.gene-search-spinner {
+  position: absolute;
+  right: 10px;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #e0e0e0;
+  border-top-color: #3498db;
+  border-radius: 50%;
+  animation: spinner-spin 0.8s linear infinite;
+}
+
+@keyframes spinner-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.gene-search-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.gene-search-item {
+  padding: 10px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gene-search-item:last-child {
+  border-bottom: none;
+}
+
+.gene-search-item:hover,
+.gene-search-item.selected {
+  background: #f0f7ff;
+}
+
+.gene-search-item .gene-name {
+  font-weight: 500;
+  color: #333;
+}
+
+.gene-search-item .gene-systematic {
+  font-size: 0.85rem;
+  color: #666;
+  margin-left: 8px;
+}
+
+.gene-search-item .gene-organism {
+  font-size: 0.8rem;
+  color: #888;
+  font-style: italic;
+}
+
+.gene-search-item .gene-description {
+  font-size: 0.8rem;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Zoom controls */
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 4px;
+}
+
+.zoom-controls button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.zoom-controls button:hover:not(:disabled) {
+  background: #f0f0f0;
+  border-color: #999;
+}
+
+.zoom-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.zoom-controls .zoom-level {
+  padding: 0 8px;
+  font-size: 0.85rem;
+  color: #666;
+  min-width: 100px;
+  text-align: center;
+}
+
+/* Species filter */
+.species-filter {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 16px;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  flex-wrap: wrap;
+}
+
+.filter-label {
+  font-weight: 500;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.species-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.species-checkbox input {
+  cursor: pointer;
+}
+
+/* Canvas area */
+.browser-canvas-wrapper {
+  position: relative;
+  min-height: 450px;
+  background: #fff;
+}
+
+.browser-canvas {
+  width: 100%;
+  min-height: 450px;
+  overflow: hidden;
+}
+
+.genome-synteny-svg {
+  display: block;
+  cursor: grab;
+}
+
+.genome-synteny-svg:active {
+  cursor: grabbing;
+}
+
+/* Track and gene styling */
+.species-label {
+  font-size: 13px;
+  fill: #333;
+  font-weight: 500;
+}
+
+.chromosome-line {
+  stroke: #ddd;
+  stroke-width: 2;
+}
+
+.gene-group {
+  transition: opacity 0.15s ease;
+}
+
+.gene-group:hover .gene-shape {
+  stroke-width: 2;
+  filter: brightness(0.9);
+}
+
+.gene-label {
+  font-family: inherit;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.ortholog-connection {
+  pointer-events: none;
+  transition: stroke-opacity 0.2s ease;
+}
+
+/* Tooltip */
+.browser-tooltip {
+  position: absolute;
+  background: rgba(44, 62, 80, 0.95);
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  z-index: 1000;
+  pointer-events: none;
+  max-width: 350px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+}
+
+.browser-tooltip .tooltip-header {
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
+
+.browser-tooltip div {
+  margin-bottom: 4px;
+}
+
+.browser-tooltip div:last-child {
+  margin-bottom: 0;
+}
+
+.browser-tooltip .tooltip-description {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  font-style: italic;
+  color: #ccc;
+}
+
+.browser-tooltip .tooltip-organism {
+  margin-top: 6px;
+  color: #aaa;
+}
+
+.browser-tooltip .tooltip-hint {
+  margin-top: 8px;
+  font-size: 0.75rem;
+  color: #aaa;
+  font-style: italic;
+}
+
+/* Loading state */
+.browser-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.9);
+  z-index: 10;
+}
+
+.browser-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #e0e0e0;
+  border-top-color: #1976d2;
+  border-radius: 50%;
+  animation: browser-spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes browser-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.browser-loading p {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* Error state */
+.browser-error {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.browser-error p {
+  color: #c62828;
+  font-size: 0.95rem;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Empty state */
+.browser-empty {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  text-align: center;
+  padding: 40px;
+}
+
+.browser-empty p {
+  margin: 8px 0;
+  font-size: 1rem;
+}
+
+.browser-empty .hint {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+/* Footer */
+.browser-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-top: 1px solid #eee;
+  background: #fff;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* Legend */
+.browser-legend {
+  display: flex;
+  gap: 20px;
+  font-size: 0.85rem;
+  color: #333;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-box {
+  display: inline-block;
+  width: 16px;
+  height: 12px;
+  border-radius: 2px;
+  border: 1px solid #666;
+}
+
+.legend-box.query {
+  background-color: #e74c3c;
+  border-color: #c0392b;
+}
+
+.legend-box.ortholog {
+  background-color: #3498db;
+  border-color: #2980b9;
+}
+
+.legend-box.singleton {
+  background-color: #95a5a6;
+  border-color: #7f8c8d;
+}
+
+.legend-arrow {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.legend-arrow.watson {
+  border-width: 6px 0 6px 10px;
+  border-color: transparent transparent transparent #2ecc71;
+}
+
+.legend-arrow.crick {
+  border-width: 6px 10px 6px 0;
+  border-color: transparent #9b59b6 transparent transparent;
+}
+
+/* Date stamp */
+.browser-datestamp {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* Download section */
+.browser-download {
+  padding: 12px 16px;
+  border-top: 1px solid #eee;
+  background: #f9f9f9;
+}
+
+.download-btn {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #333;
+  cursor: pointer;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.download-btn:hover:not(:disabled) {
+  background: #f0f0f0;
+  border-color: #999;
+}
+
+.download-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===========================================
+   RESPONSIVE ADJUSTMENTS
+   =========================================== */
+
+@media (max-width: 1024px) {
+  .browser-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .header-left,
+  .header-center,
+  .header-right {
+    width: 100%;
+    max-width: none;
+    justify-content: flex-start;
+  }
+
+  .header-center {
+    justify-content: flex-start;
+  }
+
+  .chromosome-selector {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .browser-canvas-wrapper {
+    min-height: 350px;
+  }
+
+  .browser-canvas {
+    min-height: 350px;
+  }
+
+  .zoom-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .zoom-controls .zoom-level {
+    flex: 1;
+  }
+
+  .species-filter {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .browser-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .browser-legend {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .browser-canvas-wrapper {
+    min-height: 300px;
+  }
+
+  .browser-canvas {
+    min-height: 300px;
+  }
+
+  .selector-group {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .selector-group select {
+    width: 100%;
+  }
+}

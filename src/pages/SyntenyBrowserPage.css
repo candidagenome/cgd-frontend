@@ -1,0 +1,79 @@
+/* ===========================================
+   SYNTENY BROWSER PAGE STYLES
+   =========================================== */
+
+.synteny-browser-page {
+  max-width: 100%;
+  padding: 20px;
+}
+
+.synteny-browser-page .page-header {
+  margin-bottom: 20px;
+}
+
+.synteny-browser-page .page-header h1 {
+  margin: 0 0 10px 0;
+  color: #2c3e50;
+  font-size: 1.8rem;
+}
+
+.synteny-browser-page .page-description {
+  color: #666;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.synteny-browser-page .browser-wrapper {
+  margin-bottom: 30px;
+}
+
+.synteny-browser-page .page-help {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.synteny-browser-page .page-help h2 {
+  margin: 0 0 15px 0;
+  color: #2c3e50;
+  font-size: 1.3rem;
+}
+
+.synteny-browser-page .page-help h3 {
+  margin: 20px 0 10px 0;
+  color: #2c3e50;
+  font-size: 1.1rem;
+}
+
+.synteny-browser-page .page-help ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.synteny-browser-page .page-help li {
+  margin-bottom: 8px;
+  color: #555;
+  line-height: 1.5;
+}
+
+.synteny-browser-page .page-help li strong {
+  color: #333;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .synteny-browser-page {
+    padding: 15px;
+  }
+
+  .synteny-browser-page .page-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .synteny-browser-page .page-help {
+    padding: 15px;
+  }
+}

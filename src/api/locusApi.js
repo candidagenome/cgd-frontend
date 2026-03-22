@@ -80,6 +80,31 @@ export const locusApi = {
     );
     return response.data;
   },
+
+  // Get list of all chromosomes for genome synteny browser
+  getChromosomeList: async () => {
+    const response = await api.get('/api/synteny/chromosomes');
+    return response.data;
+  },
+
+  // Get genes for a specific chromosome region
+  getChromosomeGenes: async (chromosome, windowStart = null, windowEnd = null) => {
+    let url = `/api/synteny/chromosome/${encodeURIComponent(chromosome)}`;
+    const params = [];
+    if (windowStart !== null) params.push(`window_start=${windowStart}`);
+    if (windowEnd !== null) params.push(`window_end=${windowEnd}`);
+    if (params.length > 0) url += `?${params.join('&')}`;
+    const response = await api.get(url);
+    return response.data;
+  },
+
+  // Search genes for synteny browser autocomplete
+  searchGenesForSynteny: async (query) => {
+    const response = await api.get(
+      `/api/search/genes?query=${encodeURIComponent(query)}&limit=20`
+    );
+    return response.data;
+  },
 };
 
 export default locusApi;

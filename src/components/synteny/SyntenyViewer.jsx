@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import * as d3 from 'd3';
 import { locusApi } from '../../api/locusApi';
 import './SyntenyViewer.css';
@@ -494,11 +494,17 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
         </div>
       </div>
 
-      {/* Download */}
+      {/* Download and Genome Browser link */}
       <div className="synteny-download">
         <button type="button" className="synteny-download-btn" onClick={handleDownload}>
           Download (.png)
         </button>
+        <Link
+          to={`/synteny-browser?gene=${encodeURIComponent(locusName)}`}
+          className="synteny-genome-link"
+        >
+          Open in Genome Browser &rarr;
+        </Link>
       </div>
     </div>
   );
