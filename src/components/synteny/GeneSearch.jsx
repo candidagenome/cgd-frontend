@@ -22,7 +22,8 @@ function GeneSearch({ onGeneSelect, disabled }) {
     setLoading(true);
     try {
       const data = await locusApi.searchGenesForSynteny(searchQuery);
-      const genes = data.genes || data.results || data || [];
+      // Category search returns { results: [...], total_count: N }
+      const genes = data.results || data.genes || data || [];
       setResults(genes.slice(0, 10));
       setShowDropdown(genes.length > 0);
       setSelectedIndex(-1);
@@ -87,11 +88,19 @@ function GeneSearch({ onGeneSelect, disabled }) {
 
   // Select a gene from the dropdown
   const selectGene = (gene) => {
-    setQuery(gene.gene_name || gene.feature_name || gene.name || '');
+    // Category search returns 'name', normalize to gene_name for downstream use
+    const geneName = gene.name || gene.gene_name || gene.feature_name || '';
+    setQuery(geneName);
     setShowDropdown(false);
     setSelectedIndex(-1);
     if (onGeneSelect) {
-      onGeneSelect(gene);
+      // Pass normalized gene object
+      onGeneSelect({
+        ...gene,
+        gene_name: geneName,
+        organism_name: gene.organism || gene.organism_name,
+        headline: gene.description || gene.headline,
+      });
     }
   };
 
@@ -158,22 +167,19 @@ function GeneSearch({ onGeneSelect, disabled }) {
         <div ref={dropdownRef} className="gene-search-dropdown">
           {results.map((gene, index) => (
             <div
-              key={gene.feature_name || gene.name || index}
+              key={gene.id || gene.feature_name || gene.name || index}
               className={`gene-search-item ${index === selectedIndex ? 'selected' : ''}`}
               onClick={() => selectGene(gene)}
               onMouseEnter={() => setSelectedIndex(index)}
             >
               <span className="gene-name">
-                {gene.gene_name || gene.feature_name || gene.name}
+                {gene.name || gene.gene_name || gene.feature_name}
               </span>
-              {gene.gene_name && gene.feature_name && gene.gene_name !== gene.feature_name && (
-                <span className="gene-systematic">({gene.feature_name})</span>
+              {(gene.organism || gene.organism_name) && (
+                <span className="gene-organism">{gene.organism || gene.organism_name}</span>
               )}
-              {gene.organism_name && (
-                <span className="gene-organism">{gene.organism_name}</span>
-              )}
-              {gene.headline && (
-                <span className="gene-description">{gene.headline}</span>
+              {(gene.description || gene.headline) && (
+                <span className="gene-description">{gene.description || gene.headline}</span>
               )}
             </div>
           ))}

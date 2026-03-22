@@ -101,7 +101,7 @@ export const locusApi = {
   // Search genes for synteny browser autocomplete
   searchGenesForSynteny: async (query) => {
     const response = await api.get(
-      `/api/search/genes?query=${encodeURIComponent(query)}&limit=20`
+      `/api/search/category?category=genes&query=${encodeURIComponent(query)}`
     );
     return response.data;
   },
