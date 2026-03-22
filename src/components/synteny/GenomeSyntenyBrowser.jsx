@@ -429,19 +429,23 @@ function GenomeSyntenyBrowser() {
       }
     });
 
-    // Setup drag behavior for panning
-    const drag = d3.drag()
-      .on('drag', (event) => {
-        const newPan = panOffset + event.dx;
-        // Limit panning to keep content in view
-        const minPan = baseWidth - effectiveWidth;
-        const maxPan = 0;
-        const clampedPan = Math.max(minPan, Math.min(maxPan, newPan));
-        setPanOffset(clampedPan);
-      });
+    // Setup drag behavior for panning (only when zoomed in)
+    if (effectiveWidth > baseWidth) {
+      const drag = d3.drag()
+        .on('drag', (event) => {
+          const newPan = panOffset + event.dx;
+          // Limit panning to keep content in view
+          const minPan = baseWidth - effectiveWidth;
+          const maxPan = 0;
+          const clampedPan = Math.max(minPan, Math.min(maxPan, newPan));
+          setPanOffset(clampedPan);
+        });
 
-    svg.call(drag);
-    svg.style('cursor', 'grab');
+      svg.call(drag);
+      svg.style('cursor', 'grab');
+    } else {
+      svg.style('cursor', 'default');
+    }
 
   }, [syntenyData, visibleSpecies, handleGeneClick, colorScale, geneToOrtholog, zoomLevel, panOffset]);
 
@@ -451,14 +455,19 @@ function GenomeSyntenyBrowser() {
     if (!baseWidth) return 0;
 
     const effectiveWidth = baseWidth * targetZoom;
-    // Query gene position at the target zoom level using relative position
-    const queryGeneXAtZoom = queryGeneRelativeXRef.current * effectiveWidth;
-    // Pan so that query gene is in the center of the viewport
-    const centerOffset = baseWidth / 2 - queryGeneXAtZoom;
-    // Clamp to valid range
-    const minPan = baseWidth - effectiveWidth;
-    const maxPan = 0;
-    return Math.max(minPan, Math.min(maxPan, centerOffset));
+
+    if (effectiveWidth <= baseWidth) {
+      // Zoomed out: content fits in viewport, center the entire content
+      return (baseWidth - effectiveWidth) / 2;
+    } else {
+      // Zoomed in: content larger than viewport, center on query gene
+      const queryGeneXAtZoom = queryGeneRelativeXRef.current * effectiveWidth;
+      const centerOffset = baseWidth / 2 - queryGeneXAtZoom;
+      // Clamp to valid range (content must stay within viewport bounds)
+      const minPan = baseWidth - effectiveWidth; // negative (shows right side)
+      const maxPan = 0; // shows left side
+      return Math.max(minPan, Math.min(maxPan, centerOffset));
+    }
   }, []);
 
   // Effect to handle initial centering after first render
@@ -493,22 +502,30 @@ function GenomeSyntenyBrowser() {
 
   // Navigation controls
   const handlePanLeft = () => {
-    const step = baseWidthRef.current * PAN_STEP;
-    const effectiveWidth = baseWidthRef.current * zoomLevel;
-    const minPan = baseWidthRef.current - effectiveWidth;
+    const baseWidth = baseWidthRef.current;
+    const effectiveWidth = baseWidth * zoomLevel;
+    if (effectiveWidth <= baseWidth) return; // Can't pan when zoomed out
+
+    const step = baseWidth * PAN_STEP;
+    const minPan = baseWidth - effectiveWidth;
     const newPan = Math.max(minPan, panOffset - step);
     setPanOffset(newPan);
   };
 
   const handlePanRight = () => {
-    const step = baseWidthRef.current * PAN_STEP;
+    const baseWidth = baseWidthRef.current;
+    const effectiveWidth = baseWidth * zoomLevel;
+    if (effectiveWidth <= baseWidth) return; // Can't pan when zoomed out
+
+    const step = baseWidth * PAN_STEP;
     const newPan = Math.min(0, panOffset + step);
     setPanOffset(newPan);
   };
 
-  // Check if can pan in each direction
-  const canPanLeft = panOffset > (baseWidthRef.current - baseWidthRef.current * zoomLevel);
-  const canPanRight = panOffset < 0;
+  // Check if can pan in each direction (only when zoomed in)
+  const effectiveWidth = baseWidthRef.current * zoomLevel;
+  const canPanLeft = effectiveWidth > baseWidthRef.current && panOffset > (baseWidthRef.current - effectiveWidth);
+  const canPanRight = effectiveWidth > baseWidthRef.current && panOffset < 0;
 
   // Handle flanking count change
   const handleFlankingChange = (e) => {
