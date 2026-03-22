@@ -400,8 +400,19 @@ function GenomeSyntenyBrowser() {
     // Draw ortholog connections between tracks
     const connectionsGroup = pannedGroup.append('g').attr('class', 'connections-group');
 
+    // Build a lookup for query gene's ortholog_id
+    let queryOrthologId = null;
+    speciesData.forEach(sd => {
+      const genes = sd.genes || [];
+      const queryGene = genes.find(g => g.is_query);
+      if (queryGene) {
+        queryOrthologId = geneToOrtholog[queryGene.feature_name];
+      }
+    });
+
     connections.forEach(conn => {
       const connColor = colorScale(conn.ortholog_id);
+      const isQueryConnection = conn.ortholog_id === queryOrthologId;
       const genePositions = [];
 
       // Find gene positions across species
@@ -430,9 +441,9 @@ function GenomeSyntenyBrowser() {
         connectionsGroup.append('path')
           .attr('d', `M${p1.x},${p1.y + geneHeight / 2} C${p1.x},${midY} ${p2.x},${midY} ${p2.x},${p2.y - geneHeight / 2}`)
           .attr('fill', 'none')
-          .attr('stroke', connColor)
-          .attr('stroke-width', 1.5)
-          .attr('stroke-opacity', 0.4)
+          .attr('stroke', isQueryConnection ? COLORS.queryGene : connColor)
+          .attr('stroke-width', isQueryConnection ? 2.5 : 1.5)
+          .attr('stroke-opacity', isQueryConnection ? 0.7 : 0.4)
           .attr('class', 'ortholog-connection');
       }
     });
