@@ -234,8 +234,10 @@ function GenomeSyntenyBrowser() {
     // Create scales for each species track (each has its own coordinate range)
     const speciesData = visibleRegions.map((region, idx) => {
       const genes = region.genes || [];
-      const minCoord = genes.length > 0 ? Math.min(...genes.map(g => g.start)) : 0;
-      const maxCoord = genes.length > 0 ? Math.max(...genes.map(g => g.stop)) : 1000;
+      // Use both start and stop for min/max since Crick strand genes have start > stop
+      const allCoords = genes.flatMap(g => [g.start, g.stop]);
+      const minCoord = allCoords.length > 0 ? Math.min(...allCoords) : 0;
+      const maxCoord = allCoords.length > 0 ? Math.max(...allCoords) : 1000;
       const padding = (maxCoord - minCoord) * 0.05;
       return {
         ...region,
@@ -308,8 +310,11 @@ function GenomeSyntenyBrowser() {
           .attr('data-feature', gene.feature_name)
           .style('cursor', 'pointer');
 
-        const x = xScale(gene.start);
-        const geneWidth = Math.max(xScale(gene.stop) - xScale(gene.start), 4);
+        // Handle both Watson (start < stop) and Crick (start > stop) strand genes
+        const geneLeft = Math.min(gene.start, gene.stop);
+        const geneRight = Math.max(gene.start, gene.stop);
+        const x = xScale(geneLeft);
+        const geneWidth = Math.max(xScale(geneRight) - xScale(geneLeft), 4);
         const y = (trackHeight - geneHeight) / 2;
 
         // Determine fill color
