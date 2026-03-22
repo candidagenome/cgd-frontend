@@ -17,6 +17,7 @@ const resolveDownloadUrl = (url) => {
 // Lazy load heavy visualization components
 const PhylogeneticTreeViewer = lazy(() => import('./PhylogeneticTreeViewer'));
 const AlignmentViewer = lazy(() => import('./AlignmentViewer'));
+const SyntenyViewer = lazy(() => import('../synteny/SyntenyViewer'));
 
 // Helper to get status color styling
 const getStatusStyle = (status) => {
@@ -28,7 +29,7 @@ const getStatusStyle = (status) => {
   return { color: '#666' };
 };
 
-function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
+function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismChange, locusName }) {
   // State for lazy-loaded alignment viewers
   const [showProteinAlignment, setShowProteinAlignment] = useState(false);
   const [showCodingAlignment, setShowCodingAlignment] = useState(false);
@@ -206,6 +207,22 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                   <th>Ortholog Cluster</th>
                   <td>
                     <em style={{ color: '#666' }}>No ortholog cluster information available</em>
+                  </td>
+                </tr>
+              )}
+
+              {/* Synteny View Section - only show if ortholog cluster exists */}
+              {orgData.ortholog_cluster && locusName && (
+                <tr className="section-with-divider">
+                  <th style={{ verticalAlign: 'top' }}>Synteny View</th>
+                  <td>
+                    <Suspense fallback={<div className="loading">Loading synteny viewer...</div>}>
+                      <SyntenyViewer
+                        locusName={locusName}
+                        queryOrganism={selectedOrganism}
+                        flankingCount={10}
+                      />
+                    </Suspense>
                   </td>
                 </tr>
               )}

@@ -72,6 +72,14 @@ export const locusApi = {
     const response = await api.get(`/api/locus/${encodeURIComponent(name)}/domain_details`);
     return response.data;
   },
+
+  // Get synteny data for visualization
+  getSyntenyData: async (name, flankingCount = 10) => {
+    const response = await api.get(
+      `/api/locus/${encodeURIComponent(name)}/synteny?flanking_count=${flankingCount}`
+    );
+    return response.data;
+  },
 };
 
 export default locusApi;
