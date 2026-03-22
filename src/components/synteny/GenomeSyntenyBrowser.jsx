@@ -35,12 +35,15 @@ const SPECIES_ORDER = [
   'Candida auris B8441',
 ];
 
-// Zoom level thresholds for semantic zoom
+// Zoom level thresholds for display
 const ZOOM_LEVELS = {
-  OVERVIEW: { min: 0, max: 1.5 },      // No labels
-  MEDIUM: { min: 1.5, max: 4 },        // Gene names only
-  DETAIL: { min: 4, max: Infinity },   // Names + descriptions
+  OVERVIEW: { min: 0, max: 0.8 },
+  MEDIUM: { min: 0.8, max: 2 },
+  DETAIL: { min: 2, max: Infinity },
 };
+
+// Pan step as fraction of viewport width
+const PAN_STEP = 0.25;
 
 function GenomeSyntenyBrowser() {
   const navigate = useNavigate();
@@ -62,6 +65,8 @@ function GenomeSyntenyBrowser() {
   const svgRef = useRef(null);
   const zoomRef = useRef(null);
   const transformRef = useRef({ k: 1, x: 0 });
+  const baseWidthRef = useRef(0);
+  const queryGeneXRef = useRef(0); // Store query gene's x position for centering
 
   const dateStamp = new Date().toISOString().split('T')[0];
 
@@ -77,7 +82,7 @@ function GenomeSyntenyBrowser() {
       const data = await locusApi.getSyntenyData(geneName, flankingCount);
       setSyntenyData(data);
 
-      // Reset zoom when loading new data
+      // Reset zoom when loading new data - pan will be set after first render
       transformRef.current = { k: 1, x: 0 };
       setZoomLevel(1);
       setPanOffset(0);
@@ -171,11 +176,14 @@ function GenomeSyntenyBrowser() {
     const baseWidth = containerWidth - margin.left - margin.right;
     const height = visibleRegions.length * (trackHeight + trackSpacing) + margin.top + margin.bottom - trackSpacing;
 
-    // Get current zoom transform
-    const currentZoom = transformRef.current.k;
-    const currentPan = transformRef.current.x;
+    // Store base width for navigation calculations
+    baseWidthRef.current = baseWidth;
 
-    // Calculate effective width based on zoom (for x-scale calculation)
+    // Get current zoom/pan
+    const currentZoom = zoomLevel;
+    const currentPan = panOffset;
+
+    // Calculate effective width based on zoom
     const effectiveWidth = baseWidth * currentZoom;
 
     // Create SVG
@@ -234,6 +242,18 @@ function GenomeSyntenyBrowser() {
         .domain([sd.minCoord, sd.maxCoord])
         .range([0, effectiveWidth]);
     });
+
+    // Find and store query gene position for centering
+    let queryGeneX = effectiveWidth / 2; // default to center
+    speciesData.forEach(sd => {
+      const genes = sd.genes || [];
+      const queryGene = genes.find(g => g.is_query);
+      if (queryGene) {
+        const xScale = xScales[sd.species];
+        queryGeneX = xScale((queryGene.start + queryGene.stop) / 2);
+      }
+    });
+    queryGeneXRef.current = queryGeneX;
 
     // Draw each species track
     speciesData.forEach(sd => {
@@ -400,51 +420,84 @@ function GenomeSyntenyBrowser() {
       }
     });
 
-    // Zoom behavior - horizontal only
-    const zoom = d3.zoom()
-      .scaleExtent([0.5, 10])
-      .on('zoom', (event) => {
-        // Store transform for re-render
-        transformRef.current = { k: event.transform.k, x: event.transform.x };
-        setZoomLevel(event.transform.k);
-        setPanOffset(event.transform.x);
+    // Setup drag behavior for panning
+    const drag = d3.drag()
+      .on('drag', (event) => {
+        const newPan = panOffset + event.dx;
+        // Limit panning to keep content in view
+        const minPan = baseWidth - effectiveWidth;
+        const maxPan = 0;
+        const clampedPan = Math.max(minPan, Math.min(maxPan, newPan));
+        setPanOffset(clampedPan);
       });
 
-    zoomRef.current = zoom;
-
-    // Apply current transform to SVG
-    if (transformRef.current.k !== 1 || transformRef.current.x !== 0) {
-      svg.call(zoom.transform, d3.zoomIdentity.scale(transformRef.current.k).translate(transformRef.current.x / transformRef.current.k, 0));
-    }
-
-    svg.call(zoom);
+    svg.call(drag);
+    svg.style('cursor', 'grab');
 
   }, [syntenyData, visibleSpecies, handleGeneClick, colorScale, geneToOrtholog, zoomLevel, panOffset]);
 
+  // Calculate pan offset to center query gene
+  const centerOnQueryGene = useCallback((newZoomLevel) => {
+    const baseWidth = baseWidthRef.current;
+    if (!baseWidth) return 0;
+
+    const effectiveWidth = baseWidth * newZoomLevel;
+    // Query gene's x position at the new zoom level
+    // Since queryGeneXRef stores at current zoom, we need to scale it
+    const queryGeneXAtNewZoom = (queryGeneXRef.current / zoomLevel) * newZoomLevel;
+    // Pan so that query gene is in the center of the viewport
+    const centerOffset = baseWidth / 2 - queryGeneXAtNewZoom;
+    // Clamp to valid range
+    const minPan = baseWidth - effectiveWidth;
+    const maxPan = 0;
+    return Math.max(minPan, Math.min(maxPan, centerOffset));
+  }, [zoomLevel]);
+
   // Zoom controls
   const handleZoomIn = () => {
-    if (svgRef.current && zoomRef.current) {
-      const newK = Math.min(transformRef.current.k * 1.5, 10);
-      transformRef.current = { k: newK, x: transformRef.current.x };
-      setZoomLevel(newK);
-    }
+    const newK = Math.min(zoomLevel * 1.5, 5);
+    const newPan = centerOnQueryGene(newK);
+    setZoomLevel(newK);
+    setPanOffset(newPan);
   };
 
   const handleZoomOut = () => {
-    if (svgRef.current && zoomRef.current) {
-      const newK = Math.max(transformRef.current.k * 0.67, 0.5);
-      transformRef.current = { k: newK, x: transformRef.current.x };
-      setZoomLevel(newK);
-    }
+    const newK = Math.max(zoomLevel * 0.67, 0.3);
+    const newPan = centerOnQueryGene(newK);
+    setZoomLevel(newK);
+    setPanOffset(newPan);
   };
 
   const handleZoomReset = () => {
-    if (svgRef.current && zoomRef.current) {
-      transformRef.current = { k: 1, x: 0 };
-      setZoomLevel(1);
+    setZoomLevel(1);
+    // Center on query gene at zoom level 1
+    const baseWidth = baseWidthRef.current;
+    if (baseWidth && queryGeneXRef.current) {
+      const centerOffset = baseWidth / 2 - queryGeneXRef.current;
+      setPanOffset(Math.max(baseWidth - baseWidth, Math.min(0, centerOffset)));
+    } else {
       setPanOffset(0);
     }
   };
+
+  // Navigation controls
+  const handlePanLeft = () => {
+    const step = baseWidthRef.current * PAN_STEP;
+    const effectiveWidth = baseWidthRef.current * zoomLevel;
+    const minPan = baseWidthRef.current - effectiveWidth;
+    const newPan = Math.max(minPan, panOffset - step);
+    setPanOffset(newPan);
+  };
+
+  const handlePanRight = () => {
+    const step = baseWidthRef.current * PAN_STEP;
+    const newPan = Math.min(0, panOffset + step);
+    setPanOffset(newPan);
+  };
+
+  // Check if can pan in each direction
+  const canPanLeft = panOffset > (baseWidthRef.current - baseWidthRef.current * zoomLevel);
+  const canPanRight = panOffset < 0;
 
   // Handle flanking count change
   const handleFlankingChange = (e) => {
@@ -540,16 +593,36 @@ function GenomeSyntenyBrowser() {
           </div>
         </div>
         <div className="header-right">
+          <div className="nav-controls">
+            <button
+              type="button"
+              onClick={handlePanRight}
+              disabled={loading || !syntenyData || !canPanRight}
+              title="Pan left (view earlier genes)"
+              className="nav-btn"
+            >
+              ◀
+            </button>
+            <button
+              type="button"
+              onClick={handlePanLeft}
+              disabled={loading || !syntenyData || !canPanLeft}
+              title="Pan right (view later genes)"
+              className="nav-btn"
+            >
+              ▶
+            </button>
+          </div>
           <div className="zoom-controls">
-            <button type="button" onClick={handleZoomOut} disabled={loading || !syntenyData} title="Zoom out">
+            <button type="button" onClick={handleZoomOut} disabled={loading || !syntenyData || zoomLevel <= 0.3} title="Zoom out">
               −
             </button>
             <span className="zoom-level">{Math.round(zoomLevel * 100)}% ({getZoomLabel()})</span>
-            <button type="button" onClick={handleZoomIn} disabled={loading || !syntenyData} title="Zoom in">
+            <button type="button" onClick={handleZoomIn} disabled={loading || !syntenyData || zoomLevel >= 5} title="Zoom in">
               +
             </button>
-            <button type="button" onClick={handleZoomReset} disabled={loading || !syntenyData} title="Reset zoom">
-              Reset
+            <button type="button" onClick={handleZoomReset} disabled={loading || !syntenyData} title="Center on query gene">
+              Center
             </button>
           </div>
         </div>
