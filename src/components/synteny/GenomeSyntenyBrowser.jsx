@@ -2,13 +2,12 @@ import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as d3 from 'd3';
 import { locusApi } from '../../api/locusApi';
-import ChromosomeSelector from './ChromosomeSelector';
 import GeneSearch from './GeneSearch';
 import './GenomeSyntenyBrowser.css';
 
 // Color scheme for synteny visualization
 const COLORS = {
-  queryGene: '#e74c3c',        // Red - highlighted/query gene
+  queryGene: '#e74c3c',        // Red - query gene
   orthologGene: '#3498db',     // Blue - gene with orthologs
   singletonGene: '#95a5a6',    // Gray - gene without orthologs
   watsonStrand: '#2ecc71',     // Green - Watson strand
@@ -48,119 +47,63 @@ function GenomeSyntenyBrowser() {
   const [searchParams] = useSearchParams();
 
   // State
-  const [selectedChromosome, setSelectedChromosome] = useState(null);
-  const [chromosomeData, setChromosomeData] = useState({});
+  const [syntenyData, setSyntenyData] = useState(null);
+  const [queryGeneName, setQueryGeneName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [tooltip, setTooltip] = useState({ show: false, x: 0, y: 0, content: null });
   const [zoomLevel, setZoomLevel] = useState(1);
-  const [highlightedGene, setHighlightedGene] = useState(null);
   const [visibleSpecies, setVisibleSpecies] = useState({});
+  const [flankingCount, setFlankingCount] = useState(15);
 
   // Refs
   const containerRef = useRef(null);
   const svgRef = useRef(null);
   const zoomRef = useRef(null);
-  const transformRef = useRef(d3.zoomIdentity);
 
   const dateStamp = new Date().toISOString().split('T')[0];
 
-  // Check for gene parameter in URL
-  useEffect(() => {
-    const geneParam = searchParams.get('gene');
-    if (geneParam) {
-      setHighlightedGene(geneParam);
-    }
-  }, [searchParams]);
-
-  // Load chromosome data when chromosome is selected
-  const loadChromosomeData = useCallback(async (chromosome) => {
-    if (!chromosome) return;
+  // Load synteny data for a gene
+  const loadSyntenyData = useCallback(async (geneName) => {
+    if (!geneName) return;
 
     setLoading(true);
     setError(null);
+    setQueryGeneName(geneName);
 
     try {
-      // Load data for all species
-      const dataPromises = SPECIES_ORDER.map(async (organism) => {
-        try {
-          // Find matching chromosome for this organism
-          const chrName = findMatchingChromosome(chromosome.chromosome, organism);
-          if (chrName) {
-            const data = await locusApi.getChromosomeGenes(chrName);
-            return { organism, data };
-          }
-        } catch (err) {
-          console.warn(`No data for ${organism}:`, err.message);
-        }
-        return { organism, data: null };
-      });
+      const data = await locusApi.getSyntenyData(geneName, flankingCount);
+      setSyntenyData(data);
 
-      const results = await Promise.all(dataPromises);
-      const newData = {};
-      results.forEach(({ organism, data }) => {
-        if (data) {
-          newData[organism] = data;
-        }
-      });
-
-      setChromosomeData(newData);
-
-      // Initialize visible species
+      // Initialize all species as visible
       const visible = {};
-      Object.keys(newData).forEach(org => {
-        visible[org] = true;
+      Object.keys(data.synteny_regions || {}).forEach(sp => {
+        visible[sp] = true;
       });
       setVisibleSpecies(visible);
     } catch (err) {
-      setError(err.response?.data?.detail || err.message || 'Failed to load chromosome data');
+      setError(err.response?.data?.detail || err.message || 'Failed to load synteny data');
+      setSyntenyData(null);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [flankingCount]);
 
-  // Find matching chromosome name for organism
-  const findMatchingChromosome = (baseChr, organism) => {
-    // Extract chromosome number/letter
-    const match = baseChr.match(/chr(\d+|[A-Z])/i);
-    if (!match) return baseChr;
-
-    const chrId = match[1];
-
-    // Construct chromosome name based on organism naming convention
-    if (organism.includes('albicans')) {
-      return `Ca22chr${chrId}A_C_albicans_SC5314`;
-    } else if (organism.includes('glabrata')) {
-      return `Chr${chrId}_C_glabrata_CBS138`;
-    } else if (organism.includes('parapsilosis')) {
-      // Parapsilosis uses contig naming
-      return null;
-    } else if (organism.includes('dubliniensis')) {
-      return `Chr${chrId}_C_dubliniensis_CD36`;
-    } else if (organism.includes('auris')) {
-      return `Chr${chrId}_C_auris_B8441`;
+  // Check for gene parameter in URL on mount
+  useEffect(() => {
+    const geneParam = searchParams.get('gene');
+    if (geneParam) {
+      loadSyntenyData(geneParam);
     }
-
-    return baseChr;
-  };
-
-  // Handle chromosome selection
-  const handleChromosomeSelect = useCallback((chrData) => {
-    setSelectedChromosome(chrData);
-    loadChromosomeData(chrData);
-  }, [loadChromosomeData]);
+  }, [searchParams, loadSyntenyData]);
 
   // Handle gene search selection
   const handleGeneSelect = useCallback((gene) => {
-    setHighlightedGene(gene.feature_name || gene.name);
-    // If gene has chromosome info, load that chromosome
-    if (gene.chromosome) {
-      handleChromosomeSelect({
-        chromosome: gene.chromosome,
-        organism_name: gene.organism_name,
-      });
+    const geneName = gene.feature_name || gene.gene_name || gene.name;
+    if (geneName) {
+      loadSyntenyData(geneName);
     }
-  }, [handleChromosomeSelect]);
+  }, [loadSyntenyData]);
 
   // Handle gene click navigation
   const handleGeneClick = useCallback((featureName) => {
@@ -175,43 +118,42 @@ function GenomeSyntenyBrowser() {
     }));
   };
 
-  // Build ortholog lookup from all loaded data
-  const orthologLookup = useMemo(() => {
+  // Build gene-to-ortholog lookup from connections
+  const geneToOrtholog = useMemo(() => {
     const lookup = {};
-    Object.values(chromosomeData).forEach(data => {
-      if (data?.genes) {
-        data.genes.forEach(gene => {
-          if (gene.ortholog_id) {
-            if (!lookup[gene.ortholog_id]) {
-              lookup[gene.ortholog_id] = [];
-            }
-            lookup[gene.ortholog_id].push(gene.feature_name);
-          }
+    if (syntenyData?.ortholog_connections) {
+      syntenyData.ortholog_connections.forEach(conn => {
+        conn.genes.forEach(gene => {
+          lookup[gene] = conn.ortholog_id;
         });
-      }
-    });
+      });
+    }
     return lookup;
-  }, [chromosomeData]);
+  }, [syntenyData]);
 
-  // Generate color for ortholog group
+  // Generate color scale for ortholog groups
   const colorScale = useMemo(() => {
-    const orthologIds = Object.keys(orthologLookup);
+    const orthologIds = syntenyData?.ortholog_connections?.map(c => c.ortholog_id) || [];
     return d3.scaleOrdinal(d3.schemeTableau10).domain(orthologIds);
-  }, [orthologLookup]);
+  }, [syntenyData]);
 
   // Draw the visualization
   useEffect(() => {
-    if (!containerRef.current || Object.keys(chromosomeData).length === 0) return;
+    if (!containerRef.current || !syntenyData) return;
+
+    const regions = syntenyData.synteny_regions || {};
+    const connections = syntenyData.ortholog_connections || [];
 
     // Clear existing SVG
     d3.select(containerRef.current).selectAll('svg').remove();
 
     // Filter to visible species
-    const visibleData = Object.entries(chromosomeData)
-      .filter(([organism]) => visibleSpecies[organism])
-      .sort(([a], [b]) => SPECIES_ORDER.indexOf(a) - SPECIES_ORDER.indexOf(b));
+    const visibleRegions = Object.entries(regions)
+      .filter(([sp]) => visibleSpecies[sp])
+      .sort(([a], [b]) => SPECIES_ORDER.indexOf(a) - SPECIES_ORDER.indexOf(b))
+      .map(([sp, region]) => ({ species: sp, ...region }));
 
-    if (visibleData.length === 0) return;
+    if (visibleRegions.length === 0) return;
 
     // Layout configuration
     const margin = { top: 40, right: 40, bottom: 40, left: 160 };
@@ -220,7 +162,7 @@ function GenomeSyntenyBrowser() {
     const geneHeight = 30;
     const containerWidth = containerRef.current.clientWidth;
     const width = containerWidth - margin.left - margin.right;
-    const height = visibleData.length * (trackHeight + trackSpacing) + margin.top + margin.bottom;
+    const height = visibleRegions.length * (trackHeight + trackSpacing) + margin.top + margin.bottom;
 
     // Create SVG
     const svg = d3.select(containerRef.current)
@@ -236,37 +178,35 @@ function GenomeSyntenyBrowser() {
       .attr('class', 'main-group')
       .attr('transform', `translate(${margin.left},${margin.top})`);
 
-    // Calculate global coordinate range
-    let globalMin = Infinity;
-    let globalMax = -Infinity;
-    visibleData.forEach(([, data]) => {
-      if (data?.genes) {
-        data.genes.forEach(gene => {
-          globalMin = Math.min(globalMin, gene.start);
-          globalMax = Math.max(globalMax, gene.stop);
-        });
-      }
+    // Create scales for each species track (each has its own coordinate range)
+    const speciesData = visibleRegions.map((region, idx) => {
+      const genes = region.genes || [];
+      const minCoord = genes.length > 0 ? Math.min(...genes.map(g => g.start)) : 0;
+      const maxCoord = genes.length > 0 ? Math.max(...genes.map(g => g.stop)) : 1000;
+      const padding = (maxCoord - minCoord) * 0.05;
+      return {
+        ...region,
+        index: idx,
+        minCoord: minCoord - padding,
+        maxCoord: maxCoord + padding,
+        yPosition: idx * (trackHeight + trackSpacing),
+      };
     });
 
-    // Add padding
-    const padding = (globalMax - globalMin) * 0.02;
-    globalMin -= padding;
-    globalMax += padding;
-
-    // Create global x scale
-    const xScale = d3.scaleLinear()
-      .domain([globalMin, globalMax])
-      .range([0, width]);
+    // Create x scales for each track
+    const xScales = {};
+    speciesData.forEach(sd => {
+      xScales[sd.species] = d3.scaleLinear()
+        .domain([sd.minCoord, sd.maxCoord])
+        .range([0, width]);
+    });
 
     // Draw each species track
-    visibleData.forEach(([speciesName, data], idx) => {
-      const yPosition = idx * (trackHeight + trackSpacing);
-      const genes = data?.genes || [];
-
+    speciesData.forEach(sd => {
       const trackGroup = g.append('g')
         .attr('class', 'species-track')
-        .attr('data-organism', speciesName)
-        .attr('transform', `translate(0,${yPosition})`);
+        .attr('data-organism', sd.species)
+        .attr('transform', `translate(0,${sd.yPosition})`);
 
       // Species label
       trackGroup.append('text')
@@ -276,7 +216,7 @@ function GenomeSyntenyBrowser() {
         .attr('dominant-baseline', 'middle')
         .attr('class', 'species-label')
         .style('font-style', 'italic')
-        .text(SPECIES_ABBREV[speciesName] || speciesName);
+        .text(SPECIES_ABBREV[sd.species] || sd.species);
 
       // Chromosome line
       trackGroup.append('line')
@@ -287,6 +227,9 @@ function GenomeSyntenyBrowser() {
         .attr('class', 'chromosome-line');
 
       // Draw genes
+      const xScale = xScales[sd.species];
+      const genes = sd.genes || [];
+
       genes.forEach(gene => {
         const geneGroup = trackGroup.append('g')
           .attr('class', 'gene-group')
@@ -298,14 +241,13 @@ function GenomeSyntenyBrowser() {
         const y = (trackHeight - geneHeight) / 2;
 
         // Determine fill color
+        const orthologId = geneToOrtholog[gene.feature_name];
         let fillColor;
-        const isHighlighted = highlightedGene === gene.feature_name ||
-                              highlightedGene === gene.gene_name;
 
-        if (isHighlighted) {
+        if (gene.is_query) {
           fillColor = COLORS.queryGene;
-        } else if (gene.ortholog_id) {
-          fillColor = colorScale(gene.ortholog_id);
+        } else if (orthologId) {
+          fillColor = colorScale(orthologId);
         } else {
           fillColor = COLORS.singletonGene;
         }
@@ -330,11 +272,11 @@ function GenomeSyntenyBrowser() {
         geneGroup.append('polygon')
           .attr('points', points.map(p => p.join(',')).join(' '))
           .attr('fill', fillColor)
-          .attr('stroke', isHighlighted ? '#c0392b' : '#666')
-          .attr('stroke-width', isHighlighted ? 2 : 1)
+          .attr('stroke', gene.is_query ? '#c0392b' : '#666')
+          .attr('stroke-width', gene.is_query ? 2 : 1)
           .attr('class', 'gene-shape');
 
-        // Gene label (visible based on zoom level and space)
+        // Gene label
         const label = geneGroup.append('text')
           .attr('x', x + geneWidth / 2)
           .attr('y', y + geneHeight / 2)
@@ -347,8 +289,8 @@ function GenomeSyntenyBrowser() {
           .style('opacity', 0)
           .text(gene.gene_name || gene.feature_name?.substring(0, 8) || '');
 
-        // Show label based on initial zoom level
-        if (geneWidth > 50 || isHighlighted) {
+        // Show label for query gene or if enough space
+        if (gene.is_query || geneWidth > 50) {
           label.style('opacity', 1);
         }
 
@@ -368,9 +310,9 @@ function GenomeSyntenyBrowser() {
               start: gene.start,
               stop: gene.stop,
               strand: gene.strand === 'W' || gene.strand === '+' ? 'Watson (+)' : 'Crick (-)',
-              orthologId: gene.ortholog_id,
-              headline: gene.headline,
-              organism: speciesName,
+              orthologId: orthologId,
+              isQuery: gene.is_query,
+              organism: sd.species,
             },
           });
         });
@@ -381,35 +323,32 @@ function GenomeSyntenyBrowser() {
       });
     });
 
-    // Draw ortholog connections
+    // Draw ortholog connections between tracks
     const connectionsGroup = g.append('g').attr('class', 'connections-group');
 
-    Object.entries(orthologLookup).forEach(([orthologId, geneNames]) => {
-      if (geneNames.length < 2) return;
+    connections.forEach(conn => {
+      const connColor = colorScale(conn.ortholog_id);
+      const genePositions = [];
 
-      const connColor = colorScale(orthologId);
-      const positions = [];
-
-      // Find gene positions across tracks
-      visibleData.forEach(([orgName, data], idx) => {
-        if (!data?.genes) return;
-        const yPosition = idx * (trackHeight + trackSpacing);
-
-        data.genes.forEach(gene => {
-          if (geneNames.includes(gene.feature_name)) {
-            positions.push({
-              species: orgName,
+      // Find gene positions across species
+      speciesData.forEach(sd => {
+        const genes = sd.genes || [];
+        genes.forEach(gene => {
+          if (conn.genes.includes(gene.feature_name)) {
+            const xScale = xScales[sd.species];
+            genePositions.push({
+              species: sd.species,
               x: xScale((gene.start + gene.stop) / 2),
-              y: yPosition + trackHeight / 2,
+              y: sd.yPosition + trackHeight / 2,
             });
           }
         });
       });
 
-      // Draw connections between consecutive species
-      for (let i = 0; i < positions.length - 1; i++) {
-        const p1 = positions[i];
-        const p2 = positions[i + 1];
+      // Draw bezier curves between consecutive species
+      for (let i = 0; i < genePositions.length - 1; i++) {
+        const p1 = genePositions[i];
+        const p2 = genePositions[i + 1];
 
         if (p1.species === p2.species) continue;
 
@@ -419,18 +358,16 @@ function GenomeSyntenyBrowser() {
           .attr('fill', 'none')
           .attr('stroke', connColor)
           .attr('stroke-width', 1.5)
-          .attr('stroke-opacity', 0.3)
+          .attr('stroke-opacity', 0.4)
           .attr('class', 'ortholog-connection');
       }
     });
 
     // Zoom behavior
     const zoom = d3.zoom()
-      .scaleExtent([0.5, 20])
+      .scaleExtent([0.5, 10])
       .on('zoom', (event) => {
-        transformRef.current = event.transform;
         setZoomLevel(event.transform.k);
-
         g.attr('transform', `translate(${event.transform.x + margin.left},${event.transform.y + margin.top}) scale(${event.transform.k})`);
 
         // Update label visibility based on zoom
@@ -439,14 +376,12 @@ function GenomeSyntenyBrowser() {
           const label = d3.select(this);
           const parent = d3.select(this.parentNode);
           const polygon = parent.select('.gene-shape');
+          const isQuery = parent.select('.gene-shape').attr('stroke') === '#c0392b';
 
-          // Get computed width
           const points = polygon.attr('points').split(' ').map(p => p.split(',').map(Number));
           const geneWidth = (Math.max(...points.map(p => p[0])) - Math.min(...points.map(p => p[0]))) * currentZoom;
 
-          if (currentZoom >= ZOOM_LEVELS.MEDIUM.min && geneWidth > 30) {
-            label.style('opacity', 1);
-          } else if (parent.attr('data-feature') === highlightedGene) {
+          if (isQuery || (currentZoom >= ZOOM_LEVELS.MEDIUM.min && geneWidth > 30)) {
             label.style('opacity', 1);
           } else {
             label.style('opacity', 0);
@@ -457,30 +392,7 @@ function GenomeSyntenyBrowser() {
     zoomRef.current = zoom;
     svg.call(zoom);
 
-    // If there's a highlighted gene, zoom to it
-    if (highlightedGene) {
-      // Find the gene in the data
-      let targetGene = null;
-      visibleData.forEach(([, data]) => {
-        if (data?.genes) {
-          const gene = data.genes.find(g =>
-            g.feature_name === highlightedGene || g.gene_name === highlightedGene
-          );
-          if (gene) {
-            targetGene = gene;
-          }
-        }
-      });
-
-      if (targetGene) {
-        const targetX = xScale((targetGene.start + targetGene.stop) / 2);
-        const newX = width / 2 - targetX * 3;
-
-        svg.call(zoom.transform, d3.zoomIdentity.translate(newX, 0).scale(3));
-      }
-    }
-
-  }, [chromosomeData, visibleSpecies, highlightedGene, handleGeneClick, colorScale, orthologLookup]);
+  }, [syntenyData, visibleSpecies, handleGeneClick, colorScale, geneToOrtholog]);
 
   // Zoom controls
   const handleZoomIn = () => {
@@ -507,6 +419,21 @@ function GenomeSyntenyBrowser() {
         .transition()
         .duration(300)
         .call(zoomRef.current.transform, d3.zoomIdentity);
+    }
+  };
+
+  // Handle flanking count change
+  const handleFlankingChange = (e) => {
+    const value = parseInt(e.target.value, 10);
+    if (value >= 5 && value <= 50) {
+      setFlankingCount(value);
+    }
+  };
+
+  // Reload with new flanking count
+  const handleReload = () => {
+    if (queryGeneName) {
+      loadSyntenyData(queryGeneName);
     }
   };
 
@@ -537,7 +464,7 @@ function GenomeSyntenyBrowser() {
         const downloadUrl = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = downloadUrl;
-        link.download = `genome_synteny_${selectedChromosome?.chromosome || 'view'}.png`;
+        link.download = `synteny_${queryGeneName || 'view'}.png`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -557,6 +484,8 @@ function GenomeSyntenyBrowser() {
     return 'Detail';
   };
 
+  const allSpecies = Object.keys(syntenyData?.synteny_regions || {});
+
   return (
     <div className="genome-synteny-browser">
       {/* Header controls */}
@@ -565,22 +494,37 @@ function GenomeSyntenyBrowser() {
           <GeneSearch onGeneSelect={handleGeneSelect} disabled={loading} />
         </div>
         <div className="header-center">
-          <ChromosomeSelector
-            selectedChromosome={selectedChromosome}
-            onSelect={handleChromosomeSelect}
-            loading={loading}
-          />
+          <div className="flanking-control">
+            <label htmlFor="flanking-count">Flanking genes:</label>
+            <input
+              id="flanking-count"
+              type="number"
+              min="5"
+              max="50"
+              value={flankingCount}
+              onChange={handleFlankingChange}
+              disabled={loading}
+            />
+            <button
+              type="button"
+              onClick={handleReload}
+              disabled={loading || !queryGeneName}
+              className="reload-btn"
+            >
+              Reload
+            </button>
+          </div>
         </div>
         <div className="header-right">
           <div className="zoom-controls">
-            <button type="button" onClick={handleZoomOut} disabled={loading} title="Zoom out">
+            <button type="button" onClick={handleZoomOut} disabled={loading || !syntenyData} title="Zoom out">
               −
             </button>
             <span className="zoom-level">{Math.round(zoomLevel * 100)}% ({getZoomLabel()})</span>
-            <button type="button" onClick={handleZoomIn} disabled={loading} title="Zoom in">
+            <button type="button" onClick={handleZoomIn} disabled={loading || !syntenyData} title="Zoom in">
               +
             </button>
-            <button type="button" onClick={handleZoomReset} disabled={loading} title="Reset zoom">
+            <button type="button" onClick={handleZoomReset} disabled={loading || !syntenyData} title="Reset zoom">
               Reset
             </button>
           </div>
@@ -588,10 +532,10 @@ function GenomeSyntenyBrowser() {
       </div>
 
       {/* Species filter */}
-      {Object.keys(chromosomeData).length > 0 && (
+      {allSpecies.length > 0 && (
         <div className="species-filter">
           <span className="filter-label">Show species:</span>
-          {SPECIES_ORDER.filter(org => chromosomeData[org]).map(org => (
+          {SPECIES_ORDER.filter(org => allSpecies.includes(org)).map(org => (
             <label key={org} className="species-checkbox">
               <input
                 type="checkbox"
@@ -604,12 +548,24 @@ function GenomeSyntenyBrowser() {
         </div>
       )}
 
+      {/* Query gene info */}
+      {syntenyData?.query_gene && (
+        <div className="query-info">
+          <strong>Query:</strong>{' '}
+          <span className="query-gene-name">
+            {syntenyData.query_gene.gene_name || syntenyData.query_gene.feature_name}
+          </span>
+          {' '}({syntenyData.query_gene.feature_name}) on {syntenyData.query_gene.chromosome}
+          {' '}in <em>{SPECIES_ABBREV[syntenyData.query_gene.organism] || syntenyData.query_gene.organism}</em>
+        </div>
+      )}
+
       {/* Main canvas area */}
       <div className="browser-canvas-wrapper">
         {loading && (
           <div className="browser-loading">
             <div className="browser-spinner" />
-            <p>Loading chromosome data...</p>
+            <p>Loading synteny data...</p>
           </div>
         )}
 
@@ -619,10 +575,10 @@ function GenomeSyntenyBrowser() {
           </div>
         )}
 
-        {!loading && !error && Object.keys(chromosomeData).length === 0 && (
+        {!loading && !error && !syntenyData && (
           <div className="browser-empty">
-            <p>Select a chromosome to view synteny data across species.</p>
-            <p className="hint">Use the dropdown above to select a chromosome, or search for a gene.</p>
+            <p>Search for a gene to view its syntenic region across species.</p>
+            <p className="hint">Enter a gene name (e.g., ACT1, CDC19, ERG11) in the search box above.</p>
           </div>
         )}
 
@@ -639,6 +595,7 @@ function GenomeSyntenyBrowser() {
           >
             <div className="tooltip-header">
               <strong>{tooltip.content.geneName || tooltip.content.featureName}</strong>
+              {tooltip.content.isQuery && <span className="query-badge">Query</span>}
             </div>
             {tooltip.content.geneName && tooltip.content.featureName !== tooltip.content.geneName && (
               <div>Systematic: {tooltip.content.featureName}</div>
@@ -647,9 +604,6 @@ function GenomeSyntenyBrowser() {
             <div>Strand: {tooltip.content.strand}</div>
             {tooltip.content.orthologId && (
               <div>Ortholog cluster: {tooltip.content.orthologId}</div>
-            )}
-            {tooltip.content.headline && (
-              <div className="tooltip-description">{tooltip.content.headline}</div>
             )}
             <div className="tooltip-organism" style={{ fontStyle: 'italic' }}>
               {SPECIES_ABBREV[tooltip.content.organism] || tooltip.content.organism}
@@ -664,7 +618,7 @@ function GenomeSyntenyBrowser() {
         <div className="browser-legend">
           <span className="legend-item">
             <span className="legend-box query" />
-            Highlighted Gene
+            Query Gene
           </span>
           <span className="legend-item">
             <span className="legend-box ortholog" />
@@ -694,7 +648,7 @@ function GenomeSyntenyBrowser() {
           type="button"
           className="download-btn"
           onClick={handleDownload}
-          disabled={Object.keys(chromosomeData).length === 0}
+          disabled={!syntenyData}
         >
           Download (.png)
         </button>
