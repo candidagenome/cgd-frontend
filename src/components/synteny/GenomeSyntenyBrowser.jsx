@@ -59,6 +59,7 @@ function GenomeSyntenyBrowser() {
   const [panOffset, setPanOffset] = useState(0);
   const [visibleSpecies, setVisibleSpecies] = useState({});
   const [flankingCount, setFlankingCount] = useState(15);
+  const [needsInitialCenter, setNeedsInitialCenter] = useState(false);
 
   // Refs
   const containerRef = useRef(null);
@@ -67,6 +68,7 @@ function GenomeSyntenyBrowser() {
   const transformRef = useRef({ k: 1, x: 0 });
   const baseWidthRef = useRef(0);
   const queryGeneXRef = useRef(0); // Store query gene's x position for centering
+  const queryGeneRelativeXRef = useRef(0.5); // Store query gene's relative position (0-1)
 
   const dateStamp = new Date().toISOString().split('T')[0];
 
@@ -82,10 +84,11 @@ function GenomeSyntenyBrowser() {
       const data = await locusApi.getSyntenyData(geneName, flankingCount);
       setSyntenyData(data);
 
-      // Reset zoom when loading new data - pan will be set after first render
+      // Reset zoom when loading new data
       transformRef.current = { k: 1, x: 0 };
       setZoomLevel(1);
       setPanOffset(0);
+      setNeedsInitialCenter(true); // Flag to center after first render
 
       // Initialize all species as visible
       const visible = {};
@@ -245,15 +248,21 @@ function GenomeSyntenyBrowser() {
 
     // Find and store query gene position for centering
     let queryGeneX = effectiveWidth / 2; // default to center
+    let queryGeneRelative = 0.5; // relative position (0-1)
     speciesData.forEach(sd => {
       const genes = sd.genes || [];
       const queryGene = genes.find(g => g.is_query);
       if (queryGene) {
         const xScale = xScales[sd.species];
         queryGeneX = xScale((queryGene.start + queryGene.stop) / 2);
+        // Calculate relative position within the coordinate range
+        const coordRange = sd.maxCoord - sd.minCoord;
+        const queryCoord = (queryGene.start + queryGene.stop) / 2;
+        queryGeneRelative = (queryCoord - sd.minCoord) / coordRange;
       }
     });
     queryGeneXRef.current = queryGeneX;
+    queryGeneRelativeXRef.current = queryGeneRelative;
 
     // Draw each species track
     speciesData.forEach(sd => {
@@ -436,48 +445,50 @@ function GenomeSyntenyBrowser() {
 
   }, [syntenyData, visibleSpecies, handleGeneClick, colorScale, geneToOrtholog, zoomLevel, panOffset]);
 
-  // Calculate pan offset to center query gene
-  const centerOnQueryGene = useCallback((newZoomLevel) => {
+  // Calculate pan offset to center query gene at a given zoom level
+  const calculateCenterOffset = useCallback((targetZoom) => {
     const baseWidth = baseWidthRef.current;
     if (!baseWidth) return 0;
 
-    const effectiveWidth = baseWidth * newZoomLevel;
-    // Query gene's x position at the new zoom level
-    // Since queryGeneXRef stores at current zoom, we need to scale it
-    const queryGeneXAtNewZoom = (queryGeneXRef.current / zoomLevel) * newZoomLevel;
+    const effectiveWidth = baseWidth * targetZoom;
+    // Query gene position at the target zoom level using relative position
+    const queryGeneXAtZoom = queryGeneRelativeXRef.current * effectiveWidth;
     // Pan so that query gene is in the center of the viewport
-    const centerOffset = baseWidth / 2 - queryGeneXAtNewZoom;
+    const centerOffset = baseWidth / 2 - queryGeneXAtZoom;
     // Clamp to valid range
     const minPan = baseWidth - effectiveWidth;
     const maxPan = 0;
     return Math.max(minPan, Math.min(maxPan, centerOffset));
-  }, [zoomLevel]);
+  }, []);
+
+  // Effect to handle initial centering after first render
+  useEffect(() => {
+    if (needsInitialCenter && baseWidthRef.current > 0) {
+      const centerOffset = calculateCenterOffset(zoomLevel);
+      setPanOffset(centerOffset);
+      setNeedsInitialCenter(false);
+    }
+  }, [needsInitialCenter, zoomLevel, calculateCenterOffset]);
 
   // Zoom controls
   const handleZoomIn = () => {
     const newK = Math.min(zoomLevel * 1.5, 5);
-    const newPan = centerOnQueryGene(newK);
+    const newPan = calculateCenterOffset(newK);
     setZoomLevel(newK);
     setPanOffset(newPan);
   };
 
   const handleZoomOut = () => {
     const newK = Math.max(zoomLevel * 0.67, 0.3);
-    const newPan = centerOnQueryGene(newK);
+    const newPan = calculateCenterOffset(newK);
     setZoomLevel(newK);
     setPanOffset(newPan);
   };
 
   const handleZoomReset = () => {
     setZoomLevel(1);
-    // Center on query gene at zoom level 1
-    const baseWidth = baseWidthRef.current;
-    if (baseWidth && queryGeneXRef.current) {
-      const centerOffset = baseWidth / 2 - queryGeneXRef.current;
-      setPanOffset(Math.max(baseWidth - baseWidth, Math.min(0, centerOffset)));
-    } else {
-      setPanOffset(0);
-    }
+    const centerOffset = calculateCenterOffset(1);
+    setPanOffset(centerOffset);
   };
 
   // Navigation controls
