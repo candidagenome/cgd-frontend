@@ -126,8 +126,10 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
   }, [searchParams, propGeneName, loadSyntenyData]);
 
   // Handle gene search selection
+  // Prefer gene_name/name over feature_name since aliases like "CDC60B" are
+  // resolved by the backend, while obsolete feature_names may not have synteny data
   const handleGeneSelect = useCallback((gene) => {
-    const geneName = gene.feature_name || gene.gene_name || gene.name;
+    const geneName = gene.gene_name || gene.name || gene.feature_name;
     if (geneName) {
       loadSyntenyData(geneName);
     }
@@ -859,6 +861,12 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
           <div className="browser-empty">
             <p>Search for a gene to view its syntenic region across species.</p>
             <p className="hint">Enter a gene name (e.g., ACT1, CDC19, ERG11) in the search box above.</p>
+          </div>
+        )}
+
+        {!loading && !error && syntenyData && Object.keys(syntenyData.synteny_regions || {}).length === 0 && (
+          <div className="browser-error">
+            <p>No synteny data available for {queryGeneName}</p>
           </div>
         )}
 
