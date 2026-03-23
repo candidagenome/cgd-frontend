@@ -599,6 +599,11 @@
   border-color: #c0392b;
 }
 
+.legend-box.query-ortholog {
+  background-color: #e67e22;
+  border-color: #d35400;
+}
+
 .legend-box.ortholog {
   background-color: #3498db;
   border-color: #2980b9;

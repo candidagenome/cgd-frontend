@@ -7,9 +7,10 @@ import './GenomeSyntenyBrowser.css';
 
 // Color scheme for synteny visualization
 const COLORS = {
-  queryGene: '#e74c3c',        // Red - query gene
-  orthologGene: '#3498db',     // Blue - gene with orthologs
-  singletonGene: '#95a5a6',    // Gray - gene without orthologs
+  queryGene: '#e74c3c',        // Red - the gene you searched for
+  queryOrtholog: '#e67e22',    // Orange - orthologs of your query gene
+  orthologGene: '#3498db',     // Blue - other genes with orthologs
+  singletonGene: '#95a5a6',    // Gray - species-specific genes (no orthologs)
   watsonStrand: '#2ecc71',     // Green - Watson strand
   crickStrand: '#9b59b6',      // Purple - Crick strand
   connector: '#bdc3c7',        // Light gray for ortholog connections
@@ -152,12 +153,6 @@ function GenomeSyntenyBrowser() {
     return lookup;
   }, [syntenyData]);
 
-  // Generate color scale for ortholog groups
-  const colorScale = useMemo(() => {
-    const orthologIds = syntenyData?.ortholog_connections?.map(c => c.ortholog_id) || [];
-    return d3.scaleOrdinal(d3.schemeTableau10).domain(orthologIds);
-  }, [syntenyData]);
-
   // Draw the visualization
   useEffect(() => {
     if (!containerRef.current || !syntenyData) return;
@@ -274,6 +269,16 @@ function GenomeSyntenyBrowser() {
     queryGeneXRef.current = queryGeneX;
     queryGeneRelativeXRef.current = queryGeneRelative;
 
+    // Find query gene's ortholog_id for color coding
+    let queryOrthologId = null;
+    speciesData.forEach(sd => {
+      const genes = sd.genes || [];
+      const queryGene = genes.find(g => g.is_query);
+      if (queryGene) {
+        queryOrthologId = geneToOrtholog[queryGene.feature_name];
+      }
+    });
+
     // Draw each species track
     speciesData.forEach(sd => {
       // Species label (outside clipped area, doesn't move with pan)
@@ -317,16 +322,19 @@ function GenomeSyntenyBrowser() {
         const geneWidth = Math.max(xScale(geneRight) - xScale(geneLeft), 4);
         const y = (trackHeight - geneHeight) / 2;
 
-        // Determine fill color
+        // Determine fill color using simplified scheme:
+        // Red = query gene, Orange = query's orthologs, Blue = other orthologs, Gray = no orthologs
         const orthologId = geneToOrtholog[gene.feature_name];
         let fillColor;
 
         if (gene.is_query) {
-          fillColor = COLORS.queryGene;
+          fillColor = COLORS.queryGene;  // Red - the gene you searched for
+        } else if (orthologId && orthologId === queryOrthologId) {
+          fillColor = COLORS.queryOrtholog;  // Orange - orthologs of your query gene
         } else if (orthologId) {
-          fillColor = colorScale(orthologId);
+          fillColor = COLORS.orthologGene;  // Blue - other genes with orthologs
         } else {
-          fillColor = COLORS.singletonGene;
+          fillColor = COLORS.singletonGene;  // Gray - species-specific genes
         }
 
         // Arrow point size stays constant
@@ -405,18 +413,7 @@ function GenomeSyntenyBrowser() {
     // Draw ortholog connections between tracks
     const connectionsGroup = pannedGroup.append('g').attr('class', 'connections-group');
 
-    // Build a lookup for query gene's ortholog_id
-    let queryOrthologId = null;
-    speciesData.forEach(sd => {
-      const genes = sd.genes || [];
-      const queryGene = genes.find(g => g.is_query);
-      if (queryGene) {
-        queryOrthologId = geneToOrtholog[queryGene.feature_name];
-      }
-    });
-
     connections.forEach(conn => {
-      const connColor = colorScale(conn.ortholog_id);
       const isQueryConnection = conn.ortholog_id === queryOrthologId;
       const genePositions = [];
 
@@ -443,10 +440,12 @@ function GenomeSyntenyBrowser() {
         if (p1.species === p2.species) continue;
 
         const midY = (p1.y + p2.y) / 2;
+        // Use simplified colors: orange for query connections, blue for others
+        const connColor = isQueryConnection ? COLORS.queryOrtholog : COLORS.orthologGene;
         connectionsGroup.append('path')
           .attr('d', `M${p1.x},${p1.y + geneHeight / 2} C${p1.x},${midY} ${p2.x},${midY} ${p2.x},${p2.y - geneHeight / 2}`)
           .attr('fill', 'none')
-          .attr('stroke', isQueryConnection ? COLORS.queryGene : connColor)
+          .attr('stroke', connColor)
           .attr('stroke-width', isQueryConnection ? 2.5 : 1.5)
           .attr('stroke-opacity', isQueryConnection ? 0.7 : 0.4)
           .attr('class', 'ortholog-connection');
@@ -471,7 +470,7 @@ function GenomeSyntenyBrowser() {
       svg.style('cursor', 'default');
     }
 
-  }, [syntenyData, visibleSpecies, handleGeneClick, colorScale, geneToOrtholog, zoomLevel, panOffset]);
+  }, [syntenyData, visibleSpecies, handleGeneClick, geneToOrtholog, zoomLevel, panOffset]);
 
   // Calculate pan offset to center query gene at a given zoom level
   const calculateCenterOffset = useCallback((targetZoom) => {
@@ -813,8 +812,12 @@ function GenomeSyntenyBrowser() {
             Query Gene
           </span>
           <span className="legend-item">
+            <span className="legend-box query-ortholog" />
+            Query Ortholog
+          </span>
+          <span className="legend-item">
             <span className="legend-box ortholog" />
-            Has Ortholog
+            Other Ortholog
           </span>
           <span className="legend-item">
             <span className="legend-box singleton" />
