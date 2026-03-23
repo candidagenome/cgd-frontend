@@ -497,7 +497,27 @@ function GenomeSyntenyBrowser() {
     if (svg.empty()) return;
 
     if (hoveredOrtholog) {
-      // Fade genes that don't match the hovered ortholog
+      // Check if there are any visible connections for this ortholog
+      let hasVisibleConnections = false;
+      svg.selectAll('.ortholog-connection').each(function() {
+        if (d3.select(this).attr('data-ortholog') === hoveredOrtholog) {
+          hasVisibleConnections = true;
+        }
+      });
+
+      // Count how many genes share this ortholog
+      let matchingGeneCount = 0;
+      svg.selectAll('.gene-group').each(function() {
+        if (d3.select(this).attr('data-ortholog') === hoveredOrtholog) {
+          matchingGeneCount++;
+        }
+      });
+
+      // Only apply strong fade effect if there are connections to show
+      // or multiple genes in the same ortholog cluster
+      const shouldHighlight = hasVisibleConnections || matchingGeneCount > 1;
+
+      // Fade/highlight genes
       svg.selectAll('.gene-group').each(function() {
         const el = d3.select(this);
         const ortholog = el.attr('data-ortholog');
@@ -505,7 +525,8 @@ function GenomeSyntenyBrowser() {
           el.style('opacity', 1);
           el.select('.gene-shape').attr('stroke-width', 2);
         } else {
-          el.style('opacity', 0.3);
+          // Softer fade if no connections to show
+          el.style('opacity', shouldHighlight ? 0.3 : 0.6);
         }
       });
 
@@ -517,7 +538,8 @@ function GenomeSyntenyBrowser() {
           el.attr('stroke-opacity', 0.9)
             .attr('stroke-width', 3);
         } else {
-          el.attr('stroke-opacity', 0.05);
+          // Softer fade if no connections to highlight
+          el.attr('stroke-opacity', shouldHighlight ? 0.05 : 0.12);
         }
       });
     } else {
