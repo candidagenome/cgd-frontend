@@ -430,6 +430,10 @@
   transition: stroke-opacity 0.2s ease;
 }
 
+.ortholog-connection.query-connection {
+  filter: drop-shadow(0 0 2px rgba(230, 126, 34, 0.6));
+}
+
 /* Tooltip */
 .browser-tooltip {
   position: absolute;

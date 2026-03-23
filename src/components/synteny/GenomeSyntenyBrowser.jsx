@@ -364,9 +364,13 @@ function GenomeSyntenyBrowser() {
           .attr('stroke-width', gene.is_query ? 2 : 1)
           .attr('class', 'gene-shape');
 
-        // Gene label - font size stays constant at 9px
-        const labelText = gene.gene_name || gene.feature_name?.substring(0, 10) || '';
-        const showLabel = gene.is_query || geneWidth > 40;
+        // Gene label - smart truncation based on available width
+        const rawLabel = gene.gene_name || gene.feature_name || '';
+        // Estimate ~6px per character at 9px font size
+        const maxChars = Math.max(3, Math.floor((geneWidth - 10) / 6));
+        const labelText = rawLabel.length > maxChars ? rawLabel.substring(0, maxChars) : rawLabel;
+        // Show label if query gene or enough space for at least 3 chars
+        const showLabel = gene.is_query || geneWidth > 30;
 
         if (showLabel) {
           geneGroup.append('text')
@@ -441,14 +445,16 @@ function GenomeSyntenyBrowser() {
 
         const midY = (p1.y + p2.y) / 2;
         // Use simplified colors: orange for query connections, blue for others
+        // Query connections: thicker, more opaque, with glow effect
+        // Other connections: thinner, more transparent to reduce visual clutter
         const connColor = isQueryConnection ? COLORS.queryOrtholog : COLORS.orthologGene;
-        connectionsGroup.append('path')
+        const path = connectionsGroup.append('path')
           .attr('d', `M${p1.x},${p1.y + geneHeight / 2} C${p1.x},${midY} ${p2.x},${midY} ${p2.x},${p2.y - geneHeight / 2}`)
           .attr('fill', 'none')
           .attr('stroke', connColor)
-          .attr('stroke-width', isQueryConnection ? 2.5 : 1.5)
-          .attr('stroke-opacity', isQueryConnection ? 0.7 : 0.4)
-          .attr('class', 'ortholog-connection');
+          .attr('stroke-width', isQueryConnection ? 3 : 1)
+          .attr('stroke-opacity', isQueryConnection ? 0.85 : 0.25)
+          .attr('class', isQueryConnection ? 'ortholog-connection query-connection' : 'ortholog-connection');
       }
     });
 
