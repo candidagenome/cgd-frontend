@@ -434,7 +434,11 @@
 
 .ortholog-connection {
   pointer-events: none;
-  transition: stroke-opacity 0.2s ease;
+  transition: stroke-opacity 0.2s ease, stroke-width 0.2s ease;
+}
+
+.gene-shape {
+  transition: stroke-width 0.15s ease;
 }
 
 .ortholog-connection.query-connection {

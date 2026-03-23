@@ -62,6 +62,7 @@ function GenomeSyntenyBrowser() {
   const [baseFlankingCount, setBaseFlankingCount] = useState(5);
   const [currentFlankingCount, setCurrentFlankingCount] = useState(5);
   const [needsInitialCenter, setNeedsInitialCenter] = useState(false);
+  const [hoveredOrtholog, setHoveredOrtholog] = useState(null);
 
   // Refs
   const containerRef = useRef(null);
@@ -310,9 +311,11 @@ function GenomeSyntenyBrowser() {
       const genes = sd.genes || [];
 
       genes.forEach(gene => {
+        const orthologId = geneToOrtholog[gene.feature_name];
         const geneGroup = trackGroup.append('g')
           .attr('class', 'gene-group')
           .attr('data-feature', gene.feature_name)
+          .attr('data-ortholog', orthologId || '')
           .style('cursor', 'pointer');
 
         // Handle both Watson (start < stop) and Crick (start > stop) strand genes
@@ -324,7 +327,6 @@ function GenomeSyntenyBrowser() {
 
         // Determine fill color using simplified scheme:
         // Red = query gene, Orange = query's orthologs, Blue = other orthologs, Gray = no orthologs
-        const orthologId = geneToOrtholog[gene.feature_name];
         let fillColor;
 
         if (gene.is_query) {
@@ -391,7 +393,7 @@ function GenomeSyntenyBrowser() {
         // Click handler
         geneGroup.on('click', () => handleGeneClick(gene.feature_name));
 
-        // Hover handlers
+        // Hover handlers - highlight this gene's ortholog connections
         geneGroup.on('mouseenter', (event) => {
           const rect = containerRef.current.getBoundingClientRect();
           setTooltip({
@@ -409,10 +411,15 @@ function GenomeSyntenyBrowser() {
               organism: sd.species,
             },
           });
+          // Highlight connections for this gene's ortholog group
+          if (orthologId) {
+            setHoveredOrtholog(orthologId);
+          }
         });
 
         geneGroup.on('mouseleave', () => {
           setTooltip({ show: false, x: 0, y: 0, content: null });
+          setHoveredOrtholog(null);
         });
       });
     });
@@ -457,6 +464,7 @@ function GenomeSyntenyBrowser() {
           .attr('stroke', connColor)
           .attr('stroke-width', isQueryConnection ? 4 : 0.75)
           .attr('stroke-opacity', isQueryConnection ? 0.9 : 0.18)
+          .attr('data-ortholog', conn.ortholog_id)
           .attr('class', isQueryConnection ? 'ortholog-connection query-connection' : 'ortholog-connection');
       }
     });
@@ -480,6 +488,57 @@ function GenomeSyntenyBrowser() {
     }
 
   }, [syntenyData, visibleSpecies, handleGeneClick, geneToOrtholog, zoomLevel, panOffset]);
+
+  // Handle hover highlighting - fade non-matching elements when a gene is hovered
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const svg = d3.select(containerRef.current).select('svg');
+    if (svg.empty()) return;
+
+    if (hoveredOrtholog) {
+      // Fade genes that don't match the hovered ortholog
+      svg.selectAll('.gene-group').each(function() {
+        const el = d3.select(this);
+        const ortholog = el.attr('data-ortholog');
+        if (ortholog === hoveredOrtholog) {
+          el.style('opacity', 1);
+          el.select('.gene-shape').attr('stroke-width', 2);
+        } else {
+          el.style('opacity', 0.3);
+        }
+      });
+
+      // Highlight matching connections, fade others
+      svg.selectAll('.ortholog-connection').each(function() {
+        const el = d3.select(this);
+        const ortholog = el.attr('data-ortholog');
+        if (ortholog === hoveredOrtholog) {
+          el.attr('stroke-opacity', 0.9)
+            .attr('stroke-width', 3);
+        } else {
+          el.attr('stroke-opacity', 0.05);
+        }
+      });
+    } else {
+      // Reset all to default state
+      svg.selectAll('.gene-group')
+        .style('opacity', 1)
+        .select('.gene-shape')
+        .attr('stroke-width', function() {
+          const parent = d3.select(this.parentNode);
+          return parent.select('.gene-shape').attr('stroke') === '#c0392b' ? 2 : 1;
+        });
+
+      // Reset connections to their base opacity
+      svg.selectAll('.ortholog-connection').each(function() {
+        const el = d3.select(this);
+        const isQuery = el.classed('query-connection');
+        el.attr('stroke-opacity', isQuery ? 0.9 : 0.18)
+          .attr('stroke-width', isQuery ? 4 : 0.75);
+      });
+    }
+  }, [hoveredOrtholog]);
 
   // Calculate pan offset to center query gene at a given zoom level
   const calculateCenterOffset = useCallback((targetZoom) => {
