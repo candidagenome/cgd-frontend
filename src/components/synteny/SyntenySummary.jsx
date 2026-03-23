@@ -359,8 +359,12 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
           Ortholog
         </span>
         <span className="legend-item">
+          <span className="legend-box other-ortholog" />
+          Other ortholog
+        </span>
+        <span className="legend-item">
           <span className="legend-box other" />
-          Other
+          No ortholog
         </span>
       </div>
     </div>

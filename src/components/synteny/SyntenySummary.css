@@ -74,6 +74,10 @@
   background-color: #e67e22;
 }
 
+.synteny-summary-legend .legend-box.other-ortholog {
+  background-color: #3498db;
+}
+
 .synteny-summary-legend .legend-box.other {
   background-color: #95a5a6;
 }
