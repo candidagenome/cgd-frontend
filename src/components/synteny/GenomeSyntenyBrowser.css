@@ -386,13 +386,12 @@
 /* Canvas area */
 .browser-canvas-wrapper {
   position: relative;
-  min-height: 450px;
+  min-height: 200px;
   background: #fff;
 }
 
 .browser-canvas {
   width: 100%;
-  min-height: 450px;
   overflow: hidden;
 }
 
@@ -710,11 +709,7 @@
 
 @media (max-width: 768px) {
   .browser-canvas-wrapper {
-    min-height: 350px;
-  }
-
-  .browser-canvas {
-    min-height: 350px;
+    min-height: 150px;
   }
 
   .zoom-controls {
@@ -745,11 +740,7 @@
 
 @media (max-width: 480px) {
   .browser-canvas-wrapper {
-    min-height: 300px;
-  }
-
-  .browser-canvas {
-    min-height: 300px;
+    min-height: 120px;
   }
 
   .selector-group {
