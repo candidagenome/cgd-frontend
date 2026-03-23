@@ -640,16 +640,6 @@ function GenomeSyntenyBrowser() {
     }
   };
 
-  const handleZoomReset = () => {
-    setZoomLevel(1);
-    const centerOffset = calculateCenterOffset(1);
-    setPanOffset(centerOffset);
-    // Optionally reload with base flanking count if currently expanded
-    if (currentFlankingCount > baseFlankingCount && queryGeneName) {
-      loadSyntenyData(queryGeneName, baseFlankingCount, false);
-    }
-  };
-
   // Navigation controls
   const handlePanLeft = () => {
     const baseWidth = baseWidthRef.current;
@@ -804,9 +794,6 @@ function GenomeSyntenyBrowser() {
             <span className="zoom-level">{Math.round(zoomLevel * 100)}% ({getZoomLabel()})</span>
             <button type="button" onClick={handleZoomIn} disabled={loading || !syntenyData || zoomLevel >= 5} title="Zoom in">
               +
-            </button>
-            <button type="button" onClick={handleZoomReset} disabled={loading || !syntenyData} title="Center on query gene">
-              Center
             </button>
           </div>
         </div>
