@@ -337,12 +337,14 @@ function GenomeSyntenyBrowser() {
           fillColor = COLORS.singletonGene;  // Gray - species-specific genes
         }
 
-        // Arrow point size stays constant
-        const arrowSize = 6;
+        // Arrow point size - scale with gene width, min 4px, max 8px
+        const arrowSize = Math.min(8, Math.max(4, geneWidth * 0.25));
 
-        // Gene shape with direction indicator
-        const points = gene.strand === 'W' || gene.strand === '+'
+        // Gene shape with direction indicator (arrow points in transcription direction)
+        const isForward = gene.strand === 'W' || gene.strand === '+';
+        const points = isForward
           ? [
+              // Forward strand: arrow points RIGHT
               [x, y],
               [x + geneWidth - arrowSize, y],
               [x + geneWidth, y + geneHeight / 2],
@@ -350,6 +352,7 @@ function GenomeSyntenyBrowser() {
               [x, y + geneHeight],
             ]
           : [
+              // Reverse strand: arrow points LEFT
               [x, y + geneHeight / 2],
               [x + arrowSize, y],
               [x + geneWidth, y],
@@ -400,7 +403,7 @@ function GenomeSyntenyBrowser() {
               geneName: gene.gene_name,
               start: gene.start,
               stop: gene.stop,
-              strand: gene.strand === 'W' || gene.strand === '+' ? 'Watson (+)' : 'Crick (-)',
+              strand: gene.strand === 'W' || gene.strand === '+' ? 'Forward (+)' : 'Reverse (-)',
               orthologId: orthologId,
               isQuery: gene.is_query,
               organism: sd.species,
