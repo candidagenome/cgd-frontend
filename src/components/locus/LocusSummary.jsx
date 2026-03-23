@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './LocusComponents.css';
 import { renderCitationItem } from '../../utils/formatCitation.jsx';
+import SyntenySummary from '../synteny/SyntenySummary';
 
 function LocusSummary({
   data,
@@ -609,6 +610,16 @@ function LocusSummary({
                     </a>
                   </div>
                 )}
+              </td>
+            </tr>
+          )}
+
+          {/* Synteny Summary */}
+          {feature.candida_orthologs && feature.candida_orthologs.length > 0 && (
+            <tr>
+              <th>Synteny</th>
+              <td>
+                <SyntenySummary geneName={feature.feature_name} maxSpecies={3} />
               </td>
             </tr>
           )}

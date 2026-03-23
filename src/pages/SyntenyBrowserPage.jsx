@@ -23,7 +23,6 @@ function SyntenyBrowserPage() {
           <li><strong>Search for a gene:</strong> Enter a gene name (e.g., ACT1, CDC19, ERG11) to view its syntenic region across species.</li>
           <li><strong>Adjust flanking genes:</strong> Change the number of upstream/downstream genes shown (5-50).</li>
           <li><strong>Zoom in/out:</strong> Use the + / - buttons or scroll with your mouse wheel to zoom.</li>
-          <li><strong>Pan:</strong> Click and drag to pan across the region.</li>
           <li><strong>Filter species:</strong> Use checkboxes to show/hide specific species tracks.</li>
           <li><strong>View gene details:</strong> Hover over any gene to see its name, coordinates, and ortholog cluster.</li>
           <li><strong>Navigate to locus:</strong> Click on any gene to open its full locus page.</li>

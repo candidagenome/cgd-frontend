@@ -1,0 +1,115 @@
+/* Synteny Summary - Lightweight component for Locus Summary page */
+
+.synteny-summary {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.synteny-summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.synteny-summary-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.synteny-summary-link {
+  font-size: 0.85rem;
+  color: #3498db;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.synteny-summary-link:hover {
+  color: #2980b9;
+  text-decoration: underline;
+}
+
+.synteny-summary-canvas {
+  padding: 8px 12px;
+  min-height: 90px;
+}
+
+.synteny-summary-svg {
+  display: block;
+}
+
+.synteny-summary-legend {
+  display: flex;
+  gap: 12px;
+  padding: 6px 12px;
+  background: #fafafa;
+  border-top: 1px solid #e0e0e0;
+  font-size: 0.7rem;
+  color: #777;
+}
+
+.synteny-summary-legend .legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.synteny-summary-legend .legend-box {
+  width: 10px;
+  height: 8px;
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.synteny-summary-legend .legend-box.query {
+  background-color: #e74c3c;
+}
+
+.synteny-summary-legend .legend-box.ortholog {
+  background-color: #e67e22;
+}
+
+.synteny-summary-legend .legend-box.other {
+  background-color: #95a5a6;
+}
+
+/* Loading state */
+.synteny-summary-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px;
+  color: #888;
+  font-size: 0.85rem;
+}
+
+.synteny-summary-loading .loading-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #e0e0e0;
+  border-top-color: #3498db;
+  border-radius: 50%;
+  animation: synteny-spin 0.8s linear infinite;
+}
+
+@keyframes synteny-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error state */
+.synteny-summary-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  color: #999;
+  font-size: 0.85rem;
+}

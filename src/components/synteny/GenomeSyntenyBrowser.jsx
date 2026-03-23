@@ -173,10 +173,10 @@ function GenomeSyntenyBrowser() {
     if (visibleRegions.length === 0) return;
 
     // Layout configuration - these stay constant regardless of zoom
-    const margin = { top: 20, right: 40, bottom: 20, left: 120 };
-    const trackHeight = 40;
-    const trackSpacing = 60;
-    const geneHeight = 24;
+    const margin = { top: 12, right: 40, bottom: 12, left: 120 };
+    const trackHeight = 36;
+    const trackSpacing = 44;
+    const geneHeight = 22;
     const containerWidth = containerRef.current.clientWidth;
     const baseWidth = containerWidth - margin.left - margin.right;
     const height = visibleRegions.length * (trackHeight + trackSpacing) + margin.top + margin.bottom - trackSpacing;
@@ -462,8 +462,8 @@ function GenomeSyntenyBrowser() {
           .attr('d', `M${p1.x},${p1.y + geneHeight / 2} C${p1.x},${midY} ${p2.x},${midY} ${p2.x},${p2.y - geneHeight / 2}`)
           .attr('fill', 'none')
           .attr('stroke', connColor)
-          .attr('stroke-width', isQueryConnection ? 4 : 0.75)
-          .attr('stroke-opacity', isQueryConnection ? 0.9 : 0.18)
+          .attr('stroke-width', isQueryConnection ? 4.5 : 0.6)
+          .attr('stroke-opacity', isQueryConnection ? 0.95 : 0.15)
           .attr('data-ortholog', conn.ortholog_id)
           .attr('class', isQueryConnection ? 'ortholog-connection query-connection' : 'ortholog-connection');
       }
@@ -556,8 +556,8 @@ function GenomeSyntenyBrowser() {
       svg.selectAll('.ortholog-connection').each(function() {
         const el = d3.select(this);
         const isQuery = el.classed('query-connection');
-        el.attr('stroke-opacity', isQuery ? 0.9 : 0.18)
-          .attr('stroke-width', isQuery ? 4 : 0.75);
+        el.attr('stroke-opacity', isQuery ? 0.95 : 0.15)
+          .attr('stroke-width', isQuery ? 4.5 : 0.6);
       });
     }
   }, [hoveredOrtholog]);
