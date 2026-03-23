@@ -99,6 +99,13 @@
   color: #e74c3c;
 }
 
+.query-info .query-hint {
+  margin-top: 4px;
+  font-size: 0.8rem;
+  color: #888;
+  font-style: italic;
+}
+
 .query-badge {
   display: inline-block;
   margin-left: 8px;
@@ -431,7 +438,7 @@
 }
 
 .ortholog-connection.query-connection {
-  filter: drop-shadow(0 0 2px rgba(230, 126, 34, 0.6));
+  filter: drop-shadow(0 0 3px rgba(230, 126, 34, 0.7)) drop-shadow(0 0 6px rgba(230, 126, 34, 0.4));
 }
 
 /* Tooltip */

@@ -445,15 +445,15 @@ function GenomeSyntenyBrowser() {
 
         const midY = (p1.y + p2.y) / 2;
         // Use simplified colors: orange for query connections, blue for others
-        // Query connections: thicker, more opaque, with glow effect
-        // Other connections: thinner, more transparent to reduce visual clutter
+        // Query connections: thick, prominent, with glow - the "main story"
+        // Other connections: very subtle to reduce visual clutter
         const connColor = isQueryConnection ? COLORS.queryOrtholog : COLORS.orthologGene;
-        const path = connectionsGroup.append('path')
+        connectionsGroup.append('path')
           .attr('d', `M${p1.x},${p1.y + geneHeight / 2} C${p1.x},${midY} ${p2.x},${midY} ${p2.x},${p2.y - geneHeight / 2}`)
           .attr('fill', 'none')
           .attr('stroke', connColor)
-          .attr('stroke-width', isQueryConnection ? 3 : 1)
-          .attr('stroke-opacity', isQueryConnection ? 0.85 : 0.25)
+          .attr('stroke-width', isQueryConnection ? 4 : 0.75)
+          .attr('stroke-opacity', isQueryConnection ? 0.9 : 0.18)
           .attr('class', isQueryConnection ? 'ortholog-connection query-connection' : 'ortholog-connection');
       }
     });
@@ -748,12 +748,17 @@ function GenomeSyntenyBrowser() {
       {/* Query gene info */}
       {syntenyData?.query_gene && (
         <div className="query-info">
-          <strong>Query:</strong>{' '}
-          <span className="query-gene-name">
-            {syntenyData.query_gene.gene_name || syntenyData.query_gene.feature_name}
-          </span>
-          {' '}({syntenyData.query_gene.feature_name}) on {syntenyData.query_gene.chromosome}
-          {' '}in <em>{SPECIES_ABBREV[syntenyData.query_gene.organism] || syntenyData.query_gene.organism}</em>
+          <div className="query-main">
+            <strong>Query:</strong>{' '}
+            <span className="query-gene-name">
+              {syntenyData.query_gene.gene_name || syntenyData.query_gene.feature_name}
+            </span>
+            {' '}({syntenyData.query_gene.feature_name}) on {syntenyData.query_gene.chromosome}
+            {' '}in <em>{SPECIES_ABBREV[syntenyData.query_gene.organism] || syntenyData.query_gene.organism}</em>
+          </div>
+          <div className="query-hint">
+            Genes are aligned by orthologous relationships, not genomic position.
+          </div>
         </div>
       )}
 
@@ -831,11 +836,11 @@ function GenomeSyntenyBrowser() {
           </span>
           <span className="legend-item">
             <span className="legend-arrow watson" />
-            Watson (+)
+            Forward (+)
           </span>
           <span className="legend-item">
             <span className="legend-arrow crick" />
-            Crick (-)
+            Reverse (-)
           </span>
         </div>
         <div className="browser-datestamp">
