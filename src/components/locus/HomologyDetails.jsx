@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo, Suspense, lazy } from 'react';
-import { Link } from 'react-router-dom';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
 import { API_BASE_URL } from '../../api/config';
 import './LocusComponents.css';
@@ -81,60 +80,10 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
         <>
           <table className="info-table">
             <tbody>
-              {/* Ortholog Cluster Section */}
-              {orgData.ortholog_cluster && (
-                <>
-                  <tr className="section-with-divider section-grey-bg">
-                    <th style={{ verticalAlign: 'top' }}>Ortholog Cluster</th>
-                    <td>
-                      <div style={{ marginBottom: '10px' }}>
-                        <strong>From{' '}
-                          <a href="http://cgob3.ucd.ie/" target="_blank" rel="noopener noreferrer">
-                            CGOB
-                          </a>
-                        </strong>
-                      </div>
-                      {orgData.ortholog_cluster.cluster_url && (
-                        <div style={{ marginBottom: '10px' }}>
-                          <a
-                            href={orgData.ortholog_cluster.cluster_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            View CGOB cluster and synteny information
-                          </a>
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-
-                  {/* Download Links */}
-                  {orgData.ortholog_cluster.download_links && orgData.ortholog_cluster.download_links.length > 0 && (
-                    <tr>
-                      <th style={{ paddingLeft: '20px', fontWeight: 'normal', verticalAlign: 'top' }}>
-                        Download cluster sequence files:
-                      </th>
-                      <td>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                          {orgData.ortholog_cluster.download_links.map((link, idx) => {
-                            const url = resolveDownloadUrl(link.url);
-                            return url ? (
-                              <a key={idx} href={url} target="_blank" rel="noopener noreferrer">
-                                {link.label}
-                              </a>
-                            ) : null;
-                          })}
-                        </div>
-                      </td>
-                    </tr>
-                  )}
-
-              {/* Orthologs Table */}
-              {orgData.ortholog_cluster?.orthologs && orgData.ortholog_cluster.orthologs.length > 0 && (
-                <tr>
-                  <th style={{ paddingLeft: '20px', fontWeight: 'normal', verticalAlign: 'top' }}>
-                    Orthologs in fungal species
-                  </th>
+              {/* 1. Orthologs in fungal species */}
+              {orgData.ortholog_cluster?.orthologs && orgData.ortholog_cluster.orthologs.length > 0 ? (
+                <tr className="section-with-divider section-grey-bg">
+                  <th style={{ verticalAlign: 'top' }}>Orthologs in fungal species</th>
                   <td>
                     <table className="ortholog-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
                       <thead>
@@ -187,46 +136,16 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                     </table>
                   </td>
                 </tr>
-              )}
-
-              {/* Show message if no orthologs in cluster */}
-              {orgData.ortholog_cluster && (!orgData.ortholog_cluster.orthologs || orgData.ortholog_cluster.orthologs.length === 0) && (
-                <tr>
-                  <th style={{ paddingLeft: '20px', fontWeight: 'normal' }}>Orthologs in fungal species</th>
-                  <td>
-                    <em style={{ color: '#666' }}>No orthologs found in CGOB cluster</em>
-                  </td>
-                </tr>
-              )}
-                </>
-              )}
-
-              {/* Show message if no ortholog cluster data */}
-              {!orgData.ortholog_cluster && (
+              ) : (
                 <tr className="section-with-divider section-grey-bg">
-                  <th>Ortholog Cluster</th>
+                  <th style={{ verticalAlign: 'top' }}>Orthologs in fungal species</th>
                   <td>
-                    <em style={{ color: '#666' }}>No ortholog cluster information available</em>
+                    <em style={{ color: '#666' }}>No orthologs found</em>
                   </td>
                 </tr>
               )}
 
-              {/* Synteny View Section - only show if ortholog cluster exists */}
-              {orgData.ortholog_cluster && locusName && (
-                <tr className="section-with-divider">
-                  <th style={{ verticalAlign: 'top' }}>Synteny View</th>
-                  <td>
-                    <Suspense fallback={<div className="loading">Loading synteny viewer...</div>}>
-                      <GenomeSyntenyBrowser
-                        geneName={locusName}
-                        embedded={true}
-                      />
-                    </Suspense>
-                  </td>
-                </tr>
-              )}
-
-              {/* Orthologs in Model Fungi Section */}
+              {/* 2. Orthologs in model fungi */}
               {/* Filter out A. nidulans entries */}
               {orgData.orthologs_fungal && (() => {
                 const filteredEntries = Object.entries(orgData.orthologs_fungal.by_source || {})
@@ -263,7 +182,7 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                 ) : null;
               })()}
 
-              {/* Reciprocal Best Hits in Other Species Section */}
+              {/* 3. Reciprocal best hits in other species */}
               {orgData.reciprocal_best_hits && Object.keys(orgData.reciprocal_best_hits.by_source || {}).length > 0 && (
                 <tr className="section-with-divider section-grey-bg">
                   <th style={{ verticalAlign: 'top' }}>Reciprocal best hits in other species</th>
@@ -288,6 +207,65 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                         {')'}
                       </span>
                     ))}
+                  </td>
+                </tr>
+              )}
+
+              {/* 4. Synteny View within CGD */}
+              {orgData.ortholog_cluster && locusName && (
+                <tr className="section-with-divider">
+                  <th style={{ verticalAlign: 'top' }}>Synteny View within CGD</th>
+                  <td>
+                    <Suspense fallback={<div className="loading">Loading synteny viewer...</div>}>
+                      <GenomeSyntenyBrowser
+                        geneName={locusName}
+                        embedded={true}
+                      />
+                    </Suspense>
+                  </td>
+                </tr>
+              )}
+
+              {/* 5. Wider fungal synteny */}
+              {orgData.ortholog_cluster && (
+                <tr className="section-with-divider section-grey-bg">
+                  <th style={{ verticalAlign: 'top' }}>Wider fungal synteny</th>
+                  <td>
+                    <div style={{ marginBottom: '8px' }}>
+                      Candida Gene Order Browser
+                    </div>
+                    {orgData.ortholog_cluster.cluster_url ? (
+                      <a
+                        href={orgData.ortholog_cluster.cluster_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View CGOB cluster and synteny information
+                      </a>
+                    ) : (
+                      <a href="http://cgob3.ucd.ie/" target="_blank" rel="noopener noreferrer">
+                        CGOB
+                      </a>
+                    )}
+                  </td>
+                </tr>
+              )}
+
+              {/* 6. Download cluster sequence files */}
+              {orgData.ortholog_cluster?.download_links && orgData.ortholog_cluster.download_links.length > 0 && (
+                <tr className="section-with-divider">
+                  <th style={{ verticalAlign: 'top' }}>Download cluster sequence files</th>
+                  <td>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      {orgData.ortholog_cluster.download_links.map((link, idx) => {
+                        const url = resolveDownloadUrl(link.url);
+                        return url ? (
+                          <a key={idx} href={url} target="_blank" rel="noopener noreferrer">
+                            {link.label}
+                          </a>
+                        ) : null;
+                      })}
+                    </div>
                   </td>
                 </tr>
               )}
@@ -446,56 +424,6 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                 </tr>
               )}
 
-              {/* Best Hits in CGD Species Section */}
-              {orgData.best_hits_cgd && Object.keys(orgData.best_hits_cgd.by_species || {}).length > 0 && (
-                <tr className="section-with-divider section-grey-bg">
-                  <th style={{ verticalAlign: 'top' }}>Best hits in CGD species</th>
-                  <td>
-                    {Object.entries(orgData.best_hits_cgd.by_species).map(([species, hits]) => (
-                      <div key={species} style={{ marginBottom: '4px' }}>
-                        <em>{species}</em> best hit:{' '}
-                        {hits.map((hit, idx) => (
-                          <span key={idx}>
-                            {idx > 0 && ', '}
-                            <Link to={`/locus/${hit.feature_name}`}>
-                              {hit.display_name}
-                            </Link>
-                          </span>
-                        ))}
-                      </div>
-                    ))}
-                  </td>
-                </tr>
-              )}
-
-              {/* Best Hits in Fungal Species Section - temporarily disabled */}
-              {/* {orgData.best_hits_fungal && Object.keys(orgData.best_hits_fungal.by_source || {}).length > 0 && (
-                <tr className="section-with-divider section-grey-bg">
-                  <th style={{ verticalAlign: 'top' }}>Best hits in fungal species</th>
-                  <td>
-                    {Object.entries(orgData.best_hits_fungal.by_source).map(([source, homologs], srcIdx) => (
-                      <span key={source}>
-                        {srcIdx > 0 && ' ; '}
-                        <em>{homologs[0]?.organism_name || source}</em>
-                        {' ('}
-                        {homologs.map((h, idx) => (
-                          <span key={idx}>
-                            {idx > 0 && ', '}
-                            {h.url ? (
-                              <a href={h.url} target="_blank" rel="noopener noreferrer">
-                                {h.display_name}
-                              </a>
-                            ) : (
-                              <span>{h.display_name}</span>
-                            )}
-                          </span>
-                        ))}
-                        {')'}
-                      </span>
-                    ))}
-                  </td>
-                </tr>
-              )} */}
             </tbody>
           </table>
         </>
