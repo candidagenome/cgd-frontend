@@ -340,6 +340,8 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
         <Link
           to={`/synteny-browser?gene=${encodeURIComponent(geneName)}`}
           className="synteny-summary-link"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           {orthologCount > maxSpecies
             ? `View all ${orthologCount} species →`
