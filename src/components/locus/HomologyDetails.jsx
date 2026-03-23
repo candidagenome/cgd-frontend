@@ -17,7 +17,7 @@ const resolveDownloadUrl = (url) => {
 // Lazy load heavy visualization components
 const PhylogeneticTreeViewer = lazy(() => import('./PhylogeneticTreeViewer'));
 const AlignmentViewer = lazy(() => import('./AlignmentViewer'));
-const SyntenyViewer = lazy(() => import('../synteny/SyntenyViewer'));
+const GenomeSyntenyBrowser = lazy(() => import('../synteny/GenomeSyntenyBrowser'));
 
 // Helper to get status color styling
 const getStatusStyle = (status) => {
@@ -217,10 +217,9 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                   <th style={{ verticalAlign: 'top' }}>Synteny View</th>
                   <td>
                     <Suspense fallback={<div className="loading">Loading synteny viewer...</div>}>
-                      <SyntenyViewer
-                        locusName={locusName}
-                        queryOrganism={selectedOrganism}
-                        flankingCount={10}
+                      <GenomeSyntenyBrowser
+                        geneName={locusName}
+                        embedded={true}
                       />
                     </Suspense>
                   </td>

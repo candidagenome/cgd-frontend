@@ -46,7 +46,7 @@ const ZOOM_LEVELS = {
 // Pan step as fraction of viewport width
 const PAN_STEP = 0.25;
 
-function GenomeSyntenyBrowser() {
+function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -112,13 +112,18 @@ function GenomeSyntenyBrowser() {
     }
   }, [baseFlankingCount]);
 
-  // Check for gene parameter in URL on mount
+  // Check for gene parameter in URL or prop on mount
   useEffect(() => {
-    const geneParam = searchParams.get('gene');
-    if (geneParam) {
-      loadSyntenyData(geneParam);
+    // Prop takes precedence over URL param
+    if (propGeneName) {
+      loadSyntenyData(propGeneName);
+    } else {
+      const geneParam = searchParams.get('gene');
+      if (geneParam) {
+        loadSyntenyData(geneParam);
+      }
     }
-  }, [searchParams, loadSyntenyData]);
+  }, [searchParams, propGeneName, loadSyntenyData]);
 
   // Handle gene search selection
   const handleGeneSelect = useCallback((gene) => {
@@ -741,10 +746,12 @@ function GenomeSyntenyBrowser() {
     <div className="genome-synteny-browser">
       {/* Header controls */}
       <div className="browser-header">
-        <div className="header-left">
-          <GeneSearch onGeneSelect={handleGeneSelect} disabled={loading} />
-        </div>
-        <div className="header-center">
+        {!embedded && (
+          <div className="header-left">
+            <GeneSearch onGeneSelect={handleGeneSelect} disabled={loading} />
+          </div>
+        )}
+        <div className={embedded ? "header-left" : "header-center"}>
           <div className="flanking-control">
             <label htmlFor="flanking-count">Flanking genes:</label>
             <input
