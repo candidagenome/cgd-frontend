@@ -24,8 +24,13 @@ function GeneSearch({ onGeneSelect, disabled }) {
       const data = await locusApi.searchGenesForSynteny(searchQuery);
       // Category search returns { results: [...], total_count: N }
       const genes = data.results || data.genes || data || [];
-      setResults(genes.slice(0, 10));
-      setShowDropdown(genes.length > 0);
+      // Filter out mitochondrial entries (prefix "mito_") as they don't have synteny data
+      const filteredGenes = genes.filter(gene => {
+        const geneName = gene.name || gene.gene_name || gene.feature_name || '';
+        return !geneName.toLowerCase().startsWith('mito_');
+      });
+      setResults(filteredGenes.slice(0, 10));
+      setShowDropdown(filteredGenes.length > 0);
       setSelectedIndex(-1);
     } catch (err) {
       console.error('Gene search error:', err);
