@@ -1265,32 +1265,9 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
                 >
                   View Locus Page
                 </a>
-                <a
-                  href={`/jbrowse?loc=${encodeURIComponent(selectedGene.feature_name)}`}
-                  className="gene-popup-link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  View in JBrowse
-                </a>
-                <a
-                  href={`/blast?query=${encodeURIComponent(selectedGene.feature_name)}`}
-                  className="gene-popup-link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  BLAST Search
-                </a>
               </div>
 
               <div className="gene-popup-actions">
-                <button
-                  type="button"
-                  className="gene-popup-action"
-                  onClick={() => centerOnGene(selectedGene, selectedGene.species)}
-                >
-                  Center View on This Gene
-                </button>
                 <button
                   type="button"
                   className="gene-popup-action secondary"
