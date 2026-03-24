@@ -15,9 +15,9 @@ const COLORS = {
   singletonGene: '#95a5a6',    // Gray - species-specific genes (no orthologs)
   watsonStrand: '#2ecc71',     // Green - Watson strand
   crickStrand: '#9b59b6',      // Purple - Crick strand
-  ribbon: '#c8c8c8',           // Light gray for regular ribbons
-  ribbonQuery: '#DDDADA',      // Light warm gray for query ortholog ribbons
-  ribbonStroke: '#b0b0b0',     // Gray for ribbon borders
+  ribbon: '#d0d0d0',           // Light gray for regular ribbons
+  ribbonQuery: '#b8b8b8',      // Cool gray for query ortholog ribbons (no warm tones)
+  ribbonStroke: '#c0c0c0',     // Gray for ribbon borders
   chromosome: '#ecf0f1',       // Very light gray for chromosome
   text: '#2c3e50',             // Dark text
   missingOrtholog: '#ffcc80',  // Orange for missing ortholog indicator
@@ -532,8 +532,8 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
 
         connectionsGroup.append('polygon')
           .attr('points', points.map(p => p.join(',')).join(' '))
-          .attr('fill', isQueryConnection ? COLORS.ribbonQuery : COLORS.ribbon)  // Darker gray for query connections
-          .attr('fill-opacity', isQueryConnection ? 0.3 : 0.15)
+          .attr('fill', isQueryConnection ? COLORS.ribbonQuery : COLORS.ribbon)
+          .attr('fill-opacity', isQueryConnection ? 0.25 : 0.12)
           .attr('stroke', COLORS.ribbonStroke)
           .attr('stroke-width', 0.5)
           .attr('stroke-opacity', 0.1)
@@ -728,7 +728,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
       svg.selectAll('.ortholog-connection').each(function() {
         const el = d3.select(this);
         const isQuery = el.classed('query-connection');
-        el.attr('fill-opacity', isQuery ? 0.3 : 0.15)
+        el.attr('fill-opacity', isQuery ? 0.25 : 0.12)
           .attr('stroke-opacity', 0.1)
           .attr('stroke-width', 0.5);
       });
