@@ -10,7 +10,7 @@ const COLORS = {
   queryGene: '#d32f2f',        // Strong red - the gene you searched for
   queryOrtholog: '#ef9a9a',    // Light red - orthologs (clearly lighter than query gene)
   queryOrthologStroke: '#e57373', // Medium red stroke for query orthologs
-  queryHighlight: 'rgba(255, 205, 210, 0.15)',  // Very subtle pink highlight
+  queryHighlight: 'rgba(200, 200, 200, 0.08)',  // Very subtle gray highlight (nearly invisible)
   orthologGene: '#3498db',     // Blue - other genes with orthologs
   singletonGene: '#95a5a6',    // Gray - species-specific genes (no orthologs)
   watsonStrand: '#2ecc71',     // Green - Watson strand
