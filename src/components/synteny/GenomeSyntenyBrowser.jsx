@@ -19,6 +19,8 @@ const COLORS = {
   ribbonStroke: '#a0a0a0',     // Slightly darker gray for ribbon borders
   chromosome: '#ecf0f1',       // Very light gray for chromosome
   text: '#2c3e50',             // Dark text
+  missingOrtholog: '#ffcc80',  // Orange for missing ortholog indicator
+  missingOrthologStroke: '#f57c00',  // Darker orange for stroke
 };
 
 // Species abbreviations for compact display
@@ -66,6 +68,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
   const [currentFlankingCount, setCurrentFlankingCount] = useState(5);
   const [needsInitialCenter, setNeedsInitialCenter] = useState(false);
   const [hoveredOrtholog, setHoveredOrtholog] = useState(null);
+  const [selectedGene, setSelectedGene] = useState(null); // For gene detail popup
 
   // Refs
   const containerRef = useRef(null);
@@ -138,10 +141,46 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
     }
   }, [loadSyntenyData]);
 
-  // Handle gene click navigation
-  const handleGeneClick = useCallback((featureName) => {
-    navigate(`/locus/${encodeURIComponent(featureName)}`);
-  }, [navigate]);
+  // Handle gene click - show detail popup instead of navigating directly
+  const handleGeneClick = useCallback((gene, species) => {
+    setSelectedGene({ ...gene, species });
+    setTooltip({ show: false, x: 0, y: 0, content: null }); // Hide tooltip
+  }, []);
+
+  // Close gene detail popup
+  const closeGenePopup = useCallback(() => {
+    setSelectedGene(null);
+  }, []);
+
+  // Center view on a specific gene
+  const centerOnGene = useCallback((gene, species) => {
+    if (!syntenyData) return;
+
+    const regions = syntenyData.synteny_regions || {};
+    const region = regions[species];
+    if (!region) return;
+
+    // Find the gene's position in its region
+    const genes = region.genes || [];
+    const targetGene = genes.find(g => g.feature_name === gene.feature_name);
+    if (!targetGene) return;
+
+    // Calculate relative position of this gene
+    const allCoords = genes.flatMap(g => [g.start, g.stop]);
+    const minCoord = Math.min(...allCoords);
+    const maxCoord = Math.max(...allCoords);
+    const padding = (maxCoord - minCoord) * 0.05;
+    const coordRange = (maxCoord + padding) - (minCoord - padding);
+    const geneCoord = (targetGene.start + targetGene.stop) / 2;
+    const relativePos = (geneCoord - (minCoord - padding)) / coordRange;
+
+    // Update the relative position ref and recalculate pan
+    queryGeneRelativeXRef.current = relativePos;
+    const newPan = calculateCenterOffset(zoomLevel);
+    setPanOffset(newPan);
+
+    closeGenePopup();
+  }, [syntenyData, zoomLevel, calculateCenterOffset, closeGenePopup]);
 
   // Toggle species visibility
   const toggleSpecies = (species) => {
@@ -402,8 +441,8 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
             .text(labelText);
         }
 
-        // Click handler
-        geneGroup.on('click', () => handleGeneClick(gene.feature_name));
+        // Click handler - open detail popup
+        geneGroup.on('click', () => handleGeneClick(gene, sd.species));
 
         // Hover handlers - highlight this gene's ortholog connections
         geneGroup.on('mouseenter', (event) => {
@@ -512,6 +551,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
             const xRight = xScale(geneRight);
             const geneWidth = Math.max(xRight - xLeft, 4);
             queryGenePositions.push({
+              species: sd.species,
               xLeft: xLeft,
               xRight: xLeft + geneWidth,
               yTop: sd.yPosition,
@@ -537,6 +577,76 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
             .attr('class', 'query-highlight');
         });
       }
+
+      // Draw missing ortholog indicators for species without query ortholog
+      const speciesWithQueryOrtholog = new Set(queryGenePositions.map(p => p.species));
+      const missingOrthologGroup = pannedGroup.append('g').attr('class', 'missing-ortholog-group');
+
+      speciesData.forEach(sd => {
+        if (speciesWithQueryOrtholog.has(sd.species)) return; // Has ortholog, skip
+
+        // Find average x position from species that have the ortholog
+        let avgX = effectiveWidth / 2;
+        if (queryGenePositions.length > 0) {
+          const avgLeft = queryGenePositions.reduce((sum, p) => sum + p.xLeft, 0) / queryGenePositions.length;
+          const avgRight = queryGenePositions.reduce((sum, p) => sum + p.xRight, 0) / queryGenePositions.length;
+          avgX = (avgLeft + avgRight) / 2;
+        }
+
+        // Draw dashed box indicator for missing ortholog
+        const indicatorWidth = 40;
+        const indicatorHeight = geneHeight - 4;
+        const x = avgX - indicatorWidth / 2;
+        const y = sd.yPosition + (trackHeight - indicatorHeight) / 2;
+
+        const missingGroup = missingOrthologGroup.append('g')
+          .attr('class', 'missing-ortholog-wrapper')
+          .style('cursor', 'help');
+
+        missingGroup.append('rect')
+          .attr('x', x)
+          .attr('y', y)
+          .attr('width', indicatorWidth)
+          .attr('height', indicatorHeight)
+          .attr('fill', COLORS.missingOrtholog)
+          .attr('fill-opacity', 0.3)
+          .attr('stroke', COLORS.missingOrthologStroke)
+          .attr('stroke-width', 1.5)
+          .attr('stroke-dasharray', '4,3')
+          .attr('rx', 3)
+          .attr('class', 'missing-ortholog-indicator')
+          .attr('data-species', sd.species);
+
+        // Add "?" label
+        missingGroup.append('text')
+          .attr('x', avgX)
+          .attr('y', sd.yPosition + trackHeight / 2)
+          .attr('text-anchor', 'middle')
+          .attr('dominant-baseline', 'middle')
+          .attr('class', 'missing-ortholog-label')
+          .style('font-size', '11px')
+          .style('font-weight', 'bold')
+          .style('fill', COLORS.missingOrthologStroke)
+          .text('?');
+
+        // Tooltip for missing ortholog
+        missingGroup.on('mouseenter', (event) => {
+          const rect = containerRef.current.getBoundingClientRect();
+          setTooltip({
+            show: true,
+            x: event.clientX - rect.left,
+            y: event.clientY - rect.top,
+            content: {
+              isMissingOrtholog: true,
+              organism: sd.species,
+            },
+          });
+        });
+
+        missingGroup.on('mouseleave', () => {
+          setTooltip({ show: false, x: 0, y: 0, content: null });
+        });
+      });
     }
 
     // Setup drag behavior for panning (only when zoomed in beyond 100%)
@@ -757,7 +867,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
   };
 
   // Download PNG
-  const handleDownload = () => {
+  const handleDownloadPNG = () => {
     if (!svgRef.current) return;
 
     const svgElement = svgRef.current;
@@ -794,6 +904,40 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
     };
 
     img.src = url;
+  };
+
+  // Download SVG (publication quality)
+  const handleDownloadSVG = () => {
+    if (!svgRef.current) return;
+
+    const svgElement = svgRef.current.cloneNode(true);
+
+    // Add white background
+    const bgRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    bgRect.setAttribute('width', '100%');
+    bgRect.setAttribute('height', '100%');
+    bgRect.setAttribute('fill', 'white');
+    svgElement.insertBefore(bgRect, svgElement.firstChild);
+
+    // Add XML declaration and doctype for better compatibility
+    const serializer = new XMLSerializer();
+    let svgString = serializer.serializeToString(svgElement);
+
+    // Add namespace if missing
+    if (!svgString.includes('xmlns=')) {
+      svgString = svgString.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+    }
+
+    const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(svgBlob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `synteny_${queryGeneName || 'view'}.svg`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   // Get zoom level label
@@ -946,22 +1090,39 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
               top: tooltip.y + 10,
             }}
           >
-            <div className="tooltip-header">
-              <strong>{tooltip.content.geneName || tooltip.content.featureName}</strong>
-              {tooltip.content.isQuery && <span className="query-badge">Query</span>}
-            </div>
-            {tooltip.content.geneName && tooltip.content.featureName !== tooltip.content.geneName && (
-              <div>Systematic: {tooltip.content.featureName}</div>
+            {tooltip.content.isMissingOrtholog ? (
+              <>
+                <div className="tooltip-header">
+                  <strong>No Ortholog Found</strong>
+                </div>
+                <div className="tooltip-organism" style={{ fontStyle: 'italic' }}>
+                  {SPECIES_ABBREV[tooltip.content.organism] || tooltip.content.organism}
+                </div>
+                <div className="tooltip-hint">
+                  No ortholog of the query gene was found in this species.
+                  This could indicate gene loss or incomplete annotation.
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="tooltip-header">
+                  <strong>{tooltip.content.geneName || tooltip.content.featureName}</strong>
+                  {tooltip.content.isQuery && <span className="query-badge">Query</span>}
+                </div>
+                {tooltip.content.geneName && tooltip.content.featureName !== tooltip.content.geneName && (
+                  <div>Systematic: {tooltip.content.featureName}</div>
+                )}
+                <div>Location: {tooltip.content.start?.toLocaleString()} - {tooltip.content.stop?.toLocaleString()}</div>
+                <div>Strand: {tooltip.content.strand}</div>
+                {tooltip.content.orthologId && (
+                  <div>Ortholog cluster: {tooltip.content.orthologId}</div>
+                )}
+                <div className="tooltip-organism" style={{ fontStyle: 'italic' }}>
+                  {SPECIES_ABBREV[tooltip.content.organism] || tooltip.content.organism}
+                </div>
+                <div className="tooltip-hint">Click for gene details</div>
+              </>
             )}
-            <div>Location: {tooltip.content.start?.toLocaleString()} - {tooltip.content.stop?.toLocaleString()}</div>
-            <div>Strand: {tooltip.content.strand}</div>
-            {tooltip.content.orthologId && (
-              <div>Ortholog cluster: {tooltip.content.orthologId}</div>
-            )}
-            <div className="tooltip-organism" style={{ fontStyle: 'italic' }}>
-              {SPECIES_ABBREV[tooltip.content.organism] || tooltip.content.organism}
-            </div>
-            <div className="tooltip-hint">Click to view locus page</div>
           </div>
         )}
       </div>
@@ -986,6 +1147,10 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
             Species-specific
           </span>
           <span className="legend-item">
+            <span className="legend-box missing" />
+            No Ortholog Found
+          </span>
+          <span className="legend-item">
             <span className="legend-arrow watson" />
             Forward (+)
           </span>
@@ -1004,12 +1169,121 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
         <button
           type="button"
           className="download-btn"
-          onClick={handleDownload}
+          onClick={handleDownloadPNG}
           disabled={!syntenyData}
         >
-          Download (.png)
+          Download PNG
+        </button>
+        <button
+          type="button"
+          className="download-btn download-svg"
+          onClick={handleDownloadSVG}
+          disabled={!syntenyData}
+        >
+          Download SVG
         </button>
       </div>
+
+      {/* Gene Detail Popup */}
+      {selectedGene && (
+        <div className="gene-popup-overlay" onClick={closeGenePopup}>
+          <div className="gene-popup" onClick={(e) => e.stopPropagation()}>
+            <button className="gene-popup-close" onClick={closeGenePopup} type="button">
+              &times;
+            </button>
+            <div className="gene-popup-header">
+              <h3>{selectedGene.gene_name || selectedGene.feature_name}</h3>
+              {selectedGene.is_query && <span className="query-badge">Query Gene</span>}
+            </div>
+
+            <div className="gene-popup-content">
+              <div className="gene-popup-section">
+                <div className="gene-popup-row">
+                  <span className="label">Systematic Name:</span>
+                  <span className="value">{selectedGene.feature_name}</span>
+                </div>
+                {selectedGene.gene_name && selectedGene.gene_name !== selectedGene.feature_name && (
+                  <div className="gene-popup-row">
+                    <span className="label">Standard Name:</span>
+                    <span className="value">{selectedGene.gene_name}</span>
+                  </div>
+                )}
+                <div className="gene-popup-row">
+                  <span className="label">Species:</span>
+                  <span className="value" style={{ fontStyle: 'italic' }}>
+                    {SPECIES_ABBREV[selectedGene.species] || selectedGene.species}
+                  </span>
+                </div>
+                <div className="gene-popup-row">
+                  <span className="label">Location:</span>
+                  <span className="value">
+                    {selectedGene.start?.toLocaleString()} - {selectedGene.stop?.toLocaleString()}
+                  </span>
+                </div>
+                <div className="gene-popup-row">
+                  <span className="label">Strand:</span>
+                  <span className="value">
+                    {selectedGene.strand === 'W' || selectedGene.strand === '+' ? 'Forward (+)' : 'Reverse (-)'}
+                  </span>
+                </div>
+                {geneToOrtholog[selectedGene.feature_name] && (
+                  <div className="gene-popup-row">
+                    <span className="label">Ortholog Cluster:</span>
+                    <span className="value">{geneToOrtholog[selectedGene.feature_name]}</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="gene-popup-links">
+                <a
+                  href={`/locus/${encodeURIComponent(selectedGene.feature_name)}`}
+                  className="gene-popup-link primary"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View Locus Page
+                </a>
+                <a
+                  href={`/jbrowse?loc=${encodeURIComponent(selectedGene.feature_name)}`}
+                  className="gene-popup-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View in JBrowse
+                </a>
+                <a
+                  href={`/blast?query=${encodeURIComponent(selectedGene.feature_name)}`}
+                  className="gene-popup-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  BLAST Search
+                </a>
+              </div>
+
+              <div className="gene-popup-actions">
+                <button
+                  type="button"
+                  className="gene-popup-action"
+                  onClick={() => centerOnGene(selectedGene, selectedGene.species)}
+                >
+                  Center View on This Gene
+                </button>
+                <button
+                  type="button"
+                  className="gene-popup-action secondary"
+                  onClick={() => {
+                    loadSyntenyData(selectedGene.gene_name || selectedGene.feature_name);
+                    closeGenePopup();
+                  }}
+                >
+                  Set as Query Gene
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
