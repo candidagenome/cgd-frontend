@@ -451,9 +451,7 @@
   transition: stroke-width 0.15s ease;
 }
 
-.ortholog-connection.query-connection {
-  filter: drop-shadow(0 0 3px rgba(230, 126, 34, 0.7)) drop-shadow(0 0 6px rgba(230, 126, 34, 0.4));
-}
+/* Query connections use darker gray color, no filter needed */
 
 /* Tooltip */
 .browser-tooltip {
