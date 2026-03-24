@@ -219,7 +219,8 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
 
         // Determine fill color
         let fillColor;
-        if (gene.is_query) {
+        const isQueryGene = gene.is_query && sd.species === querySpecies;
+        if (isQueryGene) {
           fillColor = COLORS.queryGene;
         } else if (orthologId && orthologId === queryOrthologId) {
           fillColor = COLORS.queryOrtholog;
@@ -253,8 +254,8 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
         trackGroup.append('polygon')
           .attr('points', points.map(p => p.join(',')).join(' '))
           .attr('fill', fillColor)
-          .attr('stroke', gene.is_query ? '#c0392b' : '#888')
-          .attr('stroke-width', gene.is_query ? 1.5 : 0.5)
+          .attr('stroke', isQueryGene ? '#c0392b' : '#888')
+          .attr('stroke-width', isQueryGene ? 1.5 : 0.5)
           .attr('class', 'gene-shape');
 
         // Only show label for query gene or query orthologs

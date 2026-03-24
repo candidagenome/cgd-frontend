@@ -277,8 +277,9 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
     queryGeneXRef.current = queryGeneX;
     queryGeneRelativeXRef.current = queryGeneRelative;
 
-    // Find query gene's ortholog_id for color coding
+    // Find query gene's ortholog_id and species for color coding
     let queryOrthologId = null;
+    const querySpecies = syntenyData.query_gene?.organism;
     speciesData.forEach(sd => {
       const genes = sd.genes || [];
       const queryGene = genes.find(g => g.is_query);
@@ -333,13 +334,14 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
         const y = (trackHeight - geneHeight) / 2;
 
         // Determine fill color using simplified scheme:
-        // Red = query gene, Orange = query's orthologs, Blue = other orthologs, Gray = no orthologs
+        // Dark red = query gene (in query species), Light red = query's orthologs, Blue = other orthologs, Gray = no orthologs
         let fillColor;
+        const isQueryGene = gene.is_query && sd.species === querySpecies;
 
-        if (gene.is_query) {
-          fillColor = COLORS.queryGene;  // Red - the gene you searched for
+        if (isQueryGene) {
+          fillColor = COLORS.queryGene;  // Dark red - the gene you searched for
         } else if (orthologId && orthologId === queryOrthologId) {
-          fillColor = COLORS.queryOrtholog;  // Orange - orthologs of your query gene
+          fillColor = COLORS.queryOrtholog;  // Light red - orthologs of your query gene
         } else if (orthologId) {
           fillColor = COLORS.orthologGene;  // Blue - other genes with orthologs
         } else {
@@ -372,8 +374,8 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
         geneGroup.append('polygon')
           .attr('points', points.map(p => p.join(',')).join(' '))
           .attr('fill', fillColor)
-          .attr('stroke', gene.is_query ? '#c0392b' : '#666')
-          .attr('stroke-width', gene.is_query ? 2 : 1)
+          .attr('stroke', isQueryGene ? '#c0392b' : '#666')
+          .attr('stroke-width', isQueryGene ? 2 : 1)
           .attr('class', 'gene-shape');
 
         // Gene label - smart truncation based on available width
