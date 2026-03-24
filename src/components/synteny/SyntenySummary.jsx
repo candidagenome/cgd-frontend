@@ -7,7 +7,7 @@ import './SyntenySummary.css';
 // Color scheme matching the full viewer - 3-level red palette
 const COLORS = {
   queryGene: '#d32f2f',        // Strong red
-  queryOrtholog: '#e57373',    // Medium red
+  queryOrtholog: '#ef9a9a',    // Light-medium red
   queryConnection: '#ef9a9a',  // Light red for connections
   orthologGene: '#3498db',
   singletonGene: '#95a5a6',
@@ -352,11 +352,11 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
       </div>
       <div className="synteny-summary-canvas" ref={containerRef} />
       <div className="synteny-summary-legend">
-        <span className="legend-item">
+        <span className="legend-item query-item">
           <span className="legend-box query" />
           Query
         </span>
-        <span className="legend-item">
+        <span className="legend-item ortholog-item">
           <span className="legend-box ortholog" />
           Ortholog
         </span>

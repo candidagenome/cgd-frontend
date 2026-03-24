@@ -8,7 +8,7 @@ import './GenomeSyntenyBrowser.css';
 // Color scheme for synteny visualization - 3-level red palette for query hierarchy
 const COLORS = {
   queryGene: '#d32f2f',        // Strong red - the gene you searched for
-  queryOrtholog: '#e57373',    // Medium red - orthologs of your query gene
+  queryOrtholog: '#ef9a9a',    // Light-medium red - orthologs of your query gene
   queryConnection: '#ef9a9a',  // Light red - connection ribbons for query orthologs
   orthologGene: '#3498db',     // Blue - other genes with orthologs
   singletonGene: '#95a5a6',    // Gray - species-specific genes (no orthologs)
@@ -907,11 +907,11 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
       {/* Footer */}
       <div className="browser-footer">
         <div className="browser-legend">
-          <span className="legend-item">
+          <span className="legend-item query-gene-item">
             <span className="legend-box query" />
             Query Gene
           </span>
-          <span className="legend-item">
+          <span className="legend-item query-ortholog-item">
             <span className="legend-box query-ortholog" />
             Query Ortholog
           </span>

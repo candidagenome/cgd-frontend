@@ -45,7 +45,7 @@
 
 .synteny-summary-legend {
   display: flex;
-  gap: 12px;
+  gap: 14px;
   padding: 6px 12px;
   background: #fafafa;
   border-top: 1px solid #e0e0e0;
@@ -56,22 +56,29 @@
 .synteny-summary-legend .legend-item {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
+}
+
+.synteny-summary-legend .legend-item.query-item {
+  font-weight: 600;
+  color: #555;
 }
 
 .synteny-summary-legend .legend-box {
-  width: 10px;
-  height: 8px;
+  width: 12px;
+  height: 9px;
   border-radius: 2px;
   border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .synteny-summary-legend .legend-box.query {
   background-color: #d32f2f;
+  border-color: #b71c1c;
 }
 
 .synteny-summary-legend .legend-box.ortholog {
-  background-color: #e57373;
+  background-color: #ef9a9a;
+  border-color: #c62828;
 }
 
 .synteny-summary-legend .legend-box.other-ortholog {

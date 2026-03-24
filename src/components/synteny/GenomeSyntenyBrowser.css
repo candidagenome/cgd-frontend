@@ -588,7 +588,7 @@
 /* Legend */
 .browser-legend {
   display: flex;
-  gap: 20px;
+  gap: 24px;
   font-size: 0.85rem;
   color: #333;
   flex-wrap: wrap;
@@ -597,25 +597,31 @@
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+}
+
+.legend-item.query-gene-item {
+  font-weight: 600;
 }
 
 .legend-box {
   display: inline-block;
-  width: 16px;
-  height: 12px;
+  width: 20px;
+  height: 14px;
   border-radius: 2px;
-  border: 1px solid #666;
+  border: 1.5px solid #666;
 }
 
 .legend-box.query {
   background-color: #d32f2f;
   border-color: #b71c1c;
+  border-width: 2px;
 }
 
 .legend-box.query-ortholog {
-  background-color: #e57373;
+  background-color: #ef9a9a;
   border-color: #c62828;
+  border-width: 2px;
 }
 
 .legend-box.ortholog {
