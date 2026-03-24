@@ -6,7 +6,7 @@ import './SyntenyViewer.css';
 
 // Color scheme for synteny visualization
 const COLORS = {
-  queryGene: '#e74c3c',        // Red - query gene
+  queryGene: '#d32f2f',        // Strong red - query gene
   orthologGene: '#3498db',     // Blue - gene with orthologs
   singletonGene: '#95a5a6',    // Gray - gene without orthologs
   watsonStrand: '#2ecc71',     // Green - Watson strand indicator

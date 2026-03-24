@@ -4,10 +4,11 @@ import * as d3 from 'd3';
 import { locusApi } from '../../api/locusApi';
 import './SyntenySummary.css';
 
-// Color scheme matching the full viewer
+// Color scheme matching the full viewer - 3-level red palette
 const COLORS = {
-  queryGene: '#e74c3c',
-  queryOrtholog: '#f5b7b1',
+  queryGene: '#d32f2f',        // Strong red
+  queryOrtholog: '#e57373',    // Medium red
+  queryConnection: '#ef9a9a',  // Light red for connections
   orthologGene: '#3498db',
   singletonGene: '#95a5a6',
 };
@@ -254,7 +255,7 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
         trackGroup.append('polygon')
           .attr('points', points.map(p => p.join(',')).join(' '))
           .attr('fill', fillColor)
-          .attr('stroke', isQueryGene ? '#c0392b' : '#888')
+          .attr('stroke', isQueryGene ? '#b71c1c' : '#888')
           .attr('stroke-width', isQueryGene ? 1.5 : 0.5)
           .attr('class', 'gene-shape');
 
@@ -304,7 +305,7 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
           g.append('path')
             .attr('d', `M${p1.x},${p1.y + geneHeight / 2} C${p1.x},${midY} ${p2.x},${midY} ${p2.x},${p2.y - geneHeight / 2}`)
             .attr('fill', 'none')
-            .attr('stroke', COLORS.queryOrtholog)
+            .attr('stroke', COLORS.queryConnection)
             .attr('stroke-width', 2)
             .attr('stroke-opacity', 0.6);
         }

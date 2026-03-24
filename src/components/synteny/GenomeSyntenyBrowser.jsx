@@ -5,10 +5,11 @@ import { locusApi } from '../../api/locusApi';
 import GeneSearch from './GeneSearch';
 import './GenomeSyntenyBrowser.css';
 
-// Color scheme for synteny visualization
+// Color scheme for synteny visualization - 3-level red palette for query hierarchy
 const COLORS = {
-  queryGene: '#e74c3c',        // Dark red - the gene you searched for
-  queryOrtholog: '#f5b7b1',    // Light red - orthologs of your query gene
+  queryGene: '#d32f2f',        // Strong red - the gene you searched for
+  queryOrtholog: '#e57373',    // Medium red - orthologs of your query gene
+  queryConnection: '#ef9a9a',  // Light red - connection ribbons for query orthologs
   orthologGene: '#3498db',     // Blue - other genes with orthologs
   singletonGene: '#95a5a6',    // Gray - species-specific genes (no orthologs)
   watsonStrand: '#2ecc71',     // Green - Watson strand
@@ -374,7 +375,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
         geneGroup.append('polygon')
           .attr('points', points.map(p => p.join(',')).join(' '))
           .attr('fill', fillColor)
-          .attr('stroke', isQueryGene ? '#c0392b' : '#666')
+          .attr('stroke', isQueryGene ? '#b71c1c' : '#666')
           .attr('stroke-width', isQueryGene ? 2 : 1)
           .attr('class', 'gene-shape');
 
@@ -463,10 +464,10 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
         if (p1.species === p2.species) continue;
 
         const midY = (p1.y + p2.y) / 2;
-        // Use simplified colors: orange for query connections, blue for others
-        // Query connections: thick, prominent, with glow - the "main story"
+        // Use 3-level red palette: light red for query connections, blue for others
+        // Query connections: thick, prominent - the "main story"
         // Other connections: very subtle to reduce visual clutter
-        const connColor = isQueryConnection ? COLORS.queryOrtholog : COLORS.orthologGene;
+        const connColor = isQueryConnection ? COLORS.queryConnection : COLORS.orthologGene;
         connectionsGroup.append('path')
           .attr('d', `M${p1.x},${p1.y + geneHeight / 2} C${p1.x},${midY} ${p2.x},${midY} ${p2.x},${p2.y - geneHeight / 2}`)
           .attr('fill', 'none')
