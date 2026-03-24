@@ -7,7 +7,7 @@ import './SyntenySummary.css';
 // Color scheme matching the full viewer
 const COLORS = {
   queryGene: '#e74c3c',
-  queryOrtholog: '#e67e22',
+  queryOrtholog: '#f1948a',
   orthologGene: '#3498db',
   singletonGene: '#95a5a6',
 };

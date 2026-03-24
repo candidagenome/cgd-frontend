@@ -614,8 +614,8 @@
 }
 
 .legend-box.query-ortholog {
-  background-color: #e67e22;
-  border-color: #d35400;
+  background-color: #f1948a;
+  border-color: #e57373;
 }
 
 .legend-box.ortholog {
@@ -637,12 +637,12 @@
 
 .legend-arrow.watson {
   border-width: 6px 0 6px 10px;
-  border-color: transparent transparent transparent #2ecc71;
+  border-color: transparent transparent transparent #333;
 }
 
 .legend-arrow.crick {
   border-width: 6px 10px 6px 0;
-  border-color: transparent #9b59b6 transparent transparent;
+  border-color: transparent #333 transparent transparent;
 }
 
 /* Date stamp */

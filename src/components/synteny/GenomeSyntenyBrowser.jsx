@@ -7,8 +7,8 @@ import './GenomeSyntenyBrowser.css';
 
 // Color scheme for synteny visualization
 const COLORS = {
-  queryGene: '#e74c3c',        // Red - the gene you searched for
-  queryOrtholog: '#e67e22',    // Orange - orthologs of your query gene
+  queryGene: '#e74c3c',        // Dark red - the gene you searched for
+  queryOrtholog: '#f1948a',    // Light red - orthologs of your query gene
   orthologGene: '#3498db',     // Blue - other genes with orthologs
   singletonGene: '#95a5a6',    // Gray - species-specific genes (no orthologs)
   watsonStrand: '#2ecc71',     // Green - Watson strand
