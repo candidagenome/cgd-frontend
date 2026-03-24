@@ -72,6 +72,39 @@ export const locusApi = {
     const response = await api.get(`/api/locus/${encodeURIComponent(name)}/domain_details`);
     return response.data;
   },
+
+  // Get synteny data for visualization
+  getSyntenyData: async (name, flankingCount = 10) => {
+    const response = await api.get(
+      `/api/locus/${encodeURIComponent(name)}/synteny?flanking_count=${flankingCount}`
+    );
+    return response.data;
+  },
+
+  // Get list of all chromosomes for genome synteny browser
+  getChromosomeList: async () => {
+    const response = await api.get('/api/synteny/chromosomes');
+    return response.data;
+  },
+
+  // Get genes for a specific chromosome region
+  getChromosomeGenes: async (chromosome, windowStart = null, windowEnd = null) => {
+    let url = `/api/synteny/chromosome/${encodeURIComponent(chromosome)}`;
+    const params = [];
+    if (windowStart !== null) params.push(`window_start=${windowStart}`);
+    if (windowEnd !== null) params.push(`window_end=${windowEnd}`);
+    if (params.length > 0) url += `?${params.join('&')}`;
+    const response = await api.get(url);
+    return response.data;
+  },
+
+  // Search genes for synteny browser autocomplete
+  searchGenesForSynteny: async (query) => {
+    const response = await api.get(
+      `/api/search/category?category=genes&query=${encodeURIComponent(query)}`
+    );
+    return response.data;
+  },
 };
 
 export default locusApi;

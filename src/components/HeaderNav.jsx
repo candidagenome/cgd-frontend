@@ -67,7 +67,8 @@ const HeaderNav = () => {
         { label: 'PatMatch', to: '/patmatch' },
         { label: 'Primers', to: '/webprimer' },
         { label: 'Phenotype Search', to: '/phenotype/search' },
-        { label: 'Restriction Mapper', to: '/restriction-mapper' }
+        { label: 'Restriction Mapper', to: '/restriction-mapper' },
+        { label: 'Synteny Browser', to: '/synteny-browser' }
       ]
     },
     {

@@ -152,6 +152,7 @@ function LocusPage() {
             error={errors.homologyDetails}
             selectedOrganism={selectedOrganism}
             onOrganismChange={setSelectedOrganism}
+            locusName={name}
           />
         );
 
