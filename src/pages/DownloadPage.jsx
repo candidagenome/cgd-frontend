@@ -91,16 +91,6 @@ const DownloadPage = () => {
           </div>
 
           <div className="help-item">
-            <h3><strong>Supplementary Data for <em>C. albicans</em> Assembly 19</strong></h3>
-            <p>
-              The supplement to the <em>C. albicans</em> genomic sequencing paper, <a href="http://www.pnas.org/cgi/content/full/101/19/7329" target="_blank" rel="noopener noreferrer">Jones et al., 2004</a>. Access information about heterozygous polymorphism, raw contigs from the Phrap assembly, sequence omitted from diploid Assembly 19 (rDNA, mtDNA, etc.), and more.
-            </p>
-            <div className="help-links">
-              <a href="http://genome-www.stanford.edu/candida-pnas2004-supplement/" target="_blank" rel="noopener noreferrer">Go to the Index Page</a>
-            </div>
-          </div>
-
-          <div className="help-item">
             <h3><strong><em>C. albicans</em> Assembly 19 Contig Diagrams</strong></h3>
             <p>
               These PDF files depict the assembly of Contig19's from Contig6's by the Stanford Genome Technology Center (SGTC). These files were originally made available from the <em>Candida</em> web server at the SGTC, and copies are archived here at CGD.
