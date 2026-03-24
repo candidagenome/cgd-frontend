@@ -8,15 +8,16 @@ import './GenomeSyntenyBrowser.css';
 // Color scheme for synteny visualization - Sybil-inspired style
 const COLORS = {
   queryGene: '#d32f2f',        // Strong red - the gene you searched for
-  queryOrtholog: '#ef5350',    // Medium red - orthologs of your query gene (more visible)
-  queryOrthologGlow: '#ffcdd2', // Light red glow for query orthologs
-  queryHighlight: 'rgba(255, 205, 210, 0.15)',  // Very subtle pink highlight (reduced opacity)
+  queryOrtholog: '#ef9a9a',    // Light red - orthologs (clearly lighter than query gene)
+  queryOrthologStroke: '#e57373', // Medium red stroke for query orthologs
+  queryHighlight: 'rgba(255, 205, 210, 0.15)',  // Very subtle pink highlight
   orthologGene: '#3498db',     // Blue - other genes with orthologs
   singletonGene: '#95a5a6',    // Gray - species-specific genes (no orthologs)
   watsonStrand: '#2ecc71',     // Green - Watson strand
   crickStrand: '#9b59b6',      // Purple - Crick strand
-  ribbon: '#787878',           // Neutral gray for ribbons (genes stay the focus)
-  ribbonStroke: '#606060',     // Darker gray for subtle ribbon borders
+  ribbon: '#a0a0a0',           // Light gray for regular ribbons
+  ribbonQuery: '#686868',      // Darker gray for query ortholog ribbons
+  ribbonStroke: '#888888',     // Gray for ribbon borders
   chromosome: '#ecf0f1',       // Very light gray for chromosome
   text: '#2c3e50',             // Dark text
   missingOrtholog: '#ffcc80',  // Orange for missing ortholog indicator
@@ -362,11 +363,10 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
         const y = (trackHeight - geneHeight) / 2;
 
         // Determine fill color and styling
-        // Dark red = query gene, Medium red with glow = query's orthologs, Blue = other orthologs, Gray = no orthologs
+        // Dark red = query gene, Light red = query's orthologs, Blue = other orthologs, Gray = no orthologs
         let fillColor;
         let strokeColor;
         let strokeWidth;
-        let applyGlow = false;
         const isQueryGene = gene.is_query && sd.species === querySpecies;
         const isQueryOrtholog = !isQueryGene && orthologId && orthologId === queryOrthologId;
 
@@ -375,10 +375,9 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
           strokeColor = '#b71c1c';
           strokeWidth = 2.5;
         } else if (isQueryOrtholog) {
-          fillColor = COLORS.queryOrtholog;  // Medium red with glow - orthologs of your query gene
-          strokeColor = '#c62828';
+          fillColor = COLORS.queryOrtholog;  // Light red - orthologs of your query gene
+          strokeColor = COLORS.queryOrthologStroke;
           strokeWidth = 2;
-          applyGlow = true;
         } else if (orthologId) {
           fillColor = COLORS.orthologGene;  // Blue - other genes with orthologs
           strokeColor = '#2980b9';
@@ -419,10 +418,6 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
           .attr('stroke-width', strokeWidth)
           .attr('class', 'gene-shape');
 
-        // Apply glow filter to query orthologs for emphasis
-        if (applyGlow) {
-          genePolygon.attr('filter', 'url(#query-glow)');
-        }
 
         // Gene label - smart truncation based on available width
         const rawLabel = gene.gene_name || gene.feature_name || '';
@@ -537,8 +532,8 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
 
         connectionsGroup.append('polygon')
           .attr('points', points.map(p => p.join(',')).join(' '))
-          .attr('fill', COLORS.ribbon)
-          .attr('fill-opacity', isQueryConnection ? 0.25 : 0.15)  // Very subtle - genes stay the focus
+          .attr('fill', isQueryConnection ? COLORS.ribbonQuery : COLORS.ribbon)  // Darker gray for query connections
+          .attr('fill-opacity', isQueryConnection ? 0.3 : 0.15)
           .attr('stroke', COLORS.ribbonStroke)
           .attr('stroke-width', 0.5)
           .attr('stroke-opacity', 0.1)
@@ -746,11 +741,11 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
           return (stroke === '#b71c1c' || stroke === '#c62828') ? 2 : 1;
         });
 
-      // Reset ribbon connections to their base opacity (very subtle)
+      // Reset ribbon connections to their base opacity
       svg.selectAll('.ortholog-connection').each(function() {
         const el = d3.select(this);
         const isQuery = el.classed('query-connection');
-        el.attr('fill-opacity', isQuery ? 0.25 : 0.15)
+        el.attr('fill-opacity', isQuery ? 0.3 : 0.15)
           .attr('stroke-opacity', 0.1)
           .attr('stroke-width', 0.5);
       });
