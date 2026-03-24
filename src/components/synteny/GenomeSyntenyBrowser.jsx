@@ -20,8 +20,6 @@ const COLORS = {
   ribbonStroke: '#aaaaaa',     // Gray for ribbon borders
   chromosome: '#ecf0f1',       // Very light gray for chromosome
   text: '#2c3e50',             // Dark text
-  missingOrtholog: '#ffcc80',  // Orange for missing ortholog indicator
-  missingOrthologStroke: '#f57c00',  // Darker orange for stroke
 };
 
 // Species abbreviations for compact display
@@ -567,75 +565,6 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
         });
       });
 
-      // Draw missing ortholog indicators for species without query ortholog
-      const speciesWithQueryOrtholog = new Set(queryGenePositions.map(p => p.species));
-      const missingOrthologGroup = pannedGroup.append('g').attr('class', 'missing-ortholog-group');
-
-      speciesData.forEach(sd => {
-        if (speciesWithQueryOrtholog.has(sd.species)) return; // Has ortholog, skip
-
-        // Find average x position from species that have the ortholog
-        let avgX = effectiveWidth / 2;
-        if (queryGenePositions.length > 0) {
-          const avgLeft = queryGenePositions.reduce((sum, p) => sum + p.xLeft, 0) / queryGenePositions.length;
-          const avgRight = queryGenePositions.reduce((sum, p) => sum + p.xRight, 0) / queryGenePositions.length;
-          avgX = (avgLeft + avgRight) / 2;
-        }
-
-        // Draw dashed box indicator for missing ortholog
-        const indicatorWidth = 40;
-        const indicatorHeight = geneHeight - 4;
-        const x = avgX - indicatorWidth / 2;
-        const y = sd.yPosition + (trackHeight - indicatorHeight) / 2;
-
-        const missingGroup = missingOrthologGroup.append('g')
-          .attr('class', 'missing-ortholog-wrapper')
-          .style('cursor', 'help');
-
-        missingGroup.append('rect')
-          .attr('x', x)
-          .attr('y', y)
-          .attr('width', indicatorWidth)
-          .attr('height', indicatorHeight)
-          .attr('fill', COLORS.missingOrtholog)
-          .attr('fill-opacity', 0.3)
-          .attr('stroke', COLORS.missingOrthologStroke)
-          .attr('stroke-width', 1.5)
-          .attr('stroke-dasharray', '4,3')
-          .attr('rx', 3)
-          .attr('class', 'missing-ortholog-indicator')
-          .attr('data-species', sd.species);
-
-        // Add "?" label
-        missingGroup.append('text')
-          .attr('x', avgX)
-          .attr('y', sd.yPosition + trackHeight / 2)
-          .attr('text-anchor', 'middle')
-          .attr('dominant-baseline', 'middle')
-          .attr('class', 'missing-ortholog-label')
-          .style('font-size', '11px')
-          .style('font-weight', 'bold')
-          .style('fill', COLORS.missingOrthologStroke)
-          .text('?');
-
-        // Tooltip for missing ortholog
-        missingGroup.on('mouseenter', (event) => {
-          const rect = containerRef.current.getBoundingClientRect();
-          setTooltip({
-            show: true,
-            x: event.clientX - rect.left,
-            y: event.clientY - rect.top,
-            content: {
-              isMissingOrtholog: true,
-              organism: sd.species,
-            },
-          });
-        });
-
-        missingGroup.on('mouseleave', () => {
-          setTooltip({ show: false, x: 0, y: 0, content: null });
-        });
-      });
     }
 
     // Setup drag behavior for panning (only when zoomed in beyond 100%)
@@ -1112,39 +1041,22 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
               top: tooltip.y + 10,
             }}
           >
-            {tooltip.content.isMissingOrtholog ? (
-              <>
-                <div className="tooltip-header">
-                  <strong>No Ortholog Found</strong>
-                </div>
-                <div className="tooltip-organism" style={{ fontStyle: 'italic' }}>
-                  {SPECIES_ABBREV[tooltip.content.organism] || tooltip.content.organism}
-                </div>
-                <div className="tooltip-hint">
-                  No ortholog of the query gene was found in this species.
-                  This could indicate gene loss or incomplete annotation.
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="tooltip-header">
-                  <strong>{tooltip.content.geneName || tooltip.content.featureName}</strong>
-                  {tooltip.content.isQuery && <span className="query-badge">Query</span>}
-                </div>
-                {tooltip.content.geneName && tooltip.content.featureName !== tooltip.content.geneName && (
-                  <div>Systematic: {tooltip.content.featureName}</div>
-                )}
-                <div>Location: {tooltip.content.start?.toLocaleString()} - {tooltip.content.stop?.toLocaleString()}</div>
-                <div>Strand: {tooltip.content.strand}</div>
-                {tooltip.content.orthologId && (
-                  <div>Ortholog cluster: {tooltip.content.orthologId}</div>
-                )}
-                <div className="tooltip-organism" style={{ fontStyle: 'italic' }}>
-                  {SPECIES_ABBREV[tooltip.content.organism] || tooltip.content.organism}
-                </div>
-                <div className="tooltip-hint">Click for details | Double-click to center</div>
-              </>
+            <div className="tooltip-header">
+              <strong>{tooltip.content.geneName || tooltip.content.featureName}</strong>
+              {tooltip.content.isQuery && <span className="query-badge">Query</span>}
+            </div>
+            {tooltip.content.geneName && tooltip.content.featureName !== tooltip.content.geneName && (
+              <div>Systematic: {tooltip.content.featureName}</div>
             )}
+            <div>Location: {tooltip.content.start?.toLocaleString()} - {tooltip.content.stop?.toLocaleString()}</div>
+            <div>Strand: {tooltip.content.strand}</div>
+            {tooltip.content.orthologId && (
+              <div>Ortholog cluster: {tooltip.content.orthologId}</div>
+            )}
+            <div className="tooltip-organism" style={{ fontStyle: 'italic' }}>
+              {SPECIES_ABBREV[tooltip.content.organism] || tooltip.content.organism}
+            </div>
+            <div className="tooltip-hint">Click for details | Double-click to center</div>
           </div>
         )}
       </div>
@@ -1167,10 +1079,6 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
           <span className="legend-item">
             <span className="legend-box singleton" />
             Species-specific
-          </span>
-          <span className="legend-item">
-            <span className="legend-box missing" />
-            No Ortholog Found
           </span>
           <span className="legend-item">
             <span className="legend-arrow watson" />
