@@ -4,14 +4,16 @@ import * as d3 from 'd3';
 import { locusApi } from '../../api/locusApi';
 import './SyntenyViewer.css';
 
-// Color scheme for synteny visualization
+// Color scheme for synteny visualization - Sybil-inspired style
 const COLORS = {
   queryGene: '#d32f2f',        // Strong red - query gene
+  queryHighlight: 'rgba(255, 182, 193, 0.4)',  // Light pink for vertical query column
   orthologGene: '#3498db',     // Blue - gene with orthologs
   singletonGene: '#95a5a6',    // Gray - gene without orthologs
   watsonStrand: '#2ecc71',     // Green - Watson strand indicator
   crickStrand: '#9b59b6',      // Purple - Crick strand indicator
-  connector: '#bdc3c7',        // Light gray for ortholog connections
+  ribbon: '#c0c0c0',           // Gray for Sybil-style ribbons
+  ribbonStroke: '#a0a0a0',     // Slightly darker gray for ribbon borders
   chromosome: '#ecf0f1',       // Very light gray for chromosome
   text: '#2c3e50',             // Dark text
 };
@@ -271,45 +273,109 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
       });
     });
 
-    // Draw ortholog connections between tracks
-    connections.forEach(conn => {
-      const connColor = colorScale(conn.ortholog_id);
+    // Find query gene's ortholog_id for highlighting
+    let queryOrthologId = null;
+    speciesData.forEach(sd => {
+      const genes = sd.genes || [];
+      const queryGene = genes.find(g => g.is_query);
+      if (queryGene) {
+        queryOrthologId = geneToOrtholog[queryGene.feature_name];
+      }
+    });
 
-      // Find genes in this connection across species
+    // Draw Sybil-style ribbon connections between tracks (insert at beginning so genes render on top)
+    const connectionsGroup = g.insert('g', ':first-child').attr('class', 'connections-group');
+
+    connections.forEach(conn => {
+      const isQueryConnection = conn.ortholog_id === queryOrthologId;
       const genePositions = [];
+
+      // Find gene positions across species (with full boundary info for ribbons)
       speciesData.forEach(sd => {
         const genes = sd.genes || [];
         genes.forEach(gene => {
           if (conn.genes.includes(gene.feature_name)) {
             const xScale = xScales[sd.species];
+            const x = xScale(gene.start);
+            const geneWidth = Math.max(xScale(gene.stop) - xScale(gene.start), 4);
             genePositions.push({
               species: sd.species,
-              x: xScale((gene.start + gene.stop) / 2),
-              y: sd.yPosition + trackHeight / 2,
+              speciesIndex: sd.index,
+              xLeft: x,
+              xRight: x + geneWidth,
+              yTop: sd.yPosition + (trackHeight - geneHeight) / 2,
+              yBottom: sd.yPosition + (trackHeight + geneHeight) / 2,
             });
           }
         });
       });
 
-      // Draw lines between consecutive species
+      // Sort by species index to ensure correct drawing order
+      genePositions.sort((a, b) => a.speciesIndex - b.speciesIndex);
+
+      // Draw trapezoid ribbons between consecutive species (Sybil style)
       for (let i = 0; i < genePositions.length - 1; i++) {
         const p1 = genePositions[i];
         const p2 = genePositions[i + 1];
 
-        // Skip if same species or non-consecutive tracks
         if (p1.species === p2.species) continue;
 
-        // Draw bezier curve
-        const midY = (p1.y + p2.y) / 2;
-        g.append('path')
-          .attr('d', `M${p1.x},${p1.y + geneHeight / 2} C${p1.x},${midY} ${p2.x},${midY} ${p2.x},${p2.y - geneHeight / 2}`)
-          .attr('fill', 'none')
-          .attr('stroke', connColor)
-          .attr('stroke-width', 1.5)
-          .attr('stroke-opacity', 0.4)
+        // Create trapezoid polygon connecting the two genes
+        const points = [
+          [p1.xLeft, p1.yBottom],   // bottom-left of top gene
+          [p1.xRight, p1.yBottom],  // bottom-right of top gene
+          [p2.xRight, p2.yTop],     // top-right of bottom gene
+          [p2.xLeft, p2.yTop],      // top-left of bottom gene
+        ];
+
+        connectionsGroup.append('polygon')
+          .attr('points', points.map(p => p.join(',')).join(' '))
+          .attr('fill', COLORS.ribbon)
+          .attr('fill-opacity', isQueryConnection ? 0.7 : 0.5)
+          .attr('stroke', COLORS.ribbonStroke)
+          .attr('stroke-width', 0.5)
+          .attr('stroke-opacity', 0.3)
           .attr('class', 'ortholog-connection');
       }
     });
+
+    // Draw vertical query highlight column (Sybil style)
+    if (queryOrthologId) {
+      const queryGenePositions = [];
+      speciesData.forEach(sd => {
+        const genes = sd.genes || [];
+        genes.forEach(gene => {
+          const orthologId = geneToOrtholog[gene.feature_name];
+          if (orthologId === queryOrthologId) {
+            const xScale = xScales[sd.species];
+            const x = xScale(gene.start);
+            const geneWidth = Math.max(xScale(gene.stop) - xScale(gene.start), 4);
+            queryGenePositions.push({
+              xLeft: x,
+              xRight: x + geneWidth,
+              yTop: sd.yPosition,
+              yBottom: sd.yPosition + trackHeight,
+            });
+          }
+        });
+      });
+
+      // Draw highlight rectangles for each query ortholog
+      if (queryGenePositions.length > 0) {
+        const highlightGroup = g.insert('g', ':first-child').attr('class', 'query-highlight-group');
+        queryGenePositions.forEach(pos => {
+          const padding = 6;
+          highlightGroup.append('rect')
+            .attr('x', pos.xLeft - padding)
+            .attr('y', pos.yTop - 6)
+            .attr('width', pos.xRight - pos.xLeft + padding * 2)
+            .attr('height', pos.yBottom - pos.yTop + 12)
+            .attr('fill', COLORS.queryHighlight)
+            .attr('rx', 4)
+            .attr('class', 'query-highlight');
+        });
+      }
+    }
 
     // Add zoom/pan behavior
     const zoom = d3.zoom()

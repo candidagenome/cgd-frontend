@@ -4,13 +4,15 @@ import * as d3 from 'd3';
 import { locusApi } from '../../api/locusApi';
 import './SyntenySummary.css';
 
-// Color scheme matching the full viewer - 3-level red palette
+// Color scheme matching the full viewer - Sybil-inspired style
 const COLORS = {
   queryGene: '#d32f2f',        // Strong red
   queryOrtholog: '#ef9a9a',    // Light-medium red
-  queryConnection: '#ef9a9a',  // Light red for connections
+  queryHighlight: 'rgba(255, 182, 193, 0.4)',  // Light pink for vertical query column
   orthologGene: '#3498db',
   singletonGene: '#95a5a6',
+  ribbon: '#c0c0c0',           // Gray for Sybil-style ribbons
+  ribbonStroke: '#a0a0a0',     // Slightly darker gray for ribbon borders
 };
 
 // Species display order and abbreviations
@@ -275,7 +277,7 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
       });
     });
 
-    // Draw ortholog connections (only for query ortholog)
+    // Draw Sybil-style ribbon connections (only for query ortholog)
     if (queryOrthologId) {
       const queryConn = connections.find(c => c.ortholog_id === queryOrthologId);
       if (queryConn) {
@@ -286,28 +288,63 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
           genes.forEach(gene => {
             if (queryConn.genes.includes(gene.feature_name)) {
               const xScale = xScales[sd.species];
+              const geneLeft = Math.min(gene.start, gene.stop);
+              const geneRight = Math.max(gene.start, gene.stop);
+              const xLeft = xScale(geneLeft);
+              const xRight = xScale(geneRight);
+              const geneWidth = Math.max(xRight - xLeft, 3);
               genePositions.push({
                 species: sd.species,
-                x: xScale((gene.start + gene.stop) / 2),
-                y: sd.yPosition + trackHeight / 2,
+                speciesIndex: sd.index,
+                xLeft: xLeft,
+                xRight: xLeft + geneWidth,
+                yTop: sd.yPosition + (trackHeight - geneHeight) / 2,
+                yBottom: sd.yPosition + (trackHeight + geneHeight) / 2,
               });
             }
           });
         });
 
-        // Draw connections
+        // Sort by species index
+        genePositions.sort((a, b) => a.speciesIndex - b.speciesIndex);
+
+        // Draw trapezoid ribbons between consecutive species
+        const connectionsGroup = g.insert('g', ':first-child').attr('class', 'connections-group');
         for (let i = 0; i < genePositions.length - 1; i++) {
           const p1 = genePositions[i];
           const p2 = genePositions[i + 1];
           if (p1.species === p2.species) continue;
 
-          const midY = (p1.y + p2.y) / 2;
-          g.append('path')
-            .attr('d', `M${p1.x},${p1.y + geneHeight / 2} C${p1.x},${midY} ${p2.x},${midY} ${p2.x},${p2.y - geneHeight / 2}`)
-            .attr('fill', 'none')
-            .attr('stroke', COLORS.queryConnection)
-            .attr('stroke-width', 2)
-            .attr('stroke-opacity', 0.6);
+          const points = [
+            [p1.xLeft, p1.yBottom],
+            [p1.xRight, p1.yBottom],
+            [p2.xRight, p2.yTop],
+            [p2.xLeft, p2.yTop],
+          ];
+
+          connectionsGroup.append('polygon')
+            .attr('points', points.map(p => p.join(',')).join(' '))
+            .attr('fill', COLORS.ribbon)
+            .attr('fill-opacity', 0.6)
+            .attr('stroke', COLORS.ribbonStroke)
+            .attr('stroke-width', 0.5)
+            .attr('stroke-opacity', 0.3);
+        }
+
+        // Draw vertical query highlight
+        if (genePositions.length > 0) {
+          const highlightGroup = g.insert('g', ':first-child').attr('class', 'query-highlight-group');
+          genePositions.forEach(pos => {
+            const padding = 3;
+            highlightGroup.append('rect')
+              .attr('x', pos.xLeft - padding)
+              .attr('y', pos.yTop - 3)
+              .attr('width', pos.xRight - pos.xLeft + padding * 2)
+              .attr('height', pos.yBottom - pos.yTop + 6)
+              .attr('fill', COLORS.queryHighlight)
+              .attr('rx', 2)
+              .attr('class', 'query-highlight');
+          });
         }
       }
     }
