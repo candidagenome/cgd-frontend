@@ -15,9 +15,9 @@ const COLORS = {
   singletonGene: '#95a5a6',    // Gray - species-specific genes (no orthologs)
   watsonStrand: '#2ecc71',     // Green - Watson strand
   crickStrand: '#9b59b6',      // Purple - Crick strand
-  ribbon: '#a0a0a0',           // Light gray for regular ribbons
-  ribbonQuery: '#686868',      // Darker gray for query ortholog ribbons
-  ribbonStroke: '#888888',     // Gray for ribbon borders
+  ribbon: '#c8c8c8',           // Light gray for regular ribbons
+  ribbonQuery: '#DDDADA',      // Light warm gray for query ortholog ribbons
+  ribbonStroke: '#b0b0b0',     // Gray for ribbon borders
   chromosome: '#ecf0f1',       // Very light gray for chromosome
   text: '#2c3e50',             // Dark text
   missingOrtholog: '#ffcc80',  // Orange for missing ortholog indicator
