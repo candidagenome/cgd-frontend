@@ -233,7 +233,7 @@ function App() {
           <Route path="/external-resources" element={<ExternalResourcesPage />} />
           <Route path="/nomenclature" element={<NomenclaturePage />} />
           <Route path="/download" element={<DownloadPage />} />
-          <Route path="/datasets" element={<DatasetsPage />} />
+          <Route path="/download-datasets" element={<DatasetsPage />} />
           <Route path="/literature" element={<LiteraturePage />} />
           <Route path="/literature-topic-search" element={<LiteratureTopicSearchPage />} />
           <Route path="/topic-biblios" element={<TopicBibliosPage />} />
