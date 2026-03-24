@@ -38,6 +38,20 @@ const MEETINGS = [
 // News items
 const NEWS_ITEMS = [
   {
+    title: 'New CGD Website Launched',
+    content: (
+      <>
+        We've launched a redesigned CGD website with improved search, updated JBrowse, enhanced
+        literature tools, and a new API interface. The new site offers faster performance, better
+        navigation, and more powerful data exploration tools.
+        <br /><br />
+        Explore the new features and <Link to="/contact">let us know your feedback</Link>.
+      </>
+    ),
+    date: 'March 2026',
+    highlight: true,
+  },
+  {
     title: 'Introducing a Public Wiki for Candida',
     content: (
       <>
@@ -249,7 +263,7 @@ function HomePage() {
             <hr />
 
             {NEWS_ITEMS.map((item, index) => (
-              <article key={index} className="news-item">
+              <article key={index} className={`news-item ${item.highlight ? 'news-highlight' : ''}`}>
                 <h2>{item.title}</h2>
                 <div className="news-content">{item.content}</div>
                 {item.date && <p className="news-date">(Posted {item.date})</p>}
