@@ -538,10 +538,10 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
         connectionsGroup.append('polygon')
           .attr('points', points.map(p => p.join(',')).join(' '))
           .attr('fill', COLORS.ribbon)
-          .attr('fill-opacity', isQueryConnection ? 0.5 : 0.3)  // Reduced opacity for less visual clutter
+          .attr('fill-opacity', isQueryConnection ? 0.35 : 0.2)  // Further reduced - keep visible but not dominant
           .attr('stroke', COLORS.ribbonStroke)
           .attr('stroke-width', 0.5)
-          .attr('stroke-opacity', 0.2)
+          .attr('stroke-opacity', 0.15)
           .attr('data-ortholog', conn.ortholog_id)
           .attr('class', isQueryConnection ? 'ortholog-connection query-connection' : 'ortholog-connection');
       }
@@ -746,12 +746,12 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
           return (stroke === '#b71c1c' || stroke === '#c62828') ? 2 : 1;
         });
 
-      // Reset ribbon connections to their base opacity (reduced)
+      // Reset ribbon connections to their base opacity (subtle)
       svg.selectAll('.ortholog-connection').each(function() {
         const el = d3.select(this);
         const isQuery = el.classed('query-connection');
-        el.attr('fill-opacity', isQuery ? 0.5 : 0.3)
-          .attr('stroke-opacity', 0.2)
+        el.attr('fill-opacity', isQuery ? 0.35 : 0.2)
+          .attr('stroke-opacity', 0.15)
           .attr('stroke-width', 0.5);
       });
     }
@@ -1048,12 +1048,13 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
               ▶
             </button>
           </div>
-          <div className="zoom-controls">
-            <button type="button" onClick={handleZoomOut} disabled={loading || !syntenyData || zoomLevel <= 0.3} title="Zoom out">
+          <div className="zoom-controls" title="Use mouse wheel to zoom when hovering over the visualization">
+            <span className="zoom-label">Zoom:</span>
+            <button type="button" onClick={handleZoomOut} disabled={loading || !syntenyData || zoomLevel <= 0.3} title="Zoom out (show more genes)">
               −
             </button>
             <span className="zoom-level">{Math.round(zoomLevel * 100)}% ({getZoomLabel()})</span>
-            <button type="button" onClick={handleZoomIn} disabled={loading || !syntenyData || zoomLevel >= 5} title="Zoom in">
+            <button type="button" onClick={handleZoomIn} disabled={loading || !syntenyData || zoomLevel >= 5} title="Zoom in (show fewer genes with more detail)">
               +
             </button>
           </div>

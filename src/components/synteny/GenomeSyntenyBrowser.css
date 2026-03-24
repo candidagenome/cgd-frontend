@@ -346,6 +346,13 @@
   cursor: not-allowed;
 }
 
+.zoom-controls .zoom-label {
+  font-size: 0.8rem;
+  color: #666;
+  font-weight: 500;
+  margin-right: 4px;
+}
+
 .zoom-controls .zoom-level {
   padding: 0 8px;
   font-size: 0.85rem;
@@ -407,8 +414,8 @@
 /* Track and gene styling */
 .species-label {
   font-size: 13px;
-  fill: #2c3e50;
-  font-weight: 600;  /* Bolder for better readability */
+  fill: #1a252f;  /* Darker for better readability */
+  font-weight: 600;
 }
 
 .chromosome-line {
@@ -417,12 +424,16 @@
 }
 
 .gene-group {
-  transition: opacity 0.15s ease;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+}
+
+.gene-group:hover {
+  transform: translateY(-1px);
 }
 
 .gene-group:hover .gene-shape {
-  stroke-width: 2;
-  filter: brightness(0.9);
+  stroke-width: 2.5;
+  filter: brightness(1.1) drop-shadow(0 1px 3px rgba(0,0,0,0.2));
 }
 
 .gene-label {
