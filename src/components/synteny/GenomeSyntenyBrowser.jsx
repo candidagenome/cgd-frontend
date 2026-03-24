@@ -152,36 +152,6 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
     setSelectedGene(null);
   }, []);
 
-  // Center view on a specific gene
-  const centerOnGene = useCallback((gene, species) => {
-    if (!syntenyData) return;
-
-    const regions = syntenyData.synteny_regions || {};
-    const region = regions[species];
-    if (!region) return;
-
-    // Find the gene's position in its region
-    const genes = region.genes || [];
-    const targetGene = genes.find(g => g.feature_name === gene.feature_name);
-    if (!targetGene) return;
-
-    // Calculate relative position of this gene
-    const allCoords = genes.flatMap(g => [g.start, g.stop]);
-    const minCoord = Math.min(...allCoords);
-    const maxCoord = Math.max(...allCoords);
-    const padding = (maxCoord - minCoord) * 0.05;
-    const coordRange = (maxCoord + padding) - (minCoord - padding);
-    const geneCoord = (targetGene.start + targetGene.stop) / 2;
-    const relativePos = (geneCoord - (minCoord - padding)) / coordRange;
-
-    // Update the relative position ref and recalculate pan
-    queryGeneRelativeXRef.current = relativePos;
-    const newPan = calculateCenterOffset(zoomLevel);
-    setPanOffset(newPan);
-
-    closeGenePopup();
-  }, [syntenyData, zoomLevel, calculateCenterOffset, closeGenePopup]);
-
   // Toggle species visibility
   const toggleSpecies = (species) => {
     setVisibleSpecies(prev => ({
@@ -766,6 +736,36 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
       return Math.max(minPan, Math.min(maxPan, centerOffset));
     }
   }, []);
+
+  // Center view on a specific gene
+  const centerOnGene = useCallback((gene, species) => {
+    if (!syntenyData) return;
+
+    const regions = syntenyData.synteny_regions || {};
+    const region = regions[species];
+    if (!region) return;
+
+    // Find the gene's position in its region
+    const genes = region.genes || [];
+    const targetGene = genes.find(g => g.feature_name === gene.feature_name);
+    if (!targetGene) return;
+
+    // Calculate relative position of this gene
+    const allCoords = genes.flatMap(g => [g.start, g.stop]);
+    const minCoord = Math.min(...allCoords);
+    const maxCoord = Math.max(...allCoords);
+    const padding = (maxCoord - minCoord) * 0.05;
+    const coordRange = (maxCoord + padding) - (minCoord - padding);
+    const geneCoord = (targetGene.start + targetGene.stop) / 2;
+    const relativePos = (geneCoord - (minCoord - padding)) / coordRange;
+
+    // Update the relative position ref and recalculate pan
+    queryGeneRelativeXRef.current = relativePos;
+    const newPan = calculateCenterOffset(zoomLevel);
+    setPanOffset(newPan);
+
+    closeGenePopup();
+  }, [syntenyData, zoomLevel, calculateCenterOffset, closeGenePopup]);
 
   // Effect to handle initial centering after first render
   useEffect(() => {
