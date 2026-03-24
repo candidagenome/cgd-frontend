@@ -131,10 +131,11 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
   }, [searchParams, propGeneName, loadSyntenyData]);
 
   // Handle gene search selection
-  // Prefer gene_name/name over feature_name since aliases like "CDC60B" are
-  // resolved by the backend, while obsolete feature_names may not have synteny data
+  // Prefer feature_name (systematic name) since it's unique and unambiguous.
+  // Names like "MDR1" can be both a standard name for one gene AND an alias
+  // for another gene (e.g., GYP2), causing the wrong gene to load.
   const handleGeneSelect = useCallback((gene) => {
-    const geneName = gene.gene_name || gene.name || gene.feature_name;
+    const geneName = gene.feature_name || gene.gene_name || gene.name;
     if (geneName) {
       loadSyntenyData(geneName);
     }
