@@ -8,9 +8,9 @@ import './GenomeSyntenyBrowser.css';
 // Color scheme for synteny visualization - Sybil-inspired style
 const COLORS = {
   queryGene: '#d32f2f',        // Strong red - the gene you searched for
-  queryOrtholog: '#ef9a9a',    // Light-medium red - orthologs of your query gene
-  queryConnection: '#ef9a9a',  // Light red - connection ribbons for query orthologs
-  queryHighlight: 'rgba(255, 182, 193, 0.4)',  // Light pink for vertical query column
+  queryOrtholog: '#ef5350',    // Medium red - orthologs of your query gene (more visible)
+  queryOrthologGlow: '#ffcdd2', // Light red glow for query orthologs
+  queryHighlight: 'rgba(255, 205, 210, 0.15)',  // Very subtle pink highlight (reduced opacity)
   orthologGene: '#3498db',     // Blue - other genes with orthologs
   singletonGene: '#95a5a6',    // Gray - species-specific genes (no orthologs)
   watsonStrand: '#2ecc71',     // Green - Watson strand
@@ -192,10 +192,10 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
     if (visibleRegions.length === 0) return;
 
     // Layout configuration - these stay constant regardless of zoom
-    const margin = { top: 12, right: 40, bottom: 12, left: 120 };
-    const trackHeight = 36;
-    const trackSpacing = 44;
-    const geneHeight = 22;
+    const margin = { top: 16, right: 40, bottom: 16, left: 120 };
+    const trackHeight = 40;
+    const trackSpacing = 52;  // Increased for better readability
+    const geneHeight = 24;
     const containerWidth = containerRef.current.clientWidth;
     const baseWidth = containerWidth - margin.left - margin.right;
     const height = visibleRegions.length * (trackHeight + trackSpacing) + margin.top + margin.bottom - trackSpacing;
@@ -221,15 +221,31 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
 
     svgRef.current = svg.node();
 
-    // Create clip path for the content area
-    svg.append('defs')
-      .append('clipPath')
+    // Create defs for clip path and filters
+    const defs = svg.append('defs');
+
+    // Clip path for content area
+    defs.append('clipPath')
       .attr('id', 'content-clip')
       .append('rect')
       .attr('x', 0)
       .attr('y', 0)
       .attr('width', baseWidth)
       .attr('height', height);
+
+    // Glow filter for query orthologs
+    const glowFilter = defs.append('filter')
+      .attr('id', 'query-glow')
+      .attr('x', '-50%')
+      .attr('y', '-50%')
+      .attr('width', '200%')
+      .attr('height', '200%');
+    glowFilter.append('feGaussianBlur')
+      .attr('stdDeviation', '2')
+      .attr('result', 'coloredBlur');
+    const feMerge = glowFilter.append('feMerge');
+    feMerge.append('feMergeNode').attr('in', 'coloredBlur');
+    feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
 
     // Create main group
     const g = svg.append('g')
@@ -345,23 +361,36 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
         const geneWidth = Math.max(xScale(geneRight) - xScale(geneLeft), 4);
         const y = (trackHeight - geneHeight) / 2;
 
-        // Determine fill color using simplified scheme:
-        // Dark red = query gene (in query species), Light red = query's orthologs, Blue = other orthologs, Gray = no orthologs
+        // Determine fill color and styling
+        // Dark red = query gene, Medium red with glow = query's orthologs, Blue = other orthologs, Gray = no orthologs
         let fillColor;
+        let strokeColor;
+        let strokeWidth;
+        let applyGlow = false;
         const isQueryGene = gene.is_query && sd.species === querySpecies;
+        const isQueryOrtholog = !isQueryGene && orthologId && orthologId === queryOrthologId;
 
         if (isQueryGene) {
           fillColor = COLORS.queryGene;  // Dark red - the gene you searched for
-        } else if (orthologId && orthologId === queryOrthologId) {
-          fillColor = COLORS.queryOrtholog;  // Light red - orthologs of your query gene
+          strokeColor = '#b71c1c';
+          strokeWidth = 2.5;
+        } else if (isQueryOrtholog) {
+          fillColor = COLORS.queryOrtholog;  // Medium red with glow - orthologs of your query gene
+          strokeColor = '#c62828';
+          strokeWidth = 2;
+          applyGlow = true;
         } else if (orthologId) {
           fillColor = COLORS.orthologGene;  // Blue - other genes with orthologs
+          strokeColor = '#2980b9';
+          strokeWidth = 1;
         } else {
           fillColor = COLORS.singletonGene;  // Gray - species-specific genes
+          strokeColor = '#7f8c8d';
+          strokeWidth = 1;
         }
 
-        // Arrow point size - scale with gene width, min 4px, max 8px
-        const arrowSize = Math.min(8, Math.max(4, geneWidth * 0.25));
+        // Arrow point size - more prominent for better strand visibility
+        const arrowSize = Math.min(10, Math.max(5, geneWidth * 0.3));
 
         // Gene shape with direction indicator (arrow points in transcription direction)
         const isForward = gene.strand === 'W' || gene.strand === '+';
@@ -383,12 +412,17 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
               [x + arrowSize, y + geneHeight],
             ];
 
-        geneGroup.append('polygon')
+        const genePolygon = geneGroup.append('polygon')
           .attr('points', points.map(p => p.join(',')).join(' '))
           .attr('fill', fillColor)
-          .attr('stroke', isQueryGene ? '#b71c1c' : '#666')
-          .attr('stroke-width', isQueryGene ? 2 : 1)
+          .attr('stroke', strokeColor)
+          .attr('stroke-width', strokeWidth)
           .attr('class', 'gene-shape');
+
+        // Apply glow filter to query orthologs for emphasis
+        if (applyGlow) {
+          genePolygon.attr('filter', 'url(#query-glow)');
+        }
 
         // Gene label - smart truncation based on available width
         const rawLabel = gene.gene_name || gene.feature_name || '';
@@ -413,6 +447,13 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
 
         // Click handler - open detail popup
         geneGroup.on('click', () => handleGeneClick(gene, sd.species));
+
+        // Double-click handler - center view on this gene
+        geneGroup.on('dblclick', (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          centerOnGene(gene, sd.species);
+        });
 
         // Hover handlers - highlight this gene's ortholog connections
         geneGroup.on('mouseenter', (event) => {
@@ -497,10 +538,10 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
         connectionsGroup.append('polygon')
           .attr('points', points.map(p => p.join(',')).join(' '))
           .attr('fill', COLORS.ribbon)
-          .attr('fill-opacity', isQueryConnection ? 0.7 : 0.5)
+          .attr('fill-opacity', isQueryConnection ? 0.5 : 0.3)  // Reduced opacity for less visual clutter
           .attr('stroke', COLORS.ribbonStroke)
           .attr('stroke-width', 0.5)
-          .attr('stroke-opacity', 0.3)
+          .attr('stroke-opacity', 0.2)
           .attr('data-ortholog', conn.ortholog_id)
           .attr('class', isQueryConnection ? 'ortholog-connection query-connection' : 'ortholog-connection');
       }
@@ -685,12 +726,12 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
         const el = d3.select(this);
         const ortholog = el.attr('data-ortholog');
         if (ortholog === hoveredOrtholog) {
-          el.attr('fill-opacity', 0.85)
-            .attr('stroke-opacity', 0.6)
+          el.attr('fill-opacity', 0.7)
+            .attr('stroke-opacity', 0.5)
             .attr('stroke-width', 1);
         } else {
           // Softer fade if no connections to highlight
-          el.attr('fill-opacity', shouldHighlight ? 0.15 : 0.35);
+          el.attr('fill-opacity', shouldHighlight ? 0.1 : 0.2);
         }
       });
     } else {
@@ -700,15 +741,17 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
         .select('.gene-shape')
         .attr('stroke-width', function() {
           const parent = d3.select(this.parentNode);
-          return parent.select('.gene-shape').attr('stroke') === '#c0392b' ? 2 : 1;
+          const stroke = parent.select('.gene-shape').attr('stroke');
+          // Query gene and query orthologs have red strokes
+          return (stroke === '#b71c1c' || stroke === '#c62828') ? 2 : 1;
         });
 
-      // Reset ribbon connections to their base opacity
+      // Reset ribbon connections to their base opacity (reduced)
       svg.selectAll('.ortholog-connection').each(function() {
         const el = d3.select(this);
         const isQuery = el.classed('query-connection');
-        el.attr('fill-opacity', isQuery ? 0.7 : 0.5)
-          .attr('stroke-opacity', 0.3)
+        el.attr('fill-opacity', isQuery ? 0.5 : 0.3)
+          .attr('stroke-opacity', 0.2)
           .attr('stroke-width', 0.5);
       });
     }
@@ -1120,7 +1163,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
                 <div className="tooltip-organism" style={{ fontStyle: 'italic' }}>
                   {SPECIES_ABBREV[tooltip.content.organism] || tooltip.content.organism}
                 </div>
-                <div className="tooltip-hint">Click for gene details</div>
+                <div className="tooltip-hint">Click for details | Double-click to center</div>
               </>
             )}
           </div>

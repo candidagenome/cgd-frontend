@@ -407,8 +407,8 @@
 /* Track and gene styling */
 .species-label {
   font-size: 13px;
-  fill: #333;
-  font-weight: 500;
+  fill: #2c3e50;
+  font-weight: 600;  /* Bolder for better readability */
 }
 
 .chromosome-line {
@@ -619,9 +619,10 @@
 }
 
 .legend-box.query-ortholog {
-  background-color: #ef9a9a;
+  background-color: #ef5350;
   border-color: #c62828;
   border-width: 2px;
+  box-shadow: 0 0 4px rgba(198, 40, 40, 0.5);  /* Glow effect to match SVG */
 }
 
 .legend-box.ortholog {
