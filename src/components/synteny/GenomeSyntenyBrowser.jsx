@@ -15,8 +15,8 @@ const COLORS = {
   singletonGene: '#95a5a6',    // Gray - species-specific genes (no orthologs)
   watsonStrand: '#2ecc71',     // Green - Watson strand
   crickStrand: '#9b59b6',      // Purple - Crick strand
-  ribbon: '#c0c0c0',           // Gray for Sybil-style ribbons
-  ribbonStroke: '#a0a0a0',     // Slightly darker gray for ribbon borders
+  ribbon: '#787878',           // Neutral gray for ribbons (genes stay the focus)
+  ribbonStroke: '#606060',     // Darker gray for subtle ribbon borders
   chromosome: '#ecf0f1',       // Very light gray for chromosome
   text: '#2c3e50',             // Dark text
   missingOrtholog: '#ffcc80',  // Orange for missing ortholog indicator
@@ -538,10 +538,10 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
         connectionsGroup.append('polygon')
           .attr('points', points.map(p => p.join(',')).join(' '))
           .attr('fill', COLORS.ribbon)
-          .attr('fill-opacity', isQueryConnection ? 0.35 : 0.2)  // Further reduced - keep visible but not dominant
+          .attr('fill-opacity', isQueryConnection ? 0.25 : 0.15)  // Very subtle - genes stay the focus
           .attr('stroke', COLORS.ribbonStroke)
           .attr('stroke-width', 0.5)
-          .attr('stroke-opacity', 0.15)
+          .attr('stroke-opacity', 0.1)
           .attr('data-ortholog', conn.ortholog_id)
           .attr('class', isQueryConnection ? 'ortholog-connection query-connection' : 'ortholog-connection');
       }
@@ -726,12 +726,12 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
         const el = d3.select(this);
         const ortholog = el.attr('data-ortholog');
         if (ortholog === hoveredOrtholog) {
-          el.attr('fill-opacity', 0.7)
-            .attr('stroke-opacity', 0.5)
+          el.attr('fill-opacity', 0.5)
+            .attr('stroke-opacity', 0.3)
             .attr('stroke-width', 1);
         } else {
           // Softer fade if no connections to highlight
-          el.attr('fill-opacity', shouldHighlight ? 0.1 : 0.2);
+          el.attr('fill-opacity', shouldHighlight ? 0.05 : 0.1);
         }
       });
     } else {
@@ -746,12 +746,12 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
           return (stroke === '#b71c1c' || stroke === '#c62828') ? 2 : 1;
         });
 
-      // Reset ribbon connections to their base opacity (subtle)
+      // Reset ribbon connections to their base opacity (very subtle)
       svg.selectAll('.ortholog-connection').each(function() {
         const el = d3.select(this);
         const isQuery = el.classed('query-connection');
-        el.attr('fill-opacity', isQuery ? 0.35 : 0.2)
-          .attr('stroke-opacity', 0.15)
+        el.attr('fill-opacity', isQuery ? 0.25 : 0.15)
+          .attr('stroke-opacity', 0.1)
           .attr('stroke-width', 0.5);
       });
     }
