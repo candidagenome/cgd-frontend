@@ -93,16 +93,17 @@ function GeneSearch({ onGeneSelect, disabled }) {
 
   // Select a gene from the dropdown
   const selectGene = (gene) => {
-    // Category search returns 'name', normalize to gene_name for downstream use
-    const geneName = gene.name || gene.gene_name || gene.feature_name || '';
-    setQuery(geneName);
+    // Display name for the input field (what the user sees)
+    const displayName = gene.name || gene.gene_name || gene.feature_name || '';
+    setQuery(displayName);
     setShowDropdown(false);
     setSelectedIndex(-1);
     if (onGeneSelect) {
-      // Pass normalized gene object
+      // Pass gene object preserving feature_name for unique identification
+      // Don't overwrite feature_name - it's the unique systematic name needed
+      // to distinguish between genes when names/aliases are ambiguous
       onGeneSelect({
         ...gene,
-        gene_name: geneName,
         organism_name: gene.organism || gene.organism_name,
         headline: gene.description || gene.headline,
       });

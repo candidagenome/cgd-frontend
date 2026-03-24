@@ -960,22 +960,3 @@
   border-color: #ffb74d;
 }
 
-/* ===========================================
-   MISSING ORTHOLOG INDICATOR
-   =========================================== */
-
-.missing-ortholog-indicator {
-  cursor: help;
-}
-
-.missing-ortholog-label {
-  pointer-events: none;
-}
-
-/* Legend item for missing ortholog */
-.legend-box.missing {
-  background-color: #ffcc80;
-  border-color: #f57c00;
-  border-style: dashed;
-  border-width: 2px;
-}
