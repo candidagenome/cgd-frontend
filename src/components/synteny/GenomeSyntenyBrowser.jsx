@@ -567,23 +567,6 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
         });
       });
 
-      // Draw highlight rectangles for each query ortholog
-      if (queryGenePositions.length > 0) {
-        const highlightGroup = pannedGroup.insert('g', ':first-child').attr('class', 'query-highlight-group');
-        queryGenePositions.forEach(pos => {
-          // Extend highlight slightly beyond gene boundaries
-          const padding = 4;
-          highlightGroup.append('rect')
-            .attr('x', pos.xLeft - padding)
-            .attr('y', pos.yTop - 4)
-            .attr('width', pos.xRight - pos.xLeft + padding * 2)
-            .attr('height', pos.yBottom - pos.yTop + 8)
-            .attr('fill', COLORS.queryHighlight)
-            .attr('rx', 3)
-            .attr('class', 'query-highlight');
-        });
-      }
-
       // Draw missing ortholog indicators for species without query ortholog
       const speciesWithQueryOrtholog = new Set(queryGenePositions.map(p => p.species));
       const missingOrthologGroup = pannedGroup.append('g').attr('class', 'missing-ortholog-group');
