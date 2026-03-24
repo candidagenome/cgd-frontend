@@ -2604,15 +2604,13 @@ a:hover {
 /* Wrap to avoid table touching edges on small screens */
 .subfeature-table-wrap {
   width: 100%;
-  overflow-x: auto;
   padding: 6px 0;
 }
 
-/* Improved subfeature table */
+/* Improved subfeature table - compact 4-column layout */
 .subfeature-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 760px; /* keeps header layout readable; scrolls on small screens */
   background: #fff;
   border: 1px solid #d9e2ef;
 }
@@ -2622,19 +2620,15 @@ a:hover {
   color: #213547;
   font-size: 13px;
   font-weight: 600;
-  text-align: center;
+  text-align: left;
   border-bottom: 1px solid #d9e2ef;
-  padding: 10px 8px;
+  padding: 8px 12px;
   white-space: nowrap;
-}
-
-.subfeature-table thead th.sf-colgroup {
-  font-weight: 700;
 }
 
 .subfeature-table tbody td {
   border-top: 1px solid #e7eef8;
-  padding: 10px 8px;
+  padding: 8px 12px;
   font-size: 14px;
   vertical-align: top;
 }
@@ -2645,9 +2639,15 @@ a:hover {
 
 /* Column sizing + alignment */
 .sf-col-type {
-  text-align: left !important;
-  width: 140px;
-  min-width: 140px;
+  width: 100px;
+}
+
+.sf-col-range {
+  width: auto;
+}
+
+.sf-col-date {
+  width: 120px;
 }
 
 .sf-type {
@@ -2656,25 +2656,15 @@ a:hover {
   white-space: nowrap;
 }
 
-.sf-num {
-  text-align: right;
+.sf-range {
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   color: #1f2d3d;
 }
 
 .sf-date {
-  text-align: center;
   white-space: nowrap;
   color: #4b5563;
-}
-
-/* Optional: slightly stronger divider between the 3 column groups */
-.subfeature-table thead tr:first-child th {
-  border-right: 1px solid #d9e2ef;
-}
-.subfeature-table thead tr:first-child th:last-child {
-  border-right: none;
 }
 
 /* Mobile tweaks */
@@ -2684,9 +2674,6 @@ a:hover {
   }
   .seq-coords {
     font-weight: 600;
-  }
-  .subfeature-table {
-    min-width: 700px;
   }
 }
 

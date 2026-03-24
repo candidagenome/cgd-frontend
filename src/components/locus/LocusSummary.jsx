@@ -313,39 +313,19 @@ function LocusSummary({
           <thead>
             <tr>
               <th className="sf-col-type">Subfeature</th>
-              <th colSpan={2} className="sf-colgroup">
-                Relative Coordinates
-              </th>
-              <th colSpan={2} className="sf-colgroup">
-                Chromosomal Coordinates
-              </th>
-              <th colSpan={2} className="sf-colgroup">
-                Most Recent Update
-              </th>
-            </tr>
-            <tr>
-              <th className="sf-col-type"></th>
-              <th className="sf-col-start">Start</th>
-              <th className="sf-col-stop">Stop</th>
-              <th className="sf-col-start">Start</th>
-              <th className="sf-col-stop">Stop</th>
-              <th className="sf-col-date">Coordinates</th>
-              <th className="sf-col-date">Sequence</th>
+              <th className="sf-col-range">Relative</th>
+              <th className="sf-col-range">Chromosomal</th>
+              <th className="sf-col-date">Last Updated</th>
             </tr>
           </thead>
           <tbody>
             {subfeatures.map((sf, idx) => (
               <tr key={idx}>
                 <td className="sf-type">{normalizeFeatureType(sf.feature_type) || ''}</td>
-                <td className="sf-num">{fmtInt(sf.relative_start)}</td>
-                <td className="sf-num">{fmtInt(sf.relative_stop)}</td>
-                <td className="sf-num">{fmtInt(sf.start_coord)}</td>
-                <td className="sf-num">{fmtInt(sf.stop_coord)}</td>
+                <td className="sf-range">{fmtInt(sf.relative_start)} - {fmtInt(sf.relative_stop)}</td>
+                <td className="sf-range">{fmtInt(sf.start_coord)} - {fmtInt(sf.stop_coord)}</td>
                 <td className="sf-date">
-                  <em>{fmtDate(sf.coord_version)}</em>
-                </td>
-                <td className="sf-date">
-                  <em>{fmtDate(sf.seq_version)}</em>
+                  <em>{fmtDate(sf.coord_version) || fmtDate(sf.seq_version) || '-'}</em>
                 </td>
               </tr>
             ))}
