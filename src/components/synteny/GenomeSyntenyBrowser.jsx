@@ -1048,7 +1048,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
         )}
 
         {/* Fixed Tooltip Bar - shows above the canvas */}
-        <div className="browser-tooltip-bar">
+        <div className="browser-tooltip-bar" style={{ color: '#fff' }}>
           {tooltip.show && tooltip.content ? (
             <>
               <span className="tooltip-gene-name">

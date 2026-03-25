@@ -508,7 +508,7 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
       </div>
 
       {/* Fixed Tooltip Bar - shows above the canvas */}
-      <div className="synteny-tooltip-bar">
+      <div className="synteny-tooltip-bar" style={{ color: '#fff' }}>
         {tooltip.show && tooltip.content ? (
           <>
             <span className="tooltip-gene-name"><strong>{tooltip.content.geneName || tooltip.content.featureName}</strong></span>
