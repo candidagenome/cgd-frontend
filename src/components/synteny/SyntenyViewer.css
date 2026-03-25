@@ -109,32 +109,39 @@
   pointer-events: none;
 }
 
-/* Tooltip */
-.synteny-tooltip {
-  position: absolute;
-  background: rgba(44, 62, 80, 0.95);
-  color: #fff;
-  padding: 10px 14px;
-  border-radius: 4px;
+/* Fixed Tooltip Bar - shows at top of canvas area */
+.synteny-tooltip-bar {
+  all: unset;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: rgba(44, 62, 80, 0.95) !important;
+  color: white !important;
+  -webkit-text-fill-color: white !important;
   font-size: 0.85rem;
-  z-index: 1000;
-  pointer-events: none;
-  max-width: 300px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  min-height: 40px;
+  flex-wrap: wrap;
+  box-sizing: border-box;
 }
 
-.synteny-tooltip div {
-  margin-bottom: 4px;
+.synteny-tooltip-bar .tooltip-gene-name {
+  color: #fff;
 }
 
-.synteny-tooltip div:last-child {
-  margin-bottom: 0;
+.synteny-tooltip-bar .tooltip-separator {
+  color: rgba(255, 255, 255, 0.4);
 }
 
-.tooltip-hint {
-  margin-top: 8px;
+.synteny-tooltip-bar .tooltip-hint {
+  margin-left: auto;
   font-size: 0.75rem;
   color: #aaa;
+  font-style: italic;
+}
+
+.synteny-tooltip-bar .tooltip-placeholder {
+  color: rgba(255, 255, 255, 0.7) !important;
   font-style: italic;
 }
 

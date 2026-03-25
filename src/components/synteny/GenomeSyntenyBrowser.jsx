@@ -59,7 +59,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
   const [queryGeneName, setQueryGeneName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [tooltip, setTooltip] = useState({ show: false, x: 0, y: 0, content: null });
+  const [tooltip, setTooltip] = useState({ show: false, content: null });
   const [zoomLevel, setZoomLevel] = useState(1);
   const [panOffset, setPanOffset] = useState(0);
   const [visibleSpecies, setVisibleSpecies] = useState({});
@@ -144,7 +144,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
   // Handle gene click - show detail popup instead of navigating directly
   const handleGeneClick = useCallback((gene, species) => {
     setSelectedGene({ ...gene, species });
-    setTooltip({ show: false, x: 0, y: 0, content: null }); // Hide tooltip
+    setTooltip({ show: false, content: null }); // Hide tooltip
   }, []);
 
   // Close gene detail popup
@@ -450,12 +450,9 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
         });
 
         // Hover handlers - highlight this gene's ortholog connections
-        geneGroup.on('mouseenter', (event) => {
-          const rect = containerRef.current.getBoundingClientRect();
+        geneGroup.on('mouseenter', () => {
           setTooltip({
             show: true,
-            x: event.clientX - rect.left,
-            y: event.clientY - rect.top,
             content: {
               featureName: gene.feature_name,
               geneName: gene.gene_name,
@@ -474,7 +471,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
         });
 
         geneGroup.on('mouseleave', () => {
-          setTooltip({ show: false, x: 0, y: 0, content: null });
+          setTooltip({ show: false, content: null });
           setHoveredOrtholog(null);
         });
       });
@@ -1017,7 +1014,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
             {' '}in <em>{SPECIES_ABBREV[syntenyData.query_gene.organism] || syntenyData.query_gene.organism}</em>
           </div>
           <div className="query-hint">
-            Genes are aligned by orthologous relationships, not genomic position.
+            Genes are aligned by orthologous relationships, not exact genomic position.
           </div>
         </div>
       )}
@@ -1050,51 +1047,42 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
           </div>
         )}
 
-        <div className="browser-canvas" ref={containerRef} />
-
-        {/* Tooltip */}
-        {tooltip.show && tooltip.content && (() => {
-          // Calculate tooltip position with overflow detection
-          const tooltipHeight = 180; // Estimated tooltip height
-          const tooltipWidth = 350;  // Max tooltip width from CSS
-          const containerHeight = containerRef.current?.clientHeight || 400;
-          const containerWidth = containerRef.current?.clientWidth || 800;
-
-          // Flip vertically if tooltip would overflow bottom
-          const flipVertical = tooltip.y + tooltipHeight + 20 > containerHeight;
-          // Flip horizontally if tooltip would overflow right
-          const flipHorizontal = tooltip.x + tooltipWidth + 20 > containerWidth;
-
-          const left = flipHorizontal ? Math.max(10, tooltip.x - tooltipWidth - 10) : tooltip.x + 10;
-          const top = flipVertical ? Math.max(10, tooltip.y - tooltipHeight - 10) : tooltip.y + 10;
-
-          return (
-          <div
-            className="browser-tooltip"
-            style={{
-              left: left,
-              top: top,
-            }}
-          >
-            <div className="tooltip-header">
-              <strong>{tooltip.content.geneName || tooltip.content.featureName}</strong>
+        {/* Fixed Tooltip Bar - shows above the canvas */}
+        <div className="browser-tooltip-bar" style={{ color: '#fff' }}>
+          {tooltip.show && tooltip.content ? (
+            <>
+              <span className="tooltip-gene-name">
+                <strong>{tooltip.content.geneName || tooltip.content.featureName}</strong>
+              </span>
               {tooltip.content.isQuery && <span className="query-badge">Query</span>}
-            </div>
-            {tooltip.content.geneName && tooltip.content.featureName !== tooltip.content.geneName && (
-              <div>Systematic: {tooltip.content.featureName}</div>
-            )}
-            <div>Location: {tooltip.content.start?.toLocaleString()} - {tooltip.content.stop?.toLocaleString()}</div>
-            <div>Strand: {tooltip.content.strand}</div>
-            {tooltip.content.orthologId && (
-              <div>Ortholog cluster: {tooltip.content.orthologId}</div>
-            )}
-            <div className="tooltip-organism" style={{ fontStyle: 'italic' }}>
-              {SPECIES_ABBREV[tooltip.content.organism] || tooltip.content.organism}
-            </div>
-            <div className="tooltip-hint">Click for details | Double-click to center</div>
-          </div>
-          );
-        })()}
+              <span className="tooltip-separator">|</span>
+              <span>Systematic: {tooltip.content.featureName}</span>
+              <span className="tooltip-separator">|</span>
+              <span>Location: {tooltip.content.start?.toLocaleString()} - {tooltip.content.stop?.toLocaleString()}</span>
+              <span className="tooltip-separator">|</span>
+              <span>Strand: {tooltip.content.strand}</span>
+              {tooltip.content.orthologId && (
+                <>
+                  <span className="tooltip-separator">|</span>
+                  <span>Ortholog: {tooltip.content.orthologId}</span>
+                </>
+              )}
+              <span className="tooltip-separator">|</span>
+              <span className="tooltip-organism">
+                {SPECIES_ABBREV[tooltip.content.organism] || tooltip.content.organism}
+              </span>
+              <span className="tooltip-hint">(Click for details | Double-click to center)</span>
+            </>
+          ) : (
+            <>
+              <span className="tooltip-gene-name">
+                <strong>Hover over a gene for details</strong>
+              </span>
+            </>
+          )}
+        </div>
+
+        <div className="browser-canvas" ref={containerRef} />
       </div>
 
       {/* Footer */}
