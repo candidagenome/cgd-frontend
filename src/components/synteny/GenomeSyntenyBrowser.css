@@ -455,21 +455,18 @@
 
 /* Fixed Tooltip Bar - shows above the canvas */
 .browser-tooltip-bar {
+  all: unset;
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 10px 16px;
-  background: rgba(44, 62, 80, 0.95);
-  color: #fff !important;
-  -webkit-text-fill-color: #fff !important;
+  background: rgba(44, 62, 80, 0.95) !important;
+  color: white !important;
+  -webkit-text-fill-color: white !important;
   font-size: 0.85rem;
   min-height: 40px;
   flex-wrap: wrap;
-}
-
-.browser-tooltip-bar * {
-  color: inherit !important;
-  -webkit-text-fill-color: inherit !important;
+  box-sizing: border-box;
 }
 
 .browser-tooltip-bar .tooltip-gene-name {
