@@ -496,7 +496,7 @@
 }
 
 .browser-tooltip-bar .tooltip-placeholder {
-  color: rgba(255, 255, 255, 0.7);
+  color: #ccc;
   font-style: italic;
 }
 
