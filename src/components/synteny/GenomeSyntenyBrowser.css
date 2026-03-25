@@ -460,10 +460,14 @@
   gap: 8px;
   padding: 10px 16px;
   background: rgba(44, 62, 80, 0.95);
-  color: #fff;
+  color: #fff !important;
   font-size: 0.85rem;
   min-height: 40px;
   flex-wrap: wrap;
+}
+
+.browser-tooltip-bar * {
+  color: inherit !important;
 }
 
 .browser-tooltip-bar .tooltip-gene-name {
