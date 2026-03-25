@@ -15,12 +15,7 @@ const SLIDESHOW_IMAGES = [
 
 // Meetings data
 const MEETINGS = [
-  {
-    title: '33rd Fungal Genetics Conference',
-    url: 'https://genetics-gsa.org/fungal-2026/',
-    location: 'Asilomar Conference Grounds, Pacific Grove, CA',
-    date: 'March 17 - 22, 2026',
-  },
+
   {
     title: 'Antimicrobial Resistance - Genomes, Big Data and Emerging Technologies',
     url: 'https://coursesandconferences.wellcomeconnectingscience.org/event/antimicrobial-resistance-genomes-big-data-and-emerging-technologies-20260323/',
@@ -50,25 +45,6 @@ const NEWS_ITEMS = [
     ),
     date: 'March 2026',
     highlight: true,
-  },
-  {
-    title: 'Introducing a Public Wiki for Candida',
-    content: (
-      <>
-        CGD thought it would be useful to provide a single reference source for the pathogenic{' '}
-        <em>Candida</em> spp. We envision this site to be useful to established researchers as a
-        reference for quick answers to questions such as "Which pathogenic <em>Candida</em> make
-        true hyphae versus pseudohyphae?" The primary usefulness, however, is likely to be for
-        trainees new to the field of <em>Candida</em>. The site provides links and references
-        covering a wide breadth of knowledge, including strains, protocols, seminal references, and
-        comparisons between species. The{' '}
-        <a href="http://publicwiki.candidagenome.org/" target="_blank" rel="noopener noreferrer">
-          site is here
-        </a>{' '}
-        and is findable on our homepage via the Community menu. Make a shortcut!
-      </>
-    ),
-    date: 'November 3, 2025',
   },
   {
     title: 'CGD Curation News',
@@ -113,6 +89,25 @@ const NEWS_ITEMS = [
     ),
     date: null,
   },
+  {
+    title: 'Introducing a Public Wiki for Candida',
+    content: (
+      <>
+        CGD thought it would be useful to provide a single reference source for the pathogenic{' '}
+        <em>Candida</em> spp. We envision this site to be useful to established researchers as a
+        reference for quick answers to questions such as "Which pathogenic <em>Candida</em> make
+        true hyphae versus pseudohyphae?" The primary usefulness, however, is likely to be for
+        trainees new to the field of <em>Candida</em>. The site provides links and references
+        covering a wide breadth of knowledge, including strains, protocols, seminal references, and
+        comparisons between species. The{' '}
+        <a href="http://publicwiki.candidagenome.org/" target="_blank" rel="noopener noreferrer">
+          site is here
+        </a>{' '}
+        and is findable on our homepage via the Community menu. Make a shortcut!
+      </>
+    ),
+    date: 'November 3, 2025',
+  },  
   {
     title: (
       <>
