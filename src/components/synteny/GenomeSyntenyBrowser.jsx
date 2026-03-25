@@ -1074,9 +1074,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
               <span className="tooltip-hint">(Click for details | Double-click to center)</span>
             </>
           ) : (
-            <>
-              <span className="tooltip-gene-name"><em>Hover over a gene for details</em></span>
-            </>
+            'Hover over a gene for details'
           )}
         </div>
 
