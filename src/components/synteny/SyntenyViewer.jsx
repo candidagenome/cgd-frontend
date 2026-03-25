@@ -527,7 +527,11 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
             <span className="tooltip-hint">(Click to view locus)</span>
           </>
         ) : (
-          'Hover over a gene for details'
+          <>
+            <span className="tooltip-gene-name">
+              <strong>Hover over a gene for details</strong>
+            </span>
+          </>
         )}
       </div>
 
