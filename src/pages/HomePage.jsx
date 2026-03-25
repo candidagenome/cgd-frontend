@@ -39,6 +39,7 @@ const NEWS_ITEMS = [
         We've launched a redesigned CGD website with improved search, updated JBrowse, enhanced
         literature tools, and a new API interface. The new site offers faster performance, better
         navigation, and more powerful data exploration tools.
+        For a list of new features, see the <a href="http://ec2-52-40-145-49.us-west-2.compute.amazonaws.com/index.php?title=Main_Page#Newsletter_Archives" target='new' >Spring 2026 CGD Newsletter.</a> 
         <br /><br />
         Explore the new features and <Link to="/contact">let us know your feedback</Link>.
       </>
