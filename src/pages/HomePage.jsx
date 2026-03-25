@@ -15,12 +15,7 @@ const SLIDESHOW_IMAGES = [
 
 // Meetings data
 const MEETINGS = [
-  {
-    title: '33rd Fungal Genetics Conference',
-    url: 'https://genetics-gsa.org/fungal-2026/',
-    location: 'Asilomar Conference Grounds, Pacific Grove, CA',
-    date: 'March 17 - 22, 2026',
-  },
+
   {
     title: 'Antimicrobial Resistance - Genomes, Big Data and Emerging Technologies',
     url: 'https://coursesandconferences.wellcomeconnectingscience.org/event/antimicrobial-resistance-genomes-big-data-and-emerging-technologies-20260323/',
@@ -43,32 +38,14 @@ const NEWS_ITEMS = [
       <>
         We've launched a redesigned CGD website with improved search, updated JBrowse, enhanced
         literature tools, and a new API interface. The new site offers faster performance, better
-        navigation, and more powerful data exploration tools.
+        navigation, and more powerful data exploration tools.<p></p>
+        For a list of new features, see the <a href="http://ec2-52-40-145-49.us-west-2.compute.amazonaws.com/index.php?title=Main_Page#Newsletter_Archives" target='new' >Spring 2026 CGD Newsletter.</a> 
         <br /><br />
         Explore the new features and <Link to="/contact">let us know your feedback</Link>.
       </>
     ),
     date: 'March 2026',
     highlight: true,
-  },
-  {
-    title: 'Introducing a Public Wiki for Candida',
-    content: (
-      <>
-        CGD thought it would be useful to provide a single reference source for the pathogenic{' '}
-        <em>Candida</em> spp. We envision this site to be useful to established researchers as a
-        reference for quick answers to questions such as "Which pathogenic <em>Candida</em> make
-        true hyphae versus pseudohyphae?" The primary usefulness, however, is likely to be for
-        trainees new to the field of <em>Candida</em>. The site provides links and references
-        covering a wide breadth of knowledge, including strains, protocols, seminal references, and
-        comparisons between species. The{' '}
-        <a href="http://publicwiki.candidagenome.org/" target="_blank" rel="noopener noreferrer">
-          site is here
-        </a>{' '}
-        and is findable on our homepage via the Community menu. Make a shortcut!
-      </>
-    ),
-    date: 'November 3, 2025',
   },
   {
     title: 'CGD Curation News',
@@ -113,6 +90,25 @@ const NEWS_ITEMS = [
     ),
     date: null,
   },
+  {
+    title: 'Introducing a Public Wiki for Candida',
+    content: (
+      <>
+        CGD thought it would be useful to provide a single reference source for the pathogenic{' '}
+        <em>Candida</em> spp. We envision this site to be useful to established researchers as a
+        reference for quick answers to questions such as "Which pathogenic <em>Candida</em> make
+        true hyphae versus pseudohyphae?" The primary usefulness, however, is likely to be for
+        trainees new to the field of <em>Candida</em>. The site provides links and references
+        covering a wide breadth of knowledge, including strains, protocols, seminal references, and
+        comparisons between species. The{' '}
+        <a href="http://publicwiki.candidagenome.org/" target="_blank" rel="noopener noreferrer">
+          site is here
+        </a>{' '}
+        and is findable on our homepage via the Community menu. Make a shortcut!
+      </>
+    ),
+    date: 'November 3, 2025',
+  },  
   {
     title: (
       <>
@@ -260,7 +256,6 @@ function HomePage() {
         <div className="home-right">
           <section className="news-section">
             <h1>New and Noteworthy</h1>
-            <hr />
 
             {NEWS_ITEMS.map((item, index) => (
               <article key={index} className={`news-item ${item.highlight ? 'news-highlight' : ''}`}>
@@ -269,7 +264,7 @@ function HomePage() {
                 {item.date && <p className="news-date">(Posted {item.date})</p>}
               </article>
             ))}
-
+            <hr />
             <article className="news-item">
               <h2>Archived News</h2>
               <p>
