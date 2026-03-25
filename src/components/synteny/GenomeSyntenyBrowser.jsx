@@ -1014,7 +1014,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
             {' '}in <em>{SPECIES_ABBREV[syntenyData.query_gene.organism] || syntenyData.query_gene.organism}</em>
           </div>
           <div className="query-hint">
-            Genes are aligned by orthologous relationships, not genomic position.
+            Genes are aligned by orthologous relationships, not exact genomic position.
           </div>
         </div>
       )}

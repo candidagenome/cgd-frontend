@@ -138,7 +138,7 @@
 }
 
 .synteny-tooltip-bar .tooltip-placeholder {
-  color: #888;
+  color: rgba(255, 255, 255, 0.7);
   font-style: italic;
 }
 
