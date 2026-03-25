@@ -498,6 +498,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
             const xLeft = xScale(geneLeft);
             const xRight = xScale(geneRight);
             const geneWidth = Math.max(xRight - xLeft, 4);
+            const isForward = gene.strand === 'W' || gene.strand === '+';
             genePositions.push({
               species: sd.species,
               speciesIndex: sd.index,
@@ -505,6 +506,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
               xRight: xLeft + geneWidth,
               yTop: sd.yPosition + (trackHeight - geneHeight) / 2,
               yBottom: sd.yPosition + (trackHeight + geneHeight) / 2,
+              isForward: isForward,
             });
           }
         });
@@ -514,20 +516,37 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
       genePositions.sort((a, b) => a.speciesIndex - b.speciesIndex);
 
       // Draw trapezoid ribbons between consecutive species (Sybil style)
+      // Use crossed/bowtie shape when genes are on opposite strands
       for (let i = 0; i < genePositions.length - 1; i++) {
         const p1 = genePositions[i];
         const p2 = genePositions[i + 1];
 
         if (p1.species === p2.species) continue;
 
-        // Create trapezoid polygon connecting the two genes
-        // Points: top-left of gene1, top-right of gene1, bottom-right of gene2, bottom-left of gene2
-        const points = [
-          [p1.xLeft, p1.yBottom],   // bottom-left of top gene
-          [p1.xRight, p1.yBottom],  // bottom-right of top gene
-          [p2.xRight, p2.yTop],     // top-right of bottom gene
-          [p2.xLeft, p2.yTop],      // top-left of bottom gene
-        ];
+        // Check if genes are on opposite strands
+        const sameStrand = p1.isForward === p2.isForward;
+
+        // Create polygon connecting the two genes
+        // Same strand: normal trapezoid (straight sides)
+        // Opposite strand: crossed/bowtie shape (X pattern)
+        let points;
+        if (sameStrand) {
+          // Normal trapezoid: left connects to left, right connects to right
+          points = [
+            [p1.xLeft, p1.yBottom],   // bottom-left of top gene
+            [p1.xRight, p1.yBottom],  // bottom-right of top gene
+            [p2.xRight, p2.yTop],     // top-right of bottom gene
+            [p2.xLeft, p2.yTop],      // top-left of bottom gene
+          ];
+        } else {
+          // Crossed bowtie: left connects to right, right connects to left
+          points = [
+            [p1.xLeft, p1.yBottom],   // bottom-left of top gene
+            [p1.xRight, p1.yBottom],  // bottom-right of top gene
+            [p2.xLeft, p2.yTop],      // top-LEFT of bottom gene (crossed)
+            [p2.xRight, p2.yTop],     // top-RIGHT of bottom gene (crossed)
+          ];
+        }
 
         connectionsGroup.append('polygon')
           .attr('points', points.map(p => p.join(',')).join(' '))
@@ -1034,12 +1053,27 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
         <div className="browser-canvas" ref={containerRef} />
 
         {/* Tooltip */}
-        {tooltip.show && tooltip.content && (
+        {tooltip.show && tooltip.content && (() => {
+          // Calculate tooltip position with overflow detection
+          const tooltipHeight = 180; // Estimated tooltip height
+          const tooltipWidth = 350;  // Max tooltip width from CSS
+          const containerHeight = containerRef.current?.clientHeight || 400;
+          const containerWidth = containerRef.current?.clientWidth || 800;
+
+          // Flip vertically if tooltip would overflow bottom
+          const flipVertical = tooltip.y + tooltipHeight + 20 > containerHeight;
+          // Flip horizontally if tooltip would overflow right
+          const flipHorizontal = tooltip.x + tooltipWidth + 20 > containerWidth;
+
+          const left = flipHorizontal ? Math.max(10, tooltip.x - tooltipWidth - 10) : tooltip.x + 10;
+          const top = flipVertical ? Math.max(10, tooltip.y - tooltipHeight - 10) : tooltip.y + 10;
+
+          return (
           <div
             className="browser-tooltip"
             style={{
-              left: tooltip.x + 10,
-              top: tooltip.y + 10,
+              left: left,
+              top: top,
             }}
           >
             <div className="tooltip-header">
@@ -1059,7 +1093,8 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
             </div>
             <div className="tooltip-hint">Click for details | Double-click to center</div>
           </div>
-        )}
+          );
+        })()}
       </div>
 
       {/* Footer */}

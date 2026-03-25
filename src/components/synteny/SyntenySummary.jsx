@@ -293,6 +293,7 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
               const xLeft = xScale(geneLeft);
               const xRight = xScale(geneRight);
               const geneWidth = Math.max(xRight - xLeft, 3);
+              const isForward = gene.strand === 'W' || gene.strand === '+';
               genePositions.push({
                 species: sd.species,
                 speciesIndex: sd.index,
@@ -300,6 +301,7 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
                 xRight: xLeft + geneWidth,
                 yTop: sd.yPosition + (trackHeight - geneHeight) / 2,
                 yBottom: sd.yPosition + (trackHeight + geneHeight) / 2,
+                isForward: isForward,
               });
             }
           });
@@ -309,18 +311,37 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
         genePositions.sort((a, b) => a.speciesIndex - b.speciesIndex);
 
         // Draw trapezoid ribbons between consecutive species
+        // Use crossed/bowtie shape when genes are on opposite strands
         const connectionsGroup = g.insert('g', ':first-child').attr('class', 'connections-group');
         for (let i = 0; i < genePositions.length - 1; i++) {
           const p1 = genePositions[i];
           const p2 = genePositions[i + 1];
           if (p1.species === p2.species) continue;
 
-          const points = [
-            [p1.xLeft, p1.yBottom],
-            [p1.xRight, p1.yBottom],
-            [p2.xRight, p2.yTop],
-            [p2.xLeft, p2.yTop],
-          ];
+          // Check if genes are on opposite strands
+          const sameStrand = p1.isForward === p2.isForward;
+
+          // Create polygon connecting the two genes
+          // Same strand: normal trapezoid (straight sides)
+          // Opposite strand: crossed/bowtie shape (X pattern)
+          let points;
+          if (sameStrand) {
+            // Normal trapezoid: left connects to left, right connects to right
+            points = [
+              [p1.xLeft, p1.yBottom],
+              [p1.xRight, p1.yBottom],
+              [p2.xRight, p2.yTop],
+              [p2.xLeft, p2.yTop],
+            ];
+          } else {
+            // Crossed bowtie: left connects to right, right connects to left
+            points = [
+              [p1.xLeft, p1.yBottom],
+              [p1.xRight, p1.yBottom],
+              [p2.xLeft, p2.yTop],
+              [p2.xRight, p2.yTop],
+            ];
+          }
 
           connectionsGroup.append('polygon')
             .attr('points', points.map(p => p.join(',')).join(' '))
