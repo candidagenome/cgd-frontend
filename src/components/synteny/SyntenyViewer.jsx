@@ -40,7 +40,7 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
   const [error, setError] = useState(null);
   const [syntenyData, setSyntenyData] = useState(null);
   const [visibleSpecies, setVisibleSpecies] = useState({});
-  const [tooltip, setTooltip] = useState({ show: false, x: 0, y: 0, content: null });
+  const [tooltip, setTooltip] = useState({ show: false, content: null });
 
   const navigate = useNavigate();
   const dateStamp = new Date().toISOString().split('T')[0];
@@ -250,12 +250,9 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
         geneGroup.on('click', () => handleGeneClick(gene.feature_name));
 
         // Hover handlers for tooltip
-        geneGroup.on('mouseenter', (event) => {
-          const rect = containerRef.current.getBoundingClientRect();
+        geneGroup.on('mouseenter', () => {
           setTooltip({
             show: true,
-            x: event.clientX - rect.left,
-            y: event.clientY - rect.top,
             content: {
               featureName: gene.feature_name,
               geneName: gene.gene_name,
@@ -268,7 +265,7 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
         });
 
         geneGroup.on('mouseleave', () => {
-          setTooltip({ show: false, x: 0, y: 0, content: null });
+          setTooltip({ show: false, content: null });
         });
       });
     });
@@ -510,26 +507,32 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
         </div>
       </div>
 
+      {/* Fixed Tooltip Bar - shows above the canvas */}
+      <div className="synteny-tooltip-bar">
+        {tooltip.show && tooltip.content ? (
+          <>
+            <span className="tooltip-gene-name"><strong>{tooltip.content.geneName || tooltip.content.featureName}</strong></span>
+            <span className="tooltip-separator">|</span>
+            <span>Systematic: {tooltip.content.featureName}</span>
+            <span className="tooltip-separator">|</span>
+            <span>Location: {tooltip.content.start.toLocaleString()} - {tooltip.content.stop.toLocaleString()}</span>
+            <span className="tooltip-separator">|</span>
+            <span>Strand: {tooltip.content.strand}</span>
+            {tooltip.content.orthologId && (
+              <>
+                <span className="tooltip-separator">|</span>
+                <span>Ortholog: {tooltip.content.orthologId}</span>
+              </>
+            )}
+            <span className="tooltip-hint">(Click to view locus)</span>
+          </>
+        ) : (
+          <span className="tooltip-placeholder">Hover over a gene for details</span>
+        )}
+      </div>
+
       {/* SVG Canvas */}
       <div className="synteny-canvas" ref={containerRef}></div>
-
-      {/* Tooltip */}
-      {tooltip.show && tooltip.content && (
-        <div
-          className="synteny-tooltip"
-          style={{
-            left: tooltip.x + 10,
-            top: tooltip.y + 10,
-          }}
-        >
-          <div><strong>{tooltip.content.geneName || tooltip.content.featureName}</strong></div>
-          <div>Systematic: {tooltip.content.featureName}</div>
-          <div>Location: {tooltip.content.start.toLocaleString()} - {tooltip.content.stop.toLocaleString()}</div>
-          <div>Strand: {tooltip.content.strand}</div>
-          {tooltip.content.orthologId && <div>Ortholog cluster: {tooltip.content.orthologId}</div>}
-          <div className="tooltip-hint">Click to view locus</div>
-        </div>
-      )}
 
       {/* Footer */}
       <div className="synteny-footer">
