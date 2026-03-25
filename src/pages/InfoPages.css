@@ -644,6 +644,12 @@
 
 .genome-snapshot-page .help-button {
   margin-left: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.genome-snapshot-page .help-button:hover svg circle {
+  fill: #e6f0ff;
 }
 
 .toc-list {

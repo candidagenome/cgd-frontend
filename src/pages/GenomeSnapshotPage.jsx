@@ -365,8 +365,11 @@ function GenomeSnapshotPage() {
           <h1>
             <em>{data.organism_name} {data.strain}</em> Genome Snapshot/Overview
           </h1>
-          <Link to="/help/genome-snapshot" className="help-button">
-            <img src="/images/help-button.png" alt="Help" width="30" height="30" />
+          <Link to="/help/genome-snapshot" className="help-button" title="Help">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="10" stroke="#0066cc" strokeWidth="2" fill="white"/>
+              <text x="12" y="17" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#0066cc">?</text>
+            </svg>
           </Link>
         </div>
         <hr />
