@@ -255,7 +255,6 @@ function HomePage() {
         <div className="home-right">
           <section className="news-section">
             <h1>New and Noteworthy</h1>
-            <hr />
 
             {NEWS_ITEMS.map((item, index) => (
               <article key={index} className={`news-item ${item.highlight ? 'news-highlight' : ''}`}>
@@ -264,7 +263,7 @@ function HomePage() {
                 {item.date && <p className="news-date">(Posted {item.date})</p>}
               </article>
             ))}
-
+            <hr />
             <article className="news-item">
               <h2>Archived News</h2>
               <p>
