@@ -269,22 +269,36 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
       const allCoords = genes.flatMap(g => [g.start, g.stop]);
       const minCoord = allCoords.length > 0 ? Math.min(...allCoords) : 0;
       const maxCoord = allCoords.length > 0 ? Math.max(...allCoords) : 1000;
-      const padding = (maxCoord - minCoord) * 0.05;
       return {
         ...region,
         index: idx,
-        minCoord: minCoord - padding,
-        maxCoord: maxCoord + padding,
+        minCoord,
+        maxCoord,
+        span: maxCoord - minCoord,
         yPosition: idx * (trackHeight + trackSpacing),
       };
     });
 
-    // Create x scales for each track - scaled by zoom level
+    // Find the maximum span across all species for consistent scaling
+    const maxSpan = Math.max(...speciesData.map(sd => sd.span));
+    const globalPadding = maxSpan * 0.05;
+    const totalDomain = maxSpan + globalPadding * 2;
+
+    // Create a single global scale (bp per pixel) based on the largest span
+    const bpPerPixel = totalDomain / effectiveWidth;
+
+    // Create x scales for each track, centered within the available width
     const xScales = {};
     speciesData.forEach(sd => {
-      xScales[sd.species] = d3.scaleLinear()
-        .domain([sd.minCoord, sd.maxCoord])
-        .range([0, effectiveWidth]);
+      const regionWidth = sd.span / bpPerPixel;
+      const xOffset = (effectiveWidth - regionWidth) / 2;
+
+      xScales[sd.species] = (coord) => {
+        const relativePos = (coord - sd.minCoord) / bpPerPixel;
+        return xOffset + relativePos;
+      };
+      xScales[sd.species].offset = xOffset;
+      xScales[sd.species].regionWidth = regionWidth;
     });
 
     // Find and store query gene position for centering
@@ -334,16 +348,16 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
         .attr('data-organism', sd.species)
         .attr('transform', `translate(0,${sd.yPosition})`);
 
-      // Chromosome line
+      // Chromosome line - spans only the region with genes
+      const xScale = xScales[sd.species];
       trackGroup.append('line')
-        .attr('x1', 0)
-        .attr('x2', effectiveWidth)
+        .attr('x1', xScale.offset)
+        .attr('x2', xScale.offset + xScale.regionWidth)
         .attr('y1', trackHeight / 2)
         .attr('y2', trackHeight / 2)
         .attr('class', 'chromosome-line');
 
       // Draw genes
-      const xScale = xScales[sd.species];
       const genes = sd.genes || [];
 
       genes.forEach(gene => {
@@ -1014,7 +1028,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
             {' '}in <em>{SPECIES_ABBREV[syntenyData.query_gene.organism] || syntenyData.query_gene.organism}</em>
           </div>
           <div className="query-hint">
-            Genes are aligned by orthologous relationships, not exact genomic position.
+            Genes are aligned by orthologous relationships, not exact genomic position. Gene sizes are drawn to a consistent scale across species.
           </div>
         </div>
       )}

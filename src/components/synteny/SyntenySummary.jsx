@@ -164,22 +164,36 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
       const allCoords = genes.flatMap(gene => [gene.start, gene.stop]);
       const minCoord = allCoords.length > 0 ? Math.min(...allCoords) : 0;
       const maxCoord = allCoords.length > 0 ? Math.max(...allCoords) : 1000;
-      const padding = (maxCoord - minCoord) * 0.05;
       return {
         ...region,
         index: idx,
-        minCoord: minCoord - padding,
-        maxCoord: maxCoord + padding,
+        minCoord,
+        maxCoord,
+        span: maxCoord - minCoord,
         yPosition: idx * (trackHeight + trackSpacing),
       };
     });
 
-    // Create x scales
+    // Find the maximum span across all species for consistent scaling
+    const maxSpan = Math.max(...speciesData.map(sd => sd.span));
+    const globalPadding = maxSpan * 0.05;
+    const totalDomain = maxSpan + globalPadding * 2;
+
+    // Create a single global scale (bp per pixel) based on the largest span
+    const bpPerPixel = totalDomain / width;
+
+    // Create x scales for each species track, centered within the available width
     const xScales = {};
     speciesData.forEach(sd => {
-      xScales[sd.species] = d3.scaleLinear()
-        .domain([sd.minCoord, sd.maxCoord])
-        .range([0, width]);
+      const regionWidth = sd.span / bpPerPixel;
+      const xOffset = (width - regionWidth) / 2;
+
+      xScales[sd.species] = (coord) => {
+        const relativePos = (coord - sd.minCoord) / bpPerPixel;
+        return xOffset + relativePos;
+      };
+      xScales[sd.species].offset = xOffset;
+      xScales[sd.species].regionWidth = regionWidth;
     });
 
     // Draw each species track
@@ -199,17 +213,17 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
       const trackGroup = g.append('g')
         .attr('transform', `translate(0,${sd.yPosition})`);
 
-      // Chromosome line
+      // Chromosome line - spans only the region with genes
+      const xScale = xScales[sd.species];
       trackGroup.append('line')
-        .attr('x1', 0)
-        .attr('x2', width)
+        .attr('x1', xScale.offset)
+        .attr('x2', xScale.offset + xScale.regionWidth)
         .attr('y1', trackHeight / 2)
         .attr('y2', trackHeight / 2)
         .attr('stroke', '#e0e0e0')
         .attr('stroke-width', 1.5);
 
       // Draw genes
-      const xScale = xScales[sd.species];
       const genes = sd.genes || [];
 
       genes.forEach(gene => {

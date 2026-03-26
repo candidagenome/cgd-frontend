@@ -139,17 +139,36 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
         index: idx,
         minCoord,
         maxCoord,
+        span: maxCoord - minCoord,
         yPosition: idx * (trackHeight + trackSpacing),
       };
     });
 
-    // Create scales for each species track
+    // Find the maximum span across all species for consistent scaling
+    const maxSpan = Math.max(...speciesData.map(sd => sd.span));
+    const globalPadding = maxSpan * 0.05;
+    const totalDomain = maxSpan + globalPadding * 2;
+
+    // Create a single global scale (bp per pixel) based on the largest span
+    // All species will use this same scale for consistent gene sizing
+    const bpPerPixel = totalDomain / width;
+
+    // Create scales for each species track, centered within the available width
     const xScales = {};
     speciesData.forEach(sd => {
-      const padding = (sd.maxCoord - sd.minCoord) * 0.05;
-      xScales[sd.species] = d3.scaleLinear()
-        .domain([sd.minCoord - padding, sd.maxCoord + padding])
-        .range([0, width]);
+      // Calculate how much horizontal space this species' region needs
+      const regionWidth = sd.span / bpPerPixel;
+      // Center the region by adding offset
+      const xOffset = (width - regionWidth) / 2;
+
+      // Create scale that maps genomic coordinates to pixel positions
+      xScales[sd.species] = (coord) => {
+        const relativePos = (coord - sd.minCoord) / bpPerPixel;
+        return xOffset + relativePos;
+      };
+      // Store offset for chromosome line drawing
+      xScales[sd.species].offset = xOffset;
+      xScales[sd.species].regionWidth = regionWidth;
     });
 
     // Draw tracks and genes for each species
@@ -168,16 +187,16 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
         .style('font-style', 'italic')
         .text(SPECIES_ABBREV[sd.species] || sd.species);
 
-      // Chromosome line
+      // Chromosome line - spans only the region with genes
+      const xScale = xScales[sd.species];
       trackGroup.append('line')
-        .attr('x1', 0)
-        .attr('x2', width)
+        .attr('x1', xScale.offset)
+        .attr('x2', xScale.offset + xScale.regionWidth)
         .attr('y1', trackHeight / 2)
         .attr('y2', trackHeight / 2)
         .attr('class', 'chromosome-line');
 
       // Draw genes
-      const xScale = xScales[sd.species];
       const genes = sd.genes || [];
 
       genes.forEach(gene => {
