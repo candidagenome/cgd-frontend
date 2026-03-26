@@ -8,8 +8,16 @@ const getSeqTypeParam = (seqType) => {
   const type = seqType?.toLowerCase() || '';
   if (type.includes('protein')) return 'protein';
   if (type.includes('coding') || type === 'cds') return 'coding';
+  if (type.includes('genomic_utr')) return 'genomic_utr';
+  if (type.includes('coding_utr') || type.includes('transcript')) return 'coding_utr';
   return 'genomic';
 };
+
+// Additional sequence download options
+const ADDITIONAL_SEQ_OPTIONS = [
+  { type: 'genomic_utr', label: 'Genomic + UTRs', description: 'Full genomic sequence including UTR regions' },
+  { type: 'coding_utr', label: 'Transcript (mRNA)', description: 'Spliced transcript with UTRs, introns removed' },
+];
 
 function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
   const [expandedSequences, setExpandedSequences] = useState({});
@@ -142,6 +150,36 @@ function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismCha
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+
+          {/* Additional Sequence Downloads */}
+          {orgData?.locus_display_name && (
+            <div className="additional-sequences-section">
+              <h4>Additional Sequence Options</h4>
+              <div className="additional-seq-options">
+                {ADDITIONAL_SEQ_OPTIONS.map(opt => (
+                  <a
+                    key={opt.type}
+                    className="additional-seq-btn"
+                    href={`${API_BASE_URL}/api/sequence?locus=${encodeURIComponent(orgData.locus_display_name)}&seqtype=${opt.type}&format=fasta`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={opt.description}
+                  >
+                    {opt.label}
+                  </a>
+                ))}
+                <a
+                  className="additional-seq-btn"
+                  href={`${API_BASE_URL}/api/sequence?locus=${encodeURIComponent(orgData.locus_display_name)}&seqtype=genomic&flankl=1000&flankr=1000&format=fasta`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Genomic sequence with 1kb upstream and downstream flanking regions"
+                >
+                  Genomic +1kb Flanking
+                </a>
+              </div>
             </div>
           )}
 
