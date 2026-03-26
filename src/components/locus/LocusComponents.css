@@ -555,6 +555,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  margin-bottom: 10px;
 }
 
 .additional-seq-btn {
@@ -574,6 +575,60 @@
 .additional-seq-btn:hover {
   background-color: #3f51b5;
   color: white;
+}
+
+.additional-seq-btn.active {
+  background-color: #3f51b5;
+}
+
+.additional-seq-btn .collapse-indicator {
+  margin-left: 6px;
+  font-size: 0.75em;
+}
+
+.additional-seq-display {
+  margin-top: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: white;
+  overflow: hidden;
+}
+
+.additional-seq-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  background-color: #f8f8f8;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+.additional-seq-header:hover {
+  background-color: #f0f0f0;
+}
+
+.additional-seq-header .seq-type {
+  font-weight: 500;
+  color: #333;
+}
+
+.additional-seq-header .seq-stat {
+  margin-left: auto;
+  color: #666;
+  font-size: 0.9em;
+}
+
+.loading-inline {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+}
+
+.error-inline {
+  padding: 15px;
+  color: #c62828;
+  background-color: #ffebee;
 }
 
 .sequence-text {

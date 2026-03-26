@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
 import { API_BASE_URL } from '../../api/config';
 import './LocusComponents.css';
@@ -13,14 +13,17 @@ const getSeqTypeParam = (seqType) => {
   return 'genomic';
 };
 
-// Additional sequence download options
+// Additional sequence options (fetched on demand)
 const ADDITIONAL_SEQ_OPTIONS = [
   { type: 'genomic_utr', label: 'Genomic + UTRs', description: 'Full genomic sequence including UTR regions' },
   { type: 'coding_utr', label: 'Transcript (mRNA)', description: 'Spliced transcript with UTRs, introns removed' },
+  { type: 'genomic_flanking', label: 'Genomic +1kb Flanking', description: 'Genomic sequence with 1kb upstream and downstream', flankl: 1000, flankr: 1000, seqtype: 'genomic' },
 ];
 
 function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
   const [expandedSequences, setExpandedSequences] = useState({});
+  const [additionalSeqs, setAdditionalSeqs] = useState({});  // { type: { sequence, loading, error } }
+  const [expandedAdditional, setExpandedAdditional] = useState({});
 
   // Get available organisms from the data - memoize to prevent new array reference each render
   const organisms = useMemo(() => {
@@ -96,6 +99,58 @@ function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismCha
     }));
   };
 
+  // Fetch additional sequence types on demand
+  const fetchAdditionalSequence = useCallback(async (opt, locusName) => {
+    const key = opt.type;
+
+    // If already loaded, just toggle expansion
+    if (additionalSeqs[key]?.sequence) {
+      setExpandedAdditional(prev => ({ ...prev, [key]: !prev[key] }));
+      return;
+    }
+
+    // Set loading state
+    setAdditionalSeqs(prev => ({ ...prev, [key]: { loading: true, error: null, sequence: null } }));
+    setExpandedAdditional(prev => ({ ...prev, [key]: true }));
+
+    try {
+      const seqtype = opt.seqtype || opt.type;
+      let url = `${API_BASE_URL}/api/sequence?locus=${encodeURIComponent(locusName)}&seqtype=${seqtype}&format=json`;
+      if (opt.flankl) url += `&flankl=${opt.flankl}`;
+      if (opt.flankr) url += `&flankr=${opt.flankr}`;
+
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch sequence: ${response.statusText}`);
+      }
+      const result = await response.json();
+
+      setAdditionalSeqs(prev => ({
+        ...prev,
+        [key]: { loading: false, error: null, sequence: result.sequence, info: result.info }
+      }));
+    } catch (err) {
+      setAdditionalSeqs(prev => ({
+        ...prev,
+        [key]: { loading: false, error: err.message, sequence: null }
+      }));
+    }
+  }, [additionalSeqs]);
+
+  // Toggle additional sequence expansion
+  const toggleAdditionalSequence = (key) => {
+    setExpandedAdditional(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  // Build download URL for additional sequences
+  const getAdditionalDownloadUrl = (opt, locusName) => {
+    const seqtype = opt.seqtype || opt.type;
+    let url = `${API_BASE_URL}/api/sequence?locus=${encodeURIComponent(locusName)}&seqtype=${seqtype}&format=fasta`;
+    if (opt.flankl) url += `&flankl=${opt.flankl}`;
+    if (opt.flankr) url += `&flankr=${opt.flankr}`;
+    return url;
+  };
+
   // Group sequences by type
   const groupSequencesByType = (sequences) => {
     const groups = {};
@@ -153,33 +208,89 @@ function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismCha
             </div>
           )}
 
-          {/* Additional Sequence Downloads */}
+          {/* Additional Sequence Options */}
           {orgData?.locus_display_name && (
             <div className="additional-sequences-section">
               <h4>Additional Sequence Options</h4>
               <div className="additional-seq-options">
                 {ADDITIONAL_SEQ_OPTIONS.map(opt => (
-                  <a
+                  <button
                     key={opt.type}
-                    className="additional-seq-btn"
-                    href={`${API_BASE_URL}/api/sequence?locus=${encodeURIComponent(orgData.locus_display_name)}&seqtype=${opt.type}&format=fasta`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    className={`additional-seq-btn ${expandedAdditional[opt.type] ? 'active' : ''}`}
+                    onClick={() => fetchAdditionalSequence(opt, orgData.locus_display_name)}
                     title={opt.description}
                   >
-                    {opt.label}
-                  </a>
+                    {additionalSeqs[opt.type]?.loading ? 'Loading...' : opt.label}
+                    <span className="collapse-indicator">{expandedAdditional[opt.type] ? ' ▼' : ' ▶'}</span>
+                  </button>
                 ))}
-                <a
-                  className="additional-seq-btn"
-                  href={`${API_BASE_URL}/api/sequence?locus=${encodeURIComponent(orgData.locus_display_name)}&seqtype=genomic&flankl=1000&flankr=1000&format=fasta`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title="Genomic sequence with 1kb upstream and downstream flanking regions"
-                >
-                  Genomic +1kb Flanking
-                </a>
               </div>
+
+              {/* Display fetched additional sequences */}
+              {ADDITIONAL_SEQ_OPTIONS.map(opt => {
+                const seqData = additionalSeqs[opt.type];
+                const isExpanded = expandedAdditional[opt.type];
+
+                if (!seqData || (!seqData.loading && !seqData.sequence && !seqData.error)) {
+                  return null;
+                }
+
+                return (
+                  <div key={opt.type} className="additional-seq-display">
+                    <div
+                      className="additional-seq-header"
+                      onClick={() => toggleAdditionalSequence(opt.type)}
+                    >
+                      <span className="collapse-icon">{isExpanded ? '▼' : '▶'}</span>
+                      <span className="seq-type">{opt.label}</span>
+                      {seqData.info?.length && (
+                        <span className="seq-stat">
+                          <strong>{seqData.info.length.toLocaleString()}</strong> bp
+                        </span>
+                      )}
+                    </div>
+
+                    {isExpanded && (
+                      <div className="sequence-content">
+                        {seqData.loading && (
+                          <div className="loading-inline">Loading sequence...</div>
+                        )}
+                        {seqData.error && (
+                          <div className="error-inline">Error: {seqData.error}</div>
+                        )}
+                        {seqData.sequence && (
+                          <>
+                            <div className="sequence-toolbar">
+                              <button
+                                className="copy-btn"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  navigator.clipboard.writeText(seqData.sequence);
+                                }}
+                              >
+                                Copy Sequence
+                              </button>
+                              <a
+                                className="download-btn"
+                                href={getAdditionalDownloadUrl(opt, orgData.locus_display_name)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                Download FASTA
+                              </a>
+                              <span className="sequence-length-info">
+                                {seqData.sequence.length.toLocaleString()} characters
+                              </span>
+                            </div>
+                            <pre className="sequence-text">{seqData.sequence}</pre>
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           )}
 
