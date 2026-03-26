@@ -74,6 +74,7 @@ import LiteratureTopicSearchPage from './pages/LiteratureTopicSearchPage';
 import ToolsPage from './pages/ToolsPage';
 import ApiDocPage from './pages/ApiDocPage';
 import SyntenyBrowserPage from './pages/SyntenyBrowserPage';
+import VirulenceFactorBrowserPage from './pages/VirulenceFactorBrowserPage';
 
 // Curation pages (protected)
 import CuratorCentralPage from './pages/curation/CuratorCentralPage';
@@ -243,6 +244,7 @@ function App() {
           <Route path="/seq-tools/results" element={<SeqToolsResultsPage />} />
           <Route path="/tools" element={<ToolsPage />} />
           <Route path="/synteny-browser" element={<SyntenyBrowserPage />} />
+          <Route path="/virulence-factor-browser" element={<VirulenceFactorBrowserPage />} />
           <Route path="/blast" element={<BlastSearchPage />} />
           <Route path="/blast/results" element={<BlastResultsPage />} />
           <Route path="/patmatch" element={<PatmatchSearchPage />} />

@@ -1,0 +1,585 @@
+/* ===========================================
+   PAGE WRAPPER
+   =========================================== */
+
+.virulence-factor-browser-page {
+  width: 1200px;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Header */
+.virulence-factor-browser-page .page-header {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.virulence-factor-browser-page .page-header h1 {
+  margin: 0 0 10px 0;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.virulence-factor-browser-page .page-header hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 0 0 10px 0;
+}
+
+.virulence-factor-browser-page .page-header .subtitle {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+/* ===========================================
+   BROWSER LAYOUT (Sidebar + Results)
+   =========================================== */
+
+.browser-layout {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+/* Filter Sidebar */
+.filter-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 15px;
+}
+
+.filter-section {
+  margin-bottom: 20px;
+}
+
+.filter-section:last-child {
+  margin-bottom: 0;
+}
+
+.filter-section h3 {
+  margin: 0 0 10px 0;
+  font-size: 0.95rem;
+  color: #333;
+  font-weight: 600;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 6px;
+}
+
+/* Category List */
+.category-actions {
+  margin-bottom: 10px;
+  font-size: 0.85rem;
+}
+
+.action-link {
+  background: none;
+  border: none;
+  color: #0066cc;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+}
+
+.action-link:hover {
+  text-decoration: underline;
+}
+
+.separator {
+  color: #999;
+  margin: 0 6px;
+}
+
+.category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.category-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 4px 0;
+  font-size: 0.9rem;
+}
+
+.category-item:hover {
+  background: #e8f4fd;
+  margin: 0 -8px;
+  padding: 4px 8px;
+  border-radius: 3px;
+}
+
+.category-item input[type="checkbox"] {
+  margin: 0;
+  cursor: pointer;
+}
+
+.category-name {
+  flex: 1;
+  color: #333;
+}
+
+.category-count {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+/* Organism Dropdown */
+.filter-sidebar .organism-dropdown {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  background: #fff;
+}
+
+.filter-sidebar .organism-dropdown:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 3px rgba(0, 102, 204, 0.3);
+}
+
+/* Search Input */
+.search-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 3px rgba(0, 102, 204, 0.3);
+}
+
+/* Filter Actions */
+.filter-actions {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+}
+
+.btn-clear {
+  width: 100%;
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #333;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn-clear:hover:not(:disabled) {
+  background: #f5f5f5;
+}
+
+.btn-clear:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===========================================
+   RESULTS PANEL
+   =========================================== */
+
+.results-panel {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Active Filters Chips */
+.active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #e8f4fd;
+  border: 1px solid #b3d7f7;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.filters-label {
+  font-weight: 500;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #fff;
+  border: 1px solid #1976d2;
+  color: #1976d2;
+  padding: 4px 8px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+}
+
+.chip-remove {
+  background: none;
+  border: none;
+  color: #1976d2;
+  cursor: pointer;
+  padding: 0;
+  font-size: 1.1rem;
+  line-height: 1;
+  margin-left: 2px;
+}
+
+.chip-remove:hover {
+  color: #c62828;
+}
+
+/* Empty / No Results States */
+.empty-state,
+.no-results {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+  background: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+.empty-state p,
+.no-results p {
+  margin: 8px 0;
+}
+
+/* Results Summary */
+.results-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  background: #fff;
+  border-left: 3px solid #0066cc;
+}
+
+.results-summary-left {
+  flex: 1;
+}
+
+.results-count {
+  font-size: 1rem;
+  color: #333;
+}
+
+.results-summary-right {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-download {
+  padding: 6px 14px;
+  border: 1px solid #0066cc;
+  border-radius: 4px;
+  background: #fff;
+  color: #0066cc;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-download:hover:not(:disabled) {
+  background: #0066cc;
+  color: #fff;
+}
+
+.btn-download:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ===========================================
+   FILTER CONTROLS (Quick Filter)
+   =========================================== */
+
+.virulence-factor-browser-page .filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 15px;
+  padding: 10px 12px;
+  background: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.virulence-factor-browser-page .filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.virulence-factor-browser-page .filter-group label {
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+
+.virulence-factor-browser-page .quick-filter-input {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  width: 200px;
+}
+
+.virulence-factor-browser-page .quick-filter-input:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 3px rgba(0, 102, 204, 0.3);
+}
+
+.virulence-factor-browser-page .apply-filter-btn {
+  padding: 6px 12px;
+  border: none;
+  background: #1976d2;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.virulence-factor-browser-page .apply-filter-btn:hover:not(:disabled) {
+  background: #1565c0;
+}
+
+.virulence-factor-browser-page .apply-filter-btn:disabled {
+  background: #90caf9;
+  cursor: not-allowed;
+}
+
+.virulence-factor-browser-page .clear-filter-btn {
+  padding: 4px 8px;
+  border: none;
+  background: #e0e0e0;
+  color: #666;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+  line-height: 1;
+}
+
+.virulence-factor-browser-page .clear-filter-btn:hover {
+  background: #d0d0d0;
+  color: #333;
+}
+
+.virulence-factor-browser-page .filter-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.virulence-factor-browser-page .filter-tag {
+  background: #e3f2fd;
+  color: #1565c0;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+}
+
+/* ===========================================
+   AG GRID RESULTS
+   =========================================== */
+
+.virulence-factor-browser-page .results-grid-wrapper {
+  margin-top: 8px;
+}
+
+.virulence-factor-browser-page .results-grid-wrapper.ag-theme-alpine {
+  --ag-row-height: auto;
+  --ag-header-height: 36px;
+  --ag-cell-horizontal-padding: 10px;
+  --ag-row-border-color: #e0e0e0;
+  --ag-header-background-color: #e8e8e8;
+  font-size: 0.9rem;
+}
+
+.virulence-factor-browser-page .results-grid-wrapper .ag-cell {
+  line-height: 1.4;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+/* Critical styles for autoHeight to work properly with pagination */
+.virulence-factor-browser-page .results-grid-wrapper .ag-body-viewport {
+  min-height: auto !important;
+}
+
+.virulence-factor-browser-page .results-grid-wrapper .ag-layout-auto-height .ag-center-cols-viewport,
+.virulence-factor-browser-page .results-grid-wrapper .ag-layout-auto-height .ag-center-cols-container {
+  min-height: auto !important;
+}
+
+.virulence-factor-browser-page .gene-link {
+  color: #0066cc;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.virulence-factor-browser-page .gene-link:hover {
+  text-decoration: underline;
+}
+
+/* Categories Cell */
+.categories-cell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.category-tag {
+  display: inline-block;
+  background: #e8f4fd;
+  color: #1565c0;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+/* Match Reasons Cell */
+.match-reasons-cell {
+  line-height: 1.4;
+}
+
+.match-reason {
+  font-size: 0.85rem;
+  color: #555;
+  margin-bottom: 3px;
+  padding-left: 8px;
+  border-left: 2px solid #ddd;
+}
+
+.match-reason:last-child {
+  margin-bottom: 0;
+}
+
+/* ===========================================
+   LOADING / ERROR STATES
+   =========================================== */
+
+.virulence-factor-browser-page .loading-section {
+  text-align: center;
+  padding: 40px 15px;
+}
+
+.virulence-factor-browser-page .loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e0e0e0;
+  border-top-color: #0066cc;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 12px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.virulence-factor-browser-page .error-section {
+  text-align: center;
+  padding: 20px;
+  background: #fff3f3;
+  border: 1px solid #ffcdd2;
+  border-radius: 4px;
+  margin: 10px 0;
+}
+
+.virulence-factor-browser-page .error-icon {
+  font-size: 1.5rem;
+  color: #f44336;
+  margin-bottom: 6px;
+}
+
+.virulence-factor-browser-page .error-message {
+  color: #c62828;
+  margin: 0;
+}
+
+/* ===========================================
+   RESPONSIVE
+   =========================================== */
+
+@media (max-width: 900px) {
+  .browser-layout {
+    flex-direction: column;
+  }
+
+  .filter-sidebar {
+    width: 100%;
+  }
+
+  .category-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .virulence-factor-browser-page {
+    padding: 10px;
+  }
+
+  .category-list {
+    grid-template-columns: 1fr;
+  }
+
+  .results-summary {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .results-summary-right {
+    width: 100%;
+  }
+
+  .btn-download {
+    flex: 1;
+  }
+
+  .virulence-factor-browser-page .filter-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .virulence-factor-browser-page .filter-group {
+    flex-wrap: wrap;
+  }
+
+  .virulence-factor-browser-page .quick-filter-input {
+    width: 100%;
+  }
+}
