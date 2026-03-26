@@ -589,10 +589,9 @@ function App() {
 
             <p className="citation-text">
               <span className="cite-label">To cite CGD</span>, please use the following reference:{' '}
-              Skrzypek MS, Binkley J, Binkley G, Miyasato SR, Simison M, Sherlock G (2017).
-              The Candida Genome Database (CGD): incorporation of Assembly 22, systematic identifiers
-              and visualization of high throughput sequencing data.{' '}
-              <em>Nucleic Acids Res</em> <strong>45</strong> (D1); D592–D596; see{' '}
+              Lew-Smith J, Binkley J, Sherlock G (2025). The Candida Genome Database: annotation
+              and visualization updates.{' '}
+              <em>Genetics</em>, Volume 229, Issue 3, March 2025; see{' '}
               <Link to="/how-to-cite">How to cite CGD</Link>.
             </p>
           </div>
