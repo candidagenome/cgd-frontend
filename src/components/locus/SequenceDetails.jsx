@@ -15,9 +15,8 @@ const getSeqTypeParam = (seqType) => {
 
 // Additional sequence options (fetched on demand)
 const ADDITIONAL_SEQ_OPTIONS = [
-  { type: 'genomic_utr', label: 'Genomic + UTRs', description: 'Full genomic sequence including UTR regions' },
-  { type: 'coding_utr', label: 'Transcript (mRNA)', description: 'Spliced transcript with UTRs, introns removed' },
-  { type: 'genomic_flanking', label: 'Genomic +1kb Flanking', description: 'Genomic sequence with 1kb upstream and downstream', flankl: 1000, flankr: 1000, seqtype: 'genomic' },
+  { type: 'coding_utr', label: 'Transcript/mRNA (introns spliced out)', description: 'Spliced transcript sequence - exons and UTRs only, no introns' },
+  { type: 'genomic_flanking', label: 'Genomic DNA +1kb Flanking', description: 'Genomic DNA (with introns) plus 1kb upstream and downstream regions', flankl: 1000, flankr: 1000, seqtype: 'genomic' },
 ];
 
 function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
@@ -164,6 +163,15 @@ function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismCha
     return groups;
   };
 
+  // Format sequence type labels for clarity
+  const formatSeqTypeLabel = (seqType) => {
+    const type = seqType?.toLowerCase() || '';
+    if (type === 'genomic') return 'Genomic DNA (with introns)';
+    if (type === 'coding') return 'Coding Sequence / CDS (introns spliced out)';
+    if (type === 'protein') return 'Protein';
+    return seqType;
+  };
+
   // Get locations and sequences for selected organism
   const currentLocations = orgData?.locations?.filter(l => l.is_current) || [];
   const sequenceGroups = orgData ? groupSequencesByType(orgData.sequences || []) : {};
@@ -301,7 +309,7 @@ function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismCha
               {Object.entries(sequenceGroups).map(([seqType, sequences]) => (
                 <div key={seqType} className="sequence-type-group">
                   <h5 className="sequence-type-header">
-                    {seqType}
+                    {formatSeqTypeLabel(seqType)}
                     <span className="count-badge">{sequences.length}</span>
                   </h5>
 
@@ -323,7 +331,7 @@ function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismCha
                             {seq.residues && (
                               <span className="collapse-icon">{isExpanded ? '▼' : '▶'}</span>
                             )}
-                            <span className="seq-type">{seq.seq_type}</span>
+                            <span className="seq-type">{formatSeqTypeLabel(seq.seq_type)}</span>
                             {seq.is_current && <span className="current-badge">Current</span>}
                           </div>
                           <div className="seq-info-right">
