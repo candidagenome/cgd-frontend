@@ -337,7 +337,7 @@ function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismCha
                           <div className="seq-info-right">
                             <span className="seq-stat">
                               <strong>{seq.seq_length?.toLocaleString()}</strong>
-                              {seq.seq_type === 'Protein' ? ' aa' : ' bp'}
+                              {seq.seq_type?.toLowerCase() === 'protein' ? ' aa' : ' bp'}
                             </span>
                             <span className="seq-meta">
                               Source: {seq.source}
