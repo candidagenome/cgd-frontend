@@ -74,6 +74,41 @@ const formatLocusName = (result) => {
   return result.feature_name || result.gene_name || '-';
 };
 
+// SearchHighlight component - highlights all occurrences of search term (case-insensitive)
+const SearchHighlight = ({ text, searchTerm }) => {
+  if (!searchTerm || !text) {
+    return <>{text}</>;
+  }
+
+  const searchLower = searchTerm.toLowerCase();
+  const parts = [];
+  let lastIndex = 0;
+  let textLower = text.toLowerCase();
+  let index = textLower.indexOf(searchLower);
+
+  while (index !== -1) {
+    // Add text before the match
+    if (index > lastIndex) {
+      parts.push(text.slice(lastIndex, index));
+    }
+    // Add the highlighted match
+    parts.push(
+      <mark key={index} className="search-highlight">
+        {text.slice(index, index + searchTerm.length)}
+      </mark>
+    );
+    lastIndex = index + searchTerm.length;
+    index = textLower.indexOf(searchLower, lastIndex);
+  }
+
+  // Add remaining text
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+
+  return <>{parts}</>;
+};
+
 function VirulenceFactorBrowserPage() {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -97,8 +132,24 @@ function VirulenceFactorBrowserPage() {
   const [pendingQuickFilter, setPendingQuickFilter] = useState('');
   const [appliedQuickFilter, setAppliedQuickFilter] = useState('');
 
+  // Description expansion state
+  const [expandedDescriptions, setExpandedDescriptions] = useState(new Set());
+
   // Request counter to handle race conditions - only use response from latest request
   const requestCounterRef = useRef(0);
+
+  // Toggle description expansion for a specific gene
+  const toggleDescriptionExpansion = useCallback((geneId) => {
+    setExpandedDescriptions((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(geneId)) {
+        newSet.delete(geneId);
+      } else {
+        newSet.add(geneId);
+      }
+      return newSet;
+    });
+  }, []);
 
   const applyQuickFilter = () => {
     setAppliedQuickFilter(pendingQuickFilter);
@@ -402,9 +453,62 @@ function VirulenceFactorBrowserPage() {
         wrapText: true,
         cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
         valueGetter: (params) => params.data.description || '-',
+        cellRenderer: (params) => {
+          const desc = params.data.description || '-';
+          const geneId = params.data.feature_name || params.data.gene_name;
+          const isExpanded = expandedDescriptions.has(geneId);
+          const highlightTerm = searchTerm || appliedQuickFilter;
+          const TRUNCATE_LENGTH = 150;
+
+          // Short descriptions don't need truncation
+          if (desc === '-' || desc.length <= TRUNCATE_LENGTH) {
+            if (highlightTerm) {
+              return <SearchHighlight text={desc} searchTerm={highlightTerm} />;
+            }
+            return desc;
+          }
+
+          // Long description - show truncated or expanded
+          if (isExpanded) {
+            return (
+              <div className="description-expandable">
+                {highlightTerm ? (
+                  <SearchHighlight text={desc} searchTerm={highlightTerm} />
+                ) : (
+                  desc
+                )}
+                <button
+                  type="button"
+                  className="description-toggle"
+                  onClick={() => toggleDescriptionExpansion(geneId)}
+                >
+                  Show less
+                </button>
+              </div>
+            );
+          }
+
+          const truncated = desc.slice(0, TRUNCATE_LENGTH) + '...';
+          return (
+            <div className="description-expandable">
+              {highlightTerm ? (
+                <SearchHighlight text={truncated} searchTerm={highlightTerm} />
+              ) : (
+                truncated
+              )}
+              <button
+                type="button"
+                className="description-toggle"
+                onClick={() => toggleDescriptionExpansion(geneId)}
+              >
+                Show more
+              </button>
+            </div>
+          );
+        },
       },
     ],
-    [categories]
+    [categories, searchTerm, appliedQuickFilter, expandedDescriptions, toggleDescriptionExpansion]
   );
 
   // Default column properties

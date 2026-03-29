@@ -577,6 +577,35 @@
   flex: 1;
 }
 
+/* Search Highlighting */
+.search-highlight {
+  background: #fff59d;
+  color: #333;
+  padding: 0 2px;
+  border-radius: 2px;
+  font-weight: 500;
+}
+
+/* Expandable Descriptions */
+.description-expandable {
+  line-height: 1.4;
+}
+
+.description-toggle {
+  background: none;
+  border: none;
+  color: #0066cc;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 4px;
+  font-weight: 500;
+}
+
+.description-toggle:hover {
+  text-decoration: underline;
+}
+
 /* ===========================================
    LOADING / ERROR STATES
    =========================================== */
