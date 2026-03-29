@@ -463,79 +463,67 @@
   border-radius: 12px;
   font-size: 0.8rem;
   white-space: nowrap;
-  border-left: 3px solid;
 }
 
 /* Default category color */
 .category-tag.cat-default {
   background: #e8f4fd;
   color: #1565c0;
-  border-left-color: #1565c0;
 }
 
 /* Adhesion & Biofilm - Blues */
 .category-tag.cat-blue {
   background: #e3f2fd;
   color: #1565c0;
-  border-left-color: #1565c0;
 }
 
 .category-tag.cat-blue-light {
   background: #e1f5fe;
   color: #0277bd;
-  border-left-color: #0277bd;
 }
 
 /* Host Interaction - Reds */
 .category-tag.cat-red {
   background: #ffebee;
   color: #c62828;
-  border-left-color: #c62828;
 }
 
 .category-tag.cat-red-light {
   background: #fce4ec;
   color: #ad1457;
-  border-left-color: #ad1457;
 }
 
 /* Secreted Enzymes - Greens */
 .category-tag.cat-green {
   background: #e8f5e9;
   color: #2e7d32;
-  border-left-color: #2e7d32;
 }
 
 .category-tag.cat-green-light {
   background: #f1f8e9;
   color: #558b2f;
-  border-left-color: #558b2f;
 }
 
 /* Morphogenesis - Purple */
 .category-tag.cat-purple {
   background: #f3e5f5;
   color: #7b1fa2;
-  border-left-color: #7b1fa2;
 }
 
 .category-tag.cat-purple-light {
   background: #ede7f6;
   color: #5e35b1;
-  border-left-color: #5e35b1;
 }
 
 /* Stress & Drug Resistance - Orange/Pink */
 .category-tag.cat-orange {
   background: #fff3e0;
   color: #e65100;
-  border-left-color: #e65100;
 }
 
 .category-tag.cat-pink {
   background: #fce4ec;
   color: #ad1457;
-  border-left-color: #ad1457;
 }
 
 /* Match Reasons Cell */
