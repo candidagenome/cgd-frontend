@@ -458,7 +458,7 @@ function VirulenceFactorBrowserPage() {
           const geneId = params.data.feature_name || params.data.gene_name;
           const isExpanded = expandedDescriptions.has(geneId);
           const highlightTerm = searchTerm || appliedQuickFilter;
-          const TRUNCATE_LENGTH = 250;
+          const TRUNCATE_LENGTH = 180;
 
           // Short descriptions don't need truncation
           if (desc === '-' || desc.length <= TRUNCATE_LENGTH) {
@@ -471,39 +471,42 @@ function VirulenceFactorBrowserPage() {
           // Long description - show truncated or expanded
           if (isExpanded) {
             return (
-              <div className="description-expandable">
+              <span className="description-expandable">
                 {highlightTerm ? (
                   <SearchHighlight text={desc} searchTerm={highlightTerm} />
                 ) : (
                   desc
                 )}
+                {' '}
                 <button
                   type="button"
                   className="description-toggle"
                   onClick={() => toggleDescriptionExpansion(geneId)}
                 >
-                  Show less
+                  show less
                 </button>
-              </div>
+              </span>
             );
           }
 
-          const truncated = desc.slice(0, TRUNCATE_LENGTH) + '...';
+          const truncated = desc.slice(0, TRUNCATE_LENGTH);
+          const remaining = desc.length - TRUNCATE_LENGTH;
           return (
-            <div className="description-expandable">
+            <span className="description-expandable">
               {highlightTerm ? (
                 <SearchHighlight text={truncated} searchTerm={highlightTerm} />
               ) : (
                 truncated
               )}
+              {'... '}
               <button
                 type="button"
                 className="description-toggle"
                 onClick={() => toggleDescriptionExpansion(geneId)}
               >
-                Show more
+                +{remaining} more
               </button>
-            </div>
+            </span>
           );
         },
       },
