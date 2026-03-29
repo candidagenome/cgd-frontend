@@ -520,6 +520,9 @@ function VirulenceFactorBrowserPage() {
     []
   );
 
+  // Grid ref for refreshing row heights
+  const gridRef = useRef(null);
+
   // Calculate row height based on content
   const getRowHeight = useCallback((params) => {
     const minHeight = 60;
@@ -528,13 +531,26 @@ function VirulenceFactorBrowserPage() {
     const categories = params.data.categories || [];
     const matchReasons = params.data.match_reasons || [];
     const description = params.data.description || '';
+    const geneId = params.data.feature_name || params.data.gene_name;
 
     const maxItems = Math.max(categories.length, matchReasons.length);
-    const descLines = Math.ceil(description.length / 50);
+
+    // Check if description is expanded
+    const isExpanded = expandedDescriptions.has(geneId);
+    const descLines = isExpanded
+      ? Math.ceil(description.length / 40) // More lines when expanded
+      : Math.min(Math.ceil(description.length / 50), 4); // Truncated
 
     const maxLines = Math.max(2, maxItems, descLines);
     return Math.max(minHeight, maxLines * lineHeight + 20);
-  }, []);
+  }, [expandedDescriptions]);
+
+  // Refresh row heights when descriptions expand/collapse
+  useEffect(() => {
+    if (gridRef.current?.api) {
+      gridRef.current.api.resetRowHeights();
+    }
+  }, [expandedDescriptions]);
 
   // Render loading state
   if (loading) {
@@ -801,6 +817,7 @@ function VirulenceFactorBrowserPage() {
               {/* Results table */}
               <div className="results-grid-wrapper ag-theme-alpine" style={{ width: '100%' }}>
                 <AgGridReact
+                  ref={gridRef}
                   rowData={filteredResults}
                   columnDefs={columnDefs}
                   defaultColDef={defaultColDef}
