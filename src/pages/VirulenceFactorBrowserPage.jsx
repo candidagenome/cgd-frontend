@@ -417,8 +417,8 @@ function VirulenceFactorBrowserPage() {
       {
         headerName: 'Matched By',
         field: 'match_reasons',
-        flex: 1.2,
-        minWidth: 180,
+        flex: 1.5,
+        minWidth: 220,
         wrapText: true,
         cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
         valueGetter: (params) => (params.data.match_reasons || []).join('; '),
