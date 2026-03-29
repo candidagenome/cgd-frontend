@@ -4,6 +4,58 @@ import { AgGridReact } from 'ag-grid-react';
 import virulenceFactorApi from '../api/virulenceFactorApi';
 import './VirulenceFactorBrowserPage.css';
 
+// Category color mapping for visual distinction
+const CATEGORY_COLORS = {
+  // Adhesion & Biofilm - Blues
+  adhesion: 'cat-blue',
+  biofilm: 'cat-blue-light',
+  biofilm_formation: 'cat-blue-light',
+  // Host Interaction - Reds
+  host_interaction: 'cat-red',
+  immune_evasion: 'cat-red-light',
+  // Secreted Enzymes - Greens
+  secreted_enzymes: 'cat-green',
+  cell_wall: 'cat-green-light',
+  // Morphogenesis - Purple
+  morphogenesis: 'cat-purple',
+  filamentation: 'cat-purple-light',
+  // Stress & Drug Resistance - Orange/Pink
+  stress_response: 'cat-orange',
+  drug_resistance: 'cat-pink',
+};
+
+// Get color class for a category
+const getCategoryColorClass = (categoryKey) => {
+  if (!categoryKey) return 'cat-default';
+  // Try exact match first
+  if (CATEGORY_COLORS[categoryKey]) {
+    return CATEGORY_COLORS[categoryKey];
+  }
+  // Try lowercase normalized
+  const normalized = categoryKey.toLowerCase().replace(/[\s-]/g, '_');
+  if (CATEGORY_COLORS[normalized]) {
+    return CATEGORY_COLORS[normalized];
+  }
+  // Default
+  return 'cat-default';
+};
+
+// Categorize match reason and return type info
+const categorizeMatchReason = (reason) => {
+  const reasonLower = reason.toLowerCase();
+  if (reasonLower.includes('go:') || reasonLower.includes('gene ontology') ||
+      reasonLower.includes('biological process') || reasonLower.includes('molecular function') ||
+      reasonLower.includes('cellular component')) {
+    return { type: 'go', label: 'GO', tooltip: 'Gene Ontology' };
+  }
+  if (reasonLower.includes('phenotype') || reasonLower.includes('resistance') ||
+      reasonLower.includes('sensitivity') || reasonLower.includes('defect') ||
+      reasonLower.includes('mutant')) {
+    return { type: 'phe', label: 'PHE', tooltip: 'Phenotype' };
+  }
+  return { type: 'kw', label: 'KW', tooltip: 'Keyword (text-based match)' };
+};
+
 // Abbreviate organism name (e.g., "Candida albicans SC5314" -> "C. albicans")
 const getOrganismAbbrev = (organismName) => {
   if (!organismName) return '';
@@ -295,11 +347,18 @@ function VirulenceFactorBrowserPage() {
           if (cats.length === 0) return '-';
           return (
             <div className="categories-cell">
-              {cats.map((cat, idx) => (
-                <span key={idx} className="category-tag">
-                  {cat}
-                </span>
-              ))}
+              {cats.map((cat, idx) => {
+                // Find the category key for this display name
+                const catObj = categories.find(
+                  (c) => c.name === cat || c.key === cat
+                );
+                const catKey = catObj?.key || cat.toLowerCase().replace(/[\s-]/g, '_');
+                return (
+                  <span key={idx} className={`category-tag ${getCategoryColorClass(catKey)}`}>
+                    {cat}
+                  </span>
+                );
+              })}
             </div>
           );
         },
@@ -317,11 +376,20 @@ function VirulenceFactorBrowserPage() {
           if (reasons.length === 0) return '-';
           return (
             <div className="match-reasons-cell">
-              {reasons.map((reason, idx) => (
-                <div key={idx} className="match-reason">
-                  {reason}
-                </div>
-              ))}
+              {reasons.map((reason, idx) => {
+                const { type, label, tooltip } = categorizeMatchReason(reason);
+                return (
+                  <div key={idx} className={`match-reason match-reason-${type}`}>
+                    <span
+                      className={`match-type-badge badge-${type}`}
+                      title={tooltip}
+                    >
+                      {label}
+                    </span>
+                    <span className="match-reason-text">{reason}</span>
+                  </div>
+                );
+              })}
             </div>
           );
         },
@@ -336,7 +404,7 @@ function VirulenceFactorBrowserPage() {
         valueGetter: (params) => params.data.description || '-',
       },
     ],
-    []
+    [categories]
   );
 
   // Default column properties
