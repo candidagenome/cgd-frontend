@@ -528,7 +528,7 @@ function VirulenceFactorBrowserPage() {
 
   // Calculate row height based on content
   const getRowHeight = useCallback((params) => {
-    const minHeight = 100;
+    const minHeight = 120;
     const lineHeight = 22;
 
     const categories = params.data.categories || [];
@@ -536,16 +536,26 @@ function VirulenceFactorBrowserPage() {
     const description = params.data.description || '';
     const geneId = params.data.feature_name || params.data.gene_name;
 
-    const maxItems = Math.max(categories.length, matchReasons.length);
+    // Calculate lines needed for each column
+    const categoryLines = Math.max(1, categories.length);
+    const matchReasonLines = Math.max(1, matchReasons.length * 1.5); // Each reason may wrap
 
     // Check if description is expanded
     const isExpanded = expandedDescriptions.has(geneId);
-    const descLines = isExpanded
-      ? Math.ceil(description.length / 40) // More lines when expanded
-      : Math.min(Math.ceil(description.length / 45), 8); // Truncated - allow up to 8 lines
+    const TRUNCATE_LENGTH = 180;
+    const charsPerLine = 35; // Approximate chars per line in description column
 
-    const maxLines = Math.max(3, maxItems, descLines);
-    return Math.max(minHeight, maxLines * lineHeight + 24);
+    let descLines;
+    if (isExpanded) {
+      descLines = Math.ceil(description.length / charsPerLine) + 1; // +1 for "show less"
+    } else if (description.length > TRUNCATE_LENGTH) {
+      descLines = Math.ceil(TRUNCATE_LENGTH / charsPerLine) + 1; // +1 for "+N more"
+    } else {
+      descLines = Math.ceil(description.length / charsPerLine);
+    }
+
+    const maxLines = Math.max(4, categoryLines, matchReasonLines, descLines);
+    return Math.max(minHeight, maxLines * lineHeight + 30);
   }, [expandedDescriptions]);
 
   // Refresh row heights when descriptions expand/collapse
