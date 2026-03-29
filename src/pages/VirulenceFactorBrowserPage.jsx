@@ -701,8 +701,8 @@ function VirulenceFactorBrowserPage() {
               </div>
 
               {/* Quick filter */}
-              <div className="filter-controls">
-                <div className="filter-group">
+              <div className="filter-controls" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                <div className="filter-group" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
                   <label htmlFor="quick-filter">Filter results: </label>
                   <input
                     type="text"

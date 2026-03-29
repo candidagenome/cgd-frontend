@@ -317,6 +317,7 @@
 
 .virulence-factor-browser-page .filter-controls {
   display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
   gap: 15px;
@@ -329,6 +330,7 @@
 
 .virulence-factor-browser-page .filter-group {
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 8px;
   flex-wrap: nowrap;
