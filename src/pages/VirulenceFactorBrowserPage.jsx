@@ -458,7 +458,7 @@ function VirulenceFactorBrowserPage() {
           const geneId = params.data.feature_name || params.data.gene_name;
           const isExpanded = expandedDescriptions.has(geneId);
           const highlightTerm = searchTerm || appliedQuickFilter;
-          const TRUNCATE_LENGTH = 150;
+          const TRUNCATE_LENGTH = 250;
 
           // Short descriptions don't need truncation
           if (desc === '-' || desc.length <= TRUNCATE_LENGTH) {
@@ -525,8 +525,8 @@ function VirulenceFactorBrowserPage() {
 
   // Calculate row height based on content
   const getRowHeight = useCallback((params) => {
-    const minHeight = 60;
-    const lineHeight = 20;
+    const minHeight = 100;
+    const lineHeight = 22;
 
     const categories = params.data.categories || [];
     const matchReasons = params.data.match_reasons || [];
@@ -539,10 +539,10 @@ function VirulenceFactorBrowserPage() {
     const isExpanded = expandedDescriptions.has(geneId);
     const descLines = isExpanded
       ? Math.ceil(description.length / 40) // More lines when expanded
-      : Math.min(Math.ceil(description.length / 50), 4); // Truncated
+      : Math.min(Math.ceil(description.length / 45), 8); // Truncated - allow up to 8 lines
 
-    const maxLines = Math.max(2, maxItems, descLines);
-    return Math.max(minHeight, maxLines * lineHeight + 20);
+    const maxLines = Math.max(3, maxItems, descLines);
+    return Math.max(minHeight, maxLines * lineHeight + 24);
   }, [expandedDescriptions]);
 
   // Refresh row heights when descriptions expand/collapse
