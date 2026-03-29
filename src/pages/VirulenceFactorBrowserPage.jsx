@@ -132,24 +132,8 @@ function VirulenceFactorBrowserPage() {
   const [pendingQuickFilter, setPendingQuickFilter] = useState('');
   const [appliedQuickFilter, setAppliedQuickFilter] = useState('');
 
-  // Description expansion state
-  const [expandedDescriptions, setExpandedDescriptions] = useState(new Set());
-
   // Request counter to handle race conditions - only use response from latest request
   const requestCounterRef = useRef(0);
-
-  // Toggle description expansion for a specific gene
-  const toggleDescriptionExpansion = useCallback((geneId) => {
-    setExpandedDescriptions((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(geneId)) {
-        newSet.delete(geneId);
-      } else {
-        newSet.add(geneId);
-      }
-      return newSet;
-    });
-  }, []);
 
   const applyQuickFilter = () => {
     setAppliedQuickFilter(pendingQuickFilter);
@@ -455,63 +439,16 @@ function VirulenceFactorBrowserPage() {
         valueGetter: (params) => params.data.description || '-',
         cellRenderer: (params) => {
           const desc = params.data.description || '-';
-          const geneId = params.data.feature_name || params.data.gene_name;
-          const isExpanded = expandedDescriptions.has(geneId);
           const highlightTerm = searchTerm || appliedQuickFilter;
-          const TRUNCATE_LENGTH = 180;
 
-          // Short descriptions don't need truncation
-          if (desc === '-' || desc.length <= TRUNCATE_LENGTH) {
-            if (highlightTerm) {
-              return <SearchHighlight text={desc} searchTerm={highlightTerm} />;
-            }
-            return desc;
+          if (highlightTerm && desc !== '-') {
+            return <SearchHighlight text={desc} searchTerm={highlightTerm} />;
           }
-
-          // Long description - show truncated or expanded
-          if (isExpanded) {
-            return (
-              <span className="description-expandable">
-                {highlightTerm ? (
-                  <SearchHighlight text={desc} searchTerm={highlightTerm} />
-                ) : (
-                  desc
-                )}
-                {' '}
-                <button
-                  type="button"
-                  className="description-toggle"
-                  onClick={() => toggleDescriptionExpansion(geneId)}
-                >
-                  show less
-                </button>
-              </span>
-            );
-          }
-
-          const truncated = desc.slice(0, TRUNCATE_LENGTH);
-          const remaining = desc.length - TRUNCATE_LENGTH;
-          return (
-            <span className="description-expandable">
-              {highlightTerm ? (
-                <SearchHighlight text={truncated} searchTerm={highlightTerm} />
-              ) : (
-                truncated
-              )}
-              {'... '}
-              <button
-                type="button"
-                className="description-toggle"
-                onClick={() => toggleDescriptionExpansion(geneId)}
-              >
-                +{remaining} more
-              </button>
-            </span>
-          );
+          return desc;
         },
       },
     ],
-    [categories, searchTerm, appliedQuickFilter, expandedDescriptions, toggleDescriptionExpansion]
+    [categories, searchTerm, appliedQuickFilter]
   );
 
   // Default column properties
@@ -523,47 +460,23 @@ function VirulenceFactorBrowserPage() {
     []
   );
 
-  // Grid ref for refreshing row heights
-  const gridRef = useRef(null);
-
   // Calculate row height based on content
   const getRowHeight = useCallback((params) => {
-    const minHeight = 120;
+    const minHeight = 80;
     const lineHeight = 22;
 
     const categories = params.data.categories || [];
     const matchReasons = params.data.match_reasons || [];
     const description = params.data.description || '';
-    const geneId = params.data.feature_name || params.data.gene_name;
 
     // Calculate lines needed for each column
     const categoryLines = Math.max(1, categories.length);
     const matchReasonLines = Math.max(1, matchReasons.length * 1.5); // Each reason may wrap
+    const descLines = Math.ceil(description.length / 40); // ~40 chars per line
 
-    // Check if description is expanded
-    const isExpanded = expandedDescriptions.has(geneId);
-    const TRUNCATE_LENGTH = 180;
-    const charsPerLine = 35; // Approximate chars per line in description column
-
-    let descLines;
-    if (isExpanded) {
-      descLines = Math.ceil(description.length / charsPerLine) + 1; // +1 for "show less"
-    } else if (description.length > TRUNCATE_LENGTH) {
-      descLines = Math.ceil(TRUNCATE_LENGTH / charsPerLine) + 1; // +1 for "+N more"
-    } else {
-      descLines = Math.ceil(description.length / charsPerLine);
-    }
-
-    const maxLines = Math.max(4, categoryLines, matchReasonLines, descLines);
-    return Math.max(minHeight, maxLines * lineHeight + 30);
-  }, [expandedDescriptions]);
-
-  // Refresh row heights when descriptions expand/collapse
-  useEffect(() => {
-    if (gridRef.current?.api) {
-      gridRef.current.api.resetRowHeights();
-    }
-  }, [expandedDescriptions]);
+    const maxLines = Math.max(3, categoryLines, matchReasonLines, descLines);
+    return Math.max(minHeight, maxLines * lineHeight + 20);
+  }, []);
 
   // Render loading state
   if (loading) {
@@ -830,7 +743,6 @@ function VirulenceFactorBrowserPage() {
               {/* Results table */}
               <div className="results-grid-wrapper ag-theme-alpine" style={{ width: '100%' }}>
                 <AgGridReact
-                  ref={gridRef}
                   rowData={filteredResults}
                   columnDefs={columnDefs}
                   defaultColDef={defaultColDef}

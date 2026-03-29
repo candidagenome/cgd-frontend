@@ -586,26 +586,6 @@
   font-weight: 500;
 }
 
-/* Expandable Descriptions */
-.description-expandable {
-  line-height: 1.4;
-}
-
-.description-toggle {
-  background: none;
-  border: none;
-  color: #0066cc;
-  font-size: inherit;
-  cursor: pointer;
-  padding: 0;
-  font-weight: 400;
-  white-space: nowrap;
-}
-
-.description-toggle:hover {
-  text-decoration: underline;
-}
-
 /* ===========================================
    LOADING / ERROR STATES
    =========================================== */
