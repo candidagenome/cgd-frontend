@@ -586,6 +586,16 @@
   font-size: 0.75em;
 }
 
+.seq-options-separator {
+  width: 100%;
+  display: block;
+  color: #e65100;
+  font-weight: 500;
+  font-size: 0.85em;
+  padding: 8px 0 4px 0;
+  margin-top: 5px;
+}
+
 .additional-seq-display {
   margin-top: 12px;
   border: 1px solid #ddd;
