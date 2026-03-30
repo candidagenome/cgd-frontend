@@ -832,11 +832,24 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
   const canPanLeft = effectiveWidth > baseWidthRef.current && panOffset > (baseWidthRef.current - effectiveWidth);
   const canPanRight = effectiveWidth > baseWidthRef.current && panOffset < 0;
 
-  // Handle flanking count change
+  // Handle flanking count change - allow typing, validate on blur
   const handleFlankingChange = (e) => {
-    const value = parseInt(e.target.value, 10);
-    if (value >= 5 && value <= 50) {
-      setBaseFlankingCount(value);
+    const rawValue = e.target.value;
+    // Allow empty or numeric input while typing
+    if (rawValue === '' || /^\d+$/.test(rawValue)) {
+      const value = parseInt(rawValue, 10);
+      if (!isNaN(value)) {
+        setBaseFlankingCount(value);
+      }
+    }
+  };
+
+  // Validate and clamp flanking count on blur
+  const handleFlankingBlur = () => {
+    if (baseFlankingCount < 5) {
+      setBaseFlankingCount(5);
+    } else if (baseFlankingCount > 50) {
+      setBaseFlankingCount(50);
     }
   };
 
@@ -948,12 +961,14 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
             <label htmlFor="flanking-count">Flanking genes:</label>
             <input
               id="flanking-count"
-              type="number"
-              min="5"
-              max="50"
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
               value={baseFlankingCount}
               onChange={handleFlankingChange}
+              onBlur={handleFlankingBlur}
               disabled={loading}
+              style={{ width: '50px', textAlign: 'center' }}
             />
             <button
               type="button"
