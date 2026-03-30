@@ -937,7 +937,7 @@ function LitGuideCurationPage() {
           <label style={styles.speciesLabel}>Species:</label>
           <select
             value={currentOrganism || ''}
-            onChange={(e) => setCurrentOrganism(e.target.value || null)}
+            onChange={(e) => handleOrganismChange(e.target.value || null)}
             style={styles.speciesSelect}
           >
             <option value="">Select species...</option>
