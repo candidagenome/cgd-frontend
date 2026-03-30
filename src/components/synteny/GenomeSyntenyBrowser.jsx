@@ -64,6 +64,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
   const [panOffset, setPanOffset] = useState(0);
   const [visibleSpecies, setVisibleSpecies] = useState({});
   const [baseFlankingCount, setBaseFlankingCount] = useState(5);
+  const [flankingInput, setFlankingInput] = useState('5'); // Text input value
   const [currentFlankingCount, setCurrentFlankingCount] = useState(5);
   const [needsInitialCenter, setNeedsInitialCenter] = useState(false);
   const [hoveredOrtholog, setHoveredOrtholog] = useState(null);
@@ -832,24 +833,27 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
   const canPanLeft = effectiveWidth > baseWidthRef.current && panOffset > (baseWidthRef.current - effectiveWidth);
   const canPanRight = effectiveWidth > baseWidthRef.current && panOffset < 0;
 
-  // Handle flanking count change - allow typing, validate on blur
+  // Handle flanking count change - allow any input while typing
   const handleFlankingChange = (e) => {
     const rawValue = e.target.value;
     // Allow empty or numeric input while typing
-    if (rawValue === '' || /^\d+$/.test(rawValue)) {
-      const value = parseInt(rawValue, 10);
-      if (!isNaN(value)) {
-        setBaseFlankingCount(value);
-      }
+    if (rawValue === '' || /^\d*$/.test(rawValue)) {
+      setFlankingInput(rawValue);
     }
   };
 
-  // Validate and clamp flanking count on blur
+  // Validate and apply flanking count on blur
   const handleFlankingBlur = () => {
-    if (baseFlankingCount < 5) {
+    const value = parseInt(flankingInput, 10);
+    if (isNaN(value) || value < 5) {
       setBaseFlankingCount(5);
-    } else if (baseFlankingCount > 50) {
+      setFlankingInput('5');
+    } else if (value > 50) {
       setBaseFlankingCount(50);
+      setFlankingInput('50');
+    } else {
+      setBaseFlankingCount(value);
+      setFlankingInput(String(value));
     }
   };
 
@@ -964,7 +968,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
               type="text"
               inputMode="numeric"
               pattern="[0-9]*"
-              value={baseFlankingCount}
+              value={flankingInput}
               onChange={handleFlankingChange}
               onBlur={handleFlankingBlur}
               disabled={loading}
