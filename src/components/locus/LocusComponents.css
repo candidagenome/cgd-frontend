@@ -647,6 +647,72 @@
   word-break: break-word;
 }
 
+/* Allele Sequences Section */
+.allele-sequences-section {
+  margin-top: 25px;
+  padding: 20px;
+  background-color: #fff8e1;
+  border: 1px solid #ffe082;
+  border-radius: 8px;
+}
+
+.allele-sequences-section h4 {
+  color: #f57c00;
+  margin: 0 0 10px 0;
+}
+
+.allele-info-text {
+  color: #666;
+  font-size: 0.9em;
+  margin: 0 0 15px 0;
+}
+
+.allele-location-block {
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.allele-location-block:last-child {
+  margin-bottom: 0;
+}
+
+.allele-header h5.allele-name {
+  margin: 0 0 10px 0;
+  color: #e65100;
+  font-size: 1.1em;
+}
+
+.allele-location-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
+  padding: 10px 12px;
+  background-color: #f5f5f5;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+.allele-location-info .chromosome-name {
+  color: #1976d2;
+  font-weight: 500;
+}
+
+.allele-location-info .location-coords {
+  color: #333;
+}
+
+.allele-location-info .strand-info {
+  color: #666;
+}
+
+.allele-sequences {
+  margin-top: 10px;
+}
+
 /* References */
 .ref-title {
   font-style: italic;
