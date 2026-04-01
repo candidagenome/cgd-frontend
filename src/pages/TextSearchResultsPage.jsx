@@ -682,6 +682,7 @@ const TextSearchResultsPage = () => {
 
     const results = categoryResults || [];
     const isPaperTitles = selectedCategory === 'paper_titles';
+    const isOrthologs = selectedCategory === 'orthologs';
 
     // Filter results by selected year (for paper_titles) or organism (for other categories)
     let facetFiltered = results;
@@ -692,6 +693,84 @@ const TextSearchResultsPage = () => {
     }
     // Apply quick filter
     const filteredResults = getFilteredResults(facetFiltered);
+
+    // Special rendering for orthologs with organism filter - show relationship table
+    if (isOrthologs && selectedOrganism && facetFiltered.length > 0) {
+      // Build relationship table data
+      // For each gene in selected organism, show which external orthologs map to it
+      const relationshipData = [];
+
+      facetFiltered.forEach(gene => {
+        if (gene.related_orthologs && gene.related_orthologs.length > 0) {
+          gene.related_orthologs.forEach(ortholog => {
+            relationshipData.push({
+              ortholog_name: ortholog.name,
+              ortholog_source: ortholog.source,
+              ortholog_organism: ortholog.organism,
+              ortholog_link: ortholog.link,
+              cgd_gene_name: gene.gene_name || gene.name,
+              cgd_gene_link: gene.link,
+              cgd_gene_organism: gene.organism,
+            });
+          });
+        }
+      });
+
+      // If we have relationship data, show the relationship table
+      if (relationshipData.length > 0) {
+        return (
+          <div>
+            <div className="ortholog-relationship-header">
+              <p>
+                Your query <strong style={{ color: '#c62828' }}>{query}</strong> matched the following ortholog(s) or Best Hit(s) associated with the following genes in{' '}
+                <strong style={{ color: '#1976d2' }}><em>{selectedOrganism.replace('Candida ', 'C. ')}</em></strong>
+              </p>
+            </div>
+
+            <table className="ortholog-relationship-table">
+              <thead>
+                <tr>
+                  <th>Ortholog or Best Hit to CGD genes</th>
+                  <th>CGD Genes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {relationshipData.map((row, idx) => (
+                  <tr key={idx}>
+                    <td>
+                      {row.ortholog_link ? (
+                        <a href={row.ortholog_link} target="_blank" rel="noopener noreferrer">
+                          {row.ortholog_name}
+                        </a>
+                      ) : (
+                        <span>{row.ortholog_name}</span>
+                      )}
+                      {' '}
+                      <span className="ortholog-type">
+                        ({row.ortholog_source === 'CGOB' ? 'Ortholog' : `${row.ortholog_source} Ortholog`})
+                      </span>
+                    </td>
+                    <td>
+                      <a href={row.cgd_gene_link} target="_blank" rel="noopener noreferrer">
+                        {row.cgd_gene_name}
+                      </a>
+                      {' '}
+                      <span className="cgd-gene-organism">
+                        ({row.cgd_gene_organism?.replace('Candida ', 'C. ')})
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <div className="ortholog-table-footer">
+              <p>{relationshipData.length} ortholog relationship(s) found</p>
+            </div>
+          </div>
+        );
+      }
+    }
 
     return (
       <div>
