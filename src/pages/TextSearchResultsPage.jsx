@@ -226,6 +226,8 @@ const TextSearchResultsPage = () => {
   const [selectedOrganism, setSelectedOrganism] = useState(null);
   const [organismCounts, setOrganismCounts] = useState({});
   const [hasApiOrganismCounts, setHasApiOrganismCounts] = useState(false);
+  // Aggregated organism counts from genes + orthologs (for sidebar display)
+  const [aggregatedOrganismCounts, setAggregatedOrganismCounts] = useState({});
 
   // Year filtering state (for paper_titles category)
   const [selectedYear, setSelectedYear] = useState(null);
@@ -356,6 +358,22 @@ const TextSearchResultsPage = () => {
         const data = await searchApi.textSearch(query, 10, type, searchField, matchMode);
         setInitialResults(data);
 
+        // Calculate aggregated organism counts from genes + orthologs categories
+        // This ensures species with orthologs (but no direct gene matches) appear in the filter
+        const aggregatedCounts = {};
+        const relevantCategories = ['genes', 'orthologs'];
+        relevantCategories.forEach(catKey => {
+          const categoryData = data.categories?.find(c => c.category === catKey);
+          if (categoryData?.results) {
+            categoryData.results.forEach(r => {
+              if (r.organism) {
+                aggregatedCounts[r.organism] = (aggregatedCounts[r.organism] || 0) + 1;
+              }
+            });
+          }
+        });
+        setAggregatedOrganismCounts(aggregatedCounts);
+
         // Determine which categories to show
         let categoriesToShow;
         if (type === 'homolog') {
@@ -449,20 +467,51 @@ const TextSearchResultsPage = () => {
   }, [categoryResults, selectedCategory]);
 
   // Handle category change
-  const handleCategoryChange = async (category) => {
+  const handleCategoryChange = async (category, keepOrganism = false) => {
     if (category === selectedCategory) return;
 
     setSelectedCategory(category);
     setCategoryResults(null);
     setTotalCount(0);
-    // Reset organism and year selection when changing category
+    // Reset organism and year selection when changing category (unless keepOrganism)
     setAvailableOrganisms([]);
     setOrganismCounts({});
-    setSelectedOrganism(null);
+    if (!keepOrganism) {
+      setSelectedOrganism(null);
+    }
     setHasApiOrganismCounts(false);
     setYearCounts({});
     setSelectedYear(null);
     await fetchCategoryResults(category);
+  };
+
+  // Handle organism selection - switch to orthologs category if needed
+  const handleOrganismSelect = async (organism) => {
+    if (organism === null) {
+      setSelectedOrganism(null);
+      return;
+    }
+
+    // Check if this organism has results in current category
+    const hasCurrentCategoryResults = (organismCounts[organism] || 0) > 0;
+
+    if (hasCurrentCategoryResults) {
+      // Just select the organism, stay in current category
+      setSelectedOrganism(organism);
+    } else {
+      // Check if organism has results in orthologs category
+      const orthologsCategory = initialResults?.categories?.find(c => c.category === 'orthologs');
+      const hasOrthologResults = orthologsCategory?.results?.some(r => r.organism === organism);
+
+      if (hasOrthologResults && selectedCategory !== 'orthologs') {
+        // Switch to orthologs category and select the organism
+        setSelectedOrganism(organism);
+        await handleCategoryChange('orthologs', true);
+      } else {
+        // Just select the organism anyway
+        setSelectedOrganism(organism);
+      }
+    }
   };
 
 
@@ -524,50 +573,65 @@ const TextSearchResultsPage = () => {
         )}
 
         {/* Organism filter facet - hide for paper_titles category */}
-        {!isPaperTitles && (availableOrganisms.length > 0 || allOrganisms.length > 0) && (
-          <div className="organism-facet">
-            <h3>Organism</h3>
-            <ul className="facet-list">
-              <li
-                className={`facet-item ${selectedOrganism === null ? 'selected' : ''}`}
-                onClick={() => setSelectedOrganism(null)}
-              >
-                <span className="facet-label">All Organisms</span>
-                <span className="facet-count">
-                  {hasApiOrganismCounts
-                    ? Object.values(organismCounts).reduce((sum, count) => sum + count, 0)
-                    : totalCount}
-                </span>
-              </li>
-              {/* First show organisms from counts (exact key match) */}
-              {availableOrganisms.map(organism => {
-                const count = organismCounts[organism] || 0;
-                return (
-                  <li
-                    key={organism}
-                    className={`facet-item ${selectedOrganism === organism ? 'selected' : ''}`}
-                    onClick={() => setSelectedOrganism(organism)}
-                  >
-                    <span className="facet-label">{organism}</span>
-                    <span className="facet-count">{count}</span>
-                  </li>
-                );
-              })}
-              {/* Then show remaining organisms from allOrganisms with 0 count */}
-              {allOrganisms
-                .filter(org => !availableOrganisms.includes(org.organism_name))
-                .map(org => (
-                  <li
-                    key={org.organism_abbrev}
-                    className="facet-item zero-count"
-                  >
-                    <span className="facet-label">{org.organism_name}</span>
-                    <span className="facet-count">0</span>
-                  </li>
-                ))}
-            </ul>
-          </div>
-        )}
+        {/* Use aggregated counts (genes + orthologs) so species with orthologs appear */}
+        {!isPaperTitles && (() => {
+          // Merge current category counts with aggregated counts from genes+orthologs
+          const mergedCounts = { ...aggregatedOrganismCounts };
+          // Also include any organisms from current category that might not be in genes/orthologs
+          Object.entries(organismCounts).forEach(([org, count]) => {
+            mergedCounts[org] = Math.max(mergedCounts[org] || 0, count);
+          });
+          const organismsWithResults = Object.keys(mergedCounts).sort();
+          const hasAnyOrganisms = organismsWithResults.length > 0 || allOrganisms.length > 0;
+
+          if (!hasAnyOrganisms) return null;
+
+          return (
+            <div className="organism-facet">
+              <h3>Organism</h3>
+              <ul className="facet-list">
+                <li
+                  className={`facet-item ${selectedOrganism === null ? 'selected' : ''}`}
+                  onClick={() => handleOrganismSelect(null)}
+                >
+                  <span className="facet-label">All Organisms</span>
+                  <span className="facet-count">
+                    {Object.values(mergedCounts).reduce((sum, count) => sum + count, 0) || totalCount}
+                  </span>
+                </li>
+                {/* Show organisms with results (from merged counts) */}
+                {organismsWithResults.map(organism => {
+                  const count = mergedCounts[organism] || 0;
+                  // Check if this organism has results in the current category
+                  const hasCurrentCategoryResults = (organismCounts[organism] || 0) > 0;
+                  return (
+                    <li
+                      key={organism}
+                      className={`facet-item ${selectedOrganism === organism ? 'selected' : ''} ${!hasCurrentCategoryResults ? 'other-category' : ''}`}
+                      onClick={() => handleOrganismSelect(organism)}
+                      title={!hasCurrentCategoryResults ? 'Click to view results in Orthologs / Best Hits' : ''}
+                    >
+                      <span className="facet-label">{organism}</span>
+                      <span className="facet-count">{count}</span>
+                    </li>
+                  );
+                })}
+                {/* Show remaining organisms from allOrganisms with 0 count */}
+                {allOrganisms
+                  .filter(org => !organismsWithResults.includes(org.organism_name))
+                  .map(org => (
+                    <li
+                      key={org.organism_abbrev}
+                      className="facet-item zero-count"
+                    >
+                      <span className="facet-label">{org.organism_name}</span>
+                      <span className="facet-count">0</span>
+                    </li>
+                  ))}
+              </ul>
+            </div>
+          );
+        })()}
 
         <h3>Categories</h3>
         <ul className="facet-list">

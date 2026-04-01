@@ -193,6 +193,22 @@
   color: #999;
 }
 
+/* Organisms with results in other categories (e.g., orthologs but not genes) */
+.text-search-facets .facet-item.other-category {
+  font-style: italic;
+}
+
+.text-search-facets .facet-item.other-category .facet-label::after {
+  content: ' *';
+  color: #7b1fa2;
+  font-size: 0.9em;
+}
+
+.text-search-facets .facet-item.other-category .facet-count {
+  background-color: #e1bee7;
+  color: #7b1fa2;
+}
+
 /* Category labels */
 .text-search-facets .facet-label {
   font-size: 0.9em;
