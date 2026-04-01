@@ -747,7 +747,7 @@ const TextSearchResultsPage = () => {
                       )}
                       {' '}
                       <span className="ortholog-type">
-                        ({row.ortholog_source === 'CGOB' ? 'Ortholog' : `${row.ortholog_source} Ortholog`})
+                        ({row.ortholog_source === 'CGOB' || row.ortholog_source === 'Orthologous genes in Candida species' ? 'Ortholog' : `${row.ortholog_source} Ortholog`})
                       </span>
                     </td>
                     <td>
