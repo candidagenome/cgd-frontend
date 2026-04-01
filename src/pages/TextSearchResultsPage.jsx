@@ -226,6 +226,8 @@ const TextSearchResultsPage = () => {
   const [selectedOrganism, setSelectedOrganism] = useState(null);
   const [organismCounts, setOrganismCounts] = useState({});
   const [hasApiOrganismCounts, setHasApiOrganismCounts] = useState(false);
+  // Aggregated organism counts from genes + orthologs (for sidebar display)
+  const [aggregatedOrganismCounts, setAggregatedOrganismCounts] = useState({});
 
   // Year filtering state (for paper_titles category)
   const [selectedYear, setSelectedYear] = useState(null);
@@ -356,6 +358,22 @@ const TextSearchResultsPage = () => {
         const data = await searchApi.textSearch(query, 10, type, searchField, matchMode);
         setInitialResults(data);
 
+        // Calculate aggregated organism counts from genes + orthologs categories
+        // This ensures species with orthologs (but no direct gene matches) appear in the filter
+        const aggregatedCounts = {};
+        const relevantCategories = ['genes', 'orthologs'];
+        relevantCategories.forEach(catKey => {
+          const categoryData = data.categories?.find(c => c.category === catKey);
+          if (categoryData?.results) {
+            categoryData.results.forEach(r => {
+              if (r.organism) {
+                aggregatedCounts[r.organism] = (aggregatedCounts[r.organism] || 0) + 1;
+              }
+            });
+          }
+        });
+        setAggregatedOrganismCounts(aggregatedCounts);
+
         // Determine which categories to show
         let categoriesToShow;
         if (type === 'homolog') {
@@ -449,20 +467,51 @@ const TextSearchResultsPage = () => {
   }, [categoryResults, selectedCategory]);
 
   // Handle category change
-  const handleCategoryChange = async (category) => {
+  const handleCategoryChange = async (category, keepOrganism = false) => {
     if (category === selectedCategory) return;
 
     setSelectedCategory(category);
     setCategoryResults(null);
     setTotalCount(0);
-    // Reset organism and year selection when changing category
+    // Reset organism and year selection when changing category (unless keepOrganism)
     setAvailableOrganisms([]);
     setOrganismCounts({});
-    setSelectedOrganism(null);
+    if (!keepOrganism) {
+      setSelectedOrganism(null);
+    }
     setHasApiOrganismCounts(false);
     setYearCounts({});
     setSelectedYear(null);
     await fetchCategoryResults(category);
+  };
+
+  // Handle organism selection - switch to orthologs category if needed
+  const handleOrganismSelect = async (organism) => {
+    if (organism === null) {
+      setSelectedOrganism(null);
+      return;
+    }
+
+    // Check if this organism has results in current category
+    const hasCurrentCategoryResults = (organismCounts[organism] || 0) > 0;
+
+    if (hasCurrentCategoryResults) {
+      // Just select the organism, stay in current category
+      setSelectedOrganism(organism);
+    } else {
+      // Check if organism has results in orthologs category
+      const orthologsCategory = initialResults?.categories?.find(c => c.category === 'orthologs');
+      const hasOrthologResults = orthologsCategory?.results?.some(r => r.organism === organism);
+
+      if (hasOrthologResults && selectedCategory !== 'orthologs') {
+        // Switch to orthologs category and select the organism
+        setSelectedOrganism(organism);
+        await handleCategoryChange('orthologs', true);
+      } else {
+        // Just select the organism anyway
+        setSelectedOrganism(organism);
+      }
+    }
   };
 
 
@@ -524,50 +573,65 @@ const TextSearchResultsPage = () => {
         )}
 
         {/* Organism filter facet - hide for paper_titles category */}
-        {!isPaperTitles && (availableOrganisms.length > 0 || allOrganisms.length > 0) && (
-          <div className="organism-facet">
-            <h3>Organism</h3>
-            <ul className="facet-list">
-              <li
-                className={`facet-item ${selectedOrganism === null ? 'selected' : ''}`}
-                onClick={() => setSelectedOrganism(null)}
-              >
-                <span className="facet-label">All Organisms</span>
-                <span className="facet-count">
-                  {hasApiOrganismCounts
-                    ? Object.values(organismCounts).reduce((sum, count) => sum + count, 0)
-                    : totalCount}
-                </span>
-              </li>
-              {/* First show organisms from counts (exact key match) */}
-              {availableOrganisms.map(organism => {
-                const count = organismCounts[organism] || 0;
-                return (
-                  <li
-                    key={organism}
-                    className={`facet-item ${selectedOrganism === organism ? 'selected' : ''}`}
-                    onClick={() => setSelectedOrganism(organism)}
-                  >
-                    <span className="facet-label">{organism}</span>
-                    <span className="facet-count">{count}</span>
-                  </li>
-                );
-              })}
-              {/* Then show remaining organisms from allOrganisms with 0 count */}
-              {allOrganisms
-                .filter(org => !availableOrganisms.includes(org.organism_name))
-                .map(org => (
-                  <li
-                    key={org.organism_abbrev}
-                    className="facet-item zero-count"
-                  >
-                    <span className="facet-label">{org.organism_name}</span>
-                    <span className="facet-count">0</span>
-                  </li>
-                ))}
-            </ul>
-          </div>
-        )}
+        {/* Use aggregated counts (genes + orthologs) so species with orthologs appear */}
+        {!isPaperTitles && (() => {
+          // Merge current category counts with aggregated counts from genes+orthologs
+          const mergedCounts = { ...aggregatedOrganismCounts };
+          // Also include any organisms from current category that might not be in genes/orthologs
+          Object.entries(organismCounts).forEach(([org, count]) => {
+            mergedCounts[org] = Math.max(mergedCounts[org] || 0, count);
+          });
+          const organismsWithResults = Object.keys(mergedCounts).sort();
+          const hasAnyOrganisms = organismsWithResults.length > 0 || allOrganisms.length > 0;
+
+          if (!hasAnyOrganisms) return null;
+
+          return (
+            <div className="organism-facet">
+              <h3>Organism</h3>
+              <ul className="facet-list">
+                <li
+                  className={`facet-item ${selectedOrganism === null ? 'selected' : ''}`}
+                  onClick={() => handleOrganismSelect(null)}
+                >
+                  <span className="facet-label">All Organisms</span>
+                  <span className="facet-count">
+                    {Object.values(mergedCounts).reduce((sum, count) => sum + count, 0) || totalCount}
+                  </span>
+                </li>
+                {/* Show organisms with results (from merged counts) */}
+                {organismsWithResults.map(organism => {
+                  const count = mergedCounts[organism] || 0;
+                  // Check if this organism has results in the current category
+                  const hasCurrentCategoryResults = (organismCounts[organism] || 0) > 0;
+                  return (
+                    <li
+                      key={organism}
+                      className={`facet-item ${selectedOrganism === organism ? 'selected' : ''} ${!hasCurrentCategoryResults ? 'other-category' : ''}`}
+                      onClick={() => handleOrganismSelect(organism)}
+                      title={!hasCurrentCategoryResults ? 'Click to view results in Orthologs / Best Hits' : ''}
+                    >
+                      <span className="facet-label">{organism}</span>
+                      <span className="facet-count">{count}</span>
+                    </li>
+                  );
+                })}
+                {/* Show remaining organisms from allOrganisms with 0 count */}
+                {allOrganisms
+                  .filter(org => !organismsWithResults.includes(org.organism_name))
+                  .map(org => (
+                    <li
+                      key={org.organism_abbrev}
+                      className="facet-item zero-count"
+                    >
+                      <span className="facet-label">{org.organism_name}</span>
+                      <span className="facet-count">0</span>
+                    </li>
+                  ))}
+              </ul>
+            </div>
+          );
+        })()}
 
         <h3>Categories</h3>
         <ul className="facet-list">
@@ -618,6 +682,7 @@ const TextSearchResultsPage = () => {
 
     const results = categoryResults || [];
     const isPaperTitles = selectedCategory === 'paper_titles';
+    const isOrthologs = selectedCategory === 'orthologs';
 
     // Filter results by selected year (for paper_titles) or organism (for other categories)
     let facetFiltered = results;
@@ -628,6 +693,84 @@ const TextSearchResultsPage = () => {
     }
     // Apply quick filter
     const filteredResults = getFilteredResults(facetFiltered);
+
+    // Special rendering for orthologs with organism filter - show relationship table
+    if (isOrthologs && selectedOrganism && facetFiltered.length > 0) {
+      // Build relationship table data
+      // For each gene in selected organism, show which external orthologs map to it
+      const relationshipData = [];
+
+      facetFiltered.forEach(gene => {
+        if (gene.related_orthologs && gene.related_orthologs.length > 0) {
+          gene.related_orthologs.forEach(ortholog => {
+            relationshipData.push({
+              ortholog_name: ortholog.name,
+              ortholog_source: ortholog.source,
+              ortholog_organism: ortholog.organism,
+              ortholog_link: ortholog.link,
+              cgd_gene_name: gene.gene_name || gene.name,
+              cgd_gene_link: gene.link,
+              cgd_gene_organism: gene.organism,
+            });
+          });
+        }
+      });
+
+      // If we have relationship data, show the relationship table
+      if (relationshipData.length > 0) {
+        return (
+          <div>
+            <div className="ortholog-relationship-header">
+              <p>
+                Your query <strong style={{ color: '#c62828' }}>{query}</strong> matched the following ortholog(s) or Best Hit(s) associated with the following genes in{' '}
+                <strong style={{ color: '#1976d2' }}><em>{selectedOrganism.replace('Candida ', 'C. ')}</em></strong>
+              </p>
+            </div>
+
+            <table className="ortholog-relationship-table">
+              <thead>
+                <tr>
+                  <th>Ortholog or Best Hit to CGD genes</th>
+                  <th>CGD Genes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {relationshipData.map((row, idx) => (
+                  <tr key={idx}>
+                    <td>
+                      {row.ortholog_link ? (
+                        <a href={row.ortholog_link} target="_blank" rel="noopener noreferrer">
+                          {row.ortholog_name}
+                        </a>
+                      ) : (
+                        <span>{row.ortholog_name}</span>
+                      )}
+                      {' '}
+                      <span className="ortholog-type">
+                        ({row.ortholog_source === 'CGOB' || row.ortholog_source === 'Orthologous genes in Candida species' ? 'Ortholog' : `${row.ortholog_source} Ortholog`})
+                      </span>
+                    </td>
+                    <td>
+                      <a href={row.cgd_gene_link} target="_blank" rel="noopener noreferrer">
+                        {row.cgd_gene_name}
+                      </a>
+                      {' '}
+                      <span className="cgd-gene-organism">
+                        ({row.cgd_gene_organism?.replace('Candida ', 'C. ')})
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <div className="ortholog-table-footer">
+              <p>{relationshipData.length} ortholog relationship(s) found</p>
+            </div>
+          </div>
+        );
+      }
+    }
 
     return (
       <div>

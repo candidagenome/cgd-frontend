@@ -14,10 +14,30 @@ const getSeqTypeParam = (seqType) => {
 };
 
 // Additional sequence options (fetched on demand)
-const ADDITIONAL_SEQ_OPTIONS = [
+const BASE_SEQ_OPTIONS = [
   { type: 'coding_utr', label: 'Transcript/mRNA (introns spliced out)', description: 'Spliced transcript sequence - exons and UTRs only, no introns' },
   { type: 'genomic_flanking', label: 'Genomic DNA +1kb Flanking', description: 'Genomic DNA (with introns) plus 1kb upstream and downstream regions', flankl: 1000, flankr: 1000, seqtype: 'genomic' },
 ];
+
+// Generate sequence options including B allele options for diploid organisms
+const getSequenceOptions = (selectedOrganism, alleleLocations) => {
+  const options = [...BASE_SEQ_OPTIONS];
+
+  // Add B allele options for C. albicans SC5314 (diploid)
+  if (selectedOrganism === 'Candida albicans SC5314' && alleleLocations?.length > 0) {
+    const bAllele = alleleLocations[0]; // First (usually only) B allele
+    if (bAllele?.feature_name) {
+      options.push(
+        { type: 'b_genomic', label: 'B Allele Genomic DNA', description: 'Genomic DNA for B allele', locusOverride: bAllele.feature_name, seqtype: 'genomic' },
+        { type: 'b_genomic_flanking', label: 'B Allele Genomic DNA +1kb Flanking', description: 'Genomic DNA for B allele with 1kb flanking regions', locusOverride: bAllele.feature_name, seqtype: 'genomic', flankl: 1000, flankr: 1000 },
+        { type: 'b_coding_utr', label: 'B Allele Transcript/mRNA', description: 'Spliced transcript for B allele', locusOverride: bAllele.feature_name, seqtype: 'coding_utr' },
+        { type: 'b_protein', label: 'B Allele Protein', description: 'Protein sequence for B allele', locusOverride: bAllele.feature_name, seqtype: 'protein' },
+      );
+    }
+  }
+
+  return options;
+};
 
 function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
   const [expandedSequences, setExpandedSequences] = useState({});
@@ -216,93 +236,7 @@ function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismCha
             </div>
           )}
 
-          {/* Additional Sequence Options */}
-          {orgData?.locus_display_name && (
-            <div className="additional-sequences-section">
-              <h4>Additional Sequence Options</h4>
-              <div className="additional-seq-options">
-                {ADDITIONAL_SEQ_OPTIONS.map(opt => (
-                  <button
-                    key={opt.type}
-                    className={`additional-seq-btn ${expandedAdditional[opt.type] ? 'active' : ''}`}
-                    onClick={() => fetchAdditionalSequence(opt, orgData.locus_display_name)}
-                    title={opt.description}
-                  >
-                    {additionalSeqs[opt.type]?.loading ? 'Loading...' : opt.label}
-                    <span className="collapse-indicator">{expandedAdditional[opt.type] ? ' ▼' : ' ▶'}</span>
-                  </button>
-                ))}
-              </div>
-
-              {/* Display fetched additional sequences */}
-              {ADDITIONAL_SEQ_OPTIONS.map(opt => {
-                const seqData = additionalSeqs[opt.type];
-                const isExpanded = expandedAdditional[opt.type];
-
-                if (!seqData || (!seqData.loading && !seqData.sequence && !seqData.error)) {
-                  return null;
-                }
-
-                return (
-                  <div key={opt.type} className="additional-seq-display">
-                    <div
-                      className="additional-seq-header"
-                      onClick={() => toggleAdditionalSequence(opt.type)}
-                    >
-                      <span className="collapse-icon">{isExpanded ? '▼' : '▶'}</span>
-                      <span className="seq-type">{opt.label}</span>
-                      {seqData.info?.length && (
-                        <span className="seq-stat">
-                          <strong>{seqData.info.length.toLocaleString()}</strong> bp
-                        </span>
-                      )}
-                    </div>
-
-                    {isExpanded && (
-                      <div className="sequence-content">
-                        {seqData.loading && (
-                          <div className="loading-inline">Loading sequence...</div>
-                        )}
-                        {seqData.error && (
-                          <div className="error-inline">Error: {seqData.error}</div>
-                        )}
-                        {seqData.sequence && (
-                          <>
-                            <div className="sequence-toolbar">
-                              <button
-                                className="copy-btn"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  navigator.clipboard.writeText(seqData.sequence);
-                                }}
-                              >
-                                Copy Sequence
-                              </button>
-                              <a
-                                className="download-btn"
-                                href={getAdditionalDownloadUrl(opt, orgData.locus_display_name)}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                Download FASTA
-                              </a>
-                              <span className="sequence-length-info">
-                                {seqData.sequence.length.toLocaleString()} characters
-                              </span>
-                            </div>
-                            <pre className="sequence-text">{seqData.sequence}</pre>
-                          </>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          )}
-
-          {/* Sequences - Grouped by Type */}
+          {/* Sequences - Grouped by Type (A allele only for C. albicans, B allele in Additional Options) */}
           {Object.keys(sequenceGroups).length > 0 && (
             <div className="sequences-section">
               <h4>Sequences</h4>
@@ -332,7 +266,6 @@ function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismCha
                               <span className="collapse-icon">{isExpanded ? '▼' : '▶'}</span>
                             )}
                             <span className="seq-type">{formatSeqTypeLabel(seq.seq_type)}</span>
-                            {seq.is_current && <span className="current-badge">Current</span>}
                           </div>
                           <div className="seq-info-right">
                             <span className="seq-stat">
@@ -384,6 +317,98 @@ function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismCha
               ))}
             </div>
           )}
+
+          {/* Additional Sequence Options - at bottom of page */}
+          {orgData?.locus_display_name && (() => {
+            const seqOptions = getSequenceOptions(selectedOrganism, orgData.allele_locations);
+            return (
+            <div className="additional-sequences-section">
+              <h4>Additional Sequence Options</h4>
+              <div className="additional-seq-options">
+                {seqOptions.map(opt => (
+                  opt.isSeparator ? (
+                    <span key={opt.type} className="seq-options-separator">{opt.label}</span>
+                  ) : (
+                  <button
+                    key={opt.type}
+                    className={`additional-seq-btn ${expandedAdditional[opt.type] ? 'active' : ''}`}
+                    onClick={() => fetchAdditionalSequence(opt, opt.locusOverride || orgData.locus_display_name)}
+                    title={opt.description}
+                  >
+                    {additionalSeqs[opt.type]?.loading ? 'Loading...' : opt.label}
+                    <span className="collapse-indicator">{expandedAdditional[opt.type] ? ' ▼' : ' ▶'}</span>
+                  </button>
+                  )
+                ))}
+              </div>
+
+              {/* Display fetched additional sequences */}
+              {seqOptions.filter(opt => !opt.isSeparator).map(opt => {
+                const seqData = additionalSeqs[opt.type];
+                const isExpanded = expandedAdditional[opt.type];
+
+                if (!seqData || (!seqData.loading && !seqData.sequence && !seqData.error)) {
+                  return null;
+                }
+
+                return (
+                  <div key={opt.type} className="additional-seq-display">
+                    <div
+                      className="additional-seq-header"
+                      onClick={() => toggleAdditionalSequence(opt.type)}
+                    >
+                      <span className="collapse-icon">{isExpanded ? '▼' : '▶'}</span>
+                      <span className="seq-type">{opt.label}</span>
+                      {seqData.info?.length && (
+                        <span className="seq-stat">
+                          <strong>{seqData.info.length.toLocaleString()}</strong> bp
+                        </span>
+                      )}
+                    </div>
+
+                    {isExpanded && (
+                      <div className="sequence-content">
+                        {seqData.loading && (
+                          <div className="loading-inline">Loading sequence...</div>
+                        )}
+                        {seqData.error && (
+                          <div className="error-inline">Error: {seqData.error}</div>
+                        )}
+                        {seqData.sequence && (
+                          <>
+                            <div className="sequence-toolbar">
+                              <button
+                                className="copy-btn"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  navigator.clipboard.writeText(seqData.sequence);
+                                }}
+                              >
+                                Copy Sequence
+                              </button>
+                              <a
+                                className="download-btn"
+                                href={getAdditionalDownloadUrl(opt, opt.locusOverride || orgData.locus_display_name)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                Download FASTA
+                              </a>
+                              <span className="sequence-length-info">
+                                {seqData.sequence.length.toLocaleString()} characters
+                              </span>
+                            </div>
+                            <pre className="sequence-text">{seqData.sequence}</pre>
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )})()}
 
           {(!orgData.locations || orgData.locations.length === 0) &&
            (!orgData.sequences || orgData.sequences.length === 0) && (

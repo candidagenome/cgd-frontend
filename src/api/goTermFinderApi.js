@@ -20,6 +20,8 @@ export const goTermFinderApi = {
     const response = await api.post('/api/go-term-finder/validate-genes', {
       genes,
       organism_no: organismNo,
+    }, {
+      timeout: 300000, // 5 minutes for large gene lists
     });
     return response.data;
   },
@@ -56,7 +58,9 @@ export const goTermFinderApi = {
     const params = new URLSearchParams();
     if (options.maxNodes) params.append('max_nodes', options.maxNodes);
     const url = `/api/go-term-finder/graph${params.toString() ? '?' + params : ''}`;
-    const response = await api.post(url, request);
+    const response = await api.post(url, request, {
+      timeout: 300000, // 5 minutes for large gene lists
+    });
     return response.data;
   },
 
@@ -70,7 +74,10 @@ export const goTermFinderApi = {
     const response = await api.post(
       `/api/go-term-finder/download/${format}`,
       request,
-      { responseType: 'blob' }
+      {
+        responseType: 'blob',
+        timeout: 300000, // 5 minutes for large gene lists
+      }
     );
     return response.data;
   },
