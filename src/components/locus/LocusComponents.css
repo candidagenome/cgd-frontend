@@ -483,6 +483,28 @@
   font-size: 0.75em;
 }
 
+.allele-badge {
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.75em;
+  font-weight: 500;
+  margin-left: 6px;
+}
+
+.allele-badge.allele-a {
+  background-color: #1976d2;
+  color: white;
+}
+
+.allele-badge.allele-b {
+  background-color: #7b1fa2;
+  color: white;
+}
+
+.sequence-block.b-allele {
+  border-left: 3px solid #7b1fa2;
+}
+
 .sequence-content {
   padding: 0;
   background-color: #fafafa;
