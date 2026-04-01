@@ -19,18 +19,19 @@ const BASE_SEQ_OPTIONS = [
   { type: 'genomic_flanking', label: 'Genomic DNA +1kb Flanking', description: 'Genomic DNA (with introns) plus 1kb upstream and downstream regions', flankl: 1000, flankr: 1000, seqtype: 'genomic' },
 ];
 
-// Generate sequence options including B allele transcript option for diploid organisms
-// Note: B allele Genomic DNA and Protein are now shown in the main Sequences section
+// Generate sequence options including B allele options for diploid organisms
 const getSequenceOptions = (selectedOrganism, alleleLocations) => {
   const options = [...BASE_SEQ_OPTIONS];
 
-  // Only add B allele transcript option for C. albicans SC5314 (diploid)
-  // B allele genomic and protein are already shown in the Sequences section above
+  // Add B allele options for C. albicans SC5314 (diploid)
   if (selectedOrganism === 'Candida albicans SC5314' && alleleLocations?.length > 0) {
     const bAllele = alleleLocations[0]; // First (usually only) B allele
     if (bAllele?.feature_name) {
       options.push(
+        { type: 'b_genomic', label: 'B Allele Genomic DNA', description: 'Genomic DNA for B allele', locusOverride: bAllele.feature_name, seqtype: 'genomic' },
+        { type: 'b_genomic_flanking', label: 'B Allele Genomic DNA +1kb Flanking', description: 'Genomic DNA for B allele with 1kb flanking regions', locusOverride: bAllele.feature_name, seqtype: 'genomic', flankl: 1000, flankr: 1000 },
         { type: 'b_coding_utr', label: 'B Allele Transcript/mRNA', description: 'Spliced transcript for B allele', locusOverride: bAllele.feature_name, seqtype: 'coding_utr' },
+        { type: 'b_protein', label: 'B Allele Protein', description: 'Protein sequence for B allele', locusOverride: bAllele.feature_name, seqtype: 'protein' },
       );
     }
   }
@@ -235,184 +236,87 @@ function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismCha
             </div>
           )}
 
-          {/* Sequences - Grouped by Type, with A and B allele labels for C. albicans */}
-          {Object.keys(sequenceGroups).length > 0 && (() => {
-            const hasBAllele = selectedOrganism === 'Candida albicans SC5314' &&
-                               orgData.allele_locations?.length > 0;
-            const bAllele = hasBAllele ? orgData.allele_locations[0] : null;
-            const bAlleleSeqs = bAllele?.sequences || [];
+          {/* Sequences - Grouped by Type (A allele only for C. albicans, B allele in Additional Options) */}
+          {Object.keys(sequenceGroups).length > 0 && (
+            <div className="sequences-section">
+              <h4>Sequences</h4>
+              {Object.entries(sequenceGroups).map(([seqType, sequences]) => (
+                <div key={seqType} className="sequence-type-group">
+                  <h5 className="sequence-type-header">
+                    {formatSeqTypeLabel(seqType)}
+                    <span className="count-badge">{sequences.length}</span>
+                  </h5>
 
-            // Group B allele sequences by type for side-by-side display
-            const bAlleleByType = {};
-            bAlleleSeqs.forEach(seq => {
-              const type = seq.seq_type || 'Other';
-              bAlleleByType[type] = seq;
-            });
+                  {sequences.map((seq, idx) => {
+                    const seqKey = `${selectedOrganism}-${seqType}-${idx}`;
+                    const isExpanded = expandedSequences[seqKey];
 
-            return (
-              <div className="sequences-section">
-                <h4>Sequences</h4>
-                {hasBAllele && (
-                  <p className="allele-info-text">
-                    <em>C. albicans</em> is diploid with two alleles (A and B) for each gene.
-                    Both allele sequences are shown below.
-                  </p>
-                )}
-                {Object.entries(sequenceGroups).map(([seqType, sequences]) => {
-                  const bSeq = bAlleleByType[seqType];
-
-                  return (
-                    <div key={seqType} className="sequence-type-group">
-                      <h5 className="sequence-type-header">
-                        {formatSeqTypeLabel(seqType)}
-                        <span className="count-badge">{sequences.length + (bSeq ? 1 : 0)}</span>
-                      </h5>
-
-                      {/* A Allele sequences */}
-                      {sequences.map((seq, idx) => {
-                        const seqKey = `${selectedOrganism}-${seqType}-${idx}`;
-                        const isExpanded = expandedSequences[seqKey];
-
-                        return (
-                          <div
-                            key={idx}
-                            className={`sequence-block ${seq.is_current ? 'current' : 'archived'}`}
-                          >
-                            <div
-                              className="sequence-header"
-                              onClick={() => seq.residues && toggleSequence(seqKey)}
-                              style={{ cursor: seq.residues ? 'pointer' : 'default' }}
-                            >
-                              <div className="seq-info-left">
-                                {seq.residues && (
-                                  <span className="collapse-icon">{isExpanded ? '▼' : '▶'}</span>
-                                )}
-                                <span className="seq-type">{formatSeqTypeLabel(seq.seq_type)}</span>
-                                {hasBAllele && <span className="allele-badge allele-a">A allele</span>}
-                              </div>
-                              <div className="seq-info-right">
-                                <span className="seq-stat">
-                                  <strong>{seq.seq_length?.toLocaleString()}</strong>
-                                  {seq.seq_type?.toLowerCase() === 'protein' ? ' aa' : ' bp'}
-                                </span>
-                                <span className="seq-meta">
-                                  Source: {seq.source}
-                                </span>
-                                <span className="seq-meta">
-                                  Version: {new Date(seq.seq_version).toLocaleDateString()}
-                                </span>
-                              </div>
-                            </div>
-
-                            {isExpanded && seq.residues && (
-                              <div className="sequence-content">
-                                <div className="sequence-toolbar">
-                                  <button
-                                    className="copy-btn"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      navigator.clipboard.writeText(seq.residues);
-                                    }}
-                                  >
-                                    Copy Sequence
-                                  </button>
-                                  <a
-                                    className="download-btn"
-                                    href={`${API_BASE_URL}/api/sequence?locus=${encodeURIComponent(orgData.locus_display_name)}&seqtype=${getSeqTypeParam(seq.seq_type)}&format=fasta`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    Download FASTA
-                                  </a>
-                                  <span className="sequence-length-info">
-                                    Showing {seq.residues.length.toLocaleString()} characters
-                                    {seq.residues.endsWith('...') && ' (truncated)'}
-                                  </span>
-                                </div>
-                                <pre className="sequence-text">{seq.residues}</pre>
-                              </div>
+                    return (
+                      <div
+                        key={idx}
+                        className={`sequence-block ${seq.is_current ? 'current' : 'archived'}`}
+                      >
+                        <div
+                          className="sequence-header"
+                          onClick={() => seq.residues && toggleSequence(seqKey)}
+                          style={{ cursor: seq.residues ? 'pointer' : 'default' }}
+                        >
+                          <div className="seq-info-left">
+                            {seq.residues && (
+                              <span className="collapse-icon">{isExpanded ? '▼' : '▶'}</span>
                             )}
+                            <span className="seq-type">{formatSeqTypeLabel(seq.seq_type)}</span>
                           </div>
-                        );
-                      })}
+                          <div className="seq-info-right">
+                            <span className="seq-stat">
+                              <strong>{seq.seq_length?.toLocaleString()}</strong>
+                              {seq.seq_type?.toLowerCase() === 'protein' ? ' aa' : ' bp'}
+                            </span>
+                            <span className="seq-meta">
+                              Source: {seq.source}
+                            </span>
+                            <span className="seq-meta">
+                              Version: {new Date(seq.seq_version).toLocaleDateString()}
+                            </span>
+                          </div>
+                        </div>
 
-                      {/* B Allele sequence for this type (if exists) */}
-                      {bSeq && (() => {
-                        const seqKey = `b-allele-${seqType}`;
-                        const isExpanded = expandedSequences[seqKey];
-
-                        return (
-                          <div
-                            className="sequence-block current b-allele"
-                          >
-                            <div
-                              className="sequence-header"
-                              onClick={() => bSeq.residues && toggleSequence(seqKey)}
-                              style={{ cursor: bSeq.residues ? 'pointer' : 'default' }}
-                            >
-                              <div className="seq-info-left">
-                                {bSeq.residues && (
-                                  <span className="collapse-icon">{isExpanded ? '▼' : '▶'}</span>
-                                )}
-                                <span className="seq-type">{formatSeqTypeLabel(bSeq.seq_type)}</span>
-                                <span className="allele-badge allele-b">B allele</span>
-                              </div>
-                              <div className="seq-info-right">
-                                <span className="seq-stat">
-                                  <strong>{bSeq.seq_length?.toLocaleString()}</strong>
-                                  {bSeq.seq_type?.toLowerCase() === 'protein' ? ' aa' : ' bp'}
-                                </span>
-                                {bSeq.source && (
-                                  <span className="seq-meta">
-                                    Source: {bSeq.source}
-                                  </span>
-                                )}
-                                {bSeq.seq_version && (
-                                  <span className="seq-meta">
-                                    Version: {new Date(bSeq.seq_version).toLocaleDateString()}
-                                  </span>
-                                )}
-                              </div>
+                        {isExpanded && seq.residues && (
+                          <div className="sequence-content">
+                            <div className="sequence-toolbar">
+                              <button
+                                className="copy-btn"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  navigator.clipboard.writeText(seq.residues);
+                                }}
+                              >
+                                Copy Sequence
+                              </button>
+                              <a
+                                className="download-btn"
+                                href={`${API_BASE_URL}/api/sequence?locus=${encodeURIComponent(orgData.locus_display_name)}&seqtype=${getSeqTypeParam(seq.seq_type)}&format=fasta`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                Download FASTA
+                              </a>
+                              <span className="sequence-length-info">
+                                Showing {seq.residues.length.toLocaleString()} characters
+                                {seq.residues.endsWith('...') && ' (truncated)'}
+                              </span>
                             </div>
-
-                            {isExpanded && bSeq.residues && (
-                              <div className="sequence-content">
-                                <div className="sequence-toolbar">
-                                  <button
-                                    className="copy-btn"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      navigator.clipboard.writeText(bSeq.residues);
-                                    }}
-                                  >
-                                    Copy Sequence
-                                  </button>
-                                  <a
-                                    className="download-btn"
-                                    href={`${API_BASE_URL}/api/sequence?locus=${encodeURIComponent(bAllele.feature_name)}&seqtype=${getSeqTypeParam(bSeq.seq_type)}&format=fasta`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    Download FASTA
-                                  </a>
-                                  <span className="sequence-length-info">
-                                    Showing {bSeq.residues.length.toLocaleString()} characters
-                                  </span>
-                                </div>
-                                <pre className="sequence-text">{bSeq.residues}</pre>
-                              </div>
-                            )}
+                            <pre className="sequence-text">{seq.residues}</pre>
                           </div>
-                        );
-                      })()}
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          })()}
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Additional Sequence Options - at bottom of page */}
           {orgData?.locus_display_name && (() => {
