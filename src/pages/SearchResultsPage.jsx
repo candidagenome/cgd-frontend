@@ -277,16 +277,15 @@ const SearchResultsPage = () => {
   }, [categoryResults, hasApiOrganismCounts]);
 
   // Reset selected organism if it's no longer available
+  // Note: handleCategoryChange already resets to null, so we only need to
+  // clear stale selections that don't exist in the new organism list
   useEffect(() => {
-    if (availableOrganisms.length > 0) {
-      setSelectedOrganism(prev => {
-        if (prev !== null && !availableOrganisms.includes(prev)) {
-          return null;
-        }
-        return prev;
-      });
+    if (availableOrganisms.length > 0 && selectedOrganism !== null) {
+      if (!availableOrganisms.includes(selectedOrganism)) {
+        setSelectedOrganism(null);
+      }
     }
-  }, [availableOrganisms]);
+  }, [availableOrganisms, selectedOrganism]);
 
   // Handle category change
   const handleCategoryChange = async (category) => {
