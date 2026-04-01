@@ -382,7 +382,6 @@ function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismCha
                                 )}
                                 <span className="seq-type">{formatSeqTypeLabel(seq.seq_type)}</span>
                                 {hasBAllele && <span className="allele-badge allele-a">A allele</span>}
-                                {seq.is_current && <span className="current-badge">Current</span>}
                               </div>
                               <div className="seq-info-right">
                                 <span className="seq-stat">
