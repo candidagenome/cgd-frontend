@@ -206,7 +206,7 @@ const HeaderSearchForm = () => {
             </li>
           ))}
           <li className="autocomplete-hint" role="note">
-            <kbd>Enter</kbd> for all results
+            <kbd>Enter</kbd> = all results
           </li>
         </ul>
       )}
