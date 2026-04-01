@@ -383,12 +383,91 @@ const SearchResultsPage = () => {
     }
 
     const results = categoryResults || [];
+    const isOrthologs = selectedCategory === 'orthologs';
+
     // Filter results by selected organism
     const organismFiltered = selectedOrganism
       ? results.filter(r => r.organism === selectedOrganism)
       : results;
     // Apply quick filter
     const filteredResults = getFilteredResults(organismFiltered);
+
+    // Special rendering for orthologs with organism filter - show relationship table
+    if (isOrthologs && selectedOrganism && organismFiltered.length > 0) {
+      // Build relationship table data
+      const relationshipData = [];
+
+      organismFiltered.forEach(gene => {
+        if (gene.related_orthologs && gene.related_orthologs.length > 0) {
+          gene.related_orthologs.forEach(ortholog => {
+            relationshipData.push({
+              ortholog_name: ortholog.name,
+              ortholog_source: ortholog.source,
+              ortholog_organism: ortholog.organism,
+              ortholog_link: ortholog.link,
+              cgd_gene_name: gene.gene_name || gene.name,
+              cgd_gene_link: gene.link,
+              cgd_gene_organism: gene.organism,
+            });
+          });
+        }
+      });
+
+      // If we have relationship data, show the relationship table
+      if (relationshipData.length > 0) {
+        return (
+          <div>
+            <div className="ortholog-relationship-header" style={{ marginBottom: '15px', padding: '10px 15px', background: '#f5f5f5', borderRadius: '4px' }}>
+              <p style={{ margin: 0 }}>
+                Your query <strong style={{ color: '#c62828' }}>{query}</strong> matched the following ortholog(s) or Best Hit(s) associated with the following genes in{' '}
+                <strong style={{ color: '#1976d2' }}><em>{selectedOrganism.replace('Candida ', 'C. ')}</em></strong>
+              </p>
+            </div>
+
+            <table className="ortholog-relationship-table" style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '15px' }}>
+              <thead>
+                <tr style={{ background: '#e3f2fd' }}>
+                  <th style={{ padding: '10px 15px', textAlign: 'left', borderBottom: '2px solid #1976d2' }}>Ortholog or Best Hit to CGD genes</th>
+                  <th style={{ padding: '10px 15px', textAlign: 'left', borderBottom: '2px solid #1976d2' }}>CGD Genes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {relationshipData.map((row, idx) => (
+                  <tr key={idx} style={{ borderBottom: '1px solid #e0e0e0' }}>
+                    <td style={{ padding: '10px 15px' }}>
+                      {row.ortholog_link ? (
+                        <a href={row.ortholog_link} target="_blank" rel="noopener noreferrer" style={{ color: '#1976d2' }}>
+                          {row.ortholog_name}
+                        </a>
+                      ) : (
+                        <span>{row.ortholog_name}</span>
+                      )}
+                      {' '}
+                      <span style={{ color: '#666', fontSize: '0.9em' }}>
+                        ({row.ortholog_source === 'CGOB' || row.ortholog_source === 'Orthologous genes in Candida species' ? 'Ortholog' : `${row.ortholog_source} Ortholog`})
+                      </span>
+                    </td>
+                    <td style={{ padding: '10px 15px' }}>
+                      <a href={row.cgd_gene_link} target="_blank" rel="noopener noreferrer" style={{ color: '#1976d2' }}>
+                        {row.cgd_gene_name}
+                      </a>
+                      {' '}
+                      <span style={{ color: '#666', fontSize: '0.9em' }}>
+                        ({row.cgd_gene_organism?.replace('Candida ', 'C. ')})
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <div style={{ color: '#666', fontSize: '0.9em' }}>
+              <p>{relationshipData.length} ortholog relationship(s) found</p>
+            </div>
+          </div>
+        );
+      }
+    }
 
     return (
       <div>
