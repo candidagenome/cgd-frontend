@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import * as d3 from 'd3';
 import { locusApi } from '../../api/locusApi';
+import { SPECIES_ORDER, SPECIES_ABBREV } from '../../constants/organisms';
 import './SyntenySummary.css';
 
 // Color scheme matching the full viewer - Sybil-inspired style
@@ -15,22 +16,6 @@ const COLORS = {
   ribbonStroke: '#a0a0a0',     // Slightly darker gray for ribbon borders
 };
 
-// Species display order and abbreviations
-const SPECIES_ORDER = [
-  'Candida albicans SC5314',
-  'Candida glabrata CBS138',
-  'Candida parapsilosis CDC317',
-  'Candida dubliniensis CD36',
-  'Candida auris B8441',
-];
-
-const SPECIES_ABBREV = {
-  'Candida albicans SC5314': 'C. albicans',
-  'Candida glabrata CBS138': 'C. glabrata',
-  'Candida parapsilosis CDC317': 'C. parapsilosis',
-  'Candida dubliniensis CD36': 'C. dubliniensis',
-  'Candida auris B8441': 'C. auris',
-};
 
 function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
   const [syntenyData, setSyntenyData] = useState(null);

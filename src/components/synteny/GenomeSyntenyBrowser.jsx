@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as d3 from 'd3';
 import { locusApi } from '../../api/locusApi';
+import { SPECIES_ORDER, SPECIES_ABBREV } from '../../constants/organisms';
 import GeneSearch from './GeneSearch';
 import './GenomeSyntenyBrowser.css';
 
@@ -22,23 +23,6 @@ const COLORS = {
   text: '#2c3e50',             // Dark text
 };
 
-// Species abbreviations for compact display
-const SPECIES_ABBREV = {
-  'Candida albicans SC5314': 'C. albicans',
-  'Candida glabrata CBS138': 'C. glabrata',
-  'Candida parapsilosis CDC317': 'C. parapsilosis',
-  'Candida dubliniensis CD36': 'C. dubliniensis',
-  'Candida auris B8441': 'C. auris',
-};
-
-// Species display order
-const SPECIES_ORDER = [
-  'Candida albicans SC5314',
-  'Candida glabrata CBS138',
-  'Candida parapsilosis CDC317',
-  'Candida dubliniensis CD36',
-  'Candida auris B8441',
-];
 
 // Zoom level thresholds for display
 const ZOOM_LEVELS = {

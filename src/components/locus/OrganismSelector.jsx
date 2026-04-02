@@ -94,13 +94,23 @@ function OrganismSelector({
 
 /**
  * Helper function to determine the best default organism.
- * Prefers "Candida albicans SC5314" if available, otherwise uses the first organism.
+ * Priority:
+ * 1. queryOrganism (the organism the searched gene belongs to)
+ * 2. "Candida albicans SC5314" if available
+ * 3. First organism in the list
+ *
+ * @param {Array} organisms - List of available organisms
+ * @param {string} queryOrganism - The organism that the queried gene belongs to (from API)
  */
-export function getDefaultOrganism(organisms) {
+export function getDefaultOrganism(organisms, queryOrganism = null) {
   if (!organisms || organisms.length === 0) {
     return null;
   }
-  // Check if default organism exists
+  // If queryOrganism is provided and exists in the list, use it
+  if (queryOrganism && organisms.includes(queryOrganism)) {
+    return queryOrganism;
+  }
+  // Fall back to default organism if available
   if (organisms.includes(DEFAULT_ORGANISM)) {
     return DEFAULT_ORGANISM;
   }

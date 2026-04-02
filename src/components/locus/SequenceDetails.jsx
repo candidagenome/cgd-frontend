@@ -295,7 +295,7 @@ function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismCha
                               </button>
                               <a
                                 className="download-btn"
-                                href={`${API_BASE_URL}/api/sequence?locus=${encodeURIComponent(orgData.locus_display_name)}&seqtype=${getSeqTypeParam(seq.seq_type)}&format=fasta`}
+                                href={`${API_BASE_URL}/api/sequence?locus=${encodeURIComponent(orgData.feature_name || orgData.jbrowse_info?.feature_name)}&seqtype=${getSeqTypeParam(seq.seq_type)}&format=fasta`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 onClick={(e) => e.stopPropagation()}
@@ -332,7 +332,7 @@ function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismCha
                   <button
                     key={opt.type}
                     className={`additional-seq-btn ${expandedAdditional[opt.type] ? 'active' : ''}`}
-                    onClick={() => fetchAdditionalSequence(opt, opt.locusOverride || orgData.locus_display_name)}
+                    onClick={() => fetchAdditionalSequence(opt, opt.locusOverride || orgData.feature_name || orgData.jbrowse_info?.feature_name)}
                     title={opt.description}
                   >
                     {additionalSeqs[opt.type]?.loading ? 'Loading...' : opt.label}
@@ -388,7 +388,7 @@ function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismCha
                               </button>
                               <a
                                 className="download-btn"
-                                href={getAdditionalDownloadUrl(opt, opt.locusOverride || orgData.locus_display_name)}
+                                href={getAdditionalDownloadUrl(opt, opt.locusOverride || orgData.feature_name || orgData.jbrowse_info?.feature_name)}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 onClick={(e) => e.stopPropagation()}

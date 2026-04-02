@@ -1,22 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { locusApi } from '../../api/locusApi';
-
-// Species display order and abbreviations
-const SPECIES_ORDER = [
-  'Candida albicans SC5314',
-  'Candida glabrata CBS138',
-  'Candida parapsilosis CDC317',
-  'Candida dubliniensis CD36',
-  'Candida auris B8441',
-];
-
-const SPECIES_ABBREV = {
-  'Candida albicans SC5314': 'C. albicans',
-  'Candida glabrata CBS138': 'C. glabrata',
-  'Candida parapsilosis CDC317': 'C. parapsilosis',
-  'Candida dubliniensis CD36': 'C. dubliniensis',
-  'Candida auris B8441': 'C. auris',
-};
+import { SPECIES_ORDER, SPECIES_ABBREV } from '../../constants/organisms';
 
 function ChromosomeSelector({ selectedChromosome, onSelect, loading: externalLoading }) {
   const [chromosomeData, setChromosomeData] = useState(null);

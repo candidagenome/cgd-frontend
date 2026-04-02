@@ -53,11 +53,11 @@ function LocusPage() {
     }
   }, [activeTab, name, loaders]);
 
-  // Set default organism when data loads - prefer "Candida albicans SC5314" if available
+  // Set default organism when data loads - prefer query_organism (the gene's actual organism)
   useEffect(() => {
     if (data.info && !selectedOrganism) {
       const organisms = Object.keys(data.info.results || {});
-      const defaultOrg = getDefaultOrganism(organisms);
+      const defaultOrg = getDefaultOrganism(organisms, data.info.query_organism);
       if (defaultOrg) {
         setSelectedOrganism(defaultOrg);
       }
