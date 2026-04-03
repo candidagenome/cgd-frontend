@@ -86,7 +86,6 @@ function TextSearchPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Enter search term..."
-              size="40"
             />
             <select
               id="matchMode"
