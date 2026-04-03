@@ -17,7 +17,7 @@ function TextSearchPage() {
   const [query, setQuery] = useState('');
   const [organism, setOrganism] = useState('all');
   const [searchField, setSearchField] = useState('all');
-  const [matchMode, setMatchMode] = useState('any'); // Default to OR
+  const [matchMode, setMatchMode] = useState('all'); // Default to AND
   const [organisms, setOrganisms] = useState([]);
   const [error, setError] = useState('');
 
@@ -95,7 +95,7 @@ function TextSearchPage() {
               className="option-select"
               title="Match mode"
             >
-              <option value="any">Any word</option>
+              <option value="any">Any words</option>
               <option value="all">All words</option>
               <option value="exact">Exact phrase</option>
             </select>

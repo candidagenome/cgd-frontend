@@ -201,7 +201,7 @@ const TextSearchResultsPage = () => {
   const query = searchParams.get('query') || '';
   const type = searchParams.get('type') || null; // 'homolog' for ortholog-only search
   const searchFieldParam = searchParams.get('search_field') || 'all';
-  const matchMode = searchParams.get('match_mode') || 'any'; // Default to OR
+  const matchMode = searchParams.get('match_mode') || 'all'; // Default to AND
 
   // Determine if searchField is a category filter or paper search option
   const isCategory = !PAPER_SEARCH_FIELDS.includes(searchFieldParam);
