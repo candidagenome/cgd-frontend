@@ -847,7 +847,7 @@ const TextSearchResultsPage = () => {
                 {searchField === 'title' && 'Paper titles only'}
                 {searchField === 'abstract' && 'Paper abstracts only'}
                 {(searchField === 'title' || searchField === 'abstract') && (matchMode === 'all' || matchMode === 'exact') && ', '}
-                {matchMode === 'all' && 'Match ALL terms'}
+                {matchMode === 'all' && 'All words'}
                 {matchMode === 'exact' && 'Exact phrase'}
                 )
               </span>

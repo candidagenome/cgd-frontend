@@ -137,39 +137,17 @@ function TextSearchPage() {
               </div>
 
               <div className="option-group">
-                <label className="option-label">Multiple terms:</label>
-                <div className="option-buttons">
-                  <label className={`option-btn ${matchMode === 'any' ? 'selected' : ''}`}>
-                    <input
-                      type="radio"
-                      name="matchMode"
-                      value="any"
-                      checked={matchMode === 'any'}
-                      onChange={(e) => setMatchMode(e.target.value)}
-                    />
-                    Match ANY (OR)
-                  </label>
-                  <label className={`option-btn ${matchMode === 'all' ? 'selected' : ''}`}>
-                    <input
-                      type="radio"
-                      name="matchMode"
-                      value="all"
-                      checked={matchMode === 'all'}
-                      onChange={(e) => setMatchMode(e.target.value)}
-                    />
-                    Match ALL (AND)
-                  </label>
-                  <label className={`option-btn ${matchMode === 'exact' ? 'selected' : ''}`}>
-                    <input
-                      type="radio"
-                      name="matchMode"
-                      value="exact"
-                      checked={matchMode === 'exact'}
-                      onChange={(e) => setMatchMode(e.target.value)}
-                    />
-                    Exact Phrase
-                  </label>
-                </div>
+                <label className="option-label" htmlFor="matchMode">Match:</label>
+                <select
+                  id="matchMode"
+                  value={matchMode}
+                  onChange={(e) => setMatchMode(e.target.value)}
+                  className="option-select"
+                >
+                  <option value="any">Any word</option>
+                  <option value="all">All words</option>
+                  <option value="exact">Exact phrase</option>
+                </select>
               </div>
             </div>
           </div>
