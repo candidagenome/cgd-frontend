@@ -50,8 +50,29 @@ function OrganismSelector({
     return org;
   };
 
-  // If only one organism, show info text instead of dropdown
-  if (organisms.length === 1 && !showAllOption) {
+  // Filter out ortholog organisms that are already in the main organisms list
+  // (computed early so we can use it in the single-organism check)
+  const filteredOrthologOrganisms = orthologOrganisms.filter(
+    orth => !organisms.includes(orth.organism)
+  );
+
+  // Handle dropdown change - convert special "all" value to null, navigate for orthologs
+  const handleChange = (e) => {
+    const value = e.target.value;
+
+    // Check if it's an ortholog selection (navigate to ortholog locus)
+    if (value.startsWith(ORTHOLOG_PREFIX)) {
+      const featureName = value.substring(ORTHOLOG_PREFIX.length);
+      navigate(`/locus/${featureName}`);
+      return;
+    }
+
+    onOrganismChange(value === ALL_ORGANISMS_VALUE ? null : value);
+  };
+
+  // If only one organism AND no orthologs to show, display info text instead of dropdown
+  // But if there are orthologs, show dropdown so users can navigate to them
+  if (organisms.length === 1 && !showAllOption && filteredOrthologOrganisms.length === 0) {
     const note = context === 'search'
       ? '(Results are only found in this organism)'
       : name
@@ -69,25 +90,6 @@ function OrganismSelector({
       </div>
     );
   }
-
-  // Handle dropdown change - convert special "all" value to null, navigate for orthologs
-  const handleChange = (e) => {
-    const value = e.target.value;
-
-    // Check if it's an ortholog selection (navigate to ortholog locus)
-    if (value.startsWith(ORTHOLOG_PREFIX)) {
-      const featureName = value.substring(ORTHOLOG_PREFIX.length);
-      navigate(`/locus/${featureName}`);
-      return;
-    }
-
-    onOrganismChange(value === ALL_ORGANISMS_VALUE ? null : value);
-  };
-
-  // Filter out ortholog organisms that are already in the main organisms list
-  const filteredOrthologOrganisms = orthologOrganisms.filter(
-    orth => !organisms.includes(orth.organism)
-  );
 
   return (
     <div className="organism-selector">
