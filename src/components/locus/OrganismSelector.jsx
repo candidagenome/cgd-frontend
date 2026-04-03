@@ -1,9 +1,10 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import './LocusComponents.css';
 
 const DEFAULT_ORGANISM = 'Candida albicans SC5314';
 const ALL_ORGANISMS_VALUE = '__all__';
+const ORTHOLOG_PREFIX = '__ortholog__';
 
 /**
  * Reusable organism selector component for tab pages.
@@ -13,6 +14,7 @@ const ALL_ORGANISMS_VALUE = '__all__';
  * @param {Object} organismCounts - Optional map of organism name to count (for search context)
  * @param {boolean} showAllOption - Whether to show "All Organisms" option (default: false)
  * @param {number} totalCount - Optional explicit total count for "All Organisms" (overrides calculated sum)
+ * @param {Array} orthologOrganisms - Optional list of {organism, feature_name} for ortholog navigation
  */
 function OrganismSelector({
   organisms,
@@ -22,9 +24,11 @@ function OrganismSelector({
   context = 'locus',
   organismCounts = null,
   showAllOption = false,
-  totalCount: explicitTotalCount = null
+  totalCount: explicitTotalCount = null,
+  orthologOrganisms = []
 }) {
   const { name } = useParams();
+  const navigate = useNavigate();
 
   if (!organisms || organisms.length === 0) {
     return null;
@@ -66,11 +70,24 @@ function OrganismSelector({
     );
   }
 
-  // Handle dropdown change - convert special "all" value to null
+  // Handle dropdown change - convert special "all" value to null, navigate for orthologs
   const handleChange = (e) => {
     const value = e.target.value;
+
+    // Check if it's an ortholog selection (navigate to ortholog locus)
+    if (value.startsWith(ORTHOLOG_PREFIX)) {
+      const featureName = value.substring(ORTHOLOG_PREFIX.length);
+      navigate(`/locus/${featureName}`);
+      return;
+    }
+
     onOrganismChange(value === ALL_ORGANISMS_VALUE ? null : value);
   };
+
+  // Filter out ortholog organisms that are already in the main organisms list
+  const filteredOrthologOrganisms = orthologOrganisms.filter(
+    orth => !organisms.includes(orth.organism)
+  );
 
   return (
     <div className="organism-selector">
@@ -87,6 +104,20 @@ function OrganismSelector({
         {organisms.map(org => (
           <option key={org} value={org}>{formatOrganismLabel(org)}</option>
         ))}
+        {filteredOrthologOrganisms.length > 0 && (
+          <>
+            <option disabled>─── Orthologs in ───</option>
+            {filteredOrthologOrganisms.map(orth => (
+              <option
+                key={`ortholog-${orth.feature_name}`}
+                value={`${ORTHOLOG_PREFIX}${orth.feature_name}`}
+                className="ortholog-option"
+              >
+                {orth.organism}
+              </option>
+            ))}
+          </>
+        )}
       </select>
     </div>
   );

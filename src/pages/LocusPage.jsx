@@ -28,8 +28,29 @@ function LocusPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'summary');
   const [selectedOrganism, setSelectedOrganism] = useState(null);
+  const [orthologOrganisms, setOrthologOrganisms] = useState([]);
 
   const { data, loading, errors, loaders } = useLocusData(name);
+
+  // Fetch ortholog organisms when locus name changes
+  useEffect(() => {
+    const fetchOrthologOrganisms = async () => {
+      try {
+        const response = await fetch(`/api/locus/${encodeURIComponent(name)}/ortholog_organisms`);
+        if (response.ok) {
+          const result = await response.json();
+          setOrthologOrganisms(result.organisms || []);
+        }
+      } catch (error) {
+        console.error('Error fetching ortholog organisms:', error);
+        setOrthologOrganisms([]);
+      }
+    };
+
+    if (name) {
+      fetchOrthologOrganisms();
+    }
+  }, [name]);
 
   // Reset selected organism when locus name changes
   useEffect(() => {
@@ -95,6 +116,7 @@ function LocusPage() {
               selectedOrganism={selectedOrganism}
               onOrganismChange={setSelectedOrganism}
               dataType="summary"
+              orthologOrganisms={orthologOrganisms}
             />
             {selectedOrganism && data.info.results[selectedOrganism] && (
               <LocusSummary
