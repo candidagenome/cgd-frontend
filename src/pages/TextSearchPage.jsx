@@ -159,6 +159,16 @@ function TextSearchPage() {
                     />
                     Match ALL (AND)
                   </label>
+                  <label className={`option-btn ${matchMode === 'exact' ? 'selected' : ''}`}>
+                    <input
+                      type="radio"
+                      name="matchMode"
+                      value="exact"
+                      checked={matchMode === 'exact'}
+                      onChange={(e) => setMatchMode(e.target.value)}
+                    />
+                    Exact Phrase
+                  </label>
                 </div>
               </div>
             </div>

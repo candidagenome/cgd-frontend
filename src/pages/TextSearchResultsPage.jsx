@@ -841,13 +841,14 @@ const TextSearchResultsPage = () => {
           <p className="search-query-info">
             Results for: <strong>"{query}"</strong>
             {initialResults && ` - ${totalResults} total results found`}
-            {(searchField !== 'all' && searchField !== 'both') || matchMode === 'all' ? (
+            {(searchField !== 'all' && searchField !== 'both') || matchMode === 'all' || matchMode === 'exact' ? (
               <span className="search-options-summary">
                 {' '}(
                 {searchField === 'title' && 'Paper titles only'}
                 {searchField === 'abstract' && 'Paper abstracts only'}
-                {(searchField === 'title' || searchField === 'abstract') && matchMode === 'all' && ', '}
+                {(searchField === 'title' || searchField === 'abstract') && (matchMode === 'all' || matchMode === 'exact') && ', '}
                 {matchMode === 'all' && 'Match ALL terms'}
+                {matchMode === 'exact' && 'Exact phrase'}
                 )
               </span>
             ) : null}
