@@ -88,7 +88,7 @@ function TextSearchPage() {
               placeholder="Enter search term..."
               size="40"
             />
-            <button type="submit" className="search-btn">Submit</button>
+            <button type="submit" className="search-btn">Search</button>
           </div>
 
           <div className="search-options">
