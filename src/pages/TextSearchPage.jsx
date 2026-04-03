@@ -88,6 +88,17 @@ function TextSearchPage() {
               placeholder="Enter search term..."
               size="40"
             />
+            <select
+              id="matchMode"
+              value={matchMode}
+              onChange={(e) => setMatchMode(e.target.value)}
+              className="option-select"
+              title="Match mode"
+            >
+              <option value="any">Any word</option>
+              <option value="all">All words</option>
+              <option value="exact">Exact phrase</option>
+            </select>
             <button type="submit" className="search-btn">Search</button>
           </div>
 
@@ -133,20 +144,6 @@ function TextSearchPage() {
                   <option value="external_ids">External Database IDs</option>
                   <option value="orthologs">Orthologs / Best Hits</option>
                   <option value="literature_topics">Literature Topics</option>
-                </select>
-              </div>
-
-              <div className="option-group">
-                <label className="option-label" htmlFor="matchMode">Match:</label>
-                <select
-                  id="matchMode"
-                  value={matchMode}
-                  onChange={(e) => setMatchMode(e.target.value)}
-                  className="option-select"
-                >
-                  <option value="any">Any word</option>
-                  <option value="all">All words</option>
-                  <option value="exact">Exact phrase</option>
                 </select>
               </div>
             </div>
