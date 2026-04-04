@@ -283,7 +283,7 @@ function BlastResultsPage() {
               </div>
 
               <p className="hits-instruction">
-                Click on the sequence ID to jump directly to the alignment.
+                Click on the sequence ID to view the locus page, or use the Gene / Locus column to access gene details.
               </p>
 
               {/* Summary Table */}
@@ -315,21 +315,27 @@ function BlastResultsPage() {
                         className={expandedHits.has(index) ? 'expanded' : ''}
                       >
                         <td className="accession-cell">
-                          <a
-                            href={`#hit-${index}`}
-                            className="sequence-link"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              const newExpanded = new Set(expandedHits);
-                              newExpanded.add(index);
-                              setExpandedHits(newExpanded);
-                              setTimeout(() => {
-                                document.getElementById(`hit-${index}`)?.scrollIntoView({ behavior: 'smooth' });
-                              }, 100);
-                            }}
-                          >
-                            {hit.accession}
-                          </a>
+                          {hit.locus_link ? (
+                            <Link to={hit.locus_link} className="sequence-link">
+                              {hit.accession}
+                            </Link>
+                          ) : (
+                            <a
+                              href={`#hit-${index}`}
+                              className="sequence-link"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                const newExpanded = new Set(expandedHits);
+                                newExpanded.add(index);
+                                setExpandedHits(newExpanded);
+                                setTimeout(() => {
+                                  document.getElementById(`hit-${index}`)?.scrollIntoView({ behavior: 'smooth' });
+                                }, 100);
+                              }}
+                            >
+                              {hit.accession}
+                            </a>
+                          )}
                         </td>
                         <td className="locus-cell">
                           {hit.locus_link ? (
@@ -387,6 +393,19 @@ function BlastResultsPage() {
                         <div className="hit-header">
                           <h3>
                             {hit.accession}{' '}
+                            {(() => {
+                              // Extract gene name from description
+                              const desc = hit.description || '';
+                              const geneMatch = desc.match(/^(\S+)/);
+                              const geneName = geneMatch ? geneMatch[1] : null;
+                              const orfMatch = desc.match(/\((orf\d+\.\d+)\)/i);
+                              const orfName = orfMatch ? orfMatch[1] : null;
+                              // Show gene name if different from accession and ORF
+                              if (geneName && geneName !== hit.accession && geneName !== orfName) {
+                                return <span className="hit-gene-name">({geneName})</span>;
+                              }
+                              return null;
+                            })()}{' '}
                             {hit.organism_name && <span className="hit-organism">{hit.organism_name}</span>}
                           </h3>
                           <div className="hit-meta">

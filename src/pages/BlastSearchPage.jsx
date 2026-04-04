@@ -145,7 +145,7 @@ function BlastSearchPage() {
     const genomes = searchParams.get('genomes');
     return genomes ? genomes.split(',') : ['C_albicans_SC5314_A22']; // Default to latest C. albicans assembly
   });
-  const [datasetType, setDatasetType] = useState(searchParams.get('dataset') || 'GENOME');
+  const [datasetType, setDatasetType] = useState(searchParams.get('dataset') || 'GENES');
   const [evalue, setEvalue] = useState(searchParams.get('evalue') || '10');
   const [maxHits, setMaxHits] = useState(searchParams.get('hits') || '50');
   const [wordSize, setWordSize] = useState(searchParams.get('word') || '');
