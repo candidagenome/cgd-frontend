@@ -83,6 +83,7 @@ function LocusCurationPage() {
         headline: data.headline || '',
         headline_pmids: data.headline_pmids || '',
         feature_type: data.feature_type || '',
+        qualifier: data.qualifier || '',
       });
     } catch (err) {
       if (err.response?.status === 404) {
@@ -485,6 +486,20 @@ function LocusCurationPage() {
                     style={styles.formInput}
                   />
                 </div>
+
+                {/* Qualifier (Verified/Uncharacterized) */}
+                <div style={styles.formRow}>
+                  <label style={styles.formLabel}>Qualifier:</label>
+                  <select
+                    value={editForm.qualifier}
+                    onChange={(e) => handleEditChange('qualifier', e.target.value)}
+                    style={styles.formSelect}
+                  >
+                    <option value="">-- Select --</option>
+                    <option value="Uncharacterized">Uncharacterized</option>
+                    <option value="Verified">Verified</option>
+                  </select>
+                </div>
                 <div style={styles.formButtons}>
                   <button
                     onClick={handleSaveFeature}
@@ -504,6 +519,7 @@ function LocusCurationPage() {
                         headline: featureData.headline || '',
                         headline_pmids: featureData.headline_pmids || '',
                         feature_type: featureData.feature_type || '',
+                        qualifier: featureData.qualifier || '',
                       });
                     }}
                     style={styles.cancelButton}
@@ -534,6 +550,10 @@ function LocusCurationPage() {
                   <tr>
                     <th style={styles.infoTh}>Feature Type:</th>
                     <td style={styles.infoTd}>{featureData.feature_type}</td>
+                  </tr>
+                  <tr>
+                    <th style={styles.infoTh}>Qualifier:</th>
+                    <td style={styles.infoTd}>{featureData.qualifier || '-'}</td>
                   </tr>
                   <tr>
                     <th style={styles.infoTh}>Headline:</th>
