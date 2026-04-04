@@ -66,9 +66,18 @@ ssh -i "$PROD_KEY" "${PROD_USER}@${PROD_SERVER}" "mkdir -p ${DATA_PATH}"
 scp -i "$PROD_KEY" "$TEMP_DIR"/sorted_hits.bam* "${PROD_USER}@${PROD_SERVER}:${DATA_PATH}/"
 echo -e "  ${GREEN}✓${NC} Data files copied"
 
-# Step 2: Copy config files
+# Step 2: Backup and copy config files
 echo ""
-echo -e "${YELLOW}[2/3] Copying config files...${NC}"
+echo -e "${YELLOW}[2/3] Backup and copy config files...${NC}"
+
+# Backup prod config files before overwriting
+BACKUP_TIME=$(date +%Y%m%d_%H%M%S)
+echo "  Creating backups on prod..."
+ssh -i "$PROD_KEY" "${PROD_USER}@${PROD_SERVER}" \
+    "cd ${CONF_PATH} && cp ${TRACKS_FILE} ${TRACKS_FILE}.bak.${BACKUP_TIME} && cp ${METADATA_FILE} ${METADATA_FILE}.bak.${BACKUP_TIME}"
+echo -e "  ${GREEN}✓${NC} Backups created"
+
+# Copy from dev to prod
 scp -i "$DEV_KEY" "${DEV_USER}@${DEV_SERVER}:${CONF_PATH}/${TRACKS_FILE}" "$TEMP_DIR/"
 scp -i "$DEV_KEY" "${DEV_USER}@${DEV_SERVER}:${CONF_PATH}/${METADATA_FILE}" "$TEMP_DIR/"
 scp -i "$PROD_KEY" "$TEMP_DIR/${TRACKS_FILE}" "${PROD_USER}@${PROD_SERVER}:${CONF_PATH}/"

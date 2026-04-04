@@ -139,11 +139,18 @@ metadata.first_author = ${AUTHOR_YEAR%_*}
 EOF
 echo ""
 
-# Step 4: Edit config files on server
-echo -e "${YELLOW}[4/4] Edit config files${NC}"
+# Step 4: Backup and edit config files on server
+echo -e "${YELLOW}[4/4] Backup and edit config files${NC}"
 read -p "Edit config files on ${ENV} server now? [Y/n] " -n 1 -r
 echo ""
 if [[ ! $REPLY =~ ^[Nn]$ ]]; then
+    # Create backups with timestamp
+    BACKUP_TIME=$(date +%Y%m%d_%H%M%S)
+    echo "  Creating backups..."
+    ssh -i "$TARGET_KEY" "${TARGET_USER}@${TARGET_SERVER}" \
+        "cd ${CONF_PATH} && cp ${TRACKS_FILE} ${TRACKS_FILE}.bak.${BACKUP_TIME} && cp ${METADATA_FILE} ${METADATA_FILE}.bak.${BACKUP_TIME}"
+    echo -e "  ${GREEN}✓${NC} Backups created: ${TRACKS_FILE}.bak.${BACKUP_TIME}, ${METADATA_FILE}.bak.${BACKUP_TIME}"
+    echo ""
     echo "Opening ${TRACKS_FILE}..."
     ssh -i "$TARGET_KEY" -t "${TARGET_USER}@${TARGET_SERVER}" "cd ${CONF_PATH} && nano ${TRACKS_FILE}"
     echo "Opening ${METADATA_FILE}..."
