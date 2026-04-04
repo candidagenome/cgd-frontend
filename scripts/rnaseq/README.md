@@ -24,18 +24,19 @@ cd ~/cgd-frontend/scripts/rnaseq
 
 1. Copy the sample config and fill in server IPs:
    ```bash
+   cd ~/cgd-frontend/scripts
    cp config.sh.sample config.sh
    # Edit config.sh with actual server IPs (get from Shuai)
    ```
 
-2. Place SSH keys in the `keys/` directory:
+2. Place SSH keys in `~/cgd-frontend/scripts/keys/`:
    - `jodi_tools.pem` - Tools server
    - `cgdadmin.pem` - Dev server
    - `Cdev_key.pem` - Prod server
 
 3. Set correct permissions:
    ```bash
-   chmod 600 keys/*.pem
+   chmod 600 ~/cgd-frontend/scripts/keys/*.pem
    ```
 
 ## Scripts

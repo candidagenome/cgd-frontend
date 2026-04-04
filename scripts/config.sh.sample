@@ -1,15 +1,15 @@
 #!/bin/bash
 #
-# config.sh - Shared configuration for RNA-Seq scripts
+# config.sh - Shared configuration for curator scripts
 #
 
-# SSH keys (stored in cgd-frontend/scripts/rnaseq/keys/)
-KEYS_DIR="$HOME/cgd-frontend/scripts/rnaseq/keys"
-TOOLS_KEY="$KEYS_DIR/Tools_key_pair.pem"
+# SSH keys (stored in cgd-frontend/scripts/keys/)
+KEYS_DIR="$HOME/cgd-frontend/scripts/keys"
+TOOLS_KEY="$KEYS_DIR/jodi_tools.pem"
 DEV_KEY="$KEYS_DIR/cgdadmin.pem"
 PROD_KEY="$KEYS_DIR/Cdev_key.pem"
 
-# Tools server (runs pipeline)
+# Tools server (runs RNA-Seq pipeline)
 TOOLS_SERVER="<TOOLS_SERVER_HOSTNAME>"
 TOOLS_USER="<CURATOR_USERNAME>"
 
@@ -21,10 +21,13 @@ DEV_USER="ec2-user"
 PROD_SERVER="<PROD_SERVER_HOSTNAME>"
 PROD_USER="ubuntu"
 
-# Paths
+# RNA-Seq paths
 TOOLS_HTS_PATH="/HTS"
 HTS_DATA_PATH="/data/HTS"
 JBROWSE_CONF_PATH="/data/jbrowse"
+
+# Dataset paths
+DATASETS_PATH="/data/downloads/systematic_results"
 
 # Colors
 RED='\033[0;31m'

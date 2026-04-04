@@ -7,7 +7,7 @@
 
 set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/config.sh"
+source "$SCRIPT_DIR/../config.sh"
 
 if [ $# -lt 2 ]; then
     echo "Usage: $0 <strain> <srr_id>"
