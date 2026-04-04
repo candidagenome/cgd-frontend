@@ -1,0 +1,34 @@
+#!/bin/bash
+#
+# config.sh - Shared configuration for RNA-Seq scripts
+#
+
+# SSH keys (stored in cgd-frontend/scripts/rnaseq/keys/)
+KEYS_DIR="$HOME/cgd-frontend/scripts/rnaseq/keys"
+TOOLS_KEY="$KEYS_DIR/Tools_key_pair.pem"
+DEV_KEY="$KEYS_DIR/cgdadmin.pem"
+PROD_KEY="$KEYS_DIR/Cdev_key.pem"
+
+# Tools server (runs pipeline)
+TOOLS_SERVER="<TOOLS_SERVER_HOSTNAME>"
+TOOLS_USER="<CURATOR_USERNAME>"
+
+# Dev server (testing)
+DEV_SERVER="<DEV_SERVER_IP>"
+DEV_USER="ec2-user"
+
+# Prod server (live)
+PROD_SERVER="<PROD_SERVER_HOSTNAME>"
+PROD_USER="ubuntu"
+
+# Paths
+TOOLS_HTS_PATH="/HTS"
+HTS_DATA_PATH="/data/HTS"
+JBROWSE_CONF_PATH="/data/jbrowse"
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+CYAN='\033[0;36m'
+NC='\033[0m'

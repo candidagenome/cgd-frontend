@@ -1,0 +1,2 @@
+# Ignore all key files - do not commit to git
+*.pem
