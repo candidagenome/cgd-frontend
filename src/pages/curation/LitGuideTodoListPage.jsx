@@ -59,7 +59,13 @@ function LitGuideTodoListPage() {
           yearParam,
           100
         );
-        setItems(data.items);
+        // Sort by date_last_reviewed ascending (oldest first)
+        const sortedItems = [...data.items].sort((a, b) => {
+          const dateA = a.date_last_reviewed || '';
+          const dateB = b.date_last_reviewed || '';
+          return dateA.localeCompare(dateB);
+        });
+        setItems(sortedItems);
         setTotalCount(data.total_count);
       } catch (err) {
         setError('Failed to load literature guide todo list');
@@ -105,6 +111,20 @@ function LitGuideTodoListPage() {
 
   return (
     <div className="litguide-todo-list-page" style={styles.container}>
+      {/* CSS for visited link styling */}
+      <style>{`
+        .litguide-curate-link {
+          color: #337ab7;
+          text-decoration: none;
+          white-space: nowrap;
+        }
+        .litguide-curate-link:visited {
+          color: #800080;
+        }
+        .litguide-curate-link:hover {
+          text-decoration: underline;
+        }
+      `}</style>
       <div style={styles.header}>
         <h1>Literature Guide Todo List</h1>
         <div style={styles.headerRight}>
@@ -228,19 +248,14 @@ function LitGuideTodoListPage() {
                     </td>
                     <td style={styles.td}>{item.date_last_reviewed || '-'}</td>
                     <td style={styles.td}>
-                      <Link
-                        to={`/curation/reference/${item.reference_no}`}
-                        style={styles.actionLink}
+                      <a
+                        href={`/curation/litguide/${item.reference_no}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="litguide-curate-link"
                       >
                         Curate
-                      </Link>
-                      {' | '}
-                      <Link
-                        to={`/curation/litguide/${item.reference_no}`}
-                        style={styles.actionLink}
-                      >
-                        Lit Guide
-                      </Link>
+                      </a>
                     </td>
                   </tr>
                 ))}
