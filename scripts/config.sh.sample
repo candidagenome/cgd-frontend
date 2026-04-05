@@ -3,8 +3,8 @@
 # config.sh - Shared configuration for curator scripts
 #
 
-# SSH keys (stored in cgd-frontend/scripts/keys/)
-KEYS_DIR="$HOME/cgd-frontend/scripts/keys"
+# SSH keys (stored in ~/.cgd-keys/)
+KEYS_DIR="$HOME/.cgd-keys"
 TOOLS_KEY="$KEYS_DIR/jodi_tools.pem"
 DEV_KEY="$KEYS_DIR/cgdadmin.pem"
 PROD_KEY="$KEYS_DIR/Cdev_key.pem"
