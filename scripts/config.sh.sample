@@ -5,9 +5,9 @@
 
 # SSH keys (stored in ~/.cgd-keys/)
 KEYS_DIR="$HOME/.cgd-keys"
-TOOLS_KEY="$KEYS_DIR/jodi_tools.pem"
-DEV_KEY="$KEYS_DIR/cgdadmin.pem"
-PROD_KEY="$KEYS_DIR/Cdev_key.pem"
+TOOLS_KEY="$KEYS_DIR/cgd-tools.pem"
+DEV_KEY="$KEYS_DIR/cgd-dev.pem"
+PROD_KEY="$KEYS_DIR/cgd-prod.pem"
 
 # Tools server (runs RNA-Seq pipeline)
 TOOLS_SERVER="<TOOLS_SERVER_HOSTNAME>"

@@ -14,8 +14,8 @@ chmod 600 ~/.cgd-keys/*.pem
 
 | File | Server | Purpose |
 |------|--------|---------|
-| `jodi_tools.pem` | Tools server | Run RNA-Seq pipeline |
-| `cgdadmin.pem` | Dev server | Testing |
-| `Cdev_key.pem` | Prod server | Live site |
+| `cgd-tools.pem` | Tools server | Run RNA-Seq pipeline |
+| `cgd-dev.pem` | Dev server | Testing |
+| `cgd-prod.pem` | Prod server | Live site |
 
-Get the keys from Shuai or another admin.
+Get the keys from admin.
