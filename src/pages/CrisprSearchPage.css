@@ -1,0 +1,411 @@
+/* CRISPR Search Page Styles */
+
+.crispr-search-page {
+  width: 1200px;
+  margin: 0 auto;
+  padding: 15px;
+  font-size: 14px;
+}
+
+.crispr-search-page * {
+  font-size: inherit;
+}
+
+.crispr-content {
+  background-color: #fff;
+  padding: 20px 25px;
+  border-radius: 4px;
+}
+
+.crispr-search-page h1 {
+  color: #1976d2;
+  margin: 0 0 8px 0;
+  font-size: 1.75em;
+}
+
+.crispr-search-page .subtitle {
+  color: #666;
+  margin: 0 0 20px 0;
+  font-size: 0.95em;
+}
+
+/* Two-column layout */
+.form-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 12px;
+}
+
+.form-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-column .form-section {
+  margin-bottom: 0;
+  flex: 1;
+}
+
+/* Form Sections */
+.form-section {
+  background-color: #f8f9fa;
+  padding: 15px 18px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  border: 1px solid #e9ecef;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.section-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background-color: #1976d2;
+  color: white;
+  border-radius: 50%;
+  font-size: 0.85em;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.section-header h3 {
+  color: #333;
+  margin: 0;
+  font-size: 1em;
+  font-weight: 600;
+  flex-grow: 1;
+}
+
+/* Form Groups */
+.form-group {
+  margin-bottom: 12px;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: #333;
+  font-size: 0.85em;
+}
+
+.form-group.compact {
+  margin-bottom: 0;
+}
+
+.form-group.compact label {
+  font-size: 0.8em;
+  color: #555;
+}
+
+.form-group input[type="text"],
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.form-group textarea {
+  font-family: monospace;
+  resize: vertical;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.15);
+}
+
+.form-group .help-text {
+  font-size: 0.8em;
+  color: #666;
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+
+/* Input Type Toggle */
+.input-type-toggle {
+  display: inline-flex;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.toggle-btn {
+  padding: 6px 14px;
+  border: none;
+  background-color: #fff;
+  color: #333;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.toggle-btn:not(:last-child) {
+  border-right: 1px solid #ccc;
+}
+
+.toggle-btn:hover {
+  background-color: #f5f5f5;
+}
+
+.toggle-btn.active {
+  background-color: #1976d2;
+  color: white;
+}
+
+/* Gene Preview */
+.gene-preview {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.gene-preview.loading {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.gene-preview.error {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.gene-preview.success {
+  background-color: #e8f5e9;
+  border: 1px solid #a5d6a7;
+}
+
+.preview-name {
+  font-size: 1em;
+  margin-bottom: 4px;
+}
+
+.preview-systematic {
+  color: #666;
+  margin-left: 8px;
+  font-weight: normal;
+}
+
+.preview-desc {
+  color: #555;
+  font-size: 0.9em;
+  margin-bottom: 6px;
+}
+
+.preview-details {
+  display: flex;
+  gap: 15px;
+  font-size: 0.85em;
+  color: #666;
+}
+
+/* Target Region Selection */
+.target-region-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.target-region-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.target-region-item:hover {
+  background-color: #f5f5f5;
+  border-color: #bbb;
+}
+
+.target-region-item input[type="radio"] {
+  margin-top: 2px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.region-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.region-label {
+  font-weight: 500;
+  color: #333;
+}
+
+.region-desc {
+  font-size: 0.85em;
+  color: #666;
+}
+
+/* Options Row */
+.options-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 12px;
+}
+
+.options-row .form-group.compact {
+  flex: 1;
+}
+
+/* Checkbox Group */
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.checkbox-group label {
+  margin: 0;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+/* Advanced Toggle */
+.advanced-toggle {
+  background: none;
+  border: 1px solid #1976d2;
+  color: #1976d2;
+  font-size: 0.8em;
+  padding: 4px 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.advanced-toggle:hover {
+  background-color: #e3f2fd;
+}
+
+/* Advanced Options */
+.advanced-options {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed #ddd;
+}
+
+/* Submit Section */
+.submit-section {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.submit-button {
+  padding: 12px 35px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.submit-button:hover:not(:disabled) {
+  background-color: #1565c0;
+}
+
+.submit-button:disabled {
+  background-color: #bbb;
+  cursor: not-allowed;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error State */
+.error-state {
+  background-color: #ffebee;
+  border: 1px solid #ef9a9a;
+  border-radius: 4px;
+  padding: 12px 15px;
+  color: #c62828;
+  margin-top: 15px;
+}
+
+.error-state strong {
+  margin-right: 5px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .form-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .form-column .form-section {
+    flex: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .crispr-search-page {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .crispr-content {
+    padding: 15px;
+  }
+
+  .options-row {
+    flex-direction: column;
+  }
+}

@@ -48,6 +48,8 @@ import SeqToolsPage from './pages/SeqToolsPage';
 import SeqToolsResultsPage from './pages/SeqToolsResultsPage';
 import BlastSearchPage from './pages/BlastSearchPage';
 import BlastResultsPage from './pages/BlastResultsPage';
+import CrisprSearchPage from './pages/CrisprSearchPage';
+import CrisprResultsPage from './pages/CrisprResultsPage';
 import PatmatchSearchPage from './pages/PatmatchSearchPage';
 import PatmatchResultsPage from './pages/PatmatchResultsPage';
 import BatchDownloadPage from './pages/BatchDownloadPage';
@@ -247,6 +249,8 @@ function App() {
           <Route path="/virulence-factor-browser" element={<VirulenceFactorBrowserPage />} />
           <Route path="/blast" element={<BlastSearchPage />} />
           <Route path="/blast/results" element={<BlastResultsPage />} />
+          <Route path="/crispr" element={<CrisprSearchPage />} />
+          <Route path="/crispr/results" element={<CrisprResultsPage />} />
           <Route path="/patmatch" element={<PatmatchSearchPage />} />
           <Route path="/patmatch/results" element={<PatmatchResultsPage />} />
           <Route path="/restriction-mapper" element={<RestrictionMapperSearchPage />} />
