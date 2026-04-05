@@ -40,6 +40,16 @@ npm install
 
 This only needs to be done once (or after pulling new changes that update dependencies).
 
+### 4. Configure API Connection
+
+Create a file to connect to the dev backend:
+
+```bash
+echo "VITE_API_URL=https://backend.dev.candidagenome.org" > .env.local
+```
+
+This file is git-ignored and only needs to be created once.
+
 ## Making Edits
 
 ### 1. Create a Local Branch
