@@ -177,6 +177,14 @@ const CATEGORY_LABELS = {
   literature_topics: 'Literature Topics',
 };
 
+// Get dynamic category label - for orthologs, include the query to clarify context
+const getCategoryLabel = (category, query) => {
+  if (category === 'orthologs' && query) {
+    return `Orthologs of C. albicans ${query}`;
+  }
+  return CATEGORY_LABELS[category] || category;
+};
+
 // Order in which categories are displayed
 const CATEGORY_ORDER = [
   'genes', 'descriptions', 'go_terms', 'colleagues', 'authors',
@@ -273,7 +281,7 @@ const TextSearchResultsPage = () => {
   // AG Grid column definitions - single combined column
   const columnDefs = useMemo(() => [
     {
-      headerName: selectedCategory ? CATEGORY_LABELS[selectedCategory] : 'Results',
+      headerName: selectedCategory ? getCategoryLabel(selectedCategory, query) : 'Results',
       field: 'name',
       cellRenderer: CombinedResultRenderer,
       sortable: true,
@@ -282,7 +290,7 @@ const TextSearchResultsPage = () => {
       autoHeight: true,
       cellStyle: { whiteSpace: 'normal', lineHeight: '1.4', padding: '10px 12px' },
     },
-  ], [selectedCategory]);
+  ], [selectedCategory, query]);
 
   // AG Grid default column definitions
   const defaultColDef = useMemo(() => ({
