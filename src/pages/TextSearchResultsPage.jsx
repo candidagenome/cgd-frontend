@@ -19,6 +19,16 @@ const DEFAULT_ORGANISMS = [
   { organism_abbrev: 'C_parapsilosis_CDC317', organism_name: 'Candida parapsilosis CDC317' },
   { organism_abbrev: 'C_tropicalis_MYA-3404', organism_name: 'Candida tropicalis MYA-3404' },
   { organism_abbrev: 'C_auris_B8441', organism_name: 'Candida auris B8441' },
+  { organism_abbrev: 'C_dubliniensis_CD36', organism_name: 'Candida dubliniensis CD36' },
+];
+
+// CGOB ortholog organisms (excludes C. albicans which is the reference)
+const CGOB_ORTHOLOG_ORGANISMS = [
+  'Candida glabrata CBS138',
+  'Candida parapsilosis CDC317',
+  'Candida tropicalis MYA-3404',
+  'Candida auris B8441',
+  'Candida dubliniensis CD36',
 ];
 
 // Combined cell renderer for identifier + description
@@ -575,6 +585,40 @@ const TextSearchResultsPage = () => {
         {/* Organism filter facet - hide for paper_titles category */}
         {/* Use aggregated counts (genes + orthologs) so species with orthologs appear */}
         {!isPaperTitles && (() => {
+          const isOrthologsCategory = selectedCategory === 'orthologs';
+
+          // For orthologs category, always show CGOB organisms (consistent list)
+          if (isOrthologsCategory) {
+            return (
+              <div className="organism-facet">
+                <h3>Organism</h3>
+                <ul className="facet-list">
+                  <li
+                    className={`facet-item ${selectedOrganism === null ? 'selected' : ''}`}
+                    onClick={() => handleOrganismSelect(null)}
+                  >
+                    <span className="facet-label">All Organisms</span>
+                    <span className="facet-count">{totalCount}</span>
+                  </li>
+                  {CGOB_ORTHOLOG_ORGANISMS.map(organism => {
+                    const count = organismCounts[organism] || 0;
+                    return (
+                      <li
+                        key={organism}
+                        className={`facet-item ${selectedOrganism === organism ? 'selected' : ''}`}
+                        onClick={() => handleOrganismSelect(organism)}
+                      >
+                        <span className="facet-label">{organism}</span>
+                        <span className="facet-count">{count}</span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            );
+          }
+
+          // For other categories, use existing logic
           // Merge current category counts with aggregated counts from genes+orthologs
           const mergedCounts = { ...aggregatedOrganismCounts };
           // Also include any organisms from current category that might not be in genes/orthologs
@@ -770,6 +814,18 @@ const TextSearchResultsPage = () => {
           </div>
         );
       }
+    }
+
+    // Empty state for orthologs when organism has no results
+    if (isOrthologs && selectedOrganism && facetFiltered.length === 0) {
+      return (
+        <div className="ortholog-no-results">
+          <p>
+            No ortholog found for <strong>{query}</strong> in{' '}
+            <em>{selectedOrganism.replace('Candida ', 'C. ')}</em>
+          </p>
+        </div>
+      );
     }
 
     return (

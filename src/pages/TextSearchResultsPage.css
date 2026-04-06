@@ -46,7 +46,8 @@
 .text-search-loading,
 .text-search-error,
 .text-search-no-results,
-.text-search-no-selection {
+.text-search-no-selection,
+.ortholog-no-results {
   text-align: center;
   padding: 40px 20px;
   color: #666;
@@ -57,7 +58,8 @@
 }
 
 .text-search-no-results,
-.text-search-no-selection {
+.text-search-no-selection,
+.ortholog-no-results {
   font-style: italic;
 }
 
