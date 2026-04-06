@@ -821,7 +821,14 @@ const TextSearchResultsPage = () => {
             pagination={true}
             paginationPageSize={10}
             paginationPageSizeSelector={[10, 25, 50, 100]}
-            getRowId={(params) => `${params.data.category}-${params.data.id}`}
+            getRowId={(params) => {
+              // For orthologs, include ortholog_display to make row ID unique
+              // since multiple orthologs can have the same CGD gene ID
+              if (params.data.category === 'orthologs' && params.data.ortholog_display) {
+                return `${params.data.category}-${params.data.id}-${params.data.ortholog_display}`;
+              }
+              return `${params.data.category}-${params.data.id}`;
+            }}
           />
         </div>
       </div>
