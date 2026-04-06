@@ -1,9 +1,20 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import './LocusComponents.css';
 
 const DEFAULT_ORGANISM = 'Candida albicans SC5314';
 const ALL_ORGANISMS_VALUE = '__all__';
+const ORTHOLOG_PREFIX = '__ortholog__';
+const NO_ORTHOLOG_PREFIX = '__no_ortholog__';
+
+// Consistent CGOB organism list for locus pages (excludes C. tropicalis)
+const CGOB_LOCUS_ORGANISMS = [
+  'Candida albicans SC5314',
+  'Candida dubliniensis CD36',
+  'Candida parapsilosis CDC317',
+  'Candida auris B8441',
+  'Candida glabrata CBS138',
+];
 
 /**
  * Reusable organism selector component for tab pages.
@@ -13,6 +24,8 @@ const ALL_ORGANISMS_VALUE = '__all__';
  * @param {Object} organismCounts - Optional map of organism name to count (for search context)
  * @param {boolean} showAllOption - Whether to show "All Organisms" option (default: false)
  * @param {number} totalCount - Optional explicit total count for "All Organisms" (overrides calculated sum)
+ * @param {Array} orthologOrganisms - Optional list of {organism, feature_name} for ortholog navigation
+ * @param {boolean} showConsistentCgobList - Show all 5 CGOB organisms consistently (default: true for locus context)
  */
 function OrganismSelector({
   organisms,
@@ -22,9 +35,18 @@ function OrganismSelector({
   context = 'locus',
   organismCounts = null,
   showAllOption = false,
-  totalCount: explicitTotalCount = null
+  totalCount: explicitTotalCount = null,
+  orthologOrganisms = [],
+  showConsistentCgobList = null,  // null means auto-detect based on context
 }) {
   const { name } = useParams();
+  const navigate = useNavigate();
+
+  // Determine if we should show consistent CGOB list
+  // Default: true for locus context, false for search context
+  const useConsistentList = showConsistentCgobList !== null
+    ? showConsistentCgobList
+    : (context === 'locus');
 
   if (!organisms || organisms.length === 0) {
     return null;
@@ -46,8 +68,40 @@ function OrganismSelector({
     return org;
   };
 
-  // If only one organism, show info text instead of dropdown
-  if (organisms.length === 1 && !showAllOption) {
+  // Build a map of ortholog organisms for quick lookup
+  const orthologMap = {};
+  orthologOrganisms.forEach(orth => {
+    orthologMap[orth.organism] = orth.feature_name;
+  });
+
+  // Filter out ortholog organisms that are already in the main organisms list
+  // (computed early so we can use it in the single-organism check)
+  const filteredOrthologOrganisms = orthologOrganisms.filter(
+    orth => !organisms.includes(orth.organism)
+  );
+
+  // Handle dropdown change - convert special "all" value to null, navigate for orthologs
+  const handleChange = (e) => {
+    const value = e.target.value;
+
+    // Check if it's an ortholog selection (navigate to ortholog locus)
+    if (value.startsWith(ORTHOLOG_PREFIX)) {
+      const featureName = value.substring(ORTHOLOG_PREFIX.length);
+      navigate(`/locus/${featureName}`);
+      return;
+    }
+
+    // Ignore selection of "no ortholog" items
+    if (value.startsWith(NO_ORTHOLOG_PREFIX)) {
+      return;
+    }
+
+    onOrganismChange(value === ALL_ORGANISMS_VALUE ? null : value);
+  };
+
+  // If only one organism AND no orthologs to show AND not using consistent list,
+  // display info text instead of dropdown
+  if (organisms.length === 1 && !showAllOption && filteredOrthologOrganisms.length === 0 && !useConsistentList) {
     const note = context === 'search'
       ? '(Results are only found in this organism)'
       : name
@@ -66,12 +120,59 @@ function OrganismSelector({
     );
   }
 
-  // Handle dropdown change - convert special "all" value to null
-  const handleChange = (e) => {
-    const value = e.target.value;
-    onOrganismChange(value === ALL_ORGANISMS_VALUE ? null : value);
-  };
+  // When using consistent CGOB list, show all 5 organisms in order
+  if (useConsistentList) {
+    return (
+      <div className="organism-selector">
+        <label htmlFor={`organism-select-${dataType || 'default'}`}>Select Organism: </label>
+        <select
+          id={`organism-select-${dataType || 'default'}`}
+          value={selectedOrganism || ALL_ORGANISMS_VALUE}
+          onChange={handleChange}
+          className="organism-dropdown"
+        >
+          {showAllOption && (
+            <option value={ALL_ORGANISMS_VALUE}>All Organisms ({totalCount})</option>
+          )}
+          {CGOB_LOCUS_ORGANISMS.map(org => {
+            const hasDirectData = organisms.includes(org);
+            const hasOrtholog = orthologMap[org];
 
+            if (hasDirectData) {
+              // Organism has direct data - show as normal selectable option
+              return (
+                <option key={org} value={org}>{formatOrganismLabel(org)}</option>
+              );
+            } else if (hasOrtholog) {
+              // Organism has ortholog - navigate to ortholog locus
+              return (
+                <option
+                  key={`ortholog-${org}`}
+                  value={`${ORTHOLOG_PREFIX}${hasOrtholog}`}
+                >
+                  {org}
+                </option>
+              );
+            } else {
+              // No data for this organism - show as disabled with "No ortholog"
+              return (
+                <option
+                  key={`no-ortholog-${org}`}
+                  value={`${NO_ORTHOLOG_PREFIX}${org}`}
+                  disabled
+                  style={{ color: '#999' }}
+                >
+                  {org} (No ortholog)
+                </option>
+              );
+            }
+          })}
+        </select>
+      </div>
+    );
+  }
+
+  // Original behavior: show organisms with data + orthologs section
   return (
     <div className="organism-selector">
       <label htmlFor={`organism-select-${dataType || 'default'}`}>Select Organism: </label>
@@ -87,6 +188,20 @@ function OrganismSelector({
         {organisms.map(org => (
           <option key={org} value={org}>{formatOrganismLabel(org)}</option>
         ))}
+        {filteredOrthologOrganisms.length > 0 && (
+          <>
+            <option disabled>─── Orthologs in ───</option>
+            {filteredOrthologOrganisms.map(orth => (
+              <option
+                key={`ortholog-${orth.feature_name}`}
+                value={`${ORTHOLOG_PREFIX}${orth.feature_name}`}
+                className="ortholog-option"
+              >
+                {orth.organism}
+              </option>
+            ))}
+          </>
+        )}
       </select>
     </div>
   );

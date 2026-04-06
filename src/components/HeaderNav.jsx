@@ -64,6 +64,7 @@ const HeaderNav = () => {
       label: 'Tools',
       to: '/tools',
       submenu: [
+        { label: 'CRISPR Guide Designer', to: '/crispr' },
         { label: 'PatMatch', to: '/patmatch' },
         { label: 'Primers', to: '/webprimer' },
         { label: 'Phenotype Search', to: '/phenotype/search' },

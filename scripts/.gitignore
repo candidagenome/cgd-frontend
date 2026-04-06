@@ -1,0 +1,2 @@
+# Ignore actual config (use config.sh.sample as template)
+config.sh

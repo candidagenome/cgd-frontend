@@ -650,6 +650,12 @@
   font-weight: normal;
 }
 
+.hit-gene-name {
+  color: #0066cc;
+  font-weight: bold;
+  margin-right: 0.5em;
+}
+
 .hit-actions {
   margin-top: 10px;
   display: flex;

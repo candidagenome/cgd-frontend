@@ -1,0 +1,540 @@
+/* CRISPR Results Page Styles */
+
+.crispr-results-page {
+  width: 1200px;
+  margin: 0 auto;
+  padding: 15px;
+  font-size: 14px;
+}
+
+.crispr-results-page * {
+  font-size: inherit;
+}
+
+.crispr-content {
+  background-color: #fff;
+  padding: 20px 25px;
+  border-radius: 4px;
+}
+
+.crispr-results-page h1 {
+  color: #1976d2;
+  margin: 0 0 8px 0;
+  font-size: 1.75em;
+}
+
+.crispr-results-page hr {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 15px 0;
+}
+
+/* Results Summary */
+.results-summary {
+  background-color: #f8f9fa;
+  padding: 15px 18px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  border: 1px solid #e9ecef;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px 20px;
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.summary-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.summary-item .label {
+  font-size: 0.8em;
+  color: #666;
+  text-transform: uppercase;
+}
+
+.summary-item .value {
+  font-size: 0.95em;
+  color: #333;
+}
+
+.summary-item .secondary {
+  color: #666;
+  font-weight: normal;
+}
+
+.summary-links {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  gap: 10px;
+}
+
+.link-button {
+  display: inline-block;
+  padding: 6px 12px;
+  background-color: #1976d2;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 0.85em;
+  transition: background-color 0.15s;
+}
+
+.link-button:hover {
+  background-color: #1565c0;
+}
+
+/* Warnings */
+.warnings-section {
+  margin-bottom: 15px;
+}
+
+.warning-item {
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+  color: #856404;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  margin-bottom: 5px;
+}
+
+/* Actions Bar */
+.actions-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+.action-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-label {
+  font-size: 0.85em;
+  color: #666;
+}
+
+.action-button {
+  padding: 6px 12px;
+  border: 1px solid #1976d2;
+  background-color: #1976d2;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85em;
+  transition: all 0.15s;
+}
+
+.action-button:hover:not(:disabled) {
+  background-color: #1565c0;
+}
+
+.action-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.action-button.secondary {
+  background-color: white;
+  color: #1976d2;
+}
+
+.action-button.secondary:hover {
+  background-color: #e3f2fd;
+}
+
+.action-button.small {
+  padding: 4px 10px;
+  font-size: 0.8em;
+}
+
+/* Guides Table */
+.guides-table-container {
+  overflow-x: auto;
+}
+
+.guides-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+
+.guides-table th,
+.guides-table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.guides-table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+}
+
+.guides-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.guides-table th.sortable:hover {
+  background-color: #e8e8e8;
+}
+
+.guides-table th.sorted {
+  color: #1976d2;
+}
+
+.guide-row {
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.guide-row:hover {
+  background-color: #f8f9fa;
+}
+
+.guide-row.expanded {
+  background-color: #e3f2fd;
+}
+
+/* Table columns */
+.col-expand {
+  width: 30px;
+  text-align: center;
+}
+
+.expand-icon {
+  color: #666;
+  font-size: 0.8em;
+}
+
+.col-rank {
+  width: 50px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.col-sequence {
+  min-width: 200px;
+}
+
+.col-pam {
+  width: 60px;
+}
+
+.col-position {
+  width: 100px;
+}
+
+.col-score {
+  width: 80px;
+  text-align: center;
+}
+
+.col-gc {
+  width: 60px;
+  text-align: center;
+}
+
+.col-flags {
+  width: 120px;
+}
+
+/* Sequence styling */
+.sequence {
+  font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+  font-size: 0.95em;
+  background-color: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+}
+
+.pam {
+  font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+  font-size: 0.95em;
+  color: #d32f2f;
+  font-weight: 600;
+}
+
+/* Score badges */
+.score-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.85em;
+}
+
+.score-excellent {
+  background-color: #c8e6c9;
+  color: #2e7d32;
+}
+
+.score-good {
+  background-color: #fff9c4;
+  color: #f9a825;
+}
+
+.score-moderate {
+  background-color: #ffecb3;
+  color: #ff8f00;
+}
+
+.score-poor {
+  background-color: #ffcdd2;
+  color: #c62828;
+}
+
+/* Flags */
+.flag {
+  display: inline-block;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 0.75em;
+  font-weight: 600;
+  margin-right: 4px;
+}
+
+.flag-warning {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.flag-info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+/* Guide Details Row */
+.guide-details-row td {
+  padding: 0;
+  background-color: #fafafa;
+}
+
+.guide-details {
+  padding: 15px 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.detail-section {
+  background-color: white;
+  padding: 12px 15px;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+}
+
+.detail-section h4 {
+  margin: 0 0 10px 0;
+  font-size: 0.9em;
+  color: #1976d2;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 6px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.detail-item:last-child {
+  margin-bottom: 0;
+}
+
+.detail-label {
+  font-size: 0.85em;
+  color: #666;
+  min-width: 100px;
+}
+
+.detail-value {
+  font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+  font-size: 0.9em;
+  background-color: #f5f5f5;
+  padding: 4px 8px;
+  border-radius: 3px;
+}
+
+.copy-btn {
+  padding: 2px 8px;
+  font-size: 0.75em;
+  background-color: #e0e0e0;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.copy-btn:hover {
+  background-color: #bdbdbd;
+}
+
+/* Scores grid in details */
+.scores-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.score-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.score-label {
+  font-size: 0.85em;
+  color: #666;
+}
+
+.score-value {
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+
+/* Primers */
+.primer-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.primer-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.primer-label {
+  font-size: 0.85em;
+  color: #666;
+  min-width: 60px;
+}
+
+.primer-seq {
+  font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+  font-size: 0.85em;
+  background-color: #f5f5f5;
+  padding: 4px 8px;
+  border-radius: 3px;
+  flex: 1;
+}
+
+/* Restriction sites */
+.restriction-sites {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.restriction-site {
+  font-size: 0.85em;
+  background-color: #e3f2fd;
+  padding: 4px 8px;
+  border-radius: 3px;
+}
+
+/* Off-target summary */
+.offtarget-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  font-size: 0.9em;
+}
+
+/* No results states */
+.no-results,
+.no-guides {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.no-results p,
+.no-guides p {
+  margin: 0 0 10px 0;
+}
+
+.back-button {
+  padding: 10px 20px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95em;
+  margin-top: 15px;
+}
+
+.back-button:hover {
+  background-color: #1565c0;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .crispr-results-page {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .crispr-content {
+    padding: 15px;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .actions-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .action-group {
+    justify-content: center;
+  }
+
+  .guides-table {
+    font-size: 0.8em;
+  }
+
+  .guides-table th,
+  .guides-table td {
+    padding: 6px 8px;
+  }
+}

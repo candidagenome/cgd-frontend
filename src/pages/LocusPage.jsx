@@ -31,6 +31,21 @@ function LocusPage() {
 
   const { data, loading, errors, loaders } = useLocusData(name);
 
+  // Extract ortholog organisms from the locus data (candida_orthologs field)
+  // This uses data already fetched from the database, no extra API call needed
+  const orthologOrganisms = React.useMemo(() => {
+    if (!data.info?.results || !selectedOrganism) return [];
+
+    const currentOrgData = data.info.results[selectedOrganism];
+    if (!currentOrgData?.candida_orthologs) return [];
+
+    // Convert candida_orthologs to the format expected by OrganismSelector
+    return currentOrgData.candida_orthologs.map(orth => ({
+      organism: orth.organism_name,
+      feature_name: orth.feature_name,
+    }));
+  }, [data.info, selectedOrganism]);
+
   // Reset selected organism when locus name changes
   useEffect(() => {
     setSelectedOrganism(null);
@@ -95,6 +110,7 @@ function LocusPage() {
               selectedOrganism={selectedOrganism}
               onOrganismChange={setSelectedOrganism}
               dataType="summary"
+              orthologOrganisms={orthologOrganisms}
             />
             {selectedOrganism && data.info.results[selectedOrganism] && (
               <LocusSummary

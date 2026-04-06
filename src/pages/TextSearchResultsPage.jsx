@@ -19,6 +19,16 @@ const DEFAULT_ORGANISMS = [
   { organism_abbrev: 'C_parapsilosis_CDC317', organism_name: 'Candida parapsilosis CDC317' },
   { organism_abbrev: 'C_tropicalis_MYA-3404', organism_name: 'Candida tropicalis MYA-3404' },
   { organism_abbrev: 'C_auris_B8441', organism_name: 'Candida auris B8441' },
+  { organism_abbrev: 'C_dubliniensis_CD36', organism_name: 'Candida dubliniensis CD36' },
+];
+
+// CGOB ortholog organisms (excludes C. albicans which is the reference)
+const CGOB_ORTHOLOG_ORGANISMS = [
+  'Candida glabrata CBS138',
+  'Candida parapsilosis CDC317',
+  'Candida tropicalis MYA-3404',
+  'Candida auris B8441',
+  'Candida dubliniensis CD36',
 ];
 
 // Combined cell renderer for identifier + description
@@ -34,7 +44,8 @@ const CombinedResultRenderer = (props) => {
   // For locus-related categories, use gene name for the link URL
   // Prefer gene_name (standard name like "HOG1") over name (which may be orf ID like "orf19.8514")
   // This ensures we use "/locus/HOG1" instead of "/locus/orf19.xxx"
-  const isLocusCategory = ['genes', 'descriptions', 'paragraphs', 'name_descriptions', 'notes', 'orthologs'].includes(data.category);
+  // Note: orthologs use data.link directly (set by backend to CGD gene link)
+  const isLocusCategory = ['genes', 'descriptions', 'paragraphs', 'name_descriptions', 'notes'].includes(data.category);
   const locusIdentifier = data.gene_name || data.name;
   const link = isLocusCategory && locusIdentifier ? `/locus/${locusIdentifier}` : data.link;
 
@@ -173,7 +184,7 @@ const CATEGORY_LABELS = {
   phenotypes: 'Phenotypes',
   notes: 'History Notes',
   external_ids: 'External Database IDs',
-  orthologs: 'Orthologs / Best Hits',
+  orthologs: 'C. albicans Orthologs',
   literature_topics: 'Literature Topics',
 };
 
@@ -201,7 +212,7 @@ const TextSearchResultsPage = () => {
   const query = searchParams.get('query') || '';
   const type = searchParams.get('type') || null; // 'homolog' for ortholog-only search
   const searchFieldParam = searchParams.get('search_field') || 'all';
-  const matchMode = searchParams.get('match_mode') || 'any'; // Default to OR
+  const matchMode = searchParams.get('match_mode') || 'all'; // Default to AND
 
   // Determine if searchField is a category filter or paper search option
   const isCategory = !PAPER_SEARCH_FIELDS.includes(searchFieldParam);
@@ -575,6 +586,40 @@ const TextSearchResultsPage = () => {
         {/* Organism filter facet - hide for paper_titles category */}
         {/* Use aggregated counts (genes + orthologs) so species with orthologs appear */}
         {!isPaperTitles && (() => {
+          const isOrthologsCategory = selectedCategory === 'orthologs';
+
+          // For orthologs category, always show CGOB organisms (consistent list)
+          if (isOrthologsCategory) {
+            return (
+              <div className="organism-facet">
+                <h3>Organism</h3>
+                <ul className="facet-list">
+                  <li
+                    className={`facet-item ${selectedOrganism === null ? 'selected' : ''}`}
+                    onClick={() => handleOrganismSelect(null)}
+                  >
+                    <span className="facet-label">All Organisms</span>
+                    <span className="facet-count">{totalCount}</span>
+                  </li>
+                  {CGOB_ORTHOLOG_ORGANISMS.map(organism => {
+                    const count = organismCounts[organism] || 0;
+                    return (
+                      <li
+                        key={organism}
+                        className={`facet-item ${selectedOrganism === organism ? 'selected' : ''}`}
+                        onClick={() => handleOrganismSelect(organism)}
+                      >
+                        <span className="facet-label">{organism}</span>
+                        <span className="facet-count">{count}</span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            );
+          }
+
+          // For other categories, use existing logic
           // Merge current category counts with aggregated counts from genes+orthologs
           const mergedCounts = { ...aggregatedOrganismCounts };
           // Also include any organisms from current category that might not be in genes/orthologs
@@ -772,6 +817,18 @@ const TextSearchResultsPage = () => {
       }
     }
 
+    // Empty state for orthologs when organism has no results
+    if (isOrthologs && selectedOrganism && facetFiltered.length === 0) {
+      return (
+        <div className="ortholog-no-results">
+          <p>
+            No ortholog found for <strong>{query}</strong> in{' '}
+            <em>{selectedOrganism.replace('Candida ', 'C. ')}</em>
+          </p>
+        </div>
+      );
+    }
+
     return (
       <div>
         {/* Quick Filter Box */}
@@ -821,7 +878,14 @@ const TextSearchResultsPage = () => {
             pagination={true}
             paginationPageSize={10}
             paginationPageSizeSelector={[10, 25, 50, 100]}
-            getRowId={(params) => `${params.data.category}-${params.data.id}`}
+            getRowId={(params) => {
+              // For orthologs, include ortholog_display to make row ID unique
+              // since multiple orthologs can have the same CGD gene ID
+              if (params.data.category === 'orthologs' && params.data.ortholog_display) {
+                return `${params.data.category}-${params.data.id}-${params.data.ortholog_display}`;
+              }
+              return `${params.data.category}-${params.data.id}`;
+            }}
           />
         </div>
       </div>
@@ -841,13 +905,14 @@ const TextSearchResultsPage = () => {
           <p className="search-query-info">
             Results for: <strong>"{query}"</strong>
             {initialResults && ` - ${totalResults} total results found`}
-            {(searchField !== 'all' && searchField !== 'both') || matchMode === 'all' ? (
+            {(searchField !== 'all' && searchField !== 'both') || matchMode === 'all' || matchMode === 'exact' ? (
               <span className="search-options-summary">
                 {' '}(
                 {searchField === 'title' && 'Paper titles only'}
                 {searchField === 'abstract' && 'Paper abstracts only'}
-                {(searchField === 'title' || searchField === 'abstract') && matchMode === 'all' && ', '}
-                {matchMode === 'all' && 'Match ALL terms'}
+                {(searchField === 'title' || searchField === 'abstract') && (matchMode === 'all' || matchMode === 'exact') && ', '}
+                {matchMode === 'all' && 'All words'}
+                {matchMode === 'exact' && 'Exact phrase'}
                 )
               </span>
             ) : null}

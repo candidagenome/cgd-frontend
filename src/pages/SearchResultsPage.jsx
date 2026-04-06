@@ -91,7 +91,7 @@ const CATEGORY_LABELS = {
   go_terms: 'GO Terms',
   phenotypes: 'Phenotypes',
   references: 'References',
-  orthologs: 'Orthologs / Best Hits',
+  orthologs: 'C. albicans Orthologs',
 };
 
 const CATEGORY_ORDER = ['genes', 'go_terms', 'phenotypes', 'references', 'orthologs'];
@@ -518,7 +518,14 @@ const SearchResultsPage = () => {
             pagination={true}
             paginationPageSize={10}
             paginationPageSizeSelector={[10, 25, 50, 100]}
-            getRowId={(params) => `${params.data.category}-${params.data.id}`}
+            getRowId={(params) => {
+              // For orthologs, include ortholog_display to make row ID unique
+              // since multiple orthologs can have the same CGD gene ID
+              if (params.data.category === 'orthologs' && params.data.ortholog_display) {
+                return `${params.data.category}-${params.data.id}-${params.data.ortholog_display}`;
+              }
+              return `${params.data.category}-${params.data.id}`;
+            }}
           />
         </div>
       </div>

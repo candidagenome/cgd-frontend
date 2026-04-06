@@ -17,7 +17,7 @@ function TextSearchPage() {
   const [query, setQuery] = useState('');
   const [organism, setOrganism] = useState('all');
   const [searchField, setSearchField] = useState('all');
-  const [matchMode, setMatchMode] = useState('any'); // Default to OR
+  const [matchMode, setMatchMode] = useState('all'); // Default to AND
   const [organisms, setOrganisms] = useState([]);
   const [error, setError] = useState('');
 
@@ -86,9 +86,19 @@ function TextSearchPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Enter search term..."
-              size="40"
             />
-            <button type="submit" className="search-btn">Submit</button>
+            <select
+              id="matchMode"
+              value={matchMode}
+              onChange={(e) => setMatchMode(e.target.value)}
+              className="option-select"
+              title="Match mode"
+            >
+              <option value="any">Any words</option>
+              <option value="all">All words</option>
+              <option value="exact">Exact phrase</option>
+            </select>
+            <button type="submit" className="search-btn">Search</button>
           </div>
 
           <div className="search-options">
@@ -134,32 +144,6 @@ function TextSearchPage() {
                   <option value="orthologs">Orthologs / Best Hits</option>
                   <option value="literature_topics">Literature Topics</option>
                 </select>
-              </div>
-
-              <div className="option-group">
-                <label className="option-label">Multiple terms:</label>
-                <div className="option-buttons">
-                  <label className={`option-btn ${matchMode === 'any' ? 'selected' : ''}`}>
-                    <input
-                      type="radio"
-                      name="matchMode"
-                      value="any"
-                      checked={matchMode === 'any'}
-                      onChange={(e) => setMatchMode(e.target.value)}
-                    />
-                    Match ANY (OR)
-                  </label>
-                  <label className={`option-btn ${matchMode === 'all' ? 'selected' : ''}`}>
-                    <input
-                      type="radio"
-                      name="matchMode"
-                      value="all"
-                      checked={matchMode === 'all'}
-                      onChange={(e) => setMatchMode(e.target.value)}
-                    />
-                    Match ALL (AND)
-                  </label>
-                </div>
               </div>
             </div>
           </div>
