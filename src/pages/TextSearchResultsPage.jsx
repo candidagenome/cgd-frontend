@@ -173,7 +173,7 @@ const CATEGORY_LABELS = {
   phenotypes: 'Phenotypes',
   notes: 'History Notes',
   external_ids: 'External Database IDs',
-  orthologs: 'Orthologs / Best Hits',
+  orthologs: 'C. albicans Orthologs',
   literature_topics: 'Literature Topics',
 };
 

@@ -91,7 +91,7 @@ const CATEGORY_LABELS = {
   go_terms: 'GO Terms',
   phenotypes: 'Phenotypes',
   references: 'References',
-  orthologs: 'Orthologs / Best Hits',
+  orthologs: 'C. albicans Orthologs',
 };
 
 const CATEGORY_ORDER = ['genes', 'go_terms', 'phenotypes', 'references', 'orthologs'];
