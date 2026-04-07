@@ -1286,23 +1286,6 @@ function LitGuideCurationPage() {
               ) : (
                 <p style={styles.noAbstract}>No abstract available.</p>
               )}
-              <div style={styles.curationStatusRow}>
-                <strong>Curation Status:</strong>{' '}
-                <select
-                  value={referenceData.curation_status || ''}
-                  onChange={(e) => {
-                    if (e.target.value) {
-                      handleSetStatus(referenceData.reference_no, e.target.value);
-                    }
-                  }}
-                  style={styles.statusSelectInline}
-                >
-                  <option value="">Not yet curated</option>
-                  {statuses.map((s) => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
-                </select>
-              </div>
             </div>
           </div>
 
