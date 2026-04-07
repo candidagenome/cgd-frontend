@@ -208,7 +208,18 @@ function GoCurationPage() {
   const handleRowChange = (rowIndex, field, value) => {
     setAnnotationRows((prev) => {
       const updated = [...prev];
-      updated[rowIndex] = { ...updated[rowIndex], [field]: value };
+      const row = { ...updated[rowIndex], [field]: value };
+
+      // Auto-select evidence code when user checks a "with" checkbox
+      // This improves UX since evidence codes like IGI, IPI, etc. require "with" anyway
+      if (field === 'with_evidence_codes' && Array.isArray(value) && value.length > 0) {
+        // If no evidence code is selected yet, auto-select the first checked "with" code
+        if (!row.evidence) {
+          row.evidence = value[0];
+        }
+      }
+
+      updated[rowIndex] = row;
       return updated;
     });
     setFormError(null);
