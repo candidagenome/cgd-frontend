@@ -569,7 +569,13 @@ function GoCurationPage() {
                                     </span>
                                   ) : (
                                     <span>
-                                      {sup.support_type.toLowerCase()} {sup.source}: {sup.dbxref_id}
+                                      {sup.support_type.toLowerCase()} {sup.source}:{' '}
+                                      {sup.description || sup.dbxref_id}
+                                      {sup.description && (
+                                        <span style={{ color: '#666', fontSize: '0.85em' }}>
+                                          {' '}({sup.dbxref_id})
+                                        </span>
+                                      )}
                                     </span>
                                   )}
                                 </div>
