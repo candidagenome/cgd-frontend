@@ -326,6 +326,12 @@ function GoCurationPage() {
           data.ic_from_goid = icGoidNum;
         }
 
+        // Add with/from data for evidence codes that support it (IGI, IPI, ISS, etc.)
+        if (row.with_db && row.with_id) {
+          data.with_db = row.with_db;
+          data.with_id = row.with_id;
+        }
+
         // Feature list - create annotation for each feature
         const featuresToAnnotate = [featureName];
         if (row.feature_list) {
