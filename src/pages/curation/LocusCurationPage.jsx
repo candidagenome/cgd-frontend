@@ -109,16 +109,33 @@ function LocusCurationPage() {
   // Search features
   const handleSearch = async (e) => {
     e.preventDefault();
-    if (!searchQuery.trim()) return;
+    const trimmedQuery = searchQuery.trim();
+    if (!trimmedQuery) return;
 
     setSearching(true);
     setError(null);
 
     try {
-      const data = await locusCurationApi.searchFeatures(searchQuery, {
+      const data = await locusCurationApi.searchFeatures(trimmedQuery, {
         organismAbbrev: selectedOrganism || undefined,
       });
-      setSearchResults(data);
+
+      // Check for exact match on feature_name or gene_name (case-insensitive)
+      const queryUpper = trimmedQuery.toUpperCase();
+      const exactMatch = data.features?.find(
+        (f) =>
+          f.feature_name?.toUpperCase() === queryUpper ||
+          f.gene_name?.toUpperCase() === queryUpper
+      );
+
+      if (exactMatch) {
+        // Go directly to the feature page
+        navigate(`/curation/locus/${exactMatch.feature_name}`);
+        setSearchQuery('');
+        setSearchResults(null);
+      } else {
+        setSearchResults(data);
+      }
     } catch (err) {
       setError('Search failed');
     } finally {
@@ -234,7 +251,21 @@ function LocusCurationPage() {
     try {
       await locusCurationApi.unlinkFieldReference(refLinkNo);
       setSuccessMessage('Reference unlinked');
-      loadFeature(featureData.feature_no);
+
+      // Update local state instead of reloading (preserves unsaved edits)
+      const fieldToRefsKey = {
+        'Gene Name': 'gene_name_refs',
+        'Name Description': 'name_description_refs',
+        'Headline': 'headline_refs',
+      };
+      const refsKey = fieldToRefsKey[fieldName];
+      if (refsKey && featureData[refsKey]) {
+        setFeatureData((prev) => ({
+          ...prev,
+          [refsKey]: prev[refsKey].filter((ref) => ref.ref_link_no !== refLinkNo),
+        }));
+      }
+
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
       setError(err.response?.data?.detail || 'Failed to unlink reference');

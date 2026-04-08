@@ -208,7 +208,18 @@ function GoCurationPage() {
   const handleRowChange = (rowIndex, field, value) => {
     setAnnotationRows((prev) => {
       const updated = [...prev];
-      updated[rowIndex] = { ...updated[rowIndex], [field]: value };
+      const row = { ...updated[rowIndex], [field]: value };
+
+      // Auto-select evidence code when user checks a "with" checkbox
+      // This improves UX since evidence codes like IGI, IPI, etc. require "with" anyway
+      if (field === 'with_evidence_codes' && Array.isArray(value) && value.length > 0) {
+        // If no evidence code is selected yet, auto-select the first checked "with" code
+        if (!row.evidence) {
+          row.evidence = value[0];
+        }
+      }
+
+      updated[rowIndex] = row;
       return updated;
     });
     setFormError(null);
@@ -313,6 +324,12 @@ function GoCurationPage() {
             continue;
           }
           data.ic_from_goid = icGoidNum;
+        }
+
+        // Add with/from data for evidence codes that support it (IGI, IPI, ISS, etc.)
+        if (row.with_db && row.with_id) {
+          data.with_db = row.with_db;
+          data.with_id = row.with_id;
         }
 
         // Feature list - create annotation for each feature
@@ -569,7 +586,13 @@ function GoCurationPage() {
                                     </span>
                                   ) : (
                                     <span>
-                                      {sup.support_type.toLowerCase()} {sup.source}: {sup.dbxref_id}
+                                      {sup.support_type.toLowerCase()} {sup.source}:{' '}
+                                      {sup.description || sup.dbxref_id}
+                                      {sup.description && (
+                                        <span style={{ color: '#666', fontSize: '0.85em' }}>
+                                          {' '}({sup.dbxref_id})
+                                        </span>
+                                      )}
                                     </span>
                                   )}
                                 </div>

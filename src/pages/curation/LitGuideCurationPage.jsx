@@ -114,7 +114,20 @@ function LitGuideCurationPage() {
         ]);
         setTopics(topicsData.topics);
         setStatuses(statusesData.statuses);
-        setOrganisms(organismsData.organisms || []);
+        const orgList = organismsData.organisms || [];
+        setOrganisms(orgList);
+
+        // Auto-select C. albicans as default if no organism is selected
+        // This ensures we can see features from other species in the UI
+        if (!currentOrganism && orgList.length > 0) {
+          const calbicans = orgList.find((o) =>
+            o.organism_abbrev?.toLowerCase().includes('sc5314') ||
+            o.organism_name?.toLowerCase().includes('albicans')
+          );
+          if (calbicans) {
+            setCurrentOrganism(calbicans.organism_abbrev);
+          }
+        }
       } catch (err) {
         console.error('Failed to load options:', err);
       }
@@ -200,6 +213,20 @@ function LitGuideCurationPage() {
       loadReferenceLiterature(referenceData.reference_no, newOrganism);
     }
   };
+
+  // Reload reference data when organism is auto-selected after initial load
+  // This ensures other_organisms is populated when defaulting to C. albicans
+  useEffect(() => {
+    // Only reload if we have reference data loaded without organism filter
+    // and an organism has been selected (auto or manual)
+    if (
+      referenceData?.reference_no &&
+      currentOrganism &&
+      !referenceData.current_organism
+    ) {
+      loadReferenceLiterature(referenceData.reference_no, currentOrganism);
+    }
+  }, [currentOrganism, referenceData?.reference_no, referenceData?.current_organism, loadReferenceLiterature]);
 
   // Load notes when reference data changes
   useEffect(() => {
@@ -603,7 +630,17 @@ function LitGuideCurationPage() {
   const updateAssignmentRow = (index, field, value) => {
     setAssignmentRows((prev) => {
       const newRows = [...prev];
-      newRows[index] = { ...newRows[index], [field]: value };
+      let finalValue = value;
+
+      // Auto-remove "High Priority" when a "Done:" status is added
+      if (field === 'curationStatuses' && Array.isArray(value)) {
+        const hasDoneStatus = value.some((s) => s.toLowerCase().startsWith('done'));
+        if (hasDoneStatus) {
+          finalValue = value.filter((s) => s !== 'High Priority');
+        }
+      }
+
+      newRows[index] = { ...newRows[index], [field]: finalValue };
       return newRows;
     });
   };
@@ -625,15 +662,22 @@ function LitGuideCurationPage() {
   const handleSubmitAssignments = async () => {
     if (!referenceData) return;
 
-    // Collect all non-empty rows
-    const rowsToSubmit = assignmentRows.filter(
+    // Collect rows with features (for feature-level assignments)
+    const rowsWithFeatures = assignmentRows.filter(
       (row) =>
         row.features.trim() &&
         (row.literatureTopics.length > 0 || row.curationStatuses.length > 0)
     );
 
-    if (rowsToSubmit.length === 0) {
-      setAssignmentError('Please enter at least one feature with at least one topic or status');
+    // Collect rows without features but with curation status (for reference-level status)
+    const rowsWithStatusOnly = assignmentRows.filter(
+      (row) =>
+        !row.features.trim() &&
+        row.curationStatuses.length > 0
+    );
+
+    if (rowsWithFeatures.length === 0 && rowsWithStatusOnly.length === 0) {
+      setAssignmentError('Please enter at least one feature with a topic/status, or select a curation status without features to set reference-level status');
       return;
     }
 
@@ -644,9 +688,11 @@ function LitGuideCurationPage() {
     try {
       let totalSuccessful = 0;
       let totalFailed = 0;
+      let refStatusSet = false;
       const errors = [];
 
-      for (const row of rowsToSubmit) {
+      // Handle rows with features (feature-level assignments)
+      for (const row of rowsWithFeatures) {
         // Parse features (split by space or |)
         const features = row.features
           .split(/[\s|]+/)
@@ -672,8 +718,29 @@ function LitGuideCurationPage() {
           .forEach((r) => errors.push(`${r.feature}/${r.topic}: ${r.message}`));
       }
 
+      // Handle rows without features (reference-level status only)
+      for (const row of rowsWithStatusOnly) {
+        // Set reference-level curation status (use the first status if multiple)
+        const status = row.curationStatuses[0];
+        try {
+          await litguideCurationApi.setReferenceStatus(referenceData.reference_no, status);
+          refStatusSet = true;
+        } catch (err) {
+          errors.push(`Failed to set reference status: ${err.response?.data?.detail || err.message}`);
+          totalFailed++;
+        }
+      }
+
+      const messages = [];
       if (totalSuccessful > 0) {
-        setAssignmentSuccess(`Successfully added ${totalSuccessful} topic association(s)`);
+        messages.push(`${totalSuccessful} topic association(s) added`);
+      }
+      if (refStatusSet) {
+        messages.push('Reference curation status updated');
+      }
+
+      if (messages.length > 0) {
+        setAssignmentSuccess(messages.join('. '));
         // Reload reference data
         const data = await litguideCurationApi.getReferenceLiterature(
           referenceData.reference_no,
@@ -831,9 +898,15 @@ function LitGuideCurationPage() {
           literatureTopics: selectedTerms,
         };
       } else if (editModalType === 'curation_status') {
+        // Auto-remove "High Priority" when a "Done:" status is added
+        let finalStatuses = selectedTerms;
+        const hasDoneStatus = selectedTerms.some((s) => s.toLowerCase().startsWith('done'));
+        if (hasDoneStatus) {
+          finalStatuses = selectedTerms.filter((s) => s !== 'High Priority');
+        }
         newRows[editModalRowIndex] = {
           ...newRows[editModalRowIndex],
-          curationStatuses: selectedTerms,
+          curationStatuses: finalStatuses,
         };
       }
       return newRows;
@@ -1286,23 +1359,6 @@ function LitGuideCurationPage() {
               ) : (
                 <p style={styles.noAbstract}>No abstract available.</p>
               )}
-              <div style={styles.curationStatusRow}>
-                <strong>Curation Status:</strong>{' '}
-                <select
-                  value={referenceData.curation_status || ''}
-                  onChange={(e) => {
-                    if (e.target.value) {
-                      handleSetStatus(referenceData.reference_no, e.target.value);
-                    }
-                  }}
-                  style={styles.statusSelectInline}
-                >
-                  <option value="">Not yet curated</option>
-                  {statuses.map((s) => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
-                </select>
-              </div>
             </div>
           </div>
 
@@ -1841,15 +1897,19 @@ function LitGuideCurationPage() {
           {currentOrganism && referenceData.other_organisms && Object.keys(referenceData.other_organisms).length > 0 && (
             <div style={styles.otherSpeciesSection}>
               <h3 style={styles.otherSpeciesHeader}>
-                Features from Other Species
+                Current Literature Guide Curation Topics to other species
               </h3>
+              <p style={{ fontSize: '0.9em', color: '#666', marginBottom: '10px' }}>
+                (Click on the Species name to curate this reference for a different species)
+              </p>
 
               <table style={styles.table}>
                 <thead>
                   <tr>
                     <th style={styles.th}>Species</th>
                     <th style={styles.th}>Features</th>
-                    <th style={styles.th}>Topics</th>
+                    <th style={styles.th}>Literature Topics</th>
+                    <th style={styles.th}>Curation Status</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1873,8 +1933,16 @@ function LitGuideCurationPage() {
                         ))}
                       </td>
                       <td style={styles.td}>
-                        {/* Collect unique topics from all features */}
-                        {[...new Set(orgData.features.flatMap(f => f.topics.map(t => t.topic)))].join(', ')}
+                        {/* Literature topics from all features */}
+                        {[...new Set(orgData.features.flatMap(f =>
+                          f.topics.filter(t => t.property_type === 'literature_topic').map(t => t.topic)
+                        ))].join(', ') || '-'}
+                      </td>
+                      <td style={styles.td}>
+                        {/* Curation statuses from all features */}
+                        {[...new Set(orgData.features.flatMap(f =>
+                          f.topics.filter(t => t.property_type === 'curation_status').map(t => t.topic)
+                        ))].join(', ') || '-'}
                       </td>
                     </tr>
                   ))}
