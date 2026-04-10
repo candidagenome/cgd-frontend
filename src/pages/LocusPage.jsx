@@ -135,6 +135,7 @@ function LocusPage() {
             error={errors.goDetails}
             selectedOrganism={selectedOrganism}
             onOrganismChange={setSelectedOrganism}
+            orthologOrganisms={orthologOrganisms}
           />
         );
 
@@ -146,6 +147,7 @@ function LocusPage() {
             error={errors.phenotypeDetails}
             selectedOrganism={selectedOrganism}
             onOrganismChange={setSelectedOrganism}
+            orthologOrganisms={orthologOrganisms}
           />
         );
 
@@ -157,6 +159,7 @@ function LocusPage() {
             error={errors.proteinDetails}
             selectedOrganism={selectedOrganism}
             onOrganismChange={setSelectedOrganism}
+            orthologOrganisms={orthologOrganisms}
           />
         );
 
@@ -180,6 +183,7 @@ function LocusPage() {
             error={errors.sequenceDetails}
             selectedOrganism={selectedOrganism}
             onOrganismChange={setSelectedOrganism}
+            orthologOrganisms={orthologOrganisms}
           />
         );
 
@@ -192,6 +196,7 @@ function LocusPage() {
             selectedOrganism={selectedOrganism}
             onOrganismChange={setSelectedOrganism}
             locusName={name}
+            orthologOrganisms={orthologOrganisms}
           />
         );
 

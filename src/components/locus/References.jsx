@@ -20,7 +20,7 @@ const formatDate = (dateStr) => {
   }
 };
 
-function References({ data, loading, error, selectedOrganism, onOrganismChange, locusName }) {
+function References({ data, loading, error, selectedOrganism, onOrganismChange, locusName, orthologOrganisms = [] }) {
   const [collapsedYears, setCollapsedYears] = useState({});
   const [viewMode, setViewMode] = useState('summary'); // 'summary', 'list', 'grouped', 'topic'
   const [selectedTopic, setSelectedTopic] = useState(null);
@@ -646,6 +646,7 @@ function References({ data, loading, error, selectedOrganism, onOrganismChange, 
         selectedOrganism={currentOrganism}
         onOrganismChange={setCurrentOrganism}
         dataType="literature"
+        orthologOrganisms={orthologOrganisms}
       />
 
       <div className="literature-intro">

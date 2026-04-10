@@ -5,7 +5,7 @@ import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
 import { renderCitationItem } from '../../utils/formatCitation.jsx';
 import './LocusComponents.css';
 
-function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
+function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismChange, orthologOrganisms = [] }) {
   const [collapsedSections, setCollapsedSections] = useState({});
   const [quickFilter, setQuickFilter] = useState('');
 
@@ -268,6 +268,7 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
         selectedOrganism={selectedOrganism}
         onOrganismChange={onOrganismChange}
         dataType="phenotype"
+        orthologOrganisms={orthologOrganisms}
       />
 
       {/* Introductory text */}
