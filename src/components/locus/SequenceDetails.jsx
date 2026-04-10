@@ -39,7 +39,7 @@ const getSequenceOptions = (selectedOrganism, alleleLocations) => {
   return options;
 };
 
-function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
+function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismChange, orthologOrganisms = [] }) {
   const [expandedSequences, setExpandedSequences] = useState({});
   const [additionalSeqs, setAdditionalSeqs] = useState({});  // { type: { sequence, loading, error } }
   const [expandedAdditional, setExpandedAdditional] = useState({});
@@ -204,6 +204,7 @@ function SequenceDetails({ data, loading, error, selectedOrganism, onOrganismCha
         selectedOrganism={selectedOrganism}
         onOrganismChange={onOrganismChange}
         dataType="sequence"
+        orthologOrganisms={orthologOrganisms}
       />
 
       {/* Display data for selected organism */}

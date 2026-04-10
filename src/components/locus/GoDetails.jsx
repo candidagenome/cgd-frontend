@@ -58,7 +58,7 @@ const EVIDENCE_DESCRIPTIONS = {
   IEA: 'Inferred from Electronic Annotation',
 };
 
-function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
+function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange, orthologOrganisms = [] }) {
   const [collapsedSections, setCollapsedSections] = useState({});
   const [quickFilter, setQuickFilter] = useState('');
 
@@ -297,6 +297,7 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange })
         selectedOrganism={selectedOrganism}
         onOrganismChange={onOrganismChange}
         dataType="go"
+        orthologOrganisms={orthologOrganisms}
       />
 
       {/* Introductory text */}

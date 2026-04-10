@@ -144,7 +144,7 @@ function getDomainUrl(accession, source) {
   return null;
 }
 
-function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChange }) {
+function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChange, orthologOrganisms = [] }) {
   const { name: locusName } = useParams();
   const [showAlphaFold, setShowAlphaFold] = useState(false);
   const [showDomainViewer, setShowDomainViewer] = useState(true); // Show domain viewer by default
@@ -189,6 +189,7 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
         selectedOrganism={selectedOrganism}
         onOrganismChange={onOrganismChange}
         dataType="protein"
+        orthologOrganisms={orthologOrganisms}
       />
 
       {/* Display data for selected organism */}
