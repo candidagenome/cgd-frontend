@@ -234,11 +234,19 @@ function PatmatchSearchPage() {
                 {patternType === 'dna' ? (
                   <>
                     Use IUPAC codes: R (A/G), Y (C/T), S (G/C), W (A/T), K (G/T),
-                    M (A/C), N (any)
+                    M (A/C), N (any).
+                    <br />
+                    Use square brackets for options at a site, e.g., [AG] for A or G.
+                    <br />
+                    Use curly brackets for repetitions, e.g., GATTCA{'{0,2}'}TTG{'{0,1}'}A
                   </>
                 ) : (
                   <>
-                    Use standard amino acids. X = any residue, B = D/N, Z = E/Q
+                    Use standard amino acids. X = any residue, B = D/N, Z = E/Q.
+                    <br />
+                    Use square brackets for options at a site, e.g., [ST]PX[KR].
+                    <br />
+                    Use curly brackets for repetitions, e.g., A{'{0,2}'} for 0-2 alanines
                   </>
                 )}
               </p>
