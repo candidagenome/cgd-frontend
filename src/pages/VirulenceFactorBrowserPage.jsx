@@ -122,6 +122,14 @@ function VirulenceFactorBrowserPage() {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedOrganism, setSelectedOrganism] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedEvidenceTypes, setSelectedEvidenceTypes] = useState([]);
+
+  // Evidence type options
+  const EVIDENCE_TYPE_OPTIONS = [
+    { key: 'GO', label: 'GO Annotation', description: 'Gene Ontology terms' },
+    { key: 'PHE', label: 'Phenotype', description: 'Phenotype and virulence model evidence' },
+    { key: 'KW', label: 'Keyword', description: 'Gene pattern, headline, or literature matches' },
+  ];
 
   // Results state
   const [results, setResults] = useState(null);
@@ -218,6 +226,7 @@ function VirulenceFactorBrowserPage() {
         categories: selectedCategories,
         organisms: selectedOrganism ? [selectedOrganism] : [],
         search_term: searchTerm.trim() || undefined,
+        evidence_types: selectedEvidenceTypes.length > 0 ? selectedEvidenceTypes : undefined,
         page: 1,
         page_size: 1000, // Get all results for client-side filtering
       };
@@ -240,7 +249,7 @@ function VirulenceFactorBrowserPage() {
         setResultsLoading(false);
       }
     }
-  }, [selectedCategories, selectedOrganism, searchTerm]);
+  }, [selectedCategories, selectedOrganism, searchTerm, selectedEvidenceTypes]);
 
   // Debounce search
   useEffect(() => {
@@ -266,11 +275,21 @@ function VirulenceFactorBrowserPage() {
     setSelectedCategories([]);
   };
 
+  // Handle evidence type checkbox change
+  const handleEvidenceTypeChange = (typeKey, checked) => {
+    if (checked) {
+      setSelectedEvidenceTypes((prev) => [...prev, typeKey]);
+    } else {
+      setSelectedEvidenceTypes((prev) => prev.filter((t) => t !== typeKey));
+    }
+  };
+
   // Clear all filters
   const clearAllFilters = () => {
     setSelectedCategories([]);
     setSelectedOrganism('');
     setSearchTerm('');
+    setSelectedEvidenceTypes([]);
     setPendingQuickFilter('');
     setAppliedQuickFilter('');
   };
@@ -399,32 +418,111 @@ function VirulenceFactorBrowserPage() {
         },
       },
       {
-        headerName: 'Matched By',
-        field: 'match_reasons',
+        headerName: 'Confidence',
+        field: 'confidence_tier',
+        flex: 0.5,
+        minWidth: 90,
+        cellRenderer: (params) => {
+          const tier = params.data.confidence_tier || 'Low';
+          const score = params.data.confidence_score || 0;
+          const tierClass = tier.toLowerCase();
+          return (
+            <span
+              className={`confidence-badge confidence-${tierClass}`}
+              title={`Score: ${score}/20 - ${params.data.inclusion_reason || ''}`}
+            >
+              {tier}
+            </span>
+          );
+        },
+      },
+      {
+        headerName: 'Evidence',
+        field: 'direct_evidence',
         flex: 1.5,
         minWidth: 220,
         wrapText: true,
         cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
-        valueGetter: (params) => (params.data.match_reasons || []).join('; '),
+        valueGetter: (params) => {
+          const direct = params.data.direct_evidence || [];
+          const indirect = params.data.indirect_evidence || [];
+          return [...direct, ...indirect].join('; ');
+        },
         cellRenderer: (params) => {
-          const reasons = params.data.match_reasons || [];
-          if (reasons.length === 0) return '-';
+          const directEvidence = params.data.direct_evidence || [];
+          const indirectEvidence = params.data.indirect_evidence || [];
+
+          if (directEvidence.length === 0 && indirectEvidence.length === 0) {
+            return '-';
+          }
+
           return (
-            <div className="match-reasons-cell">
-              {reasons.map((reason, idx) => {
-                const { type, label, tooltip } = categorizeMatchReason(reason);
-                return (
-                  <div key={idx} className={`match-reason match-reason-${type}`}>
-                    <span
-                      className={`match-type-badge badge-${type}`}
-                      title={tooltip}
+            <div className="evidence-split-cell">
+              {directEvidence.length > 0 && (
+                <div className="evidence-group evidence-direct">
+                  <span className="evidence-group-label" title="Direct virulence evidence">Direct</span>
+                  {directEvidence.map((reason, idx) => {
+                    const { type, label, tooltip } = categorizeMatchReason(reason);
+                    return (
+                      <div key={`d-${idx}`} className={`match-reason match-reason-${type}`}>
+                        <span className={`match-type-badge badge-${type}`} title={tooltip}>{label}</span>
+                        <span className="match-reason-text">{reason}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+              {indirectEvidence.length > 0 && (
+                <div className="evidence-group evidence-indirect">
+                  <span className="evidence-group-label" title="Indirect/supporting evidence">Indirect</span>
+                  {indirectEvidence.map((reason, idx) => {
+                    const { type, label, tooltip } = categorizeMatchReason(reason);
+                    return (
+                      <div key={`i-${idx}`} className={`match-reason match-reason-${type}`}>
+                        <span className={`match-type-badge badge-${type}`} title={tooltip}>{label}</span>
+                        <span className="match-reason-text">{reason}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        },
+      },
+      {
+        headerName: 'Papers',
+        field: 'paper_count',
+        flex: 0.5,
+        minWidth: 80,
+        cellRenderer: (params) => {
+          const count = params.data.paper_count || 0;
+          const pmids = params.data.pmids || [];
+
+          if (count === 0) return '-';
+
+          return (
+            <div className="papers-cell">
+              <span className="paper-count">{count}</span>
+              {pmids.length > 0 && (
+                <div className="pmid-links">
+                  {pmids.slice(0, 3).map((pmid) => (
+                    <a
+                      key={pmid}
+                      href={`https://pubmed.ncbi.nlm.nih.gov/${pmid}/`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="pmid-link"
+                      title={`PubMed ${pmid}`}
                     >
-                      {label}
-                    </span>
-                    <span className="match-reason-text">{reason}</span>
-                  </div>
-                );
-              })}
+                      {pmid}
+                    </a>
+                  ))}
+                  {pmids.length > 3 && (
+                    <span className="pmid-more">+{pmids.length - 3} more</span>
+                  )}
+                </div>
+              )}
             </div>
           );
         },
@@ -510,7 +608,7 @@ function VirulenceFactorBrowserPage() {
     );
   }
 
-  const hasFilters = selectedCategories.length > 0 || selectedOrganism || searchTerm;
+  const hasFilters = selectedCategories.length > 0 || selectedOrganism || searchTerm || selectedEvidenceTypes.length > 0;
   const hasResults = results?.items && results.items.length > 0;
 
   return (
@@ -580,6 +678,23 @@ function VirulenceFactorBrowserPage() {
             />
           </div>
 
+          <div className="filter-section">
+            <h3>Evidence Type</h3>
+            <div className="evidence-type-list">
+              {EVIDENCE_TYPE_OPTIONS.map((et) => (
+                <label key={et.key} className="evidence-type-item" title={et.description}>
+                  <input
+                    type="checkbox"
+                    checked={selectedEvidenceTypes.includes(et.key)}
+                    onChange={(e) => handleEvidenceTypeChange(et.key, e.target.checked)}
+                  />
+                  <span className={`evidence-badge badge-${et.key.toLowerCase()}`}>{et.key}</span>
+                  <span className="evidence-label">{et.label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
           <div className="filter-actions">
             <button
               type="button"
@@ -637,6 +752,18 @@ function VirulenceFactorBrowserPage() {
                   </button>
                 </span>
               )}
+              {selectedEvidenceTypes.map((et) => (
+                <span key={et} className="filter-chip">
+                  Evidence: {et}
+                  <button
+                    type="button"
+                    onClick={() => handleEvidenceTypeChange(et, false)}
+                    className="chip-remove"
+                  >
+                    &times;
+                  </button>
+                </span>
+              ))}
             </div>
           )}
 

@@ -580,6 +580,158 @@
   flex: 1;
 }
 
+/* ===========================================
+   EVIDENCE TYPE FILTER
+   =========================================== */
+
+.evidence-type-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.evidence-type-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 4px 0;
+  font-size: 0.9rem;
+}
+
+.evidence-type-item:hover {
+  background: #e8f4fd;
+  margin: 0 -8px;
+  padding: 4px 8px;
+  border-radius: 3px;
+}
+
+.evidence-type-item input[type="checkbox"] {
+  margin: 0;
+  cursor: pointer;
+}
+
+.evidence-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.evidence-label {
+  color: #333;
+}
+
+/* ===========================================
+   CONFIDENCE BADGES
+   =========================================== */
+
+.confidence-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.confidence-high {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+}
+
+.confidence-medium {
+  background: #fff3e0;
+  color: #e65100;
+  border: 1px solid #ffcc80;
+}
+
+.confidence-low {
+  background: #fafafa;
+  color: #757575;
+  border: 1px solid #e0e0e0;
+}
+
+/* ===========================================
+   PAPERS CELL
+   =========================================== */
+
+.papers-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.paper-count {
+  font-weight: 600;
+  color: #333;
+}
+
+.pmid-links {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pmid-link {
+  font-size: 0.75rem;
+  color: #0066cc;
+  text-decoration: none;
+}
+
+.pmid-link:hover {
+  text-decoration: underline;
+}
+
+.pmid-more {
+  font-size: 0.75rem;
+  color: #888;
+  font-style: italic;
+}
+
+/* ===========================================
+   EVIDENCE SPLIT (DIRECT/INDIRECT)
+   =========================================== */
+
+.evidence-split-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.evidence-group {
+  padding: 4px 0;
+}
+
+.evidence-group-label {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  margin-bottom: 4px;
+  cursor: help;
+}
+
+.evidence-direct .evidence-group-label {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.evidence-indirect .evidence-group-label {
+  background: #f5f5f5;
+  color: #757575;
+}
+
+.evidence-indirect .match-reason {
+  opacity: 0.85;
+}
+
 /* Search Highlighting */
 .search-highlight {
   background: #fff59d;
