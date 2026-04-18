@@ -548,9 +548,9 @@ function VirulenceFactorBrowserPage() {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="pmid-link"
-                      title={`PMID: ${pmid}`}
+                      title={`View reference for PMID: ${pmid}`}
                     >
-                      {pmid}
+                      PMID:{pmid}
                     </a>
                   ))}
                   {!isExpanded && moreAvailable > 0 && (

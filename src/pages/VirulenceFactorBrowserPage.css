@@ -3,7 +3,7 @@
    =========================================== */
 
 .virulence-factor-browser-page {
-  width: 1200px;
+  width: 1600px;
   max-width: 100%;
   margin: 0 auto;
   padding: 20px;
@@ -47,7 +47,7 @@
 
 /* Filter Sidebar */
 .filter-sidebar {
-  width: 260px;
+  width: 220px;
   flex-shrink: 0;
   background: #f8f9fa;
   border: 1px solid #e0e0e0;
