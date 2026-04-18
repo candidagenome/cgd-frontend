@@ -374,18 +374,38 @@ function VirulenceFactorBrowserPage() {
       {
         headerName: 'Gene',
         field: 'gene',
-        flex: 1,
-        minWidth: 140,
+        flex: 1.4,
+        minWidth: 280,
         valueGetter: (params) => formatLocusName(params.data),
-        cellRenderer: (params) => (
-          <Link 
-            to={`/locus/${params.data.feature_name || params.data.gene_name}`} 
-            className="gene-link"
-            title={params.data.summary_full || params.data.summary || ''}
-          >
-            {formatLocusName(params.data)}
-          </Link>
-        ),
+        cellRenderer: (params) => {
+          const importanceLevel = params.data.importance_level || 'low';
+          const importanceLabel = params.data.importance_label || '';
+          // Icon based on importance level
+          const importanceIcon = importanceLevel === 'high' ? '⭐' : importanceLevel === 'medium' ? '🔬' : '';
+
+          return (
+            <div className="gene-card">
+              <div className="gene-card-header">
+                <Link to={`/locus/${params.data.feature_name || params.data.gene_name}`} className="gene-link">
+                  {formatLocusName(params.data)}
+                </Link>
+                {importanceIcon && (
+                  <span
+                    className={`importance-icon importance-${importanceLevel}`}
+                    title={`${importanceLabel}`}
+                  >
+                    {importanceIcon}
+                  </span>
+                )}
+              </div>
+              {params.data.summary && (
+                <div className="gene-summary">
+                  {params.data.summary}
+                </div>
+              )}
+            </div>
+          );
+        },
       },
       {
         headerName: 'Organism',
@@ -427,15 +447,13 @@ function VirulenceFactorBrowserPage() {
       {
         headerName: 'Confidence',
         field: 'confidence_tier',
-        flex: 0.7,
-        minWidth: 140,
+        flex: 0.5,
+        minWidth: 90,
         cellRenderer: (params) => {
           const tier = params.data.confidence_tier || 'Low';
           const score = params.data.confidence_score || 0;
           const tierClass = tier.toLowerCase();
           const breakdown = params.data.evidence_breakdown || {};
-          const importanceLevel = params.data.importance_level || 'low';
-          const importanceLabel = params.data.importance_label || '';
 
           // Build detailed tooltip from evidence breakdown
           const breakdownParts = [];
@@ -459,26 +477,13 @@ function VirulenceFactorBrowserPage() {
             ? `Score: ${score}/20\n${breakdownParts.join('\n')}`
             : `Score: ${score}/20`;
 
-          // Importance icon based on level
-          const importanceIcon = importanceLevel === 'high' ? '⭐' : importanceLevel === 'medium' ? '🔬' : '';
-
           return (
-            <div className="confidence-cell">
-              <span
-                className={`confidence-badge confidence-${tierClass}`}
-                title={tooltipText}
-              >
-                {tier}
-              </span>
-              {importanceLabel && (
-                <span 
-                  className={`importance-badge importance-${importanceLevel}`}
-                  title={`Importance: ${importanceLevel.toUpperCase()}\n${importanceLabel}`}
-                >
-                  {importanceIcon} {importanceLabel}
-                </span>
-              )}
-            </div>
+            <span
+              className={`confidence-badge confidence-${tierClass}`}
+              title={tooltipText}
+            >
+              {tier}
+            </span>
           );
         },
       },
@@ -609,24 +614,6 @@ function VirulenceFactorBrowserPage() {
               )}
             </div>
           );
-        },
-      },
-      {
-        headerName: 'Description',
-        field: 'summary',
-        flex: 1.6,
-        minWidth: 150,
-        wrapText: true,
-        cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
-        valueGetter: (params) => params.data.summary || params.data.description || '-',
-        cellRenderer: (params) => {
-          const desc = params.data.summary || params.data.description || '-';
-          const highlightTerm = searchTerm || appliedQuickFilter;
-
-          if (highlightTerm && desc !== '-') {
-            return <SearchHighlight text={desc} searchTerm={highlightTerm} />;
-          }
-          return desc;
         },
       },
     ],

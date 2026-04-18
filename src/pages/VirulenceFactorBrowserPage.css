@@ -453,22 +453,45 @@
   text-decoration: underline;
 }
 
-/* Gene Cell with Summary */
-.gene-cell {
+/* Gene Card - Knowledge Card Style */
+.gene-card {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
+}
+
+.gene-card-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gene-card-header .gene-link {
+  font-size: 1rem;
+}
+
+/* Importance Icon next to gene name */
+.importance-icon {
+  font-size: 0.9rem;
+  cursor: help;
+}
+
+.importance-icon.importance-high {
+  filter: drop-shadow(0 0 2px rgba(250, 204, 21, 0.5));
+}
+
+.importance-icon.importance-medium {
+  opacity: 0.9;
 }
 
 .gene-summary {
-  font-size: 0.8rem;
-  color: #666;
-  line-height: 1.4;
+  font-size: 0.82rem;
+  color: #555;
+  line-height: 1.45;
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
-  cursor: help;
 }
 
 /* Categories Cell */
