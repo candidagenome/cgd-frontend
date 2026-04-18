@@ -548,6 +548,41 @@
   max-width: 100%;
 }
 
+/* Orthologs Display */
+.gene-orthologs {
+  font-size: 0.78rem;
+  color: #666;
+  margin-top: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+
+.gene-orthologs .orthologs-label {
+  color: #888;
+  font-weight: 500;
+}
+
+.gene-orthologs .orthologs-species {
+  color: #555;
+  font-style: italic;
+}
+
+.gene-orthologs .synteny-link {
+  color: #1976d2;
+  text-decoration: none;
+  font-size: 0.75rem;
+  margin-left: 6px;
+  opacity: 0.85;
+  transition: opacity 0.15s ease;
+}
+
+.gene-orthologs .synteny-link:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
 /* Categories Cell */
 .categories-cell {
   display: flex;

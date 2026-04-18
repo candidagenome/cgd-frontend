@@ -74,6 +74,37 @@ const formatLocusName = (result) => {
   return result.feature_name || result.gene_name || '-';
 };
 
+// Format ortholog display with short species abbreviation
+const formatOrthologDisplay = (orthologs) => {
+  if (!orthologs || orthologs.length === 0) return null;
+
+  // Sort by organism_abbrev for consistent display
+  const sorted = [...orthologs].sort((a, b) =>
+    (a.organism_abbrev || '').localeCompare(b.organism_abbrev || '')
+  );
+
+  // Create short species abbreviation (e.g., "Candida auris B8441" -> "C. auris")
+  const getShortSpecies = (org) => {
+    if (!org.organism_name) return org.organism_abbrev || '';
+    const parts = org.organism_name.split(' ');
+    if (parts.length >= 2) {
+      return `${parts[0].charAt(0)}. ${parts[1]}`;
+    }
+    return org.organism_abbrev || org.organism_name;
+  };
+
+  // Show first 2 species, then "+N more"
+  const displaySpecies = sorted.slice(0, 2).map(getShortSpecies);
+  const remaining = sorted.length - 2;
+
+  let text = displaySpecies.join(', ');
+  if (remaining > 0) {
+    text += `, +${remaining} more`;
+  }
+
+  return { text, count: sorted.length };
+};
+
 // SearchHighlight component - highlights all occurrences of search term (case-insensitive)
 const SearchHighlight = ({ text, searchTerm }) => {
   if (!searchTerm || !text) {
@@ -472,6 +503,25 @@ function VirulenceFactorBrowserPage() {
                   {params.data.summary}
                 </div>
               )}
+              {(() => {
+                const orthInfo = formatOrthologDisplay(params.data.orthologs);
+                if (!orthInfo) return null;
+                return (
+                  <div className="gene-orthologs">
+                    <span className="orthologs-label">Orthologs:</span>{' '}
+                    <span className="orthologs-species">{orthInfo.text}</span>
+                    <a
+                      href={`/synteny-viewer?gene=${params.data.feature_name}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="synteny-link"
+                      title={`View ${orthInfo.count} orthologs in synteny viewer`}
+                    >
+                      View in synteny viewer →
+                    </a>
+                  </div>
+                );
+              })()}
             </div>
           );
         },
