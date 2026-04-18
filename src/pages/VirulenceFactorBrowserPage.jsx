@@ -374,13 +374,20 @@ function VirulenceFactorBrowserPage() {
       {
         headerName: 'Gene',
         field: 'gene',
-        flex: 1,
-        minWidth: 140,
+        flex: 1.2,
+        minWidth: 180,
         valueGetter: (params) => formatLocusName(params.data),
         cellRenderer: (params) => (
-          <Link to={`/locus/${params.data.feature_name || params.data.gene_name}`} className="gene-link">
-            {formatLocusName(params.data)}
-          </Link>
+          <div className="gene-cell">
+            <Link to={`/locus/${params.data.feature_name || params.data.gene_name}`} className="gene-link">
+              {formatLocusName(params.data)}
+            </Link>
+            {params.data.summary && (
+              <div className="gene-summary" title={params.data.summary}>
+                {params.data.summary}
+              </div>
+            )}
+          </div>
         ),
       },
       {
@@ -423,19 +430,64 @@ function VirulenceFactorBrowserPage() {
       {
         headerName: 'Confidence',
         field: 'confidence_tier',
-        flex: 0.5,
-        minWidth: 90,
+        flex: 0.6,
+        minWidth: 110,
         cellRenderer: (params) => {
           const tier = params.data.confidence_tier || 'Low';
           const score = params.data.confidence_score || 0;
           const tierClass = tier.toLowerCase();
+          const breakdown = params.data.evidence_breakdown || {};
+
+          // Build detailed tooltip from evidence breakdown
+          const breakdownParts = [];
+          if (breakdown.virulence_models > 0) {
+            breakdownParts.push(`Virulence models: ${breakdown.virulence_models}`);
+          }
+          if (breakdown.go_annotations > 0) {
+            breakdownParts.push(`GO annotations: ${breakdown.go_annotations}`);
+          }
+          if (breakdown.phenotypes > 0) {
+            breakdownParts.push(`Phenotypes: ${breakdown.phenotypes}`);
+          }
+          if (breakdown.keyword_matches > 0) {
+            breakdownParts.push(`Keyword matches: ${breakdown.keyword_matches}`);
+          }
+          if (breakdown.papers > 0) {
+            breakdownParts.push(`Papers: ${breakdown.papers}`);
+          }
+
+          const tooltipText = breakdownParts.length > 0
+            ? `Score: ${score}/20\n${breakdownParts.join('\n')}`
+            : `Score: ${score}/20`;
+
           return (
-            <span
-              className={`confidence-badge confidence-${tierClass}`}
-              title={`Score: ${score}/20 - ${params.data.inclusion_reason || ''}`}
-            >
-              {tier}
-            </span>
+            <div className="confidence-cell">
+              <span
+                className={`confidence-badge confidence-${tierClass}`}
+                title={tooltipText}
+              >
+                {tier}
+              </span>
+              {breakdownParts.length > 0 && (
+                <div className="evidence-counts">
+                  {breakdown.virulence_models > 0 && (
+                    <span className="evidence-count-item" title="Virulence models">
+                      <span className="count-icon">V</span>{breakdown.virulence_models}
+                    </span>
+                  )}
+                  {breakdown.go_annotations > 0 && (
+                    <span className="evidence-count-item" title="GO annotations">
+                      <span className="count-icon">G</span>{breakdown.go_annotations}
+                    </span>
+                  )}
+                  {breakdown.phenotypes > 0 && (
+                    <span className="evidence-count-item" title="Phenotypes">
+                      <span className="count-icon">P</span>{breakdown.phenotypes}
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
           );
         },
       },
