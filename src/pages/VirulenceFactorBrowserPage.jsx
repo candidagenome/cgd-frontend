@@ -506,9 +506,10 @@ function VirulenceFactorBrowserPage() {
 
           if (count === 0) return '-';
 
-          // Show 3 by default, all when expanded
+          // Show 3 by default, all available when expanded
           const visiblePmids = isExpanded ? pmids : pmids.slice(0, 3);
-          const hiddenCount = count - visiblePmids.length;
+          // Calculate how many more PMIDs we can show (not total papers)
+          const moreAvailable = pmids.length - 3;
 
           const toggleExpand = (e) => {
             e.preventDefault();
@@ -530,32 +531,34 @@ function VirulenceFactorBrowserPage() {
               {pmids.length > 0 && (
                 <div className="pmid-links">
                   {visiblePmids.map((pmid) => (
-                    <Link
+                    <a
                       key={pmid}
-                      to={`/reference/${pmid}`}
+                      href={`/reference/${pmid}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="pmid-link"
                       title={`PMID: ${pmid}`}
                     >
                       {pmid}
-                    </Link>
+                    </a>
                   ))}
-                  {!isExpanded && hiddenCount > 0 && (
-                    <button
+                  {!isExpanded && moreAvailable > 0 && (
+                    <span
                       className="pmid-more-btn"
                       onClick={toggleExpand}
-                      title={`Show ${Math.min(hiddenCount, pmids.length - 3)} more PMIDs`}
+                      title={`Show ${moreAvailable} more PMIDs`}
                     >
-                      +{Math.min(hiddenCount, pmids.length - 3)} more
-                    </button>
+                      +{moreAvailable} more
+                    </span>
                   )}
                   {isExpanded && pmids.length > 3 && (
-                    <button
+                    <span
                       className="pmid-more-btn"
                       onClick={toggleExpand}
                       title="Show less"
                     >
                       show less
-                    </button>
+                    </span>
                   )}
                 </div>
               )}
@@ -582,7 +585,7 @@ function VirulenceFactorBrowserPage() {
         },
       },
     ],
-    [categories, searchTerm, appliedQuickFilter]
+    [categories, searchTerm, appliedQuickFilter, expandedPmidRows]
   );
 
   // Default column properties
