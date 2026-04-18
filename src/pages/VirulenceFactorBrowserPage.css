@@ -525,6 +525,18 @@
   border: 1px solid #3b82f6;
 }
 
+.gene-card-header .alphafold-link {
+  margin-left: 6px;
+  font-size: 0.85rem;
+  text-decoration: none;
+  opacity: 0.7;
+  transition: opacity 0.15s ease;
+}
+
+.gene-card-header .alphafold-link:hover {
+  opacity: 1;
+}
+
 .gene-summary {
   font-size: 0.82rem;
   color: #555;

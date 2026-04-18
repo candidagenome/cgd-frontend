@@ -455,6 +455,17 @@ function VirulenceFactorBrowserPage() {
                     {badgeText}
                   </span>
                 )}
+                {params.data.alphafold_url && (
+                  <a
+                    href={params.data.alphafold_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="alphafold-link"
+                    title={`View predicted structure (UniProt: ${params.data.uniprot_id})`}
+                  >
+                    🔬
+                  </a>
+                )}
               </div>
               {params.data.summary && (
                 <div className="gene-summary">
