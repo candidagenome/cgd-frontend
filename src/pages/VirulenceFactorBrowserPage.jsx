@@ -380,8 +380,8 @@ function VirulenceFactorBrowserPage() {
         cellRenderer: (params) => {
           const importanceLevel = params.data.importance_level || 'low';
           const importanceLabel = params.data.importance_label || '';
-          // Icon based on importance level
-          const importanceIcon = importanceLevel === 'high' ? '⭐' : importanceLevel === 'medium' ? '🔬' : '';
+          // Short text badge based on importance level
+          const badgeText = importanceLevel === 'high' ? 'In vivo' : importanceLevel === 'medium' ? 'Multi-study' : '';
 
           return (
             <div className="gene-card">
@@ -389,12 +389,12 @@ function VirulenceFactorBrowserPage() {
                 <Link to={`/locus/${params.data.feature_name || params.data.gene_name}`} className="gene-link">
                   {formatLocusName(params.data)}
                 </Link>
-                {importanceIcon && (
+                {badgeText && (
                   <span
-                    className={`importance-icon importance-${importanceLevel}`}
-                    title={`${importanceLabel}`}
+                    className={`importance-badge importance-${importanceLevel}`}
+                    title={importanceLabel}
                   >
-                    {importanceIcon}
+                    {badgeText}
                   </span>
                 )}
               </div>

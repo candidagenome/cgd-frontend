@@ -470,18 +470,27 @@
   font-size: 1rem;
 }
 
-/* Importance Icon next to gene name */
-.importance-icon {
-  font-size: 0.9rem;
+/* Importance Badge next to gene name */
+.gene-card-header .importance-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 3px;
   cursor: help;
+  white-space: nowrap;
 }
 
-.importance-icon.importance-high {
-  filter: drop-shadow(0 0 2px rgba(250, 204, 21, 0.5));
+.gene-card-header .importance-badge.importance-high {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #92400e;
+  border: 1px solid #f59e0b;
 }
 
-.importance-icon.importance-medium {
-  opacity: 0.9;
+.gene-card-header .importance-badge.importance-medium {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  color: #1e40af;
+  border: 1px solid #3b82f6;
 }
 
 .gene-summary {
