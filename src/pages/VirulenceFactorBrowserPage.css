@@ -304,9 +304,9 @@
   color: #2e7d32;
 }
 
-.tier-item.tier-annotations {
-  background: #f3e5f5;
-  color: #7b1fa2;
+.tier-item.tier-go {
+  background: #e3f2fd;
+  color: #1565c0;
 }
 
 .tier-sub {

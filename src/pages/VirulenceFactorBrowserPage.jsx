@@ -379,28 +379,28 @@ function VirulenceFactorBrowserPage() {
   }, [results?.items, appliedQuickFilter]);
 
   // Compute tier counts for results summary
-  // Separates true experimental evidence from annotation-supported
   const tierCounts = useMemo(() => {
     if (!filteredResults || filteredResults.length === 0) {
-      return { total: 0, withExperimental: 0, withAnnotations: 0, validatedInVivo: 0 };
+      return { total: 0, withExperimental: 0, withGO: 0, validatedInVivo: 0 };
     }
 
     let withExperimental = 0;
-    let withAnnotations = 0;
+    let withGO = 0;
     let validatedInVivo = 0;
 
     filteredResults.forEach((item) => {
       const directEvidence = item.direct_evidence || [];
+      const indirectEvidence = item.indirect_evidence || [];
+      const allEvidence = [...directEvidence, ...indirectEvidence];
 
-      // Count true experimental evidence (virulence model or phenotype, NOT GO/KW annotations)
-      const hasExperimental = directEvidence.some((e) => {
+      // Count genes with experimental evidence (virulence model or phenotype)
+      const hasExperimental = allEvidence.some((e) => {
         const eLower = e.toLowerCase();
-        return eLower.startsWith('virulence model:') ||
-               (eLower.startsWith('phenotype:') && !eLower.includes('go:'));
+        return eLower.startsWith('virulence model:') || eLower.startsWith('phenotype:');
       });
 
-      // Count annotation-supported (GO terms in direct evidence)
-      const hasAnnotations = directEvidence.some((e) => {
+      // Count genes with GO annotations (in either direct or indirect)
+      const hasGO = allEvidence.some((e) => {
         const eLower = e.toLowerCase();
         return eLower.startsWith('go:');
       });
@@ -408,8 +408,8 @@ function VirulenceFactorBrowserPage() {
       if (hasExperimental) {
         withExperimental++;
       }
-      if (hasAnnotations && !hasExperimental) {
-        withAnnotations++;
+      if (hasGO) {
+        withGO++;
       }
 
       // Count genes validated in vivo (high importance = virulence model evidence)
@@ -421,7 +421,7 @@ function VirulenceFactorBrowserPage() {
     return {
       total: filteredResults.length,
       withExperimental,
-      withAnnotations,
+      withGO,
       validatedInVivo,
     };
   }, [filteredResults]);
@@ -941,7 +941,7 @@ function VirulenceFactorBrowserPage() {
                   <div className="results-tiers">
                     {tierCounts.withExperimental > 0 && (
                       <span className="tier-item tier-experimental">
-                        <strong>{tierCounts.withExperimental}</strong> with experimental evidence
+                        <strong>{tierCounts.withExperimental}</strong> with phenotype/model evidence
                         {tierCounts.validatedInVivo > 0 && (
                           <span className="tier-sub">
                             ({tierCounts.validatedInVivo} in vivo)
@@ -949,9 +949,9 @@ function VirulenceFactorBrowserPage() {
                         )}
                       </span>
                     )}
-                    {tierCounts.withAnnotations > 0 && (
-                      <span className="tier-item tier-annotations">
-                        <strong>{tierCounts.withAnnotations}</strong> annotation-supported
+                    {tierCounts.withGO > 0 && (
+                      <span className="tier-item tier-go">
+                        <strong>{tierCounts.withGO}</strong> with GO annotations
                       </span>
                     )}
                   </div>
