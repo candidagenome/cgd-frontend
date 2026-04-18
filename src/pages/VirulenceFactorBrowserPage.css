@@ -299,15 +299,21 @@
   border-radius: 12px;
 }
 
-.tier-item.tier-direct {
+.tier-item.tier-experimental {
   background: #e8f5e9;
   color: #2e7d32;
 }
 
-.tier-item.tier-invivo {
-  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+.tier-item.tier-annotations {
+  background: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.tier-sub {
+  font-size: 0.8rem;
+  margin-left: 4px;
   color: #92400e;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .results-summary-right {

@@ -379,19 +379,39 @@ function VirulenceFactorBrowserPage() {
   }, [results?.items, appliedQuickFilter]);
 
   // Compute tier counts for results summary
+  // Separates true experimental evidence from annotation-supported
   const tierCounts = useMemo(() => {
     if (!filteredResults || filteredResults.length === 0) {
-      return { total: 0, withDirectEvidence: 0, validatedInVivo: 0 };
+      return { total: 0, withExperimental: 0, withAnnotations: 0, validatedInVivo: 0 };
     }
 
-    let withDirectEvidence = 0;
+    let withExperimental = 0;
+    let withAnnotations = 0;
     let validatedInVivo = 0;
 
     filteredResults.forEach((item) => {
-      // Count genes with direct evidence
-      if (item.direct_evidence && item.direct_evidence.length > 0) {
-        withDirectEvidence++;
+      const directEvidence = item.direct_evidence || [];
+
+      // Count true experimental evidence (virulence model or phenotype, NOT GO/KW annotations)
+      const hasExperimental = directEvidence.some((e) => {
+        const eLower = e.toLowerCase();
+        return eLower.startsWith('virulence model:') ||
+               (eLower.startsWith('phenotype:') && !eLower.includes('go:'));
+      });
+
+      // Count annotation-supported (GO terms in direct evidence)
+      const hasAnnotations = directEvidence.some((e) => {
+        const eLower = e.toLowerCase();
+        return eLower.startsWith('go:');
+      });
+
+      if (hasExperimental) {
+        withExperimental++;
       }
+      if (hasAnnotations && !hasExperimental) {
+        withAnnotations++;
+      }
+
       // Count genes validated in vivo (high importance = virulence model evidence)
       if (item.importance_level === 'high') {
         validatedInVivo++;
@@ -400,7 +420,8 @@ function VirulenceFactorBrowserPage() {
 
     return {
       total: filteredResults.length,
-      withDirectEvidence,
+      withExperimental,
+      withAnnotations,
       validatedInVivo,
     };
   }, [filteredResults]);
@@ -918,14 +939,19 @@ function VirulenceFactorBrowserPage() {
                     Found <strong>{tierCounts.total}</strong> virulence-related gene{tierCounts.total !== 1 ? 's' : ''}
                   </div>
                   <div className="results-tiers">
-                    {tierCounts.withDirectEvidence > 0 && (
-                      <span className="tier-item tier-direct">
-                        <strong>{tierCounts.withDirectEvidence}</strong> with direct evidence
+                    {tierCounts.withExperimental > 0 && (
+                      <span className="tier-item tier-experimental">
+                        <strong>{tierCounts.withExperimental}</strong> with experimental evidence
+                        {tierCounts.validatedInVivo > 0 && (
+                          <span className="tier-sub">
+                            ({tierCounts.validatedInVivo} in vivo)
+                          </span>
+                        )}
                       </span>
                     )}
-                    {tierCounts.validatedInVivo > 0 && (
-                      <span className="tier-item tier-invivo">
-                        <strong>{tierCounts.validatedInVivo}</strong> validated in vivo
+                    {tierCounts.withAnnotations > 0 && (
+                      <span className="tier-item tier-annotations">
+                        <strong>{tierCounts.withAnnotations}</strong> annotation-supported
                       </span>
                     )}
                   </div>
