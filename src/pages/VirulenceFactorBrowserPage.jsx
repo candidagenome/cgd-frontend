@@ -374,20 +374,17 @@ function VirulenceFactorBrowserPage() {
       {
         headerName: 'Gene',
         field: 'gene',
-        flex: 1.2,
-        minWidth: 180,
+        flex: 1,
+        minWidth: 140,
         valueGetter: (params) => formatLocusName(params.data),
         cellRenderer: (params) => (
-          <div className="gene-cell">
-            <Link to={`/locus/${params.data.feature_name || params.data.gene_name}`} className="gene-link">
-              {formatLocusName(params.data)}
-            </Link>
-            {params.data.summary && (
-              <div className="gene-summary" title={params.data.summary}>
-                {params.data.summary}
-              </div>
-            )}
-          </div>
+          <Link 
+            to={`/locus/${params.data.feature_name || params.data.gene_name}`} 
+            className="gene-link"
+            title={params.data.summary_full || params.data.summary || ''}
+          >
+            {formatLocusName(params.data)}
+          </Link>
         ),
       },
       {
