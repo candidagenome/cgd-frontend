@@ -430,13 +430,15 @@ function VirulenceFactorBrowserPage() {
       {
         headerName: 'Confidence',
         field: 'confidence_tier',
-        flex: 0.6,
-        minWidth: 110,
+        flex: 0.7,
+        minWidth: 140,
         cellRenderer: (params) => {
           const tier = params.data.confidence_tier || 'Low';
           const score = params.data.confidence_score || 0;
           const tierClass = tier.toLowerCase();
           const breakdown = params.data.evidence_breakdown || {};
+          const importanceLevel = params.data.importance_level || 'low';
+          const importanceLabel = params.data.importance_label || '';
 
           // Build detailed tooltip from evidence breakdown
           const breakdownParts = [];
@@ -460,6 +462,9 @@ function VirulenceFactorBrowserPage() {
             ? `Score: ${score}/20\n${breakdownParts.join('\n')}`
             : `Score: ${score}/20`;
 
+          // Importance icon based on level
+          const importanceIcon = importanceLevel === 'high' ? '⭐' : importanceLevel === 'medium' ? '🔬' : '';
+
           return (
             <div className="confidence-cell">
               <span
@@ -468,24 +473,13 @@ function VirulenceFactorBrowserPage() {
               >
                 {tier}
               </span>
-              {breakdownParts.length > 0 && (
-                <div className="evidence-counts">
-                  {breakdown.virulence_models > 0 && (
-                    <span className="evidence-count-item" title="Virulence models">
-                      <span className="count-icon">V</span>{breakdown.virulence_models}
-                    </span>
-                  )}
-                  {breakdown.go_annotations > 0 && (
-                    <span className="evidence-count-item" title="GO annotations">
-                      <span className="count-icon">G</span>{breakdown.go_annotations}
-                    </span>
-                  )}
-                  {breakdown.phenotypes > 0 && (
-                    <span className="evidence-count-item" title="Phenotypes">
-                      <span className="count-icon">P</span>{breakdown.phenotypes}
-                    </span>
-                  )}
-                </div>
+              {importanceLabel && (
+                <span 
+                  className={`importance-badge importance-${importanceLevel}`}
+                  title={`Importance: ${importanceLevel.toUpperCase()}\n${importanceLabel}`}
+                >
+                  {importanceIcon} {importanceLabel}
+                </span>
               )}
             </div>
           );
