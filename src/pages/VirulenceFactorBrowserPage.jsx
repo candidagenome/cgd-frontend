@@ -941,7 +941,7 @@ function VirulenceFactorBrowserPage() {
                   <div className="results-tiers">
                     {tierCounts.withExperimental > 0 && (
                       <span className="tier-item tier-experimental">
-                        <strong>{tierCounts.withExperimental}</strong> with phenotype/model evidence
+                        <strong>{tierCounts.withExperimental}</strong> with experimental phenotype evidence
                         {tierCounts.validatedInVivo > 0 && (
                           <span className="tier-sub">
                             ({tierCounts.validatedInVivo} in vivo)
@@ -951,7 +951,7 @@ function VirulenceFactorBrowserPage() {
                     )}
                     {tierCounts.withGO > 0 && (
                       <span className="tier-item tier-go">
-                        <strong>{tierCounts.withGO}</strong> with GO annotations
+                        <strong>{tierCounts.withGO}</strong> supported by GO annotations
                       </span>
                     )}
                   </div>
