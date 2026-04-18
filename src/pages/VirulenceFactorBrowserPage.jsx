@@ -527,7 +527,18 @@ function VirulenceFactorBrowserPage() {
 
           return (
             <div className="papers-cell">
-              <span className="paper-count">{count}</span>
+              <div className="papers-header">
+                <span className="paper-count">{count}</span>
+                {isExpanded && pmids.length > 3 && (
+                  <span
+                    className="pmid-more-btn"
+                    onClick={toggleExpand}
+                    title="Show less"
+                  >
+                    show less
+                  </span>
+                )}
+              </div>
               {pmids.length > 0 && (
                 <div className="pmid-links">
                   {visiblePmids.map((pmid) => (
@@ -549,15 +560,6 @@ function VirulenceFactorBrowserPage() {
                       title={`Show ${moreAvailable} more PMIDs`}
                     >
                       +{moreAvailable} more
-                    </span>
-                  )}
-                  {isExpanded && pmids.length > 3 && (
-                    <span
-                      className="pmid-more-btn"
-                      onClick={toggleExpand}
-                      title="Show less"
-                    >
-                      show less
                     </span>
                   )}
                 </div>
