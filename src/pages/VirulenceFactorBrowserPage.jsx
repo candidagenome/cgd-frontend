@@ -496,8 +496,8 @@ function VirulenceFactorBrowserPage() {
       {
         headerName: 'Papers',
         field: 'paper_count',
-        flex: 0.5,
-        minWidth: 80,
+        flex: 0.7,
+        minWidth: 120,
         cellRenderer: (params) => {
           const count = params.data.paper_count || 0;
           const pmids = params.data.pmids || [];
@@ -571,8 +571,8 @@ function VirulenceFactorBrowserPage() {
       {
         headerName: 'Description',
         field: 'description',
-        flex: 2,
-        minWidth: 250,
+        flex: 1.8,
+        minWidth: 200,
         wrapText: true,
         cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
         valueGetter: (params) => params.data.description || '-',
