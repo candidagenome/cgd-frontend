@@ -529,10 +529,6 @@
   font-size: 0.82rem;
   color: #555;
   line-height: 1.45;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
   word-wrap: break-word;
   white-space: normal;
   max-width: 100%;
