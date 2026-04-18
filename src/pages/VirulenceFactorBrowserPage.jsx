@@ -231,7 +231,7 @@ function VirulenceFactorBrowserPage() {
         search_term: searchTerm.trim() || undefined,
         evidence_types: selectedEvidenceTypes.length > 0 ? selectedEvidenceTypes : undefined,
         page: 1,
-        page_size: 1000, // Get all results for client-side filtering
+        page_size: 5000, // Get all results for client-side filtering
       };
 
       const data = await virulenceFactorApi.getFactors(params);
@@ -244,7 +244,17 @@ function VirulenceFactorBrowserPage() {
       // Only update error state if this is still the latest request
       if (thisRequestId === requestCounterRef.current) {
         console.error('Failed to fetch virulence factors:', err);
-        setResultsError(err.response?.data?.detail || err.message || 'Search failed');
+        // Handle Pydantic validation errors (detail can be array of objects)
+        let errorMsg = 'Search failed';
+        const detail = err.response?.data?.detail;
+        if (typeof detail === 'string') {
+          errorMsg = detail;
+        } else if (Array.isArray(detail) && detail.length > 0) {
+          errorMsg = detail.map((e) => e.msg || JSON.stringify(e)).join('; ');
+        } else if (err.message) {
+          errorMsg = err.message;
+        }
+        setResultsError(errorMsg);
       }
     } finally {
       // Only clear loading if this is still the latest request
@@ -367,6 +377,33 @@ function VirulenceFactorBrowserPage() {
 
     return items;
   }, [results?.items, appliedQuickFilter]);
+
+  // Compute tier counts for results summary
+  const tierCounts = useMemo(() => {
+    if (!filteredResults || filteredResults.length === 0) {
+      return { total: 0, withDirectEvidence: 0, validatedInVivo: 0 };
+    }
+
+    let withDirectEvidence = 0;
+    let validatedInVivo = 0;
+
+    filteredResults.forEach((item) => {
+      // Count genes with direct evidence
+      if (item.direct_evidence && item.direct_evidence.length > 0) {
+        withDirectEvidence++;
+      }
+      // Count genes validated in vivo (high importance = virulence model evidence)
+      if (item.importance_level === 'high') {
+        validatedInVivo++;
+      }
+    });
+
+    return {
+      total: filteredResults.length,
+      withDirectEvidence,
+      validatedInVivo,
+    };
+  }, [filteredResults]);
 
   // AG Grid column definitions
   const columnDefs = useMemo(
@@ -878,8 +915,19 @@ function VirulenceFactorBrowserPage() {
               <div className="results-summary">
                 <div className="results-summary-left">
                   <div className="results-count">
-                    Found <strong>{results.total_count || results.items.length}</strong> virulence factor
-                    {(results.total_count || results.items.length) !== 1 ? 's' : ''}
+                    Found <strong>{tierCounts.total}</strong> virulence-related gene{tierCounts.total !== 1 ? 's' : ''}
+                  </div>
+                  <div className="results-tiers">
+                    {tierCounts.withDirectEvidence > 0 && (
+                      <span className="tier-item tier-direct">
+                        <strong>{tierCounts.withDirectEvidence}</strong> with direct evidence
+                      </span>
+                    )}
+                    {tierCounts.validatedInVivo > 0 && (
+                      <span className="tier-item tier-invivo">
+                        <strong>{tierCounts.validatedInVivo}</strong> validated in vivo
+                      </span>
+                    )}
                   </div>
                 </div>
                 <div className="results-summary-right">

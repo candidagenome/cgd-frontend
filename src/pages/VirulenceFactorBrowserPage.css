@@ -284,6 +284,32 @@
   color: #333;
 }
 
+.results-tiers {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+  font-size: 0.85rem;
+}
+
+.tier-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.tier-item.tier-direct {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.tier-item.tier-invivo {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #92400e;
+  font-weight: 500;
+}
+
 .results-summary-right {
   display: flex;
   gap: 8px;
