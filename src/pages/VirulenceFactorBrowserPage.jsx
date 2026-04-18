@@ -442,8 +442,8 @@ function VirulenceFactorBrowserPage() {
       {
         headerName: 'Evidence',
         field: 'direct_evidence',
-        flex: 1.5,
-        minWidth: 220,
+        flex: 1.7,
+        minWidth: 270,
         wrapText: true,
         cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
         valueGetter: (params) => {
@@ -571,8 +571,8 @@ function VirulenceFactorBrowserPage() {
       {
         headerName: 'Description',
         field: 'description',
-        flex: 1.8,
-        minWidth: 200,
+        flex: 1.6,
+        minWidth: 150,
         wrapText: true,
         cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
         valueGetter: (params) => params.data.description || '-',
