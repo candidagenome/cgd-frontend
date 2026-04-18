@@ -622,14 +622,14 @@ function VirulenceFactorBrowserPage() {
       },
       {
         headerName: 'Description',
-        field: 'description',
+        field: 'summary',
         flex: 1.6,
         minWidth: 150,
         wrapText: true,
         cellStyle: { whiteSpace: 'normal', lineHeight: '1.4' },
-        valueGetter: (params) => params.data.description || '-',
+        valueGetter: (params) => params.data.summary || params.data.description || '-',
         cellRenderer: (params) => {
-          const desc = params.data.description || '-';
+          const desc = params.data.summary || params.data.description || '-';
           const highlightTerm = searchTerm || appliedQuickFilter;
 
           if (highlightTerm && desc !== '-') {
