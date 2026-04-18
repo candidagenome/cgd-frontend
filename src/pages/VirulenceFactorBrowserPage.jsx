@@ -140,6 +140,9 @@ function VirulenceFactorBrowserPage() {
   const [pendingQuickFilter, setPendingQuickFilter] = useState('');
   const [appliedQuickFilter, setAppliedQuickFilter] = useState('');
 
+  // Track which rows have expanded PMID list
+  const [expandedPmidRows, setExpandedPmidRows] = useState(new Set());
+
   // Request counter to handle race conditions - only use response from latest request
   const requestCounterRef = useRef(0);
 
@@ -498,28 +501,61 @@ function VirulenceFactorBrowserPage() {
         cellRenderer: (params) => {
           const count = params.data.paper_count || 0;
           const pmids = params.data.pmids || [];
+          const rowId = params.data.feature_no;
+          const isExpanded = expandedPmidRows.has(rowId);
 
           if (count === 0) return '-';
+
+          // Show 3 by default, all when expanded
+          const visiblePmids = isExpanded ? pmids : pmids.slice(0, 3);
+          const hiddenCount = count - visiblePmids.length;
+
+          const toggleExpand = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setExpandedPmidRows(prev => {
+              const newSet = new Set(prev);
+              if (newSet.has(rowId)) {
+                newSet.delete(rowId);
+              } else {
+                newSet.add(rowId);
+              }
+              return newSet;
+            });
+          };
 
           return (
             <div className="papers-cell">
               <span className="paper-count">{count}</span>
               {pmids.length > 0 && (
                 <div className="pmid-links">
-                  {pmids.slice(0, 3).map((pmid) => (
-                    <a
+                  {visiblePmids.map((pmid) => (
+                    <Link
                       key={pmid}
-                      href={`https://pubmed.ncbi.nlm.nih.gov/${pmid}/`}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      to={`/reference/${pmid}`}
                       className="pmid-link"
-                      title={`PubMed ${pmid}`}
+                      title={`PMID: ${pmid}`}
                     >
                       {pmid}
-                    </a>
+                    </Link>
                   ))}
-                  {pmids.length > 3 && (
-                    <span className="pmid-more">+{pmids.length - 3} more</span>
+                  {!isExpanded && hiddenCount > 0 && (
+                    <button
+                      className="pmid-more-btn"
+                      onClick={toggleExpand}
+                      title={`Show ${Math.min(hiddenCount, pmids.length - 3)} more PMIDs`}
+                    >
+                      +{Math.min(hiddenCount, pmids.length - 3)} more
+                    </button>
+                  )}
+                  {isExpanded && pmids.length > 3 && (
+                    <button
+                      className="pmid-more-btn"
+                      onClick={toggleExpand}
+                      title="Show less"
+                    >
+                      show less
+                    </button>
                   )}
                 </div>
               )}
