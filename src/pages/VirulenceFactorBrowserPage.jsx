@@ -601,20 +601,22 @@ function VirulenceFactorBrowserPage() {
 
   // Calculate row height based on content
   const getRowHeight = useCallback((params) => {
-    const minHeight = 80;
+    const minHeight = 150;
     const lineHeight = 22;
 
     const categories = params.data.categories || [];
-    const matchReasons = params.data.match_reasons || [];
+    const directEvidence = params.data.direct_evidence || [];
+    const indirectEvidence = params.data.indirect_evidence || [];
     const description = params.data.description || '';
 
     // Calculate lines needed for each column
     const categoryLines = Math.max(1, categories.length);
-    const matchReasonLines = Math.max(1, matchReasons.length * 1.5); // Each reason may wrap
-    const descLines = Math.ceil(description.length / 40); // ~40 chars per line
+    // Evidence column has DIRECT + INDIRECT sections with labels
+    const evidenceLines = (directEvidence.length + indirectEvidence.length) * 1.8 + 2;
+    const descLines = Math.ceil(description.length / 50); // ~50 chars per line
 
-    const maxLines = Math.max(3, categoryLines, matchReasonLines, descLines);
-    return Math.max(minHeight, maxLines * lineHeight + 20);
+    const maxLines = Math.max(5, categoryLines, evidenceLines, descLines);
+    return Math.max(minHeight, maxLines * lineHeight + 30);
   }, []);
 
   // Render loading state
