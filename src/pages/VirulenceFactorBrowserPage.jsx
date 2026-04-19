@@ -527,7 +527,6 @@ function VirulenceFactorBrowserPage() {
               {params.data.summary && (
                 <div
                   className={`gene-summary ${params.data.summary_full ? 'has-tooltip' : ''}`}
-                  title={params.data.summary_full || ''}
                 >
                   {params.data.summary}
                   {params.data.summary_full && (
