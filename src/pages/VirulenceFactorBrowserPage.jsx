@@ -496,7 +496,12 @@ function VirulenceFactorBrowserPage() {
           return (
             <div className="gene-card">
               <div className="gene-card-header">
-                <Link to={`/locus/${params.data.feature_name || params.data.gene_name}`} className="gene-link">
+                <Link
+                  to={`/locus/${params.data.feature_name || params.data.gene_name}`}
+                  className="gene-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {formatLocusName(params.data)}
                 </Link>
                 {badgeText && (
