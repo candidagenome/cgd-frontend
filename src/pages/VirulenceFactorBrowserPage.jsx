@@ -74,7 +74,7 @@ const formatLocusName = (result) => {
   return result.feature_name || result.gene_name || '-';
 };
 
-// Format ortholog display with short species abbreviation
+// Format ortholog display - show up to 3 species with count
 const formatOrthologDisplay = (orthologs) => {
   if (!orthologs || orthologs.length === 0) return null;
 
@@ -93,13 +93,13 @@ const formatOrthologDisplay = (orthologs) => {
     return org.organism_abbrev || org.organism_name;
   };
 
-  // Show first 2 species, then "+N more"
-  const displaySpecies = sorted.slice(0, 2).map(getShortSpecies);
-  const remaining = sorted.length - 2;
+  // Show first 3 species, then "(+N)" for remaining
+  const displaySpecies = sorted.slice(0, 3).map(getShortSpecies);
+  const remaining = sorted.length - 3;
 
   let text = displaySpecies.join(', ');
   if (remaining > 0) {
-    text += `, +${remaining} more`;
+    text += ` (+${remaining})`;
   }
 
   return { text, count: sorted.length };
@@ -512,13 +512,13 @@ function VirulenceFactorBrowserPage() {
                     {formatOrthologDisplay(params.data.orthologs)?.text}
                   </span>
                   <a
-                    href={`/synteny-viewer?gene=${params.data.feature_name}`}
+                    href={`/synteny-browser?gene=${params.data.feature_name}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="synteny-link"
-                    title={`View ${params.data.orthologs.length} orthologs in synteny viewer`}
+                    title={`View ${params.data.orthologs.length} orthologs in synteny browser`}
                   >
-                    View in synteny viewer →
+                    → View
                   </a>
                 </div>
               )}
