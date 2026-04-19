@@ -600,6 +600,15 @@
   opacity: 1;
 }
 
+/* Ensure tooltip is not clipped by AG Grid cell overflow */
+.virulence-factor-browser-page .ag-cell {
+  overflow: visible !important;
+}
+
+.virulence-factor-browser-page .ag-row {
+  overflow: visible !important;
+}
+
 /* Orthologs Display */
 .gene-orthologs {
   font-size: 0.78rem;
