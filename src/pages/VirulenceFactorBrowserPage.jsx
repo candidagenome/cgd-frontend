@@ -465,7 +465,6 @@ function VirulenceFactorBrowserPage() {
         field: 'gene',
         flex: 1.4,
         minWidth: 280,
-        autoHeight: true,
         wrapText: true,
         valueGetter: (params) => formatLocusName(params.data),
         cellRenderer: (params) => {
@@ -748,6 +747,20 @@ function VirulenceFactorBrowserPage() {
     []
   );
 
+  // Calculate row height based on content
+  const getRowHeight = useCallback((params) => {
+    const baseHeight = 80; // Base height for gene name, badges
+    const summaryHeight = params.data.summary ? 40 : 0;
+    const orthologsHeight = params.data.orthologs?.length > 0 ? 25 : 0;
+
+    // Evidence column height
+    const directEvidence = params.data.direct_evidence || [];
+    const indirectEvidence = params.data.indirect_evidence || [];
+    const evidenceLines = directEvidence.length + indirectEvidence.length;
+    const evidenceHeight = Math.max(0, (evidenceLines - 2) * 20);
+
+    return baseHeight + summaryHeight + orthologsHeight + evidenceHeight;
+  }, []);
 
   // Render loading state
   if (loading) {
@@ -1067,6 +1080,7 @@ function VirulenceFactorBrowserPage() {
                   paginationPageSize={10}
                   paginationPageSizeSelector={[10, 25, 50, 100]}
                   suppressCellFocus={true}
+                  getRowHeight={getRowHeight}
                 />
               </div>
             </>
