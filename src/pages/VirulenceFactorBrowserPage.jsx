@@ -465,6 +465,8 @@ function VirulenceFactorBrowserPage() {
         field: 'gene',
         flex: 1.4,
         minWidth: 280,
+        autoHeight: true,
+        wrapText: true,
         valueGetter: (params) => formatLocusName(params.data),
         cellRenderer: (params) => {
           const importanceLevel = params.data.importance_level || 'low';
