@@ -74,13 +74,33 @@ const formatLocusName = (result) => {
   return result.feature_name || result.gene_name || '-';
 };
 
+// Clinical importance ranking for species (lower = more important)
+const SPECIES_PRIORITY = {
+  'auris': 1,      // Emerging multidrug-resistant pathogen
+  'glabrata': 2,   // Common clinical isolate
+  'albicans': 3,   // Most common pathogen (but usually the query gene)
+  'tropicalis': 4, // Clinical relevance
+  'parapsilosis': 5,
+  'dubliniensis': 6,
+  'lusitaniae': 7,
+};
+
+// Get species priority for sorting (lower = more important)
+const getSpeciesPriority = (org) => {
+  const name = (org.organism_name || org.organism_abbrev || '').toLowerCase();
+  for (const [species, priority] of Object.entries(SPECIES_PRIORITY)) {
+    if (name.includes(species)) return priority;
+  }
+  return 99; // Unknown species last
+};
+
 // Format ortholog display - show up to 3 species with count
 const formatOrthologDisplay = (orthologs) => {
   if (!orthologs || orthologs.length === 0) return null;
 
-  // Sort by organism_abbrev for consistent display
+  // Sort by clinical importance (not alphabetically)
   const sorted = [...orthologs].sort((a, b) =>
-    (a.organism_abbrev || '').localeCompare(b.organism_abbrev || '')
+    getSpeciesPriority(a) - getSpeciesPriority(b)
   );
 
   // Create short species abbreviation (e.g., "Candida auris B8441" -> "C. auris")
@@ -93,13 +113,13 @@ const formatOrthologDisplay = (orthologs) => {
     return org.organism_abbrev || org.organism_name;
   };
 
-  // Show first 3 species, then "(+N)" for remaining
+  // Show first 3 species, then "+N more" for remaining
   const displaySpecies = sorted.slice(0, 3).map(getShortSpecies);
   const remaining = sorted.length - 3;
 
   let text = displaySpecies.join(', ');
   if (remaining > 0) {
-    text += ` (+${remaining})`;
+    text += ` +${remaining} more`;
   }
 
   return { text, count: sorted.length };
