@@ -505,25 +505,23 @@ function VirulenceFactorBrowserPage() {
                   {params.data.summary}
                 </div>
               )}
-              {(() => {
-                const orthInfo = formatOrthologDisplay(params.data.orthologs);
-                if (!orthInfo) return null;
-                return (
-                  <div className="gene-orthologs">
-                    <span className="orthologs-label">Orthologs:</span>{' '}
-                    <span className="orthologs-species">{orthInfo.text}</span>
-                    <a
-                      href={`/synteny-viewer?gene=${params.data.feature_name}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="synteny-link"
-                      title={`View ${orthInfo.count} orthologs in synteny viewer`}
-                    >
-                      View in synteny viewer →
-                    </a>
-                  </div>
-                );
-              })()}
+              {params.data.orthologs && params.data.orthologs.length > 0 && (
+                <div className="gene-orthologs">
+                  <span className="orthologs-label">Orthologs:</span>{' '}
+                  <span className="orthologs-species">
+                    {formatOrthologDisplay(params.data.orthologs)?.text}
+                  </span>
+                  <a
+                    href={`/synteny-viewer?gene=${params.data.feature_name}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="synteny-link"
+                    title={`View ${params.data.orthologs.length} orthologs in synteny viewer`}
+                  >
+                    View in synteny viewer →
+                  </a>
+                </div>
+              )}
             </div>
           );
         },
