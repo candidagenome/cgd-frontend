@@ -30,17 +30,34 @@ function LocusPage() {
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'summary');
   const [selectedOrganism, setSelectedOrganism] = useState(null);
 
+  // Check if this is a B allele that needs redirect
+  const isBAllele = name && (name.endsWith('_B') || name.endsWith('_b'));
+
   // Redirect B alleles to A alleles (e.g., CR_08640C_B -> CR_08640C_A)
   useEffect(() => {
-    if (name && (name.endsWith('_B') || name.endsWith('_b'))) {
+    if (isBAllele) {
       const aAlleleName = name.slice(0, -1) + 'A';
       const tab = searchParams.get('tab');
       const newUrl = tab ? `/locus/${aAlleleName}?tab=${tab}` : `/locus/${aAlleleName}`;
       navigate(newUrl, { replace: true });
     }
-  }, [name, searchParams, navigate]);
+  }, [isBAllele, name, searchParams, navigate]);
 
-  const { data, loading, errors, loaders } = useLocusData(name);
+  // Don't fetch data or render anything for B alleles - just show loading while redirecting
+  const effectiveName = isBAllele ? null : name;
+  const { data, loading, errors, loaders } = useLocusData(effectiveName);
+
+  // Show loading state while redirecting B allele
+  if (isBAllele) {
+    return (
+      <div className="locus-page">
+        <div className="loading-page">
+          <div className="loading-spinner"></div>
+          <p>Redirecting to primary allele...</p>
+        </div>
+      </div>
+    );
+  }
 
   // Extract ortholog organisms from the locus data (candida_orthologs field)
   // This uses data already fetched from the database, no extra API call needed
