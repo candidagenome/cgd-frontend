@@ -676,6 +676,18 @@ function LitGuideCurationPage() {
         row.curationStatuses.length > 0
     );
 
+    // Check for rows with literature topics but no features (topics require features)
+    const rowsWithTopicsButNoFeatures = assignmentRows.filter(
+      (row) =>
+        !row.features.trim() &&
+        row.literatureTopics.length > 0
+    );
+
+    if (rowsWithTopicsButNoFeatures.length > 0) {
+      setAssignmentError('Literature topics require features to be specified. Please enter gene/feature names, or remove the topics and select only a curation status to set reference-level status.');
+      return;
+    }
+
     if (rowsWithFeatures.length === 0 && rowsWithStatusOnly.length === 0) {
       setAssignmentError('Please enter at least one feature with a topic/status, or select a curation status without features to set reference-level status');
       return;
