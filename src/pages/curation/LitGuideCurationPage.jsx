@@ -65,7 +65,7 @@ function LitGuideCurationPage() {
   // Non-gene topics state (for reference view)
   const [nongeneTopics, setNongeneTopics] = useState({ public_topics: [], internal_topics: [] });
   const [nongeneTopicsLoading, setNongeneTopicsLoading] = useState(false);
-  const [newNongeneTopic, setNewNongeneTopic] = useState('');
+  const [nongeneTopicModalOpen, setNongeneTopicModalOpen] = useState(false);
 
   // Help section state
   const [showHelp, setShowHelp] = useState(false);
@@ -595,20 +595,32 @@ function LitGuideCurationPage() {
     }
   };
 
-  // Handle add non-gene topic
-  const handleAddNongeneTopic = async () => {
-    if (!referenceData || !newNongeneTopic) return;
+  // Handle add non-gene topics from modal
+  const handleAddNongeneTopics = async (selectedTopics) => {
+    if (!referenceData || selectedTopics.length === 0) return;
 
-    try {
-      await litguideCurationApi.addNongeneTopic(referenceData.reference_no, newNongeneTopic);
-      setSuccessMessage(`Non-gene topic '${newNongeneTopic}' added`);
-      setNewNongeneTopic('');
-      // Reload non-gene topics
-      const data = await litguideCurationApi.getNongeneTopics(referenceData.reference_no);
-      setNongeneTopics(data);
+    let addedCount = 0;
+    const errors = [];
+
+    for (const topic of selectedTopics) {
+      try {
+        await litguideCurationApi.addNongeneTopic(referenceData.reference_no, topic);
+        addedCount++;
+      } catch (err) {
+        errors.push(`${topic}: ${err.response?.data?.detail || err.message}`);
+      }
+    }
+
+    // Reload non-gene topics
+    const data = await litguideCurationApi.getNongeneTopics(referenceData.reference_no);
+    setNongeneTopics(data);
+
+    if (addedCount > 0) {
+      setSuccessMessage(`${addedCount} non-gene topic(s) added`);
       setTimeout(() => setSuccessMessage(null), 3000);
-    } catch (err) {
-      setError(err.response?.data?.detail || 'Failed to add non-gene topic');
+    }
+    if (errors.length > 0) {
+      setError(`Failed to add some topics: ${errors.join(', ')}`);
     }
   };
 
@@ -1750,24 +1762,23 @@ function LitGuideCurationPage() {
               {/* Add Non-Gene Topic */}
               <div style={styles.addNongeneRow}>
                 <span style={styles.nongeneLabel}>Add Topic:</span>
-                <select
-                  value={newNongeneTopic}
-                  onChange={(e) => setNewNongeneTopic(e.target.value)}
-                  style={styles.nongeneSelect}
-                >
-                  <option value="">Select topic...</option>
-                  {topics.map((topic) => (
-                    <option key={topic} value={topic}>{topic}</option>
-                  ))}
-                </select>
                 <button
-                  onClick={handleAddNongeneTopic}
-                  disabled={!newNongeneTopic}
+                  type="button"
+                  onClick={() => setNongeneTopicModalOpen(true)}
                   style={styles.addNongeneBtn}
                 >
-                  Add
+                  Select Topics to Add
                 </button>
               </div>
+
+              <CVTreeModal
+                isOpen={nongeneTopicModalOpen}
+                onClose={() => setNongeneTopicModalOpen(false)}
+                onSelect={handleAddNongeneTopics}
+                cvName="literature_topic"
+                title="Select Literature Topics to Add"
+                selectedTerms={[]}
+              />
 
               {/* Edit/Delete Reference Data Link */}
               <div style={styles.editRefRow}>
