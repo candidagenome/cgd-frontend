@@ -33,31 +33,20 @@ function LocusPage() {
   // Check if this is a B allele that needs redirect
   const isBAllele = name && (name.endsWith('_B') || name.endsWith('_b'));
 
+  // Compute the effective locus name (convert B allele to A allele)
+  const effectiveName = isBAllele ? name.slice(0, -1) + 'A' : name;
+
   // Redirect B alleles to A alleles (e.g., CR_08640C_B -> CR_08640C_A)
   useEffect(() => {
     if (isBAllele) {
-      const aAlleleName = name.slice(0, -1) + 'A';
       const tab = searchParams.get('tab');
-      const newUrl = tab ? `/locus/${aAlleleName}?tab=${tab}` : `/locus/${aAlleleName}`;
+      const newUrl = tab ? `/locus/${effectiveName}?tab=${tab}` : `/locus/${effectiveName}`;
       navigate(newUrl, { replace: true });
     }
-  }, [isBAllele, name, searchParams, navigate]);
+  }, [isBAllele, effectiveName, searchParams, navigate]);
 
-  // Don't fetch data or render anything for B alleles - just show loading while redirecting
-  const effectiveName = isBAllele ? null : name;
+  // Always fetch data for the effective name (A allele) - don't wait for redirect
   const { data, loading, errors, loaders } = useLocusData(effectiveName);
-
-  // Show loading state while redirecting B allele
-  if (isBAllele) {
-    return (
-      <div className="locus-page">
-        <div className="loading-page">
-          <div className="loading-spinner"></div>
-          <p>Redirecting to primary allele...</p>
-        </div>
-      </div>
-    );
-  }
 
   // Extract ortholog organisms from the locus data (candida_orthologs field)
   // This uses data already fetched from the database, no extra API call needed
