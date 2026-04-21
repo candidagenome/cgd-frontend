@@ -1199,7 +1199,7 @@ function LitGuideCurationPage() {
               {featureData.feature_name}
               {featureData.gene_name && ` (${featureData.gene_name})`}
             </h2>
-            <Link to={`/locus/${featureData.feature_name}`} style={styles.headerLink}>
+            <Link to={`/locus/${featureData.feature_name}`} style={styles.headerLink} target="_blank" rel="noopener noreferrer">
               View Locus Page
             </Link>
           </div>
@@ -1532,7 +1532,7 @@ function LitGuideCurationPage() {
                       {publicCurated.length > 0
                         ? publicCurated.map((name, idx) => (
                             <span key={name}>
-                              <Link to={`/locus/${name}`} style={styles.featureLinkInline}>
+                              <Link to={`/locus/${name}`} style={styles.featureLinkInline} target="_blank" rel="noopener noreferrer">
                                 {name}
                               </Link>
                               {idx < publicCurated.length - 1 && ' | '}
@@ -1548,7 +1548,7 @@ function LitGuideCurationPage() {
                       {notYetCurated.length > 0
                         ? notYetCurated.map((name, idx) => (
                             <span key={name}>
-                              <Link to={`/locus/${name}`} style={styles.featureLinkInline}>
+                              <Link to={`/locus/${name}`} style={styles.featureLinkInline} target="_blank" rel="noopener noreferrer">
                                 {name}
                               </Link>
                               {idx < notYetCurated.length - 1 && ' | '}
@@ -1564,7 +1564,7 @@ function LitGuideCurationPage() {
                       {internalCurated.length > 0
                         ? internalCurated.map((name, idx) => (
                             <span key={name}>
-                              <Link to={`/locus/${name}`} style={styles.featureLinkInline}>
+                              <Link to={`/locus/${name}`} style={styles.featureLinkInline} target="_blank" rel="noopener noreferrer">
                                 {name}
                               </Link>
                               {idx < internalCurated.length - 1 && ' | '}
@@ -1580,7 +1580,7 @@ function LitGuideCurationPage() {
                       <span>
                         {unlinkedFeatures.map((feat, idx) => (
                           <span key={feat.feature_no}>
-                            <Link to={`/locus/${feat.feature_name}`} style={styles.featureLinkInline}>
+                            <Link to={`/locus/${feat.feature_name}`} style={styles.featureLinkInline} target="_blank" rel="noopener noreferrer">
                               {feat.gene_name || feat.feature_name}
                             </Link>
                             {idx < unlinkedFeatures.length - 1 && ' | '}
@@ -1623,6 +1623,11 @@ function LitGuideCurationPage() {
           {/* Reference Curation Status Section (standalone, applies to entire paper) */}
           <div style={styles.refStatusStandaloneSection}>
             <h3 style={styles.refStatusStandaloneHeader}>Reference Curation Status</h3>
+            {referenceData.curation_status && (
+              <div style={styles.currentStatusDisplay}>
+                Current status: <strong>{referenceData.curation_status}</strong>
+              </div>
+            )}
             {refStatusSuccess && (
               <div style={styles.refStatusSuccessMsg}>{refStatusSuccess}</div>
             )}
@@ -1950,7 +1955,7 @@ function LitGuideCurationPage() {
                   {referenceData.features.map((feat) => (
                     <tr key={feat.feature_no}>
                       <td style={styles.td}>
-                        <Link to={`/locus/${feat.feature_name}`}>
+                        <Link to={`/locus/${feat.feature_name}`} target="_blank" rel="noopener noreferrer">
                           {feat.feature_name}
                         </Link>
                       </td>
@@ -2093,6 +2098,17 @@ function LitGuideCurationPage() {
                 {notesLoading ? 'Loading notes...' : 'No notes found.'}
               </p>
             )}
+          </div>
+
+          {/* View CGD Paper Link */}
+          <div style={styles.viewPaperLink}>
+            <Link
+              to={`/reference/${referenceData.reference_no}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View curated CGD paper →
+            </Link>
           </div>
         </div>
       )}
@@ -2668,6 +2684,24 @@ const styles = {
     backgroundColor: '#f8d7da',
     color: '#721c24',
     border: '1px solid #f5c6cb',
+    borderRadius: '4px',
+  },
+  currentStatusDisplay: {
+    padding: '0.5rem 0.75rem',
+    marginBottom: '0.75rem',
+    backgroundColor: '#e8f4e8',
+    color: '#2d5a2d',
+    border: '1px solid #b8d4b8',
+    borderRadius: '4px',
+    fontSize: '0.95rem',
+  },
+  viewPaperLink: {
+    display: 'block',
+    marginTop: '1.5rem',
+    padding: '0.75rem',
+    textAlign: 'center',
+    backgroundColor: '#f8f9fa',
+    border: '1px solid #dee2e6',
     borderRadius: '4px',
   },
   assignButtons: {
