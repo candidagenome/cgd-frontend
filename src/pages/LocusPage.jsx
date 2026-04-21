@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useSearchParams, Link } from 'react-router-dom';
+import { useParams, useSearchParams, Link, useNavigate } from 'react-router-dom';
 import useLocusData from '../hooks/useLocusData';
 import LocusSummary from '../components/locus/LocusSummary';
 import GoDetails from '../components/locus/GoDetails';
@@ -26,10 +26,27 @@ const TABS = [
 function LocusPage() {
   const { name } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'summary');
   const [selectedOrganism, setSelectedOrganism] = useState(null);
 
-  const { data, loading, errors, loaders } = useLocusData(name);
+  // Check if this is a B allele that needs redirect
+  const isBAllele = name && (name.endsWith('_B') || name.endsWith('_b'));
+
+  // Compute the effective locus name (convert B allele to A allele)
+  const effectiveName = isBAllele ? name.slice(0, -1) + 'A' : name;
+
+  // Redirect B alleles to A alleles (e.g., CR_08640C_B -> CR_08640C_A)
+  useEffect(() => {
+    if (isBAllele) {
+      const tab = searchParams.get('tab');
+      const newUrl = tab ? `/locus/${effectiveName}?tab=${tab}` : `/locus/${effectiveName}`;
+      navigate(newUrl, { replace: true });
+    }
+  }, [isBAllele, effectiveName, searchParams, navigate]);
+
+  // Always fetch data for the effective name (A allele) - don't wait for redirect
+  const { data, loading, errors, loaders } = useLocusData(effectiveName);
 
   // Extract ortholog organisms from the locus data (candida_orthologs field)
   // This uses data already fetched from the database, no extra API call needed

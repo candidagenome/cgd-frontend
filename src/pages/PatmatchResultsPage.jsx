@@ -169,124 +169,159 @@ function PatmatchResultsPage() {
     );
   };
 
+  // Check if this is a protein search (no strand column needed)
+  const isProtein = patternType === 'protein';
+
   // AG Grid column definitions
-  const columnDefs = useMemo(() => [
-    {
-      headerName: '#',
-      valueGetter: (params) => params.node.rowIndex + 1,
-      width: 60,
-      suppressSizeToFit: true,
-    },
-    {
-      headerName: 'Sequence',
-      field: 'sequence_name',
-      cellRenderer: (params) => {
-        const hit = params.data;
-        if (!hit) return '-';
-        const nameLink = hit.locus_link ? (
-          <Link to={hit.locus_link} target="_blank" rel="noopener noreferrer">
-            {hit.sequence_name}
-          </Link>
-        ) : (
-          hit.sequence_name
-        );
-        return (
-          <span>
-            {nameLink}
-            {hit.sequence_description && hit.sequence_description !== hit.sequence_name && (
-              <span className="seq-desc"> ({hit.sequence_description})</span>
-            )}
-          </span>
-        );
+  const columnDefs = useMemo(() => {
+    const cols = [
+      {
+        headerName: '#',
+        valueGetter: (params) => params.node.rowIndex + 1,
+        width: 60,
+        suppressSizeToFit: true,
       },
-      flex: 2,
-    },
-    {
-      headerName: 'Position',
-      cellRenderer: (params) => {
-        const hit = params.data;
-        if (!hit) return '-';
-        return (
-          <span>
-            {hit.match_start.toLocaleString()}-{hit.match_end.toLocaleString()}
-            {hit.jbrowse_link && (
-              <a
-                href={hit.jbrowse_link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="jbrowse-link"
-                title="View in JBrowse"
-              >
-                JB
-              </a>
-            )}
-          </span>
-        );
+      {
+        headerName: 'Sequence',
+        field: 'sequence_name',
+        cellRenderer: (params) => {
+          const hit = params.data;
+          if (!hit) return '-';
+          const nameLink = hit.locus_link ? (
+            <Link to={hit.locus_link} target="_blank" rel="noopener noreferrer">
+              {hit.sequence_name}
+            </Link>
+          ) : (
+            hit.sequence_name
+          );
+          return (
+            <span>
+              {nameLink}
+              {hit.sequence_description && hit.sequence_description !== hit.sequence_name && (
+                <span className="seq-desc"> ({hit.sequence_description})</span>
+              )}
+            </span>
+          );
+        },
+        flex: 2,
       },
-      width: 150,
-    },
-    {
-      headerName: 'Strand',
-      field: 'strand',
-      width: 80,
-    },
-    {
-      headerName: 'Match',
-      field: 'matched_sequence',
-      cellRenderer: (params) => {
-        const hit = params.data;
-        if (!hit) return '-';
-        return (
-          <code
-            onClick={() => handleSequenceClick(hit)}
-            style={{ cursor: 'pointer' }}
-            title="Click to view full sequence"
-          >
-            {hit.matched_sequence}
-          </code>
-        );
+      {
+        headerName: 'Position',
+        cellRenderer: (params) => {
+          const hit = params.data;
+          if (!hit) return '-';
+          return (
+            <span>
+              {hit.match_start.toLocaleString()}-{hit.match_end.toLocaleString()}
+              {hit.jbrowse_link && (
+                <a
+                  href={hit.jbrowse_link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="jbrowse-link"
+                  title="View in JBrowse"
+                >
+                  JB
+                </a>
+              )}
+            </span>
+          );
+        },
+        width: 150,
       },
-      flex: 1,
-    },
-    {
-      headerName: 'Context',
-      cellRenderer: (params) => {
-        const hit = params.data;
-        if (!hit) return '-';
-        return (
-          <code
-            onClick={() => handleSequenceClick(hit)}
-            style={{ cursor: 'pointer' }}
-            title="Click to view full sequence"
-          >
-            <span className="context-before">{hit.context_before}</span>
-            <span className="context-match">{hit.matched_sequence}</span>
-            <span className="context-after">{hit.context_after}</span>
-          </code>
-        );
+    ];
+
+    // Only include Strand column for DNA searches
+    if (!isProtein) {
+      cols.push({
+        headerName: 'Strand',
+        field: 'strand',
+        width: 80,
+      });
+    }
+
+    cols.push(
+      {
+        headerName: 'Match',
+        field: 'matched_sequence',
+        cellRenderer: (params) => {
+          const hit = params.data;
+          if (!hit) return '-';
+          return (
+            <code
+              onClick={() => handleSequenceClick(hit)}
+              style={{ cursor: 'pointer' }}
+              title="Click to view full sequence"
+            >
+              {hit.matched_sequence}
+            </code>
+          );
+        },
+        flex: 1,
       },
-      flex: 2,
-    },
-  ], []);
+      {
+        headerName: 'Context',
+        cellRenderer: (params) => {
+          const hit = params.data;
+          if (!hit) return '-';
+          return (
+            <code
+              onClick={() => handleSequenceClick(hit)}
+              style={{ cursor: 'pointer' }}
+              title="Click to view full sequence"
+            >
+              <span className="context-before">{hit.context_before}</span>
+              <span className="context-match">{hit.matched_sequence}</span>
+              <span className="context-after">{hit.context_after}</span>
+            </code>
+          );
+        },
+        flex: 2,
+      }
+    );
+
+    return cols;
+  }, [isProtein]);
 
   const defaultColDef = useMemo(() => ({
     sortable: true,
     resizable: true,
   }), []);
 
-  // Filter hits by quick filter text
-  const filteredHits = useMemo(() => {
-    if (!results?.hits || !appliedQuickFilter.trim()) return results?.hits || [];
-    const searchLower = appliedQuickFilter.toLowerCase().trim();
-    return results.hits.filter((hit) => {
-      const searchFields = [
-        hit.sequence_name,
-        hit.sequence_description,
-        hit.matched_sequence,
-        hit.strand,
-      ];
-      return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
+  // Sort hits by sequence name to group A and B alleles together
+  const sortHits = (hits) => {
+    return [...hits].sort((a, b) => {
+      const nameA = a.sequence_name || '';
+      const nameB = b.sequence_name || '';
+      // Strip _A or _B suffix for primary sort to group alleles together
+      const baseA = nameA.replace(/_[ABab]$/, '').toUpperCase();
+      const baseB = nameB.replace(/_[ABab]$/, '').toUpperCase();
+      // Primary sort by base name, secondary by full name (puts _A before _B)
+      if (baseA !== baseB) return baseA.localeCompare(baseB);
+      return nameA.toUpperCase().localeCompare(nameB.toUpperCase());
     });
+  };
+
+  // Filter and sort hits
+  const filteredHits = useMemo(() => {
+    let hits = results?.hits || [];
+
+    // Apply quick filter if set
+    if (appliedQuickFilter.trim()) {
+      const searchLower = appliedQuickFilter.toLowerCase().trim();
+      hits = hits.filter((hit) => {
+        const searchFields = [
+          hit.sequence_name,
+          hit.sequence_description,
+          hit.matched_sequence,
+          hit.strand,
+        ];
+        return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
+      });
+    }
+
+    // Sort by sequence name to group A/B alleles together
+    return sortHits(hits);
   }, [results?.hits, appliedQuickFilter]);
 
   if (loading) {
