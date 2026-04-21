@@ -1742,23 +1742,6 @@ function LitGuideCurationPage() {
                 </span>
               </div>
 
-              {/* Internal Topics (Curation Status) */}
-              <div style={styles.nongeneRowInternal}>
-                <strong style={styles.nongeneLabel}>Internal Topics:</strong>
-                <span style={styles.nongeneTopics}>
-                  {nongeneTopics.internal_topics.length > 0 ? (
-                    nongeneTopics.internal_topics.map((t, idx) => (
-                      <span key={t.ref_property_no}>
-                        {t.topic}
-                        {idx < nongeneTopics.internal_topics.length - 1 && ' | '}
-                      </span>
-                    ))
-                  ) : (
-                    <span style={styles.nothingYet}>nothing yet</span>
-                  )}
-                </span>
-              </div>
-
               {/* Add Non-Gene Topic */}
               <div style={styles.addNongeneRow}>
                 <span style={styles.nongeneLabel}>Add Topic:</span>
