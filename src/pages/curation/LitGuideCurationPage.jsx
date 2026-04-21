@@ -1698,37 +1698,6 @@ function LitGuideCurationPage() {
             </div>
           )}
 
-          {/* Quick Add Feature (simple form) */}
-          <div id="AddFeature" style={styles.addSection}>
-            <h3 style={styles.sectionHeader}>Quick Add Feature</h3>
-            <div style={styles.addFeatureRow}>
-              <input
-                type="text"
-                value={newFeature}
-                onChange={(e) => setNewFeature(e.target.value)}
-                placeholder="Feature name or gene name..."
-                style={styles.featureInput}
-              />
-              <select
-                value={newFeatureTopic}
-                onChange={(e) => setNewFeatureTopic(e.target.value)}
-                style={styles.topicSelect}
-              >
-                <option value="">Select topic...</option>
-                {topics.map((topic) => (
-                  <option key={topic} value={topic}>{topic}</option>
-                ))}
-              </select>
-              <button
-                onClick={handleAddFeatureToReference}
-                disabled={!newFeature || !newFeatureTopic}
-                style={styles.addButton}
-              >
-                Add Feature
-              </button>
-            </div>
-          </div>
-
           {/* Non-Gene Topics Section */}
           <div id="NongeneTopics" style={styles.nongeneSection}>
             <h3 style={styles.nongeneHeader}>
