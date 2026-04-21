@@ -676,19 +676,28 @@ function LitGuideCurationPage() {
         row.curationStatuses.length > 0
     );
 
-    // Check for rows with literature topics but no features (topics require features)
-    const rowsWithTopicsButNoFeatures = assignmentRows.filter(
+    // Check for rows with topics but no features - these are allowed only with "not gene specific" status
+    const rowsWithNongeneTopics = assignmentRows.filter(
       (row) =>
         !row.features.trim() &&
-        row.literatureTopics.length > 0
+        row.literatureTopics.length > 0 &&
+        row.curationStatuses.includes('not gene specific')
     );
 
-    if (rowsWithTopicsButNoFeatures.length > 0) {
-      setAssignmentError('Literature topics require features to be specified. Please enter gene/feature names, or remove the topics and select only a curation status to set reference-level status.');
+    // Check for invalid rows: topics without features AND without "not gene specific" status
+    const invalidTopicRows = assignmentRows.filter(
+      (row) =>
+        !row.features.trim() &&
+        row.literatureTopics.length > 0 &&
+        !row.curationStatuses.includes('not gene specific')
+    );
+
+    if (invalidTopicRows.length > 0) {
+      setAssignmentError('Literature topics without features require the "not gene specific" curation status. Please either add features, or select "not gene specific" status.');
       return;
     }
 
-    if (rowsWithFeatures.length === 0 && rowsWithStatusOnly.length === 0) {
+    if (rowsWithFeatures.length === 0 && rowsWithStatusOnly.length === 0 && rowsWithNongeneTopics.length === 0) {
       setAssignmentError('Please enter at least one feature with a topic/status, or select a curation status without features to set reference-level status');
       return;
     }
@@ -740,6 +749,30 @@ function LitGuideCurationPage() {
         } catch (err) {
           errors.push(`Failed to set reference status: ${err.response?.data?.detail || err.message}`);
           totalFailed++;
+        }
+      }
+
+      // Handle rows with topics but no features (nongene topics with "not gene specific" status)
+      for (const row of rowsWithNongeneTopics) {
+        // Add each topic as a nongene topic
+        for (const topic of row.literatureTopics) {
+          try {
+            await litguideCurationApi.addNongeneTopic(referenceData.reference_no, topic);
+            totalSuccessful++;
+          } catch (err) {
+            errors.push(`Failed to add nongene topic '${topic}': ${err.response?.data?.detail || err.message}`);
+            totalFailed++;
+          }
+        }
+        // Set the reference status (should include "not gene specific")
+        for (const status of row.curationStatuses) {
+          try {
+            await litguideCurationApi.setReferenceStatus(referenceData.reference_no, status);
+            refStatusSet = true;
+          } catch (err) {
+            errors.push(`Failed to set reference status: ${err.response?.data?.detail || err.message}`);
+            totalFailed++;
+          }
         }
       }
 
