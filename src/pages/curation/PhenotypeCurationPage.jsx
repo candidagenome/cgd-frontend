@@ -28,10 +28,12 @@ const MIN_NEW_SECTIONS = 1;
 const ADD_SECTIONS_COUNT = 1;
 
 // Property types that have CV tree browsers
+// Note: chebi_ontology is intentionally NOT included here because the CHEBI
+// ontology has 100,000+ terms which crashes the browser when loaded into a
+// dropdown. Instead, curators enter CHEBI IDs directly as text (e.g., "CHEBI:12345")
 const PROPERTY_CV_MAP = {
   strain_background: 'strain_background',
   virulence_model: 'virulence_model',
-  chebi_ontology: 'chebi_ontology',
 };
 
 // Property types to exclude from the form
