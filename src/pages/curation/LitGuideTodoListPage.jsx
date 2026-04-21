@@ -17,7 +17,7 @@ function LitGuideTodoListPage() {
   const [years, setYears] = useState([]);
   const [statuses, setStatuses] = useState([]);
   const [selectedYear, setSelectedYear] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState('Not yet curated');
+  const [selectedStatus, setSelectedStatus] = useState('High Priority');
   const [items, setItems] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
