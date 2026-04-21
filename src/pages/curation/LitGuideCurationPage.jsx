@@ -501,7 +501,8 @@ function LitGuideCurationPage() {
       try {
         const result = await litguideCurationApi.unlinkFeatureFromReference(
           referenceData.reference_no,
-          featureName
+          featureName,
+          currentOrganism
         );
         results.success.push(result.feature_name);
       } catch (err) {
@@ -887,7 +888,11 @@ function LitGuideCurationPage() {
         // Handle removed features - unlink them
         for (const featName of featuresToRemove) {
           try {
-            await litguideCurationApi.unlinkFeatureFromReference(referenceData.reference_no, featName);
+            await litguideCurationApi.unlinkFeatureFromReference(
+              referenceData.reference_no,
+              featName,
+              currentOrganism
+            );
             totalRemoved++;
           } catch (err) {
             errors.push(`Failed to unlink ${featName}: ${err.message}`);

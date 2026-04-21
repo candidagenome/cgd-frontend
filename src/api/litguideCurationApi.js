@@ -174,11 +174,16 @@ export const litguideCurationApi = {
    *
    * @param {number} referenceNo - Reference number
    * @param {string} featureIdentifier - Feature name, gene name, or feature_no
+   * @param {string} [organismAbbrev] - Optional organism abbreviation to filter feature lookup
    * @returns {Promise<Object>}
    */
-  unlinkFeatureFromReference: async (referenceNo, featureIdentifier) => {
+  unlinkFeatureFromReference: async (referenceNo, featureIdentifier, organismAbbrev = null) => {
+    const payload = { feature_identifier: featureIdentifier };
+    if (organismAbbrev) {
+      payload.organism_abbrev = organismAbbrev;
+    }
     const response = await api.delete(`/api/curation/litguide/reference/${referenceNo}/feature`, {
-      data: { feature_identifier: featureIdentifier },
+      data: payload,
     });
     return response.data;
   },
