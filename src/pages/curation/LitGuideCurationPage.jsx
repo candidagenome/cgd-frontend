@@ -1517,37 +1517,10 @@ function LitGuideCurationPage() {
             </div>
           )}
 
-          {/* Assign Literature Guide Topics Section */}
-          <div id="Assign" style={styles.assignSection}>
-            <h3 style={styles.assignHeader}>Assign Literature Guide Topics to this Paper</h3>
-            {assignmentSuccess && (
-              <div style={styles.assignSuccess}>{assignmentSuccess}</div>
-            )}
-            {assignmentError && (
-              <div style={styles.assignError}>{assignmentError}</div>
-            )}
-            <p style={styles.assignHelp}>
-              Separate multiple features by spaces or | (pipe). Topics will be applied to all
-              listed features. Leave features empty to add non-gene topics (requires &quot;not gene specific&quot; status).
-            </p>
-            <div style={styles.assignRows}>
-              {assignmentRows.map((row, index) => (
-                <TopicAssignmentRow
-                  key={index}
-                  features={row.features}
-                  literatureTopics={row.literatureTopics}
-                  onFeaturesChange={(value) => updateAssignmentRow(index, 'features', value)}
-                  onLiteratureTopicsChange={(value) => updateAssignmentRow(index, 'literatureTopics', value)}
-                  onRemove={() => removeAssignmentRow(index)}
-                  showRemoveButton={assignmentRows.length > 1}
-                  hideCurationStatus={true}
-                />
-              ))}
-            </div>
-
-            {/* Reference-level Curation Status (applies to entire paper) */}
-            <div style={styles.refStatusSection}>
-              <label style={styles.refStatusLabel}>Reference Curation Status:</label>
+          {/* Reference Curation Status Section (standalone, applies to entire paper) */}
+          <div style={styles.refStatusStandaloneSection}>
+            <h3 style={styles.refStatusStandaloneHeader}>Reference Curation Status</h3>
+            <div style={styles.refStatusContent}>
               <button
                 type="button"
                 onClick={() => setRefStatusModalOpen(true)}
@@ -1573,8 +1546,10 @@ function LitGuideCurationPage() {
                   <span style={styles.refStatusNone}>None selected</span>
                 )}
               </div>
+              <p style={styles.refStatusHelp}>
+                This status applies to the entire paper. Select &quot;not gene specific&quot; to add topics without features.
+              </p>
             </div>
-
             <CVTreeModal
               isOpen={refStatusModalOpen}
               onClose={() => setRefStatusModalOpen(false)}
@@ -1583,6 +1558,35 @@ function LitGuideCurationPage() {
               title="Select Reference Curation Status"
               selectedTerms={refCurationStatus}
             />
+          </div>
+
+          {/* Assign Literature Guide Topics Section */}
+          <div id="Assign" style={styles.assignSection}>
+            <h3 style={styles.assignHeader}>Assign Literature Guide Topics to this Paper</h3>
+            {assignmentSuccess && (
+              <div style={styles.assignSuccess}>{assignmentSuccess}</div>
+            )}
+            {assignmentError && (
+              <div style={styles.assignError}>{assignmentError}</div>
+            )}
+            <p style={styles.assignHelp}>
+              Separate multiple features by spaces or | (pipe). Topics will be applied to all
+              listed features. Leave features empty to add non-gene topics.
+            </p>
+            <div style={styles.assignRows}>
+              {assignmentRows.map((row, index) => (
+                <TopicAssignmentRow
+                  key={index}
+                  features={row.features}
+                  literatureTopics={row.literatureTopics}
+                  onFeaturesChange={(value) => updateAssignmentRow(index, 'features', value)}
+                  onLiteratureTopicsChange={(value) => updateAssignmentRow(index, 'literatureTopics', value)}
+                  onRemove={() => removeAssignmentRow(index)}
+                  showRemoveButton={assignmentRows.length > 1}
+                  hideCurationStatus={true}
+                />
+              ))}
+            </div>
 
             <div style={styles.assignButtons}>
               <button
@@ -2571,6 +2575,32 @@ const styles = {
     color: '#999',
     fontSize: '0.85rem',
     fontStyle: 'italic',
+  },
+  refStatusStandaloneSection: {
+    marginBottom: '1.5rem',
+    padding: '1rem',
+    backgroundColor: '#f0f7ff',
+    border: '1px solid #cce5ff',
+    borderRadius: '8px',
+  },
+  refStatusStandaloneHeader: {
+    margin: '0 0 0.75rem 0',
+    fontSize: '1.1rem',
+    color: '#004085',
+    borderBottom: '1px solid #cce5ff',
+    paddingBottom: '0.5rem',
+  },
+  refStatusContent: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.75rem',
+    flexWrap: 'wrap',
+  },
+  refStatusHelp: {
+    margin: '0.5rem 0 0 0',
+    fontSize: '0.85rem',
+    color: '#666',
+    width: '100%',
   },
   assignButtons: {
     display: 'flex',
