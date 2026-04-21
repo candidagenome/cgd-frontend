@@ -1664,35 +1664,6 @@ function LitGuideCurationPage() {
                         </div>
                       </div>
 
-                      {/* Curation Status (editable) */}
-                      <div style={styles.editTopicsListSection}>
-                        <button
-                          type="button"
-                          onClick={() => openEditModal(idx, 'curation_status')}
-                          style={styles.editTopicsButton}
-                        >
-                          Curation Status
-                        </button>
-                        <div style={styles.editTopicsListBox}>
-                          {row.curationStatuses.length > 0 ? (
-                            row.curationStatuses.map((status, i) => (
-                              <div key={i} style={styles.editTopicsItemEditable}>
-                                {status}
-                                <button
-                                  type="button"
-                                  onClick={() => removeEditTopic(idx, status, 'curation_status')}
-                                  style={styles.editTopicsRemoveBtn}
-                                  title="Remove status"
-                                >
-                                  &times;
-                                </button>
-                              </div>
-                            ))
-                          ) : (
-                            <span style={styles.nothingYet}>none</span>
-                          )}
-                        </div>
-                      </div>
                     </div>
                   </div>
                 ))}
