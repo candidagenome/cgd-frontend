@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useSearchParams, Link } from 'react-router-dom';
+import { useParams, useSearchParams, Link, useNavigate } from 'react-router-dom';
 import useLocusData from '../hooks/useLocusData';
 import LocusSummary from '../components/locus/LocusSummary';
 import GoDetails from '../components/locus/GoDetails';
@@ -26,8 +26,19 @@ const TABS = [
 function LocusPage() {
   const { name } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'summary');
   const [selectedOrganism, setSelectedOrganism] = useState(null);
+
+  // Redirect B alleles to A alleles (e.g., CR_08640C_B -> CR_08640C_A)
+  useEffect(() => {
+    if (name && (name.endsWith('_B') || name.endsWith('_b'))) {
+      const aAlleleName = name.slice(0, -1) + 'A';
+      const tab = searchParams.get('tab');
+      const newUrl = tab ? `/locus/${aAlleleName}?tab=${tab}` : `/locus/${aAlleleName}`;
+      navigate(newUrl, { replace: true });
+    }
+  }, [name, searchParams, navigate]);
 
   const { data, loading, errors, loaders } = useLocusData(name);
 
