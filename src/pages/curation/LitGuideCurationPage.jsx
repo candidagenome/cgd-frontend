@@ -65,7 +65,7 @@ function LitGuideCurationPage() {
   // Non-gene topics state (for reference view)
   const [nongeneTopics, setNongeneTopics] = useState({ public_topics: [], internal_topics: [] });
   const [nongeneTopicsLoading, setNongeneTopicsLoading] = useState(false);
-  const [newNongeneTopic, setNewNongeneTopic] = useState('');
+  const [nongeneTopicModalOpen, setNongeneTopicModalOpen] = useState(false);
 
   // Help section state
   const [showHelp, setShowHelp] = useState(false);
@@ -84,11 +84,16 @@ function LitGuideCurationPage() {
   const createEmptyRow = () => ({
     features: '',
     literatureTopics: [],
-    curationStatuses: [],
   });
   const [assignmentRows, setAssignmentRows] = useState(
     Array.from({ length: NUM_BLANK_ROWS }, createEmptyRow)
   );
+  // Reference-level curation status (applies to entire paper, set once)
+  const [refCurationStatus, setRefCurationStatus] = useState([]);
+  const [refStatusModalOpen, setRefStatusModalOpen] = useState(false);
+  const [submittingRefStatus, setSubmittingRefStatus] = useState(false);
+  const [refStatusSuccess, setRefStatusSuccess] = useState(null);
+  const [refStatusError, setRefStatusError] = useState(null);
   const [submittingAssignments, setSubmittingAssignments] = useState(false);
   const [assignmentSuccess, setAssignmentSuccess] = useState(null);
   const [assignmentError, setAssignmentError] = useState(null);
@@ -593,20 +598,32 @@ function LitGuideCurationPage() {
     }
   };
 
-  // Handle add non-gene topic
-  const handleAddNongeneTopic = async () => {
-    if (!referenceData || !newNongeneTopic) return;
+  // Handle add non-gene topics from modal
+  const handleAddNongeneTopics = async (selectedTopics) => {
+    if (!referenceData || selectedTopics.length === 0) return;
 
-    try {
-      await litguideCurationApi.addNongeneTopic(referenceData.reference_no, newNongeneTopic);
-      setSuccessMessage(`Non-gene topic '${newNongeneTopic}' added`);
-      setNewNongeneTopic('');
-      // Reload non-gene topics
-      const data = await litguideCurationApi.getNongeneTopics(referenceData.reference_no);
-      setNongeneTopics(data);
+    let addedCount = 0;
+    const errors = [];
+
+    for (const topic of selectedTopics) {
+      try {
+        await litguideCurationApi.addNongeneTopic(referenceData.reference_no, topic);
+        addedCount++;
+      } catch (err) {
+        errors.push(`${topic}: ${err.response?.data?.detail || err.message}`);
+      }
+    }
+
+    // Reload non-gene topics
+    const data = await litguideCurationApi.getNongeneTopics(referenceData.reference_no);
+    setNongeneTopics(data);
+
+    if (addedCount > 0) {
+      setSuccessMessage(`${addedCount} non-gene topic(s) added`);
       setTimeout(() => setSuccessMessage(null), 3000);
-    } catch (err) {
-      setError(err.response?.data?.detail || 'Failed to add non-gene topic');
+    }
+    if (errors.length > 0) {
+      setError(`Failed to add some topics: ${errors.join(', ')}`);
     }
   };
 
@@ -630,19 +647,53 @@ function LitGuideCurationPage() {
   const updateAssignmentRow = (index, field, value) => {
     setAssignmentRows((prev) => {
       const newRows = [...prev];
-      let finalValue = value;
-
-      // Auto-remove "High Priority" when a "Done:" status is added
-      if (field === 'curationStatuses' && Array.isArray(value)) {
-        const hasDoneStatus = value.some((s) => s.toLowerCase().startsWith('done'));
-        if (hasDoneStatus) {
-          finalValue = value.filter((s) => s !== 'High Priority');
-        }
-      }
-
-      newRows[index] = { ...newRows[index], [field]: finalValue };
+      newRows[index] = { ...newRows[index], [field]: value };
       return newRows;
     });
+  };
+
+  // Handle reference-level curation status change
+  const handleRefStatusChange = (statuses) => {
+    // Auto-remove "High Priority" when a "Done:" status is added
+    const hasDoneStatus = statuses.some((s) => s.toLowerCase().startsWith('done'));
+    if (hasDoneStatus) {
+      setRefCurationStatus(statuses.filter((s) => s !== 'High Priority'));
+    } else {
+      setRefCurationStatus(statuses);
+    }
+  };
+
+  // Submit reference-level curation status
+  const handleSubmitRefStatus = async () => {
+    if (!referenceData || refCurationStatus.length === 0) {
+      setRefStatusError('Please select a curation status');
+      return;
+    }
+
+    setSubmittingRefStatus(true);
+    setRefStatusError(null);
+    setRefStatusSuccess(null);
+
+    try {
+      // Set each selected status (typically just one)
+      for (const status of refCurationStatus) {
+        await litguideCurationApi.setReferenceStatus(referenceData.reference_no, status);
+      }
+
+      setRefStatusSuccess('Reference curation status updated');
+      setTimeout(() => setRefStatusSuccess(null), 5000);
+
+      // Reload reference data to reflect changes
+      const data = await litguideCurationApi.getReferenceLiterature(
+        referenceData.reference_no,
+        currentOrganism
+      );
+      setReferenceData(data);
+    } catch (err) {
+      setRefStatusError(err.response?.data?.detail || 'Failed to update reference status');
+    } finally {
+      setSubmittingRefStatus(false);
+    }
   };
 
   const addAssignmentRow = () => {
@@ -656,6 +707,7 @@ function LitGuideCurationPage() {
 
   const resetAssignmentRows = () => {
     setAssignmentRows(Array.from({ length: NUM_BLANK_ROWS }, createEmptyRow));
+    setRefCurationStatus([]);
   };
 
   // Handle batch submit of topic assignments
@@ -669,15 +721,25 @@ function LitGuideCurationPage() {
         (row.literatureTopics.length > 0 || row.curationStatuses.length > 0)
     );
 
-    // Collect rows without features but with curation status (for reference-level status)
-    const rowsWithStatusOnly = assignmentRows.filter(
+    // Collect rows without features but with topics (nongene topics)
+    const rowsWithNongeneTopics = assignmentRows.filter(
       (row) =>
         !row.features.trim() &&
-        row.curationStatuses.length > 0
+        row.literatureTopics.length > 0
     );
 
-    if (rowsWithFeatures.length === 0 && rowsWithStatusOnly.length === 0) {
-      setAssignmentError('Please enter at least one feature with a topic/status, or select a curation status without features to set reference-level status');
+    // Check: nongene topics require "not gene specific" status
+    if (rowsWithNongeneTopics.length > 0 && !refCurationStatus.includes('not gene specific')) {
+      setAssignmentError('Literature topics without features require the "not gene specific" curation status to be selected.');
+      return;
+    }
+
+    // Check: must have something to submit
+    const hasTopicsToAssign = rowsWithFeatures.length > 0 || rowsWithNongeneTopics.length > 0;
+    const hasStatusToSet = refCurationStatus.length > 0;
+
+    if (!hasTopicsToAssign && !hasStatusToSet) {
+      setAssignmentError('Please enter at least one feature with topics, or select a curation status');
       return;
     }
 
@@ -691,7 +753,7 @@ function LitGuideCurationPage() {
       let refStatusSet = false;
       const errors = [];
 
-      // Handle rows with features (feature-level assignments)
+      // Handle rows with features (feature-level topic assignments)
       for (const row of rowsWithFeatures) {
         // Parse features (split by space or |)
         const features = row.features
@@ -705,7 +767,7 @@ function LitGuideCurationPage() {
           referenceData.reference_no,
           features,
           row.literatureTopics,
-          row.curationStatuses,
+          [], // curation status is now set at reference level, not per-row
           currentOrganism
         );
 
@@ -718,15 +780,26 @@ function LitGuideCurationPage() {
           .forEach((r) => errors.push(`${r.feature}/${r.topic}: ${r.message}`));
       }
 
-      // Handle rows without features (reference-level status only)
-      for (const row of rowsWithStatusOnly) {
-        // Set reference-level curation status (use the first status if multiple)
-        const status = row.curationStatuses[0];
+      // Handle nongene topics (topics without features)
+      for (const row of rowsWithNongeneTopics) {
+        for (const topic of row.literatureTopics) {
+          try {
+            await litguideCurationApi.addNongeneTopic(referenceData.reference_no, topic);
+            totalSuccessful++;
+          } catch (err) {
+            errors.push(`Failed to add nongene topic '${topic}': ${err.response?.data?.detail || err.message}`);
+            totalFailed++;
+          }
+        }
+      }
+
+      // Set reference-level curation status (once for the entire paper)
+      for (const status of refCurationStatus) {
         try {
           await litguideCurationApi.setReferenceStatus(referenceData.reference_no, status);
           refStatusSet = true;
         } catch (err) {
-          errors.push(`Failed to set reference status: ${err.response?.data?.detail || err.message}`);
+          errors.push(`Failed to set reference status '${status}': ${err.response?.data?.detail || err.message}`);
           totalFailed++;
         }
       }
@@ -1492,6 +1565,63 @@ function LitGuideCurationPage() {
             </div>
           )}
 
+          {/* Reference Curation Status Section (standalone, applies to entire paper) */}
+          <div style={styles.refStatusStandaloneSection}>
+            <h3 style={styles.refStatusStandaloneHeader}>Reference Curation Status</h3>
+            {refStatusSuccess && (
+              <div style={styles.refStatusSuccessMsg}>{refStatusSuccess}</div>
+            )}
+            {refStatusError && (
+              <div style={styles.refStatusErrorMsg}>{refStatusError}</div>
+            )}
+            <div style={styles.refStatusContent}>
+              <button
+                type="button"
+                onClick={() => setRefStatusModalOpen(true)}
+                style={styles.refStatusButton}
+              >
+                Select Status
+              </button>
+              <div style={styles.refStatusList}>
+                {refCurationStatus.length > 0 ? (
+                  refCurationStatus.map((status, idx) => (
+                    <span key={idx} style={styles.refStatusItem}>
+                      {status}
+                      <button
+                        type="button"
+                        onClick={() => setRefCurationStatus(refCurationStatus.filter((_, i) => i !== idx))}
+                        style={styles.refStatusRemoveBtn}
+                      >
+                        &times;
+                      </button>
+                    </span>
+                  ))
+                ) : (
+                  <span style={styles.refStatusNone}>None selected</span>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={handleSubmitRefStatus}
+                disabled={submittingRefStatus || refCurationStatus.length === 0}
+                style={styles.refStatusSubmitBtn}
+              >
+                {submittingRefStatus ? 'Saving...' : 'Save Status'}
+              </button>
+            </div>
+            <p style={styles.refStatusHelp}>
+              This status applies to the entire paper. Select &quot;not gene specific&quot; to add topics without features.
+            </p>
+            <CVTreeModal
+              isOpen={refStatusModalOpen}
+              onClose={() => setRefStatusModalOpen(false)}
+              onSelect={handleRefStatusChange}
+              cvName="curation_status"
+              title="Select Reference Curation Status"
+              selectedTerms={refCurationStatus}
+            />
+          </div>
+
           {/* Assign Literature Guide Topics Section */}
           <div id="Assign" style={styles.assignSection}>
             <h3 style={styles.assignHeader}>Assign Literature Guide Topics to this Paper</h3>
@@ -1502,8 +1632,8 @@ function LitGuideCurationPage() {
               <div style={styles.assignError}>{assignmentError}</div>
             )}
             <p style={styles.assignHelp}>
-              Separate multiple features by spaces or | (pipe). Each row will have the specified
-              topics and curation statuses applied to all listed features.
+              Separate multiple features by spaces or | (pipe). Topics will be applied to all
+              listed features. Leave features empty to add non-gene topics.
             </p>
             <div style={styles.assignRows}>
               {assignmentRows.map((row, index) => (
@@ -1511,15 +1641,15 @@ function LitGuideCurationPage() {
                   key={index}
                   features={row.features}
                   literatureTopics={row.literatureTopics}
-                  curationStatuses={row.curationStatuses}
                   onFeaturesChange={(value) => updateAssignmentRow(index, 'features', value)}
                   onLiteratureTopicsChange={(value) => updateAssignmentRow(index, 'literatureTopics', value)}
-                  onCurationStatusesChange={(value) => updateAssignmentRow(index, 'curationStatuses', value)}
                   onRemove={() => removeAssignmentRow(index)}
                   showRemoveButton={assignmentRows.length > 1}
+                  hideCurationStatus={true}
                 />
               ))}
             </div>
+
             <div style={styles.assignButtons}>
               <button
                 type="button"
@@ -1596,35 +1726,6 @@ function LitGuideCurationPage() {
                         </div>
                       </div>
 
-                      {/* Curation Status (editable) */}
-                      <div style={styles.editTopicsListSection}>
-                        <button
-                          type="button"
-                          onClick={() => openEditModal(idx, 'curation_status')}
-                          style={styles.editTopicsButton}
-                        >
-                          Curation Status
-                        </button>
-                        <div style={styles.editTopicsListBox}>
-                          {row.curationStatuses.length > 0 ? (
-                            row.curationStatuses.map((status, i) => (
-                              <div key={i} style={styles.editTopicsItemEditable}>
-                                {status}
-                                <button
-                                  type="button"
-                                  onClick={() => removeEditTopic(idx, status, 'curation_status')}
-                                  style={styles.editTopicsRemoveBtn}
-                                  title="Remove status"
-                                >
-                                  &times;
-                                </button>
-                              </div>
-                            ))
-                          ) : (
-                            <span style={styles.nothingYet}>none</span>
-                          )}
-                        </div>
-                      </div>
                     </div>
                   </div>
                 ))}
@@ -1659,37 +1760,6 @@ function LitGuideCurationPage() {
             </div>
           )}
 
-          {/* Quick Add Feature (simple form) */}
-          <div id="AddFeature" style={styles.addSection}>
-            <h3 style={styles.sectionHeader}>Quick Add Feature</h3>
-            <div style={styles.addFeatureRow}>
-              <input
-                type="text"
-                value={newFeature}
-                onChange={(e) => setNewFeature(e.target.value)}
-                placeholder="Feature name or gene name..."
-                style={styles.featureInput}
-              />
-              <select
-                value={newFeatureTopic}
-                onChange={(e) => setNewFeatureTopic(e.target.value)}
-                style={styles.topicSelect}
-              >
-                <option value="">Select topic...</option>
-                {topics.map((topic) => (
-                  <option key={topic} value={topic}>{topic}</option>
-                ))}
-              </select>
-              <button
-                onClick={handleAddFeatureToReference}
-                disabled={!newFeature || !newFeatureTopic}
-                style={styles.addButton}
-              >
-                Add Feature
-              </button>
-            </div>
-          </div>
-
           {/* Non-Gene Topics Section */}
           <div id="NongeneTopics" style={styles.nongeneSection}>
             <h3 style={styles.nongeneHeader}>
@@ -1722,44 +1792,26 @@ function LitGuideCurationPage() {
                 </span>
               </div>
 
-              {/* Internal Topics (Curation Status) */}
-              <div style={styles.nongeneRowInternal}>
-                <strong style={styles.nongeneLabel}>Internal Topics:</strong>
-                <span style={styles.nongeneTopics}>
-                  {nongeneTopics.internal_topics.length > 0 ? (
-                    nongeneTopics.internal_topics.map((t, idx) => (
-                      <span key={t.ref_property_no}>
-                        {t.topic}
-                        {idx < nongeneTopics.internal_topics.length - 1 && ' | '}
-                      </span>
-                    ))
-                  ) : (
-                    <span style={styles.nothingYet}>nothing yet</span>
-                  )}
-                </span>
-              </div>
-
               {/* Add Non-Gene Topic */}
               <div style={styles.addNongeneRow}>
                 <span style={styles.nongeneLabel}>Add Topic:</span>
-                <select
-                  value={newNongeneTopic}
-                  onChange={(e) => setNewNongeneTopic(e.target.value)}
-                  style={styles.nongeneSelect}
-                >
-                  <option value="">Select topic...</option>
-                  {topics.map((topic) => (
-                    <option key={topic} value={topic}>{topic}</option>
-                  ))}
-                </select>
                 <button
-                  onClick={handleAddNongeneTopic}
-                  disabled={!newNongeneTopic}
+                  type="button"
+                  onClick={() => setNongeneTopicModalOpen(true)}
                   style={styles.addNongeneBtn}
                 >
-                  Add
+                  Select Topics to Add
                 </button>
               </div>
+
+              <CVTreeModal
+                isOpen={nongeneTopicModalOpen}
+                onClose={() => setNongeneTopicModalOpen(false)}
+                onSelect={handleAddNongeneTopics}
+                cvName="literature_topic"
+                title="Select Literature Topics to Add"
+                selectedTerms={[]}
+              />
 
               {/* Edit/Delete Reference Data Link */}
               <div style={styles.editRefRow}>
@@ -2453,6 +2505,111 @@ const styles = {
   },
   assignRows: {
     marginBottom: '0.5rem',
+  },
+  refStatusSection: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.75rem',
+    padding: '0.75rem',
+    marginBottom: '0.5rem',
+    backgroundColor: '#f0f7ff',
+    border: '1px solid #cce5ff',
+    borderRadius: '4px',
+    flexWrap: 'wrap',
+  },
+  refStatusLabel: {
+    fontWeight: 'bold',
+    fontSize: '0.9rem',
+    whiteSpace: 'nowrap',
+  },
+  refStatusButton: {
+    padding: '0.4rem 0.75rem',
+    fontSize: '0.85rem',
+    backgroundColor: '#fff',
+    border: '1px solid #007bff',
+    borderRadius: '4px',
+    color: '#007bff',
+    cursor: 'pointer',
+  },
+  refStatusList: {
+    display: 'flex',
+    gap: '0.5rem',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+  },
+  refStatusItem: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '0.25rem',
+    padding: '0.25rem 0.5rem',
+    backgroundColor: '#e0e0e0',
+    borderRadius: '3px',
+    fontSize: '0.85rem',
+  },
+  refStatusRemoveBtn: {
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    fontSize: '1rem',
+    color: '#666',
+    padding: '0 0.1rem',
+    lineHeight: 1,
+  },
+  refStatusNone: {
+    color: '#999',
+    fontSize: '0.85rem',
+    fontStyle: 'italic',
+  },
+  refStatusStandaloneSection: {
+    marginBottom: '1.5rem',
+    padding: '1rem',
+    backgroundColor: '#f0f7ff',
+    border: '1px solid #cce5ff',
+    borderRadius: '8px',
+  },
+  refStatusStandaloneHeader: {
+    margin: '0 0 0.75rem 0',
+    fontSize: '1.1rem',
+    color: '#004085',
+    borderBottom: '1px solid #cce5ff',
+    paddingBottom: '0.5rem',
+  },
+  refStatusContent: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.75rem',
+    flexWrap: 'wrap',
+  },
+  refStatusHelp: {
+    margin: '0.5rem 0 0 0',
+    fontSize: '0.85rem',
+    color: '#666',
+    width: '100%',
+  },
+  refStatusSubmitBtn: {
+    padding: '0.5rem 1rem',
+    backgroundColor: '#28a745',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontWeight: 'bold',
+  },
+  refStatusSuccessMsg: {
+    padding: '0.5rem',
+    marginBottom: '0.5rem',
+    backgroundColor: '#d4edda',
+    color: '#155724',
+    border: '1px solid #c3e6cb',
+    borderRadius: '4px',
+  },
+  refStatusErrorMsg: {
+    padding: '0.5rem',
+    marginBottom: '0.5rem',
+    backgroundColor: '#f8d7da',
+    color: '#721c24',
+    border: '1px solid #f5c6cb',
+    borderRadius: '4px',
   },
   assignButtons: {
     display: 'flex',
