@@ -91,6 +91,9 @@ function LitGuideCurationPage() {
   // Reference-level curation status (applies to entire paper, set once)
   const [refCurationStatus, setRefCurationStatus] = useState([]);
   const [refStatusModalOpen, setRefStatusModalOpen] = useState(false);
+  const [submittingRefStatus, setSubmittingRefStatus] = useState(false);
+  const [refStatusSuccess, setRefStatusSuccess] = useState(null);
+  const [refStatusError, setRefStatusError] = useState(null);
   const [submittingAssignments, setSubmittingAssignments] = useState(false);
   const [assignmentSuccess, setAssignmentSuccess] = useState(null);
   const [assignmentError, setAssignmentError] = useState(null);
@@ -657,6 +660,39 @@ function LitGuideCurationPage() {
       setRefCurationStatus(statuses.filter((s) => s !== 'High Priority'));
     } else {
       setRefCurationStatus(statuses);
+    }
+  };
+
+  // Submit reference-level curation status
+  const handleSubmitRefStatus = async () => {
+    if (!referenceData || refCurationStatus.length === 0) {
+      setRefStatusError('Please select a curation status');
+      return;
+    }
+
+    setSubmittingRefStatus(true);
+    setRefStatusError(null);
+    setRefStatusSuccess(null);
+
+    try {
+      // Set each selected status (typically just one)
+      for (const status of refCurationStatus) {
+        await litguideCurationApi.setReferenceStatus(referenceData.reference_no, status);
+      }
+
+      setRefStatusSuccess('Reference curation status updated');
+      setTimeout(() => setRefStatusSuccess(null), 5000);
+
+      // Reload reference data to reflect changes
+      const data = await litguideCurationApi.getReferenceLiterature(
+        referenceData.reference_no,
+        currentOrganism
+      );
+      setReferenceData(data);
+    } catch (err) {
+      setRefStatusError(err.response?.data?.detail || 'Failed to update reference status');
+    } finally {
+      setSubmittingRefStatus(false);
     }
   };
 
@@ -1532,6 +1568,12 @@ function LitGuideCurationPage() {
           {/* Reference Curation Status Section (standalone, applies to entire paper) */}
           <div style={styles.refStatusStandaloneSection}>
             <h3 style={styles.refStatusStandaloneHeader}>Reference Curation Status</h3>
+            {refStatusSuccess && (
+              <div style={styles.refStatusSuccessMsg}>{refStatusSuccess}</div>
+            )}
+            {refStatusError && (
+              <div style={styles.refStatusErrorMsg}>{refStatusError}</div>
+            )}
             <div style={styles.refStatusContent}>
               <button
                 type="button"
@@ -1558,10 +1600,18 @@ function LitGuideCurationPage() {
                   <span style={styles.refStatusNone}>None selected</span>
                 )}
               </div>
-              <p style={styles.refStatusHelp}>
-                This status applies to the entire paper. Select &quot;not gene specific&quot; to add topics without features.
-              </p>
+              <button
+                type="button"
+                onClick={handleSubmitRefStatus}
+                disabled={submittingRefStatus || refCurationStatus.length === 0}
+                style={styles.refStatusSubmitBtn}
+              >
+                {submittingRefStatus ? 'Saving...' : 'Save Status'}
+              </button>
             </div>
+            <p style={styles.refStatusHelp}>
+              This status applies to the entire paper. Select &quot;not gene specific&quot; to add topics without features.
+            </p>
             <CVTreeModal
               isOpen={refStatusModalOpen}
               onClose={() => setRefStatusModalOpen(false)}
@@ -2535,6 +2585,31 @@ const styles = {
     fontSize: '0.85rem',
     color: '#666',
     width: '100%',
+  },
+  refStatusSubmitBtn: {
+    padding: '0.5rem 1rem',
+    backgroundColor: '#28a745',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontWeight: 'bold',
+  },
+  refStatusSuccessMsg: {
+    padding: '0.5rem',
+    marginBottom: '0.5rem',
+    backgroundColor: '#d4edda',
+    color: '#155724',
+    border: '1px solid #c3e6cb',
+    borderRadius: '4px',
+  },
+  refStatusErrorMsg: {
+    padding: '0.5rem',
+    marginBottom: '0.5rem',
+    backgroundColor: '#f8d7da',
+    color: '#721c24',
+    border: '1px solid #f5c6cb',
+    borderRadius: '4px',
   },
   assignButtons: {
     display: 'flex',
