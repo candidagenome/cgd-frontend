@@ -862,10 +862,60 @@ function LitGuideCurationPage() {
       const errors = [];
 
       for (const row of editRows) {
-        // Use feature_no array for precise identification (convert to strings for API)
-        const featureIdentifiers = (row.featureNos || row.originalFeatureNos || []).map(
-          (no) => String(no)
+        // Parse current features from the textarea (space or | separated)
+        const currentFeatureNames = row.features
+          .split(/[\s|]+/)
+          .map((f) => f.trim())
+          .filter((f) => f.length > 0);
+
+        // Get original feature names
+        const originalFeatureNames = row.originalFeatures
+          .split(/[\s|]+/)
+          .map((f) => f.trim())
+          .filter((f) => f.length > 0);
+
+        // Find features to add (in current but not in original)
+        const featuresToAdd = currentFeatureNames.filter(
+          (f) => !originalFeatureNames.some((o) => o.toLowerCase() === f.toLowerCase())
         );
+
+        // Find features to remove (in original but not in current)
+        const featuresToRemove = originalFeatureNames.filter(
+          (f) => !currentFeatureNames.some((c) => c.toLowerCase() === f.toLowerCase())
+        );
+
+        // Handle removed features - unlink them
+        for (const featName of featuresToRemove) {
+          try {
+            await litguideCurationApi.unlinkFeatureFromReference(referenceData.reference_no, featName);
+            totalRemoved++;
+          } catch (err) {
+            errors.push(`Failed to unlink ${featName}: ${err.message}`);
+          }
+        }
+
+        // Handle added features - assign existing topics to them
+        if (featuresToAdd.length > 0 && row.literatureTopics.length > 0) {
+          try {
+            const result = await litguideCurationApi.batchAssignTopics(
+              referenceData.reference_no,
+              featuresToAdd,
+              row.literatureTopics,
+              [], // No curation statuses at feature level anymore
+              currentOrganism
+            );
+            totalAdded += result.successful;
+          } catch (err) {
+            errors.push(`Failed to add topics for new features: ${err.message}`);
+          }
+        }
+
+        // Use remaining feature_no array for topic changes (only original features that weren't removed)
+        const remainingFeatureNos = (row.originalFeatureNos || []).filter((no, idx) => {
+          const name = originalFeatureNames[idx];
+          return !featuresToRemove.some((f) => f.toLowerCase() === name?.toLowerCase());
+        });
+        const featureIdentifiers = remainingFeatureNos.map((no) => String(no));
 
         // Find topics to add (in current but not in original)
         const topicsToAdd = [
@@ -1688,12 +1738,16 @@ function LitGuideCurationPage() {
                 {editRows.map((row, idx) => (
                   <div key={idx} style={styles.editTopicsRow}>
                     <div style={styles.editTopicsRowContent}>
-                      {/* Features (read-only) */}
+                      {/* Features (editable) */}
                       <div style={styles.editTopicsFeaturesSection}>
                         <label style={styles.editTopicsLabel}>Features:</label>
-                        <div style={styles.editTopicsFeaturesList}>
-                          {row.features}
-                        </div>
+                        <textarea
+                          value={row.features}
+                          onChange={(e) => updateEditRow(idx, 'features', e.target.value)}
+                          placeholder="Enter feature names separated by space"
+                          style={styles.editTopicsFeaturesTextarea}
+                          rows={2}
+                        />
                       </div>
 
                       {/* Literature Topics (editable) */}
@@ -2688,6 +2742,15 @@ const styles = {
     borderRadius: '4px',
     fontSize: '0.9rem',
     minHeight: '2rem',
+  },
+  editTopicsFeaturesTextarea: {
+    width: '100%',
+    padding: '0.5rem',
+    fontSize: '0.9rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    resize: 'vertical',
+    fontFamily: 'inherit',
   },
   editTopicsListSection: {
     flex: '1 1 150px',
