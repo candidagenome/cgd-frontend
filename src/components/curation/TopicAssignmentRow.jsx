@@ -2,7 +2,7 @@
  * TopicAssignmentRow - A single row for assigning topics to features.
  *
  * Contains a features textarea, literature topics button+list,
- * and curation status button+list.
+ * and optionally a curation status button+list.
  */
 import { useState } from 'react';
 import PropTypes from 'prop-types';
@@ -11,12 +11,13 @@ import CVTreeModal from './CVTreeModal';
 function TopicAssignmentRow({
   features,
   literatureTopics,
-  curationStatuses,
+  curationStatuses = [],
   onFeaturesChange,
   onLiteratureTopicsChange,
-  onCurationStatusesChange,
+  onCurationStatusesChange = () => {},
   onRemove,
   showRemoveButton = true,
+  hideCurationStatus = false,
 }) {
   const [litTopicModalOpen, setLitTopicModalOpen] = useState(false);
   const [curationStatusModalOpen, setCurationStatusModalOpen] = useState(false);
@@ -76,45 +77,47 @@ function TopicAssignmentRow({
           </button>
         </div>
 
-        {/* Curation Status */}
-        <div style={styles.topicSection}>
-          <button
-            type="button"
-            onClick={() => setCurationStatusModalOpen(true)}
-            style={styles.topicButton}
-          >
-            Curation Status
-          </button>
-          <div style={styles.selectedList}>
-            {curationStatuses.length > 0 ? (
-              curationStatuses.map((status, idx) => (
-                <div key={idx} style={styles.selectedItem}>
-                  {status}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const newStatuses = curationStatuses.filter((_, i) => i !== idx);
-                      onCurationStatusesChange(newStatuses);
-                    }}
-                    style={styles.removeItemBtn}
-                  >
-                    &times;
-                  </button>
-                </div>
-              ))
-            ) : (
-              <span style={styles.noSelection}>None selected</span>
-            )}
+        {/* Curation Status (optional, can be hidden when status is set at reference level) */}
+        {!hideCurationStatus && (
+          <div style={styles.topicSection}>
+            <button
+              type="button"
+              onClick={() => setCurationStatusModalOpen(true)}
+              style={styles.topicButton}
+            >
+              Curation Status
+            </button>
+            <div style={styles.selectedList}>
+              {curationStatuses.length > 0 ? (
+                curationStatuses.map((status, idx) => (
+                  <div key={idx} style={styles.selectedItem}>
+                    {status}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const newStatuses = curationStatuses.filter((_, i) => i !== idx);
+                        onCurationStatusesChange(newStatuses);
+                      }}
+                      style={styles.removeItemBtn}
+                    >
+                      &times;
+                    </button>
+                  </div>
+                ))
+              ) : (
+                <span style={styles.noSelection}>None selected</span>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={() => onCurationStatusesChange([])}
+              style={styles.clearBtn}
+              disabled={curationStatuses.length === 0}
+            >
+              Clear
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={() => onCurationStatusesChange([])}
-            style={styles.clearBtn}
-            disabled={curationStatuses.length === 0}
-          >
-            Clear
-          </button>
-        </div>
+        )}
 
         {/* Remove row button */}
         {showRemoveButton && (
@@ -138,14 +141,16 @@ function TopicAssignmentRow({
         title="Select Literature Topics"
         selectedTerms={literatureTopics}
       />
-      <CVTreeModal
-        isOpen={curationStatusModalOpen}
-        onClose={() => setCurationStatusModalOpen(false)}
-        onSelect={onCurationStatusesChange}
-        cvName="curation_status"
-        title="Select Curation Status"
-        selectedTerms={curationStatuses}
-      />
+      {!hideCurationStatus && (
+        <CVTreeModal
+          isOpen={curationStatusModalOpen}
+          onClose={() => setCurationStatusModalOpen(false)}
+          onSelect={onCurationStatusesChange}
+          cvName="curation_status"
+          title="Select Curation Status"
+          selectedTerms={curationStatuses}
+        />
+      )}
     </div>
   );
 }
@@ -257,12 +262,13 @@ const styles = {
 TopicAssignmentRow.propTypes = {
   features: PropTypes.string.isRequired,
   literatureTopics: PropTypes.arrayOf(PropTypes.string).isRequired,
-  curationStatuses: PropTypes.arrayOf(PropTypes.string).isRequired,
+  curationStatuses: PropTypes.arrayOf(PropTypes.string),
   onFeaturesChange: PropTypes.func.isRequired,
   onLiteratureTopicsChange: PropTypes.func.isRequired,
-  onCurationStatusesChange: PropTypes.func.isRequired,
+  onCurationStatusesChange: PropTypes.func,
   onRemove: PropTypes.func.isRequired,
   showRemoveButton: PropTypes.bool,
+  hideCurationStatus: PropTypes.bool,
 };
 
 export default TopicAssignmentRow;
