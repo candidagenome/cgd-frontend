@@ -1496,9 +1496,20 @@ function LitGuideCurationPage() {
             const publicCurated = [];
             const notYetCurated = [];
             const internalCurated = [];
+            const pendingCuration = [];  // Features linked via RefLink but no topics assigned yet
 
             referenceData.features?.forEach((feat) => {
               const displayName = feat.gene_name || feat.feature_name;
+
+              // Check if feature has any topics at all
+              if (!feat.topics || feat.topics.length === 0) {
+                // Feature is linked via RefLink but has no topics - needs curation
+                if (!pendingCuration.includes(displayName)) {
+                  pendingCuration.push(displayName);
+                }
+                return;
+              }
+
               const hasPublicTopic = feat.topics?.some(
                 (t) => t.property_type === 'literature_topic' && t.topic !== 'Not yet curated'
               );
@@ -1574,6 +1585,21 @@ function LitGuideCurationPage() {
                       }
                     </span>
                   </div>
+                  {pendingCuration.length > 0 && (
+                    <div style={styles.featuresLinkedRowPending}>
+                      <strong>Linked but needs topic assignment:</strong>{' '}
+                      <span>
+                        {pendingCuration.map((name, idx) => (
+                          <span key={name}>
+                            <Link to={`/locus/${name}`} style={styles.featureLinkInline} target="_blank" rel="noopener noreferrer">
+                              {name}
+                            </Link>
+                            {idx < pendingCuration.length - 1 && ' | '}
+                          </span>
+                        ))}
+                      </span>
+                    </div>
+                  )}
                   {referenceData.pubmed && unlinkedFeatures.length > 0 && (
                     <div style={styles.featuresLinkedRowUnlinked}>
                       <strong>Unlinked from:</strong>{' '}
@@ -1962,28 +1988,32 @@ function LitGuideCurationPage() {
                       <td style={styles.td}>{feat.gene_name || '-'}</td>
                       <td style={styles.td}>{feat.feature_type || '-'}</td>
                       <td style={styles.td}>
-                        {feat.topics.map((topic) => (
-                          <div key={topic.refprop_feat_no} style={styles.topicTag}>
-                            {bulkDeleteMode && (
-                              <input
-                                type="checkbox"
-                                checked={selectedForDelete.has(topic.refprop_feat_no)}
-                                onChange={() => handleToggleDeleteSelection(topic.refprop_feat_no)}
-                                style={styles.bulkCheckbox}
-                              />
-                            )}
-                            {topic.topic}
-                            {!bulkDeleteMode && (
-                              <button
-                                onClick={() => handleRemoveTopicForReference(topic.refprop_feat_no)}
-                                style={styles.removeTopicBtn}
-                                title="Remove topic"
-                              >
-                                x
-                              </button>
-                            )}
-                          </div>
-                        ))}
+                        {feat.topics && feat.topics.length > 0 ? (
+                          feat.topics.map((topic) => (
+                            <div key={topic.refprop_feat_no} style={styles.topicTag}>
+                              {bulkDeleteMode && (
+                                <input
+                                  type="checkbox"
+                                  checked={selectedForDelete.has(topic.refprop_feat_no)}
+                                  onChange={() => handleToggleDeleteSelection(topic.refprop_feat_no)}
+                                  style={styles.bulkCheckbox}
+                                />
+                              )}
+                              {topic.topic}
+                              {!bulkDeleteMode && (
+                                <button
+                                  onClick={() => handleRemoveTopicForReference(topic.refprop_feat_no)}
+                                  style={styles.removeTopicBtn}
+                                  title="Remove topic"
+                                >
+                                  x
+                                </button>
+                              )}
+                            </div>
+                          ))
+                        ) : (
+                          <span style={styles.needsTopicAssignment}>Needs topic assignment</span>
+                        )}
                       </td>
                       <td style={styles.td}>
                         <Link
@@ -2534,6 +2564,12 @@ const styles = {
     backgroundColor: '#f9f9f9',
     fontSize: '0.9rem',
   },
+  featuresLinkedRowPending: {
+    padding: '0.5rem 1rem',
+    backgroundColor: '#fff3cd',  // Yellow/warning background
+    fontSize: '0.9rem',
+    borderLeft: '3px solid #ffc107',
+  },
   featuresLinkedRowUnlinked: {
     padding: '0.5rem 1rem',
     backgroundColor: '#f0f0f0',
@@ -3003,6 +3039,14 @@ const styles = {
   nothingYet: {
     fontStyle: 'italic',
     color: '#666',
+  },
+  needsTopicAssignment: {
+    fontStyle: 'italic',
+    color: '#856404',
+    backgroundColor: '#fff3cd',
+    padding: '2px 6px',
+    borderRadius: '3px',
+    fontSize: '0.85em',
   },
   addNongeneRow: {
     padding: '0.5rem',
