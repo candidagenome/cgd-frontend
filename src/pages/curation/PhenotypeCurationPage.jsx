@@ -782,12 +782,25 @@ function PhenotypeCurationPage() {
                                 e.target.value
                               )
                             }
+                            placeholder={propType === 'chebi_ontology' ? 'CHEBI:12345 | CHEBI:67890' : ''}
                             style={styles.propInput}
                           />
                         )}
                         {ALLOW_MULTIPLES_TYPES.includes(propType) && (
                           <div style={styles.multiplesNote}>
                             allows multiples, separate by |
+                          </div>
+                        )}
+                        {propType === 'chebi_ontology' && (
+                          <div style={styles.chebiSearchLink}>
+                            <a
+                              href="https://www.ebi.ac.uk/chebi/advancedSearchFT.do"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              Search CHEBI at EBI
+                            </a>
+                            {' '}to find chemical IDs
                           </div>
                         )}
                       </td>
@@ -1180,6 +1193,10 @@ const styles = {
     color: '#666',
     marginTop: '0.25rem',
     fontStyle: 'italic',
+  },
+  chebiSearchLink: {
+    fontSize: '0.8rem',
+    marginTop: '0.25rem',
   },
   featureListRow: {
     padding: '0.5rem',
