@@ -486,6 +486,7 @@ function VirulenceFactorBrowserPage() {
         flex: 1.4,
         minWidth: 280,
         wrapText: true,
+        autoHeight: true,
         valueGetter: (params) => formatLocusName(params.data),
         cellRenderer: (params) => {
           const importanceLevel = params.data.importance_level || 'low';
