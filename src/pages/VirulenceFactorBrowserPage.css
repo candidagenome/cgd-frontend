@@ -580,18 +580,6 @@
   background: #f8fbff;
 }
 
-/* Full summary shown above short summary */
-.gene-summary .summary-full {
-  margin-bottom: 6px;
-  padding-bottom: 6px;
-  border-bottom: 1px dashed #ccc;
-  font-style: normal;
-}
-
-.gene-summary .summary-short {
-  font-style: italic;
-}
-
 /* Ensure tooltip is not clipped by AG Grid cell overflow */
 .virulence-factor-browser-page .ag-cell {
   overflow: visible !important;
