@@ -364,7 +364,11 @@ function LocusCurationPage() {
                     <td style={styles.td}>{f.feature_name}</td>
                     <td style={styles.td}>{f.gene_name || '-'}</td>
                     <td style={styles.td}>{f.feature_type}</td>
-                    <td style={styles.td}>{f.headline || '-'}</td>
+                    <td style={styles.td}>
+                      {f.headline ? (
+                        <span dangerouslySetInnerHTML={{ __html: f.headline }} />
+                      ) : '-'}
+                    </td>
                     <td style={styles.tdAction}>
                       <button
                         onClick={() => handleSelectFeature(f)}
@@ -489,6 +493,9 @@ function LocusCurationPage() {
                         <div style={styles.charCount}>
                           {editForm.headline?.length || 0}/240
                         </div>
+                        <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
+                          Use &lt;i&gt;...&lt;/i&gt; or &lt;em&gt;...&lt;/em&gt; for italics
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -588,7 +595,11 @@ function LocusCurationPage() {
                   </tr>
                   <tr>
                     <th style={styles.infoTh}>Headline:</th>
-                    <td style={styles.infoTd}>{featureData.headline || '-'}</td>
+                    <td style={styles.infoTd}>
+                      {featureData.headline ? (
+                        <span dangerouslySetInnerHTML={{ __html: featureData.headline }} />
+                      ) : '-'}
+                    </td>
                   </tr>
                   <tr>
                     <th style={styles.infoTh}>Source:</th>
