@@ -600,6 +600,33 @@
   opacity: 1;
 }
 
+/* Summary labels */
+.gene-summary .summary-label {
+  font-weight: 600;
+  color: #666;
+}
+
+.gene-summary .summary-link {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.gene-summary .summary-link:hover {
+  text-decoration: underline;
+}
+
+/* Curator summary - slightly different styling */
+.gene-summary.curator-summary {
+  margin-bottom: 4px;
+  color: #444;
+}
+
+/* AI summary */
+.gene-summary.ai-summary {
+  color: #555;
+  font-style: italic;
+}
+
 /* Ensure tooltip is not clipped by AG Grid cell overflow */
 .virulence-factor-browser-page .ag-cell {
   overflow: visible !important;

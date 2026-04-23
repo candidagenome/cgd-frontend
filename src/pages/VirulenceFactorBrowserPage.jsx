@@ -524,10 +524,24 @@ function VirulenceFactorBrowserPage() {
                   </a>
                 )}
               </div>
+              {params.data.headline && (
+                <div className="gene-summary curator-summary">
+                  <span className="summary-label">Curator summary:</span> {params.data.headline}
+                </div>
+              )}
               {params.data.summary && (
                 <div
-                  className={`gene-summary ${params.data.summary_full ? 'has-tooltip' : ''}`}
+                  className={`gene-summary ai-summary ${params.data.summary_full ? 'has-tooltip' : ''}`}
                 >
+                  <a
+                    href="https://github.com/candidagenome/cgd-backend/blob/main/docs/VIRULENCE_BROWSER_SPECS.md#1-gene-summary-generation"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="summary-label summary-link"
+                    title="Learn how AI summaries are generated"
+                  >
+                    AI summary:
+                  </a>{' '}
                   {params.data.summary}
                   {params.data.summary_full && (
                     <span className="summary-tooltip">{params.data.summary_full}</span>
