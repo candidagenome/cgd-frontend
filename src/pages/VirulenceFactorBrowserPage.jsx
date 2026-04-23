@@ -783,11 +783,28 @@ function VirulenceFactorBrowserPage() {
     const summaryHeight = params.data.summary ? 40 : 0;
     const orthologsHeight = params.data.orthologs?.length > 0 ? 25 : 0;
 
-    // Evidence column height
+    // Evidence column height - estimate wrapped lines based on text length
     const directEvidence = params.data.direct_evidence || [];
     const indirectEvidence = params.data.indirect_evidence || [];
-    const evidenceLines = directEvidence.length + indirectEvidence.length;
-    const evidenceHeight = Math.max(0, (evidenceLines - 2) * 20);
+    const allEvidence = [...directEvidence, ...indirectEvidence];
+
+    // Estimate lines: ~40 chars fit per line in Evidence column
+    // Each evidence item needs at least 1 line, plus extra for long text
+    const charsPerLine = 40;
+    const lineHeight = 22;
+    let evidenceLines = 0;
+
+    // Add header lines for Direct/Indirect labels
+    if (directEvidence.length > 0) evidenceLines += 1;
+    if (indirectEvidence.length > 0) evidenceLines += 1;
+
+    // Calculate lines needed for each evidence item
+    allEvidence.forEach(evidence => {
+      const lines = Math.ceil(evidence.length / charsPerLine);
+      evidenceLines += lines;
+    });
+
+    const evidenceHeight = Math.max(0, (evidenceLines - 3) * lineHeight);
 
     return baseHeight + summaryHeight + orthologsHeight + evidenceHeight;
   }, []);
