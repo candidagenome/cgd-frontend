@@ -571,7 +571,7 @@
   left: 0;
   top: 100%;
   margin-top: 6px;
-  width: 350px;
+  width: 450px;
   max-width: 90vw;
   padding: 10px 12px;
   background: #1a1a2e;
@@ -583,6 +583,8 @@
   transition: opacity 0.2s ease, visibility 0.2s ease;
   pointer-events: none;
   white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 /* Arrow pointing up */
