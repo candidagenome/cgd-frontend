@@ -45,7 +45,7 @@ const CombinedResultRenderer = (props) => {
   // Prefer gene_name (standard name like "HOG1") over name (which may be orf ID like "orf19.8514")
   // This ensures we use "/locus/HOG1" instead of "/locus/orf19.xxx"
   // Note: orthologs use data.link directly (set by backend to CGD gene link)
-  const isLocusCategory = ['genes', 'descriptions', 'paragraphs', 'name_descriptions', 'notes'].includes(data.category);
+  const isLocusCategory = ['genes', 'cgdid', 'descriptions', 'paragraphs', 'name_descriptions', 'notes'].includes(data.category);
   const locusIdentifier = data.gene_name || data.name;
   const link = isLocusCategory && locusIdentifier ? `/locus/${locusIdentifier}` : data.link;
 
@@ -172,6 +172,7 @@ const CombinedResultRenderer = (props) => {
 // Category labels for display
 const CATEGORY_LABELS = {
   genes: 'Genes / Loci',
+  cgdid: 'CGD ID',
   descriptions: 'Locus Descriptions',
   go_terms: 'GO Terms',
   colleagues: 'Colleagues',
@@ -190,7 +191,7 @@ const CATEGORY_LABELS = {
 
 // Order in which categories are displayed
 const CATEGORY_ORDER = [
-  'genes', 'descriptions', 'go_terms', 'colleagues', 'authors',
+  'genes', 'cgdid', 'descriptions', 'go_terms', 'colleagues', 'authors',
   'pathways', 'paragraphs', 'paper_titles', 'name_descriptions',
   'phenotypes', 'notes', 'external_ids', 'orthologs', 'literature_topics'
 ];

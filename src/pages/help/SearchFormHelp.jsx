@@ -57,6 +57,7 @@ const SearchFormHelp = () => {
           </p>
           <ul>
             <li>Gene name (systematic ORF name, standard gene name, or alias)</li>
+            <li>CGD ID (Primary CGDID, e.g., CAL0000123456)</li>
             <li>Gene name of ortholog or Best Hit from <em>S. cerevisiae</em> or other <em>Candida</em> species</li>
             <li>Gene description</li>
             <li>Gene Ontology (GO) term (a term name or a synonym)</li>
@@ -77,6 +78,7 @@ const SearchFormHelp = () => {
           </p>
           <ul>
             <li>Gene name (systematic ORF name, standard gene name, or alias)</li>
+            <li>CGD ID (Primary CGDID, e.g., CAL0000123456)</li>
             <li>Gene name of ortholog or Best Hit from <em>S. cerevisiae</em> or other <em>Candida</em> species</li>
             <li>Gene description</li>
             <li>Gene Ontology (GO) term (a term name or a synonym)</li>

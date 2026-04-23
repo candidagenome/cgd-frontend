@@ -130,6 +130,7 @@ function TextSearchPage() {
                 >
                   <option value="all">All Categories</option>
                   <option value="genes">Genes / Loci</option>
+                  <option value="cgdid">CGD ID</option>
                   <option value="descriptions">Locus Descriptions</option>
                   <option value="go_terms">GO Terms</option>
                   <option value="colleagues">Colleagues</option>
