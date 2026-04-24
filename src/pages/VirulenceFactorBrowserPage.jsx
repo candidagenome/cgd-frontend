@@ -24,6 +24,12 @@ const CATEGORY_COLORS = {
   drug_resistance: 'cat-pink',
 };
 
+// Remove duplicate consecutive words from text (e.g., "for for" -> "for")
+const removeDuplicateWords = (text) => {
+  if (!text) return text;
+  return text.replace(/\b(\w+)\s+\1\b/gi, '$1');
+};
+
 // Get color class for a category
 const getCategoryColorClass = (categoryKey) => {
   if (!categoryKey) return 'cat-default';
@@ -541,7 +547,7 @@ function VirulenceFactorBrowserPage() {
                   >
                     AI summary:
                   </a>{' '}
-                  {params.data.summary_full || params.data.summary}
+                  {removeDuplicateWords(params.data.summary_full || params.data.summary)}
                 </div>
               )}
               {params.data.orthologs && params.data.orthologs.length > 0 && (
