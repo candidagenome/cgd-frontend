@@ -33,6 +33,21 @@ const MEETINGS = [
 // News items
 const NEWS_ITEMS = [
   {
+    title: 'New: Virulence Factor Browser (Preview)',
+    content: (
+      <>
+        Explore our new tool for searching and filtering <em>Candida</em> virulence-related genes,
+        including curated summaries, evidence types, confidence scores, and supporting literature.
+        <p></p>
+        This is an early release, and we'd love your feedback to help refine it before full launch.
+        <br /><br />
+        <Link to="/virulence-factor-browser">Try it out and share your thoughts</Link>
+      </>
+    ),
+    date: 'April 2026',
+    highlight: true,
+  },
+  {
     title: 'New CGD Website Launched',
     content: (
       <>

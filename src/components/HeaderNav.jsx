@@ -69,7 +69,8 @@ const HeaderNav = () => {
         { label: 'Primers', to: '/webprimer' },
         { label: 'Phenotype Search', to: '/phenotype/search' },
         { label: 'Restriction Mapper', to: '/restriction-mapper' },
-        { label: 'Synteny Browser', to: '/synteny-browser' }
+        { label: 'Synteny Browser', to: '/synteny-browser' },
+        { label: 'Virulence Factor Browser (Preview)', to: '/virulence-factor-browser' }
       ]
     },
     {
