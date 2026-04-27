@@ -100,19 +100,13 @@ function VirulenceFactorBrowserHelp() {
           <ul>
             <li>
               <strong>Phenotype annotations:</strong> Genes with phenotypes mentioning
-              virulence, pathogenesis, host killing, infection, or colonization
-            </li>
-            <li>
-              <strong>Virulence model evidence:</strong> Genes tested in animal models
-              (mouse systemic infection, <em>Galleria mellonella</em>, etc.)
+              virulence, pathogenesis, host killing, infection, or colonization.
+              Note: Phenotypes with a "Normal" qualifier (indicating no phenotypic
+              effect) are excluded from selection and scoring.
             </li>
             <li>
               <strong>Literature topics:</strong> Genes associated with disease-related
               literature in CGD
-            </li>
-            <li>
-              <strong>Headline keywords:</strong> Genes with descriptions mentioning
-              virulence-related terms
             </li>
           </ul>
         </div>
@@ -122,6 +116,14 @@ function VirulenceFactorBrowserHelp() {
           <p>
             Each gene is assigned a confidence score (0–20) and tier (High, Medium, Low)
             based on the quality and directness of the evidence linking it to virulence.
+          </p>
+          <p>
+            <strong>Important:</strong> The confidence score reflects the strength of
+            {' '}<em>virulence-specific evidence</em>, not overall clinical importance or
+            how well-studied a gene is. For example, drug resistance genes like ERG11
+            may have lower confidence scores because drug resistance is considered
+            indirect virulence evidence, even though these genes are clinically important
+            therapeutic targets.
           </p>
 
           <h3>Confidence Tiers</h3>
@@ -138,15 +140,15 @@ function VirulenceFactorBrowserHelp() {
                 <td><strong>High</strong></td>
                 <td>10–20</td>
                 <td style={{textAlign: 'left'}}>
-                  Strong, direct evidence from virulence assays, animal models,
-                  or multiple independent phenotype studies
+                  Strong, direct evidence from virulence phenotypes
+                  or host interaction studies
                 </td>
               </tr>
               <tr>
                 <td><strong>Medium</strong></td>
                 <td>5–9</td>
                 <td style={{textAlign: 'left'}}>
-                  Moderate evidence from host interaction studies, phenotype data,
+                  Moderate evidence from phenotype data
                   or well-supported GO annotations
                 </td>
               </tr>
@@ -163,12 +165,25 @@ function VirulenceFactorBrowserHelp() {
 
           <h3>What Contributes to Higher Scores</h3>
           <ul>
-            <li>Virulence phenotypes tested in animal models (+5 points)</li>
+            <li>Virulence phenotypes (non-normal qualifier) (+5 points)</li>
             <li>Direct virulence or pathogenesis phenotypes (+4 points)</li>
             <li>Host interaction phenotypes (+3 points)</li>
-            <li>GO annotations for pathogenesis or host interaction (+3 points)</li>
+            <li>GO annotations for host interaction with manual evidence (IDA, IMP, etc.) (+4 points)</li>
+            <li>GO annotations for host interaction with computational evidence (IEA) (+3 points)</li>
+            <li>Other GO annotations with manual evidence (+2 points)</li>
             <li>Disease-related literature association (+2 points)</li>
           </ul>
+
+          <h3>Note on Drug Resistance Genes</h3>
+          <p>
+            Genes in the Drug Resistance category (ERG11, CDR1, FKS1, etc.) may have
+            lower confidence scores because drug resistance/susceptibility phenotypes
+            are classified as indirect virulence evidence. This reflects the biological
+            distinction that drug resistance affects treatment outcomes rather than
+            directly causing disease. However, these genes are often clinically important
+            and well-studied. Users interested in antifungal targets should filter by
+            the "Drug Resistance" category rather than relying solely on confidence scores.
+          </p>
 
           <h3>Housekeeping Gene Adjustment</h3>
           <p>
@@ -240,11 +255,14 @@ function VirulenceFactorBrowserHelp() {
           <ul>
             <li>
               <strong>Phenotype annotations:</strong> Manually curated from primary
-              literature by CGD curators
+              literature by CGD curators. Only phenotypes with non-normal qualifiers
+              are included.
             </li>
             <li>
               <strong>GO annotations:</strong> Gene Ontology annotations from CGD
-              curation and computational pipelines
+              curation (manual evidence: IDA, IMP, IGI, etc.) and computational
+              pipelines (IEA). Manual evidence is weighted more heavily in scoring.
+              Evidence codes are displayed in the evidence panel.
             </li>
             <li>
               <strong>Literature associations:</strong> References linked to genes
