@@ -381,14 +381,14 @@ function VirulenceFactorBrowserHelp() {
           </p>
           <div className="cite-example">
             <p>
-              Skrzypek MS, et al. The Candida Genome Database (CGD): informatics
-              support for <em>Candida</em> species research and clinical applications.{' '}
+              Lew-Smith J, Binkley J, Sherlock G (2025). The Candida Genome Database:
+              annotation and visualization updates.{' '}
               <a
-                href="https://academic.oup.com/nar/article/45/D1/D429/2333930"
+                href="https://academic.oup.com/genetics/article/229/3/iyae195/7924788"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Nucleic Acids Research 2017;45(D1):D429-D435
+                Genetics, Volume 229, Issue 3, March 2025
               </a>
             </p>
           </div>
