@@ -868,6 +868,10 @@ function VirulenceFactorBrowserPage() {
         <p className="subtitle">
           Searchable catalog of Candida virulence-related genes including adhesins, secreted enzymes,
           morphogenesis genes, host interaction factors, biofilm-related genes, and immune evasion genes.
+          {' '}
+          <Link to="/help/virulence-factor-browser" className="help-link">
+            About this tool
+          </Link>
         </p>
       </header>
 

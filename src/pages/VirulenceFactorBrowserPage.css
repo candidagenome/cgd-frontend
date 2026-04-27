@@ -35,6 +35,16 @@
   line-height: 1.5;
 }
 
+.virulence-factor-browser-page .page-header .help-link {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.virulence-factor-browser-page .page-header .help-link:hover {
+  text-decoration: underline;
+}
+
 /* ===========================================
    BROWSER LAYOUT (Sidebar + Results)
    =========================================== */
