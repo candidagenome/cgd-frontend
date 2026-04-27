@@ -59,7 +59,11 @@ const categorizeMatchReason = (reason) => {
       reasonLower.includes('mutant')) {
     return { type: 'phe', label: 'PHE', tooltip: 'Phenotype' };
   }
-  return { type: 'kw', label: 'KW', tooltip: 'Keyword (text-based match)' };
+  if (reasonLower.includes('literature')) {
+    return { type: 'lit', label: 'LIT', tooltip: 'Literature topic' };
+  }
+  // Fallback for any remaining evidence types
+  return { type: 'other', label: '', tooltip: '' };
 };
 
 // Abbreviate organism name (e.g., "Candida albicans SC5314" -> "C. albicans")
@@ -185,7 +189,6 @@ function VirulenceFactorBrowserPage() {
   const EVIDENCE_TYPE_OPTIONS = [
     { key: 'GO', label: 'GO Annotation', description: 'Gene Ontology terms' },
     { key: 'PHE', label: 'Phenotype', description: 'Phenotype and virulence model evidence' },
-    { key: 'KW', label: 'Keyword', description: 'Gene pattern, headline, or literature matches' },
   ];
 
   // Results state
