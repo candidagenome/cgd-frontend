@@ -42,6 +42,8 @@ const NEWS_ITEMS = [
         This is an early release, and we'd love your feedback to help refine it before full launch.
         <br /><br />
         <Link to="/virulence-factor-browser">Try it out and share your thoughts</Link>
+        {' | '}
+        <Link to="/help/virulence-factor-browser">Learn how this data is compiled</Link>
       </>
     ),
     date: 'April 2026',
