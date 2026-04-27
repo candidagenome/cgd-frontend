@@ -362,6 +362,10 @@ function VirulenceFactorBrowserHelp() {
               evidence
             </li>
             <li>
+              <strong>Filter by paper count:</strong> Focus on well-studied genes
+              (many papers) or discover understudied candidates (few papers)
+            </li>
+            <li>
               <strong>Review evidence:</strong> Click on a gene to see the specific
               evidence (phenotypes, GO terms, literature) supporting its inclusion
             </li>
