@@ -195,6 +195,11 @@ const HeaderSearchForm = () => {
                   __html: suggestion.highlighted_text || suggestion.text
                 }}
               />
+              {suggestion.organism && (
+                <span className="suggestion-organism">
+                  {suggestion.organism.replace('Candida ', 'C. ').replace(/ (SC5314|CBS138|B8441|CD36|CDC317)$/, '')}
+                </span>
+              )}
               {suggestion.description && (
                 <span
                   className="suggestion-description"

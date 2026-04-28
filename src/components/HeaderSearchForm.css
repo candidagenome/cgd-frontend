@@ -79,10 +79,19 @@
   word-break: break-word;
 }
 
+/* Organism text (for genes) */
+.suggestion-organism {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: #1565c0;
+  font-style: italic;
+  white-space: nowrap;
+}
+
 /* Description text */
 .suggestion-description {
   flex-shrink: 0;
-  max-width: 150px;
+  max-width: 180px;
   font-size: 11px;
   color: #666;
   text-align: right;
@@ -146,7 +155,8 @@
     max-height: 300px;
   }
 
-  .suggestion-description {
+  .suggestion-description,
+  .suggestion-organism {
     display: none;
   }
 
