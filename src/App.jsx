@@ -133,6 +133,7 @@ import ProteinMotifsHelp from './pages/help/ProteinMotifsHelp';
 import ProteinPropertiesHelp from './pages/help/ProteinPropertiesHelp';
 import PDBHomologHelp from './pages/help/PDBHomologHelp';
 import GlabrataChanges2022Help from './pages/help/GlabrataChanges2022Help';
+import VirulenceFactorBrowserHelp from './pages/help/VirulenceFactorBrowserHelp';
 
 import ScrollToTop from './components/ScrollToTop';
 import './App.css';
@@ -560,6 +561,7 @@ function App() {
           <Route path="/help/protein-properties" element={<ProteinPropertiesHelp />} />
           <Route path="/help/pdb-homolog" element={<PDBHomologHelp />} />
           <Route path="/help/glabrata-changes-2022" element={<GlabrataChanges2022Help />} />
+          <Route path="/help/virulence-factor-browser" element={<VirulenceFactorBrowserHelp />} />
         </Routes>
 
         {/* =========================

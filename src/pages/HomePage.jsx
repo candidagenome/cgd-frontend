@@ -33,20 +33,37 @@ const MEETINGS = [
 // News items
 const NEWS_ITEMS = [
   {
-    title: 'New CGD Website Launched',
+    title: 'New: Virulence Factor Browser (Preview)',
     content: (
       <>
-        We've launched a redesigned CGD website with improved search, updated JBrowse, enhanced
-        literature tools, and a new API interface. The new site offers faster performance, better
-        navigation, and more powerful data exploration tools.<p></p>
-        For a list of new features, see the <a href="http://ec2-52-40-145-49.us-west-2.compute.amazonaws.com/index.php?title=Main_Page#Newsletter_Archives" target='new' >Spring 2026 CGD Newsletter.</a> 
+        Explore our new tool for searching and filtering <em>Candida</em> virulence-related genes,
+        including curated summaries, evidence types, confidence scores, and supporting literature.
+        <p></p>
+        This is an early release, and we'd love your feedback to help refine it before full launch.
         <br /><br />
-        Explore the new features and <Link to="/contact">let us know your feedback</Link>.
+        <Link to="/virulence-factor-browser">Try it out and share your thoughts</Link>
+        {' | '}
+        <Link to="/help/virulence-factor-browser">Learn how this data is compiled</Link>
       </>
     ),
-    date: 'March 2026',
+    date: 'April 2026',
     highlight: true,
   },
+  // {
+  //   title: 'New CGD Website Launched',
+  //   content: (
+  //     <>
+  //       We've launched a redesigned CGD website with improved search, updated JBrowse, enhanced
+  //       literature tools, and a new API interface. The new site offers faster performance, better
+  //       navigation, and more powerful data exploration tools.<p></p>
+  //       For a list of new features, see the <a href="http://ec2-52-40-145-49.us-west-2.compute.amazonaws.com/index.php?title=Main_Page#Newsletter_Archives" target='new' >Spring 2026 CGD Newsletter.</a>
+  //       <br /><br />
+  //       Explore the new features and <Link to="/contact">let us know your feedback</Link>.
+  //     </>
+  //   ),
+  //   date: 'March 2026',
+  //   highlight: true,
+  // },
   {
     title: 'CGD Curation News',
     content: (

@@ -402,6 +402,12 @@ function PhenotypeCurationPage() {
             data.properties = properties;
           }
 
+          // Include organism to disambiguate features with same name across species
+          const organismParam = searchParams.get('organism') || selectedOrganism;
+          if (organismParam) {
+            data.organism = organismParam;
+          }
+
           await phenotypeCurationApi.createAnnotation(featureName, data);
           successCount++;
         }

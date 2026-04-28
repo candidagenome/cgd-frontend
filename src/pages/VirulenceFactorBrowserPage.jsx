@@ -24,6 +24,12 @@ const CATEGORY_COLORS = {
   drug_resistance: 'cat-pink',
 };
 
+// Remove duplicate consecutive words from text (e.g., "for for" -> "for")
+const removeDuplicateWords = (text) => {
+  if (!text) return text;
+  return text.replace(/\b(\w+)\s+\1\b/gi, '$1');
+};
+
 // Get color class for a category
 const getCategoryColorClass = (categoryKey) => {
   if (!categoryKey) return 'cat-default';
@@ -53,7 +59,11 @@ const categorizeMatchReason = (reason) => {
       reasonLower.includes('mutant')) {
     return { type: 'phe', label: 'PHE', tooltip: 'Phenotype' };
   }
-  return { type: 'kw', label: 'KW', tooltip: 'Keyword (text-based match)' };
+  if (reasonLower.includes('literature')) {
+    return { type: 'lit', label: 'LIT', tooltip: 'Literature topic' };
+  }
+  // Fallback for any remaining evidence types
+  return { type: 'other', label: '', tooltip: '' };
 };
 
 // Abbreviate organism name (e.g., "Candida albicans SC5314" -> "C. albicans")
@@ -179,7 +189,6 @@ function VirulenceFactorBrowserPage() {
   const EVIDENCE_TYPE_OPTIONS = [
     { key: 'GO', label: 'GO Annotation', description: 'Gene Ontology terms' },
     { key: 'PHE', label: 'Phenotype', description: 'Phenotype and virulence model evidence' },
-    { key: 'KW', label: 'Keyword', description: 'Gene pattern, headline, or literature matches' },
   ];
 
   // Results state
@@ -432,22 +441,21 @@ function VirulenceFactorBrowserPage() {
   // Compute tier counts for results summary
   const tierCounts = useMemo(() => {
     if (!filteredResults || filteredResults.length === 0) {
-      return { total: 0, withExperimental: 0, withGO: 0, validatedInVivo: 0 };
+      return { total: 0, withExperimental: 0, withGO: 0 };
     }
 
     let withExperimental = 0;
     let withGO = 0;
-    let validatedInVivo = 0;
 
     filteredResults.forEach((item) => {
       const directEvidence = item.direct_evidence || [];
       const indirectEvidence = item.indirect_evidence || [];
       const allEvidence = [...directEvidence, ...indirectEvidence];
 
-      // Count genes with experimental evidence (virulence model or phenotype)
+      // Count genes with experimental evidence (phenotypes)
       const hasExperimental = allEvidence.some((e) => {
         const eLower = e.toLowerCase();
-        return eLower.startsWith('virulence model:') || eLower.startsWith('phenotype:');
+        return eLower.startsWith('phenotype:');
       });
 
       // Count genes with GO annotations (in either direct or indirect)
@@ -462,18 +470,12 @@ function VirulenceFactorBrowserPage() {
       if (hasGO) {
         withGO++;
       }
-
-      // Count genes validated in vivo (high importance = virulence model evidence)
-      if (item.importance_level === 'high') {
-        validatedInVivo++;
-      }
     });
 
     return {
       total: filteredResults.length,
       withExperimental,
       withGO,
-      validatedInVivo,
     };
   }, [filteredResults]);
 
@@ -489,11 +491,6 @@ function VirulenceFactorBrowserPage() {
         autoHeight: true,
         valueGetter: (params) => formatLocusName(params.data),
         cellRenderer: (params) => {
-          const importanceLevel = params.data.importance_level || 'low';
-          const importanceLabel = params.data.importance_label || '';
-          // Short text badge based on importance level
-          const badgeText = importanceLevel === 'high' ? 'In vivo' : importanceLevel === 'medium' ? 'Multi-study' : '';
-
           return (
             <div className="gene-card">
               <div className="gene-card-header">
@@ -505,14 +502,6 @@ function VirulenceFactorBrowserPage() {
                 >
                   {formatLocusName(params.data)}
                 </Link>
-                {badgeText && (
-                  <span
-                    className={`importance-badge importance-${importanceLevel}`}
-                    title={importanceLabel}
-                  >
-                    {badgeText}
-                  </span>
-                )}
                 {params.data.alphafold_url && (
                   <a
                     href={params.data.alphafold_url}
@@ -541,7 +530,7 @@ function VirulenceFactorBrowserPage() {
                   >
                     AI summary:
                   </a>{' '}
-                  {params.data.summary_full || params.data.summary}
+                  {removeDuplicateWords(params.data.summary_full || params.data.summary)}
                 </div>
               )}
               {params.data.orthologs && params.data.orthologs.length > 0 && (
@@ -862,6 +851,10 @@ function VirulenceFactorBrowserPage() {
         <p className="subtitle">
           Searchable catalog of Candida virulence-related genes including adhesins, secreted enzymes,
           morphogenesis genes, host interaction factors, biofilm-related genes, and immune evasion genes.
+          {' '}
+          <Link to="/help/virulence-factor-browser" className="help-link">
+            About this tool
+          </Link>
         </p>
       </header>
 
@@ -1053,17 +1046,12 @@ function VirulenceFactorBrowserPage() {
                   <div className="results-tiers">
                     {tierCounts.withExperimental > 0 && (
                       <span className="tier-item tier-experimental">
-                        <strong>{tierCounts.withExperimental}</strong> with experimental phenotype evidence
-                        {tierCounts.validatedInVivo > 0 && (
-                          <span className="tier-sub">
-                            ({tierCounts.validatedInVivo} in vivo)
-                          </span>
-                        )}
+                        <strong>{tierCounts.withExperimental}</strong> with phenotype evidence
                       </span>
                     )}
                     {tierCounts.withGO > 0 && (
                       <span className="tier-item tier-go">
-                        <strong>{tierCounts.withGO}</strong> supported by GO annotations
+                        <strong>{tierCounts.withGO}</strong> with GO annotations
                       </span>
                     )}
                   </div>

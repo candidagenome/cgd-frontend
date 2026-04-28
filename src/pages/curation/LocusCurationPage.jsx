@@ -15,6 +15,17 @@ import locusCurationApi from '../../api/locusCurationApi';
 import { filterAllowedOrganisms } from '../../constants/organisms';
 import { renderCitationItem } from '../../utils/formatCitation.jsx';
 
+/**
+ * Strip HTML tags from a string to get text-only length.
+ * Used for character counting that excludes formatting tags like <i>, <em>.
+ */
+const getTextLength = (html) => {
+  if (!html) return 0;
+  // Remove HTML tags and count only text content
+  const textOnly = html.replace(/<[^>]*>/g, '');
+  return textOnly.length;
+};
+
 function LocusCurationPage() {
   const { featureName } = useParams();
   const navigate = useNavigate();
@@ -364,7 +375,11 @@ function LocusCurationPage() {
                     <td style={styles.td}>{f.feature_name}</td>
                     <td style={styles.td}>{f.gene_name || '-'}</td>
                     <td style={styles.td}>{f.feature_type}</td>
-                    <td style={styles.td}>{f.headline || '-'}</td>
+                    <td style={styles.td}>
+                      {f.headline ? (
+                        <span dangerouslySetInnerHTML={{ __html: f.headline }} />
+                      ) : '-'}
+                    </td>
                     <td style={styles.tdAction}>
                       <button
                         onClick={() => handleSelectFeature(f)}
@@ -478,16 +493,19 @@ function LocusCurationPage() {
                         <textarea
                           value={editForm.headline}
                           onChange={(e) => {
-                            if (e.target.value.length <= 240) {
+                            // Allow typing if text content (excluding HTML tags) is within limit
+                            if (getTextLength(e.target.value) <= 240) {
                               handleEditChange('headline', e.target.value);
                             }
                           }}
                           style={styles.formTextareaLarge}
                           rows={5}
-                          maxLength={240}
                         />
                         <div style={styles.charCount}>
-                          {editForm.headline?.length || 0}/240
+                          {getTextLength(editForm.headline)}/240 (text only, excludes HTML tags)
+                        </div>
+                        <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
+                          Use &lt;i&gt;...&lt;/i&gt; or &lt;em&gt;...&lt;/em&gt; for italics
                         </div>
                       </div>
                     </div>
@@ -588,7 +606,11 @@ function LocusCurationPage() {
                   </tr>
                   <tr>
                     <th style={styles.infoTh}>Headline:</th>
-                    <td style={styles.infoTd}>{featureData.headline || '-'}</td>
+                    <td style={styles.infoTd}>
+                      {featureData.headline ? (
+                        <span dangerouslySetInnerHTML={{ __html: featureData.headline }} />
+                      ) : '-'}
+                    </td>
                   </tr>
                   <tr>
                     <th style={styles.infoTh}>Source:</th>
