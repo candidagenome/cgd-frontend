@@ -56,9 +56,9 @@ const CombinedResultRenderer = (props) => {
     );
   }
 
-  // For genes and cgdid categories, link to /locus/[gene_name]
+  // For genes, descriptions, and cgdid categories, link to /locus/[gene_name]
   // Prefer gene_name (standard name like "HOG1") over name (which may be orf ID like "orf19.8514")
-  const isLocusCategory = data.category === 'genes' || data.category === 'cgdid';
+  const isLocusCategory = data.category === 'genes' || data.category === 'descriptions' || data.category === 'cgdid';
   const locusIdentifier = data.gene_name || data.name;
   const linkUrl = isLocusCategory ? `/locus/${locusIdentifier}` : data.link;
   const isExternal = linkUrl?.startsWith('http');
@@ -88,6 +88,7 @@ const CombinedResultRenderer = (props) => {
 
 const CATEGORY_LABELS = {
   genes: 'Genes / Loci',
+  descriptions: 'Locus Descriptions',
   cgdid: 'CGD ID',
   go_terms: 'GO Terms',
   phenotypes: 'Phenotypes',
@@ -95,7 +96,7 @@ const CATEGORY_LABELS = {
   orthologs: 'C. albicans Orthologs',
 };
 
-const CATEGORY_ORDER = ['genes', 'cgdid', 'go_terms', 'phenotypes', 'references', 'orthologs'];
+const CATEGORY_ORDER = ['genes', 'descriptions', 'cgdid', 'go_terms', 'phenotypes', 'references', 'orthologs'];
 
 const SearchResultsPage = () => {
   const [searchParams] = useSearchParams();
