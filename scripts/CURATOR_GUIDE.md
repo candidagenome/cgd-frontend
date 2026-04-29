@@ -156,7 +156,7 @@ Then ask a developer to review and merge your changes.
 
 ## Stopping the Server
 
-Press `Ctrl+C` in the Terminal to stop the server.
+Press `Ctrl+C` or `Ctrl+D` in the Terminal to stop the server.
 
 ## Pulling Latest Changes
 
@@ -166,6 +166,36 @@ cd ~/cgd-frontend
 git pull
 npm install   # Only if package.json changed
 ```
+
+## Setting Up GitHub Credentials
+
+If Git asks for your username and password when pushing, you can configure your credentials.
+
+### Set Your Identity
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+```
+
+### Store Credentials (so you don't have to enter them every time)
+
+**Option 1: Use macOS Keychain (Recommended for Mac)**
+```bash
+git config --global credential.helper osxkeychain
+```
+
+**Option 2: Cache credentials temporarily (15 minutes by default)**
+```bash
+git config --global credential.helper cache
+```
+
+**Option 3: Cache credentials for longer (e.g., 1 hour = 3600 seconds)**
+```bash
+git config --global credential.helper 'cache --timeout=3600'
+```
+
+> **Note:** GitHub no longer accepts passwords for HTTPS. You'll need to use a Personal Access Token (PAT) instead of your password. Generate one at: https://github.com/settings/tokens
 
 ## Troubleshooting
 
