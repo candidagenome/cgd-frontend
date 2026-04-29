@@ -257,7 +257,7 @@
 }
 
 .col-flags {
-  width: 120px;
+  min-width: 140px;
 }
 
 /* Sequence styling */
@@ -314,6 +314,11 @@
   font-size: 0.75em;
   font-weight: 600;
   margin-right: 4px;
+}
+
+.flag-recommended {
+  background-color: #c8e6c9;
+  color: #2e7d32;
 }
 
 .flag-warning {
@@ -463,12 +468,133 @@
   border-radius: 3px;
 }
 
+/* Recommended badge */
+.recommended-badge {
+  display: inline-block;
+  color: #f9a825;
+  font-size: 1.1em;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+
 /* Off-target summary */
 .offtarget-summary {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
   font-size: 0.9em;
+  margin-bottom: 12px;
+}
+
+.ot-count {
+  padding: 2px 8px;
+  background-color: #f5f5f5;
+  border-radius: 3px;
+}
+
+/* Off-target table */
+.offtarget-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85em;
+  margin-top: 8px;
+}
+
+.offtarget-table th,
+.offtarget-table td {
+  padding: 6px 10px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.offtarget-table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  font-size: 0.9em;
+}
+
+.offtarget-table tr.ot-exact {
+  background-color: #ffebee;
+}
+
+.ot-location {
+  font-family: 'Monaco', 'Menlo', monospace;
+  font-size: 0.9em;
+  white-space: nowrap;
+}
+
+.ot-gene a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.ot-gene a:hover {
+  text-decoration: underline;
+}
+
+.ot-intergenic {
+  color: #999;
+  font-style: italic;
+}
+
+.ot-region {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.mm-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+.mm-badge.mm-0 {
+  background-color: #ffcdd2;
+  color: #c62828;
+}
+
+.mm-badge.mm-1 {
+  background-color: #ffe0b2;
+  color: #e65100;
+}
+
+.mm-badge.mm-2 {
+  background-color: #fff9c4;
+  color: #f9a825;
+}
+
+.mm-badge.mm-3 {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.ot-positions {
+  font-family: 'Monaco', 'Menlo', monospace;
+  font-size: 0.85em;
+  color: #666;
+}
+
+.ot-seq code {
+  font-size: 0.9em;
+  background-color: #f5f5f5;
+  padding: 2px 4px;
+  border-radius: 2px;
+}
+
+/* Score methodology note */
+.score-methodology {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed #e0e0e0;
+  font-size: 0.8em;
+  color: #666;
+  font-style: italic;
+}
+
+/* Full-width detail section */
+.detail-section.full-width {
+  grid-column: 1 / -1;
 }
 
 /* No results states */

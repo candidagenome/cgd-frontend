@@ -87,6 +87,17 @@ function CrisprResultsPage() {
     return 'score-poor';
   };
 
+  // Check if guide is recommended (high specificity + decent efficiency)
+  const isRecommended = (guide) => {
+    return guide.specificity_score >= 100 && guide.efficiency_score >= 50;
+  };
+
+  // Format mismatch positions for display
+  const formatMismatchPositions = (positions) => {
+    if (!positions || positions.length === 0) return '-';
+    return positions.map(p => p + 1).join(', '); // Convert to 1-based
+  };
+
   // Copy to clipboard
   const copyToClipboard = (text, label) => {
     navigator.clipboard.writeText(text).then(() => {
@@ -322,7 +333,12 @@ function CrisprResultsPage() {
                       <td className="col-expand">
                         <span className="expand-icon">{expandedGuides.has(guide.rank) ? '▼' : '▶'}</span>
                       </td>
-                      <td className="col-rank">{guide.rank}</td>
+                      <td className="col-rank">
+                        {guide.rank}
+                        {isRecommended(guide) && (
+                          <span className="recommended-badge" title="High specificity, good efficiency">★</span>
+                        )}
+                      </td>
                       <td className="col-sequence">
                         <code className="sequence">{guide.sequence}</code>
                       </td>
@@ -344,14 +360,19 @@ function CrisprResultsPage() {
                       </td>
                       <td className="col-gc">{guide.gc_content.toFixed(0)}%</td>
                       <td className="col-flags">
-                        {guide.has_poly_t && <span className="flag flag-warning" title="Contains TTTT">T4</span>}
+                        {isRecommended(guide) && (
+                          <span className="flag flag-recommended" title="Recommended: High specificity, good efficiency">
+                            Recommended
+                          </span>
+                        )}
+                        {guide.has_poly_t && <span className="flag flag-warning" title="Contains TTTT - may cause Pol III termination">T4</span>}
                         {guide.restriction_sites.length > 0 && (
                           <span className="flag flag-info" title={guide.restriction_sites.map(r => r.enzyme).join(', ')}>
                             RE
                           </span>
                         )}
                         {guide.offtarget_count > 0 && (
-                          <span className="flag flag-warning" title={`${guide.offtarget_count} off-targets`}>
+                          <span className="flag flag-warning" title={`${guide.offtarget_count} off-target sites found`}>
                             OT:{guide.offtarget_count}
                           </span>
                         )}
@@ -410,6 +431,10 @@ function CrisprResultsPage() {
                                     <span className="score-value">{guide.gc_content.toFixed(1)}%</span>
                                   </div>
                                 </div>
+                                <div className="score-methodology">
+                                  Efficiency: Rule Set 2 (Doench 2016), adapted for yeast.
+                                  Specificity: 100 = no off-targets; lower = more off-target risk.
+                                </div>
                               </div>
 
                               {guide.primers && (
@@ -454,14 +479,56 @@ function CrisprResultsPage() {
                               )}
 
                               {guide.offtarget_count > 0 && (
-                                <div className="detail-section">
-                                  <h4>Off-targets Summary</h4>
+                                <div className="detail-section full-width">
+                                  <h4>Off-targets ({guide.offtarget_count} found)</h4>
                                   <div className="offtarget-summary">
-                                    <span>0 mismatch: {guide.offtarget_0mm}</span>
-                                    <span>1 mismatch: {guide.offtarget_1mm}</span>
-                                    <span>2 mismatches: {guide.offtarget_2mm}</span>
-                                    <span>3 mismatches: {guide.offtarget_3mm}</span>
+                                    <span className="ot-count">0mm: {guide.offtarget_0mm}</span>
+                                    <span className="ot-count">1mm: {guide.offtarget_1mm}</span>
+                                    <span className="ot-count">2mm: {guide.offtarget_2mm}</span>
+                                    <span className="ot-count">3mm: {guide.offtarget_3mm}</span>
                                   </div>
+                                  {guide.offtargets && guide.offtargets.length > 0 && (
+                                    <table className="offtarget-table">
+                                      <thead>
+                                        <tr>
+                                          <th>Location</th>
+                                          <th>Gene</th>
+                                          <th>Region</th>
+                                          <th>Mismatches</th>
+                                          <th>Positions</th>
+                                          <th>Sequence</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {guide.offtargets.map((ot, idx) => (
+                                          <tr key={idx} className={ot.mismatches === 0 ? 'ot-exact' : ''}>
+                                            <td className="ot-location">
+                                              {ot.chromosome}:{ot.position} ({ot.strand})
+                                            </td>
+                                            <td className="ot-gene">
+                                              {ot.gene_name ? (
+                                                <Link to={`/locus/${ot.gene_name}`}>{ot.gene_name}</Link>
+                                              ) : (
+                                                <span className="ot-intergenic">intergenic</span>
+                                              )}
+                                            </td>
+                                            <td className="ot-region">{ot.gene_region || '-'}</td>
+                                            <td className="ot-mm">
+                                              <span className={`mm-badge mm-${ot.mismatches}`}>
+                                                {ot.mismatches}
+                                              </span>
+                                            </td>
+                                            <td className="ot-positions">
+                                              {formatMismatchPositions(ot.mismatch_positions)}
+                                            </td>
+                                            <td className="ot-seq">
+                                              <code>{ot.sequence}</code>
+                                            </td>
+                                          </tr>
+                                        ))}
+                                      </tbody>
+                                    </table>
+                                  )}
                                 </div>
                               )}
                             </div>
