@@ -41,6 +41,7 @@ import NomenclaturePage from './pages/NomenclaturePage';
 import DownloadPage from './pages/DownloadPage';
 import DatasetsPage from './pages/DatasetsPage';
 import LiteraturePage from './pages/LiteraturePage';
+import CGDPublicationsPage from './pages/CGDPublicationsPage';
 import TopicBibliosPage from './pages/TopicBibliosPage';
 import StrainsPage from './pages/StrainsPage';
 import ContactPage from './pages/ContactPage';
@@ -240,6 +241,7 @@ function App() {
           <Route path="/download" element={<DownloadPage />} />
           <Route path="/download-datasets" element={<DatasetsPage />} />
           <Route path="/literature" element={<LiteraturePage />} />
+          <Route path="/cgd-publications" element={<CGDPublicationsPage />} />
           <Route path="/literature-topic-search" element={<LiteratureTopicSearchPage />} />
           <Route path="/topic-biblios" element={<TopicBibliosPage />} />
           <Route path="/strains" element={<StrainsPage />} />
