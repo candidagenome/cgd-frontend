@@ -271,7 +271,7 @@ function CrisprResultsPage() {
               {/* Phenotype count with link */}
               {results.gene_info.phenotype_count > 0 && (
                 <Link
-                  to={`${results.gene_info.cgd_url}#phenotype`}
+                  to={`${results.gene_info.cgd_url}?tab=phenotype`}
                   className="annotation-badge badge-phenotype"
                   title={`${results.gene_info.phenotype_count} phenotype annotations. Top: ${results.gene_info.phenotype_observables?.slice(0, 3).join(', ') || 'N/A'}`}
                   target="_blank"
