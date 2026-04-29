@@ -23,9 +23,9 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
     d3.select(svgRef.current).selectAll('*').remove();
 
     // Dimensions
-    const margin = { top: 30, right: 40, bottom: 40, left: 60 };
+    const margin = { top: 30, right: 40, bottom: 70, left: 60 };
     const width = containerRef.current?.clientWidth || 800;
-    const height = 120;
+    const height = 150;
     const geneHeight = 30;
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
@@ -83,7 +83,7 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
       .style('opacity', 0);
 
     // Draw guide markers
-    const markerHeight = 45;
+    const markerHeight = 15;
     const markerWidth = 3;
 
     guides.forEach((guide) => {
@@ -115,12 +115,14 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
           : `${-arrowSize},${arrowY - arrowSize} 0,${arrowY} ${arrowSize},${arrowY - arrowSize}`)
         .attr('fill', colorScale(guide.combinedScore || guide.combined_score || 50));
 
-      // Rank label
+      // Rank label - position below axis for bottom strand
       markerGroup.append('text')
         .attr('x', 0)
-        .attr('y', isTopStrand ? markerY - 5 : markerY + markerHeight + 12)
+        .attr('y', isTopStrand ? markerY - 5 : innerHeight + 35)
         .attr('text-anchor', 'middle')
         .attr('class', 'guide-rank')
+        .style('font-size', '12px')
+        .style('font-weight', '700')
         .text(guide.rank);
 
       // Mouse events
@@ -184,13 +186,29 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
       .text("3'");
 
     // Legend
-    const legendX = innerWidth - 150;
+    const legendX = innerWidth - 190;
     const legendY = -20;
+    const legendPadding = 6;
+    const legendWidth = 240;
+    const legendHeight = 22;
+    const legendItemSpacing = 65;
     const legendItems = [
       { label: 'High', color: '#2e7d32' },
       { label: 'Med', color: '#f9a825' },
       { label: 'Low', color: '#c62828' }
     ];
+
+    // Legend background with padding
+    g.append('rect')
+      .attr('x', legendX - 45 - legendPadding)
+      .attr('y', legendY - legendPadding)
+      .attr('width', legendWidth)
+      .attr('height', legendHeight)
+      .attr('rx', 3)
+      .attr('ry', 3)
+      .attr('fill', '#f5f5f5')
+      .attr('stroke', '#e0e0e0')
+      .attr('stroke-width', 1);
 
     g.append('text')
       .attr('x', legendX - 40)
@@ -200,14 +218,14 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
 
     legendItems.forEach((item, i) => {
       g.append('rect')
-        .attr('x', legendX + i * 45)
+        .attr('x', legendX + i * legendItemSpacing)
         .attr('y', legendY)
         .attr('width', 12)
         .attr('height', 12)
         .attr('fill', item.color);
 
       g.append('text')
-        .attr('x', legendX + i * 45 + 16)
+        .attr('x', legendX + i * legendItemSpacing + 16)
         .attr('y', legendY + 10)
         .attr('class', 'legend-label')
         .text(item.label);
