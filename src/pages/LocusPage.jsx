@@ -9,6 +9,7 @@ import HomologyDetails from '../components/locus/HomologyDetails';
 import SequenceDetails from '../components/locus/SequenceDetails';
 import References from '../components/locus/References';
 import History from '../components/locus/History';
+import ExpressionDetails from '../components/locus/ExpressionDetails';
 import OrganismSelector, { getDefaultOrganism } from '../components/locus/OrganismSelector';
 import './LocusPage.css';
 
@@ -16,6 +17,7 @@ const TABS = [
   { id: 'summary', label: 'Summary', component: 'summary', loader: 'loadSummaryData' },
   { id: 'go', label: 'Gene Ontology', component: 'go', loader: 'loadGoDetails' },
   { id: 'phenotype', label: 'Phenotype', component: 'phenotype', loader: 'loadPhenotypeDetails' },
+  { id: 'expression', label: 'Expression', component: 'expression', loader: 'loadExpressionDetails' },
   { id: 'protein', label: 'Protein', component: 'protein', loader: 'loadProteinDetails' },
   { id: 'homology', label: 'Homologs', component: 'homology', loader: 'loadHomologyDetails' },
   { id: 'sequence', label: 'Sequence', component: 'sequence', loader: 'loadSequenceDetails' },
@@ -165,6 +167,15 @@ function LocusPage() {
             selectedOrganism={selectedOrganism}
             onOrganismChange={setSelectedOrganism}
             orthologOrganisms={orthologOrganisms}
+          />
+        );
+
+      case 'expression':
+        return (
+          <ExpressionDetails
+            data={data.expressionDetails}
+            loading={loading.expressionDetails}
+            error={errors.expressionDetails}
           />
         );
 

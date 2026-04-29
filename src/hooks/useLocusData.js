@@ -13,6 +13,7 @@ export function useLocusData(locusName) {
     references: null,
     summaryNotes: null,
     history: null,
+    expressionDetails: null,
   });
   const [loading, setLoading] = useState({
     info: false,
@@ -25,6 +26,7 @@ export function useLocusData(locusName) {
     references: false,
     summaryNotes: false,
     history: false,
+    expressionDetails: false,
   });
   const [errors, setErrors] = useState({});
 
@@ -47,6 +49,7 @@ export function useLocusData(locusName) {
       references: null,
       summaryNotes: null,
       history: null,
+      expressionDetails: null,
     });
     setErrors({});
   }, [locusName]);
@@ -128,6 +131,10 @@ export function useLocusData(locusName) {
     fetchData('history', locusApi.getHistory);
   }, [fetchData]);
 
+  const loadExpressionDetails = useCallback(() => {
+    fetchData('expressionDetails', locusApi.getExpressionDetails);
+  }, [fetchData]);
+
   const loaders = useMemo(() => ({
     loadGoDetails,
     loadPhenotypeDetails,
@@ -139,6 +146,7 @@ export function useLocusData(locusName) {
     loadReferences,
     loadSummaryNotes,
     loadHistory,
+    loadExpressionDetails,
   }), [
     loadGoDetails,
     loadPhenotypeDetails,
@@ -150,6 +158,7 @@ export function useLocusData(locusName) {
     loadReferences,
     loadSummaryNotes,
     loadHistory,
+    loadExpressionDetails,
   ]);
 
   return {

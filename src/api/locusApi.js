@@ -105,6 +105,14 @@ export const locusApi = {
     );
     return response.data;
   },
+
+  // Get expression data for a gene
+  getExpressionDetails: async (name, organism = 'C_albicans_SC5314_A22') => {
+    const response = await api.get(
+      `/api/expression/gene/${encodeURIComponent(name)}?organism=${encodeURIComponent(organism)}`
+    );
+    return response.data;
+  },
 };
 
 export default locusApi;

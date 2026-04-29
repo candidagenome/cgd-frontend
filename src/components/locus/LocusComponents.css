@@ -3280,3 +3280,298 @@ a:hover {
     padding: 5px 6px;
   }
 }
+
+/* =====================================================
+   EXPRESSION DETAILS
+   ===================================================== */
+
+.expression-details {
+  padding: 15px;
+}
+
+.expression-header {
+  margin-bottom: 20px;
+}
+
+.expression-header h3 {
+  margin: 0 0 8px 0;
+  color: #1976d2;
+  font-size: 1.3em;
+}
+
+.expression-header .gene-description {
+  margin: 0 0 12px 0;
+  color: #666;
+  font-style: italic;
+  font-size: 0.95em;
+}
+
+.expression-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding: 10px 15px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  font-size: 0.95em;
+}
+
+.expression-summary .summary-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.expression-summary .summary-item.upregulated {
+  color: #c62828;
+}
+
+.expression-summary .summary-item.downregulated {
+  color: #1565c0;
+}
+
+.expression-filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  padding: 10px 15px;
+  background: #e3f2fd;
+  border-radius: 4px;
+}
+
+.expression-filters label {
+  font-weight: 500;
+  color: #1565c0;
+}
+
+.expression-filters .bucket-filter {
+  padding: 6px 12px;
+  border: 1px solid #90caf9;
+  border-radius: 4px;
+  background: white;
+  font-size: 0.95em;
+  cursor: pointer;
+}
+
+.expression-filters .bucket-filter:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+}
+
+.expression-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 8px 12px;
+  background: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+
+.expression-legend .legend-title {
+  font-weight: 600;
+  color: #333;
+  margin-right: 5px;
+}
+
+.expression-legend .legend-item {
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+.expression-studies {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.expression-study {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.expression-study .study-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 15px;
+  background: #f5f5f5;
+  cursor: pointer;
+  user-select: none;
+}
+
+.expression-study .study-header:hover {
+  background: #eeeeee;
+}
+
+.expression-study .collapse-icon {
+  color: #666;
+  font-size: 0.8em;
+  width: 15px;
+}
+
+.expression-study .study-name {
+  font-weight: 600;
+  color: #333;
+}
+
+.expression-study .study-category {
+  color: #666;
+  font-size: 0.9em;
+  padding: 2px 8px;
+  background: #e8e8e8;
+  border-radius: 3px;
+}
+
+.expression-study .pubmed-link {
+  color: #1976d2;
+  text-decoration: none;
+  font-size: 0.9em;
+  margin-left: auto;
+}
+
+.expression-study .pubmed-link:hover {
+  text-decoration: underline;
+}
+
+.expression-study .condition-count {
+  color: #888;
+  font-size: 0.9em;
+}
+
+.expression-study .study-conditions {
+  padding: 15px;
+}
+
+.expression-study .control-info {
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 12px;
+  padding: 6px 10px;
+  background: #f9f9f9;
+  border-radius: 4px;
+}
+
+.expression-study .conditions-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.expression-study .condition-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.expression-study .condition-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95em;
+  color: #333;
+}
+
+.expression-study .bucket-badge {
+  font-size: 0.75em;
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: white;
+}
+
+.expression-study .fold-change-bar {
+  height: 24px;
+  background: #f0f0f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.expression-study .fold-change-fill {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+  min-width: 60px;
+}
+
+.expression-study .fold-change-value {
+  font-size: 0.85em;
+  font-weight: 600;
+  color: #333;
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.8);
+}
+
+.expression-warnings {
+  margin-top: 20px;
+  padding: 12px 15px;
+  background: #fff3e0;
+  border: 1px solid #ffcc80;
+  border-radius: 4px;
+}
+
+.expression-warnings h4 {
+  margin: 0 0 8px 0;
+  color: #e65100;
+  font-size: 0.95em;
+}
+
+.expression-warnings ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.expression-warnings li {
+  color: #666;
+  font-size: 0.9em;
+  margin-bottom: 4px;
+}
+
+.expression-attribution {
+  margin-top: 20px;
+  padding: 12px 15px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.expression-attribution p {
+  margin: 0;
+}
+
+.expression-error {
+  padding: 20px;
+  background: #ffebee;
+  border: 1px solid #ffcdd2;
+  border-radius: 4px;
+  color: #c62828;
+}
+
+/* Responsive expression styles */
+@media (max-width: 768px) {
+  .expression-summary {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .expression-legend {
+    font-size: 0.8em;
+  }
+
+  .expression-study .study-header {
+    flex-wrap: wrap;
+  }
+
+  .expression-study .pubmed-link {
+    margin-left: 25px;
+  }
+}
