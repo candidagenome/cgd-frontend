@@ -232,6 +232,11 @@ function CrisprGuideFinderHelp() {
               sites found in the genome with 0-3 mismatches.
             </li>
             <li>
+              <strong>Related</strong> - Off-targets detected in paralog or ortholog genes
+              of your target. These may have similar biological functions, so off-target
+              cutting could affect related pathways.
+            </li>
+            <li>
               <strong>Poly-T</strong> - Guide contains TTTT sequence, which can cause
               premature termination of RNA Pol III transcription.
             </li>
@@ -390,6 +395,26 @@ function CrisprGuideFinderHelp() {
             <li>Gene name if the off-target is within an ORF</li>
             <li>CFD score (Cutting Frequency Determination) for likelihood of cutting</li>
           </ul>
+
+          <h3>Paralog and Ortholog Warnings</h3>
+          <p>
+            Off-targets in genes related to your target are specially flagged:
+          </p>
+          <ul>
+            <li>
+              <strong>P badge (purple):</strong> Off-target is in a paralog of your
+              target gene (related gene in the same species)
+            </li>
+            <li>
+              <strong>O badge (blue):</strong> Off-target is in an ortholog of your
+              target gene (related gene in another species, if multi-species search)
+            </li>
+          </ul>
+          <p>
+            Off-targets in related genes are particularly important to consider because
+            paralogs often have similar functions. Cutting a paralog could produce
+            phenotypes that confound interpretation of your knockout.
+          </p>
         </div>
 
         <div className="info-section">
@@ -428,6 +453,58 @@ function CrisprGuideFinderHelp() {
         </div>
 
         <div className="info-section">
+          <h2>Gene Annotations</h2>
+          <p>
+            When you search by gene name, the results page displays biological context
+            from CGD to help you understand your target:
+          </p>
+
+          <h3>Essentiality</h3>
+          <p>
+            Genes are flagged as &quot;Essential&quot; if they meet certain criteria:
+          </p>
+          <ul>
+            <li>
+              <strong>GO term evidence:</strong> Annotated with housekeeping functions
+              (ribosome biogenesis, translation, RNA processing, cell cycle)
+            </li>
+            <li>
+              <strong>Ortholog conservation:</strong> Orthologs present in 4+ other
+              Candida species, suggesting core cellular function
+            </li>
+          </ul>
+          <p>
+            Essential genes may be difficult to delete completely. Consider using
+            conditional knockdown approaches for these targets.
+          </p>
+
+          <h3>Virulence Categories</h3>
+          <p>
+            Genes associated with virulence are tagged with categories such as:
+          </p>
+          <ul>
+            <li>Adhesins</li>
+            <li>Biofilm formation</li>
+            <li>Morphogenesis</li>
+            <li>Secreted enzymes</li>
+            <li>Stress response</li>
+          </ul>
+
+          <h3>Phenotypes</h3>
+          <p>
+            The phenotype count shows how many experimental phenotypes are annotated
+            for this gene in CGD. Click the link to view the full phenotype data
+            on the gene&apos;s locus page.
+          </p>
+
+          <h3>Orthologs</h3>
+          <p>
+            Shows the number of other Candida species with orthologs of this gene.
+            Highly conserved genes (many orthologs) often have essential functions.
+          </p>
+        </div>
+
+        <div className="info-section">
           <h2>Expanded View Information</h2>
           <p>
             Click on any guide row to expand and see additional details:
@@ -442,6 +519,10 @@ function CrisprGuideFinderHelp() {
             <li>
               <strong>Genomic Position:</strong> Chromosome coordinates of the
               target site
+            </li>
+            <li>
+              <strong>View in JBrowse:</strong> Link to visualize the guide location
+              in the CGD genome browser with surrounding genomic context
             </li>
           </ul>
 
