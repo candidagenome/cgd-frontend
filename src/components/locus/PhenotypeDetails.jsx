@@ -14,73 +14,7 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
     return data?.results ? Object.keys(data.results) : [];
   }, [data?.results]);
 
-  // Set default organism if not already set and data is available
-  useEffect(() => {
-    if (organisms.length > 0 && !selectedOrganism) {
-      const defaultOrg = getDefaultOrganism(organisms);
-      if (defaultOrg && onOrganismChange) {
-        onOrganismChange(defaultOrg);
-      }
-    }
-  }, [organisms, selectedOrganism, onOrganismChange]);
-
-  if (loading) return <div className="loading">Loading phenotype data...</div>;
-  if (error) return <div className="error">Error: {error}</div>;
-  if (!data || !data.results) return <div className="no-data">No phenotype data available</div>;
-
-  if (organisms.length === 0) {
-    return <div className="no-data">No phenotype annotations found</div>;
-  }
-
-  // Get data for the selected organism
-  const orgData = selectedOrganism ? data.results[selectedOrganism] : null;
-
-  // Map experiment types to root categories (like Perl does)
-  // IMPORTANT: Do NOT produce an "Other" category.
-  const getExperimentCategory = (experimentType) => {
-    // Default missing/unknown experiment types into "Classical Genetics"
-    if (!experimentType) return 'Classical Genetics';
-
-    const type = experimentType.toLowerCase();
-    if (type.includes('large-scale') || type.includes('large scale') || type.includes('survey')) {
-      return 'Large-Scale Survey';
-    }
-    return 'Classical Genetics';
-  };
-
-  // Group annotations by experiment category, then by experiment type
-  const groupAnnotations = (annotations) => {
-    const groups = {};
-
-    (annotations || []).forEach((ann) => {
-      const category = getExperimentCategory(ann.experiment_type);
-      const expType = ann.experiment_type || 'Unspecified';
-
-      if (!groups[category]) groups[category] = {};
-      if (!groups[category][expType]) groups[category][expType] = [];
-      groups[category][expType].push(ann);
-    });
-
-    return groups;
-  };
-
-  const toggleSection = (key) => {
-    setCollapsedSections((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
-  };
-
-  // Category colors matching Perl style
-  const categoryColors = {
-    'Classical Genetics': '#1976d2',
-    'Large-Scale Survey': '#7b1fa2',
-  };
-
-  // Group annotations for the selected organism
-  const grouped = orgData ? groupAnnotations(orgData.annotations || []) : null;
-
-  // AG Grid column definitions for phenotype table
+  // AG Grid column definitions for phenotype table - MUST be before any early returns
   const columnDefs = useMemo(
     () => [
       {
@@ -155,8 +89,8 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
       {
         headerName: 'Chemical',
         field: 'chemicals',
-        flex: 0.6, // smaller
-        minWidth: 80, // smaller min width
+        flex: 0.6,
+        minWidth: 80,
         autoHeight: true,
         valueGetter: (params) => {
           const chems = params.data.chemicals || [];
@@ -205,8 +139,8 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
       {
         headerName: 'References',
         field: 'references',
-        flex: 2.5, // larger
-        minWidth: 200, // larger min width
+        flex: 2.5,
+        minWidth: 200,
         autoHeight: true,
         valueGetter: (params) => {
           const refs = params.data.references || (params.data.reference ? [params.data.reference] : []);
@@ -230,7 +164,7 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
     []
   );
 
-  // Default column properties
+  // Default column properties - MUST be before any early returns
   const defaultColDef = useMemo(
     () => ({
       sortable: true,
@@ -240,7 +174,7 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
     []
   );
 
-  // Filter annotations by quick filter text
+  // Filter annotations by quick filter text - MUST be before any early returns
   const filterAnnotations = useCallback((annotations) => {
     if (!quickFilter.trim()) return annotations;
     const searchLower = quickFilter.toLowerCase().trim();
@@ -259,6 +193,73 @@ function PhenotypeDetails({ data, loading, error, selectedOrganism, onOrganismCh
       return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
     });
   }, [quickFilter]);
+
+  // Set default organism if not already set and data is available
+  useEffect(() => {
+    if (organisms.length > 0 && !selectedOrganism) {
+      const defaultOrg = getDefaultOrganism(organisms);
+      if (defaultOrg && onOrganismChange) {
+        onOrganismChange(defaultOrg);
+      }
+    }
+  }, [organisms, selectedOrganism, onOrganismChange]);
+
+  // Early returns AFTER all hooks
+  if (loading) return <div className="loading">Loading phenotype data...</div>;
+  if (error) return <div className="error">Error: {error}</div>;
+  if (!data || !data.results) return <div className="no-data">No phenotype data available</div>;
+
+  if (organisms.length === 0) {
+    return <div className="no-data">No phenotype annotations found</div>;
+  }
+
+  // Get data for the selected organism
+  const orgData = selectedOrganism ? data.results[selectedOrganism] : null;
+
+  // Map experiment types to root categories (like Perl does)
+  // IMPORTANT: Do NOT produce an "Other" category.
+  const getExperimentCategory = (experimentType) => {
+    // Default missing/unknown experiment types into "Classical Genetics"
+    if (!experimentType) return 'Classical Genetics';
+
+    const type = experimentType.toLowerCase();
+    if (type.includes('large-scale') || type.includes('large scale') || type.includes('survey')) {
+      return 'Large-Scale Survey';
+    }
+    return 'Classical Genetics';
+  };
+
+  // Group annotations by experiment category, then by experiment type
+  const groupAnnotations = (annotations) => {
+    const groups = {};
+
+    (annotations || []).forEach((ann) => {
+      const category = getExperimentCategory(ann.experiment_type);
+      const expType = ann.experiment_type || 'Unspecified';
+
+      if (!groups[category]) groups[category] = {};
+      if (!groups[category][expType]) groups[category][expType] = [];
+      groups[category][expType].push(ann);
+    });
+
+    return groups;
+  };
+
+  const toggleSection = (key) => {
+    setCollapsedSections((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
+  // Category colors matching Perl style
+  const categoryColors = {
+    'Classical Genetics': '#1976d2',
+    'Large-Scale Survey': '#7b1fa2',
+  };
+
+  // Group annotations for the selected organism
+  const grouped = orgData ? groupAnnotations(orgData.annotations || []) : null;
 
   return (
     <div className="phenotype-details">
