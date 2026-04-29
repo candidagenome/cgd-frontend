@@ -228,6 +228,62 @@ function CrisprResultsPage() {
             </div>
           </div>
 
+          {/* Gene Annotations Section */}
+          {results.gene_info && (
+            results.gene_info.phenotype_count > 0 ||
+            results.gene_info.is_essential ||
+            results.gene_info.virulence_categories?.length > 0 ||
+            results.gene_info.ortholog_count > 0
+          ) && (
+            <div className="gene-annotations">
+              <h4>Gene Annotations</h4>
+              <div className="annotation-badges">
+                {/* Essential gene badge */}
+                {results.gene_info.is_essential && (
+                  <span className="annotation-badge badge-essential" title={results.gene_info.essential_reason || 'Essential/housekeeping gene'}>
+                    Essential Gene
+                  </span>
+                )}
+
+                {/* Virulence category badges */}
+                {results.gene_info.virulence_categories?.map((category, idx) => (
+                  <span key={idx} className="annotation-badge badge-virulence" title={`Virulence-related: ${category}`}>
+                    {category}
+                  </span>
+                ))}
+
+                {/* Phenotype count with link */}
+                {results.gene_info.phenotype_count > 0 && (
+                  <Link
+                    to={`${results.gene_info.cgd_url}#phenotype`}
+                    className="annotation-badge badge-phenotype"
+                    title={`${results.gene_info.phenotype_count} phenotype annotations. Top: ${results.gene_info.phenotype_observables?.slice(0, 3).join(', ') || 'N/A'}`}
+                  >
+                    {results.gene_info.phenotype_count} Phenotypes
+                    {results.gene_info.has_virulence_phenotype && ' (includes virulence)'}
+                  </Link>
+                )}
+
+                {/* Ortholog conservation */}
+                {results.gene_info.ortholog_count > 0 && (
+                  <span className="annotation-badge badge-ortholog" title={`Conserved across ${results.gene_info.ortholog_count} Candida species`}>
+                    {results.gene_info.ortholog_count} Orthologs
+                  </span>
+                )}
+              </div>
+
+              {/* Phenotype observables preview */}
+              {results.gene_info.phenotype_observables?.length > 0 && (
+                <div className="phenotype-preview">
+                  <span className="preview-label">Top phenotypes:</span>
+                  <span className="preview-value">
+                    {results.gene_info.phenotype_observables.slice(0, 5).join(', ')}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Links */}
           {results.gene_info && (
             <div className="summary-links">

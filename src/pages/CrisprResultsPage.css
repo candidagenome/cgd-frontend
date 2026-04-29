@@ -70,6 +70,97 @@
   font-weight: normal;
 }
 
+/* Gene Annotations Section */
+.gene-annotations {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.gene-annotations h4 {
+  margin: 0 0 10px 0;
+  font-size: 0.9em;
+  color: #333;
+  font-weight: 600;
+}
+
+.annotation-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.annotation-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.8em;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: default;
+  transition: opacity 0.15s;
+}
+
+.annotation-badge:hover {
+  opacity: 0.85;
+}
+
+/* Essential gene badge - warning/alert style */
+.badge-essential {
+  background-color: #ffcdd2;
+  color: #c62828;
+  border: 1px solid #ef9a9a;
+}
+
+/* Virulence category badges - purple/magenta theme */
+.badge-virulence {
+  background-color: #e1bee7;
+  color: #7b1fa2;
+  border: 1px solid #ce93d8;
+}
+
+/* Phenotype badge - blue theme with link styling */
+.badge-phenotype {
+  background-color: #bbdefb;
+  color: #1565c0;
+  border: 1px solid #90caf9;
+  cursor: pointer;
+}
+
+.badge-phenotype:hover {
+  background-color: #90caf9;
+  text-decoration: none;
+}
+
+/* Ortholog conservation badge - green theme */
+.badge-ortholog {
+  background-color: #c8e6c9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+}
+
+/* Phenotype observables preview */
+.phenotype-preview {
+  font-size: 0.85em;
+  color: #666;
+  margin-top: 8px;
+  padding: 6px 10px;
+  background-color: #fafafa;
+  border-radius: 4px;
+  border-left: 3px solid #90caf9;
+}
+
+.phenotype-preview .preview-label {
+  font-weight: 500;
+  color: #333;
+  margin-right: 6px;
+}
+
+.phenotype-preview .preview-value {
+  font-style: italic;
+}
+
 .summary-links {
   margin-top: 12px;
   padding-top: 12px;
