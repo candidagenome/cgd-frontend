@@ -121,8 +121,8 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
         .attr('y', isTopStrand ? markerY - 5 : innerHeight + 35)
         .attr('text-anchor', 'middle')
         .attr('class', 'guide-rank')
-        .style('font-size', '12px')
-        .style('font-weight', '700')
+        .style('font-size', '9px')
+        .style('font-weight', '600')
         .text(guide.rank);
 
       // Mouse events
