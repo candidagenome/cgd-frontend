@@ -396,12 +396,28 @@ function CrisprResultsPage() {
                                   </button>
                                 </div>
                                 {guide.genomic_start && (
-                                  <div className="detail-item">
-                                    <span className="detail-label">Genomic Position:</span>
-                                    <span className="detail-value">
-                                      {guide.chromosome}:{guide.genomic_start}-{guide.genomic_end}
-                                    </span>
-                                  </div>
+                                  <>
+                                    <div className="detail-item">
+                                      <span className="detail-label">Genomic Position:</span>
+                                      <span className="detail-value">
+                                        {guide.chromosome}:{guide.genomic_start}-{guide.genomic_end}
+                                      </span>
+                                    </div>
+                                    {guide.jbrowse_url && (
+                                      <div className="detail-item">
+                                        <span className="detail-label"></span>
+                                        <a
+                                          href={guide.jbrowse_url}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="link-button"
+                                          onClick={(e) => e.stopPropagation()}
+                                        >
+                                          View in JBrowse
+                                        </a>
+                                      </div>
+                                    )}
+                                  </>
                                 )}
                               </div>
 
