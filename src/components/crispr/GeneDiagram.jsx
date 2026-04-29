@@ -83,7 +83,7 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
       .style('opacity', 0);
 
     // Draw guide markers
-    const markerHeight = 15;
+    const markerHeight = 25;
     const markerWidth = 3;
 
     guides.forEach((guide) => {
