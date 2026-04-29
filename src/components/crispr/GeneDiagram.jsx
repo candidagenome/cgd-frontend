@@ -189,7 +189,7 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
     const legendX = innerWidth - 190;
     const legendY = -20;
     const legendPadding = 6;
-    const legendWidth = 240;
+    const legendWidth = 250;
     const legendHeight = 22;
     const legendItemSpacing = 65;
     const legendItems = [
@@ -218,14 +218,14 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
 
     legendItems.forEach((item, i) => {
       g.append('rect')
-        .attr('x', legendX + i * legendItemSpacing)
+        .attr('x', legendX + 10 + i * legendItemSpacing)
         .attr('y', legendY)
         .attr('width', 12)
         .attr('height', 12)
         .attr('fill', item.color);
 
       g.append('text')
-        .attr('x', legendX + i * legendItemSpacing + 16)
+        .attr('x', legendX + 10 + i * legendItemSpacing + 16)
         .attr('y', legendY + 10)
         .attr('class', 'legend-label')
         .text(item.label);
