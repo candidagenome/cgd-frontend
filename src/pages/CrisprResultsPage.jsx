@@ -232,7 +232,7 @@ function CrisprResultsPage() {
           {results.gene_info && (
             <div className="summary-links">
               {results.gene_info.cgd_url && (
-                <Link to={results.gene_info.cgd_url} className="link-button">
+                <Link to={results.gene_info.cgd_url} className="link-button" target="_blank" rel="noopener noreferrer">
                   View in CGD
                 </Link>
               )}
@@ -274,6 +274,8 @@ function CrisprResultsPage() {
                   to={`${results.gene_info.cgd_url}#phenotype`}
                   className="annotation-badge badge-phenotype"
                   title={`${results.gene_info.phenotype_count} phenotype annotations. Top: ${results.gene_info.phenotype_observables?.slice(0, 3).join(', ') || 'N/A'}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   {results.gene_info.phenotype_count} Phenotypes
                   {results.gene_info.has_virulence_phenotype && ' (includes virulence)'}
