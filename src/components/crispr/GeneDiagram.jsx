@@ -23,9 +23,9 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
     d3.select(svgRef.current).selectAll('*').remove();
 
     // Dimensions
-    const margin = { top: 30, right: 40, bottom: 70, left: 60 };
+    const margin = { top: 40, right: 40, bottom: 80, left: 60 };
     const width = containerRef.current?.clientWidth || 800;
-    const height = 150;
+    const height = 170;
     const geneHeight = 30;
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
@@ -86,10 +86,18 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
     const markerHeight = 25;
     const markerWidth = 3;
 
+    // Sort guides by position for staggering labels
+    const topGuides = guides.filter(g => g.strand === '+').sort((a, b) => a.position - b.position);
+    const bottomGuides = guides.filter(g => g.strand !== '+').sort((a, b) => a.position - b.position);
+
     guides.forEach((guide) => {
       const x = xScale(guide.position);
       const isTopStrand = guide.strand === '+';
       const markerY = isTopStrand ? geneY - markerHeight + 10 : geneY + geneHeight - 10;
+
+      // Get index within strand group for staggering
+      const strandGuides = isTopStrand ? topGuides : bottomGuides;
+      const guideIndex = strandGuides.findIndex(g => g.rank === guide.rank);
 
       // Guide marker group
       const markerGroup = g.append('g')
@@ -115,10 +123,11 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
           : `${-arrowSize},${arrowY - arrowSize} 0,${arrowY} ${arrowSize},${arrowY - arrowSize}`)
         .attr('fill', colorScale(guide.combinedScore || guide.combined_score || 50));
 
-      // Rank label - position below axis for bottom strand
+      // Rank label - stagger vertically to avoid overlap
+      const staggerOffset = (guideIndex % 2) * 10;
       markerGroup.append('text')
         .attr('x', 0)
-        .attr('y', isTopStrand ? markerY - 5 : innerHeight + 35)
+        .attr('y', isTopStrand ? markerY - 5 - staggerOffset : innerHeight + 35 + staggerOffset)
         .attr('text-anchor', 'middle')
         .attr('class', 'guide-rank')
         .style('font-size', '9px')
