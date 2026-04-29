@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import crisprApi from '../api/crisprApi';
+import GeneDiagram from '../components/crispr/GeneDiagram';
 import './CrisprResultsPage.css';
 
 function CrisprResultsPage() {
@@ -253,6 +254,31 @@ function CrisprResultsPage() {
               </div>
             ))}
           </div>
+        )}
+
+        {/* Gene Diagram */}
+        {results.guides.length > 0 && results.target_length > 0 && (
+          <GeneDiagram
+            geneLength={results.target_length}
+            geneName={results.gene_info?.gene_name || results.gene_info?.feature_name || 'Target'}
+            strand={results.gene_info?.strand || '+'}
+            guides={results.guides.map(g => ({
+              position: g.position,
+              strand: g.strand,
+              rank: g.rank,
+              combinedScore: g.combined_score,
+              sequence: g.sequence
+            }))}
+            onGuideClick={(rank) => {
+              const newExpanded = new Set(expandedGuides);
+              if (newExpanded.has(rank)) {
+                newExpanded.delete(rank);
+              } else {
+                newExpanded.add(rank);
+              }
+              setExpandedGuides(newExpanded);
+            }}
+          />
         )}
 
         {/* Actions Bar */}
