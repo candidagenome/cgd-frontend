@@ -229,12 +229,11 @@ function CrisprResultsPage() {
           </div>
 
           {/* Gene Annotations Section */}
-          {results.gene_info && (
-            results.gene_info.phenotype_count > 0 ||
-            results.gene_info.is_essential ||
-            results.gene_info.virulence_categories?.length > 0 ||
-            results.gene_info.ortholog_count > 0
-          ) && (
+          {results.gene_info &&
+            (results.gene_info.phenotype_count > 0 ||
+             results.gene_info.is_essential ||
+             results.gene_info.virulence_categories?.length > 0 ||
+             results.gene_info.ortholog_count > 0) && (
             <div className="gene-annotations">
               <h4>Gene Annotations</h4>
               <div className="annotation-badges">
