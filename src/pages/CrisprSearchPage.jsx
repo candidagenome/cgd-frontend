@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import crisprApi from '../api/crisprApi';
 import './CrisprSearchPage.css';
 
@@ -157,7 +157,11 @@ function CrisprSearchPage() {
       <div className="crispr-content">
         <h1>CRISPR Guide RNA Designer</h1>
         <p className="subtitle">
-          Design sgRNAs for Candida species with efficiency prediction and off-target analysis
+          Design sgRNAs for Candida species with efficiency prediction and off-target analysis.
+          {' '}
+          <Link to="/help/crispr" className="help-link">
+            About this tool
+          </Link>
         </p>
 
         <form onSubmit={handleSubmit}>

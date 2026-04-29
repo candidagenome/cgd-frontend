@@ -83,6 +83,16 @@ function HelpPage() {
 
         <div className="help-item">
           <h3>
+            <Link to="/help/crispr">CRISPR Guide RNA Designer</Link>
+          </h3>
+          <p>
+            How to use the CRISPR tool to design guide RNAs for gene editing in <em>Candida</em> species.
+            Includes efficiency prediction, off-target analysis, and cloning primer generation.
+          </p>
+        </div>
+
+        <div className="help-item">
+          <h3>
             <Link to="/help/code-tables">
               Non-standard Genetic Code Usage in <em>Candida</em>
             </Link>

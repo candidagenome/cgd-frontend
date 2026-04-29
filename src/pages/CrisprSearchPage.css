@@ -29,6 +29,16 @@
   font-size: 0.95em;
 }
 
+.crispr-search-page .subtitle .help-link {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.crispr-search-page .subtitle .help-link:hover {
+  text-decoration: underline;
+}
+
 /* Two-column layout */
 .form-columns {
   display: grid;
