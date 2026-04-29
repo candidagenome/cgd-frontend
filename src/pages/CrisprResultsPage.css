@@ -424,6 +424,11 @@
   color: #0c5460;
 }
 
+.flag-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
 /* Guide Details Row */
 .guide-details-row td {
   padding: 0;
@@ -584,6 +589,61 @@
   padding: 2px 8px;
   background-color: #f5f5f5;
   border-radius: 3px;
+}
+
+/* Related gene warning */
+.related-gene-warning {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 4px;
+  margin: 10px 0;
+  color: #856404;
+  font-size: 0.9em;
+}
+
+.related-gene-warning .warning-icon {
+  font-size: 1.1em;
+}
+
+.related-count {
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.related-count.paralog {
+  background-color: #e1bee7;
+  color: #7b1fa2;
+}
+
+.related-count.ortholog {
+  background-color: #bbdefb;
+  color: #1565c0;
+}
+
+/* Homology badges in off-target table */
+.homology-badge {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-size: 0.75em;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.homology-badge.paralog {
+  background-color: #e1bee7;
+  color: #7b1fa2;
+}
+
+.homology-badge.ortholog {
+  background-color: #bbdefb;
+  color: #1565c0;
 }
 
 /* Off-target table */

@@ -459,6 +459,14 @@ function CrisprResultsPage() {
                             OT:{guide.offtarget_count}
                           </span>
                         )}
+                        {guide.has_related_gene_offtargets && (
+                          <span
+                            className="flag flag-danger"
+                            title={`Off-targets in related genes: ${guide.offtarget_in_paralogs} paralog(s), ${guide.offtarget_in_orthologs} ortholog(s)`}
+                          >
+                            Related
+                          </span>
+                        )}
                       </td>
                     </tr>
                     {expandedGuides.has(guide.rank) && (
@@ -586,6 +594,23 @@ function CrisprResultsPage() {
                                     <span className="ot-count">2mm: {guide.offtarget_2mm}</span>
                                     <span className="ot-count">3mm: {guide.offtarget_3mm}</span>
                                   </div>
+                                  {guide.has_related_gene_offtargets && (
+                                    <div className="related-gene-warning">
+                                      <span className="warning-icon">⚠️</span>
+                                      <span>Off-targets in related genes: </span>
+                                      {guide.offtarget_in_paralogs > 0 && (
+                                        <span className="related-count paralog">
+                                          {guide.offtarget_in_paralogs} paralog{guide.offtarget_in_paralogs > 1 ? 's' : ''}
+                                        </span>
+                                      )}
+                                      {guide.offtarget_in_paralogs > 0 && guide.offtarget_in_orthologs > 0 && ', '}
+                                      {guide.offtarget_in_orthologs > 0 && (
+                                        <span className="related-count ortholog">
+                                          {guide.offtarget_in_orthologs} ortholog{guide.offtarget_in_orthologs > 1 ? 's' : ''}
+                                        </span>
+                                      )}
+                                    </div>
+                                  )}
                                   {guide.offtargets && guide.offtargets.length > 0 && (
                                     <table className="offtarget-table">
                                       <thead>
@@ -606,7 +631,15 @@ function CrisprResultsPage() {
                                             </td>
                                             <td className="ot-gene">
                                               {ot.gene_name ? (
-                                                <Link to={`/locus/${ot.gene_name}`}>{ot.gene_name}</Link>
+                                                <>
+                                                  <Link to={`/locus/${ot.gene_name}`}>{ot.gene_name}</Link>
+                                                  {ot.is_paralog && (
+                                                    <span className="homology-badge paralog" title="Paralog of target gene">P</span>
+                                                  )}
+                                                  {ot.is_ortholog && (
+                                                    <span className="homology-badge ortholog" title="Ortholog of target gene">O</span>
+                                                  )}
+                                                </>
                                               ) : (
                                                 <span className="ot-intergenic">intergenic</span>
                                               )}
