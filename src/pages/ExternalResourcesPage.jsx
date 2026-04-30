@@ -1,168 +1,408 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import './InfoPages.css';
+/**
+ * External Resources 2026
+ * Converted from External_Resources_2026.html (Microsoft Word 15, filtered)
+ */
 
-const ExternalResourcesPage = () => {
-  return (
-    <div className="info-page">
-      <div className="info-page-content">
-        <h1>External Resources</h1>
-        <hr />
+const externalResources = {
+  title: "External Resources",
 
-        <nav className="info-section">
-          <ul>
-            <li><a href="#refgen">Candida Reference Genomes</a></li>
-            <li><a href="#comparisons">Candida Species Comparisons</a></li>
-            <li><a href="#comparative">Resources for Fungal Comparative Genomics</a></li>
-            <li><a href="#lab">Resources for Laboratory Research</a></li>
-            <li><a href="#tools">Analysis Tools</a></li>
-            <li><a href="#medical">Medical Mycology Resources</a></li>
-            <li><a href="#fungaldb">Other Fungal Genome Databases</a></li>
-            <li><a href="#other">Other Resources</a></li>
-          </ul>
-        </nav>
+  tableOfContents: [
+    { label: "Candida Reference Genomes",              href: "https://www.candidagenome.org/external-resources#genomes"  },
+    { label: "Candida Species Comparisons",            href: "https://www.candidagenome.org/external-resources#candida"  },
+    { label: "Resources for Fungal Comparative Genomics" },
+    { label: "Resources for Laboratory Research" },
+    { label: "Analysis Tools",                         href: "https://www.candidagenome.org/external-resources#tools"    },
+    { label: "Medical Mycology Resources",             href: "https://www.candidagenome.org/external-resources#medical"  },
+    { label: "Other Fungal Genome Databases" },
+    { label: "Other Resources",                        href: "https://www.candidagenome.org/external-resources#other"    },
+  ],
 
-        <div className="info-section" id="refgen">
-          <h2>Candida Reference Genomes</h2>
+  sections: [
 
-          <p><strong>Candida albicans SC5314 genome projects</strong></p>
-          <ul>
-            <li>
-              <strong>Assembly 22:</strong> The phased diploid Assembly 22 is described in 
-              <a href="https://doi.org/10.1128/genomeA.00590-13" target="_blank" rel="noopener noreferrer">Muzzy et al., 2013</a>.
-            </li>
-            <li>
-              <strong>Assembly 21:</strong> The haploid chromosomal-level Assembly 21 reference sequence is described in 
-              <a href="https://genomebiology.biomedcentral.com/articles/10.1186/gb-2007-8-4-r52" target="_blank" rel="noopener noreferrer">van het Hoog et al., 2007</a>.
-            </li>
-            <li>
-              <strong>Assembly 19:</strong> The C. albicans strain SC5314 genome sequence and diploid contig-level assembly was published in 
-              <a href="https://www.pnas.org/doi/10.1073/pnas.0401648101" target="_blank" rel="noopener noreferrer">Jones et al., 2004</a>. 
-              Sequencing methods are described in 
-              <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC302673/" target="_blank" rel="noopener noreferrer">Tzung et al., 2001</a>.
-            </li>
-          </ul>
+    // -------------------------------------------------------------------------
+    // Candida Reference Genomes
+    // -------------------------------------------------------------------------
+    {
+      id: "genomes",
+      heading: "Candida Reference Genomes",
+      entries: [
+        {
+          label: "Candida albicans SC5314",
+          href: "https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000182965.3/",
+          description: "genome projects",
+          subEntries: [
+            {
+              label: "Assembly 22",
+              description: "The phased diploid Assembly 22",
+              href: "https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000182965.3/",
+              reference: { text: "Muzzy et al., 2013", href: "https://pubmed.ncbi.nlm.nih.gov/24025428/" },
+            },
+            {
+              label: "Assembly 21",
+              description:
+                "The haploid chromosomal-level Assembly 21 reference sequence",
+              reference: { text: "van het Hoog et al., 2007", href: "https://pubmed.ncbi.nlm.nih.gov/17419877/" },
+            },
+            {
+              label: "Assembly 19",
+              description:
+                "The C. albicans strain SC5314 genome sequence and diploid contig-level assembly by the Stanford Genome Technology Center",
+              references: [
+                { text: "Jones et al., 2004",  href: "https://pubmed.ncbi.nlm.nih.gov/15123810/" },
+                { text: "Tzung et al., 2001",  href: "https://pubmed.ncbi.nlm.nih.gov/11248064/" },
+              ],
+            },
+          ],
+        },
+        {
+          label: "Candida albicans WO-1",
+          href: "https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_000149445.2/",
+          description:
+            "genome project. The genome of C. albicans strain WO-1 was sequenced at the Broad Institute as part of the Fungal Genome Initiative (FGI).",
+          links: [
+            { text: "Fungal Genome Initiative", href: "https://www.broadinstitute.org/fungal-genome-initiative" },
+          ],
+        },
+        {
+          label: "Candida dubliniensis CD36",
+          href: "https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000026945.1/",
+          description: "genome project. Deposited at NCBI by the Sanger Institute.",
+          links: [
+            { text: "Sanger Institute", href: "http://www.sanger.ac.uk/" },
+          ],
+        },
+        {
+          label: "Candida glabrata ATCC 2001 (Nakaseomyces glabratus)",
+          href: "https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_010111755.1/",
+          description:
+            "genome project. Original sequencing was performed by the Genolevures Consortium. A more recent assembly was deposited at NCBI.",
+          reference: { text: "Xu et al., 2020", href: "https://pubmed.ncbi.nlm.nih.gov/32068314/" },
+        },
+        {
+          label: "Candida guilliermondii (Meyerozyma guilliermondii)",
+          href: "https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000149425.1/",
+          description:
+            "genome project. The C. guilliermondii genome was sequenced at the Broad Institute as part of the Fungal Genome Initiative (FGI).",
+          links: [
+            { text: "Fungal Genome Initiative", href: "https://www.broadinstitute.org/fungal-genome-initiative" },
+          ],
+        },
+        {
+          label: "Candida lusitaniae (Clavispora lusitaniae)",
+          href: "https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_014636115.1/",
+          description:
+            "genome project. The C. lusitaniae genome was originally sequenced at the Broad Institute as part of the Fungal Genome Initiative (FGI). A more recent sequencing and assembly was performed by the US Food and Drug Administration.",
+          links: [
+            { text: "Fungal Genome Initiative", href: "https://www.broadinstitute.org/fungal-genome-initiative" },
+          ],
+          reference: { text: "Sichtig et al., 2019", href: "https://pubmed.ncbi.nlm.nih.gov/31346170/" },
+        },
+        {
+          label: "Candida parapsilosis CDC317",
+          href: "https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000182765.1/",
+          description: "genome project. Deposited at NCBI by the Sanger Institute.",
+          links: [
+            { text: "Sanger Institute", href: "http://www.sanger.ac.uk/" },
+          ],
+        },
+        {
+          label: "Candida tropicalis MYA-3404",
+          href: "https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000006335.3/",
+          description:
+            "genome project. The C. tropicalis genome was sequenced at the Broad Institute as part of the Fungal Genome Initiative (FGI). A more recent sequencing and assembly was performed by Guin et al.",
+          links: [
+            { text: "Fungal Genome Initiative", href: "https://www.broadinstitute.org/fungal-genome-initiative" },
+          ],
+          reference: { text: "Guin et al., 2020", href: "https://pubmed.ncbi.nlm.nih.gov/32469306/" },
+        },
+      ],
+    },
 
-          <p>
-            <a href="https://www.broadinstitute.org/" target="_blank" rel="noopener noreferrer">Candida albicans WO-1 genome project</a><br />
-            <small>The genome of C. albicans strain WO-1 was sequenced at the Broad Institute as part of the Fungal Genome Initiative (FGI).</small>
-          </p>
+    // -------------------------------------------------------------------------
+    // Candida Species Comparisons
+    // -------------------------------------------------------------------------
+    {
+      id: "candida",
+      heading: "Candida species comparisons",
+      entries: [
+        {
+          label: "Butler et al. (2009)",
+          href: "https://pubmed.ncbi.nlm.nih.gov/19465905/",
+          description:
+            "Supplementary data for eight Candida genomes includes genome characteristics (size, telomeres, centromeres, retrotransposons and repeats, CUG usage, SNPs, etc.), phylogeny, gene families and function (pathogenesis-associated gene families, cell wall, stress response, mating and meiosis, etc.), cross-species comparisons (alignments, synteny). Data are available for download as supplementary material associated with the paper.",
+        },
+        {
+          label: "CGD Public Wiki",
+          href: "http://publicwiki.candidagenome.org/index.php?title=Main_Page",
+          description:
+            "Contains seminal Candida papers, strain information, and species comparisons by topic such as codon usage, filamentation style, mitochondrial genomes, and more.",
+        },
+      ],
+    },
 
-          <p>
-            <a href="https://www.sanger.ac.uk/" target="_blank" rel="noopener noreferrer">Candida dubliniensis CD36 genome project</a><br />
-            <small>Deposited at NCBI by the Sanger Institute.</small>
-          </p>
+    // -------------------------------------------------------------------------
+    // Resources for Fungal Comparative Genomics
+    // -------------------------------------------------------------------------
+    {
+      id: "fungal-comparative",
+      heading: "Resources for fungal comparative genomics",
+      entries: [
+        {
+          label: "Ensembl Fungi",
+          href: "https://fungi.ensembl.org",
+          description: "genome browsers and comparative genomics for fungal species",
+        },
+        {
+          label: "JGI MycoCosm",
+          href: "https://mycocosm.jgi.doe.gov",
+          description: "fungal genomics portal with genome sequences and comparative tools",
+        },
+        {
+          label: "FungiDB",
+          href: "https://fungidb.org",
+          description:
+            "integrated genomic and functional genomic data for fungi (may require a subscription for access)",
+        },
+      ],
+    },
 
-          <p>
-            <a href="http://genolevures.org" target="_blank" rel="noopener noreferrer">Candida glabrata ATCC 2001 genome project</a><br />
-            <small>Original sequencing by the Genolevures Consortium; updated assembly published by 
-            <a href="https://doi.org/10.1093/nar/gkaa1034" target="_blank" rel="noopener noreferrer">Xu et al., 2020</a>.</small>
-          </p>
+    // -------------------------------------------------------------------------
+    // Resources for Laboratory Research
+    // -------------------------------------------------------------------------
+    {
+      id: "lab-research",
+      heading: "Resources for laboratory research",
+      entries: [
+        {
+          label: "Fungal Genetics Stock Center",
+          href: "https://www.fgsc.net/",
+          description: "strain and plasmid repository",
+        },
+        {
+          label: "Candida collections at the Fungal Genetics Stock Center",
+          href: "http://www.fgsc.net/candida/FGSCcandidaresources.htm",
+          description: "Request strains from several different mutant collections",
+        },
+        {
+          label: "EUCAST",
+          href: "https://www.eucast.org/",
+          description: "antifungal methodology",
+        },
+        {
+          label: "Clinical and Laboratory Standards Institute",
+          href: "https://clsi.org/",
+          description: "antifungal methodology",
+        },
+        {
+          label: "Developmental Studies Hybridoma Bank",
+          href: "http://dshb.biology.uiowa.edu/",
+          description:
+            "Collection of hybridomas and their antibodies that in the future will include DSHB-Microbe, a collection of antibodies against C. albicans antigens and those of other microbial pathogens.",
+        },
+      ],
+    },
 
-          <p>
-            <a href="https://www.broadinstitute.org/" target="_blank" rel="noopener noreferrer">Candida guilliermondii genome project</a><br />
-            <small>Sequenced at the Broad Institute as part of the Fungal Genome Initiative (FGI).</small>
-          </p>
+    // -------------------------------------------------------------------------
+    // Analysis Tools
+    // -------------------------------------------------------------------------
+    {
+      id: "tools",
+      heading: "Analysis Tools",
+      entries: [
+        {
+          label: "PathoYeastract",
+          href: "https://yeastract-plus.org/pathoyeastract/",
+          description:
+            "Pathogenic Yeast Search for Transcriptional Regulators And Consensus Tracking. A curated repository of all known regulatory associations between transcription factors (TF) and target genes in pathogenic Candida species, based on hundreds of bibliographic references. Includes C. albicans, C. glabrata, C. auris, C. parapsilosis, and C. tropicalis.",
+          reference: { text: "Monteiro et al., 2017", href: "https://www.ncbi.nlm.nih.gov/pubmed/27625390" },
+        },
+        {
+          label: "FungiFun2",
+          href: "https://bio.tools/fungifun",
+          description:
+            "Online resource that assigns functional annotations to lists of fungal genes or proteins based on different classification methods (Gene Ontology, Functional Catalog, KEGG) and performs an enrichment analysis to identify significantly enriched pathways or processes.",
+          reference: { text: "Priebe et al., 2015", href: "https://www.ncbi.nlm.nih.gov/pubmed/25294921" },
+        },
+        {
+          label: "FungiFun3",
+          href: "https://fungifun3.hki-jena.de/",
+          description: "Rewritten tools for analysis of differential gene expression.",
+          reference: { text: "Garcia Lopez et al., 2024", href: "https://pubmed.ncbi.nlm.nih.gov/39576688/" },
+        },
+        {
+          label: "C. albicans Multilocus Sequence Typing (MLST)",
+          href: "http://calbicans.mlst.net/",
+          description:
+            "Tools for strain typing and epidemiology, hosted at Imperial College London.",
+          reference: { text: "M.-E. Bougnoux et al., 2003", href: "https://pubmed.ncbi.nlm.nih.gov/11923347/" },
+        },
+        {
+          label: "Bioinformatics Analysis Tools",
+          href: "https://services.healthtech.dtu.dk/",
+          description:
+            "Extensive set of tools listed at the Department of Health Technology of the Technical University of Denmark. Gene-finding and splice sites, genomic epidemiology, immunological features, post-translational modifications, protein structure and sorting predictions, numerous datasets, and more.",
+        },
+        {
+          label: "Multi-genome Analysis of Positions and Patterns of Elements of Regulation (MAPPER)",
+          href: "https://neuinfo.org/data/record/nlx_144509-1/RRID:SCR_003077/resolver/pdf&i=rrid:scr_003077",
+          description:
+            "Tools for prediction of transcription factor binding sites in human, mouse, and fly.",
+          references: [
+            { text: "Marinescu et al., 2005",        href: "https://pubmed.ncbi.nlm.nih.gov/15799782/" },
+            { text: "Neuroscience Information Framework", href: "https://neuinfo.org/" },
+          ],
+        },
+        {
+          label: "Fungal Genomes BLAST at SGD",
+          href: "https://www.yeastgenome.org/blast-fungal",
+          description:
+            "BLAST search for sequence similarity within fungal genomes, provided by the Saccharomyces Genome Database.",
+        },
+      ],
+    },
 
-          <p>
-            <a href="https://www.broadinstitute.org/" target="_blank" rel="noopener noreferrer">Candida lusitaniae genome project</a><br />
-            <small>Originally sequenced at Broad; updated assembly by FDA published in 
-            <a href="https://doi.org/10.1128/genomeA.00234-19" target="_blank" rel="noopener noreferrer">Sichtig et al., 2019</a>.</small>
-          </p>
+    // -------------------------------------------------------------------------
+    // Medical Mycology Resources
+    // -------------------------------------------------------------------------
+    {
+      id: "medical",
+      heading: "Medical Mycology Resources",
+      entries: [
+        {
+          label: "Candidiasis Information at Medline Plus",
+          href: "http://www.nlm.nih.gov/medlineplus/candidiasis.html",
+          description: "Medical information about candidiasis.",
+        },
+      ],
+    },
 
-          <p>
-            <a href="https://www.sanger.ac.uk/" target="_blank" rel="noopener noreferrer">Candida parapsilosis CDC317 genome project</a><br />
-            <small>Deposited at NCBI by the Sanger Institute.</small>
-          </p>
+    // -------------------------------------------------------------------------
+    // Other Fungal Genome Databases
+    // -------------------------------------------------------------------------
+    {
+      id: "fungal-databases",
+      heading: "Other Fungal Genome Databases",
+      entries: [
+        {
+          label: "Saccharomyces Genome Database",
+          href: "http://www.yeastgenome.org/",
+          description:
+            "Genome, gene, and protein information for the model yeast Saccharomyces cerevisiae.",
+        },
+        {
+          label: "Cryptococcus neoformans genome project",
+          href: "https://www.broadinstitute.org/fungal-genome-initiative/cryptococcus-neoformans-serotype-genome-project",
+          description:
+            "Genome sequencing efforts for the fungal pathogen C. neoformans at the Broad Institute Fungal Genome Initiative.",
+          links: [
+            { text: "Fungal Genome Initiative", href: "https://www.broadinstitute.org/fungal-genome-initiative" },
+          ],
+        },
+        {
+          label: "The Aspergillus Website",
+          href: "https://www.aspergillus.org.uk/",
+          description:
+            "Database with genomic information on the fungal pathogen Aspergillus fumigatus and clinical information on aspergillosis.",
+        },
+        {
+          label: "Aspergillus nidulans genome project",
+          href: "http://www.broad.mit.edu/annotation/fungi/aspergillus/",
+          description:
+            "Home page for the A. nidulans genome project at the Broad Institute, part of the Fungal Genome Initiative.",
+          links: [
+            { text: "Fungal Genome Initiative", href: "https://www.broadinstitute.org/fungal-genome-initiative" },
+          ],
+        },
+        {
+          label: "Magnaporthe comparative genomics",
+          href: "https://www.broadinstitute.org/scientific-community/science/projects/fungal-genome-initiative/magnaporthe-comparative-genomics-proj",
+          description:
+            "Home page for the M. grisea genome project at the Broad Institute, Fungal Genome Initiative.",
+          links: [
+            { text: "Fungal Genome Initiative", href: "https://www.broadinstitute.org/fungal-genome-initiative" },
+          ],
+        },
+        {
+          label: "Schizosaccharomyces pombe Pombase",
+          href: "https://www.pombase.org/",
+          description:
+            "Comprehensive, curated, connected genomic, genetic and molecular data for Schizosaccharomyces pombe.",
+        },
+        {
+          label: "Neurospora Resources",
+          href: "https://neurospora.org/resources/",
+          description: "An information resource for the Neurospora community.",
+        },
+        {
+          label: "Fungal Genetics Stock Center",
+          href: "http://www.fgsc.net/",
+          description:
+            "General fungal information, focusing on filamentous fungi; has links to many fungal genome projects.",
+        },
+      ],
+    },
 
-          <p>
-            <a href="https://www.broadinstitute.org/" target="_blank" rel="noopener noreferrer">Candida tropicalis MYA-3404 genome project</a><br />
-            <small>Sequenced at Broad; updated assembly published in 
-            <a href="https://doi.org/10.1186/s12864-020-06891-7" target="_blank" rel="noopener noreferrer">Guin et al., 2020</a>.</small>
-          </p>
-        </div>
+    // -------------------------------------------------------------------------
+    // Other Resources
+    // -------------------------------------------------------------------------
+    {
+      id: "other",
+      heading: "Other Resources",
+      entries: [
+        {
+          label: "GenBank",
+          href: "https://www.ncbi.nlm.nih.gov/genbank/submit/",
+          description: "Sequence repository at the NCBI, Bethesda, Maryland, USA.",
+          links: [
+            { text: "NCBI", href: "http://www.ncbi.nlm.nih.gov/" },
+          ],
+        },
+        {
+          label: "EMBL-EBI",
+          href: "https://www.ebi.ac.uk/",
+          description:
+            "Sequence repository and numerous analytics tools at the European Bioinformatics Institute (EBI), Hinxton Hall, Cambridge, UK.",
+        },
+        {
+          label: "DDBJ",
+          href: "https://www.ddbj.nig.ac.jp/index-e.html",
+          description: "Sequence repository at Mishima, Japan.",
+        },
+        {
+          label: "GenePalette",
+          href: "http://www.genepalette.org/index.html",
+          description:
+            "Software application, freely available to academic users, for visualizing annotated features and other sequence elements in GenBank sequences.",
+        },
+        {
+          label: "AlphaFold Protein Structure Database",
+          href: "https://alphafold.ebi.ac.uk/",
+          description: "Program for protein structure prediction, from the Protein Design Group at EMBL-EBI.",
+          links: [
+            { text: "EMBL-EBI", href: "https://www.ebi.ac.uk/" },
+          ],
+        },
+        {
+          label: "Gene Ontology",
+          href: "http://www.geneontology.org/",
+          description: "Gene Ontology (GO) Consortium home page.",
+        },
+        {
+          label: "KEGG",
+          href: "http://www.genome.ad.jp/kegg/",
+          description: "Metabolic reactions and pathways from Kyoto University, Kyoto, Japan.",
+        },
+      ],
+    },
 
-        <div className="info-section" id="comparisons">
-          <h2>Candida Species Comparisons</h2>
-
-          <p>
-            <a href="https://doi.org/10.1038/nature08064" target="_blank" rel="noopener noreferrer">Butler et al. (2009)</a> — 
-            Supplementary data for eight Candida genomes including genome characteristics, phylogeny, gene families, and synteny.
-          </p>
-
-          <p>
-            <a href="https://www.candidagenome.org/" target="_blank" rel="noopener noreferrer">CGD Public Wiki</a> — 
-            Contains Candida papers, strain information, and comparisons by topic.
-          </p>
-        </div>
-
-        <div className="info-section" id="comparative">
-          <h2>Resources for Fungal Comparative Genomics</h2>
-          <ul>
-            <li><a href="https://fungi.ensembl.org" target="_blank" rel="noopener noreferrer">Ensembl Fungi</a> — genome browsers and comparative genomics</li>
-            <li><a href="https://mycocosm.jgi.doe.gov" target="_blank" rel="noopener noreferrer">JGI MycoCosm</a> — fungal genomics portal</li>
-            <li><a href="https://fungidb.org" target="_blank" rel="noopener noreferrer">FungiDB</a> — integrated genomic data</li>
-          </ul>
-        </div>
-
-        <div className="info-section" id="lab">
-          <h2>Resources for Laboratory Research</h2>
-          <ul>
-            <li><a href="https://www.fgsc.net" target="_blank" rel="noopener noreferrer">Fungal Genetics Stock Center</a> — strain repository</li>
-            <li><a href="https://www.fgsc.net" target="_blank" rel="noopener noreferrer">Candida collections at FGSC</a> — mutant collections</li>
-            <li><a href="https://www.eucast.org" target="_blank" rel="noopener noreferrer">EUCAST</a> — antifungal methodology</li>
-            <li><a href="https://clsi.org" target="_blank" rel="noopener noreferrer">Clinical and Laboratory Standards Institute</a></li>
-            <li><a href="https://dshb.biology.uiowa.edu" target="_blank" rel="noopener noreferrer">Developmental Studies Hybridoma Bank</a></li>
-          </ul>
-        </div>
-
-        <div className="info-section" id="tools">
-          <h2>Analysis Tools</h2>
-          <ul>
-            <li><a href="http://www.pathoyeastract.org" target="_blank" rel="noopener noreferrer">PathoYeastract</a> — TF regulatory associations (Monteiro et al., 2017)</li>
-            <li><a href="https://elbe.hki-jena.de/fungifun" target="_blank" rel="noopener noreferrer">FungiFun2</a> — functional enrichment (Priebe et al., 2015)</li>
-            <li>FungiFun3 — differential expression tools (Garcia Lopez et al., 2024)</li>
-            <li><a href="https://pubmlst.org" target="_blank" rel="noopener noreferrer">C. albicans MLST</a> — strain typing (Bougnoux et al., 2003)</li>
-            <li><a href="https://www.cbs.dtu.dk/services/" target="_blank" rel="noopener noreferrer">DTU Bioinformatics Tools</a></li>
-            <li><a href="http://mapper.chip.org" target="_blank" rel="noopener noreferrer">MAPPER</a></li>
-            <li><a href="https://www.yeastgenome.org/blast-fungal" target="_blank" rel="noopener noreferrer">Fungal Genomes BLAST</a></li>
-          </ul>
-        </div>
-
-        <div className="info-section" id="medical">
-          <h2>Medical Mycology Resources</h2>
-          <p>
-            <a href="https://medlineplus.gov/candidiasis.html" target="_blank" rel="noopener noreferrer">Candidiasis Information at MedlinePlus</a> — medical overview
-          </p>
-        </div>
-
-        <div className="info-section" id="fungaldb">
-          <h2>Other Fungal Genome Databases</h2>
-          <ul>
-            <li><a href="https://www.yeastgenome.org" target="_blank" rel="noopener noreferrer">Saccharomyces Genome Database</a></li>
-            <li><a href="https://www.broadinstitute.org" target="_blank" rel="noopener noreferrer">Cryptococcus neoformans genome project</a></li>
-            <li><a href="https://www.aspergillusgenome.org" target="_blank" rel="noopener noreferrer">Aspergillus Genome Database</a></li>
-            <li><a href="https://fungidb.org" target="_blank" rel="noopener noreferrer">Schizosaccharomyces pombe PomBase</a></li>
-            <li><a href="https://www.fgsc.net" target="_blank" rel="noopener noreferrer">Fungal Genetics Stock Center</a></li>
-          </ul>
-        </div>
-
-        <div className="info-section" id="other">
-          <h2>Other Resources</h2>
-          <ul>
-            <li><a href="https://www.ncbi.nlm.nih.gov/genbank/" target="_blank" rel="noopener noreferrer">GenBank</a></li>
-            <li><a href="https://www.ebi.ac.uk" target="_blank" rel="noopener noreferrer">EMBL-EBI</a></li>
-            <li><a href="https://www.ddbj.nig.ac.jp" target="_blank" rel="noopener noreferrer">DDBJ</a></li>
-            <li><a href="http://www.genepalette.org" target="_blank" rel="noopener noreferrer">GenePalette</a></li>
-            <li><a href="https://alphafold.ebi.ac.uk" target="_blank" rel="noopener noreferrer">AlphaFold Protein Structure Database</a></li>
-            <li><a href="http://geneontology.org" target="_blank" rel="noopener noreferrer">Gene Ontology</a></li>
-            <li><a href="https://www.genome.jp/kegg/" target="_blank" rel="noopener noreferrer">KEGG</a></li>
-          </ul>
-        </div>
-
-      </div>
-    </div>
-  );
+  ], // end sections
 };
 
-export default ExternalResourcesPage;
+// Export for use as an ES module or CommonJS module
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = externalResources;
+} else if (typeof define === "function" && define.amd) {
+  define([], function () { return externalResources; });
+} else {
+  (typeof globalThis !== "undefined" ? globalThis : window).externalResources = externalResources;
+}
