@@ -5,37 +5,41 @@ import './LocusComponents.css';
 // Default number of conditions to show per study
 const DEFAULT_VISIBLE_CONDITIONS = 6;
 
-// Color scale for fold changes with smooth gradient based on magnitude
+// Muted color palette for fold changes
+// Up = warm muted rose, Down = cool muted slate blue
+// Uses opacity to indicate magnitude (cleaner, less visual noise)
+const COLORS = {
+  up: '#c97a7a',      // muted rose
+  down: '#6f8fb5',    // muted slate blue
+  neutral: '#e5e7eb', // soft gray for ~1x
+};
+
 const getFoldChangeStyle = (fc) => {
-  // Calculate how "extreme" the change is (distance from 1.0)
   const logFc = Math.log2(fc);
   const magnitude = Math.abs(logFc);
 
-  // For very small changes (near 1.0), use gray
+  // For very small changes (near 1.0), use neutral gray
   if (magnitude < 0.15) {
     return {
-      backgroundColor: '#d0d0d0',
+      backgroundColor: COLORS.neutral,
       opacity: 1
     };
   }
 
-  // Base colors - use HSL for smoother gradient
-  // Red for up: hsl(0, 70%, L%)
-  // Blue for down: hsl(210, 70%, L%)
+  // Use base color with opacity based on magnitude
+  // magnitude 0.15 -> weak (opacity: 0.4)
+  // magnitude 1.0 (2x) -> medium (opacity: 0.7)
+  // magnitude 2.0+ (4x) -> strong (opacity: 1.0)
   const isUp = fc >= 1;
-  const hue = isUp ? 0 : 210;
+  const baseColor = isUp ? COLORS.up : COLORS.down;
 
-  // Map magnitude to saturation and lightness
-  // magnitude 0.15 -> light (sat: 50%, light: 65%)
-  // magnitude 1.0 (2x) -> medium (sat: 70%, light: 50%)
-  // magnitude 2.0 (4x) -> strong (sat: 85%, light: 40%)
+  // Map magnitude to opacity: 0.4 to 1.0
   const clampedMag = Math.min(magnitude, 2.0);
-  const saturation = 50 + (clampedMag * 17.5); // 50% to 85%
-  const lightness = 65 - (clampedMag * 12.5);  // 65% to 40%
+  const opacity = 0.4 + (clampedMag * 0.3); // 0.4 to 1.0
 
   return {
-    backgroundColor: `hsl(${hue}, ${saturation}%, ${lightness}%)`,
-    opacity: 1
+    backgroundColor: baseColor,
+    opacity: opacity
   };
 };
 
@@ -44,12 +48,13 @@ const formatFoldChange = (fc) => {
   return `${fc.toFixed(2)}x`;
 };
 
-// Bucket labels and colors
+// Bucket labels and colors - subtle, muted tones
+// Tags should never be more visible than bars
 const BUCKET_INFO = {
-  control: { label: 'Control', color: '#9e9e9e' },
-  basic_biology: { label: 'Basic Biology', color: '#4caf50' },
-  kill_candida: { label: 'Antifungal/Immune', color: '#f44336' },
-  stress: { label: 'Stress Response', color: '#ff9800' },
+  control: { label: 'Control', color: '#9ca3af', bg: '#f3f4f6' },
+  basic_biology: { label: 'Basic Biology', color: '#6b7280', bg: '#f3f4f6' },
+  kill_candida: { label: 'Antifungal/Immune', color: '#6b7280', bg: '#f3f4f6' },
+  stress: { label: 'Stress Response', color: '#6b7280', bg: '#f3f4f6' },
 };
 
 // Calculate per-study summary stats
@@ -218,11 +223,11 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
               {/* Legend */}
               <div className="expression-legend">
                 <span className="legend-title">Fold Change:</span>
-                <span className="legend-item legend-down" style={{ backgroundColor: 'hsl(210, 85%, 40%)' }}>↓ &lt;0.5x</span>
-                <span className="legend-item legend-down" style={{ backgroundColor: 'hsl(210, 60%, 55%)' }}>↓ 0.5–0.8x</span>
-                <span className="legend-item" style={{ backgroundColor: '#d0d0d0' }}>~1x</span>
-                <span className="legend-item legend-up" style={{ backgroundColor: 'hsl(0, 60%, 55%)' }}>↑ 1.2–2x</span>
-                <span className="legend-item legend-up" style={{ backgroundColor: 'hsl(0, 85%, 40%)' }}>↑ &gt;2x</span>
+                <span className="legend-item legend-down" style={{ backgroundColor: COLORS.down, opacity: 1.0 }}>↓ &lt;0.5x</span>
+                <span className="legend-item legend-down" style={{ backgroundColor: COLORS.down, opacity: 0.7 }}>↓ 0.5–0.8x</span>
+                <span className="legend-item" style={{ backgroundColor: COLORS.neutral }}>~1x</span>
+                <span className="legend-item legend-up" style={{ backgroundColor: COLORS.up, opacity: 0.7 }}>↑ 1.2–2x</span>
+                <span className="legend-item legend-up" style={{ backgroundColor: COLORS.up, opacity: 1.0 }}>↑ &gt;2x</span>
               </div>
               <div className="expression-baseline-guide">
                 <span className="baseline-label-down">← down</span>
@@ -312,8 +317,8 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
                                       <span
                                         className="bucket-badge"
                                         style={{
-                                          borderColor: BUCKET_INFO[condition.bucket]?.color || '#9e9e9e',
-                                          color: BUCKET_INFO[condition.bucket]?.color || '#9e9e9e'
+                                          backgroundColor: BUCKET_INFO[condition.bucket]?.bg || '#f3f4f6',
+                                          color: BUCKET_INFO[condition.bucket]?.color || '#6b7280'
                                         }}
                                       >
                                         {BUCKET_INFO[condition.bucket]?.label || condition.bucket}

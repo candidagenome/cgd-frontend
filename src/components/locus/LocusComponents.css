@@ -3558,19 +3558,18 @@ a:hover {
 
 .expression-study .bucket-badge {
   font-size: 0.65em;
-  padding: 1px 5px;
+  padding: 2px 6px;
   border-radius: 3px;
-  border: 1px solid;
-  background: transparent;
+  border: none;
   flex-shrink: 0;
-  opacity: 0.7;
 }
 
 /* Centered bar visualization */
 .expression-study .fold-change-bar-centered {
   position: relative;
-  height: 22px;
-  background: #e8e8e8;
+  height: 20px;
+  background: #f1f3f5;
+  border: 1px solid #e5e7eb;
   border-radius: 4px;
   overflow: visible;
 }
@@ -3578,10 +3577,10 @@ a:hover {
 .expression-study .bar-baseline {
   position: absolute;
   left: 50%;
-  top: -2px;
-  bottom: -2px;
-  width: 2px;
-  background: #999;
+  top: -1px;
+  bottom: -1px;
+  width: 1px;
+  background: #9ca3af;
   z-index: 1;
 }
 
