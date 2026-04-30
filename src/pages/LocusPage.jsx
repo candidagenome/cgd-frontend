@@ -176,6 +176,9 @@ function LocusPage() {
             data={data.expressionDetails}
             loading={loading.expressionDetails}
             error={errors.expressionDetails}
+            selectedOrganism={selectedOrganism}
+            onOrganismChange={setSelectedOrganism}
+            orthologOrganisms={orthologOrganisms}
           />
         );
 
