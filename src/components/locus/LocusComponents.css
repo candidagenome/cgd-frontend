@@ -3364,13 +3364,14 @@ a:hover {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 20px;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 8px;
   padding: 8px 12px;
   background: #fafafa;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
-  font-size: 0.85em;
+  font-size: 0.8em;
 }
 
 .expression-legend .legend-title {
@@ -3380,26 +3381,43 @@ a:hover {
 }
 
 .expression-legend .legend-item {
-  padding: 2px 8px;
+  padding: 2px 6px;
   border-radius: 3px;
-  font-size: 0.9em;
-  color: white;
-}
-
-.expression-legend .legend-item.legend-down {
-  color: white;
-}
-
-.expression-legend .legend-item.legend-up {
-  color: white;
-}
-
-.expression-legend .legend-baseline {
-  margin-left: 10px;
-  padding: 2px 8px;
   font-size: 0.85em;
-  color: #666;
-  font-family: monospace;
+  color: white;
+}
+
+/* Baseline guide - visual reference for centered bars */
+.expression-baseline-guide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+  padding: 4px 0;
+  font-size: 0.75em;
+  color: #888;
+}
+
+.expression-baseline-guide .baseline-label-down {
+  flex: 1;
+  text-align: right;
+  padding-right: 8px;
+}
+
+.expression-baseline-guide .baseline-center {
+  padding: 2px 16px;
+  background: #f0f0f0;
+  border-left: 2px solid #666;
+  border-right: 2px solid #666;
+  font-weight: 700;
+  color: #555;
+  font-size: 1.1em;
+}
+
+.expression-baseline-guide .baseline-label-up {
+  flex: 1;
+  text-align: left;
+  padding-left: 8px;
 }
 
 .expression-studies {
@@ -3418,32 +3436,33 @@ a:hover {
 .expression-study .study-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 15px;
-  background: linear-gradient(to bottom, #f8f8f8, #f0f0f0);
+  gap: 12px;
+  padding: 14px 16px;
+  background: linear-gradient(to bottom, #fafafa, #f2f2f2);
   border-bottom: 1px solid #e0e0e0;
   cursor: pointer;
   user-select: none;
 }
 
 .expression-study .study-header:hover {
-  background: linear-gradient(to bottom, #f0f0f0, #e8e8e8);
+  background: linear-gradient(to bottom, #f2f2f2, #eaeaea);
 }
 
 .expression-study .collapse-icon {
-  color: #666;
-  font-size: 0.8em;
-  width: 15px;
+  color: #888;
+  font-size: 0.75em;
+  width: 12px;
 }
 
 .expression-study .study-name {
-  font-weight: 600;
-  color: #333;
+  font-weight: 700;
+  font-size: 1.05em;
+  color: #222;
 }
 
 .expression-study .study-category {
-  color: #666;
-  font-size: 0.85em;
+  color: #777;
+  font-size: 0.8em;
   padding: 2px 8px;
   background: #e8e8e8;
   border-radius: 3px;
@@ -3451,12 +3470,12 @@ a:hover {
 
 .expression-study .study-summary {
   display: flex;
-  gap: 8px;
-  margin-left: 8px;
+  gap: 6px;
+  margin-left: 4px;
 }
 
 .expression-study .study-stat {
-  font-size: 0.85em;
+  font-size: 0.8em;
   font-weight: 600;
   padding: 2px 6px;
   border-radius: 3px;
@@ -3464,28 +3483,30 @@ a:hover {
 
 .expression-study .study-stat.up {
   color: #c62828;
-  background: rgba(198, 40, 40, 0.1);
+  background: rgba(198, 40, 40, 0.12);
 }
 
 .expression-study .study-stat.down {
   color: #1565c0;
-  background: rgba(21, 101, 192, 0.1);
+  background: rgba(21, 101, 192, 0.12);
 }
 
 .expression-study .pubmed-link {
-  color: #1976d2;
+  color: #5a9bd5;
   text-decoration: none;
-  font-size: 0.85em;
+  font-size: 0.75em;
   margin-left: auto;
+  opacity: 0.85;
 }
 
 .expression-study .pubmed-link:hover {
   text-decoration: underline;
+  opacity: 1;
 }
 
 .expression-study .condition-count {
-  color: #888;
-  font-size: 0.9em;
+  color: #999;
+  font-size: 0.8em;
 }
 
 .expression-study .study-conditions {
@@ -3537,27 +3558,20 @@ a:hover {
 }
 
 .expression-study .bucket-badge {
-  font-size: 0.7em;
+  font-size: 0.65em;
   padding: 1px 5px;
   border-radius: 3px;
-  color: white;
+  border: 1px solid;
+  background: transparent;
   flex-shrink: 0;
-}
-
-.expression-study .control-badge {
-  font-size: 0.7em;
-  padding: 1px 5px;
-  border-radius: 3px;
-  color: #666;
-  background: #e0e0e0;
-  flex-shrink: 0;
+  opacity: 0.7;
 }
 
 /* Centered bar visualization */
 .expression-study .fold-change-bar-centered {
   position: relative;
   height: 22px;
-  background: #f5f5f5;
+  background: #e8e8e8;
   border-radius: 4px;
   overflow: visible;
 }
@@ -3565,10 +3579,10 @@ a:hover {
 .expression-study .bar-baseline {
   position: absolute;
   left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: #bdbdbd;
+  top: -2px;
+  bottom: -2px;
+  width: 2px;
+  background: #999;
   z-index: 1;
 }
 
@@ -3685,26 +3699,31 @@ a:hover {
   }
 
   .expression-legend {
-    font-size: 0.8em;
+    font-size: 0.75em;
   }
 
-  .expression-legend .legend-baseline {
-    display: none;
+  .expression-baseline-guide {
+    font-size: 0.7em;
   }
 
   .expression-study .study-header {
     flex-wrap: wrap;
+    padding: 12px;
+  }
+
+  .expression-study .study-name {
+    font-size: 1em;
   }
 
   .expression-study .study-summary {
     order: 5;
     width: 100%;
-    margin-left: 25px;
+    margin-left: 20px;
     margin-top: 4px;
   }
 
   .expression-study .pubmed-link {
-    margin-left: 25px;
+    margin-left: 20px;
   }
 
   .expression-study .condition-label {

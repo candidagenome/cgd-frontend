@@ -4,34 +4,36 @@ import './LocusComponents.css';
 // Default number of conditions to show per study
 const DEFAULT_VISIBLE_CONDITIONS = 6;
 
-// Color scale for fold changes with opacity based on magnitude
+// Color scale for fold changes with smooth gradient based on magnitude
 const getFoldChangeStyle = (fc) => {
   // Calculate how "extreme" the change is (distance from 1.0)
   const logFc = Math.log2(fc);
   const magnitude = Math.abs(logFc);
 
-  // Base colors
-  let baseColor;
-  if (fc >= 1) {
-    baseColor = { r: 198, g: 40, b: 40 }; // Red for upregulation
-  } else {
-    baseColor = { r: 21, g: 101, b: 192 }; // Blue for downregulation
-  }
-
-  // Calculate opacity based on magnitude (0.3 to 1.0)
-  // log2(2) = 1, log2(1.5) ≈ 0.58, log2(1.1) ≈ 0.14
-  const opacity = Math.min(0.3 + (magnitude * 0.7), 1.0);
-
   // For very small changes (near 1.0), use gray
-  if (magnitude < 0.1) {
+  if (magnitude < 0.15) {
     return {
-      backgroundColor: '#e0e0e0',
+      backgroundColor: '#d0d0d0',
       opacity: 1
     };
   }
 
+  // Base colors - use HSL for smoother gradient
+  // Red for up: hsl(0, 70%, L%)
+  // Blue for down: hsl(210, 70%, L%)
+  const isUp = fc >= 1;
+  const hue = isUp ? 0 : 210;
+
+  // Map magnitude to saturation and lightness
+  // magnitude 0.15 -> light (sat: 50%, light: 65%)
+  // magnitude 1.0 (2x) -> medium (sat: 70%, light: 50%)
+  // magnitude 2.0 (4x) -> strong (sat: 85%, light: 40%)
+  const clampedMag = Math.min(magnitude, 2.0);
+  const saturation = 50 + (clampedMag * 17.5); // 50% to 85%
+  const lightness = 65 - (clampedMag * 12.5);  // 65% to 40%
+
   return {
-    backgroundColor: `rgba(${baseColor.r}, ${baseColor.g}, ${baseColor.b}, ${opacity})`,
+    backgroundColor: `hsl(${hue}, ${saturation}%, ${lightness}%)`,
     opacity: 1
   };
 };
@@ -204,12 +206,16 @@ function ExpressionDetails({ data, loading, error }) {
       {/* Legend */}
       <div className="expression-legend">
         <span className="legend-title">Fold Change:</span>
-        <span className="legend-item legend-down" style={{ backgroundColor: 'rgba(21, 101, 192, 1)' }}>↓ Strong</span>
-        <span className="legend-item legend-down" style={{ backgroundColor: 'rgba(21, 101, 192, 0.5)' }}>↓ Moderate</span>
-        <span className="legend-item" style={{ backgroundColor: '#e0e0e0' }}>~1x</span>
-        <span className="legend-item legend-up" style={{ backgroundColor: 'rgba(198, 40, 40, 0.5)' }}>↑ Moderate</span>
-        <span className="legend-item legend-up" style={{ backgroundColor: 'rgba(198, 40, 40, 1)' }}>↑ Strong</span>
-        <span className="legend-baseline">|← down | 1.0 | up →|</span>
+        <span className="legend-item legend-down" style={{ backgroundColor: 'hsl(210, 85%, 40%)' }}>↓ &lt;0.5x</span>
+        <span className="legend-item legend-down" style={{ backgroundColor: 'hsl(210, 60%, 55%)' }}>↓ 0.5–0.8x</span>
+        <span className="legend-item" style={{ backgroundColor: '#d0d0d0' }}>~1x</span>
+        <span className="legend-item legend-up" style={{ backgroundColor: 'hsl(0, 60%, 55%)' }}>↑ 1.2–2x</span>
+        <span className="legend-item legend-up" style={{ backgroundColor: 'hsl(0, 85%, 40%)' }}>↑ &gt;2x</span>
+      </div>
+      <div className="expression-baseline-guide">
+        <span className="baseline-label-down">← down</span>
+        <span className="baseline-center">1.0</span>
+        <span className="baseline-label-up">up →</span>
       </div>
 
       {/* Studies list */}
@@ -289,18 +295,18 @@ function ExpressionDetails({ data, loading, error }) {
                         >
                           <div className="condition-label">
                             <span className="condition-name">{condition.label}</span>
+                            {/* Only show bucket badge for non-control conditions */}
                             {!isControl && (
                               <span
                                 className="bucket-badge"
                                 style={{
-                                  backgroundColor: BUCKET_INFO[condition.bucket]?.color || '#9e9e9e',
-                                  opacity: 0.7
+                                  borderColor: BUCKET_INFO[condition.bucket]?.color || '#9e9e9e',
+                                  color: BUCKET_INFO[condition.bucket]?.color || '#9e9e9e'
                                 }}
                               >
                                 {BUCKET_INFO[condition.bucket]?.label || condition.bucket}
                               </span>
                             )}
-                            {isControl && <span className="control-badge">Control</span>}
                           </div>
                           <div className="fold-change-bar-centered">
                             <div className="bar-baseline"></div>
@@ -328,7 +334,7 @@ function ExpressionDetails({ data, loading, error }) {
                     >
                       {showAll
                         ? `Show top ${DEFAULT_VISIBLE_CONDITIONS} only`
-                        : `Show all ${sortedConditions.length} conditions (+${hiddenCount} more)`
+                        : `Show all conditions (${sortedConditions.length} total)`
                       }
                     </button>
                   )}
