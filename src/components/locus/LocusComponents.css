@@ -3307,26 +3307,25 @@ a:hover {
 }
 
 .expression-summary {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
   padding: 10px 15px;
   background: #f5f5f5;
   border-radius: 4px;
   font-size: 0.95em;
 }
 
-.expression-summary .summary-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+.expression-summary .summary-text {
+  display: inline;
 }
 
-.expression-summary .summary-item.upregulated {
+.expression-summary .summary-stat {
+  margin-left: 20px;
+}
+
+.expression-summary .summary-stat.upregulated {
   color: #c62828;
 }
 
-.expression-summary .summary-item.downregulated {
+.expression-summary .summary-stat.downregulated {
   color: #1565c0;
 }
 

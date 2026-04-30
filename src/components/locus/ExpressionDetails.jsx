@@ -180,19 +180,19 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
               <p className="gene-description">{orgData.description}</p>
             )}
             <div className="expression-summary">
-              <span className="summary-item">
+              <span className="summary-text">
                 <strong>{orgData.total_conditions}</strong> conditions across <strong>{orgData.studies?.length || 0}</strong> studies
+                {orgData.max_upregulation && (
+                  <span className="summary-stat upregulated">
+                    Max upregulation: <strong>{formatFoldChange(orgData.max_upregulation)}</strong>
+                  </span>
+                )}
+                {orgData.max_downregulation && (
+                  <span className="summary-stat downregulated">
+                    Max downregulation: <strong>{formatFoldChange(orgData.max_downregulation)}</strong>
+                  </span>
+                )}
               </span>
-              {orgData.max_upregulation && (
-                <span className="summary-item upregulated">
-                  Max upregulation: <strong>{formatFoldChange(orgData.max_upregulation)}</strong>
-                </span>
-              )}
-              {orgData.max_downregulation && (
-                <span className="summary-item downregulated">
-                  Max downregulation: <strong>{formatFoldChange(orgData.max_downregulation)}</strong>
-                </span>
-              )}
             </div>
           </div>
 
