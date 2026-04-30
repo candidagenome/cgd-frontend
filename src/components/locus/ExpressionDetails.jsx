@@ -49,13 +49,12 @@ const formatFoldChange = (fc) => {
   return `${fc.toFixed(2)}x`;
 };
 
-// Bucket labels and colors - ultra-clean outline-only style
-// Tags should be subtle, paper-like appearance
+// Bucket labels and colors - readable with subtle backgrounds
 const BUCKET_INFO = {
-  control: { label: 'Control', color: '#9ca3af', bg: 'transparent', border: '#d1d5db' },
-  basic_biology: { label: 'Basic Biology', color: '#6b7280', bg: 'transparent', border: '#d1d5db' },
-  kill_candida: { label: 'Antifungal/Immune', color: '#6b7280', bg: 'transparent', border: '#d1d5db' },
-  stress: { label: 'Stress Response', color: '#6b7280', bg: 'transparent', border: '#d1d5db' },
+  control: { label: 'Control', color: '#6b7280', bg: '#f3f4f6', border: '#d1d5db' },
+  basic_biology: { label: 'Basic Biology', color: '#4b5563', bg: '#f0fdf4', border: '#bbf7d0' },
+  kill_candida: { label: 'Antifungal/Immune', color: '#4b5563', bg: '#fef3c7', border: '#fcd34d' },
+  stress: { label: 'Stress Response', color: '#4b5563', bg: '#fee2e2', border: '#fca5a5' },
 };
 
 // Calculate per-study summary stats

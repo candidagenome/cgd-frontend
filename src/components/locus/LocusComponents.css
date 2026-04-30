@@ -3460,11 +3460,12 @@ a:hover {
 }
 
 .expression-study .study-category {
-  color: #777;
+  color: #374151;
   font-size: 0.8em;
-  padding: 2px 8px;
-  background: #e8e8e8;
-  border-radius: 3px;
+  font-weight: 500;
+  padding: 3px 10px;
+  background: #e5e7eb;
+  border-radius: 4px;
 }
 
 .expression-study .study-summary {
