@@ -97,48 +97,10 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
     return data?.results ? Object.keys(data.results) : [];
   }, [data?.results]);
 
-  // Set default organism if not already set and data is available
-  useEffect(() => {
-    if (organisms.length > 0 && !selectedOrganism) {
-      const defaultOrg = getDefaultOrganism(organisms);
-      if (defaultOrg && onOrganismChange) {
-        onOrganismChange(defaultOrg);
-      }
-    }
-  }, [organisms, selectedOrganism, onOrganismChange]);
-
-  // Handle loading state
-  if (loading) {
-    return <div className="loading">Loading expression data...</div>;
-  }
-
-  // Handle error state
-  if (error) {
-    return <div className="error">Error loading expression data: {error}</div>;
-  }
-
-  // Handle no data at all
-  if (!data || !data.results) {
-    return <div className="no-data">No expression data available</div>;
-  }
-
   // Get data for the selected organism
-  const orgData = selectedOrganism ? data.results[selectedOrganism] : null;
-
-  const toggleStudy = (studyId) => {
-    setExpandedStudies(prev => ({
-      ...prev,
-      [studyId]: !prev[studyId]
-    }));
-  };
-
-  const toggleShowAll = (studyId, e) => {
-    e.stopPropagation();
-    setShowAllConditions(prev => ({
-      ...prev,
-      [studyId]: !prev[studyId]
-    }));
-  };
+  const orgData = useMemo(() => {
+    return selectedOrganism && data?.results ? data.results[selectedOrganism] : null;
+  }, [selectedOrganism, data?.results]);
 
   // Filter conditions by bucket for the selected organism's studies
   const filteredStudies = useMemo(() => {
@@ -160,6 +122,47 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
     });
     return Array.from(buckets);
   }, [orgData?.studies]);
+
+  // Set default organism if not already set and data is available
+  useEffect(() => {
+    if (organisms.length > 0 && !selectedOrganism) {
+      const defaultOrg = getDefaultOrganism(organisms);
+      if (defaultOrg && onOrganismChange) {
+        onOrganismChange(defaultOrg);
+      }
+    }
+  }, [organisms, selectedOrganism, onOrganismChange]);
+
+  // Toggle handlers
+  const toggleStudy = (studyId) => {
+    setExpandedStudies(prev => ({
+      ...prev,
+      [studyId]: !prev[studyId]
+    }));
+  };
+
+  const toggleShowAll = (studyId, e) => {
+    e.stopPropagation();
+    setShowAllConditions(prev => ({
+      ...prev,
+      [studyId]: !prev[studyId]
+    }));
+  };
+
+  // Handle loading state
+  if (loading) {
+    return <div className="loading">Loading expression data...</div>;
+  }
+
+  // Handle error state
+  if (error) {
+    return <div className="error">Error loading expression data: {error}</div>;
+  }
+
+  // Handle no data at all
+  if (!data || !data.results) {
+    return <div className="no-data">No expression data available</div>;
+  }
 
   return (
     <div className="expression-details">
