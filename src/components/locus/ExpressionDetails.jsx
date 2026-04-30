@@ -1,22 +1,43 @@
 import React, { useState, useMemo } from 'react';
 import './LocusComponents.css';
 
-// Color scale for fold changes
-const getFoldChangeColor = (fc) => {
-  if (fc >= 2) return '#c62828'; // Strong up - dark red
-  if (fc >= 1.5) return '#ef5350'; // Moderate up - red
-  if (fc > 1.1) return '#ffcdd2'; // Slight up - light red
-  if (fc <= 0.5) return '#1565c0'; // Strong down - dark blue
-  if (fc <= 0.67) return '#42a5f5'; // Moderate down - blue
-  if (fc < 0.9) return '#bbdefb'; // Slight down - light blue
-  return '#e0e0e0'; // No change - gray
+// Default number of conditions to show per study
+const DEFAULT_VISIBLE_CONDITIONS = 6;
+
+// Color scale for fold changes with opacity based on magnitude
+const getFoldChangeStyle = (fc) => {
+  // Calculate how "extreme" the change is (distance from 1.0)
+  const logFc = Math.log2(fc);
+  const magnitude = Math.abs(logFc);
+
+  // Base colors
+  let baseColor;
+  if (fc >= 1) {
+    baseColor = { r: 198, g: 40, b: 40 }; // Red for upregulation
+  } else {
+    baseColor = { r: 21, g: 101, b: 192 }; // Blue for downregulation
+  }
+
+  // Calculate opacity based on magnitude (0.3 to 1.0)
+  // log2(2) = 1, log2(1.5) ≈ 0.58, log2(1.1) ≈ 0.14
+  const opacity = Math.min(0.3 + (magnitude * 0.7), 1.0);
+
+  // For very small changes (near 1.0), use gray
+  if (magnitude < 0.1) {
+    return {
+      backgroundColor: '#e0e0e0',
+      opacity: 1
+    };
+  }
+
+  return {
+    backgroundColor: `rgba(${baseColor.r}, ${baseColor.g}, ${baseColor.b}, ${opacity})`,
+    opacity: 1
+  };
 };
 
 // Format fold change for display
 const formatFoldChange = (fc) => {
-  if (fc >= 1) {
-    return `${fc.toFixed(2)}x`;
-  }
   return `${fc.toFixed(2)}x`;
 };
 
@@ -28,8 +49,38 @@ const BUCKET_INFO = {
   stress: { label: 'Stress Response', color: '#ff9800' },
 };
 
+// Calculate per-study summary stats
+const getStudySummary = (conditions) => {
+  let maxUp = 1;
+  let maxDown = 1;
+  let upCount = 0;
+  let downCount = 0;
+
+  conditions.forEach(c => {
+    if (c.fold_change > 1) {
+      upCount++;
+      if (c.fold_change > maxUp) maxUp = c.fold_change;
+    } else if (c.fold_change < 1) {
+      downCount++;
+      if (c.fold_change < maxDown) maxDown = c.fold_change;
+    }
+  });
+
+  return { maxUp, maxDown, upCount, downCount };
+};
+
+// Sort conditions by magnitude (most extreme first)
+const sortByMagnitude = (conditions) => {
+  return [...conditions].sort((a, b) => {
+    const magA = Math.abs(Math.log2(a.fold_change));
+    const magB = Math.abs(Math.log2(b.fold_change));
+    return magB - magA;
+  });
+};
+
 function ExpressionDetails({ data, loading, error }) {
   const [expandedStudies, setExpandedStudies] = useState({});
+  const [showAllConditions, setShowAllConditions] = useState({});
   const [filterBucket, setFilterBucket] = useState('all');
 
   // Handle loading state
@@ -76,6 +127,14 @@ function ExpressionDetails({ data, loading, error }) {
 
   const toggleStudy = (studyId) => {
     setExpandedStudies(prev => ({
+      ...prev,
+      [studyId]: !prev[studyId]
+    }));
+  };
+
+  const toggleShowAll = (studyId, e) => {
+    e.stopPropagation();
+    setShowAllConditions(prev => ({
       ...prev,
       [studyId]: !prev[studyId]
     }));
@@ -145,19 +204,27 @@ function ExpressionDetails({ data, loading, error }) {
       {/* Legend */}
       <div className="expression-legend">
         <span className="legend-title">Fold Change:</span>
-        <span className="legend-item" style={{ backgroundColor: '#c62828', color: 'white' }}>&gt;2x up</span>
-        <span className="legend-item" style={{ backgroundColor: '#ef5350', color: 'white' }}>1.5-2x up</span>
-        <span className="legend-item" style={{ backgroundColor: '#ffcdd2' }}>1.1-1.5x up</span>
+        <span className="legend-item legend-down" style={{ backgroundColor: 'rgba(21, 101, 192, 1)' }}>↓ Strong</span>
+        <span className="legend-item legend-down" style={{ backgroundColor: 'rgba(21, 101, 192, 0.5)' }}>↓ Moderate</span>
         <span className="legend-item" style={{ backgroundColor: '#e0e0e0' }}>~1x</span>
-        <span className="legend-item" style={{ backgroundColor: '#bbdefb' }}>0.67-0.9x down</span>
-        <span className="legend-item" style={{ backgroundColor: '#42a5f5', color: 'white' }}>0.5-0.67x down</span>
-        <span className="legend-item" style={{ backgroundColor: '#1565c0', color: 'white' }}>&lt;0.5x down</span>
+        <span className="legend-item legend-up" style={{ backgroundColor: 'rgba(198, 40, 40, 0.5)' }}>↑ Moderate</span>
+        <span className="legend-item legend-up" style={{ backgroundColor: 'rgba(198, 40, 40, 1)' }}>↑ Strong</span>
+        <span className="legend-baseline">|← down | 1.0 | up →|</span>
       </div>
 
       {/* Studies list */}
       <div className="expression-studies">
         {filteredStudies.map(study => {
           const isExpanded = expandedStudies[study.study_id] !== false; // Default expanded
+          const showAll = showAllConditions[study.study_id] || false;
+          const summary = getStudySummary(study.conditions);
+
+          // Sort by magnitude and limit display
+          const sortedConditions = sortByMagnitude(study.conditions);
+          const visibleConditions = showAll
+            ? sortedConditions
+            : sortedConditions.slice(0, DEFAULT_VISIBLE_CONDITIONS);
+          const hiddenCount = sortedConditions.length - DEFAULT_VISIBLE_CONDITIONS;
 
           return (
             <div key={study.study_id} className="expression-study">
@@ -170,6 +237,15 @@ function ExpressionDetails({ data, loading, error }) {
                 <span className="collapse-icon">{isExpanded ? '▼' : '▶'}</span>
                 <span className="study-name">{study.study_id.replace(/_/g, ' ')}</span>
                 <span className="study-category">{study.category}</span>
+                {/* Per-study summary */}
+                <span className="study-summary">
+                  {summary.maxUp > 1 && (
+                    <span className="study-stat up">↑{formatFoldChange(summary.maxUp)}</span>
+                  )}
+                  {summary.maxDown < 1 && (
+                    <span className="study-stat down">↓{formatFoldChange(summary.maxDown)}</span>
+                  )}
+                </span>
                 {study.pmid && (
                   <a
                     href={`https://pubmed.ncbi.nlm.nih.gov/${study.pmid}`}
@@ -189,40 +265,73 @@ function ExpressionDetails({ data, loading, error }) {
               {isExpanded && (
                 <div className="study-conditions">
                   <div className="control-info">
-                    Control: {study.control_id} (value: {study.control_value})
+                    Control: {study.control_id}
                   </div>
                   <div className="conditions-grid">
-                    {study.conditions.map(condition => (
-                      <div
-                        key={condition.condition_id}
-                        className="condition-item"
-                        title={`${condition.label}: ${formatFoldChange(condition.fold_change)} (raw value: ${condition.value})`}
-                      >
-                        <div className="condition-label">
-                          {condition.label}
-                          <span
-                            className="bucket-badge"
-                            style={{ backgroundColor: BUCKET_INFO[condition.bucket]?.color || '#9e9e9e' }}
-                          >
-                            {BUCKET_INFO[condition.bucket]?.label || condition.bucket}
-                          </span>
-                        </div>
-                        <div className="fold-change-bar">
-                          <div
-                            className="fold-change-fill"
-                            style={{
-                              backgroundColor: getFoldChangeColor(condition.fold_change),
-                              width: `${Math.min(Math.max(condition.fold_change * 30, 10), 100)}%`
-                            }}
-                          >
-                            <span className="fold-change-value">
+                    {visibleConditions.map(condition => {
+                      const isControl = condition.bucket === 'control';
+                      const foldStyle = getFoldChangeStyle(condition.fold_change);
+
+                      // Calculate bar position for centered baseline
+                      // 1.0 = center (50%), <1 goes left, >1 goes right
+                      const logFc = Math.log2(condition.fold_change);
+                      // Clamp to reasonable range (-2 to +2 in log scale = 0.25x to 4x)
+                      const clampedLog = Math.max(-2, Math.min(2, logFc));
+                      // Convert to percentage: -2 = 0%, 0 = 50%, +2 = 100%
+                      const barWidth = Math.abs(clampedLog) * 25; // 25% per log unit
+                      const isUp = condition.fold_change >= 1;
+
+                      return (
+                        <div
+                          key={condition.condition_id}
+                          className={`condition-item ${isControl ? 'condition-control' : ''}`}
+                          title={`${condition.label}: ${formatFoldChange(condition.fold_change)} (raw value: ${condition.value?.toFixed(2)})`}
+                        >
+                          <div className="condition-label">
+                            <span className="condition-name">{condition.label}</span>
+                            {!isControl && (
+                              <span
+                                className="bucket-badge"
+                                style={{
+                                  backgroundColor: BUCKET_INFO[condition.bucket]?.color || '#9e9e9e',
+                                  opacity: 0.7
+                                }}
+                              >
+                                {BUCKET_INFO[condition.bucket]?.label || condition.bucket}
+                              </span>
+                            )}
+                            {isControl && <span className="control-badge">Control</span>}
+                          </div>
+                          <div className="fold-change-bar-centered">
+                            <div className="bar-baseline"></div>
+                            <div
+                              className={`bar-fill ${isUp ? 'bar-up' : 'bar-down'}`}
+                              style={{
+                                width: `${barWidth}%`,
+                                ...foldStyle
+                              }}
+                            ></div>
+                            <span className={`fold-change-value ${isUp ? 'value-up' : 'value-down'}`}>
                               {formatFoldChange(condition.fold_change)}
                             </span>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
+
+                  {/* Show all toggle */}
+                  {hiddenCount > 0 && (
+                    <button
+                      className="show-all-toggle"
+                      onClick={(e) => toggleShowAll(study.study_id, e)}
+                    >
+                      {showAll
+                        ? `Show top ${DEFAULT_VISIBLE_CONDITIONS} only`
+                        : `Show all ${sortedConditions.length} conditions (+${hiddenCount} more)`
+                      }
+                    </button>
+                  )}
                 </div>
               )}
             </div>
@@ -245,8 +354,8 @@ function ExpressionDetails({ data, loading, error }) {
       {/* Attribution */}
       <div className="expression-attribution">
         <p>
-          Expression values are fold changes relative to control conditions within each study.
-          Data derived from RNA-seq experiments aligned to the <em>C. albicans</em> SC5314 Assembly 22 genome.
+          Values show fold change vs control (1.0 = no change).
+          Data from RNA-seq experiments aligned to <em>C. albicans</em> SC5314 Assembly 22.
         </p>
       </div>
     </div>
