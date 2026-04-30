@@ -3290,7 +3290,7 @@ a:hover {
 }
 
 .expression-header {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .expression-header h3 {
@@ -3333,8 +3333,8 @@ a:hover {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 15px;
-  padding: 10px 15px;
+  margin-bottom: 10px;
+  padding: 8px 15px;
   background: #e3f2fd;
   border-radius: 4px;
 }
@@ -3365,8 +3365,8 @@ a:hover {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  margin-bottom: 8px;
-  padding: 8px 12px;
+  margin-bottom: 4px;
+  padding: 6px 12px;
   background: #fafafa;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
@@ -3391,8 +3391,8 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 15px;
-  padding: 4px 0;
+  margin-bottom: 10px;
+  padding: 2px 0;
   font-size: 0.75em;
   color: #888;
 }
