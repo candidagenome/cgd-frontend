@@ -117,13 +117,9 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
     return <div className="error">Error loading expression data: {error}</div>;
   }
 
-  // Handle no data
+  // Handle no data at all
   if (!data || !data.results) {
     return <div className="no-data">No expression data available</div>;
-  }
-
-  if (organisms.length === 0) {
-    return <div className="no-data">No expression data found</div>;
   }
 
   // Get data for the selected organism
@@ -390,7 +386,16 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
             </div>
           )}
         </>
-      ) : null}
+      ) : (
+        <div className="no-data">
+          {organisms.length === 0
+            ? 'No expression data found'
+            : selectedOrganism
+              ? `No expression data available for this gene in ${selectedOrganism}`
+              : 'Select an organism to view expression data'
+          }
+        </div>
+      )}
     </div>
   );
 }
