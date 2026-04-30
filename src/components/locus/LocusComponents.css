@@ -3560,8 +3560,8 @@ a:hover {
   font-size: 0.65em;
   padding: 2px 6px;
   border-radius: 3px;
-  border: none;
   flex-shrink: 0;
+  /* outline-only style is set via inline styles */
 }
 
 /* Centered bar visualization */
@@ -3580,7 +3580,7 @@ a:hover {
   top: -1px;
   bottom: -1px;
   width: 1px;
-  background: #9ca3af;
+  background: #a8b0b8; /* softer gray - less sharp */
   z-index: 1;
 }
 

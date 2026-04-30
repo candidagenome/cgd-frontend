@@ -9,8 +9,8 @@ const DEFAULT_VISIBLE_CONDITIONS = 6;
 // Up = warm muted rose, Down = cool muted slate blue
 // Uses opacity to indicate magnitude (cleaner, less visual noise)
 const COLORS = {
-  up: '#c97a7a',      // muted rose
-  down: '#6f8fb5',    // muted slate blue
+  up: '#c07a7a',      // softer muted rose (less aggressive)
+  down: '#5f7fa6',    // slightly darker slate blue (better contrast)
   neutral: '#e5e7eb', // soft gray for ~1x
 };
 
@@ -27,15 +27,16 @@ const getFoldChangeStyle = (fc) => {
   }
 
   // Use base color with opacity based on magnitude
-  // magnitude 0.15 -> weak (opacity: 0.4)
-  // magnitude 1.0 (2x) -> medium (opacity: 0.7)
-  // magnitude 2.0+ (4x) -> strong (opacity: 1.0)
+  // magnitude 0.15 -> weak (opacity: 0.45)
+  // magnitude 1.0 (2x) -> medium (opacity: 0.65)
+  // magnitude 2.0+ (4x) -> strong (opacity: 0.9)
+  // This creates clear visual ranking: strong → clear, medium → soft, weak → subtle
   const isUp = fc >= 1;
   const baseColor = isUp ? COLORS.up : COLORS.down;
 
-  // Map magnitude to opacity: 0.4 to 1.0
+  // Map magnitude to opacity: 0.45 to 0.9 (ensures weak bars stay visible)
   const clampedMag = Math.min(magnitude, 2.0);
-  const opacity = 0.4 + (clampedMag * 0.3); // 0.4 to 1.0
+  const opacity = 0.45 + (clampedMag * 0.225); // 0.45 to 0.9
 
   return {
     backgroundColor: baseColor,
@@ -48,13 +49,13 @@ const formatFoldChange = (fc) => {
   return `${fc.toFixed(2)}x`;
 };
 
-// Bucket labels and colors - subtle, muted tones
-// Tags should never be more visible than bars
+// Bucket labels and colors - ultra-clean outline-only style
+// Tags should be subtle, paper-like appearance
 const BUCKET_INFO = {
-  control: { label: 'Control', color: '#9ca3af', bg: '#f3f4f6' },
-  basic_biology: { label: 'Basic Biology', color: '#6b7280', bg: '#f3f4f6' },
-  kill_candida: { label: 'Antifungal/Immune', color: '#6b7280', bg: '#f3f4f6' },
-  stress: { label: 'Stress Response', color: '#6b7280', bg: '#f3f4f6' },
+  control: { label: 'Control', color: '#9ca3af', bg: 'transparent', border: '#d1d5db' },
+  basic_biology: { label: 'Basic Biology', color: '#6b7280', bg: 'transparent', border: '#d1d5db' },
+  kill_candida: { label: 'Antifungal/Immune', color: '#6b7280', bg: 'transparent', border: '#d1d5db' },
+  stress: { label: 'Stress Response', color: '#6b7280', bg: 'transparent', border: '#d1d5db' },
 };
 
 // Calculate per-study summary stats
@@ -220,14 +221,14 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
                 </select>
               </div>
 
-              {/* Legend */}
+              {/* Legend - matches bar opacity scale */}
               <div className="expression-legend">
                 <span className="legend-title">Fold Change:</span>
-                <span className="legend-item legend-down" style={{ backgroundColor: COLORS.down, opacity: 1.0 }}>↓ &lt;0.5x</span>
-                <span className="legend-item legend-down" style={{ backgroundColor: COLORS.down, opacity: 0.7 }}>↓ 0.5–0.8x</span>
+                <span className="legend-item legend-down" style={{ backgroundColor: COLORS.down, opacity: 0.9 }}>↓ &lt;0.5x</span>
+                <span className="legend-item legend-down" style={{ backgroundColor: COLORS.down, opacity: 0.6 }}>↓ 0.5–0.8x</span>
                 <span className="legend-item" style={{ backgroundColor: COLORS.neutral }}>~1x</span>
-                <span className="legend-item legend-up" style={{ backgroundColor: COLORS.up, opacity: 0.7 }}>↑ 1.2–2x</span>
-                <span className="legend-item legend-up" style={{ backgroundColor: COLORS.up, opacity: 1.0 }}>↑ &gt;2x</span>
+                <span className="legend-item legend-up" style={{ backgroundColor: COLORS.up, opacity: 0.6 }}>↑ 1.2–2x</span>
+                <span className="legend-item legend-up" style={{ backgroundColor: COLORS.up, opacity: 0.9 }}>↑ &gt;2x</span>
               </div>
               <div className="expression-baseline-guide">
                 <span className="baseline-label-down">← down</span>
@@ -317,8 +318,9 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
                                       <span
                                         className="bucket-badge"
                                         style={{
-                                          backgroundColor: BUCKET_INFO[condition.bucket]?.bg || '#f3f4f6',
-                                          color: BUCKET_INFO[condition.bucket]?.color || '#6b7280'
+                                          backgroundColor: BUCKET_INFO[condition.bucket]?.bg || 'transparent',
+                                          color: BUCKET_INFO[condition.bucket]?.color || '#6b7280',
+                                          border: `1px solid ${BUCKET_INFO[condition.bucket]?.border || '#d1d5db'}`
                                         }}
                                       >
                                         {BUCKET_INFO[condition.bucket]?.label || condition.bucket}
