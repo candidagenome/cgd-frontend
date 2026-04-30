@@ -48,9 +48,16 @@ function OrganismSelector({
     ? showConsistentCgobList
     : (context === 'locus');
 
-  if (!organisms || organisms.length === 0) {
+  // If no organisms with data AND no orthologs AND not using consistent list, hide selector
+  const hasOrganisms = organisms && organisms.length > 0;
+  const hasOrthologs = orthologOrganisms && orthologOrganisms.length > 0;
+
+  if (!hasOrganisms && !hasOrthologs && !useConsistentList) {
     return null;
   }
+
+  // Normalize organisms to empty array if null/undefined
+  const safeOrganisms = organisms || [];
 
   // Calculate total count for "All Organisms" option
   // Use explicit totalCount if provided, otherwise sum organismCounts or fall back to organisms.length
@@ -58,7 +65,7 @@ function OrganismSelector({
     ? explicitTotalCount
     : (organismCounts
         ? Object.values(organismCounts).reduce((sum, count) => sum + count, 0)
-        : organisms.length);
+        : safeOrganisms.length);
 
   // Helper to format organism label with count
   const formatOrganismLabel = (org) => {
@@ -77,7 +84,7 @@ function OrganismSelector({
   // Filter out ortholog organisms that are already in the main organisms list
   // (computed early so we can use it in the single-organism check)
   const filteredOrthologOrganisms = orthologOrganisms.filter(
-    orth => !organisms.includes(orth.organism)
+    orth => !safeOrganisms.includes(orth.organism)
   );
 
   // Handle dropdown change - convert special "all" value to null, navigate for orthologs
@@ -101,7 +108,7 @@ function OrganismSelector({
 
   // If only one organism AND no orthologs to show AND not using consistent list,
   // display info text instead of dropdown
-  if (organisms.length === 1 && !showAllOption && filteredOrthologOrganisms.length === 0 && !useConsistentList) {
+  if (safeOrganisms.length === 1 && !showAllOption && filteredOrthologOrganisms.length === 0 && !useConsistentList) {
     const note = context === 'search'
       ? '(Results are only found in this organism)'
       : name
@@ -111,7 +118,7 @@ function OrganismSelector({
     return (
       <div className="organism-selector single-organism">
         <div className="organism-info-container">
-          <span className="organism-info">Organism: <strong>{formatOrganismLabel(organisms[0])}</strong></span>
+          <span className="organism-info">Organism: <strong>{formatOrganismLabel(safeOrganisms[0])}</strong></span>
           {note && (
             <span className="organism-availability-note">{note}</span>
           )}
@@ -135,7 +142,7 @@ function OrganismSelector({
             <option value={ALL_ORGANISMS_VALUE}>All Organisms ({totalCount})</option>
           )}
           {CGOB_LOCUS_ORGANISMS.map(org => {
-            const hasDirectData = organisms.includes(org);
+            const hasDirectData = safeOrganisms.includes(org);
             const hasOrtholog = orthologMap[org];
 
             if (hasDirectData) {
@@ -185,7 +192,7 @@ function OrganismSelector({
         {showAllOption && (
           <option value={ALL_ORGANISMS_VALUE}>All Organisms ({totalCount})</option>
         )}
-        {organisms.map(org => (
+        {safeOrganisms.map(org => (
           <option key={org} value={org}>{formatOrganismLabel(org)}</option>
         ))}
         {filteredOrthologOrganisms.length > 0 && (
