@@ -129,17 +129,42 @@ function OrganismSelector({
 
   // When using consistent CGOB list, show all 5 organisms in order
   if (useConsistentList) {
+    // Compute the effective dropdown value - must match an actual option value
+    // If selectedOrganism has direct data, use it; otherwise find first with data or use placeholder
+    const selectedHasDirectData = selectedOrganism && safeOrganisms.includes(selectedOrganism);
+    const firstOrgWithData = CGOB_LOCUS_ORGANISMS.find(org => safeOrganisms.includes(org));
+
+    // Determine the dropdown value:
+    // 1. If selected organism has direct data, use it
+    // 2. If showAllOption, use ALL_ORGANISMS_VALUE
+    // 3. If there's any organism with data, use the first one
+    // 4. Otherwise use empty string (will show first option visually)
+    let dropdownValue;
+    if (selectedHasDirectData) {
+      dropdownValue = selectedOrganism;
+    } else if (showAllOption) {
+      dropdownValue = ALL_ORGANISMS_VALUE;
+    } else if (firstOrgWithData) {
+      dropdownValue = firstOrgWithData;
+    } else {
+      dropdownValue = ''; // No data available for any organism
+    }
+
     return (
       <div className="organism-selector">
         <label htmlFor={`organism-select-${dataType || 'default'}`}>Select Organism: </label>
         <select
           id={`organism-select-${dataType || 'default'}`}
-          value={selectedOrganism || ALL_ORGANISMS_VALUE}
+          value={dropdownValue}
           onChange={handleChange}
           className="organism-dropdown"
         >
           {showAllOption && (
             <option value={ALL_ORGANISMS_VALUE}>All Organisms ({totalCount})</option>
+          )}
+          {/* Show placeholder when no organism has data */}
+          {!firstOrgWithData && !showAllOption && (
+            <option value="" disabled>No expression data available</option>
           )}
           {CGOB_LOCUS_ORGANISMS.map(org => {
             const hasDirectData = safeOrganisms.includes(org);
@@ -157,11 +182,11 @@ function OrganismSelector({
                   key={`ortholog-${org}`}
                   value={`${ORTHOLOG_PREFIX}${hasOrtholog}`}
                 >
-                  {org}
+                  {org} → view ortholog
                 </option>
               );
             } else {
-              // No data for this organism - show as disabled with "No ortholog"
+              // No data for this organism - show as disabled with "No data"
               return (
                 <option
                   key={`no-ortholog-${org}`}
@@ -169,7 +194,7 @@ function OrganismSelector({
                   disabled
                   style={{ color: '#999' }}
                 >
-                  {org} (No ortholog)
+                  {org} (No data)
                 </option>
               );
             }
