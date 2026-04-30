@@ -391,10 +391,10 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
         </>
       ) : (
         <div className="no-data">
-          {organisms.length === 0
-            ? 'No expression data found'
-            : selectedOrganism
-              ? `No expression data available for this gene in ${selectedOrganism}`
+          {selectedOrganism
+            ? `No expression data available for this gene in ${selectedOrganism}`
+            : organisms.length === 0
+              ? 'No expression data found'
               : 'Select an organism to view expression data'
           }
         </div>

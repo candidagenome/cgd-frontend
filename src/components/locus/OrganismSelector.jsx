@@ -130,27 +130,30 @@ function OrganismSelector({
   // When using consistent CGOB list, show all 5 organisms in order
   if (useConsistentList) {
     // Compute the effective dropdown value - must match an actual option value
+    // IMPORTANT: Respect the user's selected organism, even if it has no data
+    const selectedIsCgobOrg = selectedOrganism && CGOB_LOCUS_ORGANISMS.includes(selectedOrganism);
     const selectedHasDirectData = selectedOrganism && safeOrganisms.includes(selectedOrganism);
+    const selectedHasOrtholog = selectedOrganism && orthologMap[selectedOrganism];
     const firstOrgWithData = CGOB_LOCUS_ORGANISMS.find(org => safeOrganisms.includes(org));
-    const firstOrgWithOrtholog = CGOB_LOCUS_ORGANISMS.find(org => orthologMap[org]);
 
-    // Determine the dropdown value:
-    // 1. If selected organism has direct data, use it
-    // 2. If showAllOption, use ALL_ORGANISMS_VALUE
-    // 3. If there's any organism with data, use the first one
-    // 4. If there's any organism with ortholog, use its ortholog value
-    // 5. Otherwise use first CGOB organism name (will show as disabled)
+    // Determine the dropdown value - always respect user's selection if it's a valid CGOB organism
     let dropdownValue;
-    if (selectedHasDirectData) {
-      dropdownValue = selectedOrganism;
+    if (selectedIsCgobOrg) {
+      // User selected a CGOB organism - use the appropriate option value
+      if (selectedHasDirectData) {
+        dropdownValue = selectedOrganism;
+      } else if (selectedHasOrtholog) {
+        dropdownValue = `${ORTHOLOG_PREFIX}${orthologMap[selectedOrganism]}`;
+      } else {
+        dropdownValue = `${NO_ORTHOLOG_PREFIX}${selectedOrganism}`;
+      }
     } else if (showAllOption) {
       dropdownValue = ALL_ORGANISMS_VALUE;
     } else if (firstOrgWithData) {
+      // No organism selected yet - default to first with data
       dropdownValue = firstOrgWithData;
-    } else if (firstOrgWithOrtholog) {
-      dropdownValue = `${ORTHOLOG_PREFIX}${orthologMap[firstOrgWithOrtholog]}`;
     } else {
-      // No data and no orthologs - use first organism (will show disabled)
+      // No data for any organism - default to first CGOB organism
       dropdownValue = `${NO_ORTHOLOG_PREFIX}${CGOB_LOCUS_ORGANISMS[0]}`;
     }
 
