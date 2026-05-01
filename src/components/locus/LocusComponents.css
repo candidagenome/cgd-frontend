@@ -4138,9 +4138,8 @@ a:hover {
 }
 
 .multi-gene-heatmap-container .heatmap-row.query-row {
-  border: 2px solid #c62828;
-  border-radius: 2px;
-  margin: -1px 0;
+  outline: 2px solid #c62828;
+  outline-offset: -1px;
 }
 
 .multi-gene-heatmap-container .heatmap-cell {
