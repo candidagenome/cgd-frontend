@@ -163,6 +163,7 @@ function HelpPage() {
           <p>A guide to the types of information found on CGD web pages:</p>
           <div className="help-links">
             <Link to="/help/locus">Locus</Link>
+            <Link to="/help/expression">Expression</Link>
             <Link to="/help/literature-topics">Literature Guide</Link>
             <Link to="/help/curated-paper">CGD Paper</Link>
             <Link to="/help/phenotype">Mutant Phenotype</Link>
