@@ -140,6 +140,16 @@ function MultiGeneHeatmap({
       let displayName;
       if (isQuery) {
         displayName = data?.gene_name || queryDisplayName;
+        // Debug logging for query gene
+        console.log('[MultiGeneHeatmap] Query gene row:', {
+          index,
+          geneName,
+          dataGeneName: data?.gene_name,
+          queryDisplayName,
+          finalDisplayName: displayName,
+          isQueryGene,
+          queryGeneProp: queryGene
+        });
       } else {
         displayName = data?.gene_name || geneName;
       }
