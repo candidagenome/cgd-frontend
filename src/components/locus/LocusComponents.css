@@ -3999,6 +3999,57 @@ a:hover {
   color: #333;
 }
 
+/* Hover info bar - fixed position above heatmap */
+.heatmap-hover-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  background: #fafafa;
+  border-bottom: 1px solid #e0e0e0;
+  min-height: 40px;
+  font-size: 0.9em;
+}
+
+.heatmap-hover-info .hover-info-placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+.heatmap-hover-info .hover-info-separator {
+  color: #ccc;
+}
+
+.heatmap-hover-info .hover-info-gene {
+  font-weight: 600;
+  color: #1976d2;
+}
+
+.heatmap-hover-info .hover-info-condition {
+  color: #333;
+}
+
+.heatmap-hover-info .hover-info-fc {
+  font-weight: 600;
+}
+
+.heatmap-hover-info .hover-info-fc.fc-up {
+  color: #C41E3A;
+}
+
+.heatmap-hover-info .hover-info-fc.fc-down {
+  color: #5080B0;
+}
+
+.heatmap-hover-info .hover-info-category {
+  color: #666;
+  font-style: italic;
+}
+
+.heatmap-hover-info .hover-info-study {
+  color: #888;
+}
+
 .multi-gene-heatmap-container {
   flex: 1;
   overflow: auto;

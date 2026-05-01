@@ -80,7 +80,6 @@ function MultiGeneHeatmap({
   inline = false
 }) {
   const [hoveredCell, setHoveredCell] = useState(null);
-  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [selectedStudy, setSelectedStudy] = useState('all');
   const [sortBy, setSortBy] = useState('clustered');
 
@@ -207,14 +206,9 @@ function MultiGeneHeatmap({
     return Array.from(cats);
   }, [filteredConditions]);
 
-  // Handle cell hover
-  const handleCellHover = useCallback((gene, condition, fc, event) => {
+  // Handle cell hover - updates the info bar above heatmap
+  const handleCellHover = useCallback((gene, condition, fc) => {
     if (gene && condition) {
-      const rect = event.currentTarget.getBoundingClientRect();
-      setTooltipPosition({
-        x: rect.left + rect.width / 2,
-        y: rect.top - 10,
-      });
       setHoveredCell({ gene, condition, fc });
     } else {
       setHoveredCell(null);
@@ -324,6 +318,28 @@ function MultiGeneHeatmap({
   // Main heatmap content
   const heatmapContent = (
     <>
+      {/* Hover info bar - fixed position above heatmap */}
+      <div className="heatmap-hover-info">
+        {hoveredCell ? (
+          <>
+            <span className="hover-info-gene">{hoveredCell.gene.displayName}</span>
+            <span className="hover-info-separator">|</span>
+            <span className="hover-info-condition">{hoveredCell.condition.label}</span>
+            <span className="hover-info-separator">|</span>
+            <span className={`hover-info-fc ${hoveredCell.fc > 1 ? 'fc-up' : hoveredCell.fc < 1 ? 'fc-down' : ''}`}>
+              {formatFoldChange(hoveredCell.fc)}
+              {hoveredCell.fc > 1 ? ' ↑' : hoveredCell.fc < 1 ? ' ↓' : ''}
+            </span>
+            <span className="hover-info-separator">|</span>
+            <span className="hover-info-category">{CATEGORY_LABELS[hoveredCell.condition.bucket] || hoveredCell.condition.bucket}</span>
+            <span className="hover-info-separator">|</span>
+            <span className="hover-info-study">{hoveredCell.condition.studyName}</span>
+          </>
+        ) : (
+          <span className="hover-info-placeholder">Hover over a cell to see details</span>
+        )}
+      </div>
+
       <div className="multi-gene-heatmap-container">
         <div className="heatmap-content">
           {/* Gene labels column */}
@@ -402,8 +418,8 @@ function MultiGeneHeatmap({
                       style={{
                         backgroundColor: getHeatmapColor(fc, COLORS)
                       }}
-                      onMouseEnter={(e) => handleCellHover(gene, condition, fc, e)}
-                      onMouseLeave={() => handleCellHover(null, null, null, null)}
+                      onMouseEnter={() => handleCellHover(gene, condition, fc)}
+                      onMouseLeave={() => handleCellHover(null, null, null)}
                     />
                   );
                 })}
@@ -412,28 +428,6 @@ function MultiGeneHeatmap({
           </div>
         </div>
       </div>
-
-      {/* Tooltip */}
-      {hoveredCell && (
-        <div
-          className="heatmap-tooltip"
-          style={{
-            left: tooltipPosition.x,
-            top: tooltipPosition.y,
-            position: 'fixed',
-            transform: 'translateX(-50%) translateY(-100%)',
-          }}
-        >
-          <div className="tooltip-gene">{hoveredCell.gene.displayName}</div>
-          <div className="tooltip-condition">{hoveredCell.condition.label}</div>
-          <div className="tooltip-fold-change">
-            {formatFoldChange(hoveredCell.fc)}
-            {hoveredCell.fc > 1 ? ' ↑' : hoveredCell.fc < 1 ? ' ↓' : ''}
-          </div>
-          <div className="tooltip-category">{CATEGORY_LABELS[hoveredCell.condition.bucket] || hoveredCell.condition.bucket}</div>
-          <div className="tooltip-study">{hoveredCell.condition.studyName}</div>
-        </div>
-      )}
 
       <div className="multi-gene-heatmap-footer">
         <span className="heatmap-info">
