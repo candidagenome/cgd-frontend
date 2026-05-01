@@ -4125,6 +4125,49 @@ a:hover {
   color: #666;
 }
 
+/* Category Bar */
+.multi-gene-heatmap-container .heatmap-category-bar {
+  display: flex;
+  height: 8px;
+  margin-bottom: 2px;
+}
+
+.multi-gene-heatmap-container .category-cell {
+  width: 16px;
+  min-width: 16px;
+  height: 8px;
+  border-right: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.multi-gene-heatmap-container .heatmap-corner {
+  height: 90px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: 4px;
+}
+
+.multi-gene-heatmap-container .corner-category-label {
+  font-size: 0.7em;
+  color: #888;
+  text-align: right;
+  padding-right: 8px;
+  height: 8px;
+  line-height: 8px;
+  margin-bottom: 2px;
+}
+
+/* Legend divider and category legend */
+.multi-gene-heatmap-legend .legend-divider {
+  color: #ccc;
+  margin: 0 8px;
+}
+
+.multi-gene-heatmap-legend .category-legend {
+  color: white;
+  font-size: 0.75em;
+}
+
 /* View Heatmap Button in Similar Genes */
 .view-heatmap-btn {
   display: inline-flex;

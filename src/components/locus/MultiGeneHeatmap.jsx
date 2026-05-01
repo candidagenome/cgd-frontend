@@ -10,6 +10,28 @@ const COLORS = {
   noData: '#f5f5f5',
 };
 
+// Category/bucket colors for the category bar
+const CATEGORY_COLORS = {
+  control: '#9e9e9e',
+  basic_biology: '#4caf50',
+  kill_candida: '#f44336',
+  stress: '#ff9800',
+};
+
+const CATEGORY_LABELS = {
+  control: 'Control',
+  basic_biology: 'Basic Biology',
+  kill_candida: 'Antifungal/Immune',
+  stress: 'Stress Response',
+};
+
+// Sort options
+const SORT_OPTIONS = [
+  { value: 'study', label: 'By Study' },
+  { value: 'foldchange', label: 'By Fold Change' },
+  { value: 'clustered', label: 'Clustered' },
+];
+
 // Get color for heatmap cell based on fold change
 const getHeatmapColor = (fc, colors) => {
   if (fc == null) return colors.noData;
@@ -50,6 +72,7 @@ function MultiGeneHeatmap({
   const [hoveredCell, setHoveredCell] = useState(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [selectedStudy, setSelectedStudy] = useState('all');
+  const [sortBy, setSortBy] = useState('study');
 
   // Build condition map from all genes' expression data
   const { conditions, studies, geneRows } = useMemo(() => {
@@ -72,6 +95,7 @@ function MultiGeneHeatmap({
               label: condition.label,
               studyId: study.study_id,
               studyName: study.study_id.replace(/_/g, ' '),
+              bucket: condition.bucket || 'basic_biology',
             });
           }
         });
@@ -113,11 +137,65 @@ function MultiGeneHeatmap({
     };
   }, [expressionData, similarGenes]);
 
-  // Filter conditions by selected study
+  // Filter and sort conditions
   const filteredConditions = useMemo(() => {
-    if (selectedStudy === 'all') return conditions;
-    return conditions.filter(c => c.studyId === selectedStudy);
-  }, [conditions, selectedStudy]);
+    let filtered = selectedStudy === 'all'
+      ? [...conditions]
+      : conditions.filter(c => c.studyId === selectedStudy);
+
+    // Apply sorting
+    if (sortBy === 'study') {
+      // Sort by study, then by condition label within study
+      filtered.sort((a, b) => {
+        const studyCompare = a.studyId.localeCompare(b.studyId);
+        if (studyCompare !== 0) return studyCompare;
+        return a.label.localeCompare(b.label);
+      });
+    } else if (sortBy === 'foldchange') {
+      // Sort by query gene's fold change magnitude (most extreme first)
+      const queryRow = geneRows[0];
+      if (queryRow) {
+        filtered.sort((a, b) => {
+          const fcA = queryRow.foldChanges[a.id];
+          const fcB = queryRow.foldChanges[b.id];
+          const magA = fcA != null ? Math.abs(Math.log2(fcA)) : -1;
+          const magB = fcB != null ? Math.abs(Math.log2(fcB)) : -1;
+          return magB - magA; // Descending by magnitude
+        });
+      }
+    } else if (sortBy === 'clustered') {
+      // Simple clustering: sort by average fold change pattern similarity
+      // Compute average fold change across all genes for each condition
+      const conditionAvgs = new Map();
+      filtered.forEach(cond => {
+        let sum = 0;
+        let count = 0;
+        geneRows.forEach(gene => {
+          const fc = gene.foldChanges[cond.id];
+          if (fc != null) {
+            sum += Math.log2(fc);
+            count++;
+          }
+        });
+        conditionAvgs.set(cond.id, count > 0 ? sum / count : 0);
+      });
+
+      // Sort by average (groups similar conditions together)
+      filtered.sort((a, b) => {
+        const avgA = conditionAvgs.get(a.id) || 0;
+        const avgB = conditionAvgs.get(b.id) || 0;
+        return avgB - avgA; // Descending (upregulated first)
+      });
+    }
+
+    return filtered;
+  }, [conditions, selectedStudy, sortBy, geneRows]);
+
+  // Get unique categories for the category bar
+  const uniqueCategories = useMemo(() => {
+    const cats = new Set(filteredConditions.map(c => c.bucket));
+    return Array.from(cats);
+  }, [filteredConditions]);
 
   // Handle cell hover
   const handleCellHover = useCallback((gene, condition, fc, event) => {
@@ -181,6 +259,18 @@ function MultiGeneHeatmap({
                 );
               })}
             </select>
+
+            <label>Sort:</label>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+            >
+              {SORT_OPTIONS.map(opt => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
           </div>
           <button className="close-btn" onClick={onClose}>&times;</button>
         </div>
@@ -193,13 +283,27 @@ function MultiGeneHeatmap({
           <span className="legend-item" style={{ backgroundColor: COLORS.up, opacity: 0.6 }}>↑ 1.2–2x</span>
           <span className="legend-item" style={{ backgroundColor: COLORS.up, opacity: 0.9 }}>↑ &gt;2x</span>
           <span className="legend-item" style={{ backgroundColor: COLORS.noData }}>No data</span>
+
+          <span className="legend-divider">|</span>
+          <span className="legend-title">Category:</span>
+          {Object.entries(CATEGORY_COLORS).map(([key, color]) => (
+            <span
+              key={key}
+              className="legend-item category-legend"
+              style={{ backgroundColor: color }}
+            >
+              {CATEGORY_LABELS[key]}
+            </span>
+          ))}
         </div>
 
         <div className="multi-gene-heatmap-container">
           <div className="heatmap-content">
             {/* Gene labels column */}
             <div className="heatmap-gene-labels">
-              <div className="heatmap-corner"></div>
+              <div className="heatmap-corner">
+                <div className="corner-category-label">Category</div>
+              </div>
               {geneRows.map((gene, idx) => (
                 <div
                   key={gene.geneName}
@@ -219,6 +323,20 @@ function MultiGeneHeatmap({
 
             {/* Heatmap grid */}
             <div className="heatmap-grid-wrapper">
+              {/* Category color bar */}
+              <div className="heatmap-category-bar">
+                {filteredConditions.map(condition => (
+                  <div
+                    key={`cat-${condition.id}`}
+                    className="category-cell"
+                    style={{
+                      backgroundColor: CATEGORY_COLORS[condition.bucket] || '#ccc'
+                    }}
+                    title={CATEGORY_LABELS[condition.bucket] || condition.bucket}
+                  />
+                ))}
+              </div>
+
               {/* Condition headers */}
               <div className="heatmap-condition-headers">
                 {filteredConditions.map(condition => (
