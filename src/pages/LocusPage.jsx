@@ -212,6 +212,7 @@ function LocusPage() {
               <SimilarGenesDetails
                 locusName={name}
                 selectedOrganism={selectedOrganism}
+                orthologOrganisms={orthologOrganisms}
               />
             )}
           </div>

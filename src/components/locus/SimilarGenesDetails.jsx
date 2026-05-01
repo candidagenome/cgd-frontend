@@ -22,7 +22,7 @@ const ORGANISMS = Object.entries(ORGANISM_MAP).map(([display, api]) => ({
   api,
 }));
 
-function SimilarGenesDetails({ locusName, selectedOrganism }) {
+function SimilarGenesDetails({ locusName, selectedOrganism, orthologOrganisms = [] }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
@@ -48,15 +48,31 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
     }
   }, [selectedOrganism]);
 
+  // Get the effective locus name for the current organism (use ortholog if available)
+  const effectiveLocusName = useMemo(() => {
+    // Get the display name for the current organism
+    const organismDisplay = ORGANISM_DISPLAY_MAP[organism];
+
+    // Check if there's an ortholog for this organism
+    const ortholog = orthologOrganisms.find(o => o.organism === organismDisplay);
+
+    if (ortholog) {
+      return ortholog.feature_name;
+    }
+
+    // Fall back to original locus name
+    return locusName;
+  }, [organism, orthologOrganisms, locusName]);
+
   // Fetch similar genes data
   const fetchSimilarGenes = useCallback(async () => {
-    if (!locusName) return;
+    if (!effectiveLocusName) return;
 
     setLoading(true);
     setError(null);
 
     try {
-      const result = await expressionApi.getSimilarGenes(locusName, {
+      const result = await expressionApi.getSimilarGenes(effectiveLocusName, {
         organism,
         metric,
         limit,
@@ -69,7 +85,7 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
     } finally {
       setLoading(false);
     }
-  }, [locusName, organism, metric, limit]);
+  }, [effectiveLocusName, organism, metric, limit]);
 
   // Fetch data when component mounts or parameters change
   useEffect(() => {
