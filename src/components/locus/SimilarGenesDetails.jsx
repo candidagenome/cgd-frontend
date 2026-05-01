@@ -70,6 +70,20 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
     fetchSimilarGenes();
   }, [fetchSimilarGenes]);
 
+  // Deduplicate genes by gene_name (A/B alleles have same gene_name)
+  const deduplicatedGenes = useMemo(() => {
+    if (!data?.similar_genes) return [];
+
+    const seen = new Set();
+    return data.similar_genes.filter(gene => {
+      // Use gene_name for deduplication, fall back to feature_name
+      const key = gene.gene_name || gene.feature_name;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }, [data?.similar_genes]);
+
   // AG Grid column definitions
   const columnDefs = useMemo(() => [
     {
@@ -79,9 +93,9 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
       minWidth: 100,
       cellRenderer: (params) => {
         const gene = params.data;
-        const displayName = gene.gene_name || gene.systematic_name;
+        const displayName = gene.gene_name || gene.feature_name;
         return (
-          <Link to={`/locus/${gene.systematic_name || gene.gene_name}`}>
+          <Link to={`/locus/${gene.feature_name || gene.gene_name}`}>
             {displayName}
           </Link>
         );
@@ -89,14 +103,14 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
     },
     {
       headerName: 'Systematic Name',
-      field: 'systematic_name',
+      field: 'feature_name',
       flex: 1.2,
       minWidth: 120,
       cellRenderer: (params) => {
         const gene = params.data;
         return (
-          <Link to={`/locus/${gene.systematic_name}`}>
-            <code>{gene.systematic_name}</code>
+          <Link to={`/locus/${gene.feature_name}`}>
+            <code>{gene.feature_name}</code>
           </Link>
         );
       },
@@ -269,10 +283,10 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
           </div>
 
           {/* Results Table */}
-          {data.similar_genes && data.similar_genes.length > 0 ? (
+          {deduplicatedGenes.length > 0 ? (
             <div className="similar-genes-grid-wrapper ag-theme-alpine">
               <AgGridReact
-                rowData={data.similar_genes}
+                rowData={deduplicatedGenes}
                 columnDefs={columnDefs}
                 defaultColDef={defaultColDef}
                 domLayout="autoHeight"
