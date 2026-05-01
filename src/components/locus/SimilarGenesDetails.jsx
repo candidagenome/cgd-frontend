@@ -202,25 +202,41 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
       // Fetch expression data for all genes
       const expressionResults = await expressionApi.getMultiGeneExpression(allGeneNames, organismDisplay);
 
-      // Ensure query gene is always in results (even if API didn't return it)
-      const hasQueryGene = expressionResults.some(r =>
-        r.geneName === queryGeneName || r.geneName === queryDisplayName
+      // Find the query gene entry (may be returned with different name)
+      const queryIndex = expressionResults.findIndex(r =>
+        r.geneName === queryGeneName ||
+        r.geneName === queryDisplayName ||
+        r.data?.feature_name === queryGeneName ||
+        r.data?.gene_name === queryDisplayName
       );
 
-      if (!hasQueryGene) {
-        // Add query gene entry at the end with empty data
-        expressionResults.push({
-          geneName: queryGeneName,
-          data: {
-            gene_name: queryDisplayName,
-            feature_name: queryGeneName,
-            studies: []
-          },
-          error: null
-        });
+      // Reorder: put similar genes first, then query gene at the end
+      let orderedResults;
+      if (queryIndex >= 0) {
+        // Remove query gene from current position and add to end
+        const queryEntry = expressionResults[queryIndex];
+        orderedResults = [
+          ...expressionResults.slice(0, queryIndex),
+          ...expressionResults.slice(queryIndex + 1),
+          queryEntry
+        ];
+      } else {
+        // Query gene not in results, add it manually at the end
+        orderedResults = [
+          ...expressionResults,
+          {
+            geneName: queryGeneName,
+            data: {
+              gene_name: queryDisplayName,
+              feature_name: queryGeneName,
+              studies: []
+            },
+            error: null
+          }
+        ];
       }
 
-      setHeatmapData(expressionResults);
+      setHeatmapData(orderedResults);
     } catch (err) {
       console.error('Failed to load heatmap data:', err);
     } finally {
