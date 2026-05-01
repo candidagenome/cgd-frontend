@@ -195,11 +195,31 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
 
       // Build list of genes: similar genes first, then query gene at bottom
       const queryGeneName = data.query_gene.systematic_name || data.query_gene.gene_name;
+      const queryDisplayName = data.query_gene.gene_name || data.query_gene.systematic_name;
       const similarGeneNames = deduplicatedGenes.slice(0, 10).map(g => g.feature_name || g.gene_name);
       const allGeneNames = [...similarGeneNames, queryGeneName];
 
       // Fetch expression data for all genes
       const expressionResults = await expressionApi.getMultiGeneExpression(allGeneNames, organismDisplay);
+
+      // Ensure query gene is always in results (even if API didn't return it)
+      const hasQueryGene = expressionResults.some(r =>
+        r.geneName === queryGeneName || r.geneName === queryDisplayName
+      );
+
+      if (!hasQueryGene) {
+        // Add query gene entry at the end with empty data
+        expressionResults.push({
+          geneName: queryGeneName,
+          data: {
+            gene_name: queryDisplayName,
+            feature_name: queryGeneName,
+            studies: []
+          },
+          error: null
+        });
+      }
+
       setHeatmapData(expressionResults);
     } catch (err) {
       console.error('Failed to load heatmap data:', err);
