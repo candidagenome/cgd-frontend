@@ -197,14 +197,6 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
       const querySystematicName = data.query_gene.systematic_name || locusName;
       const queryStandardName = data.query_gene.gene_name || locusName;
 
-      // Debug logging
-      console.log('[SimilarGenes] Query gene info:', {
-        systematic: querySystematicName,
-        standard: queryStandardName,
-        queryGeneObj: data.query_gene,
-        locusName
-      });
-
       // Build list of genes: similar genes only (we'll handle query gene separately)
       const similarGeneNames = deduplicatedGenes.slice(0, 10).map(g => g.feature_name || g.gene_name);
 
@@ -249,14 +241,6 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
 
       // Build ordered results: similar genes first, then query gene at the end
       const orderedResults = [...filteredResults, finalQueryEntry];
-
-      // Debug logging
-      console.log('[SimilarGenes] Heatmap data:', {
-        totalResults: orderedResults.length,
-        lastEntry: orderedResults[orderedResults.length - 1],
-        lastEntryGeneName: orderedResults[orderedResults.length - 1]?.geneName,
-        lastEntryDataGeneName: orderedResults[orderedResults.length - 1]?.data?.gene_name,
-      });
 
       setHeatmapData(orderedResults);
     } catch (err) {
