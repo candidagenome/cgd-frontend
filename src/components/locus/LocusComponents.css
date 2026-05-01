@@ -3773,8 +3773,10 @@ a:hover {
 
 .expression-heatmap-strip .heatmap-cells {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 2px;
+  overflow-x: auto;
+  padding-bottom: 4px;  /* Space for scrollbar */
 }
 
 .expression-heatmap-strip .heatmap-cell {
