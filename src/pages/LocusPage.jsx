@@ -192,6 +192,9 @@ function LocusPage() {
                   {subtab.label}
                 </button>
               ))}
+              <Link to="/help/expression" className="subtab-help-link" title="Expression Help">
+                ?
+              </Link>
             </div>
 
             {/* Sub-tab Content */}
