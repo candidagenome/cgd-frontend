@@ -213,7 +213,7 @@ function LocusPage() {
                 locusName={name}
                 selectedOrganism={selectedOrganism}
                 onOrganismChange={setSelectedOrganism}
-                orthologOrganisms={orthologOrganisms}
+                currentFeatureName={selectedOrganism && data.info?.results?.[selectedOrganism]?.feature_name}
               />
             )}
           </div>

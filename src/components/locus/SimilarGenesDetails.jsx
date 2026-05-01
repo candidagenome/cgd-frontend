@@ -22,7 +22,7 @@ const ORGANISMS = Object.entries(ORGANISM_MAP).map(([display, api]) => ({
   api,
 }));
 
-function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, orthologOrganisms = [] }) {
+function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, currentFeatureName }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
@@ -60,21 +60,16 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, or
     }
   }, [onOrganismChange]);
 
-  // Get the effective locus name for the current organism (use ortholog if available)
+  // Get the effective locus name for the current organism
+  // Use currentFeatureName from the selected organism's data (handles orthologs automatically)
   const effectiveLocusName = useMemo(() => {
-    // Get the display name for the current organism
-    const organismDisplay = ORGANISM_DISPLAY_MAP[organism];
-
-    // Check if there's an ortholog for this organism
-    const ortholog = orthologOrganisms.find(o => o.organism === organismDisplay);
-
-    if (ortholog) {
-      return ortholog.feature_name;
+    // If we have the current feature name from the selected organism, use it
+    if (currentFeatureName) {
+      return currentFeatureName;
     }
-
     // Fall back to original locus name
     return locusName;
-  }, [organism, orthologOrganisms, locusName]);
+  }, [currentFeatureName, locusName]);
 
   // Fetch similar genes data
   const fetchSimilarGenes = useCallback(async () => {
