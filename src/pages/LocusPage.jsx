@@ -10,8 +10,15 @@ import SequenceDetails from '../components/locus/SequenceDetails';
 import References from '../components/locus/References';
 import History from '../components/locus/History';
 import ExpressionDetails from '../components/locus/ExpressionDetails';
+import SimilarGenesDetails from '../components/locus/SimilarGenesDetails';
 import OrganismSelector, { getDefaultOrganism } from '../components/locus/OrganismSelector';
 import './LocusPage.css';
+
+// Sub-tabs for the Expression tab (extensible for future additions)
+const EXPRESSION_SUBTABS = [
+  { id: 'data', label: 'Expression Data' },
+  { id: 'similar', label: 'Similar Genes' },
+];
 
 const TABS = [
   { id: 'summary', label: 'Summary', component: 'summary', loader: 'loadSummaryData' },
@@ -31,6 +38,7 @@ function LocusPage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'summary');
   const [selectedOrganism, setSelectedOrganism] = useState(null);
+  const [expressionSubTab, setExpressionSubTab] = useState('data');
 
   // Check if this is a B allele that needs redirect
   const isBAllele = name && (name.endsWith('_B') || name.endsWith('_b'));
@@ -172,14 +180,38 @@ function LocusPage() {
 
       case 'expression':
         return (
-          <ExpressionDetails
-            data={data.expressionDetails}
-            loading={loading.expressionDetails}
-            error={errors.expressionDetails}
-            selectedOrganism={selectedOrganism}
-            onOrganismChange={setSelectedOrganism}
-            orthologOrganisms={orthologOrganisms}
-          />
+          <div className="expression-tab-container">
+            {/* Expression Sub-tabs */}
+            <div className="expression-subtabs">
+              {EXPRESSION_SUBTABS.map(subtab => (
+                <button
+                  key={subtab.id}
+                  className={`subtab-button ${expressionSubTab === subtab.id ? 'active' : ''}`}
+                  onClick={() => setExpressionSubTab(subtab.id)}
+                >
+                  {subtab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Sub-tab Content */}
+            {expressionSubTab === 'data' && (
+              <ExpressionDetails
+                data={data.expressionDetails}
+                loading={loading.expressionDetails}
+                error={errors.expressionDetails}
+                selectedOrganism={selectedOrganism}
+                onOrganismChange={setSelectedOrganism}
+                orthologOrganisms={orthologOrganisms}
+              />
+            )}
+            {expressionSubTab === 'similar' && (
+              <SimilarGenesDetails
+                locusName={name}
+                selectedOrganism={selectedOrganism}
+              />
+            )}
+          </div>
         );
 
       case 'protein':

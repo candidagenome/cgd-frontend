@@ -243,6 +243,42 @@
   background-color: #e0e0e0;
 }
 
+/* Expression Tab Container with Sub-tabs */
+.expression-tab-container {
+  width: 100%;
+}
+
+.expression-subtabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.subtab-button {
+  padding: 10px 20px;
+  border: none;
+  background-color: transparent;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s ease;
+}
+
+.subtab-button:hover {
+  color: #1976d2;
+  background-color: #f5f9ff;
+}
+
+.subtab-button.active {
+  color: #1976d2;
+  border-bottom-color: #1976d2;
+  background-color: #e3f2fd;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .locus-page {
@@ -259,5 +295,23 @@
 
   .locus-header h1 {
     font-size: 1.5em;
+  }
+
+  .expression-subtabs {
+    flex-direction: column;
+    gap: 5px;
+    border-bottom: none;
+  }
+
+  .subtab-button {
+    border-bottom: none;
+    border-left: 3px solid transparent;
+    margin-bottom: 0;
+    text-align: left;
+  }
+
+  .subtab-button.active {
+    border-left-color: #1976d2;
+    border-bottom-color: transparent;
   }
 }
