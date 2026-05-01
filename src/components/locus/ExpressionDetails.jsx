@@ -314,12 +314,6 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
                 <span className="baseline-label-up">up →</span>
               </div>
 
-              {/* Debug: Always show heatmap section info */}
-              {console.log('HEATMAP DEBUG:', { filteredStudies: filteredStudies.length, allConditions: allConditions.length, first3: allConditions.slice(0, 3) })}
-              <div style={{ padding: '8px 12px', background: '#e3f2fd', border: '1px solid #2196f3', borderRadius: '4px', margin: '15px 0', fontSize: '13px' }}>
-                <strong>Heatmap Debug:</strong> filteredStudies={filteredStudies.length}, allConditions={allConditions.length}
-              </div>
-
               {/* Global Heatmap Strip */}
               {allConditions.length > 0 ? (
                 <div className="expression-heatmap-strip">
@@ -362,11 +356,7 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
                     </div>
                   )}
                 </div>
-              ) : (
-                <div style={{ padding: '10px', background: '#fff3cd', border: '1px solid #ffc107', borderRadius: '4px', margin: '20px 0' }}>
-                  Debug: allConditions is empty (filteredStudies: {filteredStudies.length}, total conditions: {filteredStudies.reduce((sum, s) => sum + s.conditions.length, 0)})
-                </div>
-              )}
+              ) : null}
 
               {/* Studies list */}
               <div className="expression-studies">
