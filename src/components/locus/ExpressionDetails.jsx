@@ -1,9 +1,34 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
 import './LocusComponents.css';
 
 // Default number of conditions to show per study
 const DEFAULT_VISIBLE_CONDITIONS = 6;
+
+// Get color for heatmap cell based on fold change
+const getHeatmapColor = (fc, colors) => {
+  const logFc = Math.log2(fc);
+  const magnitude = Math.abs(logFc);
+
+  // For very small changes (near 1.0), use neutral gray
+  if (magnitude < 0.15) {
+    return colors.neutral;
+  }
+
+  const isUp = fc >= 1;
+  const baseColor = isUp ? colors.up : colors.down;
+
+  // Map magnitude to opacity: 0.45 to 0.9
+  const clampedMag = Math.min(magnitude, 2.0);
+  const opacity = 0.45 + (clampedMag * 0.225);
+
+  // Convert hex to rgba
+  const r = parseInt(baseColor.slice(1, 3), 16);
+  const g = parseInt(baseColor.slice(3, 5), 16);
+  const b = parseInt(baseColor.slice(5, 7), 16);
+
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+};
 
 // Muted color palette for fold changes
 // Up = warm muted rose, Down = cool muted slate blue
@@ -90,6 +115,8 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
   const [expandedStudies, setExpandedStudies] = useState({});
   const [showAllConditions, setShowAllConditions] = useState({});
   const [filterBucket, setFilterBucket] = useState('all');
+  const [hoveredCondition, setHoveredCondition] = useState(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
 
   // Get available organisms from the data - memoize to prevent new array reference each render
   const organisms = useMemo(() => {
@@ -111,6 +138,59 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
       conditions: study.conditions.filter(c => c.bucket === filterBucket)
     })).filter(study => study.conditions.length > 0);
   }, [orgData?.studies, filterBucket]);
+
+  // Flatten all conditions for heatmap strip (sorted by magnitude within each study)
+  const allConditions = useMemo(() => {
+    if (!filteredStudies.length) return [];
+
+    const conditions = [];
+    filteredStudies.forEach(study => {
+      // Sort conditions by magnitude (most extreme first) within each study
+      const sortedConditions = sortByMagnitude(study.conditions);
+      sortedConditions.forEach(condition => {
+        conditions.push({
+          ...condition,
+          studyId: study.study_id,
+          studyName: study.study_id.replace(/_/g, ' '),
+        });
+      });
+    });
+    return conditions;
+  }, [filteredStudies]);
+
+  // Refs for scrolling to studies
+  const studyRefs = useRef({});
+
+  // Scroll to a specific study when clicking on heatmap
+  const scrollToStudy = useCallback((studyId) => {
+    // Make sure the study is expanded
+    setExpandedStudies(prev => ({
+      ...prev,
+      [studyId]: true
+    }));
+
+    // Scroll to the study after a short delay to allow expansion
+    setTimeout(() => {
+      const studyElement = studyRefs.current[studyId];
+      if (studyElement) {
+        studyElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+  }, []);
+
+  // Handle heatmap cell hover
+  const handleHeatmapHover = useCallback((condition, event) => {
+    if (condition) {
+      const rect = event.currentTarget.getBoundingClientRect();
+      setTooltipPosition({
+        x: rect.left + rect.width / 2,
+        y: rect.top - 10
+      });
+      setHoveredCondition(condition);
+    } else {
+      setHoveredCondition(null);
+    }
+  }, []);
 
   // Get unique buckets for filter from the selected organism's data
   const availableBuckets = useMemo(() => {
@@ -234,6 +314,60 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
                 <span className="baseline-label-up">up →</span>
               </div>
 
+              {/* Debug: Always show heatmap section info */}
+              {console.log('HEATMAP DEBUG:', { filteredStudies: filteredStudies.length, allConditions: allConditions.length, first3: allConditions.slice(0, 3) })}
+              <div style={{ padding: '8px 12px', background: '#e3f2fd', border: '1px solid #2196f3', borderRadius: '4px', margin: '15px 0', fontSize: '13px' }}>
+                <strong>Heatmap Debug:</strong> filteredStudies={filteredStudies.length}, allConditions={allConditions.length}
+              </div>
+
+              {/* Global Heatmap Strip */}
+              {allConditions.length > 0 ? (
+                <div className="expression-heatmap-strip">
+                  <div className="heatmap-label">
+                    <span className="heatmap-gene-name">{orgData.gene_name || orgData.feature_name}</span>
+                    <span className="heatmap-condition-count">{allConditions.length} conditions</span>
+                  </div>
+                  <div className="heatmap-cells">
+                    {allConditions.map((condition, index) => (
+                      <div
+                        key={`${condition.studyId}-${condition.condition_id}-${index}`}
+                        className="heatmap-cell"
+                        style={{
+                          backgroundColor: getHeatmapColor(condition.fold_change, COLORS)
+                        }}
+                        onClick={() => scrollToStudy(condition.studyId)}
+                        onMouseEnter={(e) => handleHeatmapHover(condition, e)}
+                        onMouseLeave={() => handleHeatmapHover(null)}
+                        role="button"
+                        tabIndex={0}
+                        aria-label={`${condition.label}: ${formatFoldChange(condition.fold_change)}`}
+                      />
+                    ))}
+                  </div>
+                  {/* Tooltip */}
+                  {hoveredCondition && (
+                    <div
+                      className="heatmap-tooltip"
+                      style={{
+                        left: tooltipPosition.x,
+                        top: tooltipPosition.y,
+                      }}
+                    >
+                      <div className="tooltip-condition">{hoveredCondition.label}</div>
+                      <div className="tooltip-fold-change">
+                        {formatFoldChange(hoveredCondition.fold_change)}
+                        {hoveredCondition.fold_change > 1 ? ' ↑' : hoveredCondition.fold_change < 1 ? ' ↓' : ''}
+                      </div>
+                      <div className="tooltip-study">{hoveredCondition.studyName}</div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div style={{ padding: '10px', background: '#fff3cd', border: '1px solid #ffc107', borderRadius: '4px', margin: '20px 0' }}>
+                  Debug: allConditions is empty (filteredStudies: {filteredStudies.length}, total conditions: {filteredStudies.reduce((sum, s) => sum + s.conditions.length, 0)})
+                </div>
+              )}
+
               {/* Studies list */}
               <div className="expression-studies">
                 {filteredStudies.map(study => {
@@ -249,7 +383,11 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
                   const hiddenCount = sortedConditions.length - DEFAULT_VISIBLE_CONDITIONS;
 
                   return (
-                    <div key={study.study_id} className="expression-study">
+                    <div
+                      key={study.study_id}
+                      className="expression-study"
+                      ref={el => studyRefs.current[study.study_id] = el}
+                    >
                       <div
                         className="study-header"
                         onClick={() => toggleStudy(study.study_id)}
