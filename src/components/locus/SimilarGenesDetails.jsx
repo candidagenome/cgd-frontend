@@ -193,48 +193,54 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
       // Get the organism display name for the API
       const organismDisplay = getOrganismDisplay(organism);
 
-      // Build list of genes: similar genes first, then query gene at bottom
-      const queryGeneName = data.query_gene.systematic_name || data.query_gene.gene_name;
-      const queryDisplayName = data.query_gene.gene_name || data.query_gene.systematic_name;
+      // Query gene identifiers
+      const querySystematicName = data.query_gene.systematic_name;
+      const queryStandardName = data.query_gene.gene_name;
+
+      // Build list of genes: similar genes only (we'll handle query gene separately)
       const similarGeneNames = deduplicatedGenes.slice(0, 10).map(g => g.feature_name || g.gene_name);
-      const allGeneNames = [...similarGeneNames, queryGeneName];
+
+      // Include query gene in the API call using systematic name
+      const queryNameForApi = querySystematicName || queryStandardName;
+      const allGeneNames = [...similarGeneNames, queryNameForApi];
 
       // Fetch expression data for all genes
       const expressionResults = await expressionApi.getMultiGeneExpression(allGeneNames, organismDisplay);
 
-      // Find the query gene entry (may be returned with different name)
-      const queryIndex = expressionResults.findIndex(r =>
-        r.geneName === queryGeneName ||
-        r.geneName === queryDisplayName ||
-        r.data?.feature_name === queryGeneName ||
-        r.data?.gene_name === queryDisplayName
+      // Find and remove any entry that matches the query gene
+      const filteredResults = expressionResults.filter(r => {
+        const isQueryGene =
+          r.geneName === querySystematicName ||
+          r.geneName === queryStandardName ||
+          r.data?.feature_name === querySystematicName ||
+          r.data?.gene_name === queryStandardName;
+        return !isQueryGene;
+      });
+
+      // Find the query gene entry from API results (if it exists)
+      const queryEntry = expressionResults.find(r =>
+        r.geneName === querySystematicName ||
+        r.geneName === queryStandardName ||
+        r.data?.feature_name === querySystematicName ||
+        r.data?.gene_name === queryStandardName
       );
 
-      // Reorder: put similar genes first, then query gene at the end
-      let orderedResults;
-      if (queryIndex >= 0) {
-        // Remove query gene from current position and add to end
-        const queryEntry = expressionResults[queryIndex];
-        orderedResults = [
-          ...expressionResults.slice(0, queryIndex),
-          ...expressionResults.slice(queryIndex + 1),
-          queryEntry
-        ];
-      } else {
-        // Query gene not in results, add it manually at the end
-        orderedResults = [
-          ...expressionResults,
-          {
-            geneName: queryGeneName,
-            data: {
-              gene_name: queryDisplayName,
-              feature_name: queryGeneName,
-              studies: []
-            },
-            error: null
-          }
-        ];
-      }
+      // Build the final query gene entry with correct names
+      const finalQueryEntry = {
+        geneName: querySystematicName || queryStandardName,
+        data: {
+          // Use API data if available, but ensure correct names
+          ...(queryEntry?.data || {}),
+          gene_name: queryStandardName || querySystematicName,
+          feature_name: querySystematicName || queryStandardName,
+          studies: queryEntry?.data?.studies || []
+        },
+        error: queryEntry?.error || null,
+        isQueryGene: true  // Flag to identify query gene
+      };
+
+      // Build ordered results: similar genes first, then query gene at the end
+      const orderedResults = [...filteredResults, finalQueryEntry];
 
       setHeatmapData(orderedResults);
     } catch (err) {
@@ -243,6 +249,11 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
       setHeatmapLoading(false);
     }
   }, [data, deduplicatedGenes, organism]);
+
+  // Reset heatmap data when similar genes data changes
+  useEffect(() => {
+    setHeatmapData(null);
+  }, [data]);
 
   // Auto-load heatmap data when similar genes data is available
   useEffect(() => {

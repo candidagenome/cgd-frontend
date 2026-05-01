@@ -116,8 +116,9 @@ function MultiGeneHeatmap({
     const studiesArr = Array.from(studySet).sort();
 
     // Build gene rows with fold change for each condition
-    // Query gene is at the bottom (last in array)
-    const rows = expressionData.map(({ geneName, data }, index) => {
+    // Query gene is at the bottom (last in array) and may have isQueryGene flag
+    const rows = expressionData.map((entry, index) => {
+      const { geneName, data, isQueryGene } = entry;
       const foldChanges = {};
 
       if (data?.studies) {
@@ -128,17 +129,27 @@ function MultiGeneHeatmap({
         });
       }
 
+      // Query gene is either flagged or is the last entry
       const isLastGene = index === expressionData.length - 1;
+      const isQuery = isQueryGene || isLastGene;
+
       // For query gene, use queryGene prop as fallback for display name
       const queryDisplayName = queryGene?.gene_name || queryGene?.systematic_name || geneName;
+
+      // Determine display name: prefer data.gene_name, fallback to queryGene prop for query gene
+      let displayName;
+      if (isQuery) {
+        displayName = data?.gene_name || queryDisplayName;
+      } else {
+        displayName = data?.gene_name || geneName;
+      }
+
       return {
         geneName,
-        displayName: isLastGene
-          ? (data?.gene_name || queryDisplayName)
-          : (data?.gene_name || geneName),
+        displayName,
         featureName: data?.feature_name || geneName,
-        isQuery: isLastGene,
-        correlation: isLastGene ? null : similarGenes?.find(g =>
+        isQuery,
+        correlation: isQuery ? null : similarGenes?.find(g =>
           g.feature_name === geneName || g.gene_name === geneName
         )?.correlation,
         foldChanges,
