@@ -209,9 +209,9 @@ function SimilarGenesDetails({ locusName, selectedOrganism, orthologOrganisms = 
       // Get the organism display name for the API
       const organismDisplay = getOrganismDisplay(organism);
 
-      // Query gene identifiers - with fallback to locusName
-      const querySystematicName = data.query_gene.systematic_name || locusName;
-      const queryStandardName = data.query_gene.gene_name || locusName;
+      // Query gene identifiers - with fallback to effectiveLocusName (ortholog if applicable)
+      const querySystematicName = data.query_gene.systematic_name || effectiveLocusName;
+      const queryStandardName = data.query_gene.gene_name || effectiveLocusName;
 
       // Build list of genes: similar genes only (we'll handle query gene separately)
       const similarGeneNames = deduplicatedGenes.slice(0, 10).map(g => g.feature_name || g.gene_name);
@@ -279,7 +279,7 @@ function SimilarGenesDetails({ locusName, selectedOrganism, orthologOrganisms = 
     } finally {
       setHeatmapLoading(false);
     }
-  }, [data, deduplicatedGenes, organism]);
+  }, [data, deduplicatedGenes, organism, effectiveLocusName]);
 
   // Reset heatmap data when similar genes data changes
   useEffect(() => {
@@ -396,7 +396,7 @@ function SimilarGenesDetails({ locusName, selectedOrganism, orthologOrganisms = 
             <div className="summary-item">
               <span className="summary-label">Query:</span>
               <span className="summary-value">
-                {data.query_gene?.gene_name || data.query_gene?.systematic_name || locusName}
+                {data.query_gene?.gene_name || data.query_gene?.systematic_name || effectiveLocusName}
                 {data.query_gene?.systematic_name && data.query_gene?.gene_name && (
                   <span className="systematic-name"> ({data.query_gene.systematic_name})</span>
                 )}
