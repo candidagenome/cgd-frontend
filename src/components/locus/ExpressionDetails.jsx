@@ -528,18 +528,6 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
               </div>
               )}
 
-              {/* Warnings */}
-              {orgData.warnings && orgData.warnings.length > 0 && (
-                <div className="expression-warnings">
-                  <h4>Notes:</h4>
-                  <ul>
-                    {orgData.warnings.map((warning, i) => (
-                      <li key={i}>{warning}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
               {/* Attribution */}
               <div className="expression-attribution">
                 <p>
