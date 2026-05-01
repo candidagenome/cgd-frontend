@@ -19,31 +19,51 @@ import locusApi from './locusApi';
 
 export const expressionApi = {
   /**
-   * Get expression details for multiple genes in parallel.
-   * Returns array of expression data for each gene.
+   * Get expression details for multiple genes using batch endpoint.
+   * Much faster than making separate requests for each gene.
+   *
+   * @param {string[]} geneNames - Array of gene names to fetch
+   * @param {string} organism - Organism display name (e.g., "Candida albicans SC5314")
+   * @returns {Promise<Array>} Array of expression data for each gene
    */
   getMultiGeneExpression: async (geneNames, organism) => {
-    const results = await Promise.all(
-      geneNames.map(async (name) => {
-        try {
-          const data = await locusApi.getExpressionDetails(name);
-          // Extract data for the specified organism
-          const orgData = data?.results?.[organism];
-          return {
-            geneName: name,
-            data: orgData || null,
-            error: orgData ? null : 'No data for organism',
-          };
-        } catch (err) {
-          return {
-            geneName: name,
-            data: null,
-            error: err.message,
-          };
-        }
-      })
-    );
-    return results;
+    try {
+      // Use the new batch endpoint for better performance
+      const response = await api.post('/api/expression/batch', {
+        gene_names: geneNames,
+        organism: organism,
+      });
+
+      // Transform response to match expected format
+      return response.data.results.map((result) => ({
+        geneName: result.gene_name,
+        data: result.data,
+        error: result.error,
+      }));
+    } catch (err) {
+      // Fallback to parallel individual requests if batch fails
+      console.warn('Batch expression endpoint failed, falling back to individual requests:', err.message);
+      const results = await Promise.all(
+        geneNames.map(async (name) => {
+          try {
+            const data = await locusApi.getExpressionDetails(name);
+            const orgData = data?.results?.[organism];
+            return {
+              geneName: name,
+              data: orgData || null,
+              error: orgData ? null : 'No data for organism',
+            };
+          } catch (fetchErr) {
+            return {
+              geneName: name,
+              data: null,
+              error: fetchErr.message,
+            };
+          }
+        })
+      );
+      return results;
+    }
   },
 
   /**
