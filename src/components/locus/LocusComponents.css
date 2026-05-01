@@ -4138,8 +4138,7 @@ a:hover {
 }
 
 .multi-gene-heatmap-container .heatmap-row.query-row {
-  outline: 2px solid #c62828;
-  outline-offset: -1px;
+  /* Query gene is indicated by red text label - no box needed */
 }
 
 .multi-gene-heatmap-container .heatmap-cell {
