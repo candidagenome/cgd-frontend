@@ -30,13 +30,13 @@ const getHeatmapColor = (fc, colors) => {
   return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 };
 
-// Muted color palette for fold changes
-// Up = warm muted rose, Down = cool muted slate blue
+// Color palette - improved for better contrast and scientific look
+// Up = deep red, Down = muted blue (publication-quality style)
 // Uses opacity to indicate magnitude (cleaner, less visual noise)
 const COLORS = {
-  up: '#c07a7a',      // softer muted rose (less aggressive)
-  down: '#5f7fa6',    // slightly darker slate blue (better contrast)
-  neutral: '#e5e7eb', // soft gray for ~1x
+  up: '#B22222',      // deep red for upregulation
+  down: '#3B6FB6',    // muted blue for downregulation
+  neutral: '#f7f7f7', // very light neutral (almost white)
 };
 
 const getFoldChangeStyle = (fc) => {

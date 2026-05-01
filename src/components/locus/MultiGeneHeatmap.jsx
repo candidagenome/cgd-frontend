@@ -2,12 +2,12 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import './LocusComponents.css';
 
-// Color palette matching ExpressionDetails
+// Color palette - improved for better contrast and scientific look
 const COLORS = {
-  up: '#c07a7a',
-  down: '#5f7fa6',
-  neutral: '#e5e7eb',
-  noData: '#f5f5f5',
+  up: '#B22222',      // deep red for upregulation
+  down: '#3B6FB6',    // muted blue for downregulation
+  neutral: '#f7f7f7', // very light neutral (almost white)
+  noData: '#f0f0f0',  // slightly darker for "no data"
 };
 
 // Category/bucket colors for the category bar
@@ -32,22 +32,25 @@ const SORT_OPTIONS = [
   { value: 'clustered', label: 'Clustered' },
 ];
 
-// Get color for heatmap cell based on fold change
+// Get color for heatmap cell based on fold change (log2 scale)
 const getHeatmapColor = (fc, colors) => {
   if (fc == null) return colors.noData;
 
   const logFc = Math.log2(fc);
   const magnitude = Math.abs(logFc);
 
-  if (magnitude < 0.15) {
+  // Very small changes → neutral (almost white)
+  if (magnitude < 0.2) {
     return colors.neutral;
   }
 
   const isUp = fc >= 1;
   const baseColor = isUp ? colors.up : colors.down;
 
-  const clampedMag = Math.min(magnitude, 2.0);
-  const opacity = 0.45 + (clampedMag * 0.225);
+  // Scale: log2 magnitude 0.2 → 0.3 opacity, 2.0+ → 0.85 opacity
+  // This gives clear visual separation while keeping extremes readable
+  const clampedMag = Math.min(magnitude, 2.5);
+  const opacity = 0.25 + (clampedMag * 0.24);
 
   const r = parseInt(baseColor.slice(1, 3), 16);
   const g = parseInt(baseColor.slice(3, 5), 16);
@@ -344,16 +347,20 @@ function MultiGeneHeatmap({
           <div className="heatmap-grid-wrapper">
             {/* Category color bar */}
             <div className="heatmap-category-bar">
-              {filteredConditions.map(condition => (
-                <div
-                  key={`cat-${condition.id}`}
-                  className="category-cell"
-                  style={{
-                    backgroundColor: CATEGORY_COLORS[condition.bucket] || '#ccc'
-                  }}
-                  title={CATEGORY_LABELS[condition.bucket] || condition.bucket}
-                />
-              ))}
+              {filteredConditions.map((condition, idx) => {
+                const prevBucket = idx > 0 ? filteredConditions[idx - 1].bucket : null;
+                const isBoundary = prevBucket && prevBucket !== condition.bucket;
+                return (
+                  <div
+                    key={`cat-${condition.id}`}
+                    className={`category-cell ${isBoundary ? 'category-boundary' : ''}`}
+                    style={{
+                      backgroundColor: CATEGORY_COLORS[condition.bucket] || '#ccc'
+                    }}
+                    title={CATEGORY_LABELS[condition.bucket] || condition.bucket}
+                  />
+                );
+              })}
             </div>
 
             {/* Condition headers */}
@@ -379,12 +386,14 @@ function MultiGeneHeatmap({
                 key={gene.geneName}
                 className={`heatmap-row ${gene.isQuery ? 'query-row' : ''}`}
               >
-                {filteredConditions.map(condition => {
+                {filteredConditions.map((condition, idx) => {
                   const fc = gene.foldChanges[condition.id];
+                  const prevBucket = idx > 0 ? filteredConditions[idx - 1].bucket : null;
+                  const isBoundary = prevBucket && prevBucket !== condition.bucket;
                   return (
                     <div
                       key={`${gene.geneName}-${condition.id}`}
-                      className="heatmap-cell"
+                      className={`heatmap-cell ${isBoundary ? 'category-boundary' : ''}`}
                       style={{
                         backgroundColor: getHeatmapColor(fc, COLORS)
                       }}
@@ -416,6 +425,7 @@ function MultiGeneHeatmap({
             {formatFoldChange(hoveredCell.fc)}
             {hoveredCell.fc > 1 ? ' ↑' : hoveredCell.fc < 1 ? ' ↓' : ''}
           </div>
+          <div className="tooltip-category">{CATEGORY_LABELS[hoveredCell.condition.bucket] || hoveredCell.condition.bucket}</div>
           <div className="tooltip-study">{hoveredCell.condition.studyName}</div>
         </div>
       )}

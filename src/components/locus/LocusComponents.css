@@ -3841,6 +3841,12 @@ a:hover {
   color: #bbb;
 }
 
+.tooltip-category {
+  font-size: 0.85em;
+  color: #aaa;
+  font-style: italic;
+}
+
 /* Responsive expression styles */
 @media (max-width: 768px) {
   .expression-summary {
@@ -4137,6 +4143,11 @@ a:hover {
   min-width: 16px;
   height: 8px;
   border-right: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Category boundary separator - subtle vertical line when category changes */
+.multi-gene-heatmap-container .category-boundary {
+  border-left: 2px solid rgba(0, 0, 0, 0.2);
 }
 
 .multi-gene-heatmap-container .heatmap-corner {
