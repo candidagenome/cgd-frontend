@@ -14,7 +14,38 @@ export const ORGANISM_DISPLAY_MAP = Object.fromEntries(
   Object.entries(ORGANISM_MAP).map(([display, api]) => [api, display])
 );
 
+// Import locusApi for expression details
+import locusApi from './locusApi';
+
 export const expressionApi = {
+  /**
+   * Get expression details for multiple genes in parallel.
+   * Returns array of expression data for each gene.
+   */
+  getMultiGeneExpression: async (geneNames, organism) => {
+    const results = await Promise.all(
+      geneNames.map(async (name) => {
+        try {
+          const data = await locusApi.getExpressionDetails(name);
+          // Extract data for the specified organism
+          const orgData = data?.results?.[organism];
+          return {
+            geneName: name,
+            data: orgData || null,
+            error: orgData ? null : 'No data for organism',
+          };
+        } catch (err) {
+          return {
+            geneName: name,
+            data: null,
+            error: err.message,
+          };
+        }
+      })
+    );
+    return results;
+  },
+
   /**
    * Get genes with similar expression profiles to a given gene.
    *

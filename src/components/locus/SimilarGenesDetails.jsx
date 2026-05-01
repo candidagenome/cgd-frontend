@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import { expressionApi, ORGANISM_MAP, ORGANISM_DISPLAY_MAP } from '../../api/expressionApi';
+import MultiGeneHeatmap from './MultiGeneHeatmap';
 import './LocusComponents.css';
 import './SimilarGenesDetails.css';
 
@@ -30,6 +31,11 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
   const [organism, setOrganism] = useState('C_albicans_SC5314_A22');
   const [metric, setMetric] = useState('pearson');
   const [limit, setLimit] = useState(20);
+
+  // Heatmap state
+  const [showHeatmap, setShowHeatmap] = useState(false);
+  const [heatmapLoading, setHeatmapLoading] = useState(false);
+  const [heatmapData, setHeatmapData] = useState(null);
 
   // Set organism based on selected organism from parent
   useEffect(() => {
@@ -177,6 +183,38 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
     return `${seconds.toFixed(1)}s`;
   };
 
+  // Load heatmap data for query gene + similar genes
+  const loadHeatmapData = useCallback(async () => {
+    if (!data?.query_gene || !deduplicatedGenes.length) return;
+
+    setHeatmapLoading(true);
+    setShowHeatmap(true);
+
+    try {
+      // Get the organism display name for the API
+      const organismDisplay = getOrganismDisplay(organism);
+
+      // Build list of genes: query gene first, then similar genes
+      const queryGeneName = data.query_gene.systematic_name || data.query_gene.gene_name;
+      const similarGeneNames = deduplicatedGenes.slice(0, 10).map(g => g.feature_name || g.gene_name);
+      const allGeneNames = [queryGeneName, ...similarGeneNames];
+
+      // Fetch expression data for all genes
+      const expressionResults = await expressionApi.getMultiGeneExpression(allGeneNames, organismDisplay);
+      setHeatmapData(expressionResults);
+    } catch (err) {
+      console.error('Failed to load heatmap data:', err);
+    } finally {
+      setHeatmapLoading(false);
+    }
+  }, [data, deduplicatedGenes, organism]);
+
+  // Close heatmap
+  const closeHeatmap = useCallback(() => {
+    setShowHeatmap(false);
+    setHeatmapData(null);
+  }, []);
+
   // Get display name for organism
   const getOrganismDisplay = (apiOrganism) => {
     return ORGANISM_DISPLAY_MAP[apiOrganism] || apiOrganism;
@@ -282,6 +320,23 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
             </div>
           </div>
 
+          {/* View Heatmap Button */}
+          {deduplicatedGenes.length > 0 && (
+            <div className="similar-genes-actions">
+              <button
+                className="view-heatmap-btn"
+                onClick={loadHeatmapData}
+                disabled={heatmapLoading}
+              >
+                <span className="btn-icon">&#9638;</span>
+                View Co-expression Heatmap
+              </button>
+              <span className="action-hint">
+                Compare expression patterns of {data.query_gene?.gene_name || locusName} with top {Math.min(10, deduplicatedGenes.length)} similar genes
+              </span>
+            </div>
+          )}
+
           {/* Results Table */}
           {deduplicatedGenes.length > 0 ? (
             <div className="similar-genes-grid-wrapper ag-theme-alpine">
@@ -322,6 +377,17 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
         <div className="no-data">
           Select options above to find genes with similar expression profiles.
         </div>
+      )}
+
+      {/* Multi-Gene Heatmap Modal */}
+      {showHeatmap && (
+        <MultiGeneHeatmap
+          queryGene={data?.query_gene}
+          similarGenes={deduplicatedGenes}
+          expressionData={heatmapData}
+          loading={heatmapLoading}
+          onClose={closeHeatmap}
+        />
       )}
     </div>
   );
