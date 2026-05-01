@@ -3333,7 +3333,6 @@ a:hover {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 10px;
   padding: 8px 15px;
   background: #e3f2fd;
   border-radius: 4px;
@@ -3690,6 +3689,58 @@ a:hover {
   border: 1px solid #ffcdd2;
   border-radius: 4px;
   color: #c62828;
+}
+
+/* Expression Controls (Filter + View Toggle) */
+.expression-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.expression-view-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.expression-view-toggle .view-toggle-label {
+  font-size: 0.9em;
+  color: #555;
+}
+
+.expression-view-toggle .view-toggle-buttons {
+  display: flex;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.expression-view-toggle .view-toggle-btn {
+  padding: 6px 12px;
+  border: none;
+  background: #fff;
+  color: #555;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  border-right: 1px solid #ddd;
+}
+
+.expression-view-toggle .view-toggle-btn:last-child {
+  border-right: none;
+}
+
+.expression-view-toggle .view-toggle-btn:hover {
+  background: #f5f5f5;
+}
+
+.expression-view-toggle .view-toggle-btn.active {
+  background: #1976d2;
+  color: white;
 }
 
 /* Heatmap Strip Styles */

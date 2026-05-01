@@ -115,6 +115,7 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
   const [expandedStudies, setExpandedStudies] = useState({});
   const [showAllConditions, setShowAllConditions] = useState({});
   const [filterBucket, setFilterBucket] = useState('all');
+  const [viewMode, setViewMode] = useState('both'); // 'bars', 'heatmap', 'both'
   const [hoveredCondition, setHoveredCondition] = useState(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
 
@@ -282,21 +283,50 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
 
           {orgData.studies && orgData.studies.length > 0 ? (
             <>
-              {/* Filter controls */}
-              <div className="expression-filters">
-                <label>Filter by category: </label>
-                <select
-                  value={filterBucket}
-                  onChange={(e) => setFilterBucket(e.target.value)}
-                  className="bucket-filter"
-                >
-                  <option value="all">All categories</option>
-                  {availableBuckets.map(bucket => (
-                    <option key={bucket} value={bucket}>
-                      {BUCKET_INFO[bucket]?.label || bucket}
-                    </option>
-                  ))}
-                </select>
+              {/* Filter and View controls */}
+              <div className="expression-controls">
+                <div className="expression-filters">
+                  <label>Filter by category: </label>
+                  <select
+                    value={filterBucket}
+                    onChange={(e) => setFilterBucket(e.target.value)}
+                    className="bucket-filter"
+                  >
+                    <option value="all">All categories</option>
+                    {availableBuckets.map(bucket => (
+                      <option key={bucket} value={bucket}>
+                        {BUCKET_INFO[bucket]?.label || bucket}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="expression-view-toggle">
+                  <span className="view-toggle-label">View:</span>
+                  <div className="view-toggle-buttons">
+                    <button
+                      className={`view-toggle-btn ${viewMode === 'bars' ? 'active' : ''}`}
+                      onClick={() => setViewMode('bars')}
+                      title="Show bar charts only"
+                    >
+                      Bars
+                    </button>
+                    <button
+                      className={`view-toggle-btn ${viewMode === 'heatmap' ? 'active' : ''}`}
+                      onClick={() => setViewMode('heatmap')}
+                      title="Show heatmap only"
+                    >
+                      Heatmap
+                    </button>
+                    <button
+                      className={`view-toggle-btn ${viewMode === 'both' ? 'active' : ''}`}
+                      onClick={() => setViewMode('both')}
+                      title="Show both views"
+                    >
+                      Both
+                    </button>
+                  </div>
+                </div>
               </div>
 
               {/* Legend - matches bar opacity scale */}
@@ -314,8 +344,8 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
                 <span className="baseline-label-up">up →</span>
               </div>
 
-              {/* Global Heatmap Strip */}
-              {allConditions.length > 0 ? (
+              {/* Global Heatmap Strip - show in 'heatmap' or 'both' mode */}
+              {(viewMode === 'heatmap' || viewMode === 'both') && allConditions.length > 0 ? (
                 <div className="expression-heatmap-strip">
                   <div className="heatmap-label">
                     <span className="heatmap-gene-name">{orgData.gene_name || orgData.feature_name}</span>
@@ -358,7 +388,8 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
                 </div>
               ) : null}
 
-              {/* Studies list */}
+              {/* Studies list - show in 'bars' or 'both' mode */}
+              {(viewMode === 'bars' || viewMode === 'both') && (
               <div className="expression-studies">
                 {filteredStudies.map(study => {
                   const isExpanded = expandedStudies[study.study_id] !== false; // Default expanded
@@ -489,6 +520,7 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
                   );
                 })}
               </div>
+              )}
 
               {/* Warnings */}
               {orgData.warnings && orgData.warnings.length > 0 && (
