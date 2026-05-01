@@ -22,7 +22,7 @@ const ORGANISMS = Object.entries(ORGANISM_MAP).map(([display, api]) => ({
   api,
 }));
 
-function SimilarGenesDetails({ locusName, selectedOrganism, orthologOrganisms = [] }) {
+function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, orthologOrganisms = [] }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
@@ -47,6 +47,18 @@ function SimilarGenesDetails({ locusName, selectedOrganism, orthologOrganisms = 
       }
     }
   }, [selectedOrganism]);
+
+  // Handle organism change - update local state and notify parent
+  const handleOrganismChange = useCallback((newOrganism) => {
+    setOrganism(newOrganism);
+    // Notify parent to update the page header
+    if (onOrganismChange) {
+      const displayName = ORGANISM_DISPLAY_MAP[newOrganism];
+      if (displayName) {
+        onOrganismChange(displayName);
+      }
+    }
+  }, [onOrganismChange]);
 
   // Get the effective locus name for the current organism (use ortholog if available)
   const effectiveLocusName = useMemo(() => {
@@ -307,7 +319,7 @@ function SimilarGenesDetails({ locusName, selectedOrganism, orthologOrganisms = 
           <select
             id="organism-select"
             value={organism}
-            onChange={(e) => setOrganism(e.target.value)}
+            onChange={(e) => handleOrganismChange(e.target.value)}
             disabled={loading}
           >
             {ORGANISMS.map((org) => (
