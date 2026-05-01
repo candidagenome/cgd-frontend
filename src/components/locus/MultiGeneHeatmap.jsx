@@ -129,9 +129,13 @@ function MultiGeneHeatmap({
       }
 
       const isLastGene = index === expressionData.length - 1;
+      // For query gene, use queryGene prop as fallback for display name
+      const queryDisplayName = queryGene?.gene_name || queryGene?.systematic_name || geneName;
       return {
         geneName,
-        displayName: data?.gene_name || geneName,
+        displayName: isLastGene
+          ? (data?.gene_name || queryDisplayName)
+          : (data?.gene_name || geneName),
         featureName: data?.feature_name || geneName,
         isQuery: isLastGene,
         correlation: isLastGene ? null : similarGenes?.find(g =>
@@ -146,7 +150,7 @@ function MultiGeneHeatmap({
       studies: studiesArr,
       geneRows: rows
     };
-  }, [expressionData, similarGenes]);
+  }, [expressionData, similarGenes, queryGene]);
 
   // Filter and sort conditions
   const filteredConditions = useMemo(() => {
