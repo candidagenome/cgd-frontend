@@ -32,8 +32,8 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
   const [metric, setMetric] = useState('pearson');
   const [limit, setLimit] = useState(20);
 
-  // Heatmap state
-  const [showHeatmap, setShowHeatmap] = useState(false);
+  // View mode: 'heatmap' (default) or 'table'
+  const [viewMode, setViewMode] = useState('heatmap');
   const [heatmapLoading, setHeatmapLoading] = useState(false);
   const [heatmapData, setHeatmapData] = useState(null);
 
@@ -188,7 +188,6 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
     if (!data?.query_gene || !deduplicatedGenes.length) return;
 
     setHeatmapLoading(true);
-    setShowHeatmap(true);
 
     try {
       // Get the organism display name for the API
@@ -209,11 +208,12 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
     }
   }, [data, deduplicatedGenes, organism]);
 
-  // Close heatmap
-  const closeHeatmap = useCallback(() => {
-    setShowHeatmap(false);
-    setHeatmapData(null);
-  }, []);
+  // Auto-load heatmap data when similar genes data is available
+  useEffect(() => {
+    if (data?.query_gene && deduplicatedGenes.length > 0 && !heatmapData && !heatmapLoading) {
+      loadHeatmapData();
+    }
+  }, [data, deduplicatedGenes, heatmapData, heatmapLoading, loadHeatmapData]);
 
   // Get display name for organism
   const getOrganismDisplay = (apiOrganism) => {
@@ -271,6 +271,24 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
             ))}
           </select>
         </div>
+
+        <div className="control-group view-toggle">
+          <label>View:</label>
+          <div className="view-toggle-buttons">
+            <button
+              className={`view-toggle-btn ${viewMode === 'heatmap' ? 'active' : ''}`}
+              onClick={() => setViewMode('heatmap')}
+            >
+              Heatmap
+            </button>
+            <button
+              className={`view-toggle-btn ${viewMode === 'table' ? 'active' : ''}`}
+              onClick={() => setViewMode('table')}
+            >
+              Table
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Loading State */}
@@ -320,37 +338,38 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
             </div>
           </div>
 
-          {/* View Heatmap Button */}
-          {deduplicatedGenes.length > 0 && (
-            <div className="similar-genes-actions">
-              <button
-                className="view-heatmap-btn"
-                onClick={loadHeatmapData}
-                disabled={heatmapLoading}
-              >
-                <span className="btn-icon">&#9638;</span>
-                View Co-expression Heatmap
-              </button>
-              <span className="action-hint">
-                Compare expression patterns of {data.query_gene?.gene_name || locusName} with top {Math.min(10, deduplicatedGenes.length)} similar genes
-              </span>
-            </div>
-          )}
-
-          {/* Results Table */}
+          {/* Results - Heatmap or Table based on viewMode */}
           {deduplicatedGenes.length > 0 ? (
-            <div className="similar-genes-grid-wrapper ag-theme-alpine">
-              <AgGridReact
-                rowData={deduplicatedGenes}
-                columnDefs={columnDefs}
-                defaultColDef={defaultColDef}
-                domLayout="autoHeight"
-                pagination={true}
-                paginationPageSize={20}
-                paginationPageSizeSelector={[10, 20, 50, 100]}
-                suppressCellFocus={true}
-              />
-            </div>
+            <>
+              {/* Heatmap View */}
+              {viewMode === 'heatmap' && (
+                <div className="coexpression-heatmap-inline">
+                  <MultiGeneHeatmap
+                    queryGene={data?.query_gene}
+                    similarGenes={deduplicatedGenes}
+                    expressionData={heatmapData}
+                    loading={heatmapLoading}
+                    inline={true}
+                  />
+                </div>
+              )}
+
+              {/* Table View */}
+              {viewMode === 'table' && (
+                <div className="similar-genes-grid-wrapper ag-theme-alpine">
+                  <AgGridReact
+                    rowData={deduplicatedGenes}
+                    columnDefs={columnDefs}
+                    defaultColDef={defaultColDef}
+                    domLayout="autoHeight"
+                    pagination={true}
+                    paginationPageSize={20}
+                    paginationPageSizeSelector={[10, 20, 50, 100]}
+                    suppressCellFocus={true}
+                  />
+                </div>
+              )}
+            </>
           ) : (
             <div className="no-data">
               No similar genes found for this query. This may be because:
@@ -379,16 +398,6 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
         </div>
       )}
 
-      {/* Multi-Gene Heatmap Modal */}
-      {showHeatmap && (
-        <MultiGeneHeatmap
-          queryGene={data?.query_gene}
-          similarGenes={deduplicatedGenes}
-          expressionData={heatmapData}
-          loading={heatmapLoading}
-          onClose={closeHeatmap}
-        />
-      )}
     </div>
   );
 }

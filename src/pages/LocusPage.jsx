@@ -17,7 +17,7 @@ import './LocusPage.css';
 // Sub-tabs for the Expression tab (extensible for future additions)
 const EXPRESSION_SUBTABS = [
   { id: 'data', label: 'Expression Data' },
-  { id: 'similar', label: 'Similar Genes' },
+  { id: 'coexpression', label: 'Co-expression' },
 ];
 
 const TABS = [
@@ -205,7 +205,7 @@ function LocusPage() {
                 orthologOrganisms={orthologOrganisms}
               />
             )}
-            {expressionSubTab === 'similar' && (
+            {expressionSubTab === 'coexpression' && (
               <SimilarGenesDetails
                 locusName={name}
                 selectedOrganism={selectedOrganism}

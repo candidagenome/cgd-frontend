@@ -264,19 +264,98 @@
   }
 }
 
-/* Actions Bar (View Heatmap button) */
-.similar-genes-actions {
+/* View Toggle in Controls */
+.similar-genes-controls .view-toggle {
+  margin-left: auto;
+}
+
+.similar-genes-controls .view-toggle-buttons {
+  display: flex;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.similar-genes-controls .view-toggle-btn {
+  padding: 6px 14px;
+  border: none;
+  background: #fff;
+  color: #555;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  border-right: 1px solid #ddd;
+}
+
+.similar-genes-controls .view-toggle-btn:last-child {
+  border-right: none;
+}
+
+.similar-genes-controls .view-toggle-btn:hover {
+  background: #f5f5f5;
+}
+
+.similar-genes-controls .view-toggle-btn.active {
+  background: #1976d2;
+  color: white;
+}
+
+/* Inline Heatmap Container */
+.coexpression-heatmap-inline {
+  margin-top: 15px;
+}
+
+.multi-gene-heatmap-inline {
+  background: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.multi-gene-heatmap-inline .multi-gene-heatmap-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e0e0e0;
+  background: #fff;
+}
+
+.multi-gene-heatmap-inline .multi-gene-heatmap-header.inline-header {
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 12px 15px;
-  background-color: #fafafa;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  margin-bottom: 15px;
 }
 
-.similar-genes-actions .action-hint {
-  font-size: 0.85em;
-  color: #666;
+.multi-gene-heatmap-inline .heatmap-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.multi-gene-heatmap-inline .heatmap-controls label {
+  font-size: 0.9em;
+  color: #555;
+}
+
+.multi-gene-heatmap-inline .heatmap-controls select {
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.multi-gene-heatmap-inline .multi-gene-heatmap-legend {
+  padding: 10px 16px;
+  background: #f5f5f5;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.multi-gene-heatmap-inline .multi-gene-heatmap-container {
+  padding: 16px;
+  overflow-x: auto;
+}
+
+.multi-gene-heatmap-inline .multi-gene-heatmap-footer {
+  padding: 10px 16px;
+  border-top: 1px solid #e0e0e0;
+  background: #fff;
 }

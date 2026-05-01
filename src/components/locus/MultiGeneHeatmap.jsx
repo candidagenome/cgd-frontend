@@ -67,12 +67,13 @@ function MultiGeneHeatmap({
   similarGenes,
   expressionData,
   loading,
-  onClose
+  onClose,
+  inline = false
 }) {
   const [hoveredCell, setHoveredCell] = useState(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [selectedStudy, setSelectedStudy] = useState('all');
-  const [sortBy, setSortBy] = useState('study');
+  const [sortBy, setSortBy] = useState('clustered');
 
   // Build condition map from all genes' expression data
   const { conditions, studies, geneRows } = useMemo(() => {
@@ -212,19 +213,31 @@ function MultiGeneHeatmap({
   }, []);
 
   if (loading) {
+    const loadingContent = (
+      <div className="multi-gene-heatmap-loading">
+        <div className="loading-spinner"></div>
+        <p>Loading expression data...</p>
+      </div>
+    );
+
+    if (inline) {
+      return <div className="multi-gene-heatmap-inline">{loadingContent}</div>;
+    }
+
     return (
       <div className="multi-gene-heatmap-overlay">
-        <div className="multi-gene-heatmap-modal">
-          <div className="multi-gene-heatmap-loading">
-            <div className="loading-spinner"></div>
-            <p>Loading expression data for {expressionData?.length || 0} genes...</p>
-          </div>
-        </div>
+        <div className="multi-gene-heatmap-modal">{loadingContent}</div>
       </div>
     );
   }
 
   if (!expressionData || expressionData.length === 0) {
+    const emptyContent = <div className="no-data">No expression data available</div>;
+
+    if (inline) {
+      return <div className="multi-gene-heatmap-inline">{emptyContent}</div>;
+    }
+
     return (
       <div className="multi-gene-heatmap-overlay">
         <div className="multi-gene-heatmap-modal">
@@ -232,8 +245,196 @@ function MultiGeneHeatmap({
             <h3>Co-expression Heatmap</h3>
             <button className="close-btn" onClick={onClose}>&times;</button>
           </div>
-          <div className="no-data">No expression data available</div>
+          {emptyContent}
         </div>
+      </div>
+    );
+  }
+
+  // Header with controls
+  const headerContent = (
+    <div className={`multi-gene-heatmap-header ${inline ? 'inline-header' : ''}`}>
+      {!inline && <h3>Co-expression Heatmap</h3>}
+      <div className="heatmap-controls">
+        <label>Study:</label>
+        <select
+          value={selectedStudy}
+          onChange={(e) => setSelectedStudy(e.target.value)}
+        >
+          <option value="all">All studies ({conditions.length} conditions)</option>
+          {studies.map(studyId => {
+            const count = conditions.filter(c => c.studyId === studyId).length;
+            return (
+              <option key={studyId} value={studyId}>
+                {studyId.replace(/_/g, ' ')} ({count})
+              </option>
+            );
+          })}
+        </select>
+
+        <label>Sort:</label>
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+        >
+          {SORT_OPTIONS.map(opt => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+      </div>
+      {!inline && <button className="close-btn" onClick={onClose}>&times;</button>}
+    </div>
+  );
+
+  // Legend content
+  const legendContent = (
+    <div className="multi-gene-heatmap-legend">
+      <span className="legend-title">Fold Change:</span>
+      <span className="legend-item" style={{ backgroundColor: COLORS.down, opacity: 0.9 }}>↓ &lt;0.5x</span>
+      <span className="legend-item" style={{ backgroundColor: COLORS.down, opacity: 0.6 }}>↓ 0.5–0.8x</span>
+      <span className="legend-item" style={{ backgroundColor: COLORS.neutral }}>~1x</span>
+      <span className="legend-item" style={{ backgroundColor: COLORS.up, opacity: 0.6 }}>↑ 1.2–2x</span>
+      <span className="legend-item" style={{ backgroundColor: COLORS.up, opacity: 0.9 }}>↑ &gt;2x</span>
+      <span className="legend-item" style={{ backgroundColor: COLORS.noData }}>No data</span>
+
+      <span className="legend-divider">|</span>
+      <span className="legend-title">Category:</span>
+      {Object.entries(CATEGORY_COLORS).map(([key, color]) => (
+        <span
+          key={key}
+          className="legend-item category-legend"
+          style={{ backgroundColor: color }}
+        >
+          {CATEGORY_LABELS[key]}
+        </span>
+      ))}
+    </div>
+  );
+
+  // Main heatmap content
+  const heatmapContent = (
+    <>
+      <div className="multi-gene-heatmap-container">
+        <div className="heatmap-content">
+          {/* Gene labels column */}
+          <div className="heatmap-gene-labels">
+            <div className="heatmap-corner">
+              <div className="corner-category-label">Category</div>
+            </div>
+            {geneRows.map((gene) => (
+              <div
+                key={gene.geneName}
+                className={`heatmap-gene-label ${gene.isQuery ? 'query-gene' : ''}`}
+              >
+                <Link to={`/locus/${gene.featureName}`}>
+                  {gene.displayName}
+                </Link>
+                {gene.correlation != null && (
+                  <span className="gene-correlation">
+                    r={gene.correlation.toFixed(2)}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Heatmap grid */}
+          <div className="heatmap-grid-wrapper">
+            {/* Category color bar */}
+            <div className="heatmap-category-bar">
+              {filteredConditions.map(condition => (
+                <div
+                  key={`cat-${condition.id}`}
+                  className="category-cell"
+                  style={{
+                    backgroundColor: CATEGORY_COLORS[condition.bucket] || '#ccc'
+                  }}
+                  title={CATEGORY_LABELS[condition.bucket] || condition.bucket}
+                />
+              ))}
+            </div>
+
+            {/* Condition headers */}
+            <div className="heatmap-condition-headers">
+              {filteredConditions.map(condition => (
+                <div
+                  key={condition.id}
+                  className="heatmap-condition-header"
+                  title={`${condition.label} (${condition.studyName})`}
+                >
+                  <span className="condition-label-rotated">
+                    {condition.label.length > 15
+                      ? condition.label.slice(0, 15) + '...'
+                      : condition.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* Gene rows */}
+            {geneRows.map((gene) => (
+              <div
+                key={gene.geneName}
+                className={`heatmap-row ${gene.isQuery ? 'query-row' : ''}`}
+              >
+                {filteredConditions.map(condition => {
+                  const fc = gene.foldChanges[condition.id];
+                  return (
+                    <div
+                      key={`${gene.geneName}-${condition.id}`}
+                      className="heatmap-cell"
+                      style={{
+                        backgroundColor: getHeatmapColor(fc, COLORS)
+                      }}
+                      onMouseEnter={(e) => handleCellHover(gene, condition, fc, e)}
+                      onMouseLeave={() => handleCellHover(null, null, null, null)}
+                    />
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Tooltip */}
+      {hoveredCell && (
+        <div
+          className="heatmap-tooltip"
+          style={{
+            left: tooltipPosition.x,
+            top: tooltipPosition.y,
+            position: 'fixed',
+            transform: 'translateX(-50%) translateY(-100%)',
+          }}
+        >
+          <div className="tooltip-gene">{hoveredCell.gene.displayName}</div>
+          <div className="tooltip-condition">{hoveredCell.condition.label}</div>
+          <div className="tooltip-fold-change">
+            {formatFoldChange(hoveredCell.fc)}
+            {hoveredCell.fc > 1 ? ' ↑' : hoveredCell.fc < 1 ? ' ↓' : ''}
+          </div>
+          <div className="tooltip-study">{hoveredCell.condition.studyName}</div>
+        </div>
+      )}
+
+      <div className="multi-gene-heatmap-footer">
+        <span className="heatmap-info">
+          {geneRows.length} genes × {filteredConditions.length} conditions
+        </span>
+      </div>
+    </>
+  );
+
+  // Render inline or modal
+  if (inline) {
+    return (
+      <div className="multi-gene-heatmap-inline">
+        {headerContent}
+        {legendContent}
+        {heatmapContent}
       </div>
     );
   }
@@ -241,171 +442,9 @@ function MultiGeneHeatmap({
   return (
     <div className="multi-gene-heatmap-overlay" onClick={onClose}>
       <div className="multi-gene-heatmap-modal" onClick={e => e.stopPropagation()}>
-        <div className="multi-gene-heatmap-header">
-          <h3>Co-expression Heatmap</h3>
-          <div className="heatmap-controls">
-            <label>Study:</label>
-            <select
-              value={selectedStudy}
-              onChange={(e) => setSelectedStudy(e.target.value)}
-            >
-              <option value="all">All studies ({conditions.length} conditions)</option>
-              {studies.map(studyId => {
-                const count = conditions.filter(c => c.studyId === studyId).length;
-                return (
-                  <option key={studyId} value={studyId}>
-                    {studyId.replace(/_/g, ' ')} ({count})
-                  </option>
-                );
-              })}
-            </select>
-
-            <label>Sort:</label>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-            >
-              {SORT_OPTIONS.map(opt => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          </div>
-          <button className="close-btn" onClick={onClose}>&times;</button>
-        </div>
-
-        <div className="multi-gene-heatmap-legend">
-          <span className="legend-title">Fold Change:</span>
-          <span className="legend-item" style={{ backgroundColor: COLORS.down, opacity: 0.9 }}>↓ &lt;0.5x</span>
-          <span className="legend-item" style={{ backgroundColor: COLORS.down, opacity: 0.6 }}>↓ 0.5–0.8x</span>
-          <span className="legend-item" style={{ backgroundColor: COLORS.neutral }}>~1x</span>
-          <span className="legend-item" style={{ backgroundColor: COLORS.up, opacity: 0.6 }}>↑ 1.2–2x</span>
-          <span className="legend-item" style={{ backgroundColor: COLORS.up, opacity: 0.9 }}>↑ &gt;2x</span>
-          <span className="legend-item" style={{ backgroundColor: COLORS.noData }}>No data</span>
-
-          <span className="legend-divider">|</span>
-          <span className="legend-title">Category:</span>
-          {Object.entries(CATEGORY_COLORS).map(([key, color]) => (
-            <span
-              key={key}
-              className="legend-item category-legend"
-              style={{ backgroundColor: color }}
-            >
-              {CATEGORY_LABELS[key]}
-            </span>
-          ))}
-        </div>
-
-        <div className="multi-gene-heatmap-container">
-          <div className="heatmap-content">
-            {/* Gene labels column */}
-            <div className="heatmap-gene-labels">
-              <div className="heatmap-corner">
-                <div className="corner-category-label">Category</div>
-              </div>
-              {geneRows.map((gene, idx) => (
-                <div
-                  key={gene.geneName}
-                  className={`heatmap-gene-label ${gene.isQuery ? 'query-gene' : ''}`}
-                >
-                  <Link to={`/locus/${gene.featureName}`}>
-                    {gene.displayName}
-                  </Link>
-                  {gene.correlation != null && (
-                    <span className="gene-correlation">
-                      r={gene.correlation.toFixed(2)}
-                    </span>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            {/* Heatmap grid */}
-            <div className="heatmap-grid-wrapper">
-              {/* Category color bar */}
-              <div className="heatmap-category-bar">
-                {filteredConditions.map(condition => (
-                  <div
-                    key={`cat-${condition.id}`}
-                    className="category-cell"
-                    style={{
-                      backgroundColor: CATEGORY_COLORS[condition.bucket] || '#ccc'
-                    }}
-                    title={CATEGORY_LABELS[condition.bucket] || condition.bucket}
-                  />
-                ))}
-              </div>
-
-              {/* Condition headers */}
-              <div className="heatmap-condition-headers">
-                {filteredConditions.map(condition => (
-                  <div
-                    key={condition.id}
-                    className="heatmap-condition-header"
-                    title={`${condition.label} (${condition.studyName})`}
-                  >
-                    <span className="condition-label-rotated">
-                      {condition.label.length > 15
-                        ? condition.label.slice(0, 15) + '...'
-                        : condition.label}
-                    </span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Gene rows */}
-              {geneRows.map((gene) => (
-                <div
-                  key={gene.geneName}
-                  className={`heatmap-row ${gene.isQuery ? 'query-row' : ''}`}
-                >
-                  {filteredConditions.map(condition => {
-                    const fc = gene.foldChanges[condition.id];
-                    return (
-                      <div
-                        key={`${gene.geneName}-${condition.id}`}
-                        className="heatmap-cell"
-                        style={{
-                          backgroundColor: getHeatmapColor(fc, COLORS)
-                        }}
-                        onMouseEnter={(e) => handleCellHover(gene, condition, fc, e)}
-                        onMouseLeave={() => handleCellHover(null, null, null, null)}
-                      />
-                    );
-                  })}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Tooltip */}
-        {hoveredCell && (
-          <div
-            className="heatmap-tooltip"
-            style={{
-              left: tooltipPosition.x,
-              top: tooltipPosition.y,
-              position: 'fixed',
-              transform: 'translateX(-50%) translateY(-100%)',
-            }}
-          >
-            <div className="tooltip-gene">{hoveredCell.gene.displayName}</div>
-            <div className="tooltip-condition">{hoveredCell.condition.label}</div>
-            <div className="tooltip-fold-change">
-              {formatFoldChange(hoveredCell.fc)}
-              {hoveredCell.fc > 1 ? ' ↑' : hoveredCell.fc < 1 ? ' ↓' : ''}
-            </div>
-            <div className="tooltip-study">{hoveredCell.condition.studyName}</div>
-          </div>
-        )}
-
-        <div className="multi-gene-heatmap-footer">
-          <span className="heatmap-info">
-            {geneRows.length} genes × {filteredConditions.length} conditions
-          </span>
-        </div>
+        {headerContent}
+        {legendContent}
+        {heatmapContent}
       </div>
     </div>
   );
