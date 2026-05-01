@@ -116,6 +116,7 @@ function MultiGeneHeatmap({
     const studiesArr = Array.from(studySet).sort();
 
     // Build gene rows with fold change for each condition
+    // Query gene is at the bottom (last in array)
     const rows = expressionData.map(({ geneName, data }, index) => {
       const foldChanges = {};
 
@@ -127,12 +128,13 @@ function MultiGeneHeatmap({
         });
       }
 
+      const isLastGene = index === expressionData.length - 1;
       return {
         geneName,
         displayName: data?.gene_name || geneName,
         featureName: data?.feature_name || geneName,
-        isQuery: index === 0,
-        correlation: similarGenes?.find(g =>
+        isQuery: isLastGene,
+        correlation: isLastGene ? null : similarGenes?.find(g =>
           g.feature_name === geneName || g.gene_name === geneName
         )?.correlation,
         foldChanges,

@@ -193,10 +193,10 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
       // Get the organism display name for the API
       const organismDisplay = getOrganismDisplay(organism);
 
-      // Build list of genes: query gene first, then similar genes
+      // Build list of genes: similar genes first, then query gene at bottom
       const queryGeneName = data.query_gene.systematic_name || data.query_gene.gene_name;
       const similarGeneNames = deduplicatedGenes.slice(0, 10).map(g => g.feature_name || g.gene_name);
-      const allGeneNames = [queryGeneName, ...similarGeneNames];
+      const allGeneNames = [...similarGeneNames, queryGeneName];
 
       // Fetch expression data for all genes
       const expressionResults = await expressionApi.getMultiGeneExpression(allGeneNames, organismDisplay);
