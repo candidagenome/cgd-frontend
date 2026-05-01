@@ -4082,6 +4082,7 @@ a:hover {
   white-space: nowrap;
   font-size: 0.85em;
   background: white;
+  min-width: 180px;  /* Ensure consistent width for alignment */
 }
 
 .multi-gene-heatmap-container .heatmap-gene-label a {
@@ -4104,6 +4105,9 @@ a:hover {
 .multi-gene-heatmap-container .gene-correlation {
   font-size: 0.8em;
   color: #888;
+  margin-left: auto;  /* Push to right side */
+  min-width: 50px;    /* Fixed width for alignment */
+  text-align: right;  /* Right-justify the text */
 }
 
 .multi-gene-heatmap-container .heatmap-grid-wrapper {

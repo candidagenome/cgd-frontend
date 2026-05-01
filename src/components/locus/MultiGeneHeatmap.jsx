@@ -6,8 +6,8 @@ import './LocusComponents.css';
 const COLORS = {
   up: '#C41E3A',      // crimson red for upregulation (slightly more vibrant)
   down: '#5080B0',    // softer steel blue for downregulation (less heavy)
-  neutral: '#f7f7f7', // very light neutral (almost white)
-  noData: '#eeeeee',  // slightly visible for "no data"
+  neutral: '#f7f7f7', // very light neutral (almost white) for ~1x fold change
+  noData: '#d0d0d0',  // distinct grey for missing data
 };
 
 // Category/bucket colors for the category bar
