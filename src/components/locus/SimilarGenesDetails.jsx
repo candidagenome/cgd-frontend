@@ -217,6 +217,21 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
         return !isQueryGene;
       });
 
+      // Sort similar genes by correlation (highest first, anticorrelated at bottom)
+      const sortedResults = [...filteredResults].sort((a, b) => {
+        // Find correlation for each gene from deduplicatedGenes
+        const getCorrelation = (entry) => {
+          const gene = deduplicatedGenes.find(g =>
+            g.feature_name === entry.geneName ||
+            g.gene_name === entry.geneName ||
+            g.feature_name === entry.data?.feature_name ||
+            g.gene_name === entry.data?.gene_name
+          );
+          return gene?.correlation ?? 0;
+        };
+        return getCorrelation(b) - getCorrelation(a); // Descending order
+      });
+
       // Find the query gene entry from API results (if it exists)
       const queryEntry = expressionResults.find(r =>
         r.geneName === querySystematicName ||
@@ -239,8 +254,8 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
         isQueryGene: true  // Flag to identify query gene
       };
 
-      // Build ordered results: query gene first, then similar genes
-      const orderedResults = [finalQueryEntry, ...filteredResults];
+      // Build ordered results: query gene first, then similar genes sorted by correlation
+      const orderedResults = [finalQueryEntry, ...sortedResults];
 
       setHeatmapData(orderedResults);
     } catch (err) {
