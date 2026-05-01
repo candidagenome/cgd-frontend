@@ -305,11 +305,8 @@ function MultiGeneHeatmap({
       <span className="legend-divider">|</span>
       <span className="legend-title">Category:</span>
       {Object.entries(CATEGORY_COLORS).map(([key, color]) => (
-        <span
-          key={key}
-          className="legend-item category-legend"
-          style={{ backgroundColor: color }}
-        >
+        <span key={key} className="legend-item category-legend-item">
+          <span className="category-swatch" style={{ backgroundColor: color }}></span>
           {CATEGORY_LABELS[key]}
         </span>
       ))}
