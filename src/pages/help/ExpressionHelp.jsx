@@ -73,10 +73,10 @@ function ExpressionHelp() {
             Experimental conditions are grouped into categories indicated by colored badges:
           </p>
           <ul>
-            <li><strong style={{color: '#9e9e9e'}}>Control</strong> - Baseline/reference conditions</li>
-            <li><strong style={{color: '#4caf50'}}>Basic Biology</strong> - Morphology, biofilm, cell type studies</li>
-            <li><strong style={{color: '#f44336'}}>Antifungal/Immune</strong> - Drug treatment and immune response</li>
-            <li><strong style={{color: '#ff9800'}}>Stress Response</strong> - Oxidative, nitrosative, and other stress conditions</li>
+            <li><strong style={{color: '#777'}}>Control</strong> - Baseline/reference conditions</li>
+            <li><strong style={{color: '#777'}}>Growth & Physiology</strong> - Morphology, biofilm, pH, serum, cell type studies</li>
+            <li><strong style={{color: '#777'}}>Host Interaction</strong> - Immune response (PMN neutrophils, NETs, infection models)</li>
+            <li><strong style={{color: '#777'}}>Stress Response</strong> - Oxidative, nitrosative, cell wall damage conditions</li>
           </ul>
         </div>
 

@@ -77,8 +77,8 @@ const formatFoldChange = (fc) => {
 // Bucket labels - grey styling matching "conditions" text (#777)
 const BUCKET_INFO = {
   control: { label: 'Control', color: '#777', bg: 'transparent', border: '#999' },
-  basic_biology: { label: 'Basic Biology', color: '#777', bg: 'transparent', border: '#999' },
-  kill_candida: { label: 'Antifungal/Immune', color: '#777', bg: 'transparent', border: '#999' },
+  basic_biology: { label: 'Growth & Physiology', color: '#777', bg: 'transparent', border: '#999' },
+  kill_candida: { label: 'Host Interaction', color: '#777', bg: 'transparent', border: '#999' },
   stress: { label: 'Stress Response', color: '#777', bg: 'transparent', border: '#999' },
 };
 
@@ -193,15 +193,21 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
     }
   }, []);
 
-  // Get unique buckets for filter from the selected organism's data
-  const availableBuckets = useMemo(() => {
-    if (!orgData?.studies) return [];
-    const buckets = new Set();
+  // Get unique buckets with counts for filter from the selected organism's data
+  const bucketCounts = useMemo(() => {
+    if (!orgData?.studies) return {};
+    const counts = {};
     orgData.studies.forEach(study => {
-      study.conditions.forEach(c => buckets.add(c.bucket));
+      study.conditions.forEach(c => {
+        counts[c.bucket] = (counts[c.bucket] || 0) + 1;
+      });
     });
-    return Array.from(buckets);
+    return counts;
   }, [orgData?.studies]);
+
+  const availableBuckets = useMemo(() => {
+    return Object.keys(bucketCounts);
+  }, [bucketCounts]);
 
   // Set default organism if not already set and data is available
   useEffect(() => {
@@ -292,10 +298,10 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
                     onChange={(e) => setFilterBucket(e.target.value)}
                     className="bucket-filter"
                   >
-                    <option value="all">All categories</option>
+                    <option value="all">All categories ({orgData?.total_conditions || 0})</option>
                     {availableBuckets.map(bucket => (
                       <option key={bucket} value={bucket}>
-                        {BUCKET_INFO[bucket]?.label || bucket}
+                        {BUCKET_INFO[bucket]?.label || bucket} ({bucketCounts[bucket] || 0})
                       </option>
                     ))}
                   </select>
