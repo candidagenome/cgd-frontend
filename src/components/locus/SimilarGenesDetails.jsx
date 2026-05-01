@@ -334,7 +334,7 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
             </div>
             <div className="summary-item">
               <span className="summary-label">Genes compared:</span>
-              <span className="summary-value">{data.genes_compared?.toLocaleString() || '-'}</span>
+              <span className="summary-value">{data.total_genes_compared?.toLocaleString() || '-'}</span>
             </div>
           </div>
 
