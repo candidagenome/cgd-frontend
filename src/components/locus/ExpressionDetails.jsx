@@ -30,12 +30,12 @@ const getHeatmapColor = (fc, colors) => {
   return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 };
 
-// Color palette - improved for better contrast and scientific look
-// Up = deep red, Down = muted blue (publication-quality style)
+// Color palette - publication-quality with balanced visual weight
+// Up = crimson red, Down = softer steel blue
 // Uses opacity to indicate magnitude (cleaner, less visual noise)
 const COLORS = {
-  up: '#B22222',      // deep red for upregulation
-  down: '#3B6FB6',    // muted blue for downregulation
+  up: '#C41E3A',      // crimson red for upregulation (slightly more vibrant)
+  down: '#5080B0',    // softer steel blue for downregulation (less heavy)
   neutral: '#f7f7f7', // very light neutral (almost white)
 };
 

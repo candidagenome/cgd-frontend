@@ -4191,6 +4191,45 @@ a:hover {
   border-radius: 2px;
 }
 
+/* Gradient legend for fold change */
+.multi-gene-heatmap-legend .fold-change-gradient-legend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.multi-gene-heatmap-legend .gradient-label {
+  font-size: 0.8em;
+  color: #555;
+  white-space: nowrap;
+}
+
+.multi-gene-heatmap-legend .gradient-bar {
+  width: 120px;
+  height: 14px;
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+}
+
+.multi-gene-heatmap-legend .gradient-fill {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right,
+    rgba(80, 128, 176, 0.8) 0%,
+    rgba(80, 128, 176, 0.4) 25%,
+    #f7f7f7 50%,
+    rgba(196, 30, 58, 0.4) 75%,
+    rgba(196, 30, 58, 0.85) 100%
+  );
+}
+
+.multi-gene-heatmap-legend .no-data-legend {
+  font-size: 0.75em;
+  padding: 2px 8px;
+  border: 1px solid #ddd;
+}
+
 /* View Heatmap Button in Similar Genes */
 .view-heatmap-btn {
   display: inline-flex;

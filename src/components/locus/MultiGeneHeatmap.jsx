@@ -2,12 +2,12 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import './LocusComponents.css';
 
-// Color palette - improved for better contrast and scientific look
+// Color palette - publication-quality with balanced visual weight
 const COLORS = {
-  up: '#B22222',      // deep red for upregulation
-  down: '#3B6FB6',    // muted blue for downregulation
+  up: '#C41E3A',      // crimson red for upregulation (slightly more vibrant)
+  down: '#5080B0',    // softer steel blue for downregulation (less heavy)
   neutral: '#f7f7f7', // very light neutral (almost white)
-  noData: '#f0f0f0',  // slightly darker for "no data"
+  noData: '#eeeeee',  // slightly visible for "no data"
 };
 
 // Category/bucket colors for the category bar
@@ -47,10 +47,16 @@ const getHeatmapColor = (fc, colors) => {
   const isUp = fc >= 1;
   const baseColor = isUp ? colors.up : colors.down;
 
-  // Scale: log2 magnitude 0.2 → 0.3 opacity, 2.0+ → 0.85 opacity
-  // This gives clear visual separation while keeping extremes readable
+  // Asymmetric scaling: reds get more contrast at high end, blues stay softer
   const clampedMag = Math.min(magnitude, 2.5);
-  const opacity = 0.25 + (clampedMag * 0.24);
+  let opacity;
+  if (isUp) {
+    // Reds: steeper curve for more contrast at high end (>2x pops more)
+    opacity = 0.30 + (clampedMag * 0.28);
+  } else {
+    // Blues: gentler curve to reduce visual weight
+    opacity = 0.25 + (clampedMag * 0.22);
+  }
 
   const r = parseInt(baseColor.slice(1, 3), 16);
   const g = parseInt(baseColor.slice(3, 5), 16);
@@ -291,16 +297,18 @@ function MultiGeneHeatmap({
     </div>
   );
 
-  // Legend content
+  // Legend content with gradient bar
   const legendContent = (
     <div className="multi-gene-heatmap-legend">
       <span className="legend-title">Fold Change:</span>
-      <span className="legend-item" style={{ backgroundColor: COLORS.down, opacity: 0.9 }}>↓ &lt;0.5x</span>
-      <span className="legend-item" style={{ backgroundColor: COLORS.down, opacity: 0.6 }}>↓ 0.5–0.8x</span>
-      <span className="legend-item" style={{ backgroundColor: COLORS.neutral }}>~1x</span>
-      <span className="legend-item" style={{ backgroundColor: COLORS.up, opacity: 0.6 }}>↑ 1.2–2x</span>
-      <span className="legend-item" style={{ backgroundColor: COLORS.up, opacity: 0.9 }}>↑ &gt;2x</span>
-      <span className="legend-item" style={{ backgroundColor: COLORS.noData }}>No data</span>
+      <div className="fold-change-gradient-legend">
+        <span className="gradient-label">↓ 0.5x</span>
+        <div className="gradient-bar">
+          <div className="gradient-fill"></div>
+        </div>
+        <span className="gradient-label">2x ↑</span>
+      </div>
+      <span className="legend-item no-data-legend" style={{ backgroundColor: COLORS.noData }}>No data</span>
 
       <span className="legend-divider">|</span>
       <span className="legend-title">Category:</span>
