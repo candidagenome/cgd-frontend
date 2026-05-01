@@ -116,7 +116,7 @@ function MultiGeneHeatmap({
     const studiesArr = Array.from(studySet).sort();
 
     // Build gene rows with fold change for each condition
-    // Query gene is at the bottom (last in array) and may have isQueryGene flag
+    // Query gene is at the top (first in array) and may have isQueryGene flag
     const rows = expressionData.map((entry, index) => {
       const { geneName, data, isQueryGene } = entry;
       const foldChanges = {};
@@ -129,9 +129,9 @@ function MultiGeneHeatmap({
         });
       }
 
-      // Query gene is either flagged or is the last entry
-      const isLastGene = index === expressionData.length - 1;
-      const isQuery = isQueryGene || isLastGene;
+      // Query gene is either flagged or is the first entry
+      const isFirstGene = index === 0;
+      const isQuery = isQueryGene || isFirstGene;
 
       // For query gene, use queryGene prop as fallback for display name
       const queryDisplayName = queryGene?.gene_name || queryGene?.systematic_name || geneName;

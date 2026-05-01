@@ -239,8 +239,8 @@ function SimilarGenesDetails({ locusName, selectedOrganism }) {
         isQueryGene: true  // Flag to identify query gene
       };
 
-      // Build ordered results: similar genes first, then query gene at the end
-      const orderedResults = [...filteredResults, finalQueryEntry];
+      // Build ordered results: query gene first, then similar genes
+      const orderedResults = [finalQueryEntry, ...filteredResults];
 
       setHeatmapData(orderedResults);
     } catch (err) {
