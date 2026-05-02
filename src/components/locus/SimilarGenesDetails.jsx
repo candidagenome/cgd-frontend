@@ -102,6 +102,7 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
 
   // Deduplicate genes by gene_name (A/B alleles have same gene_name)
   // Also filter out the query gene itself (which may appear with r=1.00)
+  // and assembly 19/21 genes (orf19.*, orf21.*)
   const deduplicatedGenes = useMemo(() => {
     if (!data?.similar_genes) return [];
 
@@ -112,6 +113,11 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
 
     const seen = new Set();
     return data.similar_genes.filter(gene => {
+      // Skip assembly 19/21 genes (old assembly identifiers)
+      if (gene.feature_name?.startsWith('orf19.') || gene.feature_name?.startsWith('orf21.')) {
+        return false;
+      }
+
       // Skip if this is the query gene (same systematic or standard name)
       if (querySystematic && (gene.feature_name === querySystematic || gene.gene_name === querySystematic)) {
         return false;
@@ -237,7 +243,8 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
       const queryStandardName = data.query_gene || effectiveLocusName;
 
       // Build list of genes: similar genes only (we'll handle query gene separately)
-      const similarGeneNames = deduplicatedGenes.slice(0, 10).map(g => g.feature_name || g.gene_name);
+      // Use the same limit as the table display for consistency
+      const similarGeneNames = deduplicatedGenes.slice(0, limit).map(g => g.feature_name || g.gene_name);
 
       // Include query gene in the API call using systematic name
       const queryNameForApi = querySystematicName || queryStandardName;
@@ -303,12 +310,12 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
     } finally {
       setHeatmapLoading(false);
     }
-  }, [data, deduplicatedGenes, organism, effectiveLocusName]);
+  }, [data, deduplicatedGenes, organism, effectiveLocusName, limit]);
 
-  // Reset heatmap data when similar genes data changes
+  // Reset heatmap data when similar genes data or limit changes
   useEffect(() => {
     setHeatmapData(null);
-  }, [data]);
+  }, [data, limit]);
 
   // Auto-load heatmap data when similar genes data is available
   useEffect(() => {
