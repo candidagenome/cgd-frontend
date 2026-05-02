@@ -80,10 +80,11 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
     setError(null);
 
     try {
+      // Request more genes than needed to account for filtering (orf19/21, duplicates)
       const result = await expressionApi.getSimilarGenes(effectiveLocusName, {
         organism,
         metric,
-        limit,
+        limit: limit * 3,  // Request 3x to ensure enough after filtering
       });
       setData(result);
     } catch (err) {
@@ -101,18 +102,17 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
   }, [fetchSimilarGenes]);
 
   // Deduplicate genes by gene_name (A/B alleles have same gene_name)
-  // Also filter out the query gene itself (which may appear with r=1.00)
-  // and assembly 19/21 genes (orf19.*, orf21.*)
+  // Filter out assembly 19/21 genes (orf19.*, orf21.*)
+  // Limit to selected number of genes
   const deduplicatedGenes = useMemo(() => {
     if (!data?.similar_genes) return [];
 
-    // Get query gene identifiers to filter out
-    // API returns: query_gene (string, e.g. "HOG1") and query_feature_name (string, e.g. "C2_03330C_A")
+    // Get query gene identifiers to filter out from similar genes list
     const queryStandard = data.query_gene;  // e.g., "HOG1"
     const querySystematic = data.query_feature_name;  // e.g., "C2_03330C_A"
 
     const seen = new Set();
-    return data.similar_genes.filter(gene => {
+    const filtered = data.similar_genes.filter(gene => {
       // Skip assembly 19/21 genes (old assembly identifiers)
       if (gene.feature_name?.startsWith('orf19.') || gene.feature_name?.startsWith('orf21.')) {
         return false;
@@ -132,7 +132,30 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
       seen.add(key);
       return true;
     });
-  }, [data?.similar_genes, data?.query_gene, data?.query_feature_name]);
+
+    // Limit to requested number of genes
+    return filtered.slice(0, limit);
+  }, [data?.similar_genes, data?.query_gene, data?.query_feature_name, limit]);
+
+  // Create query gene object for display in table/heatmap
+  const queryGeneRow = useMemo(() => {
+    if (!data?.query_gene) return null;
+    return {
+      gene_name: data.query_gene,
+      feature_name: data.query_feature_name,
+      description: 'Query gene',
+      correlation: 1.0,
+      p_value: 0,
+      shared_conditions: data.conditions_used || 0,
+      isQueryGene: true,
+    };
+  }, [data?.query_gene, data?.query_feature_name, data?.conditions_used]);
+
+  // Combined list: query gene first, then similar genes (sorted by correlation)
+  const allGenesForDisplay = useMemo(() => {
+    if (!queryGeneRow) return deduplicatedGenes;
+    return [queryGeneRow, ...deduplicatedGenes];
+  }, [queryGeneRow, deduplicatedGenes]);
 
   // AG Grid column definitions
   const columnDefs = useMemo(() => [
@@ -229,7 +252,7 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
 
   // Load heatmap data for query gene + similar genes
   const loadHeatmapData = useCallback(async () => {
-    if (!data?.query_gene || !deduplicatedGenes.length) return;
+    if (!data?.query_gene || !allGenesForDisplay.length) return;
 
     setHeatmapLoading(true);
 
@@ -242,67 +265,35 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
       const querySystematicName = data.query_feature_name || effectiveLocusName;
       const queryStandardName = data.query_gene || effectiveLocusName;
 
-      // Build list of genes: similar genes only (we'll handle query gene separately)
-      // Use the same limit as the table display for consistency
-      const similarGeneNames = deduplicatedGenes.slice(0, limit).map(g => g.feature_name || g.gene_name);
-
-      // Include query gene in the API call using systematic name
-      const queryNameForApi = querySystematicName || queryStandardName;
-      const allGeneNames = [...similarGeneNames, queryNameForApi];
+      // Use same gene list as table for consistency (query gene + similar genes)
+      const geneNamesForApi = allGenesForDisplay.map(g => g.feature_name || g.gene_name);
 
       // Fetch expression data for all genes
-      const expressionResults = await expressionApi.getMultiGeneExpression(allGeneNames, organismDisplay);
+      const expressionResults = await expressionApi.getMultiGeneExpression(geneNamesForApi, organismDisplay);
 
-      // Find and remove any entry that matches the query gene
-      const filteredResults = expressionResults.filter(r => {
-        const isQueryGene =
-          r.geneName === querySystematicName ||
-          r.geneName === queryStandardName ||
-          r.data?.feature_name === querySystematicName ||
-          r.data?.gene_name === queryStandardName;
-        return !isQueryGene;
-      });
+      // Build ordered results matching allGenesForDisplay order
+      const orderedResults = allGenesForDisplay.map(gene => {
+        const geneName = gene.feature_name || gene.gene_name;
+        const entry = expressionResults.find(r =>
+          r.geneName === geneName ||
+          r.geneName === gene.gene_name ||
+          r.data?.feature_name === gene.feature_name ||
+          r.data?.gene_name === gene.gene_name
+        );
 
-      // Sort similar genes by correlation (highest first, anticorrelated at bottom)
-      const sortedResults = [...filteredResults].sort((a, b) => {
-        // Find correlation for each gene from deduplicatedGenes
-        const getCorrelation = (entry) => {
-          const gene = deduplicatedGenes.find(g =>
-            g.feature_name === entry.geneName ||
-            g.gene_name === entry.geneName ||
-            g.feature_name === entry.data?.feature_name ||
-            g.gene_name === entry.data?.gene_name
-          );
-          return gene?.correlation ?? 0;
+        return {
+          geneName: gene.gene_name || gene.feature_name,
+          data: {
+            ...(entry?.data || {}),
+            gene_name: gene.gene_name || gene.feature_name,
+            feature_name: gene.feature_name,
+            studies: entry?.data?.studies || []
+          },
+          error: entry?.error || null,
+          isQueryGene: gene.isQueryGene || false,
+          correlation: gene.correlation
         };
-        return getCorrelation(b) - getCorrelation(a); // Descending order
       });
-
-      // Find the query gene entry from API results (if it exists)
-      const queryEntry = expressionResults.find(r =>
-        r.geneName === querySystematicName ||
-        r.geneName === queryStandardName ||
-        r.data?.feature_name === querySystematicName ||
-        r.data?.gene_name === queryStandardName
-      );
-
-      // Build the final query gene entry with correct names
-      // Prefer standard name (HOG1) over systematic name (C2_03330C_A) for display
-      const finalQueryEntry = {
-        geneName: queryStandardName || querySystematicName,
-        data: {
-          // Use API data if available, but ensure correct names
-          ...(queryEntry?.data || {}),
-          gene_name: queryStandardName || querySystematicName,
-          feature_name: querySystematicName || queryStandardName,
-          studies: queryEntry?.data?.studies || []
-        },
-        error: queryEntry?.error || null,
-        isQueryGene: true  // Flag to identify query gene
-      };
-
-      // Build ordered results: query gene first, then similar genes sorted by correlation
-      const orderedResults = [finalQueryEntry, ...sortedResults];
 
       setHeatmapData(orderedResults);
     } catch (err) {
@@ -310,7 +301,7 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
     } finally {
       setHeatmapLoading(false);
     }
-  }, [data, deduplicatedGenes, organism, effectiveLocusName, limit]);
+  }, [data, allGenesForDisplay, organism, effectiveLocusName, limit]);
 
   // Reset heatmap data when similar genes data or limit changes
   useEffect(() => {
@@ -319,10 +310,10 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
 
   // Auto-load heatmap data when similar genes data is available
   useEffect(() => {
-    if (data?.query_gene && deduplicatedGenes.length > 0 && !heatmapData && !heatmapLoading) {
+    if (data?.query_gene && allGenesForDisplay.length > 0 && !heatmapData && !heatmapLoading) {
       loadHeatmapData();
     }
-  }, [data, deduplicatedGenes, heatmapData, heatmapLoading, loadHeatmapData]);
+  }, [data, allGenesForDisplay, heatmapData, heatmapLoading, loadHeatmapData]);
 
   // Get display name for organism
   const getOrganismDisplay = (apiOrganism) => {
@@ -448,14 +439,14 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
           </div>
 
           {/* Results - Heatmap or Table based on viewMode */}
-          {deduplicatedGenes.length > 0 ? (
+          {allGenesForDisplay.length > 0 ? (
             <>
               {/* Heatmap View */}
               {viewMode === 'heatmap' && (
                 <div className="coexpression-heatmap-inline">
                   <MultiGeneHeatmap
                     queryGene={data?.query_gene}
-                    similarGenes={deduplicatedGenes}
+                    similarGenes={allGenesForDisplay}
                     expressionData={heatmapData}
                     loading={heatmapLoading}
                     inline={true}
@@ -467,7 +458,7 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
               {viewMode === 'table' && (
                 <div className="similar-genes-grid-wrapper ag-theme-alpine">
                   <AgGridReact
-                    rowData={deduplicatedGenes}
+                    rowData={allGenesForDisplay}
                     columnDefs={columnDefs}
                     defaultColDef={defaultColDef}
                     domLayout="autoHeight"
