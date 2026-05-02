@@ -9,7 +9,6 @@ import './SimilarGenesDetails.css';
 // Available metrics for correlation
 const METRICS = [
   { value: 'pearson', label: 'Pearson' },
-  { value: 'spearman', label: 'Spearman' },
 ];
 
 // Available correlation directions
