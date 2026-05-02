@@ -126,8 +126,14 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
 
   // Get data for the selected organism
   const orgData = useMemo(() => {
-    return selectedOrganism && data?.results ? data.results[selectedOrganism] : null;
-  }, [selectedOrganism, data?.results]);
+    const result = selectedOrganism && data?.results ? data.results[selectedOrganism] : null;
+    console.log('[ExpressionDetails] orgData lookup:', {
+      selectedOrganism,
+      availableOrganisms: organisms,
+      hasData: !!result,
+    });
+    return result;
+  }, [selectedOrganism, data?.results, organisms]);
 
   // Filter conditions by bucket for the selected organism's studies
   const filteredStudies = useMemo(() => {
