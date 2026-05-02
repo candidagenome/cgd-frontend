@@ -10,7 +10,6 @@ import './SimilarGenesDetails.css';
 const METRICS = [
   { value: 'pearson', label: 'Pearson' },
   { value: 'spearman', label: 'Spearman' },
-  { value: 'cosine', label: 'Cosine' },
 ];
 
 // Available correlation directions
