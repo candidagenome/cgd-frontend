@@ -13,9 +13,10 @@ function ExpressionHelp() {
           <h2>Contents</h2>
           <ul>
             <li><a href="#overview">Overview</a></li>
-            <li><a href="#expression-data">Expression Data Tab</a></li>
-            <li><a href="#coexpression">Co-expression Tab</a></li>
-            <li><a href="#heatmap">Understanding the Heatmap</a></li>
+            <li><a href="#organism-selector">Organism Selector & Orthologs</a></li>
+            <li><a href="#expression-data">Expression Data Sub-tab</a></li>
+            <li><a href="#coexpression">Co-expression Sub-tab</a></li>
+            <li><a href="#heatmap">Understanding the Heatmaps</a></li>
             <li><a href="#data-sources">Data Sources</a></li>
             <li><a href="#interpretation">Interpreting Results</a></li>
           </ul>
@@ -35,15 +36,43 @@ function ExpressionHelp() {
             The Expression tab contains two sub-tabs:
           </p>
           <ul>
-            <li><strong>Expression Data</strong> - Shows expression levels across experimental conditions</li>
-            <li><strong>Co-expression</strong> - Identifies genes with similar expression patterns</li>
+            <li><strong>Expression Data</strong> - Shows expression levels across experimental conditions for a single gene</li>
+            <li><strong>Co-expression</strong> - Identifies genes with correlated expression patterns (similar genes analysis)</li>
           </ul>
         </div>
 
         <div className="info-section">
-          <h2 id="expression-data">Expression Data Tab</h2>
+          <h2 id="organism-selector">Organism Selector & Orthologs</h2>
           <p>
-            The Expression Data tab displays fold change values for your gene of interest across
+            Both sub-tabs include an organism selector that allows you to view expression data
+            for the current gene or its orthologs in different <em>Candida</em> species.
+          </p>
+
+          <h3>Switching Organisms</h3>
+          <p>
+            When you select a different organism:
+          </p>
+          <ul>
+            <li>
+              If viewing <em>C. albicans</em> HOG1 and you select <em>C. glabrata</em>, the page
+              automatically displays data for the <em>C. glabrata</em> ortholog (e.g., CAGL0M11748g)
+            </li>
+            <li>The page header updates to show the ortholog gene name</li>
+            <li>Both Expression Data and Co-expression sub-tabs stay synchronized to the selected organism</li>
+          </ul>
+
+          <h3>Ortholog Indicators</h3>
+          <p>
+            In the organism dropdown, species with ortholog data available are indicated. If no
+            ortholog exists in a particular species, expression data may not be available for
+            that organism.
+          </p>
+        </div>
+
+        <div className="info-section">
+          <h2 id="expression-data">Expression Data Sub-tab</h2>
+          <p>
+            The Expression Data sub-tab displays fold change values for your gene of interest across
             multiple experimental conditions from published RNA-seq studies.
           </p>
 
@@ -60,30 +89,51 @@ function ExpressionHelp() {
 
           <h3>View Options</h3>
           <p>
-            You can toggle between different visualization modes:
+            Toggle between different visualization modes using the View buttons:
           </p>
           <ul>
-            <li><strong>Bars</strong> - Traditional bar chart showing fold change magnitude</li>
-            <li><strong>Heatmap</strong> - Color-coded strip showing expression patterns at a glance</li>
-            <li><strong>Both</strong> - Combined view with heatmap strip above bar charts</li>
+            <li><strong>Bars</strong> - Bar charts showing fold change magnitude for each condition, organized by study</li>
+            <li><strong>Heatmap</strong> - Compact color-coded strip showing all expression values at a glance</li>
+            <li><strong>Both</strong> (default) - Combined view with heatmap strip above the detailed bar charts</li>
           </ul>
 
-          <h3>Condition Categories</h3>
+          <h3>Category Filter</h3>
           <p>
-            Experimental conditions are grouped into categories indicated by colored badges:
+            Use the "Filter by category" dropdown to focus on specific types of experimental conditions:
           </p>
           <ul>
-            <li><strong style={{color: '#777'}}>Control</strong> - Baseline/reference conditions</li>
-            <li><strong style={{color: '#777'}}>Growth & Physiology</strong> - Morphology, biofilm, pH, serum, cell type studies</li>
-            <li><strong style={{color: '#777'}}>Host Interaction</strong> - Immune response (PMN neutrophils, NETs, infection models)</li>
-            <li><strong style={{color: '#777'}}>Stress Response</strong> - Oxidative, nitrosative, cell wall damage conditions</li>
+            <li><strong>Control</strong> - Baseline/reference conditions</li>
+            <li><strong>Growth & Physiology</strong> - Growth conditions, morphology, biofilm, pH, cell types</li>
+            <li><strong>Host Interaction</strong> - Immune cells, PMN, NETs, antimicrobial peptides</li>
+            <li><strong>Stress Response</strong> - Oxidative stress, drug treatments, DNA damage</li>
+          </ul>
+
+          <h3>Heatmap Strip Interactivity</h3>
+          <p>
+            In the heatmap strip view:
+          </p>
+          <ul>
+            <li><strong>Hover</strong> over any cell to see the condition name, fold change value, and study</li>
+            <li><strong>Click</strong> on a cell to scroll directly to that study's detailed view</li>
+          </ul>
+
+          <h3>Study Details</h3>
+          <p>
+            Each study section shows:
+          </p>
+          <ul>
+            <li>Study name and category</li>
+            <li>Maximum up/downregulation summary</li>
+            <li>Link to PubMed (PMID) for the source publication</li>
+            <li>Conditions sorted by fold change magnitude (most extreme first)</li>
+            <li>"Show all conditions" toggle for studies with many conditions</li>
           </ul>
         </div>
 
         <div className="info-section">
-          <h2 id="coexpression">Co-expression Tab</h2>
+          <h2 id="coexpression">Co-expression Sub-tab</h2>
           <p>
-            The Co-expression tab identifies genes with similar expression profiles to your gene
+            The Co-expression sub-tab identifies genes with similar expression profiles to your gene
             of interest. Genes that show correlated expression patterns often share biological
             functions or are co-regulated by common transcription factors.
           </p>
@@ -91,80 +141,121 @@ function ExpressionHelp() {
           <h3>Controls</h3>
           <ul>
             <li>
-              <strong>Organism</strong> - Select the organism/strain to analyze. Expression data
-              is specific to each organism's genome assembly.
+              <strong>Organism</strong> - Select the organism/strain to analyze. This selector is
+              synchronized with the Expression Data sub-tab, so switching organisms in one tab
+              updates both tabs.
             </li>
             <li>
               <strong>Metric</strong> - Choose the correlation method:
               <ul>
-                <li><strong>Pearson</strong> - Measures linear correlation (most common)</li>
-                <li><strong>Spearman</strong> - Rank-based correlation (robust to outliers)</li>
-                <li><strong>Cosine</strong> - Measures angle between expression vectors</li>
+                <li><strong>Pearson</strong> (default) - Measures linear correlation between expression profiles</li>
+                <li><strong>Spearman</strong> - Rank-based correlation, more robust to outliers</li>
+                <li><strong>Cosine</strong> - Measures the angle between expression vectors, useful for comparing patterns regardless of magnitude</li>
               </ul>
             </li>
             <li>
-              <strong>Limit</strong> - Number of similar genes to display (10-100)
+              <strong>Limit</strong> - Number of similar genes to display (10, 20, 50, or 100)
             </li>
           </ul>
 
           <h3>View Modes</h3>
           <ul>
             <li>
-              <strong>Heatmap</strong> (default) - Visual comparison of expression patterns across
-              the query gene and similar genes. Each row represents a gene, and each column
-              represents an experimental condition.
+              <strong>Heatmap</strong> (default) - Visual comparison of expression patterns showing
+              the query gene at the top and similar genes below, sorted by correlation strength.
+              Each row represents a gene, and each column represents an experimental condition.
             </li>
             <li>
-              <strong>Table</strong> - Sortable table listing similar genes with correlation
-              coefficients, p-values, and gene descriptions.
+              <strong>Table</strong> - Sortable, paginated table listing similar genes with:
+              <ul>
+                <li>Gene name (linked to locus page)</li>
+                <li>Systematic name</li>
+                <li>Description</li>
+                <li>Correlation coefficient</li>
+                <li>P-value</li>
+                <li>Number of shared conditions</li>
+              </ul>
             </li>
+          </ul>
+
+          <h3>Query Summary</h3>
+          <p>
+            Above the results, a summary panel shows:
+          </p>
+          <ul>
+            <li>Query gene name and systematic name</li>
+            <li>Selected organism</li>
+            <li>Number of conditions used in the correlation analysis</li>
+            <li>Total number of genes compared</li>
           </ul>
         </div>
 
         <div className="info-section">
-          <h2 id="heatmap">Understanding the Heatmap</h2>
+          <h2 id="heatmap">Understanding the Heatmaps</h2>
           <p>
-            The co-expression heatmap provides a visual overview of expression patterns across
-            multiple genes and conditions.
+            Both the Expression Data heatmap strip and the Co-expression heatmap use the same
+            color scheme for consistency.
           </p>
 
           <h3>Color Scale</h3>
           <ul>
-            <li><strong style={{color: '#c07a7a'}}>Red/Pink</strong> - Upregulated (fold change &gt; 1)</li>
-            <li><strong style={{color: '#5f7fa6'}}>Blue</strong> - Downregulated (fold change &lt; 1)</li>
-            <li><strong style={{color: '#9e9e9e'}}>Grey</strong> - No significant change (~1x)</li>
-            <li><strong style={{color: '#f5f5f5'}}>Light grey</strong> - No data available</li>
+            <li><strong style={{color: '#C41E3A'}}>Crimson Red</strong> - Upregulated (fold change &gt; 1). Darker red indicates larger fold change.</li>
+            <li><strong style={{color: '#5080B0'}}>Steel Blue</strong> - Downregulated (fold change &lt; 1). Darker blue indicates larger downregulation.</li>
+            <li><strong style={{color: '#f7f7f7', backgroundColor: '#ddd', padding: '0 4px'}}>Near White</strong> - No significant change (~1x fold change)</li>
+            <li><strong style={{color: '#666', backgroundColor: '#d0d0d0', padding: '0 4px'}}>Grey</strong> - No data available for this gene/condition combination</li>
           </ul>
           <p>
-            Color intensity indicates the magnitude of fold change - darker colors represent
-            larger changes from control.
+            Color intensity (opacity) indicates the magnitude of fold change. Changes of 2x or
+            greater appear with full intensity, while smaller changes are more subtle.
           </p>
 
-          <h3>Category Bar</h3>
-          <p>
-            The colored bar at the top of the heatmap indicates the experimental category for
-            each condition, using the same color scheme as the Expression Data tab.
-          </p>
-
-          <h3>Sorting Options</h3>
+          <h3>Co-expression Heatmap Features</h3>
           <ul>
             <li>
-              <strong>By Study</strong> - Groups conditions by their source publication
+              <strong>Query Gene Row</strong> - The query gene appears at the top with a highlighted
+              background for easy reference
+            </li>
+            <li>
+              <strong>Correlation Values</strong> - Each similar gene shows its correlation coefficient
+              (r=) next to the gene name
+            </li>
+            <li>
+              <strong>Category Bar</strong> - A colored bar at the top indicates the experimental
+              category for each condition:
+              <ul>
+                <li><span style={{backgroundColor: '#9e9e9e', color: '#fff', padding: '1px 6px', borderRadius: '3px'}}>Control</span></li>
+                <li><span style={{backgroundColor: '#4caf50', color: '#fff', padding: '1px 6px', borderRadius: '3px'}}>Growth & Physiology</span></li>
+                <li><span style={{backgroundColor: '#f44336', color: '#fff', padding: '1px 6px', borderRadius: '3px'}}>Host Interaction</span></li>
+                <li><span style={{backgroundColor: '#ff9800', color: '#fff', padding: '1px 6px', borderRadius: '3px'}}>Stress Response</span></li>
+              </ul>
+            </li>
+            <li>
+              <strong>Hover Info Bar</strong> - A fixed info bar above the heatmap displays details
+              for the currently hovered cell: gene name, condition, fold change, category, and study
+            </li>
+          </ul>
+
+          <h3>Sorting Options (Co-expression Heatmap)</h3>
+          <ul>
+            <li>
+              <strong>By Study</strong> - Groups conditions by their source publication, then
+              alphabetically within each study
             </li>
             <li>
               <strong>By Fold Change</strong> - Orders conditions by the query gene's fold change
-              magnitude (most extreme first)
+              magnitude, with most extreme changes first
             </li>
             <li>
               <strong>Clustered</strong> (default) - Groups similar conditions together based on
-              average expression patterns across all displayed genes
+              average expression patterns across all displayed genes. Upregulated conditions
+              appear first.
             </li>
           </ul>
 
-          <h3>Interactivity</h3>
+          <h3>Study Filter</h3>
           <p>
-            Hover over any cell in the heatmap to see detailed information including the gene
-            name, condition label, exact fold change value, and study name.
+            In the Co-expression heatmap, use the "Study" dropdown to focus on conditions from
+            a specific study, or select "All studies" to view the complete dataset.
           </p>
         </div>
 
@@ -191,10 +282,37 @@ function ExpressionHelp() {
             gene body, and fold changes are calculated relative to control conditions within
             each study.
           </p>
+
+          <h3>Correlation Caching</h3>
+          <p>
+            For efficient Co-expression queries, CGD pre-computes and caches pairwise correlations
+            for all genes across all available conditions. This enables instant retrieval of
+            co-expressed genes without requiring real-time computation.
+          </p>
         </div>
 
         <div className="info-section">
           <h2 id="interpretation">Interpreting Results</h2>
+
+          <h3>Expression Patterns</h3>
+          <p>
+            When analyzing a gene's expression profile:
+          </p>
+          <ul>
+            <li>
+              Look for <strong>consistent patterns</strong> across multiple studies - if a gene is
+              upregulated under similar conditions in different experiments, this provides
+              stronger evidence for condition-specific regulation
+            </li>
+            <li>
+              Consider the <strong>biological context</strong> of each condition category to
+              understand what processes may be regulating your gene
+            </li>
+            <li>
+              Use the <strong>PubMed links</strong> to access the original publications for
+              detailed experimental methods and additional context
+            </li>
+          </ul>
 
           <h3>Co-expression Analysis</h3>
           <p>
@@ -207,6 +325,23 @@ function ExpressionHelp() {
             <li>Have related cellular functions</li>
           </ul>
 
+          <h3>Choosing a Correlation Metric</h3>
+          <ul>
+            <li>
+              <strong>Pearson</strong> - Best for detecting linear relationships. Use when you
+              expect genes to have proportionally similar fold changes.
+            </li>
+            <li>
+              <strong>Spearman</strong> - Use when you care about rank order (which conditions
+              have highest/lowest expression) rather than exact values. More robust to outliers.
+            </li>
+            <li>
+              <strong>Cosine</strong> - Use when you care about the pattern shape regardless of
+              magnitude. Two genes with the same up/down pattern but different amplitudes will
+              have high cosine similarity.
+            </li>
+          </ul>
+
           <h3>Limitations</h3>
           <ul>
             <li>
@@ -215,11 +350,15 @@ function ExpressionHelp() {
             </li>
             <li>
               <strong>Condition-dependent</strong> - Co-expression relationships may only hold
-              under specific experimental conditions.
+              under specific experimental conditions included in the dataset.
             </li>
             <li>
               <strong>RNA vs. protein</strong> - mRNA expression levels do not always correlate
-              with protein abundance or activity.
+              with protein abundance or activity due to post-transcriptional regulation.
+            </li>
+            <li>
+              <strong>Dataset bias</strong> - Results reflect the conditions represented in
+              available RNA-seq studies, which may not cover all relevant biological contexts.
             </li>
           </ul>
 
@@ -236,6 +375,14 @@ function ExpressionHelp() {
             <li>
               Consider the number of shared conditions - correlations based on more conditions
               are more reliable.
+            </li>
+            <li>
+              Compare results across different organisms - conserved co-expression relationships
+              are more likely to be biologically meaningful.
+            </li>
+            <li>
+              Use the heatmap visualization to identify condition clusters where your gene
+              of interest shows the most dramatic expression changes.
             </li>
           </ul>
         </div>
