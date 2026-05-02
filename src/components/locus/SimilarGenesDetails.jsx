@@ -101,18 +101,31 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
   }, [fetchSimilarGenes]);
 
   // Deduplicate genes by gene_name (A/B alleles have same gene_name)
+  // Also filter out the query gene itself (which may appear with r=1.00)
   const deduplicatedGenes = useMemo(() => {
     if (!data?.similar_genes) return [];
 
+    // Get query gene identifiers to filter out
+    const querySystematic = data.query_gene?.systematic_name;
+    const queryStandard = data.query_gene?.gene_name;
+
     const seen = new Set();
     return data.similar_genes.filter(gene => {
+      // Skip if this is the query gene (same systematic or standard name)
+      if (querySystematic && (gene.feature_name === querySystematic || gene.gene_name === querySystematic)) {
+        return false;
+      }
+      if (queryStandard && (gene.feature_name === queryStandard || gene.gene_name === queryStandard)) {
+        return false;
+      }
+
       // Use gene_name for deduplication, fall back to feature_name
       const key = gene.gene_name || gene.feature_name;
       if (seen.has(key)) return false;
       seen.add(key);
       return true;
     });
-  }, [data?.similar_genes]);
+  }, [data?.similar_genes, data?.query_gene]);
 
   // AG Grid column definitions
   const columnDefs = useMemo(() => [
@@ -265,8 +278,9 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
       );
 
       // Build the final query gene entry with correct names
+      // Prefer standard name (HOG1) over systematic name (C2_03330C_A) for display
       const finalQueryEntry = {
-        geneName: querySystematicName || queryStandardName,
+        geneName: queryStandardName || querySystematicName,
         data: {
           // Use API data if available, but ensure correct names
           ...(queryEntry?.data || {}),
