@@ -58,20 +58,67 @@ function LocusPage() {
   // Always fetch data for the effective name (A allele) - don't wait for redirect
   const { data, loading, errors, loaders } = useLocusData(effectiveName);
 
-  // Extract ortholog organisms from the locus data (candida_orthologs field)
-  // This uses data already fetched from the database, no extra API call needed
-  const orthologOrganisms = React.useMemo(() => {
-    if (!data.info?.results || !selectedOrganism) return [];
+  // Build a map of organism -> feature_name from the primary organism's ortholog data
+  // This stays stable regardless of which organism is selected
+  // Keys are stored in multiple formats to handle potential mismatches
+  const orthologMap = React.useMemo(() => {
+    if (!data.info?.results) return new Map();
 
-    const currentOrgData = data.info.results[selectedOrganism];
-    if (!currentOrgData?.candida_orthologs) return [];
+    const map = new Map();
+
+    // Add all organisms that have direct data
+    Object.entries(data.info.results).forEach(([orgName, orgData]) => {
+      if (orgData?.feature_name) {
+        map.set(orgName, orgData.feature_name);
+      }
+
+      // Also add orthologs from this organism's candida_orthologs
+      if (orgData?.candida_orthologs) {
+        orgData.candida_orthologs.forEach(orth => {
+          // Store with the original organism_name
+          map.set(orth.organism_name, orth.feature_name);
+        });
+      }
+    });
+
+    console.log('[LocusPage] orthologMap built:', {
+      keys: Array.from(map.keys()),
+      entries: Array.from(map.entries()),
+    });
+
+    return map;
+  }, [data.info?.results]);
+
+  // Extract ortholog organisms for the OrganismSelector dropdown
+  // Uses the primary organism (query_organism) to get stable ortholog list
+  const orthologOrganisms = React.useMemo(() => {
+    if (!data.info?.results) return [];
+
+    // Get ortholog data from the primary/query organism
+    const primaryOrganism = data.info.query_organism;
+    const primaryOrgData = primaryOrganism ? data.info.results[primaryOrganism] : null;
+
+    if (!primaryOrgData?.candida_orthologs) return [];
 
     // Convert candida_orthologs to the format expected by OrganismSelector
-    return currentOrgData.candida_orthologs.map(orth => ({
+    return primaryOrgData.candida_orthologs.map(orth => ({
       organism: orth.organism_name,
       feature_name: orth.feature_name,
     }));
-  }, [data.info, selectedOrganism]);
+  }, [data.info?.results, data.info?.query_organism]);
+
+  // Get the feature name for the currently selected organism
+  // Works for both primary organisms and orthologs
+  const currentFeatureName = React.useMemo(() => {
+    if (!selectedOrganism) return null;
+    const featureName = orthologMap.get(selectedOrganism) || null;
+    console.log('[LocusPage] currentFeatureName lookup:', {
+      selectedOrganism,
+      featureName,
+      orthologMapKeys: Array.from(orthologMap.keys()),
+    });
+    return featureName;
+  }, [selectedOrganism, orthologMap]);
 
   // Reset selected organism when locus name changes
   useEffect(() => {
@@ -213,7 +260,8 @@ function LocusPage() {
                 locusName={name}
                 selectedOrganism={selectedOrganism}
                 onOrganismChange={setSelectedOrganism}
-                currentFeatureName={selectedOrganism && data.info?.results?.[selectedOrganism]?.feature_name}
+                currentFeatureName={currentFeatureName}
+                orthologMap={orthologMap}
               />
             )}
           </div>

@@ -22,13 +22,19 @@ const ORGANISMS = Object.entries(ORGANISM_MAP).map(([display, api]) => ({
   api,
 }));
 
-function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, currentFeatureName }) {
+function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, currentFeatureName, orthologMap }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
 
-  // Controls state
-  const [organism, setOrganism] = useState('C_albicans_SC5314_A22');
+  // Controls state - derive organism from selectedOrganism to stay in sync with parent
+  const organism = useMemo(() => {
+    if (selectedOrganism) {
+      return ORGANISM_MAP[selectedOrganism] || 'C_albicans_SC5314_A22';
+    }
+    return 'C_albicans_SC5314_A22';
+  }, [selectedOrganism]);
+
   const [metric, setMetric] = useState('pearson');
   const [limit, setLimit] = useState(20);
 
@@ -37,23 +43,10 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
   const [heatmapLoading, setHeatmapLoading] = useState(false);
   const [heatmapData, setHeatmapData] = useState(null);
 
-  // Set organism based on selected organism from parent
-  useEffect(() => {
-    if (selectedOrganism) {
-      // Try to map the selected organism to an API organism
-      const apiOrganism = ORGANISM_MAP[selectedOrganism];
-      if (apiOrganism) {
-        setOrganism(apiOrganism);
-      }
-    }
-  }, [selectedOrganism]);
-
-  // Handle organism change - update local state and notify parent
-  const handleOrganismChange = useCallback((newOrganism) => {
-    setOrganism(newOrganism);
-    // Notify parent to update the page header
+  // Handle organism change - notify parent which will update selectedOrganism and currentFeatureName together
+  const handleOrganismChange = useCallback((newApiOrganism) => {
     if (onOrganismChange) {
-      const displayName = ORGANISM_DISPLAY_MAP[newOrganism];
+      const displayName = ORGANISM_DISPLAY_MAP[newApiOrganism];
       if (displayName) {
         onOrganismChange(displayName);
       }
@@ -61,19 +54,38 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
   }, [onOrganismChange]);
 
   // Get the effective locus name for the current organism
-  // Use currentFeatureName from the selected organism's data (handles orthologs automatically)
+  // Use currentFeatureName from parent, or look up in orthologMap as fallback
   const effectiveLocusName = useMemo(() => {
     // If we have the current feature name from the selected organism, use it
     if (currentFeatureName) {
       return currentFeatureName;
     }
+    // Try looking up in orthologMap using the display name
+    if (orthologMap && selectedOrganism) {
+      const featureName = orthologMap.get(selectedOrganism);
+      if (featureName) {
+        return featureName;
+      }
+    }
     // Fall back to original locus name
     return locusName;
-  }, [currentFeatureName, locusName]);
+  }, [currentFeatureName, orthologMap, selectedOrganism, locusName]);
+
+  // Debug logging
+  console.log('[SimilarGenesDetails] Props:', {
+    locusName,
+    selectedOrganism,
+    currentFeatureName,
+    derivedOrganism: organism,
+    effectiveLocusName,
+    orthologMapKeys: orthologMap ? Array.from(orthologMap.keys()) : [],
+  });
 
   // Fetch similar genes data
   const fetchSimilarGenes = useCallback(async () => {
     if (!effectiveLocusName) return;
+
+    console.log('[SimilarGenesDetails] Fetching with:', { effectiveLocusName, organism, metric, limit });
 
     setLoading(true);
     setError(null);
