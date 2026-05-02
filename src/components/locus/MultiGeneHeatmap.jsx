@@ -383,7 +383,24 @@ function MultiGeneHeatmap({
 
           {/* Heatmap grid */}
           <div className="heatmap-grid-wrapper">
-            {/* Category color bar */}
+            {/* Condition headers (above category bar) */}
+            <div className="heatmap-condition-headers">
+              {filteredConditions.map(condition => (
+                <div
+                  key={condition.id}
+                  className="heatmap-condition-header"
+                  title={`${condition.label} (${condition.studyName})`}
+                >
+                  <span className="condition-label-rotated">
+                    {condition.label.length > 20
+                      ? condition.label.slice(0, 20) + '...'
+                      : condition.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* Category color bar (below condition names) */}
             <div className="heatmap-category-bar">
               {filteredConditions.map((condition, idx) => {
                 const prevBucket = idx > 0 ? filteredConditions[idx - 1].bucket : null;
@@ -399,23 +416,6 @@ function MultiGeneHeatmap({
                   />
                 );
               })}
-            </div>
-
-            {/* Condition headers */}
-            <div className="heatmap-condition-headers">
-              {filteredConditions.map(condition => (
-                <div
-                  key={condition.id}
-                  className="heatmap-condition-header"
-                  title={`${condition.label} (${condition.studyName})`}
-                >
-                  <span className="condition-label-rotated">
-                    {condition.label.length > 15
-                      ? condition.label.slice(0, 15) + '...'
-                      : condition.label}
-                  </span>
-                </div>
-              ))}
             </div>
 
             {/* Gene rows */}

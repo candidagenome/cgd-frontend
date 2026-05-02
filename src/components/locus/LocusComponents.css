@@ -4071,7 +4071,7 @@ a:hover {
 }
 
 .multi-gene-heatmap-container .heatmap-corner {
-  height: 80px;
+  height: 111px;
   background: white;
 }
 
@@ -4125,21 +4125,23 @@ a:hover {
 
 .multi-gene-heatmap-container .heatmap-condition-headers {
   display: flex;
-  height: 80px;
+  height: 100px;
+  align-items: flex-end;
 }
 
 .multi-gene-heatmap-container .heatmap-condition-header {
   width: 16px;
   min-width: 16px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-start;
-  padding-bottom: 4px;
+  height: 100px;
+  position: relative;
 }
 
 .multi-gene-heatmap-container .condition-label-rotated {
-  transform: rotate(-60deg);
-  transform-origin: left bottom;
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: rotate(-55deg);
+  transform-origin: bottom center;
   white-space: nowrap;
   font-size: 0.7em;
   color: #555;
@@ -4196,14 +4198,14 @@ a:hover {
 /* Category Bar */
 .multi-gene-heatmap-container .heatmap-category-bar {
   display: flex;
-  height: 8px;
-  margin-bottom: 2px;
+  height: 10px;
+  margin-bottom: 1px;
 }
 
 .multi-gene-heatmap-container .category-cell {
   width: 16px;
   min-width: 16px;
-  height: 8px;
+  height: 10px;
   border-right: 1px solid rgba(255, 255, 255, 0.5);
 }
 
@@ -4213,11 +4215,11 @@ a:hover {
 }
 
 .multi-gene-heatmap-container .heatmap-corner {
-  height: 90px;
+  height: 111px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding-bottom: 4px;
+  padding-bottom: 1px;
 }
 
 .multi-gene-heatmap-container .corner-category-label {
@@ -4225,7 +4227,7 @@ a:hover {
   color: #888;
   text-align: right;
   padding-right: 8px;
-  height: 8px;
+  height: 10px;
   line-height: 8px;
   margin-bottom: 2px;
 }
