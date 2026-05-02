@@ -305,10 +305,11 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
     }
   }, [data, allGenesForDisplay, organism, effectiveLocusName, limit]);
 
-  // Reset heatmap data when similar genes data or limit changes
+  // Reset heatmap data when similar genes data changes
+  // (limit changes trigger new API call which updates data)
   useEffect(() => {
     setHeatmapData(null);
-  }, [data, limit]);
+  }, [data]);
 
   // Auto-load heatmap data when similar genes data is available
   useEffect(() => {
