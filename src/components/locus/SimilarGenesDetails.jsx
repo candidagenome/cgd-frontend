@@ -344,6 +344,12 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
   // State for copy feedback
   const [copyFeedback, setCopyFeedback] = useState(null);
 
+  // Store gene list in localStorage for analysis tools (GO Term Finder, etc.)
+  const handleAnalyzeGeneList = useCallback(() => {
+    const geneList = deduplicatedGenes.map(g => g.feature_name || g.gene_name);
+    localStorage.setItem('phenotypeSearchGeneList', JSON.stringify(geneList));
+  }, [deduplicatedGenes]);
+
   // Copy gene names to clipboard (excluding query gene)
   const handleCopyGeneList = useCallback(async () => {
     const geneNames = deduplicatedGenes
@@ -532,7 +538,7 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
             </div>
           </div>
 
-          {/* Export Toolbar */}
+          {/* Export & Analyze Toolbar */}
           {deduplicatedGenes.length > 0 && (
             <div className="similar-genes-export-toolbar">
               <span className="export-label">Export ({deduplicatedGenes.length} genes):</span>
@@ -550,6 +556,28 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
               >
                 Download CSV
               </button>
+              <span className="export-separator">|</span>
+              <span className="export-label">Analyze:</span>
+              <a
+                href="/go-term-finder"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="export-btn analyze-link"
+                onClick={handleAnalyzeGeneList}
+                title="Find enriched GO terms in gene list"
+              >
+                GO Term Finder
+              </a>
+              <a
+                href="/go-slim-mapper"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="export-btn analyze-link"
+                onClick={handleAnalyzeGeneList}
+                title="Map genes to GO Slim categories"
+              >
+                GO Slim Mapper
+              </a>
             </div>
           )}
 

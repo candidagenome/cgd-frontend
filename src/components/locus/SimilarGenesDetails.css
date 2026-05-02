@@ -249,6 +249,22 @@
   border-color: #1565c0;
 }
 
+.similar-genes-export-toolbar .export-separator {
+  color: #ccc;
+  margin: 0 5px;
+}
+
+.similar-genes-export-toolbar .analyze-link {
+  text-decoration: none;
+  display: inline-block;
+}
+
+.similar-genes-export-toolbar .analyze-link:hover {
+  background-color: #2e7d32;
+  border-color: #2e7d32;
+  color: #fff;
+}
+
 /* Grid Wrapper */
 .similar-genes-grid-wrapper {
   width: 100%;
