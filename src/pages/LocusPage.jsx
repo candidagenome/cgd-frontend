@@ -147,6 +147,11 @@ function LocusPage() {
     if (data.info && !selectedOrganism) {
       const organisms = Object.keys(data.info.results || {});
       const defaultOrg = getDefaultOrganism(organisms, data.info.query_organism);
+      console.log('[LocusPage] Setting default organism:', {
+        queryOrganism: data.info.query_organism,
+        availableOrganisms: organisms,
+        defaultOrg,
+      });
       if (defaultOrg) {
         setSelectedOrganism(defaultOrg);
       }
