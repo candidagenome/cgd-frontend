@@ -1,0 +1,225 @@
+label,key,description,condition,category,technique,track_type,organism,strain,first_author,pubmed_id
+,,,,,,,,,,
+DNA,Reference sequence,C. glabrata CBS138,General,Reference sequence,Genome Assembly,Sequence,C. glabrata,CBS138,Dujon,15229592
+,,,,,,,,,,
+Transcribed Features,Transcribed Features,CGD Annotated Features,General,Gene Annotation,Annotation,Gene Annotation,C. glabrata,CBS138,CGD,24185697
+,,,,,,,,,,
+lncRNA,lncRNA,Long non-coding RNAs,General,Gene Annotation,Annotation,lncRNA,C. glabrata,CBS138,Hovhannisyan ,34916523
+,,,,,,,,,,
+Sacc_phyloP_scores,4: Order Saccharomycetales conservation scores,"C. glabrata CBS138 phyloP conservation scores from genomic alignment of 12 Saccharomycetales species: C. glabrata, C. bracarensis, N. bacillisporus, S. cerevisiae, S. castellii, A. gossypii, C. albicans, C. dubliniensis, C. parapsilosis, L. elongisporus, D. hansenii, and Y. lipolytica",Wild-type,Conservation,Genome Alignment,Conservation plot,C. glabrata,CBS138,CGD,24185697
+,,,,,,,,,,
+WGD_phyloP_scores,3. WGD clade conservation scores,"C. glabrata CBS138 phyloP conservation scores from genomic alignment of WGD clade: C. glabrata, C. bracarensis, C. nivariensis, N. bacillisporus, C. castellii, S. cerevisiae, S. mikatae, S. bayanus, S. castellii",Wild-type,Conservation,Genome Alignment,Conservation plot,C. glabrata,CBS138,CGD,24185697
+,,,,,,,,,,
+CanNak_phyloP_scores,2: Genus Nakaseomyces conservation scores,"C. glabrata CBS138 phyloP conservation scores from genomic alignment of Nakaseomyces/Candida clade: C. glabrata, C. bracarensis, C. nivariensis, N. bacillisporus, C. castellii",Wild-type,Conservation,Genome Alignment,Conservation plot,C. glabrata,CBS138,CGD,24185697
+,,,,,,,,,,
+glab_phyloP_scores,1: glabrata group conservation scores,"C. glabrata CBS138 phyloP conservation scores from genomic alignment of C. glabrata, C. bracarensis and C. nivariensis",Wild-type,Conservation,Genome Alignment,Conservation plot,C. glabrata,CBS138,CGD,24185697
+,,,,,,,,,,
+linde_ypd_1_alignments,Linde & Duggan Nitrosative Stress Control (rep 1) Alignments,"Aligned strand-specific, paired-end reads, nitrosative stress control (YPD)",Control,Gene Expression,RNA-Seq,Aligned reads,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_ypd_1_coverage,Linde & Duggan Nitrosative Stress Control (rep 1) Coverage,"Read coverage, nitrosative stress control (YPD)",Control,Gene Expression,RNA-Seq,Coverage plot,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_ypd_1_density,Linde & Duggan Nitrosative Stress Control (rep 1) Density,"Read density, nitrosative stress control (YPD)",Control,Gene Expression,RNA-Seq,Density plot,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_ypd_2_alignments,Linde & Duggan Nitrosative Stress Control (rep 2) Alignments,"Aligned strand-specific, paired-end reads, nitrosative stress control (YPD)",Control,Gene Expression,RNA-Seq,Aligned reads,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_ypd_2_coverage,Linde & Duggan Nitrosative Stress Control (rep 2) Coverage,"Read coverage, nitrosative stress control (YPD)",Control,Gene Expression,RNA-Seq,Coverage plot,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_ypd_2_density,Linde & Duggan Nitrosative Stress Control (rep 2) Density,"Read density, nitrosative stress control (YPD)",Control,Gene Expression,RNA-Seq,Density plot,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_ypd_3_alignments,Linde & Duggan Nitrosative Stress Control (rep 3) Alignments,"Aligned strand-specific, paired-end reads, nitrosative stress control (YPD)",Control,Gene Expression,RNA-Seq,Aligned reads,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_ypd_3_coverage,Linde & Duggan Nitrosative Stress Control (rep 3) Coverage,"Read coverage, nitrosative stress control (YPD)",Control,Gene Expression,RNA-Seq,Coverage plot,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_ypd_3_density,Linde & Duggan Nitrosative Stress Control (rep 3) Density,"Read density, nitrosative stress control (YPD)",Control,Gene Expression,RNA-Seq,Density plot,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_gsno_1_alignments,Linde & Duggan Nitrosative Stress (rep 1) Alignments,"Aligned strand-specific, paired-end reads, nitrosative stress (YPD + GSNO)",Nitrosative Stress,Gene Expression,RNA-Seq,Aligned reads,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_gsno_1_coverage,Linde & Duggan Nitrosative Stress (rep 1) Coverage,"Read coverage, nitrosative stress (YPD + GSNO)",Nitrosative Stress,Gene Expression,RNA-Seq,Coverage plot,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_gsno_1_density,Linde & Duggan Nitrosative Stress (rep 1) Density,"Read density, nitrosative stress (YPD + GSNO)",Nitrosative Stress,Gene Expression,RNA-Seq,Density plot,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_gsno_2_alignments,Linde & Duggan Nitrosative Stress (rep 2) Alignments,"Aligned strand-specific, paired-end reads, nitrosative stress (YPD + GSNO)",Nitrosative Stress,Gene Expression,RNA-Seq,Aligned reads,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_gsno_2_coverage,Linde & Duggan Nitrosative Stress (rep 2) Coverage,"Read coverage, nitrosative stress (YPD + GSNO)",Nitrosative Stress,Gene Expression,RNA-Seq,Coverage plot,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_gsno_2_density,Linde & Duggan Nitrosative Stress (rep 2) Density,"Read density, nitrosative stress (YPD + GSNO)",Nitrosative Stress,Gene Expression,RNA-Seq,Density plot,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_gsno_3_alignments,Linde & Duggan Nitrosative Stress (rep 3) Alignments,"Aligned strand-specific, paired-end reads, nitrosative stress (YPD + GSNO)",Nitrosative Stress,Gene Expression,RNA-Seq,Aligned reads,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_gsno_3_coverage,Linde & Duggan Nitrosative Stress (rep 3) Coverage,"Read coverage, nitrosative stress (YPD + GSNO)",Nitrosative Stress,Gene Expression,RNA-Seq,Coverage plot,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_gsno_3_density,Linde & Duggan Nitrosative Stress (rep 3) Density,"Read density, nitrosative stress (YPD + GSNO)",Nitrosative Stress,Gene Expression,RNA-Seq,Density plot,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_ph4_1_alignments,Linde & Duggan pH 4 (rep 1) Alignments,"Aligned strand-specific, paired-end reads, pH 4",pH 4,Gene Expression,RNA-Seq,Aligned reads,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_ph4_1_coverage,Linde & Duggan pH 4 (rep 1) Coverage,"Read coverage, pH 4",pH 4,Gene Expression,RNA-Seq,Coverage plot,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_ph4_1_density,Linde & Duggan pH 4 (rep 1) Density,"Read density, pH 4",pH 4,Gene Expression,RNA-Seq,Density plot,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_ph4_2_alignments,Linde & Duggan pH 4 (rep 2) Alignments,"Aligned strand-specific, paired-end reads, pH 4",pH 4,Gene Expression,RNA-Seq,Aligned reads,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_ph4_2_coverage,Linde & Duggan pH 4 (rep 2) Coverage,"Read coverage, pH 4",pH 4,Gene Expression,RNA-Seq,Coverage plot,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_ph4_2_density,Linde & Duggan pH 4 (rep 2) Density,"Read density, pH 4",pH 4,Gene Expression,RNA-Seq,Density plot,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_ph4_3_alignments,Linde & Duggan pH 4 (rep 3) Alignments,"Aligned strand-specific, paired-end reads, pH 4",pH 4,Gene Expression,RNA-Seq,Aligned reads,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_ph4_3_coverage,Linde & Duggan pH 4 (rep 3) Coverage,"Read coverage, pH 4",pH 4,Gene Expression,RNA-Seq,Coverage plot,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_ph4_3_density,Linde & Duggan pH 4 (rep 3) Density,"Read density, pH 4",pH 4,Gene Expression,RNA-Seq,Density plot,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_ph8_1_alignments,Linde & Duggan pH 8 (rep 1) Alignments,"Aligned strand-specific, paired-end reads, pH 8",pH 8,Gene Expression,RNA-Seq,Aligned reads,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_ph8_1_coverage,Linde & Duggan pH 8 (rep 1) Coverage,"Read coverage, pH 8",pH 8,Gene Expression,RNA-Seq,Coverage plot,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_ph8_1_density,Linde & Duggan pH 8 (rep 1) Density,"Read density, pH 8",pH 8,Gene Expression,RNA-Seq,Density plot,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_ph8_2_alignments,Linde & Duggan pH 8 (rep 2) Alignments,"Aligned strand-specific, paired-end reads, pH 8",pH 8,Gene Expression,RNA-Seq,Aligned reads,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_ph8_2_coverage,Linde & Duggan pH 8 (rep 2) Coverage,"Read coverage, pH 8",pH 8,Gene Expression,RNA-Seq,Coverage plot,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_ph8_2_density,Linde & Duggan pH 8 (rep 2) Density,"Read density, pH 8",pH 8,Gene Expression,RNA-Seq,Density plot,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_ph8_3_alignments,Linde & Duggan pH 8 (rep 3) Alignments,"Aligned strand-specific, paired-end reads, pH 8",pH 8,Gene Expression,RNA-Seq,Aligned reads,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_ph8_3_coverage,Linde & Duggan pH 8 (rep 3) Coverage,"Read coverage, pH 8",pH 8,Gene Expression,RNA-Seq,Coverage plot,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+linde_ph8_3_density,Linde & Duggan pH 8 (rep 3) Density,"Read density, pH 8",pH 8,Gene Expression,RNA-Seq,Density plot,C. glabrata,CBS138,Linde & Duggan,25586221
+,,,,,,,,,,
+Bhakt_set4_casp_rep2_alignments,Bhakt et al DGE for set4 caspofungin (rep 2) alignments,"Aligned non-strand-specific paired-end reads, BG2_set4 caspofungin",caspofungin,Gene Expression,RNA-Seq,Aligned reads,C. glabrata,BG2,Bhakt et al.,36108742
+,,,,,,,,,,
+Bhakt_set4_casp_rep2_coverage,Bhakt et al DGE for set4 caspofungin (rep 2) coverage,"Read coverage, BG2_set4 caspofungin",caspofungin,Gene Expression,RNA-Seq,Coverage plot,C. glabrata,BG2,Bhakt et al.,36108742
+,,,,,,,,,,
+Bhakt_set4_casp_rep2_density,Bhakt et al DGE for set4 caspofungin (rep 2) density,"Read density, BG2_set4 caspofungin",caspofungin,Gene Expression,RNA-Seq,Density plot,C. glabrata,BG2,Bhakt et al.,36108742
+,,,,,,,,,,
+Bhakt_set4_casp_rep1_alignments,Bhakt et al DGE for set4 caspofungin (rep 1) alignments,"Aligned non-strand-specific paired-end reads, BG2_set4 caspofungin",caspofungin,Gene Expression,RNA-Seq,Aligned reads,C. glabrata,BG2,Bhakt et al.,36108742
+,,,,,,,,,,
+Bhakt_set4_casp_rep1_coverage,Bhakt et al DGE for set4 caspofungin (rep 1) coverage,"Read coverage, BG2_set4 caspofungin",caspofungin,Gene Expression,RNA-Seq,Coverage plot,C. glabrata,BG2,Bhakt et al.,36108742
+,,,,,,,,,,
+Bhakt_set4_casp_rep1_density,Bhakt et al DGE for set4 caspofungin (rep 1) density,"Read density, BG2_set4 caspofungin",caspofungin,Gene Expression,RNA-Seq,Density plot,C. glabrata,BG2,Bhakt et al.,36108742
+,,,,,,,,,,
+Bhakt_set4_control_rep2_alignments,Bhakt et al set4 control (rep 2) alignments,"Aligned non-strand-specific paired-end reads, BG2_set4 control",untreated,Gene Expression,RNA-Seq,Aligned reads,C. glabrata,BG2,Bhakt et al.,36108742
+,,,,,,,,,,
+Bhakt_set4_control_rep2_coverage,Bhakt et al set4 control  (rep 2) coverage,"Read coverage, BG2_set4 control",untreated,Gene Expression,RNA-Seq,Coverage plot,C. glabrata,BG2,Bhakt et al.,36108742
+,,,,,,,,,,
+Bhakt_set4_control_rep2_density,Bhakt et al set4 control  (rep 2) density,"Read density, BG2_set4 control",untreated,Gene Expression,RNA-Seq,Density plot,C. glabrata,BG2,Bhakt et al.,36108742
+,,,,,,,,,,
+Bhakt_WT_casp_rep2_alignments,Bhakt et al WT caspofungin (rep 2) alignments,"Aligned non-strand-specific paired-end reads, BG2 caspofungin",caspofungin,Gene Expression,RNA-Seq,Aligned reads,C. glabrata,BG2,Bhakt et al.,36108742
+,,,,,,,,,,
+Bhakt_WT_casp_rep2_coverage,Bhakt et al WT caspofungin  (rep 2) coverage,"Read coverage, BG2 caspofungin",caspofungin,Gene Expression,RNA-Seq,Coverage plot,C. glabrata,BG2,Bhakt et al.,36108742
+,,,,,,,,,,
+Bhakt_WT_casp_rep2_density,Bhakt et al WT caspofungin  (rep 2) density,"Read density, BG2 caspofungin",caspofungin,Gene Expression,RNA-Seq,Density plot,C. glabrata,BG2,Bhakt et al.,36108742
+,,,,,,,,,,
+Bhakt_WT_casp_rep1_alignments,Bhakt et al WT caspofungin (rep 1) alignments,"Aligned non-strand-specific paired-end reads, BG2 caspofungin",caspofungin,Gene Expression,RNA-Seq,Aligned reads,C. glabrata,BG2,Bhakt et al.,36108742
+,,,,,,,,,,
+Bhakt_WT_casp_rep1_coverage,Bhakt et al WT caspofungin  (rep 1) coverage,"Read coverage, BG2 caspofungin",caspofungin,Gene Expression,RNA-Seq,Coverage plot,C. glabrata,BG2,Bhakt et al.,36108742
+,,,,,,,,,,
+Bhakt_WT_casp_rep1_density,Bhakt et al WT caspofungin  (rep 1) density,"Read density, BG2 caspofungin",caspofungin,Gene Expression,RNA-Seq,Density plot,C. glabrata,BG2,Bhakt et al.,36108742
+,,,,,,,,,,
+Bhakt_WT_control_rep2_alignments,Bhakt et al WT control (rep 2) alignments,"Aligned non-strand-specific paired-end reads, BG2 control",untreated,Gene Expression,RNA-Seq,Aligned reads,C. glabrata,BG2,Bhakt et al.,36108742
+,,,,,,,,,,
+Bhakt_WT_control_rep2_coverage,Bhakt et al WT control  (rep 2) coverage,"Read coverage, BG2 control",untreated,Gene Expression,RNA-Seq,Coverage plot,C. glabrata,BG2,Bhakt et al.,36108742
+,,,,,,,,,,
+Bhakt_WT_control_rep2_density,Bhakt et al WT control  (rep 2) density,"Read density, BG2 control",untreated,Gene Expression,RNA-Seq,Density plot,C. glabrata,BG2,Bhakt et al.,36108742
+,,,,,,,,,,
+Bhakt_WT_control_rep1_alignments,Bhakt et al WT control (rep 1) alignments,"Aligned non-strand-specific paired-end reads, BG2 control",untreated,Gene Expression,RNA-Seq,Aligned reads,C. glabrata,BG2,Bhakt et al.,36108742
+,,,,,,,,,,
+Bhakt_WT_control_rep1_coverage,Bhakt et al WT control  (rep 1) coverage,"Read coverage, BG2 control",untreated,Gene Expression,RNA-Seq,Coverage plot,C. glabrata,BG2,Bhakt et al.,36108742
+,,,,,,,,,,
+Bhakt_WT_control_rep1_density,Bhakt et al WT control  (rep 1) density,"Read density, BG2 control",untreated,Gene Expression,RNA-Seq,Density plot,C. glabrata,BG2,Bhakt et al.,36108742
+,,,,,,,,,,
+Vu_upc2a_rep3_alignments,Vu et al DGE for upc2a (rep 3) alignments,"Aligned non-strand-specific paired-end reads, upc2a mutant",mutant,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Vu,34591857
+Vu_upc2a_rep3_coverage,Vu et al DGE for upc2a (rep 3) coverage,"Read coverage, upc2a mutant",mutant,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Vu,34591857
+Vu_upc2a_rep3_density,Vu et al DGE for upc2a (rep 3) density,"Read density, upc2a mutant",mutant,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Vu,34591857
+Vu_upc2a_rep2_alignments,Vu et al DGE for upc2a (rep 2) alignments,"Aligned non-strand-specific paired-end reads, upc2a mutant",mutant,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Vu,34591857
+Vu_upc2a_rep2_coverage,Vu et al DGE for upc2a (rep 2) coverage,"Read coverage, upc2a mutant",mutant,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Vu,34591857
+Vu_upc2a_rep2_density,Vu et al DGE for upc2a (rep 2) density,"Read density, upc2a mutant",mutant,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Vu,34591857
+Vu_upc2a_rep1_alignments,Vu et al DGE for upc2a (rep 1) alignments,"Aligned non-strand-specific paired-end reads, upc2a mutant",mutant,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Vu,34591857
+Vu_upc2a_rep1_coverage,Vu et al DGE for upc2a (rep 1) coverage,"Read coverage, upc2a mutant",mutant,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Vu,34591857
+Vu_upc2a_rep1_density,Vu et al DGE for upc2a (rep 1) density,"Read density, upc2a mutant",mutant,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Vu,34591857
+Vu_WT_rep3_alignments,Vu et al WT control (rep 3) alignments,"Aligned non-strand-specific paired-end reads, WT control",wild type,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Vu,34591857
+Vu_WT_rep3_coverage,Vu et al WT control (rep 3) coverage,"Read coverage, WT control",wild type,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Vu,34591857
+Vu_WT_rep3_density,Vu et al WT control (rep 3) density,"Read density, WT control",wild type,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Vu,34591857
+Vu_WT_rep2_alignments,Vu et al WT control (rep 2) alignments,"Aligned non-strand-specific paired-end reads, WT control",wild type,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Vu,34591857
+Vu_WT_rep2_coverage,Vu et al WT control (rep 2) coverage,"Read coverage, WT control",wild type,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Vu,34591857
+Vu_WT_rep2_density,Vu et al WT control (rep 2) density,"Read density, WT control",wild type,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Vu,34591857
+Vu_WT_rep1_alignments,Vu et al WT control (rep 1) alignments,"Aligned non-strand-specific paired-end reads, WT control",wild type,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Vu,34591857
+Vu_WT_rep1_coverage,Vu et al WT control (rep 1) coverage,"Read coverage, WT control",wild type,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Vu,34591857
+Vu_WT_rep1_density,Vu et al WT control (rep 1) density,"Read density, WT control",wild type,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Vu,34591857
+,,,,,,,,,,
+Ni_ckb2_MMS_rep3_alignments,Ni et al DGE for ckb2 MMS (rep 3) alignments,"Aligned non-strand-specific paired-end reads, ckb2 mutant MMS",mutant 0.01% MMS,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Ni,37891489
+Ni_ckb2_MMS_rep3_coverage,Ni et al DGE for ckb2 MMS (rep 3) coverage,"Read coverage, ckb2 mutant MMS",mutant 0.01% MMS,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Ni,37891489
+Ni_ckb2_MMS_rep3_density,Ni et al DGE for ckb2 MMS (rep 3) density,"Read density, ckb2 mutant MMS",mutant 0.01% MMS,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Ni,37891489
+Ni_ckb2_MMS_rep2_alignments,Ni et al DGE for ckb2 MMS (rep 2) alignments,"Aligned non-strand-specific paired-end reads, ckb2 mutant MMS",mutant 0.01% MMS,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Ni,37891489
+Ni_ckb2_MMS_rep2_coverage,Ni et al DGE for ckb2 MMS (rep 2) coverage,"Read coverage, ckb2 mutant MMS",mutant 0.01% MMS,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Ni,37891489
+Ni_ckb2_MMS_rep2_density,Ni et al DGE for ckb2 MMS (rep 2) density,"Read density, ckb2 mutant MMS",mutant 0.01% MMS,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Ni,37891489
+Ni_ckb2_MMS_rep1_alignments,Ni et al DGE for ckb2 MMS (rep 1) alignments,"Aligned non-strand-specific paired-end reads, ckb2 mutant MMS",mutant 0.01% MMS,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Ni,37891489
+Ni_ckb2_MMS_rep1_coverage,Ni et al DGE for ckb2 MMS (rep 1) coverage,"Read coverage, ckb2 mutant MMS",mutant 0.01% MMS,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Ni,37891489
+Ni_ckb2_MMS_rep1_density,Ni et al DGE for ckb2 MMS (rep 1) density,"Read density, ckb2 mutant MMS",mutant 0.01% MMS,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Ni,37891489
+Ni_ckb1_MMS_rep2_alignments,Ni et al DGE for ckb1 MMS (rep 2) alignments,"Aligned non-strand-specific paired-end reads, ckb1 mutant MMS",mutant 0.01% MMS,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Ni,37891489
+Ni_ckb1_MMS_rep2_coverage,Ni et al DGE for ckb1 MMS (rep 2) coverage,"Read coverage, ckb1 mutant MMS",mutant 0.01% MMS,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Ni,37891489
+Ni_ckb1_MMS_rep2_density,Ni et al DGE for ckb1 MMS (rep 2) density,"Read density, ckb1 mutant MMS",mutant 0.01% MMS,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Ni,37891489
+Ni_ckb1_MMS_rep1_alignments,Ni et al DGE for ckb1 MMS (rep 1) alignments,"Aligned non-strand-specific paired-end reads, ckb1 mutant MMS",mutant 0.01% MMS,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Ni,37891489
+Ni_ckb1_MMS_rep1_coverage,Ni et al DGE for ckb1 MMS (rep 1) coverage,"Read coverage, ckb1 mutant MMS",mutant 0.01% MMS,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Ni,37891489
+Ni_ckb1_MMS_rep1_density,Ni et al DGE for ckb1 MMS (rep 1) density,"Read density, ckb1 mutant MMS",mutant 0.01% MMS,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Ni,37891489
+Ni_WT_MMS_rep3_alignments,Ni et al WT MMS (rep 3) alignments,"Aligned non-strand-specific paired-end reads, WT MMS",wild type 0.01% MMS,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Ni,37891489
+Ni_WT_MMS_rep3_coverage,Ni et al  WT MMS (rep 3) coverage,"Read coverage, WT MMS",wild type 0.01% MMS,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Ni,37891489
+Ni_WT_MMS_rep3_density,Ni et al  WT MMS (rep 3) density,"Read density, WT MMS",wild type 0.01% MMS,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Ni,37891489
+Ni_WT_MMS_rep2_alignments,Ni et al  WT MMS (rep 2) alignments,"Aligned non-strand-specific paired-end reads, WT MMS",wild type 0.01% MMS,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Ni,37891489
+Ni_WT_MMS_rep2_coverage,Ni et al  WT MMS (rep 2) coverage,"Read coverage, WT MMS",wild type 0.01% MMS,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Ni,37891489
+Ni_WT_MMS_rep2_density,Ni et al DGE MMS (rep 2) density,"Read density, WT MMS",wild type 0.01% MMS,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Ni,37891489
+Ni_WT_MMS_rep1_alignments,Ni et al  WT MMS (rep 1) alignments,"Aligned non-strand-specific paired-end reads, WT MMS",wild type 0.01% MMS,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Ni,37891489
+Ni_WT_MMS_rep1_coverage,Ni et al  WT MMS (rep 1) coverage,"Read coverage, WT MMS",wild type 0.01% MMS,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Ni,37891489
+Ni_WT_MMS_rep1_density,Ni et al  WT MMS (rep 1) density,"Read density, WT MMS",wild type 0.01% MMS,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Ni,37891489
+Ni_ckb2_untreated_rep2_alignments,Ni et al DGE for ckb2 untreated (rep 2) alignments,"Aligned non-strand-specific paired-end reads, ckb2 mutant untreated",mutant untreated,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Ni,37891489
+Ni_ckb2_untreated_rep2_coverage,Ni et al DGE for ckb2 untreated (rep 2) coverage,"Read coverage, ckb2 mutant untreated",mutant untreated,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Ni,37891489
+Ni_ckb2_untreated_rep2_density,Ni et al DGE for ckb2 untreated (rep 2) density,"Read density, ckb2 mutant untreated",mutant untreated,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Ni,37891489
+Ni_WT_untreated_rep3_alignments,Ni et al WT control (rep 3) alignments,"Aligned non-strand-specific paired-end reads, WT control",wild type untreated,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Ni,37891489
+Ni_WT_untreated_rep3_coverage,Ni et al  WT control (rep 3) coverage,"Read coverage, WT control",wild type untreated,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Ni,37891489
+Ni_WT_untreated_rep3_density,Ni et al  WT control (rep 3) density,"Read density, WT control",wild type untreated,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Ni,37891489
+Ni_WT_untreated_rep2_alignments,Ni et al  WT control (rep 2) alignments,"Aligned non-strand-specific paired-end reads, WT control",wild type untreated,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Ni,37891489
+Ni_WT_untreated_rep2_coverage,Ni et al  WT control (rep 2) coverage,"Read coverage, WT control",wild type untreated,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Ni,37891489
+Ni_WT_untreated_rep2_density,Ni et al DGE control (rep 2) density,"Read density, WT control",wild type untreated,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Ni,37891489
+Ni_WT_untreated_rep1_alignments,Ni et al  WT control (rep 1) alignments,"Aligned non-strand-specific paired-end reads, WT control",wild type untreated,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Ni,37891489
+Ni_WT_untreated_rep1_coverage,Ni et al  WT control (rep 1) coverage,"Read coverage, WT control",wild type untreated,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Ni,37891489
+Ni_WT_untreated_rep1_density,Ni et al  WT control (rep 1) density,"Read density, WT control",wild type untreated,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Ni,37891489
+,,,,,,,,,,
+Kumar_snf2_macrophage_10h_rep1_alignments,Kumar et al DGE for snf2 10 h macrophage (rep 1) alignments,"Aligned strand-specific paired-end reads, snf2 mutant with 10 h macrophage trtmt",mutant with macrophages,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Kumar,38632999
+Kumar_snf2_macrophage_10h_rep1_coverage,Kumar et al DGE for snf2 10 h macrophage (rep 1) coverage,"Read coverage, snf2 mutant with 10 h macrophage trtmt",mutant with macrophages,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Kumar,38632999
+Kumar_snf2_macrophage_10h_rep1_density,Kumar et al DGE for snf2 10 h macrophage (rep 1) density,"Read density, snf2 mutant with 10 h macrophage trtmt",mutant with macrophages,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Kumar,38632999
+Kumar_WT_macrophage_10h_rep2_alignments,Kumar et al WT macrophage 10 h (rep 2) alignments,"Aligned strand-specific paired-end reads, wild type with 10 h macrophage trtmt",wild type with macrophages,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Kumar,38632999
+Kumar_WT_macrophage_10h_rep2_coverage,Kumar et al WT macrophage 10 h (rep 2) coverage,"Read coverage, wild type with 10 h macrophage trtmt",wild type with macrophages,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Kumar,38632999
+Kumar_WT_macrophage_10h_rep2_density,Kumar et al WT macrophage 10 h (rep 2) density,"Read density, wild type with 10 h macrophage trtmt",wild type with macrophages,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Kumar,38632999
+Kumar_snf2_macrophage_10h_rep2_alignments,Kumar et al DGE for snf2 10 h macrophage (rep 2) alignments,"Aligned strand-specific paired-end reads, snf2 mutant with 10 h macrophage trtmt",mutant with macrophages,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Kumar,38632999
+Kumar_snf2_macrophage_10h_rep2_coverage,Kumar et al DGE for snf2 10 h macrophage (rep 2) coverage,"Read coverage, snf2 mutant with 10 h macrophage trtmt",mutant with macrophages,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Kumar,38632999
+Kumar_snf2_macrophage_10h_rep2_density,Kumar et al DGE for snf2 10 h macrophage (rep 2) density,"Read density, snf2 mutant with 10 h macrophage trtmt",mutant with macrophages,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Kumar,38632999
+Kumar_snf2_RPMI_10h_rep1_alignments,Kumar et al DGE for snf2 10 h RPMI (rep 1) alignments,"Aligned strand-specific paired-end reads, snf2 mutant 10 h growth untreated",mutant untreated,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Kumar,38632999
+Kumar_snf2_RPMI_10h_rep1_coverage,Kumar et al DGE for snf2 10 h RPMI  (rep 1) coverage,"Read coverage, snf2 mutant 10 h growth untreated",mutant untreated,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Kumar,38632999
+Kumar_snf2_RPMI_10h_rep1_density,Kumar et al DGE for snf2 10 h RPMI  (rep 1) density,"Read density, snf2 mutant 10 h growth untreated",mutant untreated,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Kumar,38632999
+Kumar_snf2_macrophage_2h_rep2_alignments,Kumar et al DGE for snf2 2 h macrophage (rep 2) alignments,"Aligned strand-specific paired-end reads, snf2 mutant with 2 h macrophage trtmt",mutant with macrophages,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Kumar,38632999
+Kumar_snf2_macrophage_2h_rep2_coverage,Kumar et al DGE for snf2 2 h macrophage (rep 2) coverage,"Read coverage, snf2 mutant with 2 h macrophage trtmt",mutant with macrophages,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Kumar,38632999
+Kumar_snf2_macrophage_2h_rep2_density,Kumar et al DGE for snf2 2 h macrophage (rep 2) density,"Read density, snf2 mutant with 2 h macrophage trtmt",mutant with macrophages,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Kumar,38632999
+Kumar_WT_macrophage_2h_rep2_alignments,Kumar et al DGE for WT 2 h macrophage (rep 2) alignments,"Aligned strand-specific paired-end reads, wild type with 2 h macrophage trtmt",wild type with macrophages,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Kumar,38632999
+Kumar_WT_macrophage_2h_rep2_coverage,Kumar et al DGE for WT 2 h macrophage (rep 2) coverage,"Read coverage, wild type with 2 h macrophage trtmt",wild type with macrophages,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Kumar,38632999
+Kumar_WT_macrophage_2h_rep2_density,Kumar et al DGE for WT 2 h macrophage (rep 2) density,"Read density, wild type with 2 h macrophage trtmt",wild type with macrophages,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Kumar,38632999
+Kumar_snf2_macrophage_2h_rep1_alignments,Kumar et al DGE for snf2 2 h macrophage (rep 1) alignments,"Aligned strand-specific paired-end reads, snf2 mutant with 2 h macrophage trtmt",mutant with macrophages,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Kumar,38632999
+Kumar_snf2_macrophage_2h_rep1_coverage,Kumar et al DGE for snf2 2 h macrophage (rep 1) coverage,"Read coverage, snf2 mutant with 2 h macrophage trtmt",mutant with macrophages,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Kumar,38632999
+Kumar_snf2_macrophage_2h_rep1_density,Kumar et al DGE for snf2 2 h macrophage (rep 1) density,"Read density, snf2 mutant with 2 h macrophage trtmt",mutant with macrophages,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Kumar,38632999
+Kumar_WT_macrophage_2h_rep1_alignments,Kumar et al DGE for WT 2 h macrophage (rep 1) alignments,"Aligned strand-specific paired-end reads, wild type with 2 h macrophage trtmt",wild type with macrophages,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Kumar,38632999
+Kumar_WT_macrophage_2h_rep1_coverage,Kumar et al DGE for WT 2 h macrophage (rep 1) coverage,"Read coverage, wild type with 2 h macrophage trtmt",wild type with macrophages,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Kumar,38632999
+Kumar_WT_macrophage_2h_rep1_density,Kumar et al DGE for WT 2 h macrophage (rep 1) density,"Read density, wild type with 2 h macrophage trtmt",wild type with macrophages,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Kumar,38632999
+Kumar_snf2_RPMI_2h_rep1_alignments,Kumar et al DGE for snf2 2 h RPMI (rep 1) alignments,"Aligned strand-specific paired-end reads, snf2 mutant 2 h growth untreated",mutant untreated,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Kumar,38632999
+Kumar_snf2_RPMI_2h_rep1_coverage,Kumar et al DGE for snf2 2 h RPMI  (rep 1) coverage,"Read coverage, snf2 mutant 2 h growth untreated",mutant untreated,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Kumar,38632999
+Kumar_snf2_RPMI_2h_rep1_density,Kumar et al DGE for snf2 2 h RPMI  (rep 1) density,"Read density, snf2 mutant 2 h growth untreated",mutant untreated,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Kumar,38632999
+Kumar_WT_RPMI_2h_rep2_alignments,Kumar et al WT control 2 h (rep 2) alignments,"Aligned strand-specific paired-end reads, WT control 2 h",wild type untreated,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Kumar,38632999
+Kumar_WT_RPMI_2h_rep2_coverage,Kumar et al WT control 2 h (rep 2) coverage,"Read coverage, WT control 2 h",wild type untreated,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Kumar,38632999
+Kumar_WT_RPMI_2h_rep2_density,Kumar et al WT control 2 h (rep 2) density,"Read density, WT control 2 h",wild type untreated,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Kumar,38632999
+Kumar_snf2_RPMI_2h_rep2_alignments,Kumar et al DGE for snf2 2 h RPMI (rep 2) alignments,"Aligned strand-specific paired-end reads, snf2 mutant 2 h growth untreated",mutant untreated,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Kumar,38632999
+Kumar_snf2_RPMI_2h_rep2_coverage,Kumar et al DGE for snf2 2 h RPMI  (rep 2) coverage,"Read coverage, snf2 mutant 2 h growth untreated",mutant untreated,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Kumar,38632999
+Kumar_snf2_RPMI_2h_rep2_density,Kumar et al DGE for snf2 2 h RPMI  (rep 2) density,"Read density, snf2 mutant 2 h growth untreated",mutant untreated,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Kumar,38632999
+Kumar_WT_RPMI_2h_rep1_alignments,Kumar et al WT control 2 h (rep 1) alignments,"Aligned strand-specific paired-end reads, WT control 2 h",wild type untreated,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Kumar,38632999
+Kumar_WT_RPMI_2h_rep1_coverage,Kumar et al WT control 2 h (rep 1) coverage,"Read coverage, WT control 2 h",wild type untreated,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Kumar,38632999
+Kumar_WT_RPMI_2h_rep1_density,Kumar et al WT control 2 h (rep 1) density,"Read density, WT control 2 h",wild type untreated,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Kumar,38632999
+Kumar_snf2_RPMI_10h_rep2_alignments,Kumar et al DGE for snf2 10 h RPMI (rep 2) alignments,"Aligned strand-specific paired-end reads, snf2 mutant 10 h growth untreated",mutant untreated,Gene Expression,RNA-Seq,Aligned reads,Candida glabrata,CBS138,Kumar,38632999
+Kumar_snf2_RPMI_10h_rep2_coverage,Kumar et al DGE for snf2 10 h RPMI  (rep 2) coverage,"Read coverage, snf2 mutant 10 h growth untreated",mutant untreated,Gene Expression,RNA-Seq,Coverage plot,Candida glabrata,CBS138,Kumar,38632999
+Kumar_snf2_RPMI_10h_rep2_density,Kumar et al DGE for snf2 10 h RPMI  (rep 2) density,"Read density, snf2 mutant 10 h growth untreated",mutant untreated,Gene Expression,RNA-Seq,Density plot,Candida glabrata,CBS138,Kumar,38632999

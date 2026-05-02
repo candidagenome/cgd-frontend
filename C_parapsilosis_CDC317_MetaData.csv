@@ -1,0 +1,263 @@
+label,key,description,condition,category,technique,track_type,organism,strain,first_author,pubmed_id
+,,,,,,,,,,
+DNA,Reference sequence,C. parapsilosis CDC317,General,Reference sequence,Genome Assembly,Sequence,C. parapsilosis,CDC317,Butler,19465905
+,,,,,,,,,,
+Transcribed Features,Transcribed Features,CGD Annotated Features,General,Gene Annotation,Annotation,Gene Annotation,C. parapsilosis,CDC317,CGD,24185697
+,,,,,,,,,,
+lncRNA,lncRNA,Long non-coding RNAs,General,Gene Annotation,Annotation,lncRNA,C. parapsilosis,CDC317,Hovhannisyan ,34916523
+,,,,,,,,,,
+Sacc_phyloP_scores,4: Order Saccharomycetales conservation scores,"C. parapsilosis CDC317 phyloP conservation scores from genomic alignment of 12 Saccharomycetales species: C. parapsilosis, L. elongisporus, C. albicans, C. dubliniensis, D. hansenii, C. glabrata, C. bracarensis, N. bacillisporus, S. cerevisiae, S. castellii, A. gossypii, and Y. lipolytica",Wild-type,Conservation,Genome Alignment,Conservation plot,C. parapsilosis,CDC317,CGD,24185697
+,,,,,,,,,,
+CTG_phyloP_scores,3: Family Debaryomycetaceae conservation scores,"C. parapsilosis CDC317 phyloP conservation scores from genomic alignment of CTG clade:  C. parapsilosis, C. orthopsilosis, L. elongisporus, C. albicans, C. dubliniensis, C. tropicalis,C. guilliermondii, D. hansenii, C. lusitaniae",Wild-type,Conservation,Genome Alignment,Conservation plot,C. parapsilosis,CDC317,CGD,24185697
+,,,,,,,,,,
+CanLod_phyloP_scores,2: Candida/Lodderomyces clade conservation scores,"C. parapsilosis CDC317 phyloP conservation scores from genomic alignment of Candida/Lodderomyces clade: C. parapsilosis, C. orthopsilosis, L. elongisporus, C. albicans, C. dubliniensis, C. tropicalis",Wild-type,Conservation,Genome Alignment,Conservation plot,C. parapsilosis,CDC317,CGD,24185697
+,,,,,,,,,,
+para_phyloP_scores,1: parapsilosis group conservation scores,"C. parapsilosis CDC317 phyloP conservation scores from genomic alignment of C. parapsilosis, C. orthopsilosis and L. elongisporus",Wild-type,Conservation,Genome Alignment,Conservation plot,C. parapsilosis,CDC317,CGD,24185697
+,,,,,,,,,,
+holland_wt_plnk_1_alignments,Holland Wild-type Planktonic (rep 1) Alignments,"Aligned strand-specific, paired-end reads, wild-type planktonic growth",Control,Gene Expression,RNA-Seq,Aligned reads,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_wt_plnk_1_coverage,Holland Wild-type Planktonic (rep 1) Coverage,"Read coverage, wild-type planktonic growth",Control,Gene Expression,RNA-Seq,Coverage plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_wt_plnk_1_density,Holland Wild-type Planktonic (rep 1) Density,"Read density, wild-type planktonic growth",Control,Gene Expression,RNA-Seq,Density plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_wt_plnk_2_alignments,Holland Wild-type Planktonic (rep 2) Alignments,"Aligned strand-specific, paired-end reads, wild-type planktonic growth",Control,Gene Expression,RNA-Seq,Aligned reads,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_wt_plnk_2_coverage,Holland Wild-type Planktonic (rep 2) Coverage,"Read coverage, wild-type planktonic growth",Control,Gene Expression,RNA-Seq,Coverage plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_wt_plnk_2_density,Holland Wild-type Planktonic (rep 2) Density,"Read density, wild-type planktonic growth",Control,Gene Expression,RNA-Seq,Density plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_wt_plnk_3_alignments,Holland Wild-type Planktonic (rep 3) Alignments,"Aligned strand-specific, paired-end reads, wild-type planktonic growth",Control,Gene Expression,RNA-Seq,Aligned reads,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_wt_plnk_3_coverage,Holland Wild-type Planktonic (rep 3) Coverage,"Read coverage, wild-type planktonic growth",Control,Gene Expression,RNA-Seq,Coverage plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_wt_plnk_3_density,Holland Wild-type Planktonic (rep 3) Density,"Read density, wild-type planktonic growth",Control,Gene Expression,RNA-Seq,Density plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_wt_film_1_alignments,Holland Wild-type Biofilm (rep 1) Alignments,"Aligned strand-specific, paired-end reads, wild-type biofilm growth",Biofilm growth,Gene Expression,RNA-Seq,Aligned reads,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_wt_film_1_coverage,Holland Wild-type Biofilm (rep 1) Coverage,"Read coverage, wild-type biofilm growth",Biofilm growth,Gene Expression,RNA-Seq,Coverage plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_wt_film_1_density,Holland Wild-type Biofilm (rep 1) Density,"Read density, wild-type biofilm growth",Biofilm growth,Gene Expression,RNA-Seq,Density plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_wt_film_2_alignments,Holland Wild-type Biofilm (rep 2) Alignments,"Aligned strand-specific, paired-end reads, wild-type biofilm growth",Biofilm growth,Gene Expression,RNA-Seq,Aligned reads,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_wt_film_2_coverage,Holland Wild-type Biofilm (rep 2) Coverage,"Read coverage, wild-type biofilm growth",Biofilm growth,Gene Expression,RNA-Seq,Coverage plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_wt_film_2_density,Holland Wild-type Biofilm (rep 2) Density,"Read density, wild-type biofilm growth",Biofilm growth,Gene Expression,RNA-Seq,Density plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_wt_film_3_alignments,Holland Wild-type Biofilm (rep 3) Alignments,"Aligned strand-specific, paired-end reads, wild-type biofilm growth",Biofilm growth,Gene Expression,RNA-Seq,Aligned reads,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_wt_film_3_coverage,Holland Wild-type Biofilm (rep 3) Coverage,"Read coverage, wild-type biofilm growth",Biofilm growth,Gene Expression,RNA-Seq,Coverage plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_wt_film_3_density,Holland Wild-type Biofilm (rep 3) Density,"Read density, wild-type biofilm growth",Biofilm growth,Gene Expression,RNA-Seq,Density plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_ace2_1_alignments,Holland ace2 Deletion (rep 1) Alignments,"Aligned strand-specific, paired-end reads, ace2 deletion",ace2-deletion,Gene Expression,RNA-Seq,Aligned reads,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_ace2_1_coverage,Holland ace2 Deletion (rep 1) Coverage,"Read coverage, ace2 deletion",ace2-deletion,Gene Expression,RNA-Seq,Coverage plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_ace2_1_density,Holland ace2 Deletion (rep 1) Density,"Read density, ace2 deletion",ace2-deletion,Gene Expression,RNA-Seq,Density plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_ace2_2_alignments,Holland ace2 Deletion (rep 2) Alignments,"Aligned strand-specific, paired-end reads, ace2 deletion",ace2-deletion,Gene Expression,RNA-Seq,Aligned reads,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_ace2_2_coverage,Holland ace2 Deletion (rep 2) Coverage,"Read coverage, ace2 deletion",ace2-deletion,Gene Expression,RNA-Seq,Coverage plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_ace2_2_density,Holland ace2 Deletion (rep 2) Density,"Read density, ace2 deletion",ace2-deletion,Gene Expression,RNA-Seq,Density plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_ace2_3_alignments,Holland ace2 Deletion (rep 3) Alignments,"Aligned strand-specific, paired-end reads, ace2 deletion",ace2-deletion,Gene Expression,RNA-Seq,Aligned reads,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_ace2_3_coverage,Holland ace2 Deletion (rep 3) Coverage,"Read coverage, ace2 deletion",ace2-deletion,Gene Expression,RNA-Seq,Coverage plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_ace2_3_density,Holland ace2 Deletion (rep 3) Density,"Read density, ace2 deletion",ace2-deletion,Gene Expression,RNA-Seq,Density plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_cph2_1_alignments,Holland cph2 Deletion (rep 1) Alignments,"Aligned strand-specific, paired-end reads, cph2 deletion",cph2-deletion,Gene Expression,RNA-Seq,Aligned reads,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_cph2_1_coverage,Holland cph2 Deletion (rep 1) Coverage,"Read coverage, cph2 deletion",cph2-deletion,Gene Expression,RNA-Seq,Coverage plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_cph2_1_density,Holland cph2 Deletion (rep 1) Density,"Read density, cph2 deletion",cph2-deletion,Gene Expression,RNA-Seq,Density plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_cph2_2_alignments,Holland cph2 Deletion (rep 2) Alignments,"Aligned strand-specific, paired-end reads, cph2 deletion",cph2-deletion,Gene Expression,RNA-Seq,Aligned reads,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_cph2_2_coverage,Holland cph2 Deletion (rep 2) Coverage,"Read coverage, cph2 deletion",cph2-deletion,Gene Expression,RNA-Seq,Coverage plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_cph2_2_density,Holland cph2 Deletion (rep 2) Density,"Read density, cph2 deletion",cph2-deletion,Gene Expression,RNA-Seq,Density plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_cph2_3_alignments,Holland cph2 Deletion (rep 3) Alignments,"Aligned strand-specific, paired-end reads, cph2 deletion",cph2-deletion,Gene Expression,RNA-Seq,Aligned reads,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_cph2_3_coverage,Holland cph2 Deletion (rep 3) Coverage,"Read coverage, cph2 deletion",cph2-deletion,Gene Expression,RNA-Seq,Coverage plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_cph2_3_density,Holland cph2 Deletion (rep 3) Density,"Read density, cph2 deletion",cph2-deletion,Gene Expression,RNA-Seq,Density plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_efg1_1_alignments,Holland efg1 Deletion (rep 1) Alignments,"Aligned strand-specific, paired-end reads, efg1 deletion",efg1-deletion,Gene Expression,RNA-Seq,Aligned reads,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_efg1_1_coverage,Holland efg1 Deletion (rep 1) Coverage,"Read coverage, efg1 deletion",efg1-deletion,Gene Expression,RNA-Seq,Coverage plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_efg1_1_density,Holland efg1 Deletion (rep 1) Density,"Read density, efg1 deletion",efg1-deletion,Gene Expression,RNA-Seq,Density plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_efg1_2_alignments,Holland efg1 Deletion (rep 2) Alignments,"Aligned strand-specific, paired-end reads, efg1 deletion",efg1-deletion,Gene Expression,RNA-Seq,Aligned reads,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_efg1_2_coverage,Holland efg1 Deletion (rep 2) Coverage,"Read coverage, efg1 deletion",efg1-deletion,Gene Expression,RNA-Seq,Coverage plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_efg1_2_density,Holland efg1 Deletion (rep 2) Density,"Read density, efg1 deletion",efg1-deletion,Gene Expression,RNA-Seq,Density plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_efg1_3_alignments,Holland efg1 Deletion (rep 3) Alignments,"Aligned strand-specific, paired-end reads, efg1 deletion",efg1-deletion,Gene Expression,RNA-Seq,Aligned reads,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_efg1_3_coverage,Holland efg1 Deletion (rep 3) Coverage,"Read coverage, efg1 deletion",efg1-deletion,Gene Expression,RNA-Seq,Coverage plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_efg1_3_density,Holland efg1 Deletion (rep 3) Density,"Read density, efg1 deletion",efg1-deletion,Gene Expression,RNA-Seq,Density plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_czf1_1_alignments,Holland czf1 Deletion (rep 1) Alignments,"Aligned strand-specific, paired-end reads, czf1 deletion",czf1-deletion,Gene Expression,RNA-Seq,Aligned reads,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_czf1_1_coverage,Holland czf1 Deletion (rep 1) Coverage,"Read coverage, czf1 deletion",czf1-deletion,Gene Expression,RNA-Seq,Coverage plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_czf1_1_density,Holland czf1 Deletion (rep 1) Density,"Read density, czf1 deletion",czf1-deletion,Gene Expression,RNA-Seq,Density plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_czf1_2_alignments,Holland czf1 Deletion (rep 2) Alignments,"Aligned strand-specific, paired-end reads, czf1 deletion",czf1-deletion,Gene Expression,RNA-Seq,Aligned reads,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_czf1_2_coverage,Holland czf1 Deletion (rep 2) Coverage,"Read coverage, czf1 deletion",czf1-deletion,Gene Expression,RNA-Seq,Coverage plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_czf1_2_density,Holland czf1 Deletion (rep 2) Density,"Read density, czf1 deletion",czf1-deletion,Gene Expression,RNA-Seq,Density plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_czf1_3_alignments,Holland czf1 Deletion (rep 3) Alignments,"Aligned strand-specific, paired-end reads, czf1 deletion",czf1-deletion,Gene Expression,RNA-Seq,Aligned reads,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_czf1_3_coverage,Holland czf1 Deletion (rep 3) Coverage,"Read coverage, czf1 deletion",czf1-deletion,Gene Expression,RNA-Seq,Coverage plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_czf1_3_density,Holland czf1 Deletion (rep 3) Density,"Read density, czf1 deletion",czf1-deletion,Gene Expression,RNA-Seq,Density plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_ume6_1_alignments,Holland ume6 Deletion (rep 1) Alignments,"Aligned strand-specific, paired-end reads, ume6 deletion",ume6-deletion,Gene Expression,RNA-Seq,Aligned reads,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_ume6_1_coverage,Holland ume6 Deletion (rep 1) Coverage,"Read coverage, ume6 deletion",ume6-deletion,Gene Expression,RNA-Seq,Coverage plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_ume6_1_density,Holland ume6 Deletion (rep 1) Density,"Read density, ume6 deletion",ume6-deletion,Gene Expression,RNA-Seq,Density plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_ume6_2_alignments,Holland ume6 Deletion (rep 2) Alignments,"Aligned strand-specific, paired-end reads, ume6 deletion",ume6-deletion,Gene Expression,RNA-Seq,Aligned reads,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_ume6_2_coverage,Holland ume6 Deletion (rep 2) Coverage,"Read coverage, ume6 deletion",ume6-deletion,Gene Expression,RNA-Seq,Coverage plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_ume6_2_density,Holland ume6 Deletion (rep 2) Density,"Read density, ume6 deletion",ume6-deletion,Gene Expression,RNA-Seq,Density plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_ume6_3_alignments,Holland ume6 Deletion (rep 3) Alignments,"Aligned strand-specific, paired-end reads, ume6 deletion",ume6-deletion,Gene Expression,RNA-Seq,Aligned reads,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_ume6_3_coverage,Holland ume6 Deletion (rep 3) Coverage,"Read coverage, ume6 deletion",ume6-deletion,Gene Expression,RNA-Seq,Coverage plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_ume6_3_density,Holland ume6 Deletion (rep 3) Density,"Read density, ume6 deletion",ume6-deletion,Gene Expression,RNA-Seq,Density plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_bcr1_1_alignments,Holland bcr1 Deletion (rep 1) Alignments,"Aligned strand-specific, paired-end reads, bcr1 deletion",bcr1-deletion,Gene Expression,RNA-Seq,Aligned reads,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_bcr1_1_coverage,Holland bcr1 Deletion (rep 1) Coverage,"Read coverage, bcr1 deletion",bcr1-deletion,Gene Expression,RNA-Seq,Coverage plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_bcr1_1_density,Holland bcr1 Deletion (rep 1) Density,"Read density, bcr1 deletion",bcr1-deletion,Gene Expression,RNA-Seq,Density plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_bcr1_2_alignments,Holland bcr1 Deletion (rep 2) Alignments,"Aligned strand-specific, paired-end reads, bcr1 deletion",bcr1-deletion,Gene Expression,RNA-Seq,Aligned reads,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_bcr1_2_coverage,Holland bcr1 Deletion (rep 2) Coverage,"Read coverage, bcr1 deletion",bcr1-deletion,Gene Expression,RNA-Seq,Coverage plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_bcr1_2_density,Holland bcr1 Deletion (rep 2) Density,"Read density, bcr1 deletion",bcr1-deletion,Gene Expression,RNA-Seq,Density plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_bcr1_3_alignments,Holland bcr1 Deletion (rep 3) Alignments,"Aligned strand-specific, paired-end reads, bcr1 deletion",bcr1-deletion,Gene Expression,RNA-Seq,Aligned reads,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_bcr1_3_coverage,Holland bcr1 Deletion (rep 3) Coverage,"Read coverage, bcr1 deletion",bcr1-deletion,Gene Expression,RNA-Seq,Coverage plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+holland_bcr1_3_density,Holland bcr1 Deletion (rep 3) Density,"Read density, bcr1 deletion",bcr1-deletion,Gene Expression,RNA-Seq,Density plot,C. parapsilosis,CDC317,Holland,25233198
+,,,,,,,,,,
+Connolly_efg1_smooth_2_alignments,Connolly et al DGE for efg1 smooth colony (rep 2) alignments,"Aligned strand-specific single-end reads, efg1_smooth",efg1_deletion,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Connolly,23895281
+Connolly_efg1_smooth_2_coverage,Connolly et al DGE for efg1 smooth colony (rep 2) coverage,"Read coverage, efg1_smooth",efg1_deletion,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Connolly,23895281
+Connolly_efg1_smooth_2_density,Connolly et al DGE for efg1 smooth colony (rep 2) density,"Read density, efg1_smooth",efg1_deletion,Gene expression,RNA-Seq,density plot,C. parapsilosis,CLIB214,Connolly,23895281
+Connolly_efg1_smooth_1_alignments,Connolly et al DGE for efg1 smooth colony (rep 1) alignments,"Aligned strand-specific single-end reads, efg1_smooth",efg1_deletion,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Connolly,23895281
+Connolly_efg1_smooth_1_coverage,Connolly et al DGE for efg1 smooth colony (rep 1) coverage,"Read coverage, efg1_smooth",efg1_deletion,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Connolly,23895281
+Connolly_efg1_smooth_2_density,Connolly et al DGE for efg1 smooth colony (rep 2) density,"Read density, efg1_smooth",efg1_deletion,Gene expression,RNA-Seq,density plot,C. parapsilosis,CLIB214,Connolly,23895281
+Connolly_efg1_concentric_3_alignments,Connolly et al DGE for efg1 concentric colony (rep 3) alignments,"Aligned strand-specific single-end reads, efg1_concentric",efg1_deletion,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Connolly,23895281
+Connolly_efg1_concentric_3_coverage,Connolly et al DGE for efg1 concentric colony (rep 3) coverage,"Read coverage, efg1_concentric",efg1_deletion,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Connolly,23895281
+Connolly_efg1_concentric_3_density,Connolly et al DGE for efg1 concentric colony (rep 3) density,"Read density, efg1_concentric",efg1_deletion,Gene expression,RNA-Seq,density plot,C. parapsilosis,CLIB214,Connolly,23895281
+Connolly_efg1_concentric_2_alignments,Connolly et al DGE for efg1 concentric colony (rep 2) alignments,"Aligned strand-specific single-end reads, efg1_concentric",efg1_deletion,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Connolly,23895281
+Connolly_efg1_concentric_2_coverage,Connolly et al DGE for efg1 concentric colony (rep 2) coverage,"Read coverage, efg1_concentric",efg1_deletion,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Connolly,23895281
+Connolly_efg1_concentric_2_density,Connolly et al DGE for efg1 concentric colony (rep 2) density,"Read density, efg1_concentric",efg1_deletion,Gene expression,RNA-Seq,density plot,C. parapsilosis,CLIB214,Connolly,23895281
+Connolly_efg1_concentric_1_alignments,Connolly et al DGE for efg1 concentric colony (rep 1) alignments,"Aligned strand-specific single-end reads, efg1_concentric",efg1_deletion,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Connolly,23895281
+Connolly_efg1_concentric_1_coverage,Connolly et al DGE for efg1 concentric colony (rep 1) coverage,"Read coverage, efg1_concentric",efg1_deletion,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Connolly,23895281
+Connolly_efg1_concentric_1_density,Connolly et al DGE for efg1 concentric colony (rep 1) density,"Read density, efg1_concentric",efg1_deletion,Gene expression,RNA-Seq,density plot,C. parapsilosis,CLIB214,Connolly,23895281
+Connolly_WT_control_3_alignments,Connolly et al WT control (rep 3) alignments,"Aligned strand-specific single-end reads, WT control",control,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Connolly,23895281
+Connolly_WT_control_3_coverage,Connolly et al WT control (rep 3) coverage,"Read coverage, WT control",control,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Connolly,23895281
+Connolly_WT_control_3_density,Connolly et al WT control (rep 3) density,"Read density, WT control",control,Gene expression,RNA-Seq,density plot,C. parapsilosis,CLIB214,Connolly,23895281
+Connolly_WT_control_2_alignments,Connolly et al WT control (rep 2) alignments,"Aligned strand-specific single-end reads, WT control",control,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Connolly,23895281
+Connolly_WT_control_2_coverage,Connolly et al WT control (rep 2) coverage,"Read coverage, WT control",control,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Connolly,23895281
+Connolly_WT_control_2_density,Connolly et al WT control (rep 2) density,"Read density, WT control",control,Gene expression,RNA-Seq,density plot,C. parapsilosis,CLIB214,Connolly,23895281
+Connolly_WT_control_1_alignments,Connolly et al WT control (rep 1) alignments,"Aligned strand-specific single-end reads, WT control",control,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Connolly,23895281
+Connolly_WT_control_1_coverage,Connolly et al WT control (rep 1) coverage,"Read coverage, WT control",control,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Connolly,23895281
+Connolly_WT_control_1_density,Connolly et al WT control (rep 1) density,"Read density, WT control",control,Gene expression,RNA-Seq,density plot,C. parapsilosis,CLIB214,Connolly,23895281
+,,,,,,,,,,
+Guida_WT_BMW_1_1_alignments,Guida et al WT on BMW (biol rep 1; tech rep 1) alignments,"Aligned non-strand-specific single-end reads, WT on BMW",BMW medium,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_BMW_1_1_coverage,Guida et al WT on BMW (biol rep 1; tech rep 1) coverage,"Read coverage, WT on BMW",BMW medium,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_BMW_1_1_density,Guida et al WT on BMW (biol rep 1; tech rep 1) density,"Read density, WT on BMW",BMW medium,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_1_1_alignments,Guida et al WT on YPD (biol rep 1; tech rep 1) alignments,"Aligned non-strand-specific single-end reads, WT control",control,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_1_1_coverage,Guida et al WT on YPD (biol rep 1; tech rep 1) coverage,"Read coverage, WT control",control,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_1_1_density,Guida et al WT on YPD (biol rep 1; tech rep 1) density,"Read density, WT control",control,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_BMW_1_2_alignments,Guida et al WT on BMW (biol rep 1; tech rep 2) alignments,"Aligned non-strand-specific single-end reads, WT on BMW",BMW medium,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_BMW_1_2_coverage,Guida et al WT on BMW (biol rep 1; tech rep 2) coverage,"Read coverage, WT on BMW",BMW medium,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_BMW_1_2_density,Guida et al WT on BMW (biol rep 1; tech rep 2) density,"Read density, WT on BMW",BMW medium,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_1_2_alignments,Guida et al WT on YPD (biol rep 1; tech rep 2) alignments,"Aligned non-strand-specific single-end reads, WT control",control,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_1_2_coverage,Guida et al WT on YPD (biol rep 1; tech rep 2) coverage,"Read coverage, WT control",control,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_1_2_density,Guida et al WT on YPD (biol rep 1; tech rep 2) density,"Read density, WT control",control,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_1_3_alignments,Guida et al WT on YPD (biol rep 1; tech rep 3) alignments,"Aligned non-strand-specific single-end reads, WT control",control,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_1_3_coverage,Guida et al WT on YPD (biol rep 1; tech rep 3) coverage,"Read coverage, WT control",control,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_1_3_density,Guida et al WT on YPD (biol rep 1; tech rep 3) density,"Read density, WT control",control,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_BMW_1_3_alignments,Guida et al WT on BMW (biol rep 1; tech rep 3) alignments,"Aligned non-strand-specific single-end reads, WT on BMW",BMW medium,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_BMW_1_3_coverage,Guida et al WT on BMW (biol rep 1; tech rep 3) coverage,"Read coverage, WT on BMW",BMW medium,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_BMW_1_3_density,Guida et al WT on BMW (biol rep 1; tech rep 3) density,"Read density, WT on BMW",BMW medium,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_1_4_alignments,Guida et al WT on YPD (biol rep 1; tech rep 4) alignments,"Aligned non-strand-specific single-end reads, WT control",control,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_1_4_coverage,Guida et al WT on YPD (biol rep 1; tech rep 4) coverage,"Read coverage, WT control",control,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_1_4_density,Guida et al WT on YPD (biol rep 1; tech rep 4) density,"Read density, WT control",control,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_BMW_2_1_alignments,Guida et al WT on BMW (biol rep 2; tech rep 1) alignments,"Aligned non-strand-specific single-end reads, WT on BMW",BMW medium,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_BMW_2_1_coverage,Guida et al WT on BMW (biol rep 2; tech rep 1) coverage,"Read coverage, WT on BMW",BMW medium,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_BMW_2_1_density,Guida et al WT on BMW (biol rep 2; tech rep 1) density,"Read density, WT on BMW",BMW medium,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_2_1_alignments,Guida et al WT on YPD (biol rep 2; tech rep 1) alignments,"Aligned non-strand-specific single-end reads, WT control",control,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_2_1_coverage,Guida et al WT on YPD (biol rep 2; tech rep 1) coverage,"Read coverage, WT control",control,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_2_1_density,Guida et al WT on YPD (biol rep 2; tech rep 1) density,"Read density, WT control",control,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_BMW_2_2_alignments,Guida et al WT on BMW (biol rep 2; tech rep 2) alignments,"Aligned non-strand-specific single-end reads, WT on BMW",BMW medium,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_BMW_2_2_coverage,Guida et al WT on BMW (biol rep 2; tech rep 2) coverage,"Read coverage, WT on BMW",BMW medium,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_BMW_2_2_density,Guida et al WT on BMW (biol rep 2; tech rep 2) density,"Read density, WT on BMW",BMW medium,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_2_2_alignments,Guida et al WT on YPD (biol rep 2; tech rep 2) alignments,"Aligned non-strand-specific single-end reads, WT control",control,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_2_2_coverage,Guida et al WT on YPD (biol rep 2; tech rep 2) coverage,"Read coverage, WT control",control,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_2_2_density,Guida et al WT on YPD (biol rep 2; tech rep 2) density,"Read density, WT control",control,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_2_3_alignments,Guida et al WT on YPD (biol rep 2; tech rep 3) alignments,"Aligned non-strand-specific single-end reads, WT control",control,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_2_3_coverage,Guida et al WT on YPD (biol rep 2; tech rep 3) coverage,"Read coverage, WT control",control,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_2_3_density,Guida et al WT on YPD (biol rep 2; tech rep 3) density,"Read density, WT control",control,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_BMW_3_1_alignments,Guida et al WT on BMW (biol rep 3; tech rep 1) alignments,"Aligned non-strand-specific single-end reads, WT on BMW",BMW medium,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_BMW_3_1_coverage,Guida et al WT on BMW (biol rep 3; tech rep 1) coverage,"Read coverage, WT on BMW",BMW medium,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_BMW_3_1_density,Guida et al WT on BMW (biol rep 3; tech rep 1) density,"Read density, WT on BMW",BMW medium,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_3_1_alignments,Guida et al WT on YPD (biol rep 3; tech rep 1) alignments,"Aligned non-strand-specific single-end reads, WT control",control,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_3_1_coverage,Guida et al WT on YPD (biol rep 3; tech rep 1) coverage,"Read coverage, WT control",control,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_3_1_density,Guida et al WT on YPD (biol rep 3; tech rep 1) density,"Read density, WT control",control,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_hypoxia_1_1_alignments,Guida et al DGE for WT on YPD under 1% oxygen (biol rep 1; tech rep 1) alignments,"Aligned non-strand-specific single-end reads, WT hypoxia",1% oxygen,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_hypoxia_1_1_coverage,Guida et al DGE for WT on YPD under 1% oxygen (biol rep 1; tech rep 1) coverage,"Read coverage, WT hypoxia",1% oxygen,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_hypoxia_1_1_density,Guida et al DGE for WT on YPD under 1% oxygen (biol rep 1; tech rep 1) density,"Read density, WT hypoxia",1% oxygen,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_4_1_alignments,Guida et al WT on YPD (biol rep 4; tech rep 1) alignments,"Aligned non-strand-specific single-end reads, WT control",control,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_4_1_coverage,Guida et al WT on YPD (biol rep 4; tech rep 1) coverage,"Read coverage, WT control",control,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_4_1_density,Guida et al WT on YPD (biol rep 4; tech rep 1) density,"Read density, WT control",control,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_mediamix_1_1_alignments,Guida et al WT on mixed BMW-YPD (biol rep 1; tech rep 1) alignments,"Aligned non-strand-specific single-end reads, WT on mediamix",Mediamix medium,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_mediamix_1_1_coverage,Guida et al WT on mixed BMW-YPD (biol rep 1; tech rep 1) coverage,"Read coverage, WT on mediamix",Mediamix medium,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_mediamix_1_1_density,Guida et al WT on mixed BMW-YPD (biol rep 1; tech rep 1) density,"Read density, WT on mediamix",Mediamix medium,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_hypoxia_2_1_alignments,Guida et al DGE for WT on YPD under 1% oxygen (biol rep 2; tech rep 1) alignments,"Aligned non-strand-specific single-end reads, WT hypoxia",1% oxygen,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_hypoxia_2_1_coverage,Guida et al DGE for WT on YPD under 1% oxygen (biol rep 2; tech rep 1) coverage,"Read coverage, WT hypoxia",1% oxygen,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_hypoxia_2_1_density,Guida et al DGE for WT on YPD under 1% oxygen (biol rep 2; tech rep 1) density,"Read density, WT hypoxia",1% oxygen,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_hypoxia_3_1_alignments,Guida et al DGE for WT on YPD under 1% oxygen (biol rep 3; tech rep 1) alignments,"Aligned non-strand-specific single-end reads, WT hypoxia",1% oxygen,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_hypoxia_3_1_coverage,Guida et al DGE for WT on YPD under 1% oxygen (biol rep 3; tech rep 1) coverage,"Read coverage, WT hypoxia",1% oxygen,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_hypoxia_3_1_density,Guida et al DGE for WT on YPD under 1% oxygen (biol rep 3; tech rep 1) density,"Read density, WT hypoxia",1% oxygen,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_upc2_YPD_hypoxia_1_1_alignments,Guida et al DGE for upc2 on YPD under 1% oxygen (biol rep 1; tech rep 1) alignments,"Aligned non-strand-specific single-end reads, upc2 hypoxia",1% oxygen upc2 deletion,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_upc2_YPD_hypoxia_1_1_coverage,Guida et al DGE for upc2 on YPD under 1% oxygen (biol rep 1; tech rep 1) coverage,"Read coverage, upc2 hypoxia",1% oxygen upc2 deletion,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_upc2_YPD_hypoxia_1_1_density,Guida et al DGE for upc2 on YPD under 1% oxygen (biol rep 1; tech rep 1) density,"Read density, upc2 hypoxia",1% oxygen upc2 deletion,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_5_1_alignments,Guida et al WT on YPD (biol rep 5; tech rep 1) alignments,"Aligned non-strand-specific single-end reads, WT control",control,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_5_1_coverage,Guida et al WT on YPD (biol rep 5; tech rep 1) coverage,"Read coverage, WT control",control,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_5_1_density,Guida et al WT on YPD (biol rep 5; tech rep 1) density,"Read density, WT control",control,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_hypoxia_4_1_alignments,Guida et al DGE for WT on YPD under 1% oxygen (biol rep 4; tech rep 1) alignments,"Aligned non-strand-specific single-end reads, WT hypoxia",1% oxygen,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_hypoxia_4_1_coverage,Guida et al DGE for WT on YPD under 1% oxygen (biol rep 4; tech rep 1) coverage,"Read coverage, WT hypoxia",1% oxygen,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_hypoxia_4_1_density,Guida et al DGE for WT on YPD under 1% oxygen (biol rep 4; tech rep 1) density,"Read density, WT hypoxia",1% oxygen,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_upc2_YPD_hypoxia_2_1_alignments,Guida et al DGE for upc2 on YPD under 1% oxygen (biol rep 2; tech rep 1) alignments,"Aligned non-strand-specific single-end reads, upc2 hypoxia",1% oxygen upc2 deletion,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_upc2_YPD_hypoxia_2_1_coverage,Guida et al DGE for upc2 on YPD under 1% oxygen (biol rep 2; tech rep 1) coverage,"Read coverage, upc2 hypoxia",1% oxygen upc2 deletion,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_upc2_YPD_hypoxia_2_1_density,Guida et al DGE for upc2 on YPD under 1% oxygen (biol rep 2; tech rep 1) density,"Read density, upc2 hypoxia",1% oxygen upc2 deletion,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_6_1_alignments,Guida et al WT on YPD (biol rep 6; tech rep 1) alignments,"Aligned non-strand-specific single-end reads, WT control",control,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_6_1_coverage,Guida et al WT on YPD (biol rep 6; tech rep 1) coverage,"Read coverage, WT control",control,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_6_1_density,Guida et al WT on YPD (biol rep 6; tech rep 1) density,"Read density, WT control",control,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_BMW_4_1_alignments,Guida et al WT on BMW (biol rep 4; tech rep 1) alignments,"Aligned non-strand-specific single-end reads, WT on BMW",BMW medium,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_BMW_4_1_coverage,Guida et al WT on BMW (biol rep 4; tech rep 1) coverage,"Read coverage, WT on BMW",BMW medium,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_BMW_4_1_density,Guida et al WT on BMW (biol rep 4; tech rep 1) density,"Read density, WT on BMW",BMW medium,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_7_1_alignments,Guida et al WT on YPD (biol rep 7; tech rep 1) alignments,"Aligned non-strand-specific single-end reads, WT control",control,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_7_1_coverage,Guida et al WT on YPD (biol rep 7; tech rep 1) coverage,"Read coverage, WT control",control,Gene expression,RNA-Seq,aligned reads,C. parapsilosis,CLIB214,Guida,22192698
+Guida_WT_YPD_7_1_density,Guida et al WT on YPD (biol rep 7; tech rep 1) density,"Read density, WT control",control,Gene expression,RNA-Seq,coverage plot,C. parapsilosis,CLIB214,Guida,22192698

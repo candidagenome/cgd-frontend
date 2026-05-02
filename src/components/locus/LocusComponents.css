@@ -4109,10 +4109,14 @@ a:hover {
 
 .multi-gene-heatmap-container .gene-correlation {
   font-size: 0.8em;
-  color: #888;
+  color: #666;
   margin-left: auto;  /* Push to right side */
   min-width: 50px;    /* Fixed width for alignment */
   text-align: right;  /* Right-justify the text */
+}
+
+.multi-gene-heatmap-container .gene-correlation .correlation-label {
+  color: #aaa;  /* Lighter gray for "r=" to reduce visual noise */
 }
 
 .multi-gene-heatmap-container .heatmap-grid-wrapper {

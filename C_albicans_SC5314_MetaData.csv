@@ -1,0 +1,1145 @@
+label,key,description,condition,category,technique,track_type,organism,strain,haplotype,first_author,pubmed_id
+,,,,,,,,,,,
+DNA,Reference sequence,Assembly 22 reference sequence,General,Reference sequence,Genome Assembly,Sequence,C. albicans,SC5314,Both,CGD,24185697
+,,,,,,,,,,,
+Transcribed Features,Transcribed Features,All CGD annotated features,General,Gene Annotation,Annotation,Gene Annotation,C. albicans,SC5314,Both,CGD,24185697
+,,,,,,,,,,,
+lncRNA,lncRNA,Long non-coding RNAs,General,Gene Annotation,Annotation,lncRNA,C. albicans,SC5314,A,Hovhannisyan ,34916523
+,,,,,,,,,,,
+segal_hapA_transposon_hits,Segal HapA Transposon Mutagenesis Independent Hits,"Independent hits, combined experiments, Hap A",Wild-type,Mutagenesis,DNA-Seq,Coverage plot,C. albicans,SC5314,A,Segal,30377286
+,,,,,,,,,,,
+segal_hapA_transposon_reads,Segal HapA Transposon Mutagenesis Read Depth,"Total reads, combined experiments, Hap A",Wild-type,Mutagenesis,DNA-Seq,Coverage plot,C. albicans,SC5314,A,Segal,30377286
+,,,,,,,,,,,
+segal_hapB_transposon_hits,Segal HapB Transposon Mutagenesis Independent Hits,"Independent hits, combined experiments, Hap B",Wild-type,Mutagenesis,DNA-Seq,Coverage plot,C. albicans,SC5314,B,Segal,30377286
+,,,,,,,,,,,
+segal_hapB_transposon_reads,Segal HapB Transposon Mutagenesis Read Depth,"Total reads, combined experiments, Hap B",Wild-type,Mutagenesis,DNA-Seq,Coverage plot,C. albicans,SC5314,B,Segal,30377286
+,,,,,,,,,,,
+muzzey_wt_hapA_alignments,Muzzey HapA WT Alignments,"Aligned paired-end reads, wild-type, Hap A",Control,Genome Sequence,DNA-Seq,Aligned reads,C. albicans,SC5314,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_wt_hapA_coverage,Muzzey HapA WT Coverage,"Read coverage, wild-type, Hap A",Wild-type,Genome Sequence,DNA-Seq,Coverage plot,C. albicans,SC5314,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_wt_hapA_density,Muzzey HapA WT Density,"Read density, wild-type, Hap A",Wild-type,Genome Sequence,DNA-Seq,Density plot,C. albicans,SC5314,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_wt_hapA_vcf,Muzzey HapA WT Sequence Variants,"Sequence variants, wild-type, Hap A",Wild-type,Sequence Variants,DNA-Seq,Variant,C. albicans,SC5314,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_wt_hapB_alignments,Muzzey HapB WT Alignments,"Aligned paired-end reads, wild-type, Hap B",Wild-type,Genome Sequence,DNA-Seq,Aligned reads,C. albicans,SC5314,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_wt_hapB_coverage,Muzzey HapB WT Coverage,"Read coverage, wild-type, Hap B",Wild-type,Genome Sequence,DNA-Seq,Coverage plot,C. albicans,SC5314,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_wt_hapB_density,Muzzey HapB WT Density,"Read density, wild-type, Hap B",Wild-type,Genome Sequence,DNA-Seq,Density plot,C. albicans,SC5314,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_wt_hapB_vcf,Muzzey HapB WT Sequence Variants,"Sequence variants, wild-type, Hap B",Wild-type,Sequence Variants,DNA-Seq,Variant,C. albicans,SC5314,B,Muzzey,24025428
+,,,,,,,,,,,
+WO1_hapA_vcf,C. albicans WO-1 vs. SC5314 HapA Sequence Variants,"Sequence variants, WO-1 vs SC5314 Hap A",Wild-type,Sequence Variants,DNA-Seq,Variant,C. albicans,WO-1,A,Butler,19465905
+,,,,,,,,,,,
+WO1_hapB_vcf,C. albicans WO-1 vs. SC5314 HapB Sequence Variants,"Sequence variants, WO-1 vs SC5314 Hap B",Wild-type,Sequence Variants,DNA-Seq,Variant,C. albicans,WO-1,B,Butler,19465905
+,,,,,,,,,,,
+hapA_Sacc_phyloP_scores,"A4: Order Saccharomycetales conservation scores, HapA","SC5314 Hap A phyloP conservation scores from genomic alignment of 12 Saccharomycetales species: C. albicans, C. dubliniensis, C. parapsilosis, L. elongisporus, D. hansenii, C. glabrata, C. bracarensis, N. bacillisporus, S. cerevisiae, S. castellii, A. gossypii, and Y. lipolytica",Wild-type,Conservation,Genome Alignment,Conservation plot,C. albicans,SC5314,A,CGD,24185697
+,,,,,,,,,,,
+hapA_CTG_phyloP_scores,"A3: Family Debaryomycetaceae conservation scores, HapA","SC5314 Hap A phyloP conservation scores from genomic alignment of CTG clade: C. albicans, C. dubliniensis, C. tropicalis, C. parapsilosis, C. orthopsilosis, L. elongisporus, C. guilliermondii, D. hansenii, C. lusitaniae",Wild-type,Conservation,Genome Alignment,Conservation plot,C. albicans,SC5314,A,CGD,24185697
+,,,,,,,,,,,
+hapA_CanLod_phyloP_scores,"A2: Candida/Lodderomyces clade conservation scores, HapA","SC5314 Hap A phyloP conservation scores from genomic alignment of Candida/Lodderomyces clade: C. albicans, C. dubliniensis, C. tropicalis, C. parapsilosis, C. orthopsilosis, L. elongisporus",Wild-type,Conservation,Genome Alignment,Conservation plot,C. albicans,SC5314,A,CGD,24185697
+,,,,,,,,,,,
+hapA_alb_dub_phyloP_scores,"A1: albicans group conservation scores, HapA","SC5314 Hap A phyloP conservation scores from genomic alignment of C. albicans, C. dubliniensis and C. tropicalis",Wild-type,Conservation,Genome Alignment,Conservation plot,C. albicans,SC5314,A,CGD,24185697
+,,,,,,,,,,,
+hapB_Sacc_phyloP_scores,"B4: Order Saccharomycetales conservation scores, HapB","SC5314 Hap B phyloP conservation scores from genomic alignment of 12 Saccharomycetales species: C. albicans, C. dubliniensis, C. parapsilosis, L. elongisporus, D. hansenii, C. glabrata, C. bracarensis, N. bacillisporus, S. cerevisiae, S. castellii, A. gossypii, and Y. lipolytica",Wild-type,Conservation,Genome Alignment,Conservation plot,C. albicans,SC5314,B,CGD,24185697
+,,,,,,,,,,,
+hapB_CTG_phyloP_scores,"B3: Family Debaryomycetaceae conservation scores, HapB","SC5314 Hap B phyloP conservation scores from genomic alignment of CTG clade: C. albicans, C. dubliniensis, C. tropicalis, C. parapsilosis, C. orthopsilosis, L. elongisporus, C. guilliermondii, D. hansenii, C. lusitaniae",Wild-type,Conservation,Genome Alignment,Conservation plot,C. albicans,SC5314,B,CGD,24185697
+,,,,,,,,,,,
+hapB_CanLod_phyloP_scores,"B2: Candida/Lodderomyces clade conservation scores, HapB","SC5314 Hap B phyloP conservation scores from genomic alignment of Candida/Lodderomyces clade: C. albicans, C. dubliniensis, C. tropicalis, C. parapsilosis, C. orthopsilosis, L. elongisporus",Wild-type,Conservation,Genome Alignment,Conservation plot,C. albicans,SC5314,B,CGD,24185697
+,,,,,,,,,,,
+hapB_alb_dub_phyloP_scores,"B1: albicans group conservation scores, HapB","SC5314 Hap B phyloP conservation scores from genomic alignment of C. albicans, C. dubliniensis and C. tropicalis",Wild-type,Conservation,Genome Alignment,Conservation plot,C. albicans,SC5314,B,CGD,24185697
+,,,,,,,,,,,
+muzzey_chr1A_hapA_alignments,Muzzey HapA chr1A Alignments,"Aligned paired-end reads, chr1A homozygous, Hap A",chr1A homozygous,Genome Sequence,DNA-Seq,Aligned reads,C. albicans,AF9318_1,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr1A_hapA_coverage,Muzzey HapA chr1A Coverage,"Read coverage, chr1A homozygous, Hap A",chr1A homozygous,Genome Sequence,DNA-Seq,Coverage plot,C. albicans,AF9318_1,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr1A_hapA_density,Muzzey HapA chr1A Density,"Read density, chr1A homozygous, Hap A",chr1A homozygous,Genome Sequence,DNA-Seq,Density plot,C. albicans,AF9318_1,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr1A_hapA_vcf,Muzzey HapA chr1A Sequence Variants,"Sequence variants, chr1A homozygous, Hap A",chr1A homozygous,Sequence Variants,DNA-Seq,Variant,C. albicans,AF9318_1,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr1A_hapB_alignments,Muzzey HapB chr1A Alignments,"Aligned paired-end reads, chr1A homozygous, Hap B",chr1A homozygous,Genome Sequence,DNA-Seq,Aligned reads,C. albicans,AF9318_1,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr1A_hapB_coverage,Muzzey HapB chr1A Coverage,"Read coverage, chr1A homozygous, Hap B",chr1A homozygous,Genome Sequence,DNA-Seq,Coverage plot,C. albicans,AF9318_1,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr1A_hapB_density,Muzzey HapB chr1A Density,"Read density, chr1A homozygous, Hap B",chr1A homozygous,Genome Sequence,DNA-Seq,Density plot,C. albicans,AF9318_1,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr1A_hapB_vcf,Muzzey HapB chr1A Sequence Variants,"Sequence variants, chr1A homozygous, Hap B",chr1A homozygous,Sequence Variants,DNA-Seq,Variant,C. albicans,AF9318_1,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr2A_hapA_alignments,Muzzey HapA chr2A Alignments,"Aligned paired-end reads, chr2A homozygous, Hap A",chr2A homozygous,Genome Sequence,DNA-Seq,Aligned reads,C. albicans,AF3990,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr2A_hapA_coverage,Muzzey HapA chr2A Coverage,"Read coverage, chr2A homozygous, Hap A",chr2A homozygous,Genome Sequence,DNA-Seq,Coverage plot,C. albicans,AF3990,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr2A_hapA_density,Muzzey HapA chr2A Density,"Read density, chr2A homozygous, Hap A",chr2A homozygous,Genome Sequence,DNA-Seq,Density plot,C. albicans,AF3990,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr2A_hapA_vcf,Muzzey HapA chr2A Sequence Variants,"Sequence variants, chr2A homozygous, Hap A",chr2A homozygous,Sequence Variants,DNA-Seq,Variant,C. albicans,AF3990,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr2A_hapB_alignments,Muzzey HapB chr2A Alignments,"Aligned paired-end reads, chr2A homozygous, Hap B",chr2A homozygous,Genome Sequence,DNA-Seq,Aligned reads,C. albicans,AF3990,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr2A_hapB_coverage,Muzzey HapB chr2A Coverage,"Read coverage, chr2A homozygous, Hap B",chr2A homozygous,Genome Sequence,DNA-Seq,Coverage plot,C. albicans,AF3990,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr2A_hapB_density,Muzzey HapB chr2A Density,"Read density, chr2A homozygous, Hap B",chr2A homozygous,Genome Sequence,DNA-Seq,Density plot,C. albicans,AF3990,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr2A_hapB_vcf,Muzzey HapB chr2A Sequence Variants,"Sequence variants, chr2A homozygous, Hap B",chr2A homozygous,Sequence Variants,DNA-Seq,Variant,C. albicans,AF3990,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr3A_hapA_alignments,Muzzey HapA chr3A Alignments,"Aligned paired-end reads, chr3A homozygous, Hap A",chr3A homozygous,Genome Sequence,DNA-Seq,Aligned reads,C. albicans,RBY_10_10,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr3A_hapA_coverage,Muzzey HapA chr3A Coverage,"Read coverage, chr3A homozygous, Hap A",chr3A homozygous,Genome Sequence,DNA-Seq,Coverage plot,C. albicans,RBY_10_10,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr3A_hapA_density,Muzzey HapA chr3A Density,"Read density, chr3A homozygous, Hap A",chr3A homozygous,Genome Sequence,DNA-Seq,Density plot,C. albicans,RBY_10_10,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr3A_hapA_vcf,Muzzey HapA chr3A Sequence Variants,"Sequence variants, chr3A homozygous, Hap A",chr3A homozygous,Sequence Variants,DNA-Seq,Variant,C. albicans,RBY_10_10,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr3A_hapB_alignments,Muzzey HapB chr3A Alignments,"Aligned paired-end reads, chr3A homozygous, Hap B",chr3A homozygous,Genome Sequence,DNA-Seq,Aligned reads,C. albicans,RBY_10_10,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr3A_hapB_coverage,Muzzey HapB chr3A Coverage,"Read coverage, chr3A homozygous, Hap B",chr3A homozygous,Genome Sequence,DNA-Seq,Coverage plot,C. albicans,RBY_10_10,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr3A_hapB_density,Muzzey HapB chr3A Density,"Read density, chr3A homozygous, Hap B",chr3A homozygous,Genome Sequence,DNA-Seq,Density plot,C. albicans,RBY_10_10,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr3A_hapB_vcf,Muzzey HapB chr3A Sequence Variants,"Sequence variants, chr3A homozygous, Hap B",chr3A homozygous,Sequence Variants,DNA-Seq,Variant,C. albicans,RBY_10_10,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr4A_hapA_alignments,Muzzey HapA chr4A Alignments,"Aligned paired-end reads, chr4A homozygous, Hap A",chr4A homozygous,Genome Sequence,DNA-Seq,Aligned reads,C. albicans,RBY_E_6,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr4A_hapA_coverage,Muzzey HapA chr4A Coverage,"Read coverage, chr4A homozygous, Hap A",chr4A homozygous,Genome Sequence,DNA-Seq,Coverage plot,C. albicans,RBY_E_6,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr4A_hapA_density,Muzzey HapA chr4A Density,"Read density, chr4A homozygous, Hap A",chr4A homozygous,Genome Sequence,DNA-Seq,Density plot,C. albicans,RBY_E_6,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr4A_hapA_vcf,Muzzey HapA chr4A Sequence Variants,"Sequence variants, chr4A homozygous, Hap A",chr4A homozygous,Sequence Variants,DNA-Seq,Variant,C. albicans,RBY_E_6,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr4A_hapB_alignments,Muzzey HapB chr4A Alignments,"Aligned paired-end reads, chr4A homozygous, Hap B",chr4A homozygous,Genome Sequence,DNA-Seq,Aligned reads,C. albicans,RBY_E_6,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr4A_hapB_coverage,Muzzey HapB chr4A Coverage,"Read coverage, chr4A homozygous, Hap B",chr4A homozygous,Genome Sequence,DNA-Seq,Coverage plot,C. albicans,RBY_E_6,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr4A_hapB_density,Muzzey HapB chr4A Density,"Read density, chr4A homozygous, Hap B",chr4A homozygous,Genome Sequence,DNA-Seq,Density plot,C. albicans,RBY_E_6,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr4A_hapB_vcf,Muzzey HapB chr4A Sequence Variants,"Sequence variants, chr4A homozygous, Hap B",chr4A homozygous,Sequence Variants,DNA-Seq,Variant,C. albicans,RBY_E_6,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr5A_hapA_alignments,Muzzey HapA chr5A Alignments,"Aligned paired-end reads, chr5A homozygous, Hap A",chr5A homozygous,Genome Sequence,DNA-Seq,Aligned reads,C. albicans,AF4448,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr5A_hapA_coverage,Muzzey HapA chr5A Coverage,"Read coverage, chr5A homozygous, Hap A",chr5A homozygous,Genome Sequence,DNA-Seq,Coverage plot,C. albicans,AF4448,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr5A_hapA_density,Muzzey HapA chr5A Density,"Read density, chr5A homozygous, Hap A",chr5A homozygous,Genome Sequence,DNA-Seq,Density plot,C. albicans,AF4448,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr5A_hapA_vcf,Muzzey HapA chr5A Sequence Variants,"Sequence variants, chr5A homozygous, Hap A",chr5A homozygous,Sequence Variants,DNA-Seq,Variant,C. albicans,AF4448,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr5A_hapB_alignments,Muzzey HapB chr5A Alignments,"Aligned paired-end reads, chr5A homozygous, Hap B",chr5A homozygous,Genome Sequence,DNA-Seq,Aligned reads,C. albicans,AF4448,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr5A_hapB_coverage,Muzzey HapB chr5A Coverage,"Read coverage, chr5A homozygous, Hap B",chr5A homozygous,Genome Sequence,DNA-Seq,Coverage plot,C. albicans,AF4448,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr5A_hapB_density,Muzzey HapB chr5A Density,"Read density, chr5A homozygous, Hap B",chr5A homozygous,Genome Sequence,DNA-Seq,Density plot,C. albicans,AF4448,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr5A_hapB_vcf,Muzzey HapB chr5A Sequence Variants,"Sequence variants, chr5A homozygous, Hap B",chr5A homozygous,Sequence Variants,DNA-Seq,Variant,C. albicans,AF4448,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr6A_hapA_alignments,Muzzey HapA chr6A Alignments,"Aligned paired-end reads, chr6A homozygous, Hap A",chr6A homozygous,Genome Sequence,DNA-Seq,Aligned reads,C. albicans,RBY10_12,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr6A_hapA_coverage,Muzzey HapA chr6A Coverage,"Read coverage, chr6A homozygous, Hap A",chr6A homozygous,Genome Sequence,DNA-Seq,Coverage plot,C. albicans,RBY10_12,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr6A_hapA_density,Muzzey HapA chr6A Density,"Read density, chr6A homozygous, Hap A",chr6A homozygous,Genome Sequence,DNA-Seq,Density plot,C. albicans,RBY10_12,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr6A_hapA_vcf,Muzzey HapA chr6A Sequence Variants,"Sequence variants, chr6A homozygous, Hap A",chr6A homozygous,Sequence Variants,DNA-Seq,Variant,C. albicans,RBY10_12,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr6A_hapB_alignments,Muzzey HapB chr6A Alignments,"Aligned paired-end reads, chr6A homozygous, Hap B",chr6A homozygous,Genome Sequence,DNA-Seq,Aligned reads,C. albicans,RBY10_12,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr6A_hapB_coverage,Muzzey HapB chr6A Coverage,"Read coverage, chr6A homozygous, Hap B",chr6A homozygous,Genome Sequence,DNA-Seq,Coverage plot,C. albicans,RBY10_12,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr6A_hapB_density,Muzzey HapB chr6A Density,"Read density, chr6A homozygous, Hap B",chr6A homozygous,Genome Sequence,DNA-Seq,Density plot,C. albicans,RBY10_12,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr6A_hapB_vcf,Muzzey HapB chr6A Sequence Variants,"Sequence variants, chr6A homozygous, Hap B",chr6A homozygous,Sequence Variants,DNA-Seq,Variant,C. albicans,RBY10_12,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr7A_hapA_alignments,Muzzey HapA chr7A Alignments,"Aligned paired-end reads, chr7A homozygous, Hap A",chr7A homozygous,Genome Sequence,DNA-Seq,Aligned reads,C. albicans,RBY_9_3sm,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr7A_hapA_coverage,Muzzey HapA chr7A Coverage,"Read coverage, chr7A homozygous, Hap A",chr7A homozygous,Genome Sequence,DNA-Seq,Coverage plot,C. albicans,RBY_9_3sm,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr7A_hapA_density,Muzzey HapA chr7A Density,"Read density, chr7A homozygous, Hap A",chr7A homozygous,Genome Sequence,DNA-Seq,Density plot,C. albicans,RBY_9_3sm,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr7A_hapA_vcf,Muzzey HapA chr7A Sequence Variants,"Sequence variants, chr7A homozygous, Hap A",chr7A homozygous,Sequence Variants,DNA-Seq,Variant,C. albicans,RBY_9_3sm,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr7A_hapB_alignments,Muzzey HapB chr7A Alignments,"Aligned paired-end reads, chr7A homozygous, Hap B",chr7A homozygous,Genome Sequence,DNA-Seq,Aligned reads,C. albicans,RBY_9_3sm,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr7A_hapB_coverage,Muzzey HapB chr7A Coverage,"Read coverage, chr7A homozygous, Hap B",chr7A homozygous,Genome Sequence,DNA-Seq,Coverage plot,C. albicans,RBY_9_3sm,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr7A_hapB_density,Muzzey HapB chr7A Density,"Read density, chr7A homozygous, Hap B",chr7A homozygous,Genome Sequence,DNA-Seq,Density plot,C. albicans,RBY_9_3sm,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chr7A_hapB_vcf,Muzzey HapB chr7A Sequence Variants,"Sequence variants, chr7A homozygous, Hap B",chr7A homozygous,Sequence Variants,DNA-Seq,Variant,C. albicans,RBY_9_3sm,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chrRA_hapA_alignments,Muzzey HapA chrRA Alignments,"Aligned paired-end reads, chrRA homozygous, Hap A",chrRA homozygous,Genome Sequence,DNA-Seq,Aligned reads,C. albicans,YJB10699,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chrRA_hapA_coverage,Muzzey HapA chrRA Coverage,"Read coverage, chrRA homozygous, Hap A",chrRA homozygous,Genome Sequence,DNA-Seq,Coverage plot,C. albicans,YJB10699,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chrRA_hapA_density,Muzzey HapA chrRA Density,"Read density, chrRA homozygous, Hap A",chrRA homozygous,Genome Sequence,DNA-Seq,Density plot,C. albicans,YJB10699,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chrRA_hapA_vcf,Muzzey HapA chrRA Sequence Variants,"Sequence variants, chrRA homozygous, Hap A",chrRA homozygous,Sequence Variants,DNA-Seq,Variant,C. albicans,YJB10699,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chrRA_hapB_alignments,Muzzey HapB chrRA Alignments,"Aligned paired-end reads, chrRA homozygous, Hap B",chrRA homozygous,Genome Sequence,DNA-Seq,Aligned reads,C. albicans,YJB10699,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chrRA_hapB_coverage,Muzzey HapB chrRA Coverage,"Read coverage, chrRA homozygous, Hap B",chrRA homozygous,Genome Sequence,DNA-Seq,Coverage plot,C. albicans,YJB10699,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chrRA_hapB_density,Muzzey HapB chrRA Density,"Read density, chrRA homozygous, Hap B",chrRA homozygous,Genome Sequence,DNA-Seq,Density plot,C. albicans,YJB10699,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chrRA_hapB_vcf,Muzzey HapB chrRA Sequence Variants,"Sequence variants, chrRA homozygous, Hap B",chrRA homozygous,Sequence Variants,DNA-Seq,Variant,C. albicans,YJB10699,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chrRB_hapA_alignments,Muzzey HapA chrRB Alignments,"Aligned paired-end reads, chrRB homozygous, Hap A",chrRB homozygous,Genome Sequence,DNA-Seq,Aligned reads,C. albicans,YJB10698,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chrRB_hapA_coverage,Muzzey HapA chrRB Coverage,"Read coverage, chrRB homozygous, Hap A",chrRB homozygous,Genome Sequence,DNA-Seq,Coverage plot,C. albicans,YJB10698,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chrRB_hapA_density,Muzzey HapA chrRB Density,"Read density, chrRB homozygous, Hap A",chrRB homozygous,Genome Sequence,DNA-Seq,Density plot,C. albicans,YJB10698,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chrRB_hapA_vcf,Muzzey HapA chrRB Sequence Variants,"Sequence variants, chrRB homozygous, Hap A",chrRB homozygous,Sequence Variants,DNA-Seq,Variant,C. albicans,YJB10698,A,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chrRB_hapB_alignments,Muzzey HapB chrRB Alignments,"Aligned paired-end reads, chrRB homozygous, Hap B",chrRB homozygous,Genome Sequence,DNA-Seq,Aligned reads,C. albicans,YJB10698,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chrRB_hapB_coverage,Muzzey HapB chrRB Coverage,"Read coverage, chrRB homozygous, Hap B",chrRB homozygous,Genome Sequence,DNA-Seq,Coverage plot,C. albicans,YJB10698,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chrRB_hapB_density,Muzzey HapB chrRB Density,"Read density, chrRB homozygous, Hap B",chrRB homozygous,Genome Sequence,DNA-Seq,Density plot,C. albicans,YJB10698,B,Muzzey,24025428
+,,,,,,,,,,,
+muzzey_chrRB_hapB_vcf,Muzzey HapB chrRB Sequence Variants,"Sequence variants, chrRB homozygous, Hap B",chrRB homozygous,Sequence Variants,DNA-Seq,Variant,C. albicans,YJB10698,B,Muzzey,24025428
+,,,,,,,,,,,
+niemiec_chg_77_hapA_alignments,Niemiec HapA PMN Control Yeast 0-min Alignments,"Aligned reads, PMN Control Yeast 0-min, HapA",PMN Yeast Control,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_77_hapA_coverage,Niemiec HapA PMN Control Yeast 0-min Coverage,"Read coverage, PMN Control Yeast 0-min, HapA",PMN Yeast Control,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_77_hapA_density,Niemiec HapA PMN Control Yeast 0-min Density,"Read density, PMN Control Yeast 0-min, HapA",PMN Yeast Control,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_71_hapA_alignments,Niemiec HapA PMN Yeast 15-min Alignments,"Aligned reads, PMN Yeast 15-min, HapA",PMN Yeast 15-min,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_71_hapA_coverage,Niemiec HapA PMN Yeast 15-min Coverage,"Read coverage, PMN Yeast 15-min, HapA",PMN Yeast 15-min,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_71_hapA_density,Niemiec HapA PMN Yeast 15-min Density,"Read density, PMN Yeast 15-min, HapA",PMN Yeast 15-min,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_72_hapA_alignments,Niemiec HapA PMN Yeast 30-min Alignments,"Aligned reads, PMN Yeast 30-min, HapA",PMN Yeast 30-min,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_72_hapA_coverage,Niemiec HapA PMN Yeast 30-min Coverage,"Read coverage, PMN Yeast 30-min, HapA",PMN Yeast 30-min,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_72_hapA_density,Niemiec HapA PMN Yeast 30-min Density,"Read density, PMN Yeast 30-min, HapA",PMN Yeast 30-min,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_73_hapA_alignments,Niemiec HapA PMN Yeast 60-min Alignments,"Aligned reads, PMN Yeast 60-min, HapA",PMN Yeast 60-min,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_73_hapA_coverage,Niemiec HapA PMN Yeast 60-min Coverage,"Read coverage, PMN Yeast 60-min, HapA",PMN Yeast 60-min,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_73_hapA_density,Niemiec HapA PMN Yeast 60-min Density,"Read density, PMN Yeast 60-min, HapA",PMN Yeast 60-min,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_75_hapA_alignments,Niemiec HapA PMN Control Hyphae 0-min Alignments,"Aligned reads, PMN Control Hyphae 0-min, HapA",PMN Hyphae Control,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_75_hapA_coverage,Niemiec HapA PMN Control Hyphae 0-min Coverage,"Read coverage, PMN Control Hyphae 0-min, HapA",PMN Hyphae Control,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_75_hapA_density,Niemiec HapA PMN Control Hyphae 0-min Density,"Read density, PMN Control Hyphae 0-min, HapA",PMN Hyphae Control,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_79_hapA_alignments,Niemiec HapA PMN Hyphae 15-min Alignments,"Aligned reads, PMN Hyphae 15-min, HapA",PMN Hyphae 15-min,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_79_hapA_coverage,Niemiec HapA PMN Hyphae 15-min Coverage,"Read coverage, PMN Hyphae 15-min, HapA",PMN Hyphae 15-min,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_79_hapA_density,Niemiec HapA PMN Hyphae 15-min Density,"Read density, PMN Hyphae 15-min, HapA",PMN Hyphae 15-min,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_80_hapA_alignments,Niemiec HapA PMN Hyphae 30-min Alignments,"Aligned reads, PMN Hyphae 30-min, HapA",PMN Hyphae 30-min,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_80_hapA_coverage,Niemiec HapA PMN Hyphae 30-min Coverage,"Read coverage, PMN Hyphae 30-min, HapA",PMN Hyphae 30-min,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_80_hapA_density,Niemiec HapA PMN Hyphae 30-min Density,"Read density, PMN Hyphae 30-min, HapA",PMN Hyphae 30-min,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_81_hapA_alignments,Niemiec HapA PMN Hyphae 60-min Alignments,"Aligned reads, PMN Hyphae 60-min, HapA",PMN Hyphae 60-min,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_81_hapA_coverage,Niemiec HapA PMN Hyphae 60-min Coverage,"Read coverage, PMN Hyphae 60-min, HapA",PMN Hyphae 60-min,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_81_hapA_density,Niemiec HapA PMN Hyphae 60-min Density,"Read density, PMN Hyphae 60-min, HapA",PMN Hyphae 60-min,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_76_hapA_alignments,Niemiec HapA NET Control Yeast Alignments,"Aligned reads, NET Control Yeast, HapA",NET Yeast Control,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_76_hapA_coverage,Niemiec HapA NET Control Yeast Coverage,"Read coverage, NET Control Yeast, HapA",NET Yeast Control,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_76_hapA_density,Niemiec HapA NET Control Yeast Density,"Read density, NET Control Yeast, HapA",NET Yeast Control,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_70_hapA_alignments,Niemiec HapA NETs Yeast Alignments,"Aligned reads, NETs Yeast, HapA",NETs Yeast,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_70_hapA_coverage,Niemiec HapA NETs Yeast Coverage,"Read coverage, NETs Yeast, HapA",NETs Yeast,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_70_hapA_density,Niemiec HapA NETs Yeast Density,"Read density, NETs Yeast, HapA",NETs Yeast,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_74_hapA_alignments,Niemiec HapA NET Control Hyphae Alignments,"Aligned reads, NET Control Hyphae, HapA",NET Hyphae Control,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_74_hapA_coverage,Niemiec HapA NET Control Hyphae Coverage,"Read coverage, NET Control Hyphae, HapA",NET Hyphae Control,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_74_hapA_density,Niemiec HapA NET Control Hyphae Density,"Read density, NET Control Hyphae, HapA",NET Hyphae Control,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_69_hapA_alignments,Niemiec HapA NETs Hyphae Alignments,"Aligned reads, NETs Hyphae, HapA",NETs Hyphae,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_69_hapA_coverage,Niemiec HapA NETs Hyphae Coverage,"Read coverage, NETs Hyphae, HapA",NETs Hyphae,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_69_hapA_density,Niemiec HapA NETs Hyphae Density,"Read density, NETs Hyphae, HapA",NETs Hyphae,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_77_hapB_alignments,Niemiec HapB PMN Control Yeast 0-min Alignments,"Aligned reads, PMN Control Yeast 0-min, HapB",PMN Yeast Control,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_77_hapB_coverage,Niemiec HapB PMN Control Yeast 0-min Coverage,"Read coverage, PMN Control Yeast 0-min, HapB",PMN Yeast Control,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_77_hapB_density,Niemiec HapB PMN Control Yeast 0-min Density,"Read density, PMN Control Yeast 0-min, HapB",PMN Yeast Control,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_71_hapB_alignments,Niemiec HapB PMN Yeast 15-min Alignments,"Aligned reads, PMN Yeast 15-min, HapB",PMN Yeast 15-min,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_71_hapB_coverage,Niemiec HapB PMN Yeast 15-min Coverage,"Read coverage, PMN Yeast 15-min, HapB",PMN Yeast 15-min,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_71_hapB_density,Niemiec HapB PMN Yeast 15-min Density,"Read density, PMN Yeast 15-min, HapB",PMN Yeast 15-min,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_72_hapB_alignments,Niemiec HapB PMN Yeast 30-min Alignments,"Aligned reads, PMN Yeast 30-min, HapB",PMN Yeast 30-min,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_72_hapB_coverage,Niemiec HapB PMN Yeast 30-min Coverage,"Read coverage, PMN Yeast 30-min, HapB",PMN Yeast 30-min,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_72_hapB_density,Niemiec HapB PMN Yeast 30-min Density,"Read density, PMN Yeast 30-min, HapB",PMN Yeast 30-min,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_73_hapB_alignments,Niemiec HapB PMN Yeast 60-min Alignments,"Aligned reads, PMN Yeast 60-min, HapB",PMN Yeast 60-min,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_73_hapB_coverage,Niemiec HapB PMN Yeast 60-min Coverage,"Read coverage, PMN Yeast 60-min, HapB",PMN Yeast 60-min,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_73_hapB_density,Niemiec HapB PMN Yeast 60-min Density,"Read density, PMN Yeast 60-min, HapB",PMN Yeast 60-min,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_75_hapB_alignments,Niemiec HapB PMN Control Hyphae 0-min Alignments,"Aligned reads, PMN Control Hyphae 0-min, HapB",PMN Hyphae Control,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_75_hapB_coverage,Niemiec HapB PMN Control Hyphae 0-min Coverage,"Read coverage, PMN Control Hyphae 0-min, HapB",PMN Hyphae Control,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_75_hapB_density,Niemiec HapB PMN Control Hyphae 0-min Density,"Read density, PMN Control Hyphae 0-min, HapB",PMN Hyphae Control,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_79_hapB_alignments,Niemiec HapB PMN Hyphae 15-min Alignments,"Aligned reads, PMN Hyphae 15-min, HapB",PMN Hyphae 15-min,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_79_hapB_coverage,Niemiec HapB PMN Hyphae 15-min Coverage,"Read coverage, PMN Hyphae 15-min, HapB",PMN Hyphae 15-min,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_79_hapB_density,Niemiec HapB PMN Hyphae 15-min Density,"Read density, PMN Hyphae 15-min, HapB",PMN Hyphae 15-min,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_80_hapB_alignments,Niemiec HapB PMN Hyphae 30-min Alignments,"Aligned reads, PMN Hyphae 30-min, HapB",PMN Hyphae 30-min,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_80_hapB_coverage,Niemiec HapB PMN Hyphae 30-min Coverage,"Read coverage, PMN Hyphae 30-min, HapB",PMN Hyphae 30-min,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_80_hapB_density,Niemiec HapB PMN Hyphae 30-min Density,"Read density, PMN Hyphae 30-min, HapB",PMN Hyphae 30-min,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_81_hapB_alignments,Niemiec HapB PMN Hyphae 60-min Alignments,"Aligned reads, PMN Hyphae 60-min, HapB",PMN Hyphae 60-min,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_81_hapB_coverage,Niemiec HapB PMN Hyphae 60-min Coverage,"Read coverage, PMN Hyphae 60-min, HapB",PMN Hyphae 60-min,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_81_hapB_density,Niemiec HapB PMN Hyphae 60-min Density,"Read density, PMN Hyphae 60-min, HapB",PMN Hyphae 60-min,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_76_hapB_alignments,Niemiec HapB NET Control Yeast Alignments,"Aligned reads, NET Control Yeast, HapB",NET Yeast Control,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_76_hapB_coverage,Niemiec HapB NET Control Yeast Coverage,"Read coverage, NET Control Yeast, HapB",NET Yeast Control,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_76_hapB_density,Niemiec HapB NET Control Yeast Density,"Read density, NET Control Yeast, HapB",NET Yeast Control,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_70_hapB_alignments,Niemiec HapB NETs Yeast Alignments,"Aligned reads, NETs Yeast, HapB",NETs Yeast,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_70_hapB_coverage,Niemiec HapB NETs Yeast Coverage,"Read coverage, NETs Yeast, HapB",NETs Yeast,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_70_hapB_density,Niemiec HapB NETs Yeast Density,"Read density, NETs Yeast, HapB",NETs Yeast,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_74_hapB_alignments,Niemiec HapB NET Control Hyphae Alignments,"Aligned reads, NET Control Hyphae, HapB",NET Hyphae Control,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_74_hapB_coverage,Niemiec HapB NET Control Hyphae Coverage,"Read coverage, NET Control Hyphae, HapB",NET Hyphae Control,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_74_hapB_density,Niemiec HapB NET Control Hyphae Density,"Read density, NET Control Hyphae, HapB",NET Hyphae Control,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_69_hapB_alignments,Niemiec HapB NETs Hyphae Alignments,"Aligned reads, NETs Hyphae, HapB",NETs Hyphae,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_69_hapB_coverage,Niemiec HapB NETs Hyphae Coverage,"Read coverage, NETs Hyphae, HapB",NETs Hyphae,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+niemiec_chg_69_hapB_density,Niemiec HapB NETs Hyphae Density,"Read density, NETs Hyphae, HapB",NETs Hyphae,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Niemiec,28874114
+,,,,,,,,,,,
+bruno_ypd_hapA_alignments,Bruno HapA Serum-control Alignments,"Aligned strand-specific reads, serum control, Hap A",Control,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_ypd_hapA_coverage,Bruno HapA Serum-control Coverage,"Read coverage, serum control, Hap A",Control,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_ypd_hapA_density,Bruno HapA Serum-control Density,"Read density, serum control, Hap A",Control,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_ypd_hapB_alignments,Bruno HapB Serum-control Alignments,"Aligned strand-specific reads, serum control, Hap B",Control,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_ypd_hapB_coverage,Bruno HapB Serum-control Coverage,"Read coverage, serum control, Hap B",Control,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_ypd_hapB_density,Bruno HapB Serum-control Density,"Read density, serum control, Hap B",Control,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_serum_hapA_alignments,Bruno HapA Serum Alignments,"Aligned strand-specific reads, serum, Hap A",Serum,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_serum_hapA_coverage,Bruno HapA Serum Coverage,"Read coverage, serum, Hap A",Serum,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_serum_hapA_density,Bruno HapA Serum Density,"Read density, serum, Hap A",Serum,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_serum_hapB_alignments,Bruno HapB Serum Alignments,"Aligned strand-specific reads, serum, Hap B",Serum,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_serum_hapB_coverage,Bruno HapB Serum Coverage,"Read coverage, serum, Hap B",Serum,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_serum_hapB_density,Bruno HapB Serum Density,"Read density, serum, Hap B",Serum,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_nitroSp_hapA_alignments,Bruno HapA Nitrosative Stress Alignments,"Aligned reads, nitrosative stress (DPTA-NONOate), Hap A",Nitrosative Stress,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_nitroSp_hapA_coverage,Bruno HapA Nitrosative Stress Coverage,"Read coverage, nitrosative stress (DPTA-NONOate), Hap A",Nitrosative Stress,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_nitroSp_hapA_density,Bruno HapA Nitrosative Stress Density,"Read density, nitrosative stress (DPTA-NONOate), Hap A",Nitrosative Stress,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_nitroSp_hapB_alignments,Bruno HapB Nitrosative Stress Alignments,"Aligned reads, nitrosative stress (DPTA-NONOate), Hap B",Nitrosative Stress,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_nitroSp_hapB_coverage,Bruno HapB Nitrosative Stress Coverage,"Read coverage, nitrosative stress (DPTA-NONOate), Hap B",Nitrosative Stress,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_nitroSp_hapB_density,Bruno HapB Nitrosative Stress Density,"Read density, nitrosative stress (DPTA-NONOate), Hap B",Nitrosative Stress,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_nitroSm_hapA_alignments,Bruno HapA Nitrosative Stress Control Alignments,"Aligned reads, nitrosative stress control, Hap A",Control,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_nitroSm_hapA_coverage,Bruno HapA Nitrosative Stress Control Coverage,"Read coverage, nitrosative stress control, Hap A",Control,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_nitroSm_hapA_density,Bruno HapA Nitrosative Stress Control Density,"Read density, nitrosative stress control, Hap A",Control,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_nitroSm_hapB_alignments,Bruno HapB Nitrosative Stress Control Alignments,"Aligned reads, nitrosative stress control, Hap B",Control,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_nitroSm_hapB_coverage,Bruno HapB Nitrosative Stress Control Coverage,"Read coverage, nitrosative stress control, Hap B",Control,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_nitroSm_hapB_density,Bruno HapB Nitrosative Stress Control Density,"Read density, nitrosative stress control, Hap B",Control,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_cwdp_hapA_alignments,Bruno HapA Cell Wall Damage Alignments,"Aligned reads, cell wall damage (congo red), Hap A",Cell Wall Damage,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_cwdp_hapA_coverage,Bruno HapA Cell Wall Damage Coverage,"Read coverage, cell wall damage (congo red), Hap A",Cell Wall Damage,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_cwdp_hapA_density,Bruno HapA Cell Wall Damage Density,"Read density, cell wall damage (congo red), Hap A",Cell Wall Damage,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_cwdp_hapB_alignments,Bruno HapB Cell Wall Damage Alignments,"Aligned reads, cell wall damage (congo red), Hap B",Cell Wall Damage,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_cwdp_hapB_coverage,Bruno HapB Cell Wall Damage Coverage,"Read coverage, cell wall damage (congo red), Hap B",Cell Wall Damage,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_cwdp_hapB_density,Bruno HapB Cell Wall Damage Density,"Read density, cell wall damage (congo red), Hap B",Cell Wall Damage,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_cwdm_hapA_alignments,Bruno HapA Cell Wall Damage Control Alignments,"Aligned reads, cell wall damage control, Hap A",Control,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_cwdm_hapA_coverage,Bruno HapA Cell Wall Damage Control Coverage,"Read coverage, cell wall damage control, Hap A",Control,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_cwdm_hapA_density,Bruno HapA Cell Wall Damage Control Density,"Read density, cell wall damage control, Hap A",Control,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_cwdm_hapB_alignments,Bruno HapB Cell Wall Damage Control Alignments,"Aligned reads, cell wall damage control, Hap B",Control,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_cwdm_hapB_coverage,Bruno HapB Cell Wall Damage Control Coverage,"Read coverage, cell wall damage control, Hap B",Control,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_cwdm_hapB_density,Bruno HapB Cell Wall Damage Control Density,"Read density, cell wall damage control, Hap B",Control,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_ph4_hapA_alignments,Bruno HapA pH 4 Alignments,"Aligned strand-specific reads, pH 4, Hap A",pH 4,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_ph4_hapA_coverage,Bruno HapA pH 4 Coverage,"Read coverage, pH 4, Hap A",pH 4,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_ph4_hapA_density,Bruno HapA pH 4 Density,"Read density, pH 4, Hap A",pH 4,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_ph4_hapB_alignments,Bruno HapB pH 4 Alignments,"Aligned strand-specific reads, pH 4, Hap B",pH 4,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_ph4_hapB_coverage,Bruno HapB pH 4 Coverage,"Read coverage, pH 4, Hap B",pH 4,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_ph4_hapB_density,Bruno HapB pH 4 Density,"Read density, pH 4, Hap B",pH 4,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_ph8_hapA_alignments,Bruno HapA pH 8 Alignments,"Aligned strand-specific reads, pH 8, Hap A",pH 8,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_ph8_hapA_coverage,Bruno HapA pH 8 Coverage,"Read coverage, pH 8, Hap A",pH 8,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_ph8_hapA_density,Bruno HapA pH 8 Density,"Read density, pH 8, Hap A",pH 8,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_ph8_hapB_alignments,Bruno HapB pH 8 Alignments,"Aligned strand-specific reads, pH 8, Hap B",pH 8,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_ph8_hapB_coverage,Bruno HapB pH 8 Coverage,"Read coverage, pH 8, Hap B",pH 8,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_ph8_hapB_density,Bruno HapB pH 8 Density,"Read density, pH 8, Hap B",pH 8,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_hOxi_hapA_alignments,Bruno HapA High Oxidative Stress Alignments,"Aligned reads, high oxidative stress (5mM H2O2), Hap A",Oxidative Stress,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_hOxi_hapA_coverage,Bruno HapA High Oxidative Stress Coverage,"Read coverage, high oxidative stress (5mM H2O2), Hap A",Oxidative Stress,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_hOxi_hapA_density,Bruno HapA High Oxidative Stress Density,"Read density, high oxidative stress (5mM H2O2), Hap A",Oxidative Stress,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_hOxi_hapB_alignments,Bruno HapB High Oxidative Stress Alignments,"Aligned reads, high oxidative stress (5mM H2O2), Hap B",Oxidative Stress,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_hOxi_hapB_coverage,Bruno HapB High Oxidative Stress Coverage,"Read coverage, high oxidative stress (5mM H2O2), Hap B",Oxidative Stress,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_hOxi_hapB_density,Bruno HapB High Oxidative Stress Density,"Read density, high oxidative stress (5mM H2O2), Hap B",Oxidative Stress,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_lOxi_hapA_alignments,Bruno HapA Low Oxidative Stress Alignments,"Aligned reads, low oxidative stress (0.5mM H2O2), Hap A",Oxidative Stress,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_lOxi_hapA_coverage,Bruno HapA Low Oxidative Stress Coverage,"Read coverage, low oxidative stress (0.5mM H2O2), Hap A",Oxidative Stress,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_lOxi_hapA_density,Bruno HapA Low Oxidative Stress Density,"Read density, low oxidative stress (0.5mM H2O2), Hap A",Oxidative Stress,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_lOxi_hapB_alignments,Bruno HapB Low Oxidative Stress Alignments,"Aligned reads, low oxidative stress (0.5mM H2O2), Hap B",Oxidative Stress,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_lOxi_hapB_coverage,Bruno HapB Low Oxidative Stress Coverage,"Read coverage, low oxidative stress (0.5mM H2O2), Hap B",Oxidative Stress,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_lOxi_hapB_density,Bruno HapB Low Oxidative Stress Density,"Read density, low oxidative stress (0.5mM H2O2), Hap B",Oxidative Stress,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_nOxi_hapA_alignments,Bruno HapA Oxidative Stress Control Alignments,"Aligned reads, oxidative stress control, Hap A",Control,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_nOxi_hapA_coverage,Bruno HapA Oxidative Stress Control Coverage,"Read coverage, oxidative stress control, Hap A",Control,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_nOxi_hapA_density,Bruno HapA Oxidative Stress Control Density,"Read density, oxidative stress control, Hap A",Control,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Bruno,20810668
+,,,,,,,,,,,
+bruno_nOxi_hapB_alignments,Bruno HapB Oxidative Stress Control Alignments,"Aligned reads, oxidative stress control, Hap B",Control,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_nOxi_hapB_coverage,Bruno HapB Oxidative Stress Control Coverage,"Read coverage, oxidative stress control, Hap B",Control,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+bruno_nOxi_hapB_density,Bruno HapB Oxidative Stress Control Density,"Read density, oxidative stress control, Hap B",Control,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Bruno,20810668
+,,,,,,,,,,,
+desai_sc_film_hapA_alignments,Desai HapA SC5314 Biofilm Alignments,"Aligned strand-specific reads, SC5314 biofilm, Hap A",Biofilm Growth,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Desai,23572557
+,,,,,,,,,,,
+desai_sc_film_hapA_coverage,Desai HapA SC5314 Biofilm Coverage,"Read coverage, SC5314 biofilm, Hap A",Biofilm Growth,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Desai,23572557
+,,,,,,,,,,,
+desai_sc_film_hapA_density,Desai HapA SC5314 Biofilm Density,"Read density, SC5314 biofilm, Hap A",Biofilm Growth,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Desai,23572557
+,,,,,,,,,,,
+desai_sc_film_hapB_alignments,Desai HapB SC5314 Biofilm Alignments,"Aligned strand-specific reads, SC5314 biofilm, Hap B",Biofilm Growth,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Desai,23572557
+,,,,,,,,,,,
+desai_sc_film_hapB_coverage,Desai HapB SC5314 Biofilm Coverage,"Read coverage, SC5314 biofilm, Hap B",Biofilm Growth,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Desai,23572557
+,,,,,,,,,,,
+desai_sc_film_hapB_density,Desai HapB SC5314 Biofilm Density,"Read density, SC5314 biofilm, Hap B",Biofilm Growth,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Desai,23572557
+,,,,,,,,,,,
+desai_woW_film_hapA_alignments,Desai HapA WO1-white Biofilm Alignments,"Aligned strand-specific reads, WO1-white biofilm, Hap A","Biofilm Growth Conditions, White Cells",Gene Expression,RNA-Seq,Aligned reads,C. albicans,WO-1-white,A,Desai,23572557
+,,,,,,,,,,,
+desai_woW_film_hapA_coverage,Desai HapA WO1-white Biofilm Coverage,"Read coverage, WO1-white biofilm, Hap A","Biofilm Growth Conditions, White Cells",Gene Expression,RNA-Seq,Coverage plot,C. albicans,WO-1-white,A,Desai,23572557
+,,,,,,,,,,,
+desai_woW_film_hapA_density,Desai HapA WO1-white Biofilm Density,"Read density, WO1-white biofilm, Hap A","Biofilm Growth Conditions, White Cells",Gene Expression,RNA-Seq,Density plot,C. albicans,WO-1-white,A,Desai,23572557
+,,,,,,,,,,,
+desai_woW_film_hapB_alignments,Desai HapB WO1-white Biofilm Alignments,"Aligned strand-specific reads, WO1-white biofilm, Hap B","Biofilm Growth Conditions, White Cells",Gene Expression,RNA-Seq,Aligned reads,C. albicans,WO-1-white,B,Desai,23572557
+,,,,,,,,,,,
+desai_woW_film_hapB_coverage,Desai HapB WO1-white Biofilm Coverage,"Read coverage, WO1-white biofilm, Hap B","Biofilm Growth Conditions, White Cells",Gene Expression,RNA-Seq,Coverage plot,C. albicans,WO-1-white,B,Desai,23572557
+,,,,,,,,,,,
+desai_woW_film_hapB_density,Desai HapB WO1-white Biofilm Density,"Read density, WO1-white biofilm, Hap B","Biofilm Growth Conditions, White Cells",Gene Expression,RNA-Seq,Density plot,C. albicans,WO-1-white,B,Desai,23572557
+,,,,,,,,,,,
+desai_woO_film_hapA_alignments,Desai HapA WO1-opaque Biofilm Alignments,"Aligned strand-specific reads, WO1-opaque biofilm, Hap A","Biofilm Growth Conditions, Opaque Cells",Gene Expression,RNA-Seq,Aligned reads,C. albicans,WO-1-opaque,A,Desai,23572557
+,,,,,,,,,,,
+desai_woO_film_hapA_coverage,Desai HapA WO1-opaque Biofilm Coverage,"Read coverage, WO1-opaque biofilm, Hap A","Biofilm Growth Conditions, Opaque Cells",Gene Expression,RNA-Seq,Coverage plot,C. albicans,WO-1-opaque,A,Desai,23572557
+,,,,,,,,,,,
+desai_woO_film_hapA_density,Desai HapA WO1-opaque Biofilm Density,"Read density, WO1-opaque biofilm, Hap A","Biofilm Growth Conditions, Opaque Cells",Gene Expression,RNA-Seq,Density plot,C. albicans,WO-1-opaque,A,Desai,23572557
+,,,,,,,,,,,
+desai_woO_film_hapB_alignments,Desai HapB WO1-opaque Biofilm Alignments,"Aligned strand-specific reads, WO1-opaque biofilm, Hap B","Biofilm Growth Conditions, Opaque Cells",Gene Expression,RNA-Seq,Aligned reads,C. albicans,WO-1-opaque,B,Desai,23572557
+,,,,,,,,,,,
+desai_woO_film_hapB_coverage,Desai HapB WO1-opaque Biofilm Coverage,"Read coverage, WO1-opaque biofilm, Hap B","Biofilm Growth Conditions, Opaque Cells",Gene Expression,RNA-Seq,Coverage plot,C. albicans,WO-1-opaque,B,Desai,23572557
+,,,,,,,,,,,
+desai_woO_film_hapB_density,Desai HapB WO1-opaque Biofilm Density,"Read density, WO1-opaque biofilm, Hap B","Biofilm Growth Conditions, Opaque Cells",Gene Expression,RNA-Seq,Density plot,C. albicans,WO-1-opaque,B,Desai,23572557
+,,,,,,,,,,,
+desai_sc_plnk_hapA_alignments,Desai HapA SC5314 Planktonic Alignments,"Aligned strand-specific reads, SC5314 planktonic growth, Hap A",Control,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Desai,23572557
+,,,,,,,,,,,
+desai_sc_plnk_hapA_coverage,Desai HapA SC5314 Planktonic Coverage,"Read coverage, SC5314 planktonic growth, Hap A",Control,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Desai,23572557
+,,,,,,,,,,,
+desai_sc_plnk_hapA_density,Desai HapA SC5314 Planktonic Density,"Read density, SC5314 planktonic growth, Hap A",Control,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Desai,23572557
+,,,,,,,,,,,
+desai_sc_plnk_hapB_alignments,Desai HapB SC5314 Planktonic Alignments,"Aligned strand-specific reads, SC5314 planktonic growth, Hap B",Control,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Desai,23572557
+,,,,,,,,,,,
+desai_sc_plnk_hapB_coverage,Desai HapB SC5314 Planktonic Coverage,"Read coverage, SC5314 planktonic growth, Hap B",Control,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Desai,23572557
+,,,,,,,,,,,
+desai_sc_plnk_hapB_density,Desai HapB SC5314 Planktonic Density,"Read density, SC5314 planktonic growth, Hap B",Control,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Desai,23572557
+,,,,,,,,,,,
+desai_woW_plnk_hapA_alignments,Desai HapA WO1-white Planktonic Alignments,"Aligned strand-specific reads, WO1-white planktonic growth, Hap A",Control,Gene Expression,RNA-Seq,Aligned reads,C. albicans,WO-1-white,A,Desai,23572557
+,,,,,,,,,,,
+desai_woW_plnk_hapA_coverage,Desai HapA WO1-white Planktonic Coverage,"Read coverage, WO1-white planktonic growth, Hap A",Control,Gene Expression,RNA-Seq,Coverage plot,C. albicans,WO-1-white,A,Desai,23572557
+,,,,,,,,,,,
+desai_woW_plnk_hapA_density,Desai HapA WO1-white Planktonic Density,"Read density, WO1-white planktonic growth, Hap A",Control,Gene Expression,RNA-Seq,Density plot,C. albicans,WO-1-white,A,Desai,23572557
+,,,,,,,,,,,
+desai_woW_plnk_hapB_alignments,Desai HapB WO1-white Planktonic Alignments,"Aligned strand-specific reads, WO1-white planktonic growth, Hap B",Control,Gene Expression,RNA-Seq,Aligned reads,C. albicans,WO-1-white,B,Desai,23572557
+,,,,,,,,,,,
+desai_woW_plnk_hapB_coverage,Desai HapB WO1-white Planktonic Coverage,"Read coverage, WO1-white planktonic growth, Hap B",Control,Gene Expression,RNA-Seq,Coverage plot,C. albicans,WO-1-white,B,Desai,23572557
+,,,,,,,,,,,
+desai_woW_plnk_hapB_density,Desai HapB WO1-white Planktonic Density,"Read density, WO1-white planktonic growth, Hap B",Control,Gene Expression,RNA-Seq,Density plot,C. albicans,WO-1-white,B,Desai,23572557
+,,,,,,,,,,,
+desai_woO_plnk_hapA_alignments,Desai HapA WO1-opaque Planktonic Alignments,"Aligned strand-specific reads, WO1-opaque planktonic growth, Hap A",Control,Gene Expression,RNA-Seq,Aligned reads,C. albicans,WO-1-opaque,A,Desai,23572557
+,,,,,,,,,,,
+desai_woO_plnk_hapA_coverage,Desai HapA WO1-opaque Planktonic Coverage,"Read coverage, WO1-opaque planktonic growth, Hap A",Control,Gene Expression,RNA-Seq,Coverage plot,C. albicans,WO-1-opaque,A,Desai,23572557
+,,,,,,,,,,,
+desai_woO_plnk_hapA_density,Desai HapA WO1-opaque Planktonic Density,"Read density, WO1-opaque planktonic growth, Hap A",Control,Gene Expression,RNA-Seq,Density plot,C. albicans,WO-1-opaque,A,Desai,23572557
+,,,,,,,,,,,
+desai_woO_plnk_hapB_alignments,Desai HapB WO1-opaque Planktonic Alignments,"Aligned strand-specific reads, WO1-opaque planktonic growth, Hap B",Control,Gene Expression,RNA-Seq,Aligned reads,C. albicans,WO-1-opaque,B,Desai,23572557
+,,,,,,,,,,,
+desai_woO_plnk_hapB_coverage,Desai HapB WO1-opaque Planktonic Coverage,"Read coverage, WO1-opaque planktonic growth, Hap B",Control,Gene Expression,RNA-Seq,Coverage plot,C. albicans,WO-1-opaque,B,Desai,23572557
+,,,,,,,,,,,
+desai_woO_plnk_hapB_density,Desai HapB WO1-opaque Planktonic Density,"Read density, WO1-opaque planktonic growth, Hap B",Control,Gene Expression,RNA-Seq,Density plot,C. albicans,WO-1-opaque,B,Desai,23572557
+,,,,,,,,,,,
+desai_rhr2D_1_hapA_alignments,Desai HapA rhr2-Deletion (rep 1) Alignments,"Aligned strand-specific, paired end reads, rhr2-deletion, Hap A",rhr2-deletion,Gene Expression,RNA-Seq,Aligned reads,C. albicans,DAY185,A,Desai,23572557
+,,,,,,,,,,,
+desai_rhr2D_1_hapA_coverage,Desai HapA rhr2-Deletion (rep 1) Coverage,"Read coverage, rhr2-deletion, Hap A",rhr2-deletion,Gene Expression,RNA-Seq,Coverage plot,C. albicans,DAY185,A,Desai,23572557
+,,,,,,,,,,,
+desai_rhr2D_1_hapA_density,Desai HapA rhr2-Deletion (rep 1) Density,"Read density, rhr2-deletion, Hap A",rhr2-deletion,Gene Expression,RNA-Seq,Density plot,C. albicans,DAY185,A,Desai,23572557
+,,,,,,,,,,,
+desai_rhr2D_2_hapA_alignments,Desai HapA rhr2-Deletion (rep 2) Alignments,"Aligned strand-specific, paired end reads, rhr2-deletion, Hap A",rhr2-deletion,Gene Expression,RNA-Seq,Aligned reads,C. albicans,DAY185,A,Desai,23572557
+,,,,,,,,,,,
+desai_rhr2D_2_hapA_coverage,Desai HapA rhr2-Deletion (rep 2) Coverage,"Read coverage, rhr2-deletion, Hap A",rhr2-deletion,Gene Expression,RNA-Seq,Coverage plot,C. albicans,DAY185,A,Desai,23572557
+,,,,,,,,,,,
+desai_rhr2D_2_hapA_density,Desai HapA rhr2-Deletion (rep 2) Density,"Read density, rhr2-deletion, Hap A",rhr2-deletion,Gene Expression,RNA-Seq,Density plot,C. albicans,DAY185,A,Desai,23572557
+,,,,,,,,,,,
+desai_rhr2D_1_hapB_alignments,Desai HapB rhr2-Deletion (rep 1) Alignments,"Aligned strand-specific, paired end reads, rhr2-deletion, Hap B",rhr2-deletion,Gene Expression,RNA-Seq,Aligned reads,C. albicans,DAY185,B,Desai,23572557
+,,,,,,,,,,,
+desai_rhr2D_1_hapB_coverage,Desai HapB rhr2-Deletion (rep 1) Coverage,"Read coverage, rhr2-deletion, Hap B",rhr2-deletion,Gene Expression,RNA-Seq,Coverage plot,C. albicans,DAY185,B,Desai,23572557
+,,,,,,,,,,,
+desai_rhr2D_1_hapB_density,Desai HapB rhr2-Deletion (rep 1) Density,"Read density, rhr2-deletion, Hap B",rhr2-deletion,Gene Expression,RNA-Seq,Density plot,C. albicans,DAY185,B,Desai,23572557
+,,,,,,,,,,,
+desai_rhr2D_2_hapB_alignments,Desai HapB rhr2-Deletion (rep 2) Alignments,"Aligned strand-specific, paired end reads, rhr2-deletion, Hap B",rhr2-deletion,Gene Expression,RNA-Seq,Aligned reads,C. albicans,DAY185,B,Desai,23572557
+,,,,,,,,,,,
+desai_rhr2D_2_hapB_coverage,Desai HapB rhr2-Deletion (rep 2) Coverage,"Read coverage, rhr2-deletion, Hap B",rhr2-deletion,Gene Expression,RNA-Seq,Coverage plot,C. albicans,DAY185,B,Desai,23572557
+,,,,,,,,,,,
+desai_rhr2D_2_hapB_density,Desai HapB rhr2-Deletion (rep 2) Density,"Read density, rhr2-deletion, Hap B",rhr2-deletion,Gene Expression,RNA-Seq,Density plot,C. albicans,DAY185,B,Desai,23572557
+,,,,,,,,,,,
+desai_rhr2C_1_hapA_alignments,Desai HapA RHR2+ Complemented (rep 1) Alignments,"Aligned strand-specific, paired end reads, RHR2+ complemented, Hap A",Control,Gene Expression,RNA-Seq,Aligned reads,C. albicans,DAY185,A,Desai,23572557
+,,,,,,,,,,,
+desai_rhr2C_1_hapA_coverage,Desai HapA RHR2+ Complemented (rep 1) Coverage,"Read coverage, RHR2+ complemented, Hap A",Control,Gene Expression,RNA-Seq,Coverage plot,C. albicans,DAY185,A,Desai,23572557
+,,,,,,,,,,,
+desai_rhr2C_1_hapA_density,Desai HapA RHR2+ Complemented (rep 1) Density,"Read density, RHR2+ complemented, Hap A",Control,Gene Expression,RNA-Seq,Density plot,C. albicans,DAY185,A,Desai,23572557
+,,,,,,,,,,,
+desai_rhr2C_2_hapA_alignments,Desai HapA RHR2+ Complemented (rep 2) Alignments,"Aligned strand-specific, paired end reads, RHR2+ complemented, Hap A",Control,Gene Expression,RNA-Seq,Aligned reads,C. albicans,DAY185,A,Desai,23572557
+,,,,,,,,,,,
+desai_rhr2C_2_hapA_coverage,Desai HapA RHR2+ Complemented (rep 2) Coverage,"Read coverage, RHR2+ complemented, Hap A",Control,Gene Expression,RNA-Seq,Coverage plot,C. albicans,DAY185,A,Desai,23572557
+,,,,,,,,,,,
+desai_rhr2C_2_hapA_density,Desai HapA RHR2+ Complemented (rep 2) Density,"Read density, RHR2+ complemented, Hap A",Control,Gene Expression,RNA-Seq,Density plot,C. albicans,DAY185,A,Desai,23572557
+,,,,,,,,,,,
+desai_rhr2C_1_hapB_alignments,Desai HapB RHR2+ Complemented (rep 1) Alignments,"Aligned strand-specific, paired end reads, RHR2+ complemented, Hap B",Control,Gene Expression,RNA-Seq,Aligned reads,C. albicans,DAY185,B,Desai,23572557
+,,,,,,,,,,,
+desai_rhr2C_1_hapB_coverage,Desai HapB RHR2+ Complemented (rep 1) Coverage,"Read coverage, RHR2+ complemented, Hap B",Control,Gene Expression,RNA-Seq,Coverage plot,C. albicans,DAY185,B,Desai,23572557
+,,,,,,,,,,,
+desai_rhr2C_1_hapB_density,Desai HapB RHR2+ Complemented (rep 1) Density,"Read density, RHR2+ complemented, Hap B",Control,Gene Expression,RNA-Seq,Density plot,C. albicans,DAY185,B,Desai,23572557
+,,,,,,,,,,,
+desai_rhr2C_2_hapB_alignments,Desai HapB RHR2+ Complemented (rep 2) Alignments,"Aligned strand-specific, paired end reads, RHR2+ complemented, Hap B",Control,Gene Expression,RNA-Seq,Aligned reads,C. albicans,DAY185,B,Desai,23572557
+,,,,,,,,,,,
+desai_rhr2C_2_hapB_coverage,Desai HapB RHR2+ Complemented (rep 2) Coverage,"Read coverage, RHR2+ complemented, Hap B",Control,Gene Expression,RNA-Seq,Coverage plot,C. albicans,DAY185,B,Desai,23572557
+,,,,,,,,,,,
+desai_rhr2C_2_hapB_density,Desai HapB RHR2+ Complemented (rep 2) Density,"Read density, RHR2+ complemented, Hap B",Control,Gene Expression,RNA-Seq,Density plot,C. albicans,DAY185,B,Desai,23572557
+,,,,,,,,,,,
+xie_white_hapA_alignments,Xie HapA MTLa/alpha White Alignments,"Aligned strand-specific reads, MTLa/alpha white cells, Hap A",White Cells,Gene Expression,RNA-Seq,Aligned reads,C. albicans,CY110,A,Xie,23555196
+,,,,,,,,,,,
+xie_white_hapA_coverage,Xie HapA MTLa/alpha White Coverage,"Read coverage, MTLa/alpha white cells, Hap A",White Cells,Gene Expression,RNA-Seq,Coverage plot,C. albicans,CY110,A,Xie,23555196
+,,,,,,,,,,,
+xie_white_hapA_density,Xie HapA MTLa/alpha White Density,"Read density, MTLa/alpha white cells, Hap A",White Cells,Gene Expression,RNA-Seq,Density plot,C. albicans,CY110,A,Xie,23555196
+,,,,,,,,,,,
+xie_white_hapB_alignments,Xie HapB MTLa/alpha White Alignments,"Aligned strand-specific reads, MTLa/alpha white cells, Hap B",White Cells,Gene Expression,RNA-Seq,Aligned reads,C. albicans,CY110,B,Xie,23555196
+,,,,,,,,,,,
+xie_white_hapB_coverage,Xie HapB MTLa/alpha White Coverage,"Read coverage, MTLa/alpha white cells, Hap B",White Cells,Gene Expression,RNA-Seq,Coverage plot,C. albicans,CY110,B,Xie,23555196
+,,,,,,,,,,,
+xie_white_hapB_density,Xie HapB MTLa/alpha White Density,"Read density, MTLa/alpha white cells, Hap B",White Cells,Gene Expression,RNA-Seq,Density plot,C. albicans,CY110,B,Xie,23555196
+,,,,,,,,,,,
+xie_opaque_hapA_alignments,Xie HapA MTLa/alpha Opaque Alignments,"Aligned strand-specific reads, MTLa/alpha opaque cells, Hap A",Opaque Cells,Gene Expression,RNA-Seq,Aligned reads,C. albicans,CY110,A,Xie,23555196
+,,,,,,,,,,,
+xie_opaque_hapA_coverage,Xie HapA MTLa/alpha Opaque Coverage,"Read coverage, MTLa/alpha opaque cells, Hap A",Opaque Cells,Gene Expression,RNA-Seq,Coverage plot,C. albicans,CY110,A,Xie,23555196
+,,,,,,,,,,,
+xie_opaque_hapA_density,Xie HapA MTLa/alpha Opaque Density,"Read density, MTLa/alpha opaque cells, Hap A",Opaque Cells,Gene Expression,RNA-Seq,Density plot,C. albicans,CY110,A,Xie,23555196
+,,,,,,,,,,,
+xie_opaque_hapB_alignments,Xie HapB MTLa/alpha Opaque Alignments,"Aligned strand-specific reads, MTLa/alpha opaque cells, Hap B",Opaque Cells,Gene Expression,RNA-Seq,Aligned reads,C. albicans,CY110,B,Xie,23555196
+,,,,,,,,,,,
+xie_opaque_hapB_coverage,Xie HapB MTLa/alpha Opaque Coverage,"Read coverage, MTLa/alpha opaque cells, Hap B",Opaque Cells,Gene Expression,RNA-Seq,Coverage plot,C. albicans,CY110,B,Xie,23555196
+,,,,,,,,,,,
+xie_opaque_hapB_density,Xie HapB MTLa/alpha Opaque Density,"Read density, MTLa/alpha opaque cells, Hap B",Opaque Cells,Gene Expression,RNA-Seq,Density plot,C. albicans,CY110,B,Xie,23555196
+,,,,,,,,,,,
+lohse_wt_con_hapA_alignments,Lohse HapA Wor1p ChIP-Seq Control White Cells Alignments,"Aligned reads, white cells ChIP-Seq control, Hap A",Control,Chromatin Binding,ChIP-Seq,Aligned reads,C. albicans,AHY135,A,Lohse,26772749
+,,,,,,,,,,,
+lohse_wt_con_hapA_coverage,Lohse HapA Wor1p ChIP-Seq Control White Cells Coverage,"Read coverage, white cells ChIP-Seq control, Hap A",Control,Chromatin Binding,ChIP-Seq,Coverage plot,C. albicans,AHY135,A,Lohse,26772749
+,,,,,,,,,,,
+lohse_wt_con_hapA_density,Lohse HapA Wor1p ChIP-Seq Control White Cells Density,"Read density, white cells ChIP-Seq control, Hap A",Control,Chromatin Binding,ChIP-Seq,Density plot,C. albicans,AHY135,A,Lohse,26772749
+,,,,,,,,,,,
+lohse_wt_con_hapB_alignments,Lohse HapB Wor1p ChIP-Seq Control White Cells Alignments,"Aligned reads, white cells ChIP-Seq control, Hap B",Control,Chromatin Binding,ChIP-Seq,Aligned reads,C. albicans,AHY136,B,Lohse,26772749
+,,,,,,,,,,,
+lohse_wt_con_hapB_coverage,Lohse HapB Wor1p ChIP-Seq Control White Cells Coverage,"Read coverage, white cells ChIP-Seq control, Hap B",Control,Chromatin Binding,ChIP-Seq,Coverage plot,C. albicans,AHY136,B,Lohse,26772749
+,,,,,,,,,,,
+lohse_wt_con_hapB_density,Lohse HapB Wor1p ChIP-Seq Control White Cells Density,"Read density, white cells ChIP-Seq control, Hap B",Control,Chromatin Binding,ChIP-Seq,Density plot,C. albicans,AHY136,B,Lohse,26772749
+,,,,,,,,,,,
+lohse_op_con_hapA_alignments,Lohse HapA Wor1p ChIP-Seq Control Opaque Cells Alignments,"Aligned reads, opaque cells ChIP-Seq control, Hap A",Control,Chromatin Binding,ChIP-Seq,Aligned reads,C. albicans,AHY135,A,Lohse,26772749
+,,,,,,,,,,,
+lohse_op_con_hapA_coverage,Lohse HapA Wor1p ChIP-Seq Control Opaque Cells Coverage,"Read coverage, opaque cells ChIP-Seq control, Hap A",Control,Chromatin Binding,ChIP-Seq,Coverage plot,C. albicans,AHY135,A,Lohse,26772749
+,,,,,,,,,,,
+lohse_op_con_hapA_density,Lohse HapA Wor1p ChIP-Seq Control Opaque Cells Density,"Read density, opaque cells ChIP-Seq control, Hap A",Control,Chromatin Binding,ChIP-Seq,Density plot,C. albicans,AHY135,A,Lohse,26772749
+,,,,,,,,,,,
+lohse_op_con_hapB_alignments,Lohse HapB Wor1p ChIP-Seq Control Opaque Cells Alignments,"Aligned reads, opaque cells ChIP-Seq control, Hap B",Control,Chromatin Binding,ChIP-Seq,Aligned reads,C. albicans,AHY136,B,Lohse,26772749
+,,,,,,,,,,,
+lohse_op_con_hapB_coverage,Lohse HapB Wor1p ChIP-Seq Control Opaque Cells Coverage,"Read coverage, opaque cells ChIP-Seq control, Hap B",Control,Chromatin Binding,ChIP-Seq,Coverage plot,C. albicans,AHY136,B,Lohse,26772749
+,,,,,,,,,,,
+lohse_op_con_hapB_density,Lohse HapB Wor1p ChIP-Seq Control Opaque Cells Density,"Read density, opaque cells ChIP-Seq control, Hap B",Control,Chromatin Binding,ChIP-Seq,Density plot,C. albicans,AHY136,B,Lohse,26772749
+,,,,,,,,,,,
+lohse_wt_gfp_hapA_alignments,Lohse HapA Wor1p ChIP-Seq White Cells Alignments,"Aligned reads, white cells, Wor1p ChIP-Seq, Hap A","Wor4p binding, White Cells",Chromatin Binding,ChIP-Seq,Aligned reads,C. albicans,MLY1295,A,Lohse,26772749
+,,,,,,,,,,,
+lohse_wt_gfp_hapA_coverage,Lohse HapA Wor1p ChIP-Seq White Cells Coverage,"Read coverage, white cells, Wor1p ChIP-Seq, Hap A","Wor4p binding, White Cells",Chromatin Binding,ChIP-Seq,Coverage plot,C. albicans,MLY1295,A,Lohse,26772749
+,,,,,,,,,,,
+lohse_wt_gfp_hapA_density,Lohse HapA Wor1p ChIP-Seq White Cells Density,"Read density, white cells, Wor1p ChIP-Seq, Hap A","Wor4p binding, White Cells",Chromatin Binding,ChIP-Seq,Density plot,C. albicans,MLY1295,A,Lohse,26772749
+,,,,,,,,,,,
+lohse_wt_gfp_hapB_alignments,Lohse HapB Wor1p ChIP-Seq White Cells Alignments,"Aligned reads, white cells, Wor1p ChIP-Seq, Hap B","Wor4p binding, White Cells",Chromatin Binding,ChIP-Seq,Aligned reads,C. albicans,MLY1304,B,Lohse,26772749
+,,,,,,,,,,,
+lohse_wt_gfp_hapB_coverage,Lohse HapB Wor1p ChIP-Seq White Cells Coverage,"Read coverage, white cells, Wor1p ChIP-Seq, Hap B","Wor4p binding, White Cells",Chromatin Binding,ChIP-Seq,Coverage plot,C. albicans,MLY1304,B,Lohse,26772749
+,,,,,,,,,,,
+lohse_wt_gfp_hapB_density,Lohse HapB Wor1p ChIP-Seq White Cells Density,"Read density, white cells, Wor1p ChIP-Seq, Hap B","Wor4p binding, White Cells",Chromatin Binding,ChIP-Seq,Density plot,C. albicans,MLY1304,B,Lohse,26772749
+,,,,,,,,,,,
+lohse_op_gfp_hapA_alignments,Lohse HapA Wor1p ChIP-Seq Opaque Cells Alignments,"Aligned reads, opaque cells, Wor1p ChIP-Seq, Hap A","Wor4p binding, Opaque Cells",Chromatin Binding,ChIP-Seq,Aligned reads,C. albicans,MLY1295,A,Lohse,26772749
+,,,,,,,,,,,
+lohse_op_gfp_hapA_coverage,Lohse HapA Wor1p ChIP-Seq Opaque Cells Coverage,"Read coverage, opaque cells, Wor1p ChIP-Seq, Hap A","Wor4p binding, Opaque Cells",Chromatin Binding,ChIP-Seq,Coverage plot,C. albicans,MLY1295,A,Lohse,26772749
+,,,,,,,,,,,
+lohse_op_gfp_hapA_density,Lohse HapA Wor1p ChIP-Seq Opaque Cells Density,"Read density, opaque cells, Wor1p ChIP-Seq, Hap A","Wor4p binding, Opaque Cells",Chromatin Binding,ChIP-Seq,Density plot,C. albicans,MLY1295,A,Lohse,26772749
+,,,,,,,,,,,
+lohse_op_gfp_hapB_alignments,Lohse HapB Wor1p ChIP-Seq Opaque Cells Alignments,"Aligned reads, opaque cells, Wor1p ChIP-Seq, Hap B","Wor4p binding, Opaque Cells",Chromatin Binding,ChIP-Seq,Aligned reads,C. albicans,MLY1304,B,Lohse,26772749
+,,,,,,,,,,,
+lohse_op_gfp_hapB_coverage,Lohse HapB Wor1p ChIP-Seq Opaque Cells Coverage,"Read coverage, opaque cells, Wor1p ChIP-Seq, Hap B","Wor4p binding, Opaque Cells",Chromatin Binding,ChIP-Seq,Coverage plot,C. albicans,MLY1304,B,Lohse,26772749
+,,,,,,,,,,,
+lohse_op_gfp_hapB_density,Lohse HapB Wor1p ChIP-Seq Opaque Cells Density,"Read density, opaque cells, Wor1p ChIP-Seq, Hap B","Wor4p binding, Opaque Cells",Chromatin Binding,ChIP-Seq,Density plot,C. albicans,MLY1304,B,Lohse,26772749
+,,,,,,,,,,,
+Glazier_WT_SpiderB_HapA_alignments,Glazier et al DGE for WT on Spider (rep B; hap A) alignments,"Aligned strand-specific single-end reads, SC5314 Spider_B",Spider 37 deg,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_SpiderB_HapA_coverage,Glazier et al DGE for WT on Spider (rep B; hap A) coverage,"Read coverage, SC5314 Spider_B",Spider 37 deg,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_SpiderB_HapA_density,Glazier et al DGE for WT on Spider (rep B; hap A) density,"Read density, SC5314 Spider_B",Spider 37 deg,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_SpiderA_HapA_alignments,Glazier et al DGE for WT on Spider (rep A; hap A) alignments,"Aligned strand-specific single-end reads, SC5314 Spider_A",Spider 37 deg,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_SpiderA_HapA_coverage,Glazier et al DGE for WT on Spider (rep A; hap A) coverage,"Read coverage, SC5314 Spider_A",Spider 37 deg,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_SpiderA_HapA_density,Glazier et al DGE for WT on Spider (rep A; hap A) density,"Read density, SC5314 Spider_A",Spider 37 deg,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_RPMI_B_HapA_alignments,Glazier et al DGE for WT on RPMI (rep B; hap A) alignments,"Aligned strand-specific single-end reads, SC5314 RPMI_B",RPMI 37 deg,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_RPMI_B_HapA_coverage,Glazier et al DGE for WT on BPMI (rep B; hap A) coverage,"Read coverage, SC5314 RPMI_B",RPMI 37 deg,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_RPMI_B_HapA_density,Glazier et al DGE for WT on BPMI (rep B; hap A) density,"Read density, SC5314 RPMI_B",RPMI 37 deg,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_RPMI_A_HapA_alignments,Glazier et al DGE for WT on BPMI (rep A; hap A) alignments,"Aligned strand-specific single-end reads, SC5314 RPMI_A",RPMI 37 deg,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_RPMI_A_HapA_coverage,Glazier et al DGE for WT on BPMI (rep A; hap A) coverage,"Read coverage, SC5314 RPMI_A",RPMI 37 deg,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_RPMI_A_HapA_density,Glazier et al DGE for WT on BPMI (rep A; hap A) density,"Read density, SC5314 RPMI_A",RPMI 37 deg,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_YPD_B_HapA_alignments,Glazier et al WT control (rep B; hap A) alignments,"Aligned strand-specific single-end reads, SC5314 control_B",YPD 30 deg,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_YPD_B_HapA_coverage,Glazier et al WT control (rep B; hap A) coverage,"Read coverage, SC5314 control_B",YPD 30 deg,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_YPD_B_HapA_density,Glazier et al WT control (rep B; hap A) density,"Read density, SC5314 control_B",YPD 30 deg,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_YPD_A_HapA_alignments,Glazier et al WT control (rep A; hap A) alignments,"Aligned strand-specific single-end reads, SC5314 control_A",YPD 30 deg,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_YPD_A_HapA_coverage,Glazier et al WT control (rep A; hap A) coverage,"Read coverage, SC5314 control_A",YPD 30 deg,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_YPD_A_HapA_density,Glazier et al WT control (rep A; hap A) density,"Read density, SC5314 control_A",YPD 30 deg,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_Spider_B_HapA_alignments,Glazier et al DGE for rob1 on Spider (rep B; hap A) alignments,"Aligned strand-specific single-end reads, SC5314_rob1 Spider_B",Spider 37 deg,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314_rob1,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_Spider_B_HapA_coverage,Glazier et al DGE for rob1 on Spider (rep B; hap A) coverage,"Read coverage, SC5314_rob1 Spider_B",Spider 37 deg,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314_rob1,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_Spider_B_HapA_density,Glazier et al DGE for rob1 on Spider (rep B; hap A) density,"Read density, SC5314_rob1 Spider_B",Spider 37 deg,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314_rob1,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_Spider_A_HapA_alignments,Glazier et al DGE for rob1 on Spider (rep A; hap A) alignments,"Aligned strand-specific single-end reads, SC5314_rob1 Spider_A",Spider 37 deg,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314_rob1,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_Spider_A_HapA_coverage,Glazier et al DGE for rob1 on Spider (rep A; hap A) coverage,"Read coverage, SC5314_rob1 Spider_A",Spider 37 deg,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314_rob1,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_Spider_A_HapA_density,Glazier et al DGE for rob1 on Spider (rep A; hap A) density,"Read density, SC5314_rob1 Spider_A",Spider 37 deg,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314_rob1,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_RPMI_B_HapA_alignments,Glazier et al DGE for rob1 on RPMI (rep B; hap A) alignments,"Aligned strand-specific single-end reads, SC5314_rob1 RPMI_B",RPMI 37 deg,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314_rob1,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_RPMI_B_HapA_coverage,Glazier et al DGE for rob1 on BPMI (rep B; hap A) coverage,"Read coverage, SC5314_rob1 RPMI_B",RPMI 37 deg,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314_rob1,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_RPMI_B_HapA_density,Glazier et al DGE for rob1 on BPMI (rep B; hap A) density,"Read density, SC5314_rob1 RPMI_B",RPMI 37 deg,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314_rob1,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_RPMI_A_HapA_alignments,Glazier et al DGE for rob1 on BPMI (rep A; hap A) alignments,"Aligned strand-specific single-end reads, SC5314_rob1 RPMI_A",RPMI 37 deg,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314_rob1,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_RPMI_A_HapA_coverage,Glazier et al DGE for rob1 on BPMI (rep A; hap A) coverage,"Read coverage, SC5314_rob1 RPMI_A",RPMI 37 deg,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314_rob1,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_RPMI_A_HapA_density,Glazier et al DGE for rob1 on BPMI (rep A; hap A) density,"Read density, SC5314_rob1 RPMI_A",RPMI 37 deg,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314_rob1,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_YPD_B_HapA_alignments,Glazier et al rob1 control (rep B; hap A) alignments,"Aligned strand-specific single-end reads, SC5314_rob1 control_B",YPD 30 deg,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314_rob1,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_YPD_B_HapA_coverage,Glazier et al rob1 control (rep B; hap A) coverage,"Read coverage, SC5314_rob1 control_B",YPD 30 deg,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314_rob1,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_YPD_B_HapA_density,Glazier et al rob1 control (rep B; hap A) density,"Read density, SC5314_rob1 control_B",YPD 30 deg,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314_rob1,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_YPD_A_HapA_alignments,Glazier et al rob1 control (rep A; hap A) alignments,"Aligned strand-specific single-end reads, SC5314_rob1 control_A",YPD 30 deg,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314_rob1,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_YPD_A_HapA_coverage,Glazier et al rob1 control (rep A; hap A) coverage,"Read coverage, SC5314_rob1 control_A",YPD 30 deg,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314_rob1,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_YPD_A_HapA_density,Glazier et al rob1 control (rep A; hap A) density,"Read density, SC5314_rob1 control_A",YPD 30 deg,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314_rob1,A,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_SpiderB_HapB_alignments,Glazier et al DGE for WT on Spider (rep B; hap B) alignments,"Aligned strand-specific single-end reads, SC5314 Spider_B",Spider 37 deg,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_SpiderB_HapB_coverage,Glazier et al DGE for WT on Spider (rep B; hap B) coverage,"Read coverage, SC5314 Spider_B",Spider 37 deg,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_SpiderB_HapB_density,Glazier et al DGE for WT on Spider (rep B; hap B) density,"Read density, SC5314 Spider_B",Spider 37 deg,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_SpiderA_HapB_alignments,Glazier et al DGE for WT on Spider (rep A; hap B) alignments,"Aligned strand-specific single-end reads, SC5314 Spider_A",Spider 37 deg,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_SpiderA_HapB_coverage,Glazier et al DGE for WT on Spider (rep A; hap B) coverage,"Read coverage, SC5314 Spider_A",Spider 37 deg,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_SpiderA_HapB_density,Glazier et al DGE for WT on Spider (rep A; hap B) density,"Read density, SC5314 Spider_A",Spider 37 deg,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_RPMI_B_HapB_alignments,Glazier et al DGE for WT on RPMI (rep B; hap B) alignments,"Aligned strand-specific single-end reads, SC5314 RPMI_B",RPMI 37 deg,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_RPMI_B_HapB_coverage,Glazier et al DGE for WT on BPMI (rep B; hap B) coverage,"Read coverage, SC5314 RPMI_B",RPMI 37 deg,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_RPMI_B_HapB_density,Glazier et al DGE for WT on BPMI (rep B; hap B) density,"Read density, SC5314 RPMI_B",RPMI 37 deg,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_RPMI_A_HapB_alignments,Glazier et al DGE for WT on BPMI (rep A; hap B) alignments,"Aligned strand-specific single-end reads, SC5314 RPMI_A",RPMI 37 deg,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_RPMI_A_HapB_coverage,Glazier et al DGE for WT on BPMI (rep A; hap B) coverage,"Read coverage, SC5314 RPMI_A",RPMI 37 deg,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_RPMI_A_HapB_density,Glazier et al DGE for WT on BPMI (rep A; hap B) density,"Read density, SC5314 RPMI_A",RPMI 37 deg,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_YPD_B_HapB_alignments,Glazier et al WT control (rep B; hap B) alignments,"Aligned strand-specific single-end reads, SC5314 control_B",YPD 30 deg,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_YPD_B_HapB_coverage,Glazier et al WT control (rep B; hap B) coverage,"Read coverage, SC5314 control_B",YPD 30 deg,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_YPD_B_HapB_density,Glazier et al WT control (rep B; hap B) density,"Read density, SC5314 control_B",YPD 30 deg,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_YPD_A_HapB_alignments,Glazier et al WT control (rep A; hap B) alignments,"Aligned strand-specific single-end reads, SC5314 control_A",YPD 30 deg,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_YPD_A_HapB_coverage,Glazier et al WT control (rep A; hap B) coverage,"Read coverage, SC5314 control_A",YPD 30 deg,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_WT_YPD_A_HapB_density,Glazier et al WT control (rep A; hap B) density,"Read density, SC5314 control_A",YPD 30 deg,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_Spider_B_HapB_alignments,Glazier et al DGE for rob1 on Spider (rep B; hap B) alignments,"Aligned strand-specific single-end reads, SC5314_rob1 Spider_B",Spider 37 deg,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314_rob1,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_Spider_B_HapB_coverage,Glazier et al DGE for rob1 on Spider (rep B; hap B) coverage,"Read coverage, SC5314_rob1 Spider_B",Spider 37 deg,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314_rob1,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_Spider_B_HapB_density,Glazier et al DGE for rob1 on Spider (rep B; hap B) density,"Read density, SC5314_rob1 Spider_B",Spider 37 deg,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314_rob1,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_Spider_A_HapB_alignments,Glazier et al DGE for rob1 on Spider (rep A; hap B) alignments,"Aligned strand-specific single-end reads, SC5314_rob1 Spider_A",Spider 37 deg,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314_rob1,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_Spider_A_HapB_coverage,Glazier et al DGE for rob1 on Spider (rep A; hap B) coverage,"Read coverage, SC5314_rob1 Spider_A",Spider 37 deg,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314_rob1,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_Spider_A_HapB_density,Glazier et al DGE for rob1 on Spider (rep A; hap B) density,"Read density, SC5314_rob1 Spider_A",Spider 37 deg,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314_rob1,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_RPMI_B_HapB_alignments,Glazier et al DGE for rob1 on RPMI (rep B; hap B) alignments,"Aligned strand-specific single-end reads, SC5314_rob1 RPMI_B",RPMI 37 deg,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314_rob1,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_RPMI_B_HapB_coverage,Glazier et al DGE for rob1 on BPMI (rep B; hap B) coverage,"Read coverage, SC5314_rob1 RPMI_B",RPMI 37 deg,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314_rob1,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_RPMI_B_HapB_density,Glazier et al DGE for rob1 on BPMI (rep B; hap B) density,"Read density, SC5314_rob1 RPMI_B",RPMI 37 deg,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314_rob1,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_RPMI_A_HapB_alignments,Glazier et al DGE for rob1 on BPMI (rep A; hap B) alignments,"Aligned strand-specific single-end reads, SC5314_rob1 RPMI_A",RPMI 37 deg,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314_rob1,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_RPMI_A_HapB_coverage,Glazier et al DGE for rob1 on BPMI (rep A; hap B) coverage,"Read coverage, SC5314_rob1 RPMI_A",RPMI 37 deg,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314_rob1,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_RPMI_A_HapB_density,Glazier et al DGE for rob1 on BPMI (rep A; hap B) density,"Read density, SC5314_rob1 RPMI_A",RPMI 37 deg,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314_rob1,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_YPD_B_HapB_alignments,Glazier et al rob1 control (rep B; hap B) alignments,"Aligned strand-specific single-end reads, SC5314_rob1 control_B",YPD 30 deg,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314_rob1,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_YPD_B_HapB_coverage,Glazier et al rob1 control (rep B; hap B) coverage,"Read coverage, SC5314_rob1 control_B",YPD 30 deg,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314_rob1,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_YPD_B_HapB_density,Glazier et al rob1 control (rep B; hap B) density,"Read density, SC5314_rob1 control_B",YPD 30 deg,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314_rob1,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_YPD_A_HapB_alignments,Glazier et al rob1 control (rep A; hap B) alignments,"Aligned strand-specific single-end reads, SC5314_rob1 control_A",YPD 30 deg,Gene Expression,RNA-Seq,Aligned reads,C. albicans,SC5314_rob1,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_YPD_A_HapB_coverage,Glazier et al rob1 control (rep A; hap B) coverage,"Read coverage, SC5314_rob1 control_A",YPD 30 deg,Gene Expression,RNA-Seq,Coverage plot,C. albicans,SC5314_rob1,B,Glazier ,37737633
+,,,,,,,,,,,
+Glazier_rob1_YPD_A_HapB_density,Glazier et al rob1 control (rep A; hap B) density,"Read density, SC5314_rob1 control_A",YPD 30 deg,Gene Expression,RNA-Seq,Density plot,C. albicans,SC5314_rob1,B,Glazier ,37737633
+,,,,,,,,,,,
+Shivarathri_WT_control_I_HapA_alignments,Shivarathri et al WT control (biol rep I; hap A) alignments,"Aligned strand-specific single-end reads, SC5314 control",control,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_control_I_HapA_coverage,Shivarathri et al WT control (biol rep I; hap A) coverage,"Read coverage, SC5314 control",control,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_control_I_HapA_density,Shivarathri et al WT control (biol rep I; hap A) density,"Read density, SC5314 control",control,Gene Expression,RNA-Seq,density,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_15min_I_HapA_alignments,Shivarathri et al DGE for WT on caspofungin 15 min (biol rep I; hap A) alignments,"Aligned strand-specific single-end reads, SC5314 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_15min_I_HapA_coverage,Shivarathri et al DGE for WT on caspofungin 15 min (biol rep I; hap A) coverage,"Read coverage, SC5314 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_15min_I_HapA_density,Shivarathri et al DGE for WT on caspofungin 15 min (biol rep I; hap A) density,"Read density, SC5314 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,density,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_45min_I_HapA_alignments,Shivarathri et al DGE for WT on caspofungin 45 min (biol rep I; hap A) alignments,"Aligned strand-specific single-end reads, SC5314 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_45min_I_HapA_coverage,Shivarathri et al DGE for WT on caspofungin 45 min (biol rep I; hap A) coverage,"Read coverage, SC5314 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_45min_I_HapA_density,Shivarathri et al DGE for WT on caspofungin 45 min (biol rep I; hap A) density,"Read density, SC5314 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,density,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_control_I_HapA_alignments,Shivarathri et al gcn5 control (biol rep I; hap A) alignments,"Aligned strand-specific single-end reads, SC5314_gcn5 control",control,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314_gcn5,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_control_I_HapA_coverage,Shivarathri et al gcn5 control (biol rep I; hap A) coverage,"Read coverage, SC5314_gcn5 control",control,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314_gcn5,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_control_I_HapA_density,Shivarathri et al gcn5 control (biol rep I; hap A) density,"Read density, SC5314_gcn5 control",control,Gene Expression,RNA-Seq,density,C. albicans,SC5314_gcn5,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_casp_15min_I_HapA_alignments,Shivarathri et al DGE for gcn5 on caspofungin 15 min (biol rep I; hap A) alignments,"Aligned strand-specific single-end reads, SC5314_gcn5 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314_gcn5,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_casp_15min_I_HapA_coverage,Shivarathri et al DGE for gcn5 on caspofungin 15 min (biol rep I; hap A) coverage,"Read coverage, SC5314_gcn5 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314_gcn5,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_casp_15min_I_HapA_density,Shivarathri et al DGE for gcn5 on caspofungin 15 min (biol rep I; hap A) density,"Read density, SC5314_gcn5 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,density,C. albicans,SC5314_gcn5,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_casp_45min_I_HapA_alignments,Shivarathri et al DGE for gcn5 on caspofungin 45 min (biol rep I; hap A) alignments,"Aligned strand-specific single-end reads, SC5314_gcn5 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314_gcn5,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_casp_45min_I_HapA_coverage,Shivarathri et al DGE for gcn5 on caspofungin 45 min (biol rep I; hap A) coverage,"Read coverage, SC5314_gcn5 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314_gcn5,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_casp_45min_I_HapA_density,Shivarathri et al DGE for gcn5 on caspofungin 45 min (biol rep I; hap A) density,"Read density, SC5314_gcn5 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,density,C. albicans,SC5314_gcn5,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_control_II_HapA_alignments,Shivarathri et al WT control (biol rep II; hap A) alignments,"Aligned strand-specific single-end reads, SC5314 control",control,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_control_II_HapA_coverage,Shivarathri et al WT control (biol rep II; hap A) coverage,"Read coverage, SC5314 control",control,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_control_II_HapA_density,Shivarathri et al WT control (biol rep II; hap A) density,"Read density, SC5314 control",control,Gene Expression,RNA-Seq,density,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_15min_II_HapA_alignments,Shivarathri et al DGE for WT on caspofungin 15 min (biol rep II; hap A) alignments,"Aligned strand-specific single-end reads, SC5314 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_15min_II_HapA_coverage,Shivarathri et al DGE for WT on caspofungin 15 min (biol rep II; hap A) coverage,"Read coverage, SC5314 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_15min_II_HapA_density,Shivarathri et al DGE for WT on caspofungin 15 min (biol rep II; hap A) density,"Read density, SC5314 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,density,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_45min_II_HapA_alignments,Shivarathri et al DGE for WT on caspofungin 45 min (biol rep II; hap A) alignments,"Aligned strand-specific single-end reads, SC5314 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_45min_II_HapA_coverage,Shivarathri et al DGE for WT on caspofungin 45 min (biol rep II; hap A) coverage,"Read coverage, SC5314 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_45min_II_HapA_density,Shivarathri et al DGE for WT on caspofungin 45 min (biol rep II; hap A) density,"Read density, SC5314 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,density,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_control_II_HapA_alignments,Shivarathri et al gcn5 control (biol rep II; hap A) alignments,"Aligned strand-specific single-end reads, SC5314_gcn5 control",control,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314_gcn5,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_control_II_HapA_coverage,Shivarathri et al gcn5 control (biol rep II; hap A) coverage,"Read coverage, SC5314_gcn5 control",control,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314_gcn5,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_control_II_HapA_density,Shivarathri et al gcn5 control (biol rep II; hap A) density,"Read density, SC5314_gcn5 control",control,Gene Expression,RNA-Seq,density,C. albicans,SC5314_gcn5,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_control_III_HapA_alignments,Shivarathri et al WT control (biol rep III; hap A) alignments,"Aligned strand-specific single-end reads, SC5314 control",control,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_control_III_HapA_coverage,Shivarathri et al WT control (biol rep III; hap A) coverage,"Read coverage, SC5314 control",control,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_control_III_HapA_density,Shivarathri et al WT control (biol rep III; hap A) density,"Read density, SC5314 control",control,Gene Expression,RNA-Seq,density,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_15min_III_HapA_alignments,Shivarathri et al DGE for WT on caspofungin 15 min (biol rep III; hap A) alignments,"Aligned strand-specific single-end reads, SC5314 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_15min_III_HapA_coverage,Shivarathri et al DGE for WT on caspofungin 15 min (biol rep III; hap A) coverage,"Read coverage, SC5314 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_15min_III_HapA_density,Shivarathri et al DGE for WT on caspofungin 15 min (biol rep III; hap A) density,"Read density, SC5314 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,density,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_45min_III_HapA_alignments,Shivarathri et al DGE for WT on caspofungin 45 min (biol rep III; hap A) alignments,"Aligned strand-specific single-end reads, SC5314 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_45min_III_HapA_coverage,Shivarathri et al DGE for WT on caspofungin 45 min (biol rep III; hap A) coverage,"Read coverage, SC5314 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_45min_III_HapA_density,Shivarathri et al DGE for WT on caspofungin 45 min (biol rep III; hap A) density,"Read density, SC5314 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,density,C. albicans,SC5314,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_control_III_HapA_alignments,Shivarathri et al gcn5 control (biol rep III; hap A) alignments,"Aligned strand-specific single-end reads, SC5314_gcn5 control",control,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314_gcn5,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_control_III_HapA_coverage,Shivarathri et al gcn5 control (biol rep III; hap A) coverage,"Read coverage, SC5314_gcn5 control",control,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314_gcn5,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_control_III_HapA_density,Shivarathri et al gcn5 control (biol rep III; hap A) density,"Read density, SC5314_gcn5 control",control,Gene Expression,RNA-Seq,density,C. albicans,SC5314_gcn5,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_casp_15min_II_HapA_alignments,Shivarathri et al DGE for gcn5 on caspofungin 15 min (biol rep II; hap A) alignments,"Aligned strand-specific single-end reads, SC5314_gcn5 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314_gcn5,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_casp_15min_II_HapA_coverage,Shivarathri et al DGE for gcn5 on caspofungin 15 min (biol rep II; hap A) coverage,"Read coverage, SC5314_gcn5 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314_gcn5,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_casp_15min_II_HapA_density,Shivarathri et al DGE for gcn5 on caspofungin 15 min (biol rep II; hap A) density,"Read density, SC5314_gcn5 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,density,C. albicans,SC5314_gcn5,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_casp_45min_II_HapA_alignments,Shivarathri et al DGE for gcn5 on caspofungin 45 min (biol rep II; hap A) alignments,"Aligned strand-specific single-end reads, SC5314_gcn5 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314_gcn5,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_casp_45min_II_HapA_coverage,Shivarathri et al DGE for gcn5 on caspofungin 45 min (biol rep II; hap A) coverage,"Read coverage, SC5314_gcn5 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314_gcn5,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_casp_45min_II_HapA_density,Shivarathri et al DGE for gcn5 on caspofungin 45 min (biol rep II; hap A) density,"Read density, SC5314_gcn5 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,density,C. albicans,SC5314_gcn5,A,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_control_I_HapB_alignments,Shivarathri et al WT control (biol rep I; hap B) alignments,"Aligned strand-specific single-end reads, SC5314 control",control,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_control_I_HapB_coverage,Shivarathri et al WT control (biol rep I; hap B) coverage,"Read coverage, SC5314 control",control,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_control_I_HapB_density,Shivarathri et al WT control (biol rep I; hap B) density,"Read density, SC5314 control",control,Gene Expression,RNA-Seq,density,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_15min_I_HapB_alignments,Shivarathri et al DGE for WT on caspofungin 15 min (biol rep I; hap B) alignments,"Aligned strand-specific single-end reads, SC5314 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_15min_I_HapB_coverage,Shivarathri et al DGE for WT on caspofungin 15 min (biol rep I; hap B) coverage,"Read coverage, SC5314 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_15min_I_HapB_density,Shivarathri et al DGE for WT on caspofungin 15 min (biol rep I; hap B) density,"Read density, SC5314 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,density,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_45min_I_HapB_alignments,Shivarathri et al DGE for WT on caspofungin 45 min (biol rep I; hap B) alignments,"Aligned strand-specific single-end reads, SC5314 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_45min_I_HapB_coverage,Shivarathri et al DGE for WT on caspofungin 45 min (biol rep I; hap B) coverage,"Read coverage, SC5314 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_45min_I_HapB_density,Shivarathri et al DGE for WT on caspofungin 45 min (biol rep I; hap B) density,"Read density, SC5314 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,density,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_control_I_HapB_alignments,Shivarathri et al gcn5 control (biol rep I; hap B) alignments,"Aligned strand-specific single-end reads, SC5314_gcn5 control",control,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314_gcn5,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_control_I_HapB_coverage,Shivarathri et al gcn5 control (biol rep I; hap B) coverage,"Read coverage, SC5314_gcn5 control",control,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314_gcn5,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_control_I_HapB_density,Shivarathri et al gcn5 control (biol rep I; hap B) density,"Read density, SC5314_gcn5 control",control,Gene Expression,RNA-Seq,density,C. albicans,SC5314_gcn5,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_casp_15min_I_HapB_alignments,Shivarathri et al DGE for gcn5 on caspofungin 15 min (biol rep I; hap B) alignments,"Aligned strand-specific single-end reads, SC5314_gcn5 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314_gcn5,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_casp_15min_I_HapB_coverage,Shivarathri et al DGE for gcn5 on caspofungin 15 min (biol rep I; hap B) coverage,"Read coverage, SC5314_gcn5 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314_gcn5,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_casp_15min_I_HapB_density,Shivarathri et al DGE for gcn5 on caspofungin 15 min (biol rep I; hap B) density,"Read density, SC5314_gcn5 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,density,C. albicans,SC5314_gcn5,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_casp_45min_I_HapB_alignments,Shivarathri et al DGE for gcn5 on caspofungin 45 min (biol rep I; hap B) alignments,"Aligned strand-specific single-end reads, SC5314_gcn5 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314_gcn5,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_casp_45min_I_HapB_coverage,Shivarathri et al DGE for gcn5 on caspofungin 45 min (biol rep I; hap B) coverage,"Read coverage, SC5314_gcn5 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314_gcn5,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_casp_45min_I_HapB_density,Shivarathri et al DGE for gcn5 on caspofungin 45 min (biol rep I; hap B) density,"Read density, SC5314_gcn5 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,density,C. albicans,SC5314_gcn5,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_control_II_HapB_alignments,Shivarathri et al WT control (biol rep II; hap B) alignments,"Aligned strand-specific single-end reads, SC5314 control",control,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_control_II_HapB_coverage,Shivarathri et al WT control (biol rep II; hap B) coverage,"Read coverage, SC5314 control",control,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_control_II_HapB_density,Shivarathri et al WT control (biol rep II; hap B) density,"Read density, SC5314 control",control,Gene Expression,RNA-Seq,density,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_15min_II_HapB_alignments,Shivarathri et al DGE for WT on caspofungin 15 min (biol rep II; hap B) alignments,"Aligned strand-specific single-end reads, SC5314 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_15min_II_HapB_coverage,Shivarathri et al DGE for WT on caspofungin 15 min (biol rep II; hap B) coverage,"Read coverage, SC5314 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_15min_II_HapB_density,Shivarathri et al DGE for WT on caspofungin 15 min (biol rep II; hap B) density,"Read density, SC5314 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,density,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_45min_II_HapB_alignments,Shivarathri et al DGE for WT on caspofungin 45 min (biol rep II; hap B) alignments,"Aligned strand-specific single-end reads, SC5314 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_45min_II_HapB_coverage,Shivarathri et al DGE for WT on caspofungin 45 min (biol rep II; hap B) coverage,"Read coverage, SC5314 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_45min_II_HapB_density,Shivarathri et al DGE for WT on caspofungin 45 min (biol rep II; hap B) density,"Read density, SC5314 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,density,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_control_II_HapB_alignments,Shivarathri et al gcn5 control (biol rep II; hap B) alignments,"Aligned strand-specific single-end reads, SC5314_gcn5 control",control,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314_gcn5,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_control_II_HapB_coverage,Shivarathri et al gcn5 control (biol rep II; hap B) coverage,"Read coverage, SC5314_gcn5 control",control,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314_gcn5,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_control_II_HapB_density,Shivarathri et al gcn5 control (biol rep II; hap B) density,"Read density, SC5314_gcn5 control",control,Gene Expression,RNA-Seq,density,C. albicans,SC5314_gcn5,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_control_III_HapB_alignments,Shivarathri et al WT control (biol rep III; hap B) alignments,"Aligned strand-specific single-end reads, SC5314 control",control,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_control_III_HapB_coverage,Shivarathri et al WT control (biol rep III; hap B) coverage,"Read coverage, SC5314 control",control,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_control_III_HapB_density,Shivarathri et al WT control (biol rep III; hap B) density,"Read density, SC5314 control",control,Gene Expression,RNA-Seq,density,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_15min_III_HapB_alignments,Shivarathri et al DGE for WT on caspofungin 15 min (biol rep III; hap B) alignments,"Aligned strand-specific single-end reads, SC5314 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_15min_III_HapB_coverage,Shivarathri et al DGE for WT on caspofungin 15 min (biol rep III; hap B) coverage,"Read coverage, SC5314 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_15min_III_HapB_density,Shivarathri et al DGE for WT on caspofungin 15 min (biol rep III; hap B) density,"Read density, SC5314 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,density,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_45min_III_HapB_alignments,Shivarathri et al DGE for WT on caspofungin 45 min (biol rep III; hap B) alignments,"Aligned strand-specific single-end reads, SC5314 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_45min_III_HapB_coverage,Shivarathri et al DGE for WT on caspofungin 45 min (biol rep III; hap B) coverage,"Read coverage, SC5314 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_WT_casp_45min_III_HapB_density,Shivarathri et al DGE for WT on caspofungin 45 min (biol rep III; hap B) density,"Read density, SC5314 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,density,C. albicans,SC5314,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_control_III_HapB_alignments,Shivarathri et al gcn5 control (biol rep III; hap B) alignments,"Aligned strand-specific single-end reads, SC5314_gcn5 control",control,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314_gcn5,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_control_III_HapB_coverage,Shivarathri et al gcn5 control (biol rep III; hap B) coverage,"Read coverage, SC5314_gcn5 control",control,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314_gcn5,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_control_III_HapB_density,Shivarathri et al gcn5 control (biol rep III; hap B) density,"Read density, SC5314_gcn5 control",control,Gene Expression,RNA-Seq,density,C. albicans,SC5314_gcn5,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_casp_15min_II_HapB_alignments,Shivarathri et al DGE for gcn5 on caspofungin 15 min (biol rep II; hap B) alignments,"Aligned strand-specific single-end reads, SC5314_gcn5 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314_gcn5,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_casp_15min_II_HapB_coverage,Shivarathri et al DGE for gcn5 on caspofungin 15 min (biol rep II; hap B) coverage,"Read coverage, SC5314_gcn5 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314_gcn5,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_casp_15min_II_HapB_density,Shivarathri et al DGE for gcn5 on caspofungin 15 min (biol rep II; hap B) density,"Read density, SC5314_gcn5 casp_15",caspofungin 15 min,Gene Expression,RNA-Seq,density,C. albicans,SC5314_gcn5,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_casp_45min_II_HapB_alignments,Shivarathri et al DGE for gcn5 on caspofungin 45 min (biol rep II; hap B) alignments,"Aligned strand-specific single-end reads, SC5314_gcn5 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,alignments,C. albicans,SC5314_gcn5,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_casp_45min_II_HapB_coverage,Shivarathri et al DGE for gcn5 on caspofungin 45 min (biol rep II; hap B) coverage,"Read coverage, SC5314_gcn5 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,coverage,C. albicans,SC5314_gcn5,B,Shivarathri,31263212
+,,,,,,,,,,,
+Shivarathri_gcn5_casp_45min_II_HapB_density,Shivarathri et al DGE for gcn5 on caspofungin 45 min (biol rep II; hap B) density,"Read density, SC5314_gcn5 casp_45",caspofungin 45 min,Gene Expression,RNA-Seq,density,C. albicans,SC5314_gcn5,B,Shivarathri,31263212
+,,,,,,,,,,,
+Rai_CEC4665_1_HapA_alignments,Rai et al strain CEC4665 (biol rep 1; hap A) alignments,"Aligned strand-specific single-end reads, CEC4665 control",control,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,CEC4665,A,Rai,38905306
+Rai_CEC4665_1_HapA_coverage,Rai et al strain CEC4665 (biol rep 1; hap A) coverage,"Read coverage, CEC4665 control",control,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,CEC4665,A,Rai,38905306
+Rai_CEC4665_1_HapA_density,Rai et al strain CEC4665 (biol rep 1; hap A) density,"Read density, CEC4665 control",control,Gene Expression,RNA-Seq,Density plot,Candida albicans,CEC4665,A,Rai,38905306
+Rai_CEC4665_2_HapA_alignments,Rai et al strain CEC4665 (biol rep 2; hap A) alignments,"Aligned strand-specific single-end reads, CEC4665 control",control,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,CEC4665,A,Rai,38905306
+Rai_CEC4665_2_HapA_coverage,Rai et al strain CEC4665 (biol rep 2; hap A) coverage,"Read coverage, CEC4665 control",control,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,CEC4665,A,Rai,38905306
+Rai_CEC4665_2_HapA_density,Rai et al strain CEC4665 (biol rep 2; hap A) density,"Read density, CEC4665 control",control,Gene Expression,RNA-Seq,Density plot,Candida albicans,CEC4665,A,Rai,38905306
+Rai_CEC4665_3_HapA_alignments,Rai et al strain CEC4665 (biol rep 3; hap A) alignments,"Aligned strand-specific single-end reads, CEC4665 control",control,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,CEC4665,A,Rai,38905306
+Rai_CEC4665_3_HapA_coverage,Rai et al strain CEC4665 (biol rep 3; hap A) coverage,"Read coverage, CEC4665 control",control,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,CEC4665,A,Rai,38905306
+Rai_CEC4665_3_HapA_density,Rai et al strain CEC4665 (biol rep 3; hap A) density,"Read density, CEC4665 control",control,Gene Expression,RNA-Seq,Density plot,Candida albicans,CEC4665,A,Rai,38905306
+Rai_SN152_1_HapA_alignments,Rai et al strain SN152 (biol rep 1; hap A) alignments,"Aligned strand-specific single-end reads, SN152 control",control,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,SN152,A,Rai,38905306
+Rai_SN152_1_HapA_coverage,Rai et al strain SN152 (biol rep 1; hap A) coverage,"Read coverage, SN152  control",control,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,SN152,A,Rai,38905306
+Rai_SN152_1_HapA_density,Rai et al strain SN152 (biol rep 1; hap A) density,"Read density, SN152  control",control,Gene Expression,RNA-Seq,Density plot,Candida albicans,SN152,A,Rai,38905306
+Rai_SN152_2_HapA_alignments,Rai et al strain SN152 (biol rep 2; hap A) alignments,"Aligned strand-specific single-end reads, SN152 control",control,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,SN152,A,Rai,38905306
+Rai_SN152_2_HapA_coverage,Rai et al strain SN152 (biol rep 2; hap A) coverage,"Read coverage, SN152  control",control,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,SN152,A,Rai,38905306
+Rai_SN152_2_HapA_density,Rai et al strain SN152 (biol rep 2; hap A) density,"Read density, SN152  control",control,Gene Expression,RNA-Seq,Density plot,Candida albicans,SN152,A,Rai,38905306
+Rai_SN152_3_HapA_alignments,Rai et al strain SN152 (biol rep 3; hap A) alignments,"Aligned strand-specific single-end reads, SN152 control",control,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,SN152,A,Rai,38905306
+Rai_SN152_3_HapA_coverage,Rai et al strain SN152 (biol rep 3; hap A) coverage,"Read coverage, SN152  control",control,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,SN152,A,Rai,38905306
+Rai_SN152_3_HapA_density,Rai et al strain SN152 (biol rep 3; hap A) density,"Read density, SN152  control",control,Gene Expression,RNA-Seq,Density plot,Candida albicans,SN152,A,Rai,38905306
+Rai_TetO_ZCF15_1_HapA_alignments,Rai et al strain TetO_ZCF15 (biol rep 1; hap A) alignments,"Aligned strand-specific single-end reads, ZCF15 overexpression",overexpression,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,TetO_ZCF15,A,Rai,38905306
+Rai_TetO_ZCF15_1_HapA_coverage,Rai et al strain TetO_ZCF15 (biol rep 1; hap A) coverage,"Read coverage, ZCF15 overexpression",overexpression,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,TetO_ZCF15,A,Rai,38905306
+Rai_TetO_ZCF15_1_HapA_density,Rai et al strain TetO_ZCF15 (biol rep 1; hap A) density,"Read density, ZCF15 overexpression",overexpression,Gene Expression,RNA-Seq,Density plot,Candida albicans,TetO_ZCF15,A,Rai,38905306
+Rai_TetO_ZCF15_2_HapA_alignments,Rai et al strain TetO_ZCF15 (biol rep 2; hap A) alignments,"Aligned strand-specific single-end reads, ZCF15 overexpression",overexpression,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,TetO_ZCF15,A,Rai,38905306
+Rai_TetO_ZCF15_2_HapA_coverage,Rai et al strain TetO_ZCF15 (biol rep 2; hap A) coverage,"Read coverage, ZCF15 overexpression",overexpression,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,TetO_ZCF15,A,Rai,38905306
+Rai_TetO_ZCF15_2_HapA_density,Rai et al strain TetO_ZCF15 (biol rep 2; hap A) density,"Read density, ZCF15 overexpression",overexpression,Gene Expression,RNA-Seq,Density plot,Candida albicans,TetO_ZCF15,A,Rai,38905306
+Rai_TetO_ZCF15_3_HapA_alignments,Rai et al strain TetO_ZCF15 (biol rep 3; hap A) alignments,"Aligned strand-specific single-end reads, ZCF15 overexpression",overexpression,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,TetO_ZCF15,A,Rai,38905306
+Rai_TetO_ZCF15_3_HapA_coverage,Rai et al strain TetO_ZCF15 (biol rep 3; hap A) coverage,"Read coverage, ZCF15 overexpression",overexpression,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,TetO_ZCF15,A,Rai,38905306
+Rai_TetO_ZCF15_3_HapA_density,Rai et al strain TetO_ZCF15 (biol rep 3; hap A) density,"Read density, ZCF15 overexpression",overexpression,Gene Expression,RNA-Seq,Density plot,Candida albicans,TetO_ZCF15,A,Rai,38905306
+Rai_TetO_ZCF26_1_HapA_alignments,Rai et al strain TetO_ZCF26 (biol rep 1; hap A) alignments,"Aligned strand-specific single-end reads, ZCF26 overexpression",overexpression,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,TetO_ZCF26,A,Rai,38905306
+Rai_TetO_ZCF26_1_HapA_coverage,Rai et al strain TetO_ZCF26 (biol rep 1; hap A) coverage,"Read coverage, ZCF26 overexpression",overexpression,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,TetO_ZCF26,A,Rai,38905306
+Rai_TetO_ZCF26_1_HapA_density,Rai et al strain TetO_ZCF26 (biol rep 1; hap A) density,"Read density, ZCF26 overexpression",overexpression,Gene Expression,RNA-Seq,Density plot,Candida albicans,TetO_ZCF26,A,Rai,38905306
+Rai_TetO_ZCF26_2_HapA_alignments,Rai et al strain TetO_ZCF26 (biol rep 2; hap A) alignments,"Aligned strand-specific single-end reads, ZCF26 overexpression",overexpression,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,TetO_ZCF26,A,Rai,38905306
+Rai_TetO_ZCF26_2_HapA_coverage,Rai et al strain TetO_ZCF26 (biol rep 2; hap A) coverage,"Read coverage, ZCF26 overexpression",overexpression,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,TetO_ZCF26,A,Rai,38905306
+Rai_TetO_ZCF26_2_HapA_density,Rai et al strain TetO_ZCF26 (biol rep 2; hap A) density,"Read density, ZCF26 overexpression",overexpression,Gene Expression,RNA-Seq,Density plot,Candida albicans,TetO_ZCF26,A,Rai,38905306
+Rai_TetO_ZCF26_3_HapA_alignments,Rai et al strain TetO_ZCF26 (biol rep 3; hap A) alignments,"Aligned strand-specific single-end reads, ZCF26 overexpression",overexpression,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,TetO_ZCF26,A,Rai,38905306
+Rai_TetO_ZCF26_3_HapA_coverage,Rai et al strain TetO_ZCF26 (biol rep 3; hap A) coverage,"Read coverage, ZCF26 overexpression",overexpression,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,TetO_ZCF26,A,Rai,38905306
+Rai_TetO_ZCF26_3_HapA_density,Rai et al strain TetO_ZCF26 (biol rep 3; hap A) density,"Read density, ZCF26 overexpression",overexpression,Gene Expression,RNA-Seq,Density plot,Candida albicans,TetO_ZCF26,A,Rai,38905306
+Rai_zcf15_1_HapA_alignments,Rai et al strain zcf15 (biol rep 1; hap A) alignments,"Aligned strand-specific single-end reads, zcf15 null",null mutant,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,ZCF15_null,A,Rai,38905306
+Rai_zcf15_1_HapA_coverage,Rai et al strain zcf15 (biol rep 1; hap A) coverage,"Read coverage, zcf15 null",null mutant,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,ZCF15_null,A,Rai,38905306
+Rai_zcf15_1_HapA_density,Rai et al strain zcf15 (biol rep 1; hap A) density,"Read density, zcf15 null",null mutant,Gene Expression,RNA-Seq,Density plot,Candida albicans,ZCF15_null,A,Rai,38905306
+Rai_zcf15_2_HapA_alignments,Rai et al strain zcf15 (biol rep 2; hap A) alignments,"Aligned strand-specific single-end reads, zcf15 null",null mutant,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,ZCF15_null,A,Rai,38905306
+Rai_zcf15_2_HapA_coverage,Rai et al strain zcf15 (biol rep 2; hap A) coverage,"Read coverage, zcf15 null",null mutant,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,ZCF15_null,A,Rai,38905306
+Rai_zcf15_2_HapA_density,Rai et al strain zcf15 (biol rep 2; hap A) density,"Read density, zcf15 null",null mutant,Gene Expression,RNA-Seq,Density plot,Candida albicans,ZCF15_null,A,Rai,38905306
+Rai_zcf15_3_HapA_alignments,Rai et al strain zcf15 (biol rep 3; hap A) alignments,"Aligned strand-specific single-end reads, zcf15 null",null mutant,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,ZCF15_null,A,Rai,38905306
+Rai_zcf15_3_HapA_coverage,Rai et al strain zcf15 (biol rep 3; hap A) coverage,"Read coverage, zcf15 null",null mutant,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,ZCF15_null,A,Rai,38905306
+Rai_zcf15_3_HapA_density,Rai et al strain zcf15 (biol rep 3; hap A) density,"Read density, zcf15 null",null mutant,Gene Expression,RNA-Seq,Density plot,Candida albicans,ZCF15_null,A,Rai,38905306
+Rai_zcf26_1_HapA_alignments,Rai et al strain zcf26 (biol rep 1; hap A) alignments,"Aligned strand-specific single-end reads, zcf26 null",null mutant,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,ZCF26_null,A,Rai,38905306
+Rai_zcf26_1_HapA_coverage,Rai et al strain zcf26 (biol rep 1; hap A) coverage,"Read coverage, zcf26 null",null mutant,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,ZCF26_null,A,Rai,38905306
+Rai_zcf26_1_HapA_density,Rai et al strain zcf26 (biol rep 1; hap A) density,"Read density, zcf26 null",null mutant,Gene Expression,RNA-Seq,Density plot,Candida albicans,ZCF26_null,A,Rai,38905306
+Rai_zcf26_2_HapA_alignments,Rai et al strain zcf26 (biol rep 2; hap A) alignments,"Aligned strand-specific single-end reads, zcf26 null",null mutant,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,ZCF26_null,A,Rai,38905306
+Rai_zcf26_2_HapA_coverage,Rai et al strain zcf26 (biol rep 2; hap A) coverage,"Read coverage, zcf26 null",null mutant,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,ZCF26_null,A,Rai,38905306
+Rai_zcf26_2_HapA_density,Rai et al strain zcf26 (biol rep 2; hap A) density,"Read density, zcf26 null",null mutant,Gene Expression,RNA-Seq,Density plot,Candida albicans,ZCF26_null,A,Rai,38905306
+Rai_zcf26_3_HapA_alignments,Rai et al strain zcf26 (biol rep 3; hap A) alignments,"Aligned strand-specific single-end reads, zcf26 null",null mutant,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,ZCF26_null,A,Rai,38905306
+Rai_zcf26_3_HapA_coverage,Rai et al strain zcf26 (biol rep 3; hap A) coverage,"Read coverage, zcf26 null",null mutant,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,ZCF26_null,A,Rai,38905306
+Rai_zcf26_3_HapA_density,Rai et al strain zcf26 (biol rep 3; hap A) density,"Read density, zcf26 null",null mutant,Gene Expression,RNA-Seq,Density plot,Candida albicans,ZCF26_null,A,Rai,38905306
+Rai_CEC4665_1_HapB_alignments,Rai et al strain CEC4665 (biol rep 1; hap B) alignments,"Aligned strand-specific single-end reads, CEC4665 control",control,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,CEC4665,B,Rai,38905306
+Rai_CEC4665_1_HapB_coverage,Rai et al strain CEC4665 (biol rep 1; hap B) coverage,"Read coverage, CEC4665 control",control,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,CEC4665,B,Rai,38905306
+Rai_CEC4665_1_HapB_density,Rai et al strain CEC4665 (biol rep 1; hap B) density,"Read density, CEC4665 control",control,Gene Expression,RNA-Seq,Density plot,Candida albicans,CEC4665,B,Rai,38905306
+Rai_CEC4665_2_HapB_alignments,Rai et al strain CEC4665 (biol rep 2; hap B) alignments,"Aligned strand-specific single-end reads, CEC4665 control",control,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,CEC4665,B,Rai,38905306
+Rai_CEC4665_2_HapB_coverage,Rai et al strain CEC4665 (biol rep 2; hap B) coverage,"Read coverage, CEC4665 control",control,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,CEC4665,B,Rai,38905306
+Rai_CEC4665_2_HapB_density,Rai et al strain CEC4665 (biol rep 2; hap B) density,"Read density, CEC4665 control",control,Gene Expression,RNA-Seq,Density plot,Candida albicans,CEC4665,B,Rai,38905306
+Rai_CEC4665_3_HapB_alignments,Rai et al strain CEC4665 (biol rep 3; hap B) alignments,"Aligned strand-specific single-end reads, CEC4665 control",control,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,CEC4665,B,Rai,38905306
+Rai_CEC4665_3_HapB_coverage,Rai et al strain CEC4665 (biol rep 3; hap B) coverage,"Read coverage, CEC4665 control",control,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,CEC4665,B,Rai,38905306
+Rai_CEC4665_3_HapB_density,Rai et al strain CEC4665 (biol rep 3; hap B) density,"Read density, CEC4665 control",control,Gene Expression,RNA-Seq,Density plot,Candida albicans,CEC4665,B,Rai,38905306
+Rai_SN152_1_HapB_alignments,Rai et al strain SN152 (biol rep 1; hap B) alignments,"Aligned strand-specific single-end reads, SN152 control",control,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,SN152,B,Rai,38905306
+Rai_SN152_1_HapB_coverage,Rai et al strain SN152 (biol rep 1; hap B) coverage,"Read coverage, SN152  control",control,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,SN152,B,Rai,38905306
+Rai_SN152_1_HapB_density,Rai et al strain SN152 (biol rep 1; hap B) density,"Read density, SN152  control",control,Gene Expression,RNA-Seq,Density plot,Candida albicans,SN152,B,Rai,38905306
+Rai_SN152_2_HapB_alignments,Rai et al strain SN152 (biol rep 2; hap B) alignments,"Aligned strand-specific single-end reads, SN152 control",control,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,SN152,B,Rai,38905306
+Rai_SN152_2_HapB_coverage,Rai et al strain SN152 (biol rep 2; hap B) coverage,"Read coverage, SN152  control",control,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,SN152,B,Rai,38905306
+Rai_SN152_2_HapB_density,Rai et al strain SN152 (biol rep 2; hap B) density,"Read density, SN152  control",control,Gene Expression,RNA-Seq,Density plot,Candida albicans,SN152,B,Rai,38905306
+Rai_SN152_3_HapB_alignments,Rai et al strain SN152 (biol rep 3; hap B) alignments,"Aligned strand-specific single-end reads, SN152 control",control,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,SN152,B,Rai,38905306
+Rai_SN152_3_HapB_coverage,Rai et al strain SN152 (biol rep 3; hap B) coverage,"Read coverage, SN152  control",control,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,SN152,B,Rai,38905306
+Rai_SN152_3_HapB_density,Rai et al strain SN152 (biol rep 3; hap B) density,"Read density, SN152  control",control,Gene Expression,RNA-Seq,Density plot,Candida albicans,SN152,B,Rai,38905306
+Rai_TetO_ZCF15_1_HapB_alignments,Rai et al strain TetO_ZCF15 (biol rep 1; hap B) alignments,"Aligned strand-specific single-end reads, ZCF15 overexpression",overexpression,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,TetO_ZCF15,B,Rai,38905306
+Rai_TetO_ZCF15_1_HapB_coverage,Rai et al strain TetO_ZCF15 (biol rep 1; hap B) coverage,"Read coverage, ZCF15 overexpression",overexpression,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,TetO_ZCF15,B,Rai,38905306
+Rai_TetO_ZCF15_1_HapB_density,Rai et al strain TetO_ZCF15 (biol rep 1; hap B) density,"Read density, ZCF15 overexpression",overexpression,Gene Expression,RNA-Seq,Density plot,Candida albicans,TetO_ZCF15,B,Rai,38905306
+Rai_TetO_ZCF15_2_HapB_alignments,Rai et al strain TetO_ZCF15 (biol rep 2; hap B) alignments,"Aligned strand-specific single-end reads, ZCF15 overexpression",overexpression,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,TetO_ZCF15,B,Rai,38905306
+Rai_TetO_ZCF15_2_HapB_coverage,Rai et al strain TetO_ZCF15 (biol rep 2; hap B) coverage,"Read coverage, ZCF15 overexpression",overexpression,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,TetO_ZCF15,B,Rai,38905306
+Rai_TetO_ZCF15_2_HapB_density,Rai et al strain TetO_ZCF15 (biol rep 2; hap B) density,"Read density, ZCF15 overexpression",overexpression,Gene Expression,RNA-Seq,Density plot,Candida albicans,TetO_ZCF15,B,Rai,38905306
+Rai_TetO_ZCF15_3_HapB_alignments,Rai et al strain TetO_ZCF15 (biol rep 3; hap B) alignments,"Aligned strand-specific single-end reads, ZCF15 overexpression",overexpression,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,TetO_ZCF15,B,Rai,38905306
+Rai_TetO_ZCF15_3_HapB_coverage,Rai et al strain TetO_ZCF15 (biol rep 3; hap B) coverage,"Read coverage, ZCF15 overexpression",overexpression,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,TetO_ZCF15,B,Rai,38905306
+Rai_TetO_ZCF15_3_HapB_density,Rai et al strain TetO_ZCF15 (biol rep 3; hap B) density,"Read density, ZCF15 overexpression",overexpression,Gene Expression,RNA-Seq,Density plot,Candida albicans,TetO_ZCF15,B,Rai,38905306
+Rai_TetO_ZCF26_1_HapB_alignments,Rai et al strain TetO_ZCF26 (biol rep 1; hap B) alignments,"Aligned strand-specific single-end reads, ZCF26 overexpression",overexpression,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,TetO_ZCF26,B,Rai,38905306
+Rai_TetO_ZCF26_1_HapB_coverage,Rai et al strain TetO_ZCF26 (biol rep 1; hap B) coverage,"Read coverage, ZCF26 overexpression",overexpression,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,TetO_ZCF26,B,Rai,38905306
+Rai_TetO_ZCF26_1_HapB_density,Rai et al strain TetO_ZCF26 (biol rep 1; hap B) density,"Read density, ZCF26 overexpression",overexpression,Gene Expression,RNA-Seq,Density plot,Candida albicans,TetO_ZCF26,B,Rai,38905306
+Rai_TetO_ZCF26_2_HapB_alignments,Rai et al strain TetO_ZCF26 (biol rep 2; hap B) alignments,"Aligned strand-specific single-end reads, ZCF26 overexpression",overexpression,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,TetO_ZCF26,B,Rai,38905306
+Rai_TetO_ZCF26_2_HapB_coverage,Rai et al strain TetO_ZCF26 (biol rep 2; hap B) coverage,"Read coverage, ZCF26 overexpression",overexpression,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,TetO_ZCF26,B,Rai,38905306
+Rai_TetO_ZCF26_2_HapB_density,Rai et al strain TetO_ZCF26 (biol rep 2; hap B) density,"Read density, ZCF26 overexpression",overexpression,Gene Expression,RNA-Seq,Density plot,Candida albicans,TetO_ZCF26,B,Rai,38905306
+Rai_TetO_ZCF26_3_HapB_alignments,Rai et al strain TetO_ZCF26 (biol rep 3; hap B) alignments,"Aligned strand-specific single-end reads, ZCF26 overexpression",overexpression,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,TetO_ZCF26,B,Rai,38905306
+Rai_TetO_ZCF26_3_HapB_coverage,Rai et al strain TetO_ZCF26 (biol rep 3; hap B) coverage,"Read coverage, ZCF26 overexpression",overexpression,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,TetO_ZCF26,B,Rai,38905306
+Rai_TetO_ZCF26_3_HapB_density,Rai et al strain TetO_ZCF26 (biol rep 3; hap B) density,"Read density, ZCF26 overexpression",overexpression,Gene Expression,RNA-Seq,Density plot,Candida albicans,TetO_ZCF26,B,Rai,38905306
+Rai_ZCF15_null_1_HapB_alignments,Rai et al strain zcf15 (biol rep 1; hap B) alignments,"Aligned strand-specific single-end reads, zcf15 null",null mutant,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,ZCF15_null,B,Rai,38905306
+Rai_ZCF15_null_1_HapB_coverage,Rai et al strain zcf15 (biol rep 1; hap B) coverage,"Read coverage, zcf15 null",null mutant,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,ZCF15_null,B,Rai,38905306
+Rai_ZCF15_null_1_HapB_density,Rai et al strain zcf15 (biol rep 1; hap B) density,"Read density, zcf15 null",null mutant,Gene Expression,RNA-Seq,Density plot,Candida albicans,ZCF15_null,B,Rai,38905306
+Rai_ZCF15_null_2_HapB_alignments,Rai et al strain zcf15 (biol rep 2; hap B) alignments,"Aligned strand-specific single-end reads, zcf15 null",null mutant,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,ZCF15_null,B,Rai,38905306
+Rai_ZCF15_null_2_HapB_coverage,Rai et al strain zcf15 (biol rep 2; hap B) coverage,"Read coverage, zcf15 null",null mutant,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,ZCF15_null,B,Rai,38905306
+Rai_ZCF15_null_2_HapB_density,Rai et al strain zcf15 (biol rep 2; hap B) density,"Read density, zcf15 null",null mutant,Gene Expression,RNA-Seq,Density plot,Candida albicans,ZCF15_null,B,Rai,38905306
+Rai_ZCF15_null_3_HapB_alignments,Rai et al strain zcf15 (biol rep 3; hap B) alignments,"Aligned strand-specific single-end reads, zcf15 null",null mutant,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,ZCF15_null,B,Rai,38905306
+Rai_ZCF15_null_3_HapB_coverage,Rai et al strain zcf15 (biol rep 3; hap B) coverage,"Read coverage, zcf15 null",null mutant,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,ZCF15_null,B,Rai,38905306
+Rai_ZCF15_null_3_HapB_density,Rai et al strain zcf15 (biol rep 3; hap B) density,"Read density, zcf15 null",null mutant,Gene Expression,RNA-Seq,Density plot,Candida albicans,ZCF15_null,B,Rai,38905306
+Rai_ZCF26_null_1_HapB_alignments,Rai et al strain zcf26 (biol rep 1; hap B) alignments,"Aligned strand-specific single-end reads, zcf26 null",null mutant,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,ZCF26_null,B,Rai,38905306
+Rai_ZCF26_null_1_HapB_coverage,Rai et al strain zcf26 (biol rep 1; hap B) coverage,"Read coverage, zcf26 null",null mutant,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,ZCF26_null,B,Rai,38905306
+Rai_ZCF26_null_1_HapB_density,Rai et al strain zcf26 (biol rep 1; hap B) density,"Read density, zcf26 null",null mutant,Gene Expression,RNA-Seq,Density plot,Candida albicans,ZCF26_null,B,Rai,38905306
+Rai_ZCF26_null_2_HapB_alignments,Rai et al strain zcf26 (biol rep 2; hap B) alignments,"Aligned strand-specific single-end reads, zcf26 null",null mutant,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,ZCF26_null,B,Rai,38905306
+Rai_ZCF26_null_2_HapB_coverage,Rai et al strain zcf26 (biol rep 2; hap B) coverage,"Read coverage, zcf26 null",null mutant,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,ZCF26_null,B,Rai,38905306
+Rai_ZCF26_null_2_HapB_density,Rai et al strain zcf26 (biol rep 2; hap B) density,"Read density, zcf26 null",null mutant,Gene Expression,RNA-Seq,Density plot,Candida albicans,ZCF26_null,B,Rai,38905306
+Rai_ZCF26_null_3_HapB_alignments,Rai et al strain zcf26 (biol rep 3; hap B) alignments,"Aligned strand-specific single-end reads, zcf26 null",null mutant,Gene Expression,RNA-Seq,Aligned reads,Candida albicans,ZCF26_null,B,Rai,38905306
+Rai_ZCF26_null_3_HapB_coverage,Rai et al strain zcf26 (biol rep 3; hap B) coverage,"Read coverage, zcf26 null",null mutant,Gene Expression,RNA-Seq,Coverage plot,Candida albicans,ZCF26_null,B,Rai,38905306
+Rai_ZCF26_null_3_HapB_density,Rai et al strain zcf26 (biol rep 3; hap B) density,"Read density, zcf26 null",null mutant,Gene Expression,RNA-Seq,Density plot,Candida albicans,ZCF26_null,B,Rai,38905306
+,,,,,,,,,,,
+Zhang_MMS_3_HapA_alignments,Zhang et al methyl methanesulfonate (biol rep 3; hap A) alignments,"Aligned non-strand-specific paired-end reads, MMS",MMS,Gene Expression,RNA-Seq,alignments,Candida albicans,SN148,A,Zhang,38921373
+Zhang_MMS_3_HapA_coverage,Zhang et al methyl methanesulfonate (biol rep 3; hap A) coverage,"Read coverage, MMS",MMS,Gene Expression,RNA-Seq,coverage,Candida albicans,SN148,A,Zhang,38921373
+Zhang_MMS_3_HapA_density,Zhang et al methyl methanesulfonate (biol rep 3; hap A) density,"Read density, MMS",MMS,Gene Expression,RNA-Seq,density,Candida albicans,SN148,A,Zhang,38921373
+Zhang_MMS_2_HapA_alignments,Zhang et al methyl methanesulfonate (biol rep 2; hap A) alignments,"Aligned non-strand-specific paired-end reads, MMS",MMS,Gene Expression,RNA-Seq,alignments,Candida albicans,SN148,A,Zhang,38921373
+Zhang_MMS_2_HapA_coverage,Zhang et al methyl methanesulfonate (biol rep 2; hap A) coverage,"Read coverage, MMS",MMS,Gene Expression,RNA-Seq,coverage,Candida albicans,SN148,A,Zhang,38921373
+Zhang_MMS_2_HapA_density,Zhang et al methyl methanesulfonate (biol rep 2; hap A) density,"Read density, MMS",MMS,Gene Expression,RNA-Seq,density,Candida albicans,SN148,A,Zhang,38921373
+Zhang_MMS_1_HapA_alignments,Zhang et al methyl methanesulfonate (biol rep 1; hap A) alignments,"Aligned non-strand-specific paired-end reads, MMS",MMS,Gene Expression,RNA-Seq,alignments,Candida albicans,SN148,A,Zhang,38921373
+Zhang_MMS_1_HapA_coverage,Zhang et al methyl methanesulfonate (biol rep 1; hap A) coverage,"Read coverage, MMS",MMS,Gene Expression,RNA-Seq,coverage,Candida albicans,SN148,A,Zhang,38921373
+Zhang_MMS_1_HapA_density,Zhang et al methyl methanesulfonate (biol rep 1; hap A) density,"Read density, MMS",MMS,Gene Expression,RNA-Seq,density,Candida albicans,SN148,A,Zhang,38921373
+Zhang_control_3_HapA_alignments,Zhang et al control (biol rep 3; hap A) alignments,"Aligned non-strand-specific paired-end reads, control",control,Gene Expression,RNA-Seq,alignments,Candida albicans,SN148,A,Zhang,38921373
+Zhang_control_3_HapA_coverage,Zhang et al control (biol rep 3; hap A) coverage,"Read coverage, control",control,Gene Expression,RNA-Seq,coverage,Candida albicans,SN148,A,Zhang,38921373
+Zhang_control_3_HapA_density,Zhang et al control (biol rep 3; hap A) density,"Read density, control",control,Gene Expression,RNA-Seq,density,Candida albicans,SN148,A,Zhang,38921373
+Zhang_control_2_HapA_alignments,Zhang et al control (biol rep 2; hap A) alignments,"Aligned non-strand-specific paired-end reads, control",control,Gene Expression,RNA-Seq,alignments,Candida albicans,SN148,A,Zhang,38921373
+Zhang_control_2_HapA_coverage,Zhang et al control (biol rep 2; hap A) coverage,"Read coverage, control",control,Gene Expression,RNA-Seq,coverage,Candida albicans,SN148,A,Zhang,38921373
+Zhang_control_2_HapA_density,Zhang et al control (biol rep 2; hap A) density,"Read density, control",control,Gene Expression,RNA-Seq,density,Candida albicans,SN148,A,Zhang,38921373
+Zhang_control_1_HapA_alignments,Zhang et al control (biol rep 1; hap A) alignments,"Aligned non-strand-specific paired-end reads, control",control,Gene Expression,RNA-Seq,alignments,Candida albicans,SN148,A,Zhang,38921373
+Zhang_control_1_HapA_coverage,Zhang et al control (biol rep 1; hap A) coverage,"Read coverage, control",control,Gene Expression,RNA-Seq,coverage,Candida albicans,SN148,A,Zhang,38921373
+Zhang_control_1_HapA_density,Zhang et al control (biol rep 1; hap A) density,"Read density, control",control,Gene Expression,RNA-Seq,density,Candida albicans,SN148,A,Zhang,38921373
+Zhang_MMS_3_HapB_alignments,Zhang et al methyl methanesulfonate (biol rep 3; hap B) alignments,"Aligned non-strand-specific paired-end reads, MMS",MMS,Gene Expression,RNA-Seq,alignments,Candida albicans,SN148,B,Zhang,38921373
+Zhang_MMS_3_HapB_coverage,Zhang et al methyl methanesulfonate (biol rep 3; hap B) coverage,"Read coverage, MMS",MMS,Gene Expression,RNA-Seq,coverage,Candida albicans,SN148,B,Zhang,38921373
+Zhang_MMS_3_HapB_density,Zhang et al methyl methanesulfonate (biol rep 3; hap B) density,"Read density, MMS",MMS,Gene Expression,RNA-Seq,density,Candida albicans,SN148,B,Zhang,38921373
+Zhang_MMS_2_HapB_alignments,Zhang et al methyl methanesulfonate (biol rep 2; hap B) alignments,"Aligned non-strand-specific paired-end reads, MMS",MMS,Gene Expression,RNA-Seq,alignments,Candida albicans,SN148,B,Zhang,38921373
+Zhang_MMS_2_HapB_coverage,Zhang et al methyl methanesulfonate (biol rep 2; hap B) coverage,"Read coverage, MMS",MMS,Gene Expression,RNA-Seq,coverage,Candida albicans,SN148,B,Zhang,38921373
+Zhang_MMS_2_HapB_density,Zhang et al methyl methanesulfonate (biol rep 2; hap B) density,"Read density, MMS",MMS,Gene Expression,RNA-Seq,density,Candida albicans,SN148,B,Zhang,38921373
+Zhang_MMS_1_HapB_alignments,Zhang et al methyl methanesulfonate (biol rep 1; hap B) alignments,"Aligned non-strand-specific paired-end reads, MMS",MMS,Gene Expression,RNA-Seq,alignments,Candida albicans,SN148,B,Zhang,38921373
+Zhang_MMS_1_HapB_coverage,Zhang et al methyl methanesulfonate (biol rep 1; hap B) coverage,"Read coverage, MMS",MMS,Gene Expression,RNA-Seq,coverage,Candida albicans,SN148,B,Zhang,38921373
+Zhang_MMS_1_HapB_density,Zhang et al methyl methanesulfonate (biol rep 1; hap B) density,"Read density, MMS",MMS,Gene Expression,RNA-Seq,density,Candida albicans,SN148,B,Zhang,38921373
+Zhang_control_3_HapB_alignments,Zhang et al control (biol rep 3; hap B) alignments,"Aligned non-strand-specific paired-end reads, control",control,Gene Expression,RNA-Seq,alignments,Candida albicans,SN148,B,Zhang,38921373
+Zhang_control_3_HapB_coverage,Zhang et al control (biol rep 3; hap B) coverage,"Read coverage, control",control,Gene Expression,RNA-Seq,coverage,Candida albicans,SN148,B,Zhang,38921373
+Zhang_control_3_HapB_density,Zhang et al control (biol rep 3; hap B) density,"Read density, control",control,Gene Expression,RNA-Seq,density,Candida albicans,SN148,B,Zhang,38921373
+Zhang_control_2_HapB_alignments,Zhang et al control (biol rep 2; hap B) alignments,"Aligned non-strand-specific paired-end reads, control",control,Gene Expression,RNA-Seq,alignments,Candida albicans,SN148,B,Zhang,38921373
+Zhang_control_2_HapB_coverage,Zhang et al control (biol rep 2; hap B) coverage,"Read coverage, control",control,Gene Expression,RNA-Seq,coverage,Candida albicans,SN148,B,Zhang,38921373
+Zhang_control_2_HapB_density,Zhang et al control (biol rep 2; hap B) density,"Read density, control",control,Gene Expression,RNA-Seq,density,Candida albicans,SN148,B,Zhang,38921373
+Zhang_control_1_HapB_alignments,Zhang et al control (biol rep 1; hap B) alignments,"Aligned non-strand-specific paired-end reads, control",control,Gene Expression,RNA-Seq,alignments,Candida albicans,SN148,B,Zhang,38921373
+Zhang_control_1_HapB_coverage,Zhang et al control (biol rep 1; hap B) coverage,"Read coverage, control",control,Gene Expression,RNA-Seq,coverage,Candida albicans,SN148,B,Zhang,38921373
+Zhang_control_1_HapB_density,Zhang et al control (biol rep 1; hap B) density,"Read density, control",control,Gene Expression,RNA-Seq,density,Candida albicans,SN148,B,Zhang,38921373

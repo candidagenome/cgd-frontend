@@ -374,7 +374,7 @@ function MultiGeneHeatmap({
                 </Link>
                 {gene.correlation != null && (
                   <span className="gene-correlation">
-                    r={gene.correlation.toFixed(2)}
+                    <span className="correlation-label">r=</span>{gene.correlation.toFixed(2)}
                   </span>
                 )}
               </div>
