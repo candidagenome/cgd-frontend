@@ -106,8 +106,9 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
     if (!data?.similar_genes) return [];
 
     // Get query gene identifiers to filter out
-    const querySystematic = data.query_gene?.systematic_name;
-    const queryStandard = data.query_gene?.gene_name;
+    // API returns: query_gene (string, e.g. "HOG1") and query_feature_name (string, e.g. "C2_03330C_A")
+    const queryStandard = data.query_gene;  // e.g., "HOG1"
+    const querySystematic = data.query_feature_name;  // e.g., "C2_03330C_A"
 
     const seen = new Set();
     return data.similar_genes.filter(gene => {
@@ -125,7 +126,7 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
       seen.add(key);
       return true;
     });
-  }, [data?.similar_genes, data?.query_gene]);
+  }, [data?.similar_genes, data?.query_gene, data?.query_feature_name]);
 
   // AG Grid column definitions
   const columnDefs = useMemo(() => [
@@ -231,8 +232,9 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
       const organismDisplay = getOrganismDisplay(organism);
 
       // Query gene identifiers - with fallback to effectiveLocusName (ortholog if applicable)
-      const querySystematicName = data.query_gene.systematic_name || effectiveLocusName;
-      const queryStandardName = data.query_gene.gene_name || effectiveLocusName;
+      // API returns: query_gene (string, e.g. "HOG1") and query_feature_name (string, e.g. "C2_03330C_A")
+      const querySystematicName = data.query_feature_name || effectiveLocusName;
+      const queryStandardName = data.query_gene || effectiveLocusName;
 
       // Build list of genes: similar genes only (we'll handle query gene separately)
       const similarGeneNames = deduplicatedGenes.slice(0, 10).map(g => g.feature_name || g.gene_name);
@@ -418,9 +420,9 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
             <div className="summary-item">
               <span className="summary-label">Query:</span>
               <span className="summary-value">
-                {data.query_gene?.gene_name || data.query_gene?.systematic_name || effectiveLocusName}
-                {data.query_gene?.systematic_name && data.query_gene?.gene_name && (
-                  <span className="systematic-name"> ({data.query_gene.systematic_name})</span>
+                {data.query_gene || effectiveLocusName}
+                {data.query_feature_name && data.query_gene && (
+                  <span className="systematic-name"> ({data.query_feature_name})</span>
                 )}
               </span>
             </div>
