@@ -14,7 +14,7 @@ const METRICS = [
 ];
 
 // Available limits for results
-const LIMITS = [10, 20, 50, 100];
+const LIMITS = [10, 20, 50];
 
 // Available organisms for expression data
 const ORGANISMS = Object.entries(ORGANISM_MAP).map(([display, api]) => ({
@@ -81,10 +81,12 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
 
     try {
       // Request more genes than needed to account for filtering (orf19/21, duplicates)
+      // Cap at 100 to avoid backend limits
+      const requestLimit = Math.min(limit * 2, 100);
       const result = await expressionApi.getSimilarGenes(effectiveLocusName, {
         organism,
         metric,
-        limit: limit * 3,  // Request 3x to ensure enough after filtering
+        limit: requestLimit,
       });
       setData(result);
     } catch (err) {
