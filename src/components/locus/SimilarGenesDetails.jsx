@@ -13,6 +13,13 @@ const METRICS = [
   { value: 'cosine', label: 'Cosine' },
 ];
 
+// Available correlation directions
+const DIRECTIONS = [
+  { value: 'positive', label: 'Correlated' },
+  { value: 'negative', label: 'Anticorrelated' },
+  { value: 'both', label: 'Both' },
+];
+
 // Available limits for results
 const LIMITS = [10, 20, 50];
 
@@ -37,6 +44,8 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
 
   const [metric, setMetric] = useState('pearson');
   const [limit, setLimit] = useState(20);
+  const [direction, setDirection] = useState('positive');
+  const [threshold, setThreshold] = useState(0.8);
 
   // View mode: 'heatmap' (default) or 'table'
   const [viewMode, setViewMode] = useState('heatmap');
@@ -87,6 +96,7 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
         organism,
         metric,
         limit: requestLimit,
+        direction,
       });
       setData(result);
     } catch (err) {
@@ -96,7 +106,7 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
     } finally {
       setLoading(false);
     }
-  }, [effectiveLocusName, organism, metric, limit]);
+  }, [effectiveLocusName, organism, metric, limit, direction]);
 
   // Fetch data when component mounts or parameters change
   useEffect(() => {
@@ -105,6 +115,7 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
 
   // Deduplicate genes by gene_name (A/B alleles have same gene_name)
   // Filter out assembly 19/21 genes (orf19.*, orf21.*)
+  // Filter by correlation threshold (using absolute value)
   // Limit to selected number of genes
   const deduplicatedGenes = useMemo(() => {
     if (!data?.similar_genes) return [];
@@ -128,6 +139,11 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
         return false;
       }
 
+      // Filter by correlation threshold (using absolute value)
+      if (gene.correlation != null && Math.abs(gene.correlation) < threshold) {
+        return false;
+      }
+
       // Use gene_name for deduplication, fall back to feature_name
       const key = gene.gene_name || gene.feature_name;
       if (seen.has(key)) return false;
@@ -137,7 +153,7 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
 
     // Limit to requested number of genes
     return filtered.slice(0, limit);
-  }, [data?.similar_genes, data?.query_gene, data?.query_feature_name, limit]);
+  }, [data?.similar_genes, data?.query_gene, data?.query_feature_name, limit, threshold]);
 
   // Create query gene object for display in table/heatmap
   const queryGeneRow = useMemo(() => {
@@ -213,9 +229,19 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
       },
       cellClass: (params) => {
         if (params.value == null) return '';
-        if (params.value >= 0.8) return 'correlation-high';
-        if (params.value >= 0.6) return 'correlation-medium';
-        return 'correlation-low';
+        const absValue = Math.abs(params.value);
+        const isNegative = params.value < 0;
+        if (isNegative) {
+          // Negative correlations (anticorrelated) - use blue shades
+          if (absValue >= 0.8) return 'correlation-negative-high';
+          if (absValue >= 0.6) return 'correlation-negative-medium';
+          return 'correlation-negative-low';
+        } else {
+          // Positive correlations (correlated) - use existing colors
+          if (absValue >= 0.8) return 'correlation-high';
+          if (absValue >= 0.6) return 'correlation-medium';
+          return 'correlation-low';
+        }
       },
     },
     {
@@ -323,6 +349,64 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
     return ORGANISM_DISPLAY_MAP[apiOrganism] || apiOrganism;
   };
 
+  // State for copy feedback
+  const [copyFeedback, setCopyFeedback] = useState(null);
+
+  // Copy gene names to clipboard (excluding query gene)
+  const handleCopyGeneList = useCallback(async () => {
+    const geneNames = deduplicatedGenes
+      .map(g => g.gene_name || g.feature_name)
+      .join('\n');
+
+    try {
+      await navigator.clipboard.writeText(geneNames);
+      setCopyFeedback('copied');
+      setTimeout(() => setCopyFeedback(null), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+      setCopyFeedback('error');
+      setTimeout(() => setCopyFeedback(null), 2000);
+    }
+  }, [deduplicatedGenes]);
+
+  // Download CSV with gene details
+  const handleDownloadCSV = useCallback(() => {
+    const queryGene = data?.query_gene || effectiveLocusName;
+    const headers = ['Gene Name', 'Systematic Name', 'Description', 'Correlation', 'P-value', 'Shared Conditions'];
+    const rows = deduplicatedGenes.map(g => [
+      g.gene_name || '',
+      g.feature_name || '',
+      (g.description || '').replace(/"/g, '""'),  // Escape quotes
+      g.correlation?.toFixed(4) || '',
+      g.p_value?.toFixed(6) || '',
+      g.shared_conditions || ''
+    ]);
+
+    // Build CSV content
+    const csvContent = [
+      `# Similar genes for ${queryGene}`,
+      `# Organism: ${getOrganismDisplay(organism)}`,
+      `# Metric: ${metric}`,
+      `# Direction: ${direction}`,
+      `# Threshold: ${threshold}`,
+      `# Generated: ${new Date().toISOString()}`,
+      '',
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+
+    // Create and trigger download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `similar_genes_${queryGene}_${direction}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }, [deduplicatedGenes, data, effectiveLocusName, organism, metric, direction, threshold, getOrganismDisplay]);
+
   return (
     <div className="similar-genes-details">
       {/* Controls Bar */}
@@ -357,6 +441,37 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
               </option>
             ))}
           </select>
+        </div>
+
+        <div className="control-group">
+          <label htmlFor="direction-select">Direction:</label>
+          <select
+            id="direction-select"
+            value={direction}
+            onChange={(e) => setDirection(e.target.value)}
+            disabled={loading}
+          >
+            {DIRECTIONS.map((d) => (
+              <option key={d.value} value={d.value}>
+                {d.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="control-group threshold-control">
+          <label htmlFor="threshold-slider">Min |r|:</label>
+          <input
+            id="threshold-slider"
+            type="range"
+            min="0"
+            max="1"
+            step="0.05"
+            value={threshold}
+            onChange={(e) => setThreshold(Number(e.target.value))}
+            disabled={loading}
+          />
+          <span className="threshold-value">{threshold.toFixed(2)}</span>
         </div>
 
         <div className="control-group">
@@ -440,6 +555,27 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
               <span className="summary-value">{data.total_genes_compared?.toLocaleString() || '-'}</span>
             </div>
           </div>
+
+          {/* Export Toolbar */}
+          {deduplicatedGenes.length > 0 && (
+            <div className="similar-genes-export-toolbar">
+              <span className="export-label">Export ({deduplicatedGenes.length} genes):</span>
+              <button
+                className="export-btn"
+                onClick={handleCopyGeneList}
+                title="Copy gene names to clipboard"
+              >
+                {copyFeedback === 'copied' ? 'Copied!' : copyFeedback === 'error' ? 'Error' : 'Copy Gene List'}
+              </button>
+              <button
+                className="export-btn"
+                onClick={handleDownloadCSV}
+                title="Download as CSV file"
+              >
+                Download CSV
+              </button>
+            </div>
+          )}
 
           {/* Results - Heatmap or Table based on viewMode */}
           {allGenesForDisplay.length > 0 ? (

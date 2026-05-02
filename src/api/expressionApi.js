@@ -75,6 +75,7 @@ export const expressionApi = {
    * @param {number} options.limit - Maximum number of similar genes to return (default: 20)
    * @param {string} options.metric - Similarity metric: 'pearson', 'spearman', or 'cosine' (default: 'pearson')
    * @param {number} options.minConditions - Minimum number of shared conditions required (default: 5)
+   * @param {string} options.direction - Correlation direction: 'positive', 'negative', or 'both' (default: 'positive')
    * @returns {Promise<Object>} Response containing similar genes data
    */
   getSimilarGenes: async (geneName, options = {}) => {
@@ -91,6 +92,9 @@ export const expressionApi = {
     }
     if (options.minConditions) {
       params.append('min_conditions', options.minConditions.toString());
+    }
+    if (options.direction) {
+      params.append('direction', options.direction);
     }
 
     const queryString = params.toString();
