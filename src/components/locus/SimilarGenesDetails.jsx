@@ -6,11 +6,6 @@ import MultiGeneHeatmap from './MultiGeneHeatmap';
 import './LocusComponents.css';
 import './SimilarGenesDetails.css';
 
-// Available metrics for correlation
-const METRICS = [
-  { value: 'pearson', label: 'Pearson' },
-];
-
 // Available correlation directions
 const DIRECTIONS = [
   { value: 'positive', label: 'Correlated' },
@@ -40,7 +35,6 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
     return 'C_albicans_SC5314_A22';
   }, [selectedOrganism]);
 
-  const [metric, setMetric] = useState('pearson');
   const [limit, setLimit] = useState(20);
   const [direction, setDirection] = useState('positive');
   const [threshold, setThreshold] = useState(0.8);
@@ -92,7 +86,7 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
       const requestLimit = Math.min(limit * 2, 100);
       const result = await expressionApi.getSimilarGenes(effectiveLocusName, {
         organism,
-        metric,
+        metric: 'pearson',
         limit: requestLimit,
         direction,
       });
@@ -104,7 +98,7 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
     } finally {
       setLoading(false);
     }
-  }, [effectiveLocusName, organism, metric, limit, direction]);
+  }, [effectiveLocusName, organism, limit, direction]);
 
   // Fetch data when component mounts or parameters change
   useEffect(() => {
@@ -384,7 +378,7 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
     const csvContent = [
       `# Similar genes for ${queryGene}`,
       `# Organism: ${getOrganismDisplay(organism)}`,
-      `# Metric: ${metric}`,
+      `# Metric: pearson`,
       `# Direction: ${direction}`,
       `# Threshold: ${threshold}`,
       `# Generated: ${new Date().toISOString()}`,
@@ -403,7 +397,7 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-  }, [deduplicatedGenes, data, effectiveLocusName, organism, metric, direction, threshold, getOrganismDisplay]);
+  }, [deduplicatedGenes, data, effectiveLocusName, organism, direction, threshold, getOrganismDisplay]);
 
   return (
     <div className="similar-genes-details">
@@ -420,22 +414,6 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
             {ORGANISMS.map((org) => (
               <option key={org.api} value={org.api}>
                 {org.display}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="control-group">
-          <label htmlFor="metric-select">Metric:</label>
-          <select
-            id="metric-select"
-            value={metric}
-            onChange={(e) => setMetric(e.target.value)}
-            disabled={loading}
-          >
-            {METRICS.map((m) => (
-              <option key={m.value} value={m.value}>
-                {m.label}
               </option>
             ))}
           </select>
