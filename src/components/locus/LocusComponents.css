@@ -4071,7 +4071,7 @@ a:hover {
 }
 
 .multi-gene-heatmap-container .heatmap-corner {
-  height: 111px;
+  height: 141px;
   background: white;
 }
 
@@ -4125,26 +4125,28 @@ a:hover {
 
 .multi-gene-heatmap-container .heatmap-condition-headers {
   display: flex;
-  height: 100px;
+  height: 130px;
   align-items: flex-end;
 }
 
 .multi-gene-heatmap-container .heatmap-condition-header {
   width: 16px;
   min-width: 16px;
-  height: 100px;
+  height: 130px;
   position: relative;
+  overflow: visible;
 }
 
 .multi-gene-heatmap-container .condition-label-rotated {
   position: absolute;
-  bottom: 2px;
-  left: 50%;
-  transform: rotate(-55deg);
-  transform-origin: bottom center;
+  bottom: 0;
+  left: 8px;
+  transform: rotate(-60deg);
+  transform-origin: left bottom;
   white-space: nowrap;
-  font-size: 0.7em;
-  color: #555;
+  font-size: 0.65em;
+  color: #444;
+  line-height: 1;
 }
 
 .multi-gene-heatmap-container .heatmap-row {
@@ -4215,7 +4217,7 @@ a:hover {
 }
 
 .multi-gene-heatmap-container .heatmap-corner {
-  height: 111px;
+  height: 141px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
