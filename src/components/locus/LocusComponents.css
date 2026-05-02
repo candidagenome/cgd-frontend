@@ -4084,12 +4084,15 @@ a:hover {
   white-space: nowrap;
   font-size: 0.85em;
   background: white;
-  min-width: 180px;  /* Ensure consistent width for alignment */
+  width: 200px;  /* Fixed width for consistent alignment */
 }
 
 .multi-gene-heatmap-container .heatmap-gene-label a {
   color: #1976d2;
   text-decoration: none;
+  flex: 1;  /* Take available space */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .multi-gene-heatmap-container .heatmap-gene-label a:hover {
