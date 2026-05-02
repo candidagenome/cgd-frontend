@@ -111,13 +111,7 @@ function LocusPage() {
   // Works for both primary organisms and orthologs
   const currentFeatureName = React.useMemo(() => {
     if (!selectedOrganism) return null;
-    const featureName = orthologMap.get(selectedOrganism) || null;
-    console.log('[LocusPage] currentFeatureName lookup:', {
-      selectedOrganism,
-      featureName,
-      orthologMapKeys: Array.from(orthologMap.keys()),
-    });
-    return featureName;
+    return orthologMap.get(selectedOrganism) || null;
   }, [selectedOrganism, orthologMap]);
 
   // Reset selected organism when locus name changes
@@ -147,11 +141,6 @@ function LocusPage() {
     if (data.info && !selectedOrganism) {
       const organisms = Object.keys(data.info.results || {});
       const defaultOrg = getDefaultOrganism(organisms, data.info.query_organism);
-      console.log('[LocusPage] Setting default organism:', {
-        queryOrganism: data.info.query_organism,
-        availableOrganisms: organisms,
-        defaultOrg,
-      });
       if (defaultOrg) {
         setSelectedOrganism(defaultOrg);
       }
@@ -344,11 +333,39 @@ function LocusPage() {
     }
   };
 
+  // Get gene info for the selected organism (including orthologs)
+  const currentGeneInfo = React.useMemo(() => {
+    if (!selectedOrganism || !data.info?.results) return null;
+
+    // Check if we have direct data for this organism
+    if (data.info.results[selectedOrganism]) {
+      const feature = data.info.results[selectedOrganism];
+      return {
+        feature_name: feature.feature_name,
+        gene_name: feature.gene_name,
+      };
+    }
+
+    // Otherwise, look for ortholog info in candida_orthologs
+    for (const orgData of Object.values(data.info.results)) {
+      const ortholog = orgData.candida_orthologs?.find(
+        orth => orth.organism_name === selectedOrganism
+      );
+      if (ortholog) {
+        return {
+          feature_name: ortholog.feature_name,
+          gene_name: ortholog.gene_name,
+        };
+      }
+    }
+
+    return null;
+  }, [selectedOrganism, data.info?.results]);
+
   // Get display name for the page title
   const getDisplayName = () => {
-    if (data.info && selectedOrganism && data.info.results[selectedOrganism]) {
-      const feature = data.info.results[selectedOrganism];
-      return feature.gene_name || feature.feature_name;
+    if (currentGeneInfo) {
+      return currentGeneInfo.gene_name || currentGeneInfo.feature_name;
     }
     return name;
   };
@@ -405,12 +422,12 @@ function LocusPage() {
     <div className="locus-page">
       <header className="locus-header">
         <h1>{getDisplayName()}</h1>
-        {data.info && selectedOrganism && data.info.results[selectedOrganism] && (
+        {currentGeneInfo && (
           <p className="subtitle">
-            {data.info.results[selectedOrganism].feature_name}
-            {data.info.results[selectedOrganism].gene_name &&
-              data.info.results[selectedOrganism].gene_name !== data.info.results[selectedOrganism].feature_name &&
-              ` / ${data.info.results[selectedOrganism].gene_name}`
+            {currentGeneInfo.feature_name}
+            {currentGeneInfo.gene_name &&
+              currentGeneInfo.gene_name !== currentGeneInfo.feature_name &&
+              ` / ${currentGeneInfo.gene_name}`
             }
           </p>
         )}

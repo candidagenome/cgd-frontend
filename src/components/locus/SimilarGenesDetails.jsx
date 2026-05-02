@@ -71,21 +71,10 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
     return locusName;
   }, [currentFeatureName, orthologMap, selectedOrganism, locusName]);
 
-  // Debug logging
-  console.log('[SimilarGenesDetails] Props:', {
-    locusName,
-    selectedOrganism,
-    currentFeatureName,
-    derivedOrganism: organism,
-    effectiveLocusName,
-    orthologMapKeys: orthologMap ? Array.from(orthologMap.keys()) : [],
-  });
 
   // Fetch similar genes data
   const fetchSimilarGenes = useCallback(async () => {
     if (!effectiveLocusName) return;
-
-    console.log('[SimilarGenesDetails] Fetching with:', { effectiveLocusName, organism, metric, limit });
 
     setLoading(true);
     setError(null);
