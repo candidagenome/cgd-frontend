@@ -153,11 +153,11 @@ function ExpressionHelp() {
               </ul>
             </li>
             <li>
-              <strong>Min |r|</strong> - Set the minimum absolute correlation threshold using the slider.
+              <strong>Cutoff |r|</strong> - Set the minimum absolute correlation threshold using the slider.
               Only genes with correlation values at or above this threshold will be displayed.
               <ul>
                 <li>Default for Correlated: 0.80 (showing highly correlated genes)</li>
-                <li>Default for Anticorrelated: 0.30 (anticorrelations tend to be weaker)</li>
+                <li>Default for Anticorrelated: 0.50 (anticorrelations tend to be weaker)</li>
               </ul>
               Adjust the slider to show more or fewer genes based on correlation strength.
             </li>

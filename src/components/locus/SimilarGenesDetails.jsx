@@ -438,9 +438,9 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
               // Clear stale data immediately to prevent showing wrong genes during API fetch
               setData(null);
               setHeatmapData(null);
-              // Auto-adjust threshold: 0.3 for anticorrelated (weaker correlations), 0.8 for correlated
+              // Auto-adjust threshold: 0.5 for anticorrelated (weaker correlations), 0.8 for correlated
               if (newDirection === 'negative') {
-                setThreshold(0.3);
+                setThreshold(0.5);
               } else if (newDirection === 'positive') {
                 setThreshold(0.8);
               }
@@ -456,7 +456,7 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
         </div>
 
         <div className="control-group threshold-control">
-          <label htmlFor="threshold-slider">Min |r|:</label>
+          <label htmlFor="threshold-slider">Cutoff |r|:</label>
           <input
             id="threshold-slider"
             type="range"
@@ -543,11 +543,11 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
               <span className="summary-value">{getOrganismDisplay(data.organism || organism)}</span>
             </div>
             <div className="summary-item">
-              <span className="summary-label">Conditions:</span>
-              <span className="summary-value">{data.conditions_used || '-'}</span>
+              <span className="summary-label">Conditions used:</span>
+              <span className="summary-value">{data.conditions_used || 'All'}</span>
             </div>
             <div className="summary-item">
-              <span className="summary-label">Genes compared:</span>
+              <span className="summary-label">Genes in database:</span>
               <span className="summary-value">{data.total_genes_compared?.toLocaleString() || '-'}</span>
             </div>
           </div>
