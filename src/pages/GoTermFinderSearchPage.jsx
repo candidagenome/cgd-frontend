@@ -36,7 +36,6 @@ function GoTermFinderSearchPage() {
 
         // Check if organism was passed from another page
         const passedOrganism = localStorage.getItem('phenotypeSearchOrganism');
-        let organismSet = false;
 
         if (passedOrganism && data.organisms) {
           // Extract species name (second word, e.g., "auris" from "Candida auris B8441")
@@ -46,21 +45,23 @@ function GoTermFinderSearchPage() {
           const matchingOrg = data.organisms.find((org) =>
             org.display_name.toLowerCase().includes(speciesName)
           );
+
           if (matchingOrg) {
             setFormData((prev) => ({
               ...prev,
               organism_no: matchingOrg.organism_no,
             }));
-            organismSet = true;
+            // Only clear after successfully setting - use setTimeout to avoid StrictMode double-run issue
+            setTimeout(() => localStorage.removeItem('phenotypeSearchOrganism'), 0);
+            return; // Don't set default
           }
-          localStorage.removeItem('phenotypeSearchOrganism');
         }
 
         // Set default organism if no passed organism was matched
-        if (!organismSet && data.organisms && data.organisms.length > 0) {
+        if (data.organisms && data.organisms.length > 0) {
           setFormData((prev) => ({
             ...prev,
-            organism_no: data.organisms[0].organism_no,
+            organism_no: prev.organism_no || data.organisms[0].organism_no,
           }));
         }
       } catch (err) {

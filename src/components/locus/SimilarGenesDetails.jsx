@@ -350,7 +350,6 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
     localStorage.setItem('phenotypeSearchGeneList', JSON.stringify(geneList));
     // Also store organism display name for pre-selection in GO tools
     const organismDisplay = getOrganismDisplay(organism);
-    console.log('Co-expression - storing organism:', organism, '->', organismDisplay);
     localStorage.setItem('phenotypeSearchOrganism', organismDisplay);
   }, [deduplicatedGenes, organism]);
 
