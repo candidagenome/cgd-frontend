@@ -527,25 +527,21 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
       {/* Results */}
       {data && !loading && !error && (
         <>
-          {/* Query Summary */}
+          {/* Query Summary - single line */}
           <div className="similar-genes-summary">
-            <div className="summary-item">
-              <span className="summary-label">Query:</span>
-              <span className="summary-value">
-                {data.query_gene || effectiveLocusName}
-                {data.query_feature_name && data.query_gene && (
-                  <span className="systematic-name"> ({data.query_feature_name})</span>
-                )}
-              </span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">Organism:</span>
-              <span className="summary-value">{getOrganismDisplay(data.organism || organism)}</span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">Conditions:</span>
-              <span className="summary-value">{data.conditions_used || 'All'}</span>
-            </div>
+            <span className="summary-label">Query:</span>
+            <span className="summary-value">
+              {data.query_gene || effectiveLocusName}
+              {data.query_feature_name && data.query_gene && (
+                <span className="systematic-name"> ({data.query_feature_name})</span>
+              )}
+            </span>
+            <span className="summary-separator">|</span>
+            <span className="summary-label">Organism:</span>
+            <span className="summary-value">{getOrganismDisplay(data.organism || organism)}</span>
+            <span className="summary-separator">|</span>
+            <span className="summary-label">Conditions:</span>
+            <span className="summary-value">{data.conditions_used || 'All'}</span>
           </div>
 
           {/* Export & Analyze Toolbar */}

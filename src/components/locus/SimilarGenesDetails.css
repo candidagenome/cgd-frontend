@@ -183,18 +183,13 @@
 .similar-genes-summary {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
-  padding: 12px 15px;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 15px;
   background-color: #e3f2fd;
   border: 1px solid #bbdefb;
   border-radius: 6px;
   margin-bottom: 15px;
-}
-
-.similar-genes-summary .summary-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
 }
 
 .similar-genes-summary .summary-label {
@@ -204,6 +199,12 @@
 
 .similar-genes-summary .summary-value {
   color: #333;
+  margin-right: 4px;
+}
+
+.similar-genes-summary .summary-separator {
+  color: #90caf9;
+  margin: 0 4px;
 }
 
 .similar-genes-summary .systematic-name {
@@ -387,8 +388,7 @@
   }
 
   .similar-genes-summary {
-    flex-direction: column;
-    gap: 8px;
+    justify-content: flex-start;
   }
 }
 
