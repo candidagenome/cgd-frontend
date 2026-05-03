@@ -433,6 +433,9 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
             onChange={(e) => {
               const newDirection = e.target.value;
               setDirection(newDirection);
+              // Clear stale data immediately to prevent showing wrong genes during API fetch
+              setData(null);
+              setHeatmapData(null);
               // Auto-adjust threshold: 0.3 for anticorrelated (weaker correlations), 0.8 for correlated
               if (newDirection === 'negative') {
                 setThreshold(0.3);
