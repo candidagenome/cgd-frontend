@@ -210,14 +210,9 @@ function ExpressionHelp() {
 
           <h3>Query Summary</h3>
           <p>
-            Above the results, a summary panel shows:
+            Above the results, a compact summary bar shows the query gene name (with systematic name),
+            selected organism, and number of conditions used in the analysis.
           </p>
-          <ul>
-            <li>Query gene name and systematic name</li>
-            <li>Selected organism</li>
-            <li>Number of conditions used in the correlation analysis</li>
-            <li>Total number of genes compared</li>
-          </ul>
         </div>
 
         <div className="info-section">
