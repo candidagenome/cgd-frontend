@@ -37,14 +37,20 @@ function GoSlimMapperSearchPage() {
         const passedOrganism = localStorage.getItem('phenotypeSearchOrganism');
         let organismSet = false;
 
+        console.log('GO Slim Mapper - passedOrganism from localStorage:', passedOrganism);
+        console.log('GO Slim Mapper - available organisms:', data.organisms?.map(o => o.display_name));
+
         if (passedOrganism && data.organisms) {
           // Extract species name (second word, e.g., "auris" from "Candida auris B8441")
           const passedWords = passedOrganism.toLowerCase().split(/\s+/);
           const speciesName = passedWords[1] || passedWords[0];
+          console.log('GO Slim Mapper - extracted species name:', speciesName);
 
           const matchingOrg = data.organisms.find((org) =>
             org.display_name.toLowerCase().includes(speciesName)
           );
+          console.log('GO Slim Mapper - matching organism:', matchingOrg);
+
           if (matchingOrg) {
             setFormData((prev) => ({
               ...prev,
