@@ -283,21 +283,42 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 6px;
   margin-left: auto;
-  padding: 6px 12px;
-  font-size: 13px;
-  color: #666;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1976d2;
   text-decoration: none;
-  border: 1px solid #ccc;
+  border: 1px solid #1976d2;
   border-radius: 4px;
+  background-color: #e3f2fd;
   align-self: center;
   transition: all 0.2s ease;
 }
 
+.subtab-help-link .help-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  background-color: #1976d2;
+  border-radius: 50%;
+}
+
 .subtab-help-link:hover {
+  color: #fff;
+  border-color: #1565c0;
+  background-color: #1976d2;
+}
+
+.subtab-help-link:hover .help-icon {
+  background-color: #fff;
   color: #1976d2;
-  border-color: #1976d2;
-  background-color: #e3f2fd;
 }
 
 /* Responsive */

@@ -234,7 +234,7 @@ function LocusPage() {
                 </button>
               ))}
               <Link to="/help/expression" className="subtab-help-link" title="Expression Help">
-                About this page
+                <span className="help-icon">?</span> About this page
               </Link>
             </div>
 

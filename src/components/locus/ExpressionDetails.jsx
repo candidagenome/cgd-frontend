@@ -3,7 +3,7 @@ import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
 import './LocusComponents.css';
 
 // Default number of conditions to show per study
-const DEFAULT_VISIBLE_CONDITIONS = 6;
+const DEFAULT_VISIBLE_CONDITIONS = 4;
 
 // Get color for heatmap cell based on fold change
 const getHeatmapColor = (fc, colors) => {
@@ -289,7 +289,7 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
 
           {orgData.studies && orgData.studies.length > 0 ? (
             <>
-              {/* Filter and View controls */}
+              {/* Filter controls */}
               <div className="expression-controls">
                 <div className="expression-filters">
                   <label>Filter by category: </label>
@@ -305,33 +305,6 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
                       </option>
                     ))}
                   </select>
-                </div>
-
-                <div className="expression-view-toggle">
-                  <span className="view-toggle-label">View:</span>
-                  <div className="view-toggle-buttons">
-                    <button
-                      className={`view-toggle-btn ${viewMode === 'bars' ? 'active' : ''}`}
-                      onClick={() => setViewMode('bars')}
-                      title="Show bar charts only"
-                    >
-                      Bars
-                    </button>
-                    <button
-                      className={`view-toggle-btn ${viewMode === 'heatmap' ? 'active' : ''}`}
-                      onClick={() => setViewMode('heatmap')}
-                      title="Show heatmap only"
-                    >
-                      Heatmap
-                    </button>
-                    <button
-                      className={`view-toggle-btn ${viewMode === 'both' ? 'active' : ''}`}
-                      onClick={() => setViewMode('both')}
-                      title="Show both views"
-                    >
-                      Both
-                    </button>
-                  </div>
                 </div>
               </div>
 

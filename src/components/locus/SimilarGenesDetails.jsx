@@ -503,6 +503,20 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
             </button>
           </div>
         </div>
+
+        <button
+          className="reset-btn"
+          onClick={() => {
+            setDirection('positive');
+            setThreshold(0.8);
+            setLimit(20);
+            setViewMode('heatmap');
+          }}
+          title="Reset to default settings"
+          disabled={loading}
+        >
+          Reset
+        </button>
       </div>
 
       {/* Loading State */}
@@ -544,49 +558,6 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
             <span className="summary-value">{data.conditions_used || 'All'}</span>
           </div>
 
-          {/* Export & Analyze Toolbar */}
-          {deduplicatedGenes.length > 0 && (
-            <div className="similar-genes-export-toolbar">
-              <span className="export-label">Export ({deduplicatedGenes.length} genes):</span>
-              <button
-                className="export-btn"
-                onClick={handleCopyGeneList}
-                title="Copy gene names to clipboard"
-              >
-                {copyFeedback === 'copied' ? 'Copied!' : copyFeedback === 'error' ? 'Error' : 'Copy Gene List'}
-              </button>
-              <button
-                className="export-btn"
-                onClick={handleDownloadCSV}
-                title="Download as CSV file"
-              >
-                Download CSV
-              </button>
-              <span className="export-separator">|</span>
-              <span className="export-label">Analyze:</span>
-              <a
-                href="/go-term-finder"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="export-btn analyze-link"
-                onClick={handleAnalyzeGeneList}
-                title="Find enriched GO terms in gene list"
-              >
-                GO Term Finder
-              </a>
-              <a
-                href="/go-slim-mapper"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="export-btn analyze-link"
-                onClick={handleAnalyzeGeneList}
-                title="Map genes to GO Slim categories"
-              >
-                GO Slim Mapper
-              </a>
-            </div>
-          )}
-
           {/* Results - Heatmap or Table based on viewMode */}
           {allGenesForDisplay.length > 0 ? (
             <>
@@ -626,6 +597,49 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
                 <li>The gene has no expression data in the selected organism</li>
                 <li>There are not enough shared conditions with other genes</li>
               </ul>
+            </div>
+          )}
+
+          {/* Export & Analyze Toolbar - at bottom after results */}
+          {deduplicatedGenes.length > 0 && (
+            <div className="similar-genes-export-toolbar">
+              <span className="export-label">Export ({deduplicatedGenes.length} genes):</span>
+              <button
+                className="export-btn"
+                onClick={handleCopyGeneList}
+                title="Copy gene names to clipboard"
+              >
+                {copyFeedback === 'copied' ? 'Copied!' : copyFeedback === 'error' ? 'Error' : 'Copy Gene List'}
+              </button>
+              <button
+                className="export-btn"
+                onClick={handleDownloadCSV}
+                title="Download as CSV file"
+              >
+                Download CSV
+              </button>
+              <span className="export-separator">|</span>
+              <span className="export-label">Analyze:</span>
+              <a
+                href="/go-term-finder"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="export-btn analyze-link"
+                onClick={handleAnalyzeGeneList}
+                title="Find enriched GO terms in gene list"
+              >
+                GO Term Finder
+              </a>
+              <a
+                href="/go-slim-mapper"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="export-btn analyze-link"
+                onClick={handleAnalyzeGeneList}
+                title="Map genes to GO Slim categories"
+              >
+                GO Slim Mapper
+              </a>
             </div>
           )}
 
