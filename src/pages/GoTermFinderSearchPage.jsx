@@ -33,8 +33,31 @@ function GoTermFinderSearchPage() {
       try {
         const data = await goTermFinderApi.getConfig();
         setConfig(data);
-        // Set default organism if available and not already set
-        if (data.organisms && data.organisms.length > 0 && !formData.organism_no) {
+
+        // Check if organism was passed from another page
+        const passedOrganism = localStorage.getItem('phenotypeSearchOrganism');
+        let organismSet = false;
+
+        if (passedOrganism && data.organisms) {
+          // Extract species name (second word, e.g., "auris" from "Candida auris B8441")
+          const passedWords = passedOrganism.toLowerCase().split(/\s+/);
+          const speciesName = passedWords[1] || passedWords[0];
+
+          const matchingOrg = data.organisms.find((org) =>
+            org.display_name.toLowerCase().includes(speciesName)
+          );
+          if (matchingOrg) {
+            setFormData((prev) => ({
+              ...prev,
+              organism_no: matchingOrg.organism_no,
+            }));
+            organismSet = true;
+          }
+          localStorage.removeItem('phenotypeSearchOrganism');
+        }
+
+        // Set default organism if no passed organism was matched
+        if (!organismSet && data.organisms && data.organisms.length > 0) {
           setFormData((prev) => ({
             ...prev,
             organism_no: data.organisms[0].organism_no,
@@ -50,47 +73,25 @@ function GoTermFinderSearchPage() {
     loadConfig();
   }, []);
 
-  // Check for gene list and organism passed from other pages (e.g., co-expression, phenotype search)
+  // Check for gene list passed from other pages (e.g., co-expression, phenotype search)
   useEffect(() => {
     const passedGenes = localStorage.getItem('phenotypeSearchGeneList');
-    const passedOrganism = localStorage.getItem('phenotypeSearchOrganism');
 
     if (passedGenes) {
       try {
         const geneList = JSON.parse(passedGenes);
         if (Array.isArray(geneList) && geneList.length > 0) {
-          // Override the saved form data with passed genes
           setFormData((prev) => ({
             ...prev,
             genes: geneList.join('\n'),
           }));
         }
-        // Clear after reading so it doesn't persist
         localStorage.removeItem('phenotypeSearchGeneList');
       } catch (e) {
         console.error('Failed to parse passed gene list:', e);
       }
     }
-
-    // Set organism if passed and config is loaded
-    if (passedOrganism && config?.organisms) {
-      // Extract species name (second word, e.g., "auris" from "Candida auris B8441")
-      const passedWords = passedOrganism.toLowerCase().split(/\s+/);
-      const speciesName = passedWords[1] || passedWords[0]; // Use second word, fallback to first
-
-      // Find matching organism by species name
-      const matchingOrg = config.organisms.find((org) =>
-        org.display_name.toLowerCase().includes(speciesName)
-      );
-      if (matchingOrg) {
-        setFormData((prev) => ({
-          ...prev,
-          organism_no: matchingOrg.organism_no,
-        }));
-      }
-      localStorage.removeItem('phenotypeSearchOrganism');
-    }
-  }, [config]);
+  }, []);
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
