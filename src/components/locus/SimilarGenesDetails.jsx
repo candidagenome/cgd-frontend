@@ -543,12 +543,8 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
               <span className="summary-value">{getOrganismDisplay(data.organism || organism)}</span>
             </div>
             <div className="summary-item">
-              <span className="summary-label">Conditions used:</span>
+              <span className="summary-label">Conditions:</span>
               <span className="summary-value">{data.conditions_used || 'All'}</span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">Genes in database:</span>
-              <span className="summary-value">{data.total_genes_compared?.toLocaleString() || '-'}</span>
             </div>
           </div>
 
