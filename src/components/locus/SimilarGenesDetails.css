@@ -9,8 +9,8 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 20px;
-  padding: 12px 15px;
+  gap: 12px;
+  padding: 10px 12px;
   background-color: #f8f9fa;
   border: 1px solid #e0e0e0;
   border-radius: 6px;
@@ -20,7 +20,7 @@
 .similar-genes-controls .control-group {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .similar-genes-controls label {
@@ -30,14 +30,17 @@
 }
 
 .similar-genes-controls select {
-  padding: 6px 12px;
+  padding: 5px 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
   background-color: white;
-  font-size: 0.9em;
+  font-size: 0.85em;
   color: #333;
   cursor: pointer;
-  min-width: 120px;
+}
+
+.similar-genes-controls #limit-select {
+  min-width: 50px;
 }
 
 .similar-genes-controls select:hover {

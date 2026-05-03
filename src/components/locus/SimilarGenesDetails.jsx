@@ -430,7 +430,17 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
           <select
             id="direction-select"
             value={direction}
-            onChange={(e) => setDirection(e.target.value)}
+            onChange={(e) => {
+              const newDirection = e.target.value;
+              setDirection(newDirection);
+              // Auto-adjust threshold: 0.5 for anticorrelated (weaker correlations), 0.8 for correlated
+              if (newDirection === 'negative') {
+                setThreshold(0.5);
+              } else if (newDirection === 'positive') {
+                setThreshold(0.8);
+              }
+              // 'both' keeps current threshold
+            }}
             disabled={loading}
           >
             {DIRECTIONS.map((d) => (
