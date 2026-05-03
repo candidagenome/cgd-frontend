@@ -73,10 +73,13 @@ function GoSlimMapperSearchPage() {
 
     // Set organism if passed and config is loaded
     if (passedOrganism && config?.organisms) {
-      // Find matching organism by display name (partial match for flexibility)
+      // Extract species name (second word, e.g., "auris" from "Candida auris B8441")
+      const passedWords = passedOrganism.toLowerCase().split(/\s+/);
+      const speciesName = passedWords[1] || passedWords[0]; // Use second word, fallback to first
+
+      // Find matching organism by species name
       const matchingOrg = config.organisms.find((org) =>
-        org.display_name.toLowerCase().includes(passedOrganism.toLowerCase().split(' ')[0]) ||
-        passedOrganism.toLowerCase().includes(org.display_name.toLowerCase().split(' ')[0])
+        org.display_name.toLowerCase().includes(speciesName)
       );
       if (matchingOrg) {
         setFormData((prev) => ({
