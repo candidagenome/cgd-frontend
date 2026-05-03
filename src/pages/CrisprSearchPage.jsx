@@ -14,6 +14,7 @@ const PAM_OPTIONS = [
 // Target region options
 const TARGET_REGIONS = [
   { value: '5_prime', label: "5' Region (Recommended)", description: 'First 20% of CDS - best for knockouts' },
+  { value: '5_prime_upstream', label: "5' Region + Upstream", description: 'First 20% of CDS plus 500bp upstream - includes promoter' },
   { value: '3_prime', label: "3' Region", description: 'Last 20% of CDS' },
   { value: 'full_cds', label: 'Full CDS', description: 'Entire coding sequence' },
 ];
