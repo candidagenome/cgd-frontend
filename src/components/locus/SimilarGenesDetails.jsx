@@ -10,7 +10,6 @@ import './SimilarGenesDetails.css';
 const DIRECTIONS = [
   { value: 'positive', label: 'Correlated' },
   { value: 'negative', label: 'Anticorrelated' },
-  { value: 'both', label: 'Both' },
 ];
 
 // Available limits for results
@@ -445,7 +444,6 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
               } else if (newDirection === 'positive') {
                 setThreshold(0.8);
               }
-              // 'both' keeps current threshold
             }}
             disabled={loading}
           >
