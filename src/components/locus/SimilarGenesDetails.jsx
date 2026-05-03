@@ -344,11 +344,14 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
   // State for copy feedback
   const [copyFeedback, setCopyFeedback] = useState(null);
 
-  // Store gene list in localStorage for analysis tools (GO Term Finder, etc.)
+  // Store gene list and organism in localStorage for analysis tools (GO Term Finder, etc.)
   const handleAnalyzeGeneList = useCallback(() => {
     const geneList = deduplicatedGenes.map(g => g.feature_name || g.gene_name);
     localStorage.setItem('phenotypeSearchGeneList', JSON.stringify(geneList));
-  }, [deduplicatedGenes]);
+    // Also store organism display name for pre-selection in GO tools
+    const organismDisplay = getOrganismDisplay(organism);
+    localStorage.setItem('phenotypeSearchOrganism', organismDisplay);
+  }, [deduplicatedGenes, organism]);
 
   // Copy gene names to clipboard (excluding query gene)
   const handleCopyGeneList = useCallback(async () => {

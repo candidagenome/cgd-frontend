@@ -49,9 +49,11 @@ function GoSlimMapperSearchPage() {
     loadConfig();
   }, []);
 
-  // Check for gene list passed from other pages (e.g., phenotype search)
+  // Check for gene list and organism passed from other pages (e.g., co-expression, phenotype search)
   useEffect(() => {
     const passedGenes = localStorage.getItem('phenotypeSearchGeneList');
+    const passedOrganism = localStorage.getItem('phenotypeSearchOrganism');
+
     if (passedGenes) {
       try {
         const geneList = JSON.parse(passedGenes);
@@ -68,7 +70,23 @@ function GoSlimMapperSearchPage() {
         console.error('Failed to parse passed gene list:', e);
       }
     }
-  }, []);
+
+    // Set organism if passed and config is loaded
+    if (passedOrganism && config?.organisms) {
+      // Find matching organism by display name (partial match for flexibility)
+      const matchingOrg = config.organisms.find((org) =>
+        org.display_name.toLowerCase().includes(passedOrganism.toLowerCase().split(' ')[0]) ||
+        passedOrganism.toLowerCase().includes(org.display_name.toLowerCase().split(' ')[0])
+      );
+      if (matchingOrg) {
+        setFormData((prev) => ({
+          ...prev,
+          organism_no: matchingOrg.organism_no,
+        }));
+      }
+      localStorage.removeItem('phenotypeSearchOrganism');
+    }
+  }, [config]);
 
   // Load terms when set/aspect changes
   useEffect(() => {
