@@ -146,15 +146,45 @@ function ExpressionHelp() {
               updates both tabs.
             </li>
             <li>
-              <strong>Metric</strong> - Choose the correlation method:
+              <strong>Direction</strong> - Choose the correlation direction:
               <ul>
-                <li><strong>Pearson</strong> (default) - Measures linear correlation between expression profiles</li>
-                <li><strong>Spearman</strong> - Rank-based correlation, more robust to outliers</li>
-                <li><strong>Cosine</strong> - Measures the angle between expression vectors, useful for comparing patterns regardless of magnitude</li>
+                <li><strong>Correlated</strong> (default) - Find genes with similar expression patterns (positive correlation)</li>
+                <li><strong>Anticorrelated</strong> - Find genes with opposite expression patterns (negative correlation)</li>
               </ul>
             </li>
             <li>
-              <strong>Limit</strong> - Number of similar genes to display (10, 20, 50, or 100)
+              <strong>Min |r|</strong> - Set the minimum absolute correlation threshold using the slider.
+              Only genes with correlation values at or above this threshold will be displayed.
+              <ul>
+                <li>Default for Correlated: 0.80 (showing highly correlated genes)</li>
+                <li>Default for Anticorrelated: 0.30 (anticorrelations tend to be weaker)</li>
+              </ul>
+              Adjust the slider to show more or fewer genes based on correlation strength.
+            </li>
+            <li>
+              <strong>Limit</strong> - Maximum number of similar genes to display (10, 20, or 50)
+            </li>
+          </ul>
+
+          <h3>Export and Analyze</h3>
+          <p>
+            The export toolbar provides options to work with your gene list:
+          </p>
+          <ul>
+            <li>
+              <strong>Copy Gene List</strong> - Copy gene names to clipboard for use in other applications
+            </li>
+            <li>
+              <strong>Download CSV</strong> - Download the full results as a CSV file including gene names,
+              descriptions, correlation values, p-values, and shared conditions
+            </li>
+            <li>
+              <strong>GO Term Finder</strong> - Open the gene list in GO Term Finder to identify enriched
+              Gene Ontology terms. The organism is automatically pre-selected.
+            </li>
+            <li>
+              <strong>GO Slim Mapper</strong> - Open the gene list in GO Slim Mapper to map genes to
+              broader GO Slim categories. The organism is automatically pre-selected.
             </li>
           </ul>
 
@@ -316,7 +346,7 @@ function ExpressionHelp() {
 
           <h3>Co-expression Analysis</h3>
           <p>
-            High correlation between genes suggests they may:
+            <strong>Correlated genes</strong> (positive correlation) may:
           </p>
           <ul>
             <li>Be involved in the same biological pathway or process</li>
@@ -324,23 +354,30 @@ function ExpressionHelp() {
             <li>Respond similarly to environmental conditions</li>
             <li>Have related cellular functions</li>
           </ul>
-
-          <h3>Choosing a Correlation Metric</h3>
+          <p>
+            <strong>Anticorrelated genes</strong> (negative correlation) may:
+          </p>
           <ul>
-            <li>
-              <strong>Pearson</strong> - Best for detecting linear relationships. Use when you
-              expect genes to have proportionally similar fold changes.
-            </li>
-            <li>
-              <strong>Spearman</strong> - Use when you care about rank order (which conditions
-              have highest/lowest expression) rather than exact values. More robust to outliers.
-            </li>
-            <li>
-              <strong>Cosine</strong> - Use when you care about the pattern shape regardless of
-              magnitude. Two genes with the same up/down pattern but different amplitudes will
-              have high cosine similarity.
-            </li>
+            <li>Have opposing roles in regulatory pathways</li>
+            <li>Be regulated by competing transcription factors</li>
+            <li>Represent alternative cellular states or responses</li>
+            <li>Be involved in feedback inhibition mechanisms</li>
           </ul>
+
+          <h3>Correlation Method</h3>
+          <p>
+            CGD uses <strong>Pearson correlation</strong> to measure the linear relationship
+            between gene expression profiles. Pearson correlation values range from -1 to +1:
+          </p>
+          <ul>
+            <li><strong>r = +1</strong> - Perfect positive correlation (identical expression patterns)</li>
+            <li><strong>r = 0</strong> - No linear relationship</li>
+            <li><strong>r = -1</strong> - Perfect negative correlation (opposite expression patterns)</li>
+          </ul>
+          <p>
+            Generally, correlations above 0.8 (or below -0.5 for anticorrelated genes) are
+            considered strong and biologically meaningful.
+          </p>
 
           <h3>Limitations</h3>
           <ul>
@@ -365,12 +402,16 @@ function ExpressionHelp() {
           <h3>Tips for Analysis</h3>
           <ul>
             <li>
-              Look for genes with high correlation (&gt;0.8) and low p-values (&lt;0.001) for
-              the most confident co-expression relationships.
+              For <strong>correlated genes</strong>, look for r &gt; 0.8 and low p-values (&lt;0.001)
+              for the most confident co-expression relationships.
             </li>
             <li>
-              Check if co-expressed genes share Gene Ontology (GO) annotations, which may
-              indicate functional relationships.
+              For <strong>anticorrelated genes</strong>, use a lower threshold (e.g., |r| &gt; 0.3)
+              as negative correlations tend to be weaker than positive ones.
+            </li>
+            <li>
+              Use the <strong>GO Term Finder</strong> link to identify enriched biological processes
+              among your co-expressed gene set.
             </li>
             <li>
               Consider the number of shared conditions - correlations based on more conditions
@@ -384,6 +425,10 @@ function ExpressionHelp() {
               Use the heatmap visualization to identify condition clusters where your gene
               of interest shows the most dramatic expression changes.
             </li>
+            <li>
+              <strong>Export the gene list</strong> to CSV for further analysis or to share
+              with collaborators.
+            </li>
           </ul>
         </div>
 
@@ -392,6 +437,7 @@ function ExpressionHelp() {
           <ul>
             <li><Link to="/help/locus">Locus Page Help</Link></li>
             <li><Link to="/help/go-term-finder">GO Term Finder Help</Link></li>
+            <li><Link to="/help/go-slim">GO Slim Mapper Help</Link></li>
           </ul>
         </div>
       </div>
