@@ -369,11 +369,13 @@ function MultiGeneHeatmap({
             <div className="heatmap-corner">
               <div className="corner-category-label">Category</div>
               <div className="corner-correlation-label">
-                <span
-                  className="correlation-info-icon"
-                  title="Pearson correlation coefficient (r) measures linear relationship between expression profiles. Values range from -1 (anticorrelated) to +1 (correlated). Calculated across all conditions with data for both genes. Number in parentheses shows how many conditions were used."
-                >
+                <span className="correlation-info-icon">
                   i
+                  <span className="correlation-tooltip">
+                    Pearson correlation (r) measures similarity between expression profiles.
+                    Values: -1 (opposite) to +1 (same pattern).
+                    Number in parentheses = conditions used.
+                  </span>
                 </span>
               </div>
             </div>
