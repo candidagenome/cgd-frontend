@@ -33,6 +33,25 @@ const MEETINGS = [
 // News items
 const NEWS_ITEMS = [
   {
+    title: 'New: Enhanced Expression Tab',
+    content: (
+      <>
+        The Expression tab on gene pages now features two powerful subtabs:
+        <ul style={{ margin: '8px 0', paddingLeft: '20px' }}>
+          <li><strong>Expression Data</strong> – View RNA-seq fold changes across studies with interactive heatmaps</li>
+          <li><strong>Expression Profiles</strong> – Find genes with similar expression patterns using Pearson correlation</li>
+        </ul>
+        Explore co-expressed genes, export gene lists, and analyze them with GO Term Finder.
+        <br /><br />
+        <Link to="/locus/HOG1?tab=expression">Try it on HOG1</Link>
+        {' | '}
+        <Link to="/help/expression">Learn more</Link>
+      </>
+    ),
+    date: 'May 2026',
+    highlight: true,
+  },
+  {
     title: 'New: Virulence Factor Browser (Preview)',
     content: (
       <>
