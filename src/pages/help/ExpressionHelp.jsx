@@ -146,25 +146,46 @@ function ExpressionHelp() {
               updates both tabs.
             </li>
             <li>
-              <strong>Direction</strong> - Choose the correlation direction:
+              <strong>Relationship</strong> - Choose which types of correlations to display:
               <ul>
-                <li><strong>Correlated</strong> (default) - Find genes with similar expression patterns (positive correlation)</li>
-                <li><strong>Anticorrelated</strong> - Find genes with opposite expression patterns (negative correlation)</li>
+                <li><strong>Both</strong> (default) - Show both correlated and anticorrelated genes together</li>
+                <li><strong>Correlated</strong> - Show only genes with similar expression patterns (positive correlation)</li>
+                <li><strong>Anticorrelated</strong> - Show only genes with opposite expression patterns (negative correlation)</li>
               </ul>
             </li>
             <li>
-              <strong>Cutoff |r|</strong> - Set the minimum absolute correlation threshold using the slider.
-              Only genes with correlation values at or above this threshold will be displayed.
+              <strong>Rank by</strong> - Control how genes are sorted:
               <ul>
-                <li>Default for Correlated: 0.80 (showing highly correlated genes)</li>
-                <li>Default for Anticorrelated: 0.50 (anticorrelations tend to be weaker)</li>
+                <li><strong>Strongest relationship |r|</strong> (default) - Sort by absolute correlation value,
+                so both strong positive (r=0.91) and strong negative (r=-0.89) correlations appear at the top</li>
+                <li><strong>Most correlated</strong> - Sort from most positive to most negative correlation</li>
+                <li><strong>Most anticorrelated</strong> - Sort from most negative to most positive correlation</li>
               </ul>
-              Adjust the slider to show more or fewer genes based on correlation strength.
             </li>
             <li>
               <strong>Limit</strong> - Maximum number of similar genes to display (10, 20, or 50)
             </li>
           </ul>
+
+          <h3>Visual Indicators</h3>
+          <p>
+            Correlation values are color-coded for quick identification:
+          </p>
+          <ul>
+            <li><strong style={{color: '#2e7d32'}}>Green</strong> - Positive correlations (e.g., r=0.91)</li>
+            <li><strong style={{color: '#1565c0'}}>Blue</strong> - Negative correlations (e.g., r=-0.73)</li>
+          </ul>
+          <p>
+            This makes it easy to spot anticorrelated genes at a glance without competing with
+            the heatmap's red/blue color scheme for fold changes.
+          </p>
+
+          <h3>Helper Text</h3>
+          <p>
+            When "Both" relationship is selected, a helper line appears below the controls explaining
+            the current sorting behavior. For example: "Showing the top 20 genes ranked by strongest
+            expression relationship, using absolute correlation |r|."
+          </p>
 
           <h3>Export and Analyze</h3>
           <p>
@@ -417,12 +438,17 @@ function ExpressionHelp() {
           <h3>Tips for Analysis</h3>
           <ul>
             <li>
+              Use <strong>"Both" relationship with "Strongest relationship |r|"</strong> ranking
+              to see the most significant correlations regardless of direction. This shows genes
+              like r=0.91, r=-0.89, r=0.88 at the top.
+            </li>
+            <li>
               For <strong>correlated genes</strong>, look for r &gt; 0.8 and low p-values (&lt;0.001)
               for the most confident co-expression relationships.
             </li>
             <li>
-              For <strong>anticorrelated genes</strong>, use a lower threshold (e.g., |r| &gt; 0.3)
-              as negative correlations tend to be weaker than positive ones.
+              <strong>Anticorrelations tend to be weaker</strong> than positive correlations.
+              Use "Most anticorrelated" ranking to find genes with opposite expression patterns.
             </li>
             <li>
               Use the <strong>GO Term Finder</strong> link to identify enriched biological processes
