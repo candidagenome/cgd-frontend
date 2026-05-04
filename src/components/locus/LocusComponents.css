@@ -4111,12 +4111,19 @@ a:hover {
   font-size: 0.8em;
   color: #666;
   margin-left: auto;  /* Push to right side */
-  min-width: 50px;    /* Fixed width for alignment */
+  min-width: 65px;    /* Fixed width for alignment */
   text-align: right;  /* Right-justify the text */
+  cursor: help;
 }
 
 .multi-gene-heatmap-container .gene-correlation .correlation-label {
   color: #aaa;  /* Lighter gray for "r=" to reduce visual noise */
+}
+
+.multi-gene-heatmap-container .gene-correlation .shared-conditions {
+  font-size: 0.85em;
+  color: #999;
+  margin-left: 2px;
 }
 
 .multi-gene-heatmap-container .heatmap-grid-wrapper {
@@ -4222,6 +4229,7 @@ a:hover {
   flex-direction: column;
   justify-content: flex-end;
   padding-bottom: 1px;
+  position: relative;
 }
 
 .multi-gene-heatmap-container .corner-category-label {
@@ -4232,6 +4240,23 @@ a:hover {
   height: 10px;
   line-height: 8px;
   margin-bottom: 2px;
+}
+
+.multi-gene-heatmap-container .corner-correlation-label {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.multi-gene-heatmap-container .correlation-info-icon {
+  font-size: 14px;
+  color: #1976d2;
+  cursor: help;
+  opacity: 0.8;
+}
+
+.multi-gene-heatmap-container .correlation-info-icon:hover {
+  opacity: 1;
 }
 
 /* Legend divider and category legend */

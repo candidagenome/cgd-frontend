@@ -144,14 +144,19 @@ function MultiGeneHeatmap({
         displayName = data?.gene_name || geneName;
       }
 
+      // Find matching similar gene to get correlation and description
+      const matchingSimilarGene = !isQuery ? similarGenes?.find(g =>
+        g.feature_name === geneName || g.gene_name === geneName
+      ) : null;
+
       return {
         geneName,
         displayName,
         featureName: data?.feature_name || geneName,
         isQuery,
-        correlation: isQuery ? null : similarGenes?.find(g =>
-          g.feature_name === geneName || g.gene_name === geneName
-        )?.correlation,
+        correlation: matchingSimilarGene?.correlation ?? null,
+        sharedConditions: matchingSimilarGene?.shared_conditions ?? null,
+        description: matchingSimilarGene?.description || data?.headline || null,
         foldChanges,
       };
     });
@@ -363,18 +368,35 @@ function MultiGeneHeatmap({
           <div className="heatmap-gene-labels">
             <div className="heatmap-corner">
               <div className="corner-category-label">Category</div>
+              <div className="corner-correlation-label">
+                <span
+                  className="correlation-info-icon"
+                  title="Pearson correlation coefficient (r) measures linear relationship between expression profiles. Values range from -1 (anticorrelated) to +1 (correlated). Calculated across all conditions with data for both genes."
+                >
+                  ⓘ
+                </span>
+              </div>
             </div>
             {geneRows.map((gene) => (
               <div
                 key={gene.geneName}
                 className={`heatmap-gene-label ${gene.isQuery ? 'query-gene' : ''}`}
               >
-                <Link to={`/locus/${gene.featureName}`}>
+                <Link
+                  to={`/locus/${gene.featureName}`}
+                  title={gene.description || gene.displayName}
+                >
                   {gene.displayName}
                 </Link>
                 {gene.correlation != null && (
-                  <span className="gene-correlation">
+                  <span
+                    className="gene-correlation"
+                    title={gene.sharedConditions ? `Based on ${gene.sharedConditions} shared conditions` : ''}
+                  >
                     <span className="correlation-label">r=</span>{gene.correlation.toFixed(2)}
+                    {gene.sharedConditions && (
+                      <span className="shared-conditions">({gene.sharedConditions})</span>
+                    )}
                   </span>
                 )}
               </div>
