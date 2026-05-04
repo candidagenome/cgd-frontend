@@ -103,9 +103,9 @@ function ExpressionHelp() {
           </p>
           <ul>
             <li><strong>Control</strong> - Baseline/reference conditions</li>
-            <li><strong>Growth & Physiology</strong> - Growth conditions, morphology, biofilm, pH, cell types</li>
-            <li><strong>Host Interaction</strong> - Immune cells, PMN, NETs, antimicrobial peptides</li>
-            <li><strong>Stress Response</strong> - Oxidative stress, drug treatments, DNA damage</li>
+            <li><strong>Growth & Morphology</strong> - Growth conditions, morphological switching, biofilm, pH, cell types</li>
+            <li><strong>Antifungal Response</strong> - Antifungal drugs, antimicrobial peptides, immune cell interactions</li>
+            <li><strong>Stress Response</strong> - Oxidative stress, DNA damage, environmental stressors</li>
           </ul>
 
           <h3>Heatmap Strip Interactivity</h3>
@@ -249,8 +249,8 @@ function ExpressionHelp() {
               category for each condition:
               <ul>
                 <li><span style={{backgroundColor: '#9e9e9e', color: '#fff', padding: '1px 6px', borderRadius: '3px'}}>Control</span></li>
-                <li><span style={{backgroundColor: '#4caf50', color: '#fff', padding: '1px 6px', borderRadius: '3px'}}>Growth & Physiology</span></li>
-                <li><span style={{backgroundColor: '#f44336', color: '#fff', padding: '1px 6px', borderRadius: '3px'}}>Host Interaction</span></li>
+                <li><span style={{backgroundColor: '#4caf50', color: '#fff', padding: '1px 6px', borderRadius: '3px'}}>Growth & Morphology</span></li>
+                <li><span style={{backgroundColor: '#f44336', color: '#fff', padding: '1px 6px', borderRadius: '3px'}}>Antifungal Response</span></li>
                 <li><span style={{backgroundColor: '#ff9800', color: '#fff', padding: '1px 6px', borderRadius: '3px'}}>Stress Response</span></li>
               </ul>
             </li>

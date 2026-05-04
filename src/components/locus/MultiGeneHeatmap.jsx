@@ -20,8 +20,8 @@ const CATEGORY_COLORS = {
 
 const CATEGORY_LABELS = {
   control: 'Control',
-  basic_biology: 'Growth & Physiology',
-  kill_candida: 'Host Interaction',
+  basic_biology: 'Growth & Morphology',
+  kill_candida: 'Antifungal Response',
   stress: 'Stress Response',
 };
 

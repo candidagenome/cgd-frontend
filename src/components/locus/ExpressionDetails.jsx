@@ -77,8 +77,8 @@ const formatFoldChange = (fc) => {
 // Bucket labels - grey styling matching "conditions" text (#777)
 const BUCKET_INFO = {
   control: { label: 'Control', color: '#777', bg: 'transparent', border: '#999' },
-  basic_biology: { label: 'Growth & Physiology', color: '#777', bg: 'transparent', border: '#999' },
-  kill_candida: { label: 'Host Interaction', color: '#777', bg: 'transparent', border: '#999' },
+  basic_biology: { label: 'Growth & Morphology', color: '#777', bg: 'transparent', border: '#999' },
+  kill_candida: { label: 'Antifungal Response', color: '#777', bg: 'transparent', border: '#999' },
   stress: { label: 'Stress Response', color: '#777', bg: 'transparent', border: '#999' },
 };
 
