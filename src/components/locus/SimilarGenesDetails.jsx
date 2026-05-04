@@ -180,7 +180,11 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
         const gene = params.data;
         const displayName = gene.gene_name || gene.feature_name;
         return (
-          <Link to={`/locus/${gene.feature_name || gene.gene_name}`}>
+          <Link
+            to={`/locus/${gene.feature_name || gene.gene_name}?tab=expression&subtab=coexpression`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {displayName}
           </Link>
         );
@@ -194,7 +198,11 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
       cellRenderer: (params) => {
         const gene = params.data;
         return (
-          <Link to={`/locus/${gene.feature_name}`}>
+          <Link
+            to={`/locus/${gene.feature_name}?tab=expression&subtab=coexpression`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <code>{gene.feature_name}</code>
           </Link>
         );
