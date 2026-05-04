@@ -381,10 +381,8 @@ function MultiGeneHeatmap({
               </div>
             </div>
             {geneRows.map((gene) => {
-              // For non-query genes, include the origin gene in the link for back navigation
-              const linkUrl = gene.isQuery
-                ? `/locus/${gene.featureName}?tab=expression&subtab=coexpression`
-                : `/locus/${gene.featureName}?tab=expression&subtab=coexpression&from=${queryFeatureName || gene.featureName}`;
+              // Open gene links in new tab so user doesn't lose their current view
+              const linkUrl = `/locus/${gene.featureName}?tab=expression&subtab=coexpression`;
 
               // Low shared conditions warning (< 10 is statistically unreliable)
               const lowConditions = gene.sharedConditions && gene.sharedConditions < 10;
@@ -396,6 +394,8 @@ function MultiGeneHeatmap({
                 >
                   <Link
                     to={linkUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     title={gene.description || gene.displayName}
                   >
                     {gene.displayName}

@@ -512,31 +512,6 @@
   background: #fff;
 }
 
-/* Back to Origin Gene Bar */
-.similar-genes-back-bar {
-  margin-bottom: 12px;
-}
-
-.back-to-origin-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  background-color: #e3f2fd;
-  border: 1px solid #90caf9;
-  border-radius: 6px;
-  color: #1565c0;
-  font-size: 0.9em;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.back-to-origin-btn:hover {
-  background-color: #bbdefb;
-  border-color: #64b5f6;
-}
-
 /* Low Conditions Warning */
 .similar-genes-warning {
   display: flex;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import { expressionApi, ORGANISM_MAP, ORGANISM_DISPLAY_MAP } from '../../api/expressionApi';
 import MultiGeneHeatmap from './MultiGeneHeatmap';
@@ -25,13 +25,6 @@ const ORGANISMS = Object.entries(ORGANISM_MAP).map(([display, api]) => ({
 }));
 
 function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, currentFeatureName, orthologMap }) {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-
-  // Track origin gene for "Back" button - when user clicked through from another gene's heatmap
-  const originGene = searchParams.get('from');
-  const originTab = searchParams.get('tab');
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
@@ -585,19 +578,6 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
       {/* Results */}
       {data && !loading && !error && (
         <>
-          {/* Back button - shown when navigated from another gene's heatmap */}
-          {originGene && (
-            <div className="similar-genes-back-bar">
-              <button
-                className="back-to-origin-btn"
-                onClick={() => navigate(`/locus/${originGene}?tab=expression&subtab=coexpression`)}
-                title={`Return to ${originGene}'s Expression Profiles`}
-              >
-                ← Back to {originGene}
-              </button>
-            </div>
-          )}
-
           {/* Query Summary - single line */}
           <div className="similar-genes-summary">
             <span className="summary-label">Query:</span>
