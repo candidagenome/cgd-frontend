@@ -267,7 +267,7 @@ function MultiGeneHeatmap({
       <div className="multi-gene-heatmap-overlay">
         <div className="multi-gene-heatmap-modal">
           <div className="multi-gene-heatmap-header">
-            <h3>Related Expression Heatmap</h3>
+            <h3>Expression Profiles Heatmap</h3>
             <button className="close-btn" onClick={onClose}>&times;</button>
           </div>
           {emptyContent}
@@ -279,7 +279,7 @@ function MultiGeneHeatmap({
   // Header with controls
   const headerContent = (
     <div className={`multi-gene-heatmap-header ${inline ? 'inline-header' : ''}`}>
-      {!inline && <h3>Related Expression Heatmap</h3>}
+      {!inline && <h3>Expression Profiles Heatmap</h3>}
       <div className="heatmap-controls">
         <label>Study:</label>
         <select
