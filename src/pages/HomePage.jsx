@@ -43,7 +43,7 @@ const NEWS_ITEMS = [
         </ul>
         Explore co-expressed genes, export gene lists, and analyze them with GO Term Finder.
         <br /><br />
-        <Link to="/locus/HOG1?tab=expression">Try it on HOG1</Link>
+        <Link to="/locus/HOG1?tab=expression">Try it on HOG1 and share your thoughts</Link>
         {' | '}
         <Link to="/help/expression">Learn more</Link>
       </>
