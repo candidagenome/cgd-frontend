@@ -672,6 +672,10 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
               {rankBy === 'anticorrelated' && (
                 <>Showing top {limit} genes sorted from most negative to most positive correlation.</>
               )}
+              {/* Note when no negatives appear in "Both" mode */}
+              {rankBy === 'strength' && deduplicatedGenes.length > 0 && !deduplicatedGenes.some(g => g.correlation < 0) && (
+                <span className="helper-note"> No anticorrelated genes in top {limit}. Use "Most anticorrelated" ranking to see them.</span>
+              )}
             </div>
           )}
 
