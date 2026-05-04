@@ -9,19 +9,7 @@ import './SimilarGenesDetails.css';
 // Minimum number of shared conditions for statistically reliable correlations
 const MIN_RELIABLE_CONDITIONS = 10;
 
-// Available correlation directions
-const DIRECTIONS = [
-  { value: 'both', label: 'Both' },
-  { value: 'positive', label: 'Correlated' },
-  { value: 'negative', label: 'Anticorrelated' },
-];
-
-// Gene ranking/sorting options
-const RANK_OPTIONS = [
-  { value: 'strength', label: 'Strongest relationship |r|' },
-  { value: 'correlated', label: 'Most correlated' },
-  { value: 'anticorrelated', label: 'Most anticorrelated' },
-];
+// Note: Anticorrelation features temporarily removed pending data quality investigation
 
 // Available limits for results
 const LIMITS = [10, 20, 50];
@@ -46,8 +34,6 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
   }, [selectedOrganism]);
 
   const [limit, setLimit] = useState(20);
-  const [direction, setDirection] = useState('both');
-  const [rankBy, setRankBy] = useState('strength'); // 'strength' (|r|), 'correlated', 'anticorrelated'
 
   // View mode: 'heatmap' (default) or 'table'
   const [viewMode, setViewMode] = useState('heatmap');
@@ -95,42 +81,13 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
       // Cap at 100 to avoid backend limits
       const requestLimit = Math.min(limit * 2, 100);
 
-      if (direction === 'both') {
-        // Fetch both positive and negative correlations and combine them
-        const [positiveResult, negativeResult] = await Promise.all([
-          expressionApi.getSimilarGenes(effectiveLocusName, {
-            organism,
-            metric: 'pearson',
-            limit: requestLimit,
-            direction: 'positive',
-          }),
-          expressionApi.getSimilarGenes(effectiveLocusName, {
-            organism,
-            metric: 'pearson',
-            limit: requestLimit,
-            direction: 'negative',
-          }),
-        ]);
-
-        // Combine results - sorting will be applied later based on rankBy
-        const combinedGenes = [
-          ...(positiveResult.similar_genes || []),
-          ...(negativeResult.similar_genes || []),
-        ];
-
-        setData({
-          ...positiveResult,
-          similar_genes: combinedGenes,
-        });
-      } else {
-        const result = await expressionApi.getSimilarGenes(effectiveLocusName, {
-          organism,
-          metric: 'pearson',
-          limit: requestLimit,
-          direction,
-        });
-        setData(result);
-      }
+      const result = await expressionApi.getSimilarGenes(effectiveLocusName, {
+        organism,
+        metric: 'pearson',
+        limit: requestLimit,
+        direction: 'positive',
+      });
+      setData(result);
     } catch (err) {
       const errorMessage = err.response?.data?.detail || err.message || 'Failed to fetch similar genes';
       setError(errorMessage);
@@ -138,7 +95,7 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
     } finally {
       setLoading(false);
     }
-  }, [effectiveLocusName, organism, limit, direction]);
+  }, [effectiveLocusName, organism, limit]);
 
   // Fetch data when component mounts or parameters change
   useEffect(() => {
@@ -177,21 +134,12 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
       return true;
     });
 
-    // Sort based on rankBy option
-    if (rankBy === 'strength') {
-      // Sort by absolute correlation descending (strongest relationships first)
-      filtered.sort((a, b) => Math.abs(b.correlation) - Math.abs(a.correlation));
-    } else if (rankBy === 'correlated') {
-      // Sort by correlation descending (most positive first)
-      filtered.sort((a, b) => b.correlation - a.correlation);
-    } else if (rankBy === 'anticorrelated') {
-      // Sort by correlation ascending (most negative first)
-      filtered.sort((a, b) => a.correlation - b.correlation);
-    }
+    // Sort by correlation descending (most correlated first)
+    filtered.sort((a, b) => b.correlation - a.correlation);
 
     // Limit to requested number of genes
     return filtered.slice(0, limit);
-  }, [data?.similar_genes, data?.query_gene, data?.query_feature_name, limit, rankBy]);
+  }, [data?.similar_genes, data?.query_gene, data?.query_feature_name, limit]);
 
   // Create query gene object for display in table/heatmap
   const queryGeneRow = useMemo(() => {
@@ -377,11 +325,10 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
     }
   }, [data, allGenesForDisplay, organism, effectiveLocusName, limit]);
 
-  // Reset heatmap data when similar genes data or ranking changes
-  // (need to reload expression data for the new sorted gene list)
+  // Reset heatmap data when similar genes data changes
   useEffect(() => {
     setHeatmapData(null);
-  }, [data, rankBy]);
+  }, [data]);
 
   // Get the query gene's condition count from the similar genes data
   // The shared_conditions value from similar genes tells us how many conditions
@@ -475,9 +422,7 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
     const csvContent = [
       `# Similar genes for ${queryGene}`,
       `# Organism: ${getOrganismDisplay(organism)}`,
-      `# Metric: pearson`,
-      `# Direction: ${direction}`,
-      `# Rank by: ${rankBy}`,
+      `# Metric: pearson correlation`,
       `# Generated: ${new Date().toISOString()}`,
       '',
       headers.join(','),
@@ -489,12 +434,12 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `similar_genes_${queryGene}_${direction}.csv`;
+    link.download = `similar_genes_${queryGene}.csv`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-  }, [deduplicatedGenes, data, effectiveLocusName, organism, direction, rankBy, getOrganismDisplay]);
+  }, [deduplicatedGenes, data, effectiveLocusName, organism, getOrganismDisplay]);
 
   return (
     <div className="similar-genes-details">
@@ -511,43 +456,6 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
             {ORGANISMS.map((org) => (
               <option key={org.api} value={org.api}>
                 {org.display}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="control-group">
-          <label htmlFor="direction-select">Relationship:</label>
-          <select
-            id="direction-select"
-            value={direction}
-            onChange={(e) => {
-              setDirection(e.target.value);
-              // Clear stale data immediately to prevent showing wrong genes during API fetch
-              setData(null);
-              setHeatmapData(null);
-            }}
-            disabled={loading}
-          >
-            {DIRECTIONS.map((d) => (
-              <option key={d.value} value={d.value}>
-                {d.label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="control-group">
-          <label htmlFor="rank-select">Rank by:</label>
-          <select
-            id="rank-select"
-            value={rankBy}
-            onChange={(e) => setRankBy(e.target.value)}
-            disabled={loading}
-          >
-            {RANK_OPTIONS.map((r) => (
-              <option key={r.value} value={r.value}>
-                {r.label}
               </option>
             ))}
           </select>
@@ -590,8 +498,6 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
         <button
           className="reset-btn"
           onClick={() => {
-            setDirection('both');
-            setRankBy('strength');
             setLimit(20);
             setViewMode('heatmap');
           }}
@@ -657,25 +563,6 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
                 Correlations based on fewer than {MIN_RELIABLE_CONDITIONS} conditions may not be statistically reliable.
                 High r values with few data points can occur by chance.
               </span>
-            </div>
-          )}
-
-          {/* Helper text explaining current sorting */}
-          {direction === 'both' && (
-            <div className="similar-genes-helper">
-              {rankBy === 'strength' && (
-                <>Showing the top {limit} genes ranked by strongest expression relationship, using absolute correlation |r|.</>
-              )}
-              {rankBy === 'correlated' && (
-                <>Showing top {limit} genes sorted from most positive to most negative correlation.</>
-              )}
-              {rankBy === 'anticorrelated' && (
-                <>Showing top {limit} genes sorted from most negative to most positive correlation.</>
-              )}
-              {/* Note when no negatives appear in "Both" mode */}
-              {rankBy === 'strength' && deduplicatedGenes.length > 0 && !deduplicatedGenes.some(g => g.correlation < 0) && (
-                <span className="helper-note"> No anticorrelated genes in top {limit}. Use "Most anticorrelated" ranking to see them.</span>
-              )}
             </div>
           )}
 
