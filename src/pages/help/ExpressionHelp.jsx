@@ -15,7 +15,7 @@ function ExpressionHelp() {
             <li><a href="#overview">Overview</a></li>
             <li><a href="#organism-selector">Organism Selector & Orthologs</a></li>
             <li><a href="#expression-data">Expression Data Sub-tab</a></li>
-            <li><a href="#coexpression">Co-expression Sub-tab</a></li>
+            <li><a href="#coexpression">Related Expression Sub-tab</a></li>
             <li><a href="#heatmap">Understanding the Heatmaps</a></li>
             <li><a href="#data-sources">Data Sources</a></li>
             <li><a href="#interpretation">Interpreting Results</a></li>
@@ -37,7 +37,7 @@ function ExpressionHelp() {
           </p>
           <ul>
             <li><strong>Expression Data</strong> - Shows expression levels across experimental conditions for a single gene</li>
-            <li><strong>Co-expression</strong> - Identifies genes with correlated expression patterns (similar genes analysis)</li>
+            <li><strong>Related Expression</strong> - Identifies genes with correlated expression patterns (similar genes analysis)</li>
           </ul>
         </div>
 
@@ -58,7 +58,7 @@ function ExpressionHelp() {
               automatically displays data for the <em>C. glabrata</em> ortholog (e.g., CAGL0M11748g)
             </li>
             <li>The page header updates to show the ortholog gene name</li>
-            <li>Both Expression Data and Co-expression sub-tabs stay synchronized to the selected organism</li>
+            <li>Both Expression Data and Related Expression sub-tabs stay synchronized to the selected organism</li>
           </ul>
 
           <h3>Ortholog Indicators</h3>
@@ -131,9 +131,9 @@ function ExpressionHelp() {
         </div>
 
         <div className="info-section">
-          <h2 id="coexpression">Co-expression Sub-tab</h2>
+          <h2 id="coexpression">Related Expression Sub-tab</h2>
           <p>
-            The Co-expression sub-tab identifies genes with similar expression profiles to your gene
+            The Related Expression sub-tab identifies genes with similar expression profiles to your gene
             of interest. Genes that show correlated expression patterns often share biological
             functions or are co-regulated by common transcription factors.
           </p>
@@ -218,7 +218,7 @@ function ExpressionHelp() {
         <div className="info-section">
           <h2 id="heatmap">Understanding the Heatmaps</h2>
           <p>
-            Both the Expression Data heatmap strip and the Co-expression heatmap use the same
+            Both the Expression Data heatmap strip and the Related Expression heatmap use the same
             color scheme for consistency.
           </p>
 

@@ -250,33 +250,32 @@
 
 .expression-subtabs {
   display: flex;
-  gap: 0;
+  gap: 10px;
   margin-bottom: 20px;
+  padding: 10px 0;
   border-bottom: 2px solid #e0e0e0;
 }
 
 .subtab-button {
-  padding: 10px 20px;
-  border: none;
-  background-color: transparent;
-  color: #666;
-  font-size: 14px;
-  font-weight: 500;
+  padding: 12px 24px;
+  border: 2px solid #1976d2;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #1976d2;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -2px;
   transition: all 0.2s ease;
 }
 
 .subtab-button:hover {
-  color: #1976d2;
-  background-color: #f5f9ff;
+  background-color: #e3f2fd;
 }
 
 .subtab-button.active {
-  color: #1976d2;
-  border-bottom-color: #1976d2;
-  background-color: #e3f2fd;
+  color: #fff;
+  background-color: #1976d2;
+  border-color: #1976d2;
 }
 
 .subtab-help-link {

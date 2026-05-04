@@ -17,7 +17,7 @@ import './LocusPage.css';
 // Sub-tabs for the Expression tab (extensible for future additions)
 const EXPRESSION_SUBTABS = [
   { id: 'data', label: 'Expression Data' },
-  { id: 'coexpression', label: 'Co-expression' },
+  { id: 'coexpression', label: 'Related Expression' },
 ];
 
 const TABS = [
