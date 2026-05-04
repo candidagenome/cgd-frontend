@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import { expressionApi, ORGANISM_MAP, ORGANISM_DISPLAY_MAP } from '../../api/expressionApi';
 import MultiGeneHeatmap from './MultiGeneHeatmap';
 import './LocusComponents.css';
 import './SimilarGenesDetails.css';
+
+// Minimum number of shared conditions for statistically reliable correlations
+const MIN_RELIABLE_CONDITIONS = 10;
 
 // Available correlation directions
 const DIRECTIONS = [
@@ -22,6 +25,13 @@ const ORGANISMS = Object.entries(ORGANISM_MAP).map(([display, api]) => ({
 }));
 
 function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, currentFeatureName, orthologMap }) {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  // Track origin gene for "Back" button - when user clicked through from another gene's heatmap
+  const originGene = searchParams.get('from');
+  const originTab = searchParams.get('tab');
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
@@ -328,6 +338,40 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
     setHeatmapData(null);
   }, [data, threshold]);
 
+  // Get the query gene's condition count from the similar genes data
+  // The shared_conditions value from similar genes tells us how many conditions
+  // the query gene has (since correlation requires both genes to have data)
+  const queryGeneConditionCount = useMemo(() => {
+    // Try to get from raw API response first (data.similar_genes)
+    if (data?.similar_genes?.length > 0) {
+      const firstGene = data.similar_genes[0];
+      if (firstGene.shared_conditions) {
+        return firstGene.shared_conditions;
+      }
+    }
+
+    // Fallback: try deduplicatedGenes
+    if (deduplicatedGenes.length > 0 && deduplicatedGenes[0].shared_conditions) {
+      return deduplicatedGenes[0].shared_conditions;
+    }
+
+    // Fallback: try to count from heatmap data if available
+    if (heatmapData && heatmapData.length > 0) {
+      const queryGeneData = heatmapData[0];
+      if (queryGeneData?.data?.studies) {
+        let count = 0;
+        queryGeneData.data.studies.forEach(study => {
+          if (study.conditions) {
+            count += study.conditions.length;
+          }
+        });
+        if (count > 0) return count;
+      }
+    }
+
+    return null;
+  }, [data?.similar_genes, deduplicatedGenes, heatmapData]);
+
   // Auto-load heatmap data when similar genes data is available
   useEffect(() => {
     if (data?.query_gene && allGenesForDisplay.length > 0 && !heatmapData && !heatmapLoading) {
@@ -541,6 +585,19 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
       {/* Results */}
       {data && !loading && !error && (
         <>
+          {/* Back button - shown when navigated from another gene's heatmap */}
+          {originGene && (
+            <div className="similar-genes-back-bar">
+              <button
+                className="back-to-origin-btn"
+                onClick={() => navigate(`/locus/${originGene}?tab=expression&subtab=coexpression`)}
+                title={`Return to ${originGene}'s Expression Profiles`}
+              >
+                ← Back to {originGene}
+              </button>
+            </div>
+          )}
+
           {/* Query Summary - single line */}
           <div className="similar-genes-summary">
             <span className="summary-label">Query:</span>
@@ -555,8 +612,27 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
             <span className="summary-value">{getOrganismDisplay(data.organism || organism)}</span>
             <span className="summary-separator">|</span>
             <span className="summary-label">Conditions:</span>
-            <span className="summary-value">{data.conditions_used || 'All'}</span>
+            <span className="summary-value">
+              {queryGeneConditionCount || data.conditions_used || 'All'}
+              {queryGeneConditionCount && queryGeneConditionCount < MIN_RELIABLE_CONDITIONS && (
+                <span className="low-conditions-warning" title="Correlations based on few conditions may not be statistically reliable">
+                  ⚠
+                </span>
+              )}
+            </span>
           </div>
+
+          {/* Warning for low condition count */}
+          {queryGeneConditionCount && queryGeneConditionCount < MIN_RELIABLE_CONDITIONS && (
+            <div className="similar-genes-warning">
+              <span className="warning-icon">⚠</span>
+              <span className="warning-text">
+                This gene has expression data for only {queryGeneConditionCount} conditions.
+                Correlations based on fewer than {MIN_RELIABLE_CONDITIONS} conditions may not be statistically reliable.
+                High r values with few data points can occur by chance.
+              </span>
+            </div>
+          )}
 
           {/* Results - Heatmap or Table based on viewMode */}
           {allGenesForDisplay.length > 0 ? (
@@ -566,6 +642,7 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
                 <div className="coexpression-heatmap-inline">
                   <MultiGeneHeatmap
                     queryGene={data?.query_gene}
+                    queryFeatureName={data?.query_feature_name || effectiveLocusName}
                     similarGenes={allGenesForDisplay}
                     expressionData={heatmapData}
                     loading={heatmapLoading}

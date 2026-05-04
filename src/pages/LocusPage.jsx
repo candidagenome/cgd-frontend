@@ -38,7 +38,15 @@ function LocusPage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'summary');
   const [selectedOrganism, setSelectedOrganism] = useState(null);
-  const [expressionSubTab, setExpressionSubTab] = useState('data');
+  const [expressionSubTab, setExpressionSubTab] = useState(searchParams.get('subtab') || 'data');
+
+  // Sync expressionSubTab when URL params change (e.g., navigating from another gene's heatmap)
+  useEffect(() => {
+    const subtab = searchParams.get('subtab');
+    if (subtab && (subtab === 'data' || subtab === 'coexpression')) {
+      setExpressionSubTab(subtab);
+    }
+  }, [searchParams]);
 
   // Check if this is a B allele that needs redirect
   const isBAllele = name && (name.endsWith('_B') || name.endsWith('_b'));
@@ -50,7 +58,14 @@ function LocusPage() {
   useEffect(() => {
     if (isBAllele) {
       const tab = searchParams.get('tab');
-      const newUrl = tab ? `/locus/${effectiveName}?tab=${tab}` : `/locus/${effectiveName}`;
+      const subtab = searchParams.get('subtab');
+      const from = searchParams.get('from');
+      let newUrl = `/locus/${effectiveName}`;
+      const params = [];
+      if (tab) params.push(`tab=${tab}`);
+      if (subtab) params.push(`subtab=${subtab}`);
+      if (from) params.push(`from=${from}`);
+      if (params.length > 0) newUrl += '?' + params.join('&');
       navigate(newUrl, { replace: true });
     }
   }, [isBAllele, effectiveName, searchParams, navigate]);

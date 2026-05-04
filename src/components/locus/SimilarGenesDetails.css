@@ -511,3 +511,65 @@
   border-top: 1px solid #e0e0e0;
   background: #fff;
 }
+
+/* Back to Origin Gene Bar */
+.similar-genes-back-bar {
+  margin-bottom: 12px;
+}
+
+.back-to-origin-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background-color: #e3f2fd;
+  border: 1px solid #90caf9;
+  border-radius: 6px;
+  color: #1565c0;
+  font-size: 0.9em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.back-to-origin-btn:hover {
+  background-color: #bbdefb;
+  border-color: #64b5f6;
+}
+
+/* Low Conditions Warning */
+.similar-genes-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 15px;
+  background-color: #fff3e0;
+  border: 1px solid #ffcc02;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+.similar-genes-warning .warning-icon {
+  font-size: 1.1em;
+  color: #f57c00;
+  flex-shrink: 0;
+}
+
+.similar-genes-warning .warning-text {
+  font-size: 0.9em;
+  color: #795548;
+  line-height: 1.5;
+}
+
+/* Low conditions warning icon in summary */
+.similar-genes-summary .low-conditions-warning {
+  margin-left: 4px;
+  color: #f57c00;
+  cursor: help;
+}
+
+/* Low conditions styling in heatmap correlation values */
+.gene-correlation.low-conditions {
+  opacity: 0.7;
+  font-style: italic;
+}

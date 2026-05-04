@@ -73,6 +73,7 @@ const formatFoldChange = (fc) => {
 
 function MultiGeneHeatmap({
   queryGene,
+  queryFeatureName,
   similarGenes,
   expressionData,
   loading,
@@ -379,30 +380,43 @@ function MultiGeneHeatmap({
                 </span>
               </div>
             </div>
-            {geneRows.map((gene) => (
-              <div
-                key={gene.geneName}
-                className={`heatmap-gene-label ${gene.isQuery ? 'query-gene' : ''}`}
-              >
-                <Link
-                  to={`/locus/${gene.featureName}`}
-                  title={gene.description || gene.displayName}
+            {geneRows.map((gene) => {
+              // For non-query genes, include the origin gene in the link for back navigation
+              const linkUrl = gene.isQuery
+                ? `/locus/${gene.featureName}?tab=expression&subtab=coexpression`
+                : `/locus/${gene.featureName}?tab=expression&subtab=coexpression&from=${queryFeatureName || gene.featureName}`;
+
+              // Low shared conditions warning (< 10 is statistically unreliable)
+              const lowConditions = gene.sharedConditions && gene.sharedConditions < 10;
+
+              return (
+                <div
+                  key={gene.geneName}
+                  className={`heatmap-gene-label ${gene.isQuery ? 'query-gene' : ''}`}
                 >
-                  {gene.displayName}
-                </Link>
-                {gene.correlation != null && (
-                  <span
-                    className="gene-correlation"
-                    title={gene.sharedConditions ? `Based on ${gene.sharedConditions} shared conditions` : ''}
+                  <Link
+                    to={linkUrl}
+                    title={gene.description || gene.displayName}
                   >
-                    <span className="correlation-label">r=</span>{gene.correlation.toFixed(2)}
-                    {gene.sharedConditions && (
-                      <span className="shared-conditions">({gene.sharedConditions})</span>
-                    )}
-                  </span>
-                )}
-              </div>
-            ))}
+                    {gene.displayName}
+                  </Link>
+                  {gene.correlation != null && (
+                    <span
+                      className={`gene-correlation ${lowConditions ? 'low-conditions' : ''}`}
+                      title={lowConditions
+                        ? `Based on only ${gene.sharedConditions} conditions - correlation may not be reliable`
+                        : gene.sharedConditions ? `Based on ${gene.sharedConditions} shared conditions` : ''
+                      }
+                    >
+                      <span className="correlation-label">r=</span>{gene.correlation.toFixed(2)}
+                      {gene.sharedConditions && (
+                        <span className="shared-conditions">({gene.sharedConditions})</span>
+                      )}
+                    </span>
+                  )}
+                </div>
+              );
+            })}
           </div>
 
           {/* Heatmap grid */}
