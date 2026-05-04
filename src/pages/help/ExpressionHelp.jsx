@@ -213,6 +213,25 @@ function ExpressionHelp() {
             Above the results, a compact summary bar shows the query gene name (with systematic name),
             selected organism, and number of conditions used in the analysis.
           </p>
+
+          <h3>Low Conditions Warning</h3>
+          <p>
+            When a gene has expression data for fewer than 10 conditions, a warning banner appears
+            explaining that correlations based on few data points may not be statistically reliable.
+            High correlation values (even r = 1.00) can occur by chance with very few observations.
+          </p>
+          <p>
+            The number of shared conditions used for each correlation is shown in parentheses next
+            to the r-value, e.g., "r=0.95 (12)" means the correlation was computed using 12 shared
+            conditions between the two genes.
+          </p>
+
+          <h3>Navigation</h3>
+          <p>
+            Clicking on a gene name in either the heatmap or table view opens that gene's Expression
+            Profiles page in a <strong>new browser tab</strong>, allowing you to explore related genes
+            without losing your current view.
+          </p>
         </div>
 
         <div className="info-section">
@@ -242,7 +261,8 @@ function ExpressionHelp() {
             </li>
             <li>
               <strong>Correlation Values</strong> - Each similar gene shows its correlation coefficient
-              (r=) next to the gene name
+              (r=) next to the gene name, followed by the number of shared conditions in parentheses.
+              Hover over the blue "i" info icon for an explanation of correlation values.
             </li>
             <li>
               <strong>Category Bar</strong> - A colored bar at the top indicates the experimental
@@ -409,8 +429,10 @@ function ExpressionHelp() {
               among your co-expressed gene set.
             </li>
             <li>
-              Consider the number of shared conditions - correlations based on more conditions
-              are more reliable.
+              Consider the <strong>number of shared conditions</strong> shown in parentheses -
+              correlations based on more conditions (e.g., 50+) are more statistically reliable
+              than those based on few conditions (e.g., 5-10). A warning appears for genes with
+              fewer than 10 conditions.
             </li>
             <li>
               Compare results across different organisms - conserved co-expression relationships
