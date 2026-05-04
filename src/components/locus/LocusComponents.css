@@ -4244,19 +4244,27 @@ a:hover {
 
 .multi-gene-heatmap-container .corner-correlation-label {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 4px;
+  right: 4px;
 }
 
 .multi-gene-heatmap-container .correlation-info-icon {
-  font-size: 14px;
-  color: #1976d2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #1976d2;
+  border-radius: 50%;
   cursor: help;
-  opacity: 0.8;
+  font-style: normal;
 }
 
 .multi-gene-heatmap-container .correlation-info-icon:hover {
-  opacity: 1;
+  background-color: #1565c0;
 }
 
 /* Legend divider and category legend */
