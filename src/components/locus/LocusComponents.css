@@ -4272,7 +4272,7 @@ a:hover {
   display: none;
   position: absolute;
   top: 28px;
-  right: 0;
+  left: 0;
   width: 260px;
   padding: 10px 12px;
   background-color: #333;
