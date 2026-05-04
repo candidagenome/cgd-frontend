@@ -3785,7 +3785,7 @@ a:hover {
   border-radius: 2px;
   cursor: pointer;
   transition: transform 0.1s ease, box-shadow 0.1s ease;
-  border: 1px solid transparent;
+  border: 1px solid #ddd;  /* Visible border so neutral cells don't disappear */
 }
 
 .expression-heatmap-strip .heatmap-cell:hover {
@@ -3847,6 +3847,14 @@ a:hover {
   font-size: 0.85em;
   color: #aaa;
   font-style: italic;
+}
+
+.expression-heatmap-strip .heatmap-hint {
+  font-size: 0.8em;
+  color: #888;
+  font-style: italic;
+  margin-top: 6px;
+  text-align: center;
 }
 
 /* Responsive expression styles */

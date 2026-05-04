@@ -313,7 +313,7 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
                 <span className="legend-title">Fold Change:</span>
                 <span className="legend-item legend-down" style={{ backgroundColor: COLORS.down, opacity: 0.9 }}>↓ &lt;0.5x</span>
                 <span className="legend-item legend-down" style={{ backgroundColor: COLORS.down, opacity: 0.6 }}>↓ 0.5–0.8x</span>
-                <span className="legend-item" style={{ backgroundColor: COLORS.neutral }}>~1x</span>
+                <span className="legend-item" style={{ backgroundColor: COLORS.neutral, border: '1px solid #ddd' }}>~1x</span>
                 <span className="legend-item legend-up" style={{ backgroundColor: COLORS.up, opacity: 0.6 }}>↑ 1.2–2x</span>
                 <span className="legend-item legend-up" style={{ backgroundColor: COLORS.up, opacity: 0.9 }}>↑ &gt;2x</span>
               </div>
@@ -364,6 +364,7 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
                       <div className="tooltip-study">{hoveredCondition.studyName}</div>
                     </div>
                   )}
+                  <div className="heatmap-hint">Click a cell to jump to study details</div>
                 </div>
               ) : null}
 
