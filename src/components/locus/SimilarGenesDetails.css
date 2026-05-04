@@ -59,61 +59,6 @@
   cursor: not-allowed;
 }
 
-/* Threshold Slider */
-.similar-genes-controls .threshold-control {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.similar-genes-controls .threshold-control input[type="range"] {
-  width: 100px;
-  height: 6px;
-  -webkit-appearance: none;
-  appearance: none;
-  background: #ddd;
-  border-radius: 3px;
-  outline: none;
-  cursor: pointer;
-}
-
-.similar-genes-controls .threshold-control input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 16px;
-  height: 16px;
-  background: #1976d2;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: background 0.15s ease;
-}
-
-.similar-genes-controls .threshold-control input[type="range"]::-webkit-slider-thumb:hover {
-  background: #1565c0;
-}
-
-.similar-genes-controls .threshold-control input[type="range"]::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
-  background: #1976d2;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.similar-genes-controls .threshold-control input[type="range"]:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.similar-genes-controls .threshold-value {
-  min-width: 36px;
-  font-family: 'Courier New', monospace;
-  font-size: 0.9em;
-  color: #333;
-  font-weight: 500;
-}
-
 /* Reset Button */
 .similar-genes-controls .reset-btn {
   margin-left: auto;
@@ -547,4 +492,16 @@
 .gene-correlation.low-conditions {
   opacity: 0.7;
   font-style: italic;
+}
+
+/* Helper text for sorting explanation */
+.similar-genes-helper {
+  font-size: 0.85em;
+  color: #666;
+  font-style: italic;
+  padding: 8px 15px;
+  background-color: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  margin-bottom: 15px;
 }

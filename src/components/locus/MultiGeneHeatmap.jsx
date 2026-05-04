@@ -402,7 +402,7 @@ function MultiGeneHeatmap({
                   </Link>
                   {gene.correlation != null && (
                     <span
-                      className={`gene-correlation ${lowConditions ? 'low-conditions' : ''}`}
+                      className={`gene-correlation ${lowConditions ? 'low-conditions' : ''} ${gene.correlation >= 0 ? 'positive' : 'negative'}`}
                       title={lowConditions
                         ? `Based on only ${gene.sharedConditions} conditions - correlation may not be reliable`
                         : gene.sharedConditions ? `Based on ${gene.sharedConditions} shared conditions` : ''

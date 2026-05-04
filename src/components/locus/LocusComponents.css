@@ -4134,6 +4134,16 @@ a:hover {
   margin-left: 2px;
 }
 
+/* Positive correlation - subtle green/teal */
+.multi-gene-heatmap-container .gene-correlation.positive {
+  color: #2e7d32;
+}
+
+/* Negative correlation - subtle blue/purple */
+.multi-gene-heatmap-container .gene-correlation.negative {
+  color: #1565c0;
+}
+
 .multi-gene-heatmap-container .heatmap-grid-wrapper {
   flex: 1;
 }
