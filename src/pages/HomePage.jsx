@@ -33,7 +33,7 @@ const MEETINGS = [
 // News items
 const NEWS_ITEMS = [
   {
-    title: 'New: Enhanced Expression Tab',
+    title: 'New: Enhanced Expression Tab (Preview)',
     content: (
       <>
         The Expression tab on gene pages now features two powerful subtabs:
