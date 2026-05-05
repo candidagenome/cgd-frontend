@@ -316,6 +316,33 @@ function ExpressionHelp() {
             each study.
           </p>
 
+          <h3>Fold Change Calculation</h3>
+          <p>
+            Fold changes are calculated using <strong>library-size normalized</strong> values
+            to correct for differences in sequencing depth between samples. The formula is:
+          </p>
+          <pre style={{backgroundColor: '#f5f5f5', padding: '12px', borderRadius: '4px', overflowX: 'auto'}}>
+{`fold_change = (condition_coverage × control_library_size) / (control_coverage × condition_library_size)`}
+          </pre>
+          <p>
+            Where:
+          </p>
+          <ul>
+            <li><strong>condition_coverage</strong> - Mean read coverage across the gene body in the experimental condition</li>
+            <li><strong>control_coverage</strong> - Mean read coverage across the gene body in the control condition</li>
+            <li><strong>library_size</strong> - Total number of mapped reads in each sample (in millions)</li>
+          </ul>
+          <p>
+            This normalization is equivalent to converting raw coverage to CPM (Counts Per Million)
+            before calculating the ratio. It ensures that a sample sequenced twice as deeply
+            doesn't appear to have twice the expression.
+          </p>
+          <p>
+            <strong>Why not RPKM?</strong> Gene length normalization (the "PK" in RPKM) is not
+            needed for fold change calculations because we compare the same gene region in both
+            conditions—the gene length factor cancels out in the ratio.
+          </p>
+
           <h3>Correlation Caching</h3>
           <p>
             For efficient Co-expression queries, CGD pre-computes and caches pairwise correlations
