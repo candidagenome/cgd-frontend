@@ -243,6 +243,83 @@
   background-color: #e0e0e0;
 }
 
+/* Expression Tab Container with Sub-tabs */
+.expression-tab-container {
+  width: 100%;
+}
+
+.expression-subtabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 10px 0;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.subtab-button {
+  padding: 12px 24px;
+  border: 2px solid #1976d2;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #1976d2;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.subtab-button:hover {
+  background-color: #e3f2fd;
+}
+
+.subtab-button.active {
+  color: #fff;
+  background-color: #1976d2;
+  border-color: #1976d2;
+}
+
+.subtab-help-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-left: auto;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1976d2;
+  text-decoration: none;
+  border: 1px solid #1976d2;
+  border-radius: 4px;
+  background-color: #e3f2fd;
+  align-self: center;
+  transition: all 0.2s ease;
+}
+
+.subtab-help-link .help-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  background-color: #1976d2;
+  border-radius: 50%;
+}
+
+.subtab-help-link:hover {
+  color: #fff;
+  border-color: #1565c0;
+  background-color: #1976d2;
+}
+
+.subtab-help-link:hover .help-icon {
+  background-color: #fff;
+  color: #1976d2;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .locus-page {
@@ -259,5 +336,23 @@
 
   .locus-header h1 {
     font-size: 1.5em;
+  }
+
+  .expression-subtabs {
+    flex-direction: column;
+    gap: 5px;
+    border-bottom: none;
+  }
+
+  .subtab-button {
+    border-bottom: none;
+    border-left: 3px solid transparent;
+    margin-bottom: 0;
+    text-align: left;
+  }
+
+  .subtab-button.active {
+    border-left-color: #1976d2;
+    border-bottom-color: transparent;
   }
 }

@@ -32,11 +32,35 @@ function GoSlimMapperSearchPage() {
       try {
         const data = await goSlimMapperApi.getConfig();
         setConfig(data);
-        // Set default organism if available
+
+        // Check if organism was passed from another page
+        const passedOrganism = localStorage.getItem('phenotypeSearchOrganism');
+
+        if (passedOrganism && data.organisms) {
+          // Extract species name (second word, e.g., "auris" from "Candida auris B8441")
+          const passedWords = passedOrganism.toLowerCase().split(/\s+/);
+          const speciesName = passedWords[1] || passedWords[0];
+
+          const matchingOrg = data.organisms.find((org) =>
+            org.display_name.toLowerCase().includes(speciesName)
+          );
+
+          if (matchingOrg) {
+            setFormData((prev) => ({
+              ...prev,
+              organism_no: matchingOrg.organism_no,
+            }));
+            // Only clear after successfully setting - use setTimeout to avoid StrictMode double-run issue
+            setTimeout(() => localStorage.removeItem('phenotypeSearchOrganism'), 0);
+            return; // Don't set default
+          }
+        }
+
+        // Set default organism if no passed organism was matched
         if (data.organisms && data.organisms.length > 0) {
           setFormData((prev) => ({
             ...prev,
-            organism_no: data.organisms[0].organism_no,
+            organism_no: prev.organism_no || data.organisms[0].organism_no,
           }));
         }
       } catch (err) {
@@ -49,20 +73,19 @@ function GoSlimMapperSearchPage() {
     loadConfig();
   }, []);
 
-  // Check for gene list passed from other pages (e.g., phenotype search)
+  // Check for gene list passed from other pages (e.g., co-expression, phenotype search)
   useEffect(() => {
     const passedGenes = localStorage.getItem('phenotypeSearchGeneList');
+
     if (passedGenes) {
       try {
         const geneList = JSON.parse(passedGenes);
         if (Array.isArray(geneList) && geneList.length > 0) {
-          // Override the saved form data with passed genes
           setFormData((prev) => ({
             ...prev,
             genes: geneList.join('\n'),
           }));
         }
-        // Clear after reading so it doesn't persist
         localStorage.removeItem('phenotypeSearchGeneList');
       } catch (e) {
         console.error('Failed to parse passed gene list:', e);

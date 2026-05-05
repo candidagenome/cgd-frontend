@@ -9,13 +9,22 @@ import HomologyDetails from '../components/locus/HomologyDetails';
 import SequenceDetails from '../components/locus/SequenceDetails';
 import References from '../components/locus/References';
 import History from '../components/locus/History';
+import ExpressionDetails from '../components/locus/ExpressionDetails';
+import SimilarGenesDetails from '../components/locus/SimilarGenesDetails';
 import OrganismSelector, { getDefaultOrganism } from '../components/locus/OrganismSelector';
 import './LocusPage.css';
+
+// Sub-tabs for the Expression tab (extensible for future additions)
+const EXPRESSION_SUBTABS = [
+  { id: 'data', label: 'Expression Data' },
+  { id: 'coexpression', label: 'Expression Profiles' },
+];
 
 const TABS = [
   { id: 'summary', label: 'Summary', component: 'summary', loader: 'loadSummaryData' },
   { id: 'go', label: 'Gene Ontology', component: 'go', loader: 'loadGoDetails' },
   { id: 'phenotype', label: 'Phenotype', component: 'phenotype', loader: 'loadPhenotypeDetails' },
+  { id: 'expression', label: 'Expression (Preview)', component: 'expression', loader: 'loadExpressionDetails' },
   { id: 'protein', label: 'Protein', component: 'protein', loader: 'loadProteinDetails' },
   { id: 'homology', label: 'Homologs', component: 'homology', loader: 'loadHomologyDetails' },
   { id: 'sequence', label: 'Sequence', component: 'sequence', loader: 'loadSequenceDetails' },
@@ -29,6 +38,15 @@ function LocusPage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'summary');
   const [selectedOrganism, setSelectedOrganism] = useState(null);
+  const [expressionSubTab, setExpressionSubTab] = useState(searchParams.get('subtab') || 'data');
+
+  // Sync expressionSubTab when URL params change (e.g., navigating from another gene's heatmap)
+  useEffect(() => {
+    const subtab = searchParams.get('subtab');
+    if (subtab && (subtab === 'data' || subtab === 'coexpression')) {
+      setExpressionSubTab(subtab);
+    }
+  }, [searchParams]);
 
   // Check if this is a B allele that needs redirect
   const isBAllele = name && (name.endsWith('_B') || name.endsWith('_b'));
@@ -40,7 +58,14 @@ function LocusPage() {
   useEffect(() => {
     if (isBAllele) {
       const tab = searchParams.get('tab');
-      const newUrl = tab ? `/locus/${effectiveName}?tab=${tab}` : `/locus/${effectiveName}`;
+      const subtab = searchParams.get('subtab');
+      const from = searchParams.get('from');
+      let newUrl = `/locus/${effectiveName}`;
+      const params = [];
+      if (tab) params.push(`tab=${tab}`);
+      if (subtab) params.push(`subtab=${subtab}`);
+      if (from) params.push(`from=${from}`);
+      if (params.length > 0) newUrl += '?' + params.join('&');
       navigate(newUrl, { replace: true });
     }
   }, [isBAllele, effectiveName, searchParams, navigate]);
@@ -48,20 +73,61 @@ function LocusPage() {
   // Always fetch data for the effective name (A allele) - don't wait for redirect
   const { data, loading, errors, loaders } = useLocusData(effectiveName);
 
-  // Extract ortholog organisms from the locus data (candida_orthologs field)
-  // This uses data already fetched from the database, no extra API call needed
-  const orthologOrganisms = React.useMemo(() => {
-    if (!data.info?.results || !selectedOrganism) return [];
+  // Build a map of organism -> feature_name from the primary organism's ortholog data
+  // This stays stable regardless of which organism is selected
+  // Keys are stored in multiple formats to handle potential mismatches
+  const orthologMap = React.useMemo(() => {
+    if (!data.info?.results) return new Map();
 
-    const currentOrgData = data.info.results[selectedOrganism];
-    if (!currentOrgData?.candida_orthologs) return [];
+    const map = new Map();
+
+    // Add all organisms that have direct data
+    Object.entries(data.info.results).forEach(([orgName, orgData]) => {
+      if (orgData?.feature_name) {
+        map.set(orgName, orgData.feature_name);
+      }
+
+      // Also add orthologs from this organism's candida_orthologs
+      if (orgData?.candida_orthologs) {
+        orgData.candida_orthologs.forEach(orth => {
+          // Store with the original organism_name
+          map.set(orth.organism_name, orth.feature_name);
+        });
+      }
+    });
+
+    console.log('[LocusPage] orthologMap built:', {
+      keys: Array.from(map.keys()),
+      entries: Array.from(map.entries()),
+    });
+
+    return map;
+  }, [data.info?.results]);
+
+  // Extract ortholog organisms for the OrganismSelector dropdown
+  // Uses the primary organism (query_organism) to get stable ortholog list
+  const orthologOrganisms = React.useMemo(() => {
+    if (!data.info?.results) return [];
+
+    // Get ortholog data from the primary/query organism
+    const primaryOrganism = data.info.query_organism;
+    const primaryOrgData = primaryOrganism ? data.info.results[primaryOrganism] : null;
+
+    if (!primaryOrgData?.candida_orthologs) return [];
 
     // Convert candida_orthologs to the format expected by OrganismSelector
-    return currentOrgData.candida_orthologs.map(orth => ({
+    return primaryOrgData.candida_orthologs.map(orth => ({
       organism: orth.organism_name,
       feature_name: orth.feature_name,
     }));
-  }, [data.info, selectedOrganism]);
+  }, [data.info?.results, data.info?.query_organism]);
+
+  // Get the feature name for the currently selected organism
+  // Works for both primary organisms and orthologs
+  const currentFeatureName = React.useMemo(() => {
+    if (!selectedOrganism) return null;
+    return orthologMap.get(selectedOrganism) || null;
+  }, [selectedOrganism, orthologMap]);
 
   // Reset selected organism when locus name changes
   useEffect(() => {
@@ -168,6 +234,48 @@ function LocusPage() {
           />
         );
 
+      case 'expression':
+        return (
+          <div className="expression-tab-container">
+            {/* Expression Sub-tabs */}
+            <div className="expression-subtabs">
+              {EXPRESSION_SUBTABS.map(subtab => (
+                <button
+                  key={subtab.id}
+                  className={`subtab-button ${expressionSubTab === subtab.id ? 'active' : ''}`}
+                  onClick={() => setExpressionSubTab(subtab.id)}
+                >
+                  {subtab.label}
+                </button>
+              ))}
+              <Link to="/help/expression" className="subtab-help-link" title="Expression Help" target="_blank" rel="noopener noreferrer">
+                <span className="help-icon">?</span> About this page
+              </Link>
+            </div>
+
+            {/* Sub-tab Content */}
+            {expressionSubTab === 'data' && (
+              <ExpressionDetails
+                data={data.expressionDetails}
+                loading={loading.expressionDetails}
+                error={errors.expressionDetails}
+                selectedOrganism={selectedOrganism}
+                onOrganismChange={setSelectedOrganism}
+                orthologOrganisms={orthologOrganisms}
+              />
+            )}
+            {expressionSubTab === 'coexpression' && (
+              <SimilarGenesDetails
+                locusName={name}
+                selectedOrganism={selectedOrganism}
+                onOrganismChange={setSelectedOrganism}
+                currentFeatureName={currentFeatureName}
+                orthologMap={orthologMap}
+              />
+            )}
+          </div>
+        );
+
       case 'protein':
         return (
           <ProteinDetails
@@ -240,11 +348,39 @@ function LocusPage() {
     }
   };
 
+  // Get gene info for the selected organism (including orthologs)
+  const currentGeneInfo = React.useMemo(() => {
+    if (!selectedOrganism || !data.info?.results) return null;
+
+    // Check if we have direct data for this organism
+    if (data.info.results[selectedOrganism]) {
+      const feature = data.info.results[selectedOrganism];
+      return {
+        feature_name: feature.feature_name,
+        gene_name: feature.gene_name,
+      };
+    }
+
+    // Otherwise, look for ortholog info in candida_orthologs
+    for (const orgData of Object.values(data.info.results)) {
+      const ortholog = orgData.candida_orthologs?.find(
+        orth => orth.organism_name === selectedOrganism
+      );
+      if (ortholog) {
+        return {
+          feature_name: ortholog.feature_name,
+          gene_name: ortholog.gene_name,
+        };
+      }
+    }
+
+    return null;
+  }, [selectedOrganism, data.info?.results]);
+
   // Get display name for the page title
   const getDisplayName = () => {
-    if (data.info && selectedOrganism && data.info.results[selectedOrganism]) {
-      const feature = data.info.results[selectedOrganism];
-      return feature.gene_name || feature.feature_name;
+    if (currentGeneInfo) {
+      return currentGeneInfo.gene_name || currentGeneInfo.feature_name;
     }
     return name;
   };
@@ -301,12 +437,12 @@ function LocusPage() {
     <div className="locus-page">
       <header className="locus-header">
         <h1>{getDisplayName()}</h1>
-        {data.info && selectedOrganism && data.info.results[selectedOrganism] && (
+        {currentGeneInfo && (
           <p className="subtitle">
-            {data.info.results[selectedOrganism].feature_name}
-            {data.info.results[selectedOrganism].gene_name &&
-              data.info.results[selectedOrganism].gene_name !== data.info.results[selectedOrganism].feature_name &&
-              ` / ${data.info.results[selectedOrganism].gene_name}`
+            {currentGeneInfo.feature_name}
+            {currentGeneInfo.gene_name &&
+              currentGeneInfo.gene_name !== currentGeneInfo.feature_name &&
+              ` / ${currentGeneInfo.gene_name}`
             }
           </p>
         )}

@@ -1,0 +1,512 @@
+/* Similar Genes Details Component Styles */
+
+.similar-genes-details {
+  width: 100%;
+}
+
+/* Controls Bar */
+.similar-genes-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+.similar-genes-controls .control-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.similar-genes-controls label {
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+}
+
+.similar-genes-controls select {
+  padding: 5px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 0.85em;
+  color: #333;
+  cursor: pointer;
+}
+
+.similar-genes-controls #limit-select {
+  min-width: 50px;
+}
+
+.similar-genes-controls select:hover {
+  border-color: #1976d2;
+}
+
+.similar-genes-controls select:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+}
+
+.similar-genes-controls select:disabled {
+  background-color: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* Reset Button */
+.similar-genes-controls .reset-btn {
+  margin-left: auto;
+  padding: 6px 14px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.85em;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.similar-genes-controls .reset-btn:hover {
+  background-color: #f5f5f5;
+  border-color: #999;
+  color: #333;
+}
+
+.similar-genes-controls .reset-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Loading State */
+.similar-genes-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.similar-genes-loading .loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e0e0e0;
+  border-top-color: #1976d2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.similar-genes-loading p {
+  margin: 5px 0;
+  color: #555;
+}
+
+.similar-genes-loading .loading-note {
+  font-size: 0.85em;
+  color: #888;
+  font-style: italic;
+}
+
+/* Error State */
+.similar-genes-error {
+  padding: 20px;
+  background-color: #ffebee;
+  border: 1px solid #ffcdd2;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.similar-genes-error p {
+  color: #c62828;
+  margin: 0 0 15px 0;
+}
+
+.similar-genes-error .retry-btn {
+  padding: 8px 20px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.similar-genes-error .retry-btn:hover {
+  background-color: #1565c0;
+}
+
+/* Summary Bar */
+.similar-genes-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 15px;
+  background-color: #e3f2fd;
+  border: 1px solid #bbdefb;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+.similar-genes-summary .summary-label {
+  font-weight: 500;
+  color: #1565c0;
+}
+
+.similar-genes-summary .summary-value {
+  color: #333;
+  margin-right: 4px;
+}
+
+.similar-genes-summary .summary-separator {
+  color: #90caf9;
+  margin: 0 4px;
+}
+
+.similar-genes-summary .systematic-name {
+  color: #666;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+/* Export Toolbar */
+.similar-genes-export-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  background-color: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+.similar-genes-export-toolbar .export-label {
+  font-size: 0.9em;
+  color: #555;
+  font-weight: 500;
+}
+
+.similar-genes-export-toolbar .export-btn {
+  padding: 6px 14px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.85em;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.similar-genes-export-toolbar .export-btn:hover {
+  background-color: #1976d2;
+  border-color: #1976d2;
+  color: #fff;
+}
+
+.similar-genes-export-toolbar .export-btn:active {
+  background-color: #1565c0;
+  border-color: #1565c0;
+}
+
+.similar-genes-export-toolbar .export-separator {
+  color: #ccc;
+  margin: 0 5px;
+}
+
+.similar-genes-export-toolbar .analyze-link {
+  text-decoration: none;
+  display: inline-block;
+}
+
+.similar-genes-export-toolbar .analyze-link:hover {
+  background-color: #2e7d32;
+  border-color: #2e7d32;
+  color: #fff;
+}
+
+/* Grid Wrapper */
+.similar-genes-grid-wrapper {
+  width: 100%;
+}
+
+.similar-genes-grid-wrapper .ag-root-wrapper {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+}
+
+.similar-genes-grid-wrapper.ag-theme-alpine {
+  --ag-grid-size: 4px;
+  --ag-row-height: 40px;
+}
+
+.similar-genes-grid-wrapper .ag-header {
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.similar-genes-grid-wrapper .ag-header-cell {
+  padding: 8px 10px;
+  font-weight: 500;
+  color: #333;
+  font-size: 0.9em;
+}
+
+.similar-genes-grid-wrapper .ag-cell {
+  padding: 8px 10px;
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.similar-genes-grid-wrapper .ag-row {
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.similar-genes-grid-wrapper .ag-row:hover {
+  background-color: #f5f5f5;
+}
+
+.similar-genes-grid-wrapper .ag-row-even {
+  background-color: #fafafa;
+}
+
+.similar-genes-grid-wrapper .ag-paging-panel {
+  padding: 8px 10px;
+  font-size: 0.85em;
+  height: auto;
+  min-height: 36px;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* Gene Description Cell */
+.similar-genes-grid-wrapper .gene-description {
+  display: block;
+  line-height: 1.4;
+  color: #555;
+}
+
+/* Correlation Cell Colors - Positive (correlated) */
+.similar-genes-grid-wrapper .correlation-high {
+  color: #2e7d32;
+  font-weight: 500;
+}
+
+.similar-genes-grid-wrapper .correlation-medium {
+  color: #f57c00;
+}
+
+.similar-genes-grid-wrapper .correlation-low {
+  color: #666;
+}
+
+/* Correlation Cell Colors - Negative (anticorrelated) */
+.similar-genes-grid-wrapper .correlation-negative-high {
+  color: #1565c0;
+  font-weight: 500;
+}
+
+.similar-genes-grid-wrapper .correlation-negative-medium {
+  color: #5c6bc0;
+}
+
+.similar-genes-grid-wrapper .correlation-negative-low {
+  color: #7986cb;
+}
+
+/* Footer */
+.similar-genes-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 0;
+  margin-top: 10px;
+}
+
+.similar-genes-footer .computation-time {
+  font-size: 0.85em;
+  color: #888;
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .similar-genes-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .similar-genes-controls .control-group {
+    width: 100%;
+  }
+
+  .similar-genes-controls select {
+    flex: 1;
+  }
+
+  .similar-genes-summary {
+    justify-content: flex-start;
+  }
+}
+
+/* View Toggle in Controls */
+.similar-genes-controls .view-toggle {
+  margin-left: auto;
+}
+
+.similar-genes-controls .view-toggle-buttons {
+  display: flex;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.similar-genes-controls .view-toggle-btn {
+  padding: 6px 14px;
+  border: none;
+  background: #fff;
+  color: #555;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  border-right: 1px solid #ddd;
+}
+
+.similar-genes-controls .view-toggle-btn:last-child {
+  border-right: none;
+}
+
+.similar-genes-controls .view-toggle-btn:hover {
+  background: #f5f5f5;
+}
+
+.similar-genes-controls .view-toggle-btn.active {
+  background: #1976d2;
+  color: white;
+}
+
+/* Inline Heatmap Container */
+.coexpression-heatmap-inline {
+  margin-top: 15px;
+}
+
+.multi-gene-heatmap-inline {
+  background: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.multi-gene-heatmap-inline .multi-gene-heatmap-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e0e0e0;
+  background: #fff;
+}
+
+.multi-gene-heatmap-inline .multi-gene-heatmap-header.inline-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.multi-gene-heatmap-inline .heatmap-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.multi-gene-heatmap-inline .heatmap-controls label {
+  font-size: 0.9em;
+  color: #555;
+}
+
+.multi-gene-heatmap-inline .heatmap-controls select {
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.multi-gene-heatmap-inline .multi-gene-heatmap-legend {
+  padding: 10px 16px;
+  background: #f5f5f5;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.multi-gene-heatmap-inline .multi-gene-heatmap-container {
+  padding: 16px;
+  overflow-x: auto;
+}
+
+.multi-gene-heatmap-inline .multi-gene-heatmap-footer {
+  padding: 10px 16px;
+  border-top: 1px solid #e0e0e0;
+  background: #fff;
+}
+
+/* Low Conditions Warning */
+.similar-genes-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 15px;
+  background-color: #fff3e0;
+  border: 1px solid #ffcc02;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+.similar-genes-warning .warning-icon {
+  font-size: 1.1em;
+  color: #f57c00;
+  flex-shrink: 0;
+}
+
+.similar-genes-warning .warning-text {
+  font-size: 0.9em;
+  color: #795548;
+  line-height: 1.5;
+}
+
+/* Low conditions warning icon in summary */
+.similar-genes-summary .low-conditions-warning {
+  margin-left: 4px;
+  color: #f57c00;
+  cursor: help;
+}
+
+/* Low conditions styling in heatmap correlation values */
+.gene-correlation.low-conditions {
+  opacity: 0.7;
+  font-style: italic;
+}
+
+/* Helper text for sorting explanation */
+.similar-genes-helper {
+  font-size: 0.85em;
+  color: #666;
+  font-style: italic;
+  padding: 8px 15px;
+  background-color: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.similar-genes-helper .helper-note {
+  color: #1565c0;
+  margin-left: 8px;
+}

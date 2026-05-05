@@ -136,6 +136,7 @@ import PDBHomologHelp from './pages/help/PDBHomologHelp';
 import GlabrataChanges2022Help from './pages/help/GlabrataChanges2022Help';
 import VirulenceFactorBrowserHelp from './pages/help/VirulenceFactorBrowserHelp';
 import CrisprGuideFinderHelp from './pages/help/CrisprGuideFinderHelp';
+import ExpressionHelp from './pages/help/ExpressionHelp';
 
 import ScrollToTop from './components/ScrollToTop';
 import './App.css';
@@ -566,6 +567,7 @@ function App() {
           <Route path="/help/glabrata-changes-2022" element={<GlabrataChanges2022Help />} />
           <Route path="/help/virulence-factor-browser" element={<VirulenceFactorBrowserHelp />} />
           <Route path="/help/crispr" element={<CrisprGuideFinderHelp />} />
+          <Route path="/help/expression" element={<ExpressionHelp />} />
         </Routes>
 
         {/* =========================

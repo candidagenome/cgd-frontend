@@ -105,6 +105,12 @@ export const locusApi = {
     );
     return response.data;
   },
+
+  // Get expression data for a gene (follows same pattern as other locus endpoints)
+  getExpressionDetails: async (name) => {
+    const response = await api.get(`/api/locus/${encodeURIComponent(name)}/expression_details`);
+    return response.data;
+  },
 };
 
 export default locusApi;
