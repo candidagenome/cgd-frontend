@@ -81,6 +81,7 @@ function MultiGeneHeatmap({
   inline = false
 }) {
   const [hoveredCell, setHoveredCell] = useState(null);
+  const [hoveredGene, setHoveredGene] = useState(null);
   const [selectedStudy, setSelectedStudy] = useState('all');
   const [sortBy, setSortBy] = useState('clustered');
 
@@ -169,6 +170,27 @@ function MultiGeneHeatmap({
     };
   }, [expressionData, similarGenes, queryGene]);
 
+  // Minimum data coverage threshold (percentage of conditions required)
+  const MIN_DATA_COVERAGE = 0.5; // 50%
+
+  // Filter genes with sparse data (only in "All studies" view)
+  const filteredGeneRows = useMemo(() => {
+    if (selectedStudy !== 'all' || conditions.length === 0) {
+      return geneRows; // No filtering when viewing single study
+    }
+
+    return geneRows.filter(gene => {
+      // Always keep the query gene
+      if (gene.isQuery) return true;
+
+      // Count how many conditions have data for this gene
+      const dataPointCount = Object.values(gene.foldChanges).filter(fc => fc != null).length;
+      const coverage = dataPointCount / conditions.length;
+
+      return coverage >= MIN_DATA_COVERAGE;
+    });
+  }, [geneRows, conditions, selectedStudy]);
+
   // Filter and sort conditions
   const filteredConditions = useMemo(() => {
     let filtered = selectedStudy === 'all'
@@ -184,15 +206,17 @@ function MultiGeneHeatmap({
         return a.label.localeCompare(b.label);
       });
     } else if (sortBy === 'foldchange') {
-      // Sort by query gene's fold change magnitude (most extreme first)
-      const queryRow = geneRows[0];
+      // Sort by query gene's fold change: upregulated first (descending), then downregulated
+      const queryRow = filteredGeneRows[0];
       if (queryRow) {
         filtered.sort((a, b) => {
           const fcA = queryRow.foldChanges[a.id];
           const fcB = queryRow.foldChanges[b.id];
-          const magA = fcA != null ? Math.abs(Math.log2(fcA)) : -1;
-          const magB = fcB != null ? Math.abs(Math.log2(fcB)) : -1;
-          return magB - magA; // Descending by magnitude
+          // Use log2 values for proper ordering (positive = up, negative = down)
+          // null values go to the end
+          const logA = fcA != null ? Math.log2(fcA) : -Infinity;
+          const logB = fcB != null ? Math.log2(fcB) : -Infinity;
+          return logB - logA; // Descending: most upregulated first, then downregulated
         });
       }
     } else if (sortBy === 'clustered') {
@@ -202,7 +226,7 @@ function MultiGeneHeatmap({
       filtered.forEach(cond => {
         let sum = 0;
         let count = 0;
-        geneRows.forEach(gene => {
+        filteredGeneRows.forEach(gene => {
           const fc = gene.foldChanges[cond.id];
           if (fc != null) {
             sum += Math.log2(fc);
@@ -221,7 +245,7 @@ function MultiGeneHeatmap({
     }
 
     return filtered;
-  }, [conditions, selectedStudy, sortBy, geneRows]);
+  }, [conditions, selectedStudy, sortBy, filteredGeneRows]);
 
   // Get unique categories for the category bar
   const uniqueCategories = useMemo(() => {
@@ -233,8 +257,19 @@ function MultiGeneHeatmap({
   const handleCellHover = useCallback((gene, condition, fc) => {
     if (gene && condition) {
       setHoveredCell({ gene, condition, fc });
+      setHoveredGene(null); // Clear gene hover when hovering cells
     } else {
       setHoveredCell(null);
+    }
+  }, []);
+
+  // Handle gene name hover - shows gene description in info bar
+  const handleGeneHover = useCallback((gene) => {
+    if (gene) {
+      setHoveredGene(gene);
+      setHoveredCell(null); // Clear cell hover when hovering gene names
+    } else {
+      setHoveredGene(null);
     }
   }, []);
 
@@ -358,8 +393,22 @@ function MultiGeneHeatmap({
             <span className="hover-info-separator">|</span>
             <span className="hover-info-study">{hoveredCell.condition.studyName}</span>
           </>
+        ) : hoveredGene ? (
+          <>
+            <span className="hover-info-gene">{hoveredGene.displayName}</span>
+            {hoveredGene.featureName && hoveredGene.featureName !== hoveredGene.displayName && (
+              <>
+                <span className="hover-info-separator">|</span>
+                <span className="hover-info-systematic">{hoveredGene.featureName}</span>
+              </>
+            )}
+            <span className="hover-info-separator">|</span>
+            <span className="hover-info-description">
+              {hoveredGene.description || 'No description available'}
+            </span>
+          </>
         ) : (
-          <span className="hover-info-placeholder">Hover over a cell to see details</span>
+          <span className="hover-info-placeholder">Hover over a cell or gene name to see details</span>
         )}
       </div>
 
@@ -380,7 +429,7 @@ function MultiGeneHeatmap({
                 </span>
               </div>
             </div>
-            {geneRows.map((gene) => {
+            {filteredGeneRows.map((gene) => {
               // Open gene links in new tab so user doesn't lose their current view
               const linkUrl = `/locus/${gene.featureName}?tab=expression&subtab=coexpression`;
 
@@ -391,12 +440,13 @@ function MultiGeneHeatmap({
                 <div
                   key={gene.geneName}
                   className={`heatmap-gene-label ${gene.isQuery ? 'query-gene' : ''}`}
+                  onMouseEnter={() => handleGeneHover(gene)}
+                  onMouseLeave={() => handleGeneHover(null)}
                 >
                   <Link
                     to={linkUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    title={gene.description || gene.displayName}
                   >
                     {gene.displayName}
                   </Link>
@@ -457,7 +507,7 @@ function MultiGeneHeatmap({
             </div>
 
             {/* Gene rows */}
-            {geneRows.map((gene) => (
+            {filteredGeneRows.map((gene) => (
               <div
                 key={gene.geneName}
                 className={`heatmap-row ${gene.isQuery ? 'query-row' : ''}`}
@@ -486,7 +536,7 @@ function MultiGeneHeatmap({
 
       <div className="multi-gene-heatmap-footer">
         <span className="heatmap-info">
-          {geneRows.length} genes × {filteredConditions.length} conditions
+          {filteredGeneRows.length} genes × {filteredConditions.length} conditions
         </span>
       </div>
     </>

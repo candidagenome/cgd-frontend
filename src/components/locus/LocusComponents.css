@@ -4060,6 +4060,21 @@ a:hover {
   color: #888;
 }
 
+.heatmap-hover-info .hover-info-systematic {
+  color: #666;
+  font-family: monospace;
+  font-size: 0.9em;
+}
+
+.heatmap-hover-info .hover-info-description {
+  color: #333;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 600px;
+}
+
 .multi-gene-heatmap-container {
   flex: 1;
   overflow: auto;
