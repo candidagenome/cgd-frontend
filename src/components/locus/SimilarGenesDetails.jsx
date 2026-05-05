@@ -77,9 +77,9 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
     setError(null);
 
     try {
-      // Request more genes than needed to account for filtering (orf19/21, duplicates)
-      // Cap at 100 to avoid backend limits
-      const requestLimit = Math.min(limit * 2, 100);
+      // Always fetch 100 genes to ensure consistent results regardless of display limit
+      // This prevents situations where changing limit shows different genes
+      const requestLimit = 100;
 
       const result = await expressionApi.getSimilarGenes(effectiveLocusName, {
         organism,
@@ -95,7 +95,7 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
     } finally {
       setLoading(false);
     }
-  }, [effectiveLocusName, organism, limit]);
+  }, [effectiveLocusName, organism]);
 
   // Fetch data when component mounts or parameters change
   useEffect(() => {
@@ -325,10 +325,10 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
     }
   }, [data, allGenesForDisplay, organism, effectiveLocusName, limit]);
 
-  // Reset heatmap data when similar genes data changes
+  // Reset heatmap data when similar genes data or limit changes
   useEffect(() => {
     setHeatmapData(null);
-  }, [data]);
+  }, [data, limit]);
 
   // Get the query gene's condition count from the similar genes data
   // The shared_conditions value from similar genes tells us how many conditions
