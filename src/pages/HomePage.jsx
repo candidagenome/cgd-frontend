@@ -38,8 +38,8 @@ const NEWS_ITEMS = [
       <>
         The Expression tab on gene pages now features two powerful subtabs:
         <ul style={{ margin: '8px 0', paddingLeft: '20px' }}>
-          <li><strong>Expression Data</strong> – View RNA-seq fold changes across studies with interactive heatmaps</li>
-          <li><strong>Expression Profiles</strong> – Find genes with similar expression patterns using Pearson correlation</li>
+          <li><strong>Expression Data</strong> – View RNA-seq fold changes across studies</li>
+          <li><strong>Expression Profiles</strong> – Find genes with similar expression patterns with interactive heatmaps</li>
         </ul>
         Explore co-expressed genes, export gene lists, and analyze them with GO Term Finder.
         <br /><br />

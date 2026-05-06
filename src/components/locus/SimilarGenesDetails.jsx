@@ -443,6 +443,11 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
 
   return (
     <div className="similar-genes-details">
+      {/* Introductory description for newcomers */}
+      <p className="similar-genes-intro">
+        Profiles of genes with similar expression patterns based on Pearson correlation across RNA-seq conditions.
+      </p>
+
       {/* Controls Bar */}
       <div className="similar-genes-controls">
         <div className="control-group">
