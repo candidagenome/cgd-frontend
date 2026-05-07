@@ -96,26 +96,37 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
       }
     }
 
-    // Build visible species list: prioritize query species and those with orthologs
-    let visibleSpeciesList = SPECIES_ORDER.filter(sp => regions[sp]);
-
-    // Sort to prioritize: 1) query species, 2) species with query orthologs, 3) others
-    visibleSpeciesList.sort((a, b) => {
-      if (a === querySpecies) return -1;
-      if (b === querySpecies) return 1;
-      const aHasOrtholog = speciesWithQueryOrthologs.has(a);
-      const bHasOrtholog = speciesWithQueryOrthologs.has(b);
-      if (aHasOrtholog && !bHasOrtholog) return -1;
-      if (!aHasOrtholog && bHasOrtholog) return 1;
-      return 0;
-    });
+    // Build visible species list in phylogenetic order (SPECIES_ORDER)
+    const allAvailableSpecies = SPECIES_ORDER.filter(sp => regions[sp]);
 
     // Count total species with orthologs before limiting
     const totalWithOrthologs = speciesWithQueryOrthologs.size;
     setOrthologCount(totalWithOrthologs);
 
-    // Limit to maxSpecies
-    visibleSpeciesList = visibleSpeciesList.slice(0, maxSpecies);
+    // When limiting to maxSpecies, prioritize species with query orthologs
+    // while maintaining their relative order in SPECIES_ORDER
+    let visibleSpeciesList;
+    if (allAvailableSpecies.length <= maxSpecies) {
+      // Show all available species in phylogenetic order
+      visibleSpeciesList = allAvailableSpecies;
+    } else {
+      // Need to limit - prioritize species with query orthologs
+      const withOrthologs = allAvailableSpecies.filter(sp => speciesWithQueryOrthologs.has(sp));
+      const withoutOrthologs = allAvailableSpecies.filter(sp => !speciesWithQueryOrthologs.has(sp));
+
+      if (withOrthologs.length >= maxSpecies) {
+        // Enough species with orthologs - take first maxSpecies (maintains order)
+        visibleSpeciesList = withOrthologs.slice(0, maxSpecies);
+      } else {
+        // Include all with orthologs, fill remaining slots from others
+        const remaining = maxSpecies - withOrthologs.length;
+        visibleSpeciesList = [...withOrthologs, ...withoutOrthologs.slice(0, remaining)];
+        // Re-sort to maintain SPECIES_ORDER
+        visibleSpeciesList.sort((a, b) =>
+          SPECIES_ORDER.indexOf(a) - SPECIES_ORDER.indexOf(b)
+        );
+      }
+    }
 
     const visibleRegions = visibleSpeciesList.map(sp => ({
       species: sp,
