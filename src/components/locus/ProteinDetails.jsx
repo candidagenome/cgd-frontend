@@ -27,6 +27,9 @@ const proteinAssemblyConfig = {
   'C_parapsilosis_CDC317': {
     assembly: 'C_parapsilosis_CDC317_prot',
   },
+  'C_tropicalis': {
+    assembly: 'C_tropicalis_prot',
+  },
 };
 
 const getProteinAssemblyKey = (orgName) => {
