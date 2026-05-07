@@ -9,7 +9,7 @@ const AlphaFoldViewer = lazy(() => import('./AlphaFoldViewer'));
 
 // JBrowse2 protein assembly configuration
 // Domain track types to display
-const domainTrackTypes = ['Pfam', 'PANTHER', 'SUPERFAMILY', 'CATH', 'SMART', 'CDD', 'PRINTS', 'ProSitePatterns'];
+const domainTrackTypes = ['Pfam', 'PANTHER', 'SUPERFAMILY', 'CATH', 'SMART', 'CDD', 'PRINTS', 'ProSiteProfiles'];
 
 const proteinAssemblyConfig = {
   'C_albicans_SC5314': {
