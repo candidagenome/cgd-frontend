@@ -28,6 +28,16 @@ const getStatusStyle = (status) => {
   return { color: '#666' };
 };
 
+// CGD organisms - these can be navigated to in the locus pages
+const CGD_ORGANISMS = new Set([
+  'Candida albicans SC5314',
+  'Candida dubliniensis CD36',
+  'Candida tropicalis MYA-3404',
+  'Candida parapsilosis CDC317',
+  'Candida auris B8441',
+  'Candida glabrata CBS138',
+]);
+
 function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismChange, locusName }) {
   // State for lazy-loaded alignment viewers
   const [showProteinAlignment, setShowProteinAlignment] = useState(false);
@@ -38,25 +48,34 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
     return data?.results ? Object.keys(data.results) : [];
   }, [data?.results]);
 
-  // Extract CGD orthologs for navigation to other organisms
+  // Extract orthologs for navigation to other CGD organisms
   const orthologOrganisms = useMemo(() => {
     if (!data?.results) return [];
 
     const orthologs = [];
     const seenOrganisms = new Set();
 
-    // Look through all organism results for CGD orthologs
+    // Look through all organism results for orthologs in CGD organisms
     Object.values(data.results).forEach(orgData => {
       const orthologList = orgData?.ortholog_cluster?.orthologs || [];
       orthologList.forEach(orth => {
-        // Only include CGD orthologs that we can navigate to
-        if (orth.source === 'CGD' && orth.feature_name && !orth.is_query) {
-          const orgName = orth.organism_name;
-          if (orgName && !seenOrganisms.has(orgName)) {
+        if (orth.is_query) return; // Skip the query gene itself
+
+        const orgName = orth.organism_name;
+        if (!orgName || seenOrganisms.has(orgName)) return;
+
+        // Include if source is CGD, or if organism is a CGD organism (even with EnsemblFungi source)
+        const isCGDSource = orth.source === 'CGD';
+        const isCGDOrganism = CGD_ORGANISMS.has(orgName);
+
+        if (isCGDSource || isCGDOrganism) {
+          // For CGD source, use feature_name; for EnsemblFungi, use sequence_id
+          const featureName = orth.feature_name || orth.sequence_id;
+          if (featureName) {
             seenOrganisms.add(orgName);
             orthologs.push({
               organism: orgName,
-              feature_name: orth.feature_name,
+              feature_name: featureName,
             });
           }
         }
@@ -135,6 +154,11 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                             <td style={{ padding: '8px' }}>
                               {orth.source === 'CGD' ? (
                                 <a href={`/locus/${orth.feature_name}`} target="_blank" rel="noopener noreferrer">
+                                  {orth.sequence_id}
+                                </a>
+                              ) : CGD_ORGANISMS.has(orth.organism_name) ? (
+                                // Link to CGD locus page for CGD organisms even if source is EnsemblFungi
+                                <a href={`/locus/${orth.sequence_id}`} target="_blank" rel="noopener noreferrer">
                                   {orth.sequence_id}
                                 </a>
                               ) : orth.url ? (
