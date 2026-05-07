@@ -10,6 +10,7 @@ export const ALLOWED_SPECIES = [
   'Candida auris B8441',
   'Candida dubliniensis CD36',
   'Candida parapsilosis CDC317',
+  'Candida tropicalis MYA-3404',
 ];
 
 /**
@@ -28,6 +29,7 @@ export const ALLOWED_SPECIES = [
 export const SPECIES_ORDER = [
   'Candida albicans SC5314',
   'Candida dubliniensis CD36',
+  'Candida tropicalis MYA-3404',
   'Candida parapsilosis CDC317',
   'Candida auris B8441',
   'Candida glabrata CBS138',
@@ -39,6 +41,7 @@ export const SPECIES_ORDER = [
 export const SPECIES_ABBREV = {
   'Candida albicans SC5314': 'C. albicans',
   'Candida dubliniensis CD36': 'C. dubliniensis',
+  'Candida tropicalis MYA-3404': 'C. tropicalis',
   'Candida parapsilosis CDC317': 'C. parapsilosis',
   'Candida auris B8441': 'C. auris',
   'Candida glabrata CBS138': 'C. glabrata',
