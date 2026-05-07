@@ -38,6 +38,34 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
     return data?.results ? Object.keys(data.results) : [];
   }, [data?.results]);
 
+  // Extract CGD orthologs for navigation to other organisms
+  const orthologOrganisms = useMemo(() => {
+    if (!data?.results) return [];
+
+    const orthologs = [];
+    const seenOrganisms = new Set();
+
+    // Look through all organism results for CGD orthologs
+    Object.values(data.results).forEach(orgData => {
+      const orthologList = orgData?.ortholog_cluster?.orthologs || [];
+      orthologList.forEach(orth => {
+        // Only include CGD orthologs that we can navigate to
+        if (orth.source === 'CGD' && orth.feature_name && !orth.is_query) {
+          const orgName = orth.organism_name;
+          if (orgName && !seenOrganisms.has(orgName)) {
+            seenOrganisms.add(orgName);
+            orthologs.push({
+              organism: orgName,
+              feature_name: orth.feature_name,
+            });
+          }
+        }
+      });
+    });
+
+    return orthologs;
+  }, [data?.results]);
+
   // Set default organism if not already set and data is available
   useEffect(() => {
     if (organisms.length > 0 && !selectedOrganism) {
@@ -73,6 +101,7 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
         selectedOrganism={selectedOrganism}
         onOrganismChange={onOrganismChange}
         dataType="homology"
+        orthologOrganisms={orthologOrganisms}
       />
 
       {/* Display data for selected organism */}
