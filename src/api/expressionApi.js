@@ -4,9 +4,10 @@ import api from './config';
 export const ORGANISM_MAP = {
   'Candida albicans SC5314': 'C_albicans_SC5314_A22',
   'Candida auris B8441': 'C_auris_B8441',
-  'Candida glabrata CBS138': 'C_glabrata_CBS138',
   'Candida dubliniensis CD36': 'C_dubliniensis_CD36',
+  'Candida glabrata CBS138': 'C_glabrata_CBS138',
   'Candida parapsilosis CDC317': 'C_parapsilosis_CDC317',
+  'Candida tropicalis MYA-3404': 'C_tropicalis_MYA-3404',
 };
 
 // Reverse mapping from API organism identifiers to display names

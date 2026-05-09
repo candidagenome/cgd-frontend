@@ -44,6 +44,7 @@ const DATA_TYPE_INFO = {
 const ORGANISM_OPTIONS = [
   { id: '', name: 'All organisms' },
   { id: 'C_albicans_SC5314', name: 'C. albicans SC5314' },
+  { id: 'C_auris_B8441', name: 'C. auris B8441' },
   { id: 'C_dubliniensis_CD36', name: 'C. dubliniensis CD36' },
   { id: 'C_glabrata_CBS138', name: 'C. glabrata CBS138' },
   { id: 'C_parapsilosis_CDC317', name: 'C. parapsilosis CDC317' },
