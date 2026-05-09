@@ -287,19 +287,13 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                     <div style={{ marginBottom: '8px' }}>
                       Candida Gene Order Browser
                     </div>
-                    {orgData.ortholog_cluster.cluster_url ? (
-                      <a
-                        href={orgData.ortholog_cluster.cluster_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        View CGOB cluster and synteny information
-                      </a>
-                    ) : (
-                      <a href="http://cgob3.ucd.ie/" target="_blank" rel="noopener noreferrer">
-                        CGOB
-                      </a>
-                    )}
+                    <a
+                      href={orgData.ortholog_cluster.cluster_url || `http://cgob3.ucd.ie/cgob.pl?gene=${locusName}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View CGOB cluster and synteny information
+                    </a>
                   </td>
                 </tr>
               )}
