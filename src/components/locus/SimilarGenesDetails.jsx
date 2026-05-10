@@ -441,6 +441,40 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
     URL.revokeObjectURL(url);
   }, [deduplicatedGenes, data, effectiveLocusName, organism, getOrganismDisplay]);
 
+  // Download expression matrix (gene x condition) as TSV
+  const [matrixDownloading, setMatrixDownloading] = useState(false);
+  const handleDownloadExpressionMatrix = useCallback(async () => {
+    if (matrixDownloading || !deduplicatedGenes.length) return;
+
+    setMatrixDownloading(true);
+    try {
+      // Build gene list: query gene + similar genes
+      const queryGene = effectiveLocusName || data?.query_gene;
+      const geneNames = [queryGene, ...deduplicatedGenes.map(g => g.feature_name || g.gene_name)];
+
+      // Build correlations map for metadata
+      const correlations = {};
+      correlations[queryGene] = 1.0; // Query gene has perfect correlation with itself
+      deduplicatedGenes.forEach(g => {
+        const name = g.feature_name || g.gene_name;
+        correlations[name] = g.correlation;
+      });
+
+      // Get organism display name
+      const organismDisplay = getOrganismDisplay(organism);
+
+      await expressionApi.downloadExpressionMatrix(geneNames, organismDisplay, {
+        includeMetadata: true,
+        correlations: correlations,
+      });
+    } catch (err) {
+      console.error('Failed to download expression matrix:', err);
+      alert('Failed to download expression matrix. Please try again.');
+    } finally {
+      setMatrixDownloading(false);
+    }
+  }, [deduplicatedGenes, effectiveLocusName, data, organism, getOrganismDisplay, matrixDownloading]);
+
   return (
     <div className="similar-genes-details">
       {/* Introductory description for newcomers */}
@@ -631,6 +665,14 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
                 title="Download as CSV file"
               >
                 Download CSV
+              </button>
+              <button
+                className="export-btn"
+                onClick={handleDownloadExpressionMatrix}
+                disabled={matrixDownloading}
+                title="Download expression matrix (gene × condition) as TSV"
+              >
+                {matrixDownloading ? 'Downloading...' : 'Expression Matrix'}
               </button>
               <span className="export-separator">|</span>
               <span className="export-label">Analyze:</span>

@@ -104,6 +104,51 @@ export const expressionApi = {
     const response = await api.get(url);
     return response.data;
   },
+
+  /**
+   * Download expression matrix as TSV file.
+   *
+   * @param {string[]} geneNames - Array of gene names to include in matrix
+   * @param {string} organism - Organism display name
+   * @param {Object} options - Optional parameters
+   * @param {boolean} options.includeMetadata - Include description and correlation columns
+   * @param {Object} options.correlations - Dict mapping gene names to correlation values
+   */
+  downloadExpressionMatrix: async (geneNames, organism, options = {}) => {
+    const response = await api.post(
+      '/api/expression/matrix/download',
+      {
+        gene_names: geneNames,
+        organism: organism,
+        include_metadata: options.includeMetadata !== false,
+        correlations: options.correlations || null,
+      },
+      {
+        responseType: 'blob',
+      }
+    );
+
+    // Extract filename from Content-Disposition header or use default
+    const contentDisposition = response.headers['content-disposition'];
+    let filename = 'expression_matrix.tsv';
+    if (contentDisposition) {
+      const match = contentDisposition.match(/filename="?(.+?)"?$/);
+      if (match) {
+        filename = match[1];
+      }
+    }
+
+    // Create download link
+    const blob = new Blob([response.data], { type: 'text/tab-separated-values' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  },
 };
 
 export default expressionApi;
