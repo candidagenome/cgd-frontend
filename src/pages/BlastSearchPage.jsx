@@ -55,7 +55,7 @@ const LOCUS_ORGANISM_OPTIONS = [
   { id: 'C_dubliniensis_CD36', name: 'C. dubliniensis CD36' },
   { id: 'C_glabrata_CBS138', name: 'C. glabrata CBS138' },
   { id: 'C_parapsilosis_CDC317', name: 'C. parapsilosis CDC317' },
-  { id: 'C_tropicalis_MYA-3404', name: 'C. tropicalis MYA-3404' },
+  { id: 'C_tropicalis', name: 'C. tropicalis MYA-3404' },
 ];
 
 // Available genomes for selection (IDs match database file naming convention)
@@ -73,7 +73,7 @@ const GENOME_OPTIONS = [
   { id: 'C_lusitaniae_CBS6936', name: 'Candida lusitaniae CBS6936' },
   { id: 'C_orthopsilosis_Co_90-125', name: 'Candida orthopsilosis Co 90-125' },
   { id: 'C_parapsilosis_CDC317', name: 'Candida parapsilosis CDC317' },
-  { id: 'C_tropicalis_MYA-3404', name: 'Candida tropicalis MYA-3404' },
+  { id: 'C_tropicalis', name: 'Candida tropicalis MYA-3404' },
   { id: 'D_hansenii_CBS767', name: 'Debaryomyces hansenii CBS767' },
   { id: 'L_elongisporus_NRLL_YB-4239', name: 'Lodderomyces elongisporus NRRL YB-4239' },
 ];

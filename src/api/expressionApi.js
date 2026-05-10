@@ -7,7 +7,7 @@ export const ORGANISM_MAP = {
   'Candida dubliniensis CD36': 'C_dubliniensis_CD36',
   'Candida glabrata CBS138': 'C_glabrata_CBS138',
   'Candida parapsilosis CDC317': 'C_parapsilosis_CDC317',
-  'Candida tropicalis MYA-3404': 'C_tropicalis_MYA-3404',
+  'Candida tropicalis MYA-3404': 'C_tropicalis',
 };
 
 // Reverse mapping from API organism identifiers to display names

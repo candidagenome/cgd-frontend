@@ -8,7 +8,7 @@ const DEFAULT_ORGANISMS = [
   { organism_abbrev: 'C_albicans_SC5314', organism_name: 'Candida albicans SC5314' },
   { organism_abbrev: 'C_glabrata_CBS138', organism_name: 'Candida glabrata CBS138' },
   { organism_abbrev: 'C_parapsilosis_CDC317', organism_name: 'Candida parapsilosis CDC317' },
-  { organism_abbrev: 'C_tropicalis_MYA-3404', organism_name: 'Candida tropicalis MYA-3404' },
+  { organism_abbrev: 'C_tropicalis', organism_name: 'Candida tropicalis MYA-3404' },
   { organism_abbrev: 'C_auris_B8441', organism_name: 'Candida auris B8441' },
 ];
 
