@@ -123,6 +123,39 @@ function OrfPieChart({ verified, uncharacterized, dubious, organismName }) {
     { label: 'Dubious', value: dubious, color: colors.dubious, pct: dubiousPct },
   ].filter(s => s.value > 0);
 
+  // Special case: only one slice (100%) - use a circle instead of arc
+  if (slices.length === 1) {
+    const slice = slices[0];
+    return (
+      <div className="orf-pie-chart">
+        <h4 style={{ textAlign: 'center', marginBottom: '10px' }}>
+          <em>{organismName}</em> ORF Distribution
+        </h4>
+        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+          <circle
+            cx={centerX}
+            cy={centerY}
+            r={radius}
+            fill={slice.color}
+            stroke="#fff"
+            strokeWidth="2"
+          />
+          <text
+            x={centerX}
+            y={centerY}
+            textAnchor="middle"
+            dominantBaseline="middle"
+            fill="#fff"
+            fontSize="12"
+            fontWeight="bold"
+          >
+            {slice.pct.toFixed(1)}%
+          </text>
+        </svg>
+      </div>
+    );
+  }
+
   // Generate SVG path for each slice
   let currentAngle = -90; // Start at top (12 o'clock)
   const paths = slices.map((slice, index) => {
