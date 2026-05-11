@@ -113,6 +113,11 @@ const NEWS_ITEMS = [
           </Link>
         </li>
         <li>
+          <Link to="/genome-snapshot/C_tropicalis">
+            <em>C. tropicalis</em> Genome Snapshot
+          </Link>
+        </li>
+        <li>
           <a href="/reference/NewPapersThisWeek" target="_blank" rel="noopener noreferrer">New papers</a> added to CGD this week.
         </li>
         <li>
