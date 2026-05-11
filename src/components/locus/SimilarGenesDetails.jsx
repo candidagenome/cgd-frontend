@@ -385,6 +385,7 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
   // State for enrichment analysis
   const [goEnrichment, setGoEnrichment] = useState({ loading: false, data: null, error: null, show: false });
   const [phenoEnrichment, setPhenoEnrichment] = useState({ loading: false, data: null, error: null, show: false });
+  const [goManualOnly, setGoManualOnly] = useState(false); // Toggle for manual annotations only
 
   // Store gene list and organism in localStorage for analysis tools (GO Term Finder, etc.)
   const handleAnalyzeGeneList = useCallback(() => {
@@ -497,14 +498,19 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
 
     try {
       const geneNames = deduplicatedGenes.map(g => g.feature_name || g.gene_name);
-      const result = await goTermFinderApi.runAnalysis({
+      const params = {
         genes: geneNames,
         organism_no: data.organism_no,
         ontology: 'all',
         p_value_cutoff: 0.05,
         correction_method: 'bh',
         min_genes_in_term: 2,
-      });
+      };
+      // Filter for manual annotations only if toggle is on
+      if (goManualOnly) {
+        params.annotation_types = ['manually_curated'];
+      }
+      const result = await goTermFinderApi.runAnalysis(params);
 
       setGoEnrichment({ loading: false, data: result, error: null, show: true });
     } catch (err) {
@@ -516,7 +522,7 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
         show: true,
       });
     }
-  }, [data?.organism_no, deduplicatedGenes]);
+  }, [data?.organism_no, deduplicatedGenes, goManualOnly]);
 
   // Run phenotype enrichment analysis
   const handlePhenotypeEnrichment = useCallback(async () => {
@@ -771,6 +777,14 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
               >
                 {goEnrichment.loading ? 'Analyzing...' : 'GO Enrichment'}
               </button>
+              <label className="manual-only-toggle" title="Exclude computational annotations (IEA, ISO, etc.)">
+                <input
+                  type="checkbox"
+                  checked={goManualOnly}
+                  onChange={(e) => setGoManualOnly(e.target.checked)}
+                />
+                <span>Manual only</span>
+              </label>
               <button
                 className="export-btn analyze-btn"
                 onClick={handlePhenotypeEnrichment}
