@@ -31,7 +31,7 @@ const HeaderNav = () => {
         { label: 'C. dubliniensis', href: '/jbrowse2/?assembly=C_dubliniensis_CD36&loc=Chr1_C_dubliniensis_CD36:131096..145475&tracks=C_dubliniensis_CD36_features.sorted.gff,alb_dub_C_dub_phyloP_scores,CanLod_C_dub_phyloP_scores,CTG_C_dub_phyloP_scores,Sacc_C_dub_phyloP_scores', external: true },
         { label: 'C. glabrata', href: '/jbrowse2/?assembly=C_glabrata_CBS138&loc=ChrA_C_glabrata_CBS138:1..100000&tracks=C_glabrata_CBS138_features.sorted.gff,glab_phyloP_scores,CanNak_C_glab_phyloP_scores,WGD_C_glab_phyloP_scores,Sacc_C_glab_phyloP_scores', external: true },
         { label: 'C. parapsilosis', href: '/jbrowse2/?assembly=C_parapsilosis_CDC317&loc=Contig005504_C_parapsilosis_CDC317:1..100000&tracks=C_parapsilosis_CDC317_features.sorted.gff,para_phyloP_scores,CanLod_C_para_phyloP_scores,CTG_C_para_phyloP_scores,Sacc_C_para_phyloP_scores', external: true },
-        { label: 'C. tropicalis', href: '/jbrowse2/?assembly=C_tropicalis_MYA3404&loc=CP047869.1_C_tropicalis_MYA3404:1..100000&tracks=C_tropicalis_features.sorted.gff', external: true }
+        { label: 'C. tropicalis', href: '/jbrowse2/?assembly=C_tropicalis_MYA3404&loc=CP047869.1:1..100000&tracks=C_tropicalis_features.sorted.gff', external: true }
       ]
     },
     {

@@ -91,6 +91,24 @@
       }
     },
     {
+      "name": "C_tropicalis_MYA3404",
+      "sequence": {
+        "type": "ReferenceSequenceTrack",
+        "trackId": "C_tropicalis_MYA3404-ReferenceSequenceTrack",
+        "adapter": {
+          "type": "IndexedFastaAdapter",
+          "fastaLocation": {
+            "uri": "C_tropicalis_current_chromosomes.fasta",
+            "locationType": "UriLocation"
+          },
+          "faiLocation": {
+            "uri": "C_tropicalis_current_chromosomes.fasta.fai",
+            "locationType": "UriLocation"
+          }
+        }
+      }
+    },
+    {
       "name": "C_albicans_SC5314_prot",
       "sequence": {
         "type": "ReferenceSequenceTrack",
@@ -418,6 +436,50 @@
         {
           "type": "LinearBasicDisplay",
           "displayId": "C_glabrata_CBS138_features.sorted.gff-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "jexl:get(feature,'strand')==1?'red':get(feature,'strand')==-1?'blue':'gray'",
+            "color2": "jexl:get(feature,'strand')==1?'red':get(feature,'strand')==-1?'blue':'gray'",
+            "color3": "black",
+            "height": 12,
+            "showLabels": true,
+            "showDescriptions": true,
+            "displayMode": "normal",
+            "labels": {
+              "name": "jexl:get(feature,'Gene') || get(feature,'gene') || get(feature,'Name')"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_tropicalis_features.sorted.gff",
+      "name": "Gene Features",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "C_tropicalis_features.sorted.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "C_tropicalis_features.sorted.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_tropicalis_MYA3404"
+      ],
+      "category": [
+        "Annotations"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_tropicalis_features.sorted.gff-LinearBasicDisplay",
           "renderer": {
             "type": "SvgFeatureRenderer",
             "color1": "jexl:get(feature,'strand')==1?'red':get(feature,'strand')==-1?'blue':'gray'",
