@@ -45,6 +45,7 @@ const HeaderNav = () => {
         { label: 'C. dubliniensis Genome Snapshot', to: '/genome-snapshot/C_dubliniensis_CD36' },
         { label: 'C. glabrata Genome Snapshot', to: '/genome-snapshot/C_glabrata_CBS138' },
         { label: 'C. parapsilosis Genome Snapshot', to: '/genome-snapshot/C_parapsilosis_CDC317' },
+        { label: 'C. tropicalis Genome Snapshot', to: '/genome-snapshot/C_tropicalis' },
         { label: 'Genome Versions', to: '/genome-version-history' }
       ]
     },
