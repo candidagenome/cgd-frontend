@@ -2,7 +2,10 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import { expressionApi, ORGANISM_MAP, ORGANISM_DISPLAY_MAP } from '../../api/expressionApi';
+import { goTermFinderApi } from '../../api/goTermFinderApi';
+import { phenotypeEnrichmentApi } from '../../api/phenotypeEnrichmentApi';
 import MultiGeneHeatmap from './MultiGeneHeatmap';
+import EnrichmentResultsPanel from './EnrichmentResultsPanel';
 import './LocusComponents.css';
 import './SimilarGenesDetails.css';
 
@@ -379,6 +382,10 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
   // State for copy feedback
   const [copyFeedback, setCopyFeedback] = useState(null);
 
+  // State for enrichment analysis
+  const [goEnrichment, setGoEnrichment] = useState({ loading: false, data: null, error: null, show: false });
+  const [phenoEnrichment, setPhenoEnrichment] = useState({ loading: false, data: null, error: null, show: false });
+
   // Store gene list and organism in localStorage for analysis tools (GO Term Finder, etc.)
   const handleAnalyzeGeneList = useCallback(() => {
     const geneList = deduplicatedGenes.map(g => g.feature_name || g.gene_name);
@@ -474,6 +481,86 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
       setMatrixDownloading(false);
     }
   }, [deduplicatedGenes, effectiveLocusName, data, organism, getOrganismDisplay, matrixDownloading]);
+
+  // Run GO enrichment analysis
+  const handleGoEnrichment = useCallback(async () => {
+    if (!data?.organism_no || !deduplicatedGenes.length) {
+      setGoEnrichment(prev => ({
+        ...prev,
+        show: true,
+        error: 'No organism information available. Please refresh and try again.',
+      }));
+      return;
+    }
+
+    setGoEnrichment({ loading: true, data: null, error: null, show: true });
+
+    try {
+      const geneNames = deduplicatedGenes.map(g => g.feature_name || g.gene_name);
+      const result = await goTermFinderApi.runAnalysis({
+        genes: geneNames,
+        organism_no: data.organism_no,
+        ontology: 'all',
+        p_value_cutoff: 0.05,
+        correction_method: 'bh',
+        min_genes_in_term: 2,
+      });
+
+      setGoEnrichment({ loading: false, data: result, error: null, show: true });
+    } catch (err) {
+      console.error('GO enrichment failed:', err);
+      setGoEnrichment({
+        loading: false,
+        data: null,
+        error: err.response?.data?.detail || err.message || 'GO enrichment analysis failed',
+        show: true,
+      });
+    }
+  }, [data?.organism_no, deduplicatedGenes]);
+
+  // Run phenotype enrichment analysis
+  const handlePhenotypeEnrichment = useCallback(async () => {
+    if (!data?.organism_no || !deduplicatedGenes.length) {
+      setPhenoEnrichment(prev => ({
+        ...prev,
+        show: true,
+        error: 'No organism information available. Please refresh and try again.',
+      }));
+      return;
+    }
+
+    setPhenoEnrichment({ loading: true, data: null, error: null, show: true });
+
+    try {
+      const geneNames = deduplicatedGenes.map(g => g.feature_name || g.gene_name);
+      const result = await phenotypeEnrichmentApi.runAnalysis({
+        genes: geneNames,
+        organism_no: data.organism_no,
+        p_value_cutoff: 0.05,
+        correction_method: 'bh',
+        min_genes_in_term: 2,
+      });
+
+      setPhenoEnrichment({ loading: false, data: result, error: null, show: true });
+    } catch (err) {
+      console.error('Phenotype enrichment failed:', err);
+      setPhenoEnrichment({
+        loading: false,
+        data: null,
+        error: err.response?.data?.detail || err.message || 'Phenotype enrichment analysis failed',
+        show: true,
+      });
+    }
+  }, [data?.organism_no, deduplicatedGenes]);
+
+  // Close enrichment panels
+  const handleCloseGoEnrichment = useCallback(() => {
+    setGoEnrichment(prev => ({ ...prev, show: false }));
+  }, []);
+
+  const handleClosePhenoEnrichment = useCallback(() => {
+    setPhenoEnrichment(prev => ({ ...prev, show: false }));
+  }, []);
 
   return (
     <div className="similar-genes-details">
@@ -676,15 +763,32 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
               </button>
               <span className="export-separator">|</span>
               <span className="export-label">Analyze:</span>
+              <button
+                className="export-btn analyze-btn"
+                onClick={handleGoEnrichment}
+                disabled={goEnrichment.loading || !data?.organism_no}
+                title="Find enriched GO terms in this gene list"
+              >
+                {goEnrichment.loading ? 'Analyzing...' : 'GO Enrichment'}
+              </button>
+              <button
+                className="export-btn analyze-btn"
+                onClick={handlePhenotypeEnrichment}
+                disabled={phenoEnrichment.loading || !data?.organism_no}
+                title="Find enriched phenotypes in this gene list"
+              >
+                {phenoEnrichment.loading ? 'Analyzing...' : 'Phenotype Enrichment'}
+              </button>
+              <span className="export-separator">|</span>
               <a
                 href="/go-term-finder"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="export-btn analyze-link"
                 onClick={handleAnalyzeGeneList}
-                title="Find enriched GO terms in gene list"
+                title="Open GO Term Finder in new tab"
               >
-                GO Term Finder
+                GO Term Finder ↗
               </a>
               <a
                 href="/go-slim-mapper"
@@ -692,11 +796,37 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
                 rel="noopener noreferrer"
                 className="export-btn analyze-link"
                 onClick={handleAnalyzeGeneList}
-                title="Map genes to GO Slim categories"
+                title="Open GO Slim Mapper in new tab"
               >
-                GO Slim Mapper
+                GO Slim Mapper ↗
               </a>
             </div>
+          )}
+
+          {/* GO Enrichment Results Panel */}
+          {goEnrichment.show && (
+            <EnrichmentResultsPanel
+              title="GO Enrichment Results"
+              type="go"
+              data={goEnrichment.data}
+              loading={goEnrichment.loading}
+              error={goEnrichment.error}
+              onClose={handleCloseGoEnrichment}
+              onRetry={handleGoEnrichment}
+            />
+          )}
+
+          {/* Phenotype Enrichment Results Panel */}
+          {phenoEnrichment.show && (
+            <EnrichmentResultsPanel
+              title="Phenotype Enrichment Results"
+              type="phenotype"
+              data={phenoEnrichment.data}
+              loading={phenoEnrichment.loading}
+              error={phenoEnrichment.error}
+              onClose={handleClosePhenoEnrichment}
+              onRetry={handlePhenotypeEnrichment}
+            />
           )}
 
           {/* Computation Time */}
