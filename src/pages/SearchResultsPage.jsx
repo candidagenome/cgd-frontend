@@ -93,7 +93,7 @@ const CATEGORY_LABELS = {
   go_terms: 'GO Terms',
   phenotypes: 'Phenotypes',
   references: 'References',
-  orthologs: 'C. albicans Orthologs',
+  orthologs: 'Orthologs',
 };
 
 const CATEGORY_ORDER = ['genes', 'descriptions', 'cgdid', 'go_terms', 'phenotypes', 'references', 'orthologs'];
