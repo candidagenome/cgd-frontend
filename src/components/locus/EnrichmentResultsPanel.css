@@ -159,6 +159,49 @@
   color: #1565c0;
 }
 
+/* Filters */
+.enrichment-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: #fafafa;
+  border-radius: 6px;
+  font-size: 0.9em;
+}
+
+.enrichment-filters label {
+  color: #555;
+  font-weight: 500;
+}
+
+.enrichment-filters .aspect-filter-select {
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 0.95em;
+  color: #333;
+  cursor: pointer;
+}
+
+.enrichment-filters .aspect-filter-select:hover {
+  border-color: #1976d2;
+}
+
+.enrichment-filters .aspect-filter-select:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.15);
+}
+
+.enrichment-filters .filter-count {
+  color: #888;
+  font-size: 0.9em;
+  margin-left: 8px;
+}
+
 .enrichment-summary .summary-sep {
   color: #90caf9;
 }

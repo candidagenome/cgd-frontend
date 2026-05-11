@@ -30,6 +30,7 @@ function EnrichmentResultsPanel({
   const [sortField, setSortField] = useState('p_value');
   const [sortDirection, setSortDirection] = useState('asc');
   const [currentPage, setCurrentPage] = useState(1);
+  const [aspectFilter, setAspectFilter] = useState('all'); // 'all', 'F', 'P', 'C'
 
   // Get enriched terms based on type
   const enrichedTerms = useMemo(() => {
@@ -49,11 +50,17 @@ function EnrichmentResultsPanel({
     }
   }, [data, type]);
 
-  // Sort terms
+  // Filter and sort terms
   const sortedTerms = useMemo(() => {
     if (!enrichedTerms.length) return [];
 
-    return [...enrichedTerms].sort((a, b) => {
+    // Apply aspect filter for GO terms
+    let filtered = enrichedTerms;
+    if (type === 'go' && aspectFilter !== 'all') {
+      filtered = enrichedTerms.filter(term => term.go_aspect === aspectFilter);
+    }
+
+    return [...filtered].sort((a, b) => {
       let aVal, bVal;
 
       switch (sortField) {
@@ -84,7 +91,13 @@ function EnrichmentResultsPanel({
         return bVal - aVal;
       }
     });
-  }, [enrichedTerms, sortField, sortDirection]);
+  }, [enrichedTerms, sortField, sortDirection, type, aspectFilter]);
+
+  // Reset page when filter changes
+  const handleAspectFilterChange = (e) => {
+    setAspectFilter(e.target.value);
+    setCurrentPage(1);
+  };
 
   // Pagination
   const totalPages = Math.ceil(sortedTerms.length / ROWS_PER_PAGE);
@@ -235,6 +248,29 @@ function EnrichmentResultsPanel({
                 <span>P-value cutoff: {data.result.p_value_cutoff}</span>
               </div>
 
+              {/* Aspect Filter for GO */}
+              {type === 'go' && enrichedTerms.length > 0 && (
+                <div className="enrichment-filters">
+                  <label htmlFor="aspect-filter">Filter by Aspect: </label>
+                  <select
+                    id="aspect-filter"
+                    value={aspectFilter}
+                    onChange={handleAspectFilterChange}
+                    className="aspect-filter-select"
+                  >
+                    <option value="all">All Aspects</option>
+                    <option value="F">F - Molecular Function</option>
+                    <option value="P">P - Biological Process</option>
+                    <option value="C">C - Cellular Component</option>
+                  </select>
+                  {aspectFilter !== 'all' && (
+                    <span className="filter-count">
+                      (showing {sortedTerms.length} of {enrichedTerms.length} terms)
+                    </span>
+                  )}
+                </div>
+              )}
+
               {/* Results Table */}
               {sortedTerms.length > 0 ? (
                 <>
@@ -339,7 +375,10 @@ function EnrichmentResultsPanel({
                                     {term.genes?.map((gene, gIdx) => (
                                       <span key={gIdx}>
                                         <Link
-                                          to={`/locus/${gene.systematic_name}`}
+                                          to={type === 'phenotype'
+                                            ? `/locus/${gene.systematic_name}?tab=phenotype`
+                                            : `/locus/${gene.systematic_name}`
+                                          }
                                           target="_blank"
                                           rel="noopener noreferrer"
                                           onClick={(e) => e.stopPropagation()}
