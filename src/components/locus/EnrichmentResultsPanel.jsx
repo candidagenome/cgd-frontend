@@ -2,6 +2,8 @@ import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import './EnrichmentResultsPanel.css';
 
+const ROWS_PER_PAGE = 10;
+
 /**
  * Reusable panel for displaying GO or Phenotype enrichment results.
  *
@@ -27,6 +29,7 @@ function EnrichmentResultsPanel({
   const [expandedRows, setExpandedRows] = useState(new Set());
   const [sortField, setSortField] = useState('p_value');
   const [sortDirection, setSortDirection] = useState('asc');
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Get enriched terms based on type
   const enrichedTerms = useMemo(() => {
@@ -83,18 +86,14 @@ function EnrichmentResultsPanel({
     });
   }, [enrichedTerms, sortField, sortDirection]);
 
-  // Toggle row expansion to show gene list
-  const toggleRow = (index) => {
-    const newExpanded = new Set(expandedRows);
-    if (newExpanded.has(index)) {
-      newExpanded.delete(index);
-    } else {
-      newExpanded.add(index);
-    }
-    setExpandedRows(newExpanded);
-  };
+  // Pagination
+  const totalPages = Math.ceil(sortedTerms.length / ROWS_PER_PAGE);
+  const paginatedTerms = useMemo(() => {
+    const startIndex = (currentPage - 1) * ROWS_PER_PAGE;
+    return sortedTerms.slice(startIndex, startIndex + ROWS_PER_PAGE);
+  }, [sortedTerms, currentPage]);
 
-  // Handle sort click
+  // Reset to page 1 when sort changes
   const handleSort = (field) => {
     if (sortField === field) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
@@ -102,6 +101,25 @@ function EnrichmentResultsPanel({
       setSortField(field);
       setSortDirection(field === 'fold_enrichment' || field === 'query_count' ? 'desc' : 'asc');
     }
+    setCurrentPage(1);
+  };
+
+  // Toggle row expansion to show gene list
+  const toggleRow = (index) => {
+    const globalIndex = (currentPage - 1) * ROWS_PER_PAGE + index;
+    const newExpanded = new Set(expandedRows);
+    if (newExpanded.has(globalIndex)) {
+      newExpanded.delete(globalIndex);
+    } else {
+      newExpanded.add(globalIndex);
+    }
+    setExpandedRows(newExpanded);
+  };
+
+  // Check if row is expanded
+  const isRowExpanded = (index) => {
+    const globalIndex = (currentPage - 1) * ROWS_PER_PAGE + index;
+    return expandedRows.has(globalIndex);
   };
 
   // Format p-value for display
@@ -129,12 +147,14 @@ function EnrichmentResultsPanel({
     }
   };
 
-  // Get aspect/category for GO terms
-  const getAspect = (term) => {
-    if (type === 'go') {
-      return term.aspect_name || term.go_aspect;
+  // Format genes for inline display (show first few, truncate if needed)
+  const formatGenesInline = (genes, maxShow = 5) => {
+    if (!genes || genes.length === 0) return '-';
+    const geneNames = genes.map(g => g.gene_name || g.systematic_name);
+    if (geneNames.length <= maxShow) {
+      return geneNames.join(', ');
     }
-    return term.mutant_type || '';
+    return `${geneNames.slice(0, maxShow).join(', ')} +${geneNames.length - maxShow} more`;
   };
 
   return (
@@ -207,118 +227,169 @@ function EnrichmentResultsPanel({
 
               {/* Results Table */}
               {sortedTerms.length > 0 ? (
-                <div className="enrichment-table-wrapper">
-                  <table className="enrichment-table">
-                    <thead>
-                      <tr>
-                        <th className="expand-col"></th>
-                        <th className="term-col">
-                          {type === 'go' ? 'GO Term' : 'Observable'}
-                        </th>
-                        {type === 'go' && <th className="aspect-col">Aspect</th>}
-                        <th
-                          className={`sortable ${sortField === 'query_count' ? 'sorted' : ''}`}
-                          onClick={() => handleSort('query_count')}
-                        >
-                          Genes
-                          {sortField === 'query_count' && (
-                            <span className="sort-icon">{sortDirection === 'asc' ? ' ↑' : ' ↓'}</span>
-                          )}
-                        </th>
-                        <th
-                          className={`sortable ${sortField === 'fold_enrichment' ? 'sorted' : ''}`}
-                          onClick={() => handleSort('fold_enrichment')}
-                        >
-                          Fold
-                          {sortField === 'fold_enrichment' && (
-                            <span className="sort-icon">{sortDirection === 'asc' ? ' ↑' : ' ↓'}</span>
-                          )}
-                        </th>
-                        <th
-                          className={`sortable ${sortField === 'p_value' ? 'sorted' : ''}`}
-                          onClick={() => handleSort('p_value')}
-                        >
-                          P-value
-                          {sortField === 'p_value' && (
-                            <span className="sort-icon">{sortDirection === 'asc' ? ' ↑' : ' ↓'}</span>
-                          )}
-                        </th>
-                        <th
-                          className={`sortable ${sortField === 'fdr' ? 'sorted' : ''}`}
-                          onClick={() => handleSort('fdr')}
-                        >
-                          FDR
-                          {sortField === 'fdr' && (
-                            <span className="sort-icon">{sortDirection === 'asc' ? ' ↑' : ' ↓'}</span>
-                          )}
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {sortedTerms.map((term, index) => (
-                        <React.Fragment key={index}>
-                          <tr
-                            className={`term-row ${expandedRows.has(index) ? 'expanded' : ''}`}
-                            onClick={() => toggleRow(index)}
+                <>
+                  <div className="enrichment-table-wrapper">
+                    <table className="enrichment-table">
+                      <thead>
+                        <tr>
+                          <th className="expand-col"></th>
+                          <th className="term-col">
+                            {type === 'go' ? 'GO Term' : 'Observable'}
+                          </th>
+                          {type === 'go' && <th className="aspect-col">Aspect</th>}
+                          <th
+                            className={`sortable count-col ${sortField === 'query_count' ? 'sorted' : ''}`}
+                            onClick={() => handleSort('query_count')}
                           >
-                            <td className="expand-col">
-                              <span className="expand-icon">
-                                {expandedRows.has(index) ? '−' : '+'}
-                              </span>
-                            </td>
-                            <td className="term-col">
-                              <span className="term-name">{getTermName(term)}</span>
-                              {getTermId(term) && (
-                                <span className="term-id">{getTermId(term)}</span>
-                              )}
-                            </td>
-                            {type === 'go' && (
-                              <td className="aspect-col">
-                                <span className={`aspect-badge aspect-${term.go_aspect?.toLowerCase()}`}>
-                                  {term.go_aspect}
+                            #
+                            {sortField === 'query_count' && (
+                              <span className="sort-icon">{sortDirection === 'asc' ? ' ↑' : ' ↓'}</span>
+                            )}
+                          </th>
+                          <th
+                            className={`sortable ${sortField === 'fold_enrichment' ? 'sorted' : ''}`}
+                            onClick={() => handleSort('fold_enrichment')}
+                          >
+                            Fold
+                            {sortField === 'fold_enrichment' && (
+                              <span className="sort-icon">{sortDirection === 'asc' ? ' ↑' : ' ↓'}</span>
+                            )}
+                          </th>
+                          <th
+                            className={`sortable ${sortField === 'p_value' ? 'sorted' : ''}`}
+                            onClick={() => handleSort('p_value')}
+                          >
+                            P-value
+                            {sortField === 'p_value' && (
+                              <span className="sort-icon">{sortDirection === 'asc' ? ' ↑' : ' ↓'}</span>
+                            )}
+                          </th>
+                          <th
+                            className={`sortable ${sortField === 'fdr' ? 'sorted' : ''}`}
+                            onClick={() => handleSort('fdr')}
+                          >
+                            FDR
+                            {sortField === 'fdr' && (
+                              <span className="sort-icon">{sortDirection === 'asc' ? ' ↑' : ' ↓'}</span>
+                            )}
+                          </th>
+                          <th className="genes-col">Genes</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {paginatedTerms.map((term, index) => (
+                          <React.Fragment key={index}>
+                            <tr
+                              className={`term-row ${isRowExpanded(index) ? 'expanded' : ''}`}
+                              onClick={() => toggleRow(index)}
+                            >
+                              <td className="expand-col">
+                                <span className="expand-icon">
+                                  {isRowExpanded(index) ? '−' : '+'}
                                 </span>
                               </td>
-                            )}
-                            <td className="count-col">
-                              {term.query_count}/{term.query_total}
-                            </td>
-                            <td className="fold-col">
-                              {term.fold_enrichment?.toFixed(2)}
-                            </td>
-                            <td className="pval-col">
-                              {formatPValue(term.p_value)}
-                            </td>
-                            <td className="fdr-col">
-                              {formatPValue(term.fdr)}
-                            </td>
-                          </tr>
-                          {/* Expanded Gene List */}
-                          {expandedRows.has(index) && (
-                            <tr className="gene-list-row">
-                              <td colSpan={type === 'go' ? 7 : 6}>
-                                <div className="gene-list">
-                                  <strong>Genes:</strong>{' '}
-                                  {term.genes?.map((gene, gIdx) => (
-                                    <span key={gIdx}>
-                                      <Link
-                                        to={`/locus/${gene.systematic_name}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                      >
-                                        {gene.gene_name || gene.systematic_name}
-                                      </Link>
-                                      {gIdx < term.genes.length - 1 && ', '}
-                                    </span>
-                                  ))}
-                                </div>
+                              <td className="term-col">
+                                <span className="term-name">{getTermName(term)}</span>
+                                {getTermId(term) && (
+                                  <span className="term-id">{getTermId(term)}</span>
+                                )}
+                              </td>
+                              {type === 'go' && (
+                                <td className="aspect-col">
+                                  <span className={`aspect-badge aspect-${term.go_aspect?.toLowerCase()}`}>
+                                    {term.go_aspect}
+                                  </span>
+                                </td>
+                              )}
+                              <td className="count-col">
+                                {term.query_count}/{term.query_total}
+                              </td>
+                              <td className="fold-col">
+                                {term.fold_enrichment?.toFixed(2)}
+                              </td>
+                              <td className="pval-col">
+                                {formatPValue(term.p_value)}
+                              </td>
+                              <td className="fdr-col">
+                                {formatPValue(term.fdr)}
+                              </td>
+                              <td className="genes-col">
+                                <span className="genes-inline">{formatGenesInline(term.genes)}</span>
                               </td>
                             </tr>
-                          )}
-                        </React.Fragment>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                            {/* Expanded Gene List with links */}
+                            {isRowExpanded(index) && (
+                              <tr className="gene-list-row">
+                                <td colSpan={type === 'go' ? 8 : 7}>
+                                  <div className="gene-list">
+                                    <strong>Genes:</strong>{' '}
+                                    {term.genes?.map((gene, gIdx) => (
+                                      <span key={gIdx}>
+                                        <Link
+                                          to={`/locus/${gene.systematic_name}`}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          onClick={(e) => e.stopPropagation()}
+                                        >
+                                          {gene.gene_name || gene.systematic_name}
+                                        </Link>
+                                        {gIdx < term.genes.length - 1 && ', '}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </td>
+                              </tr>
+                            )}
+                          </React.Fragment>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Pagination */}
+                  {totalPages > 1 && (
+                    <div className="enrichment-pagination">
+                      <button
+                        className="page-btn"
+                        onClick={() => setCurrentPage(1)}
+                        disabled={currentPage === 1}
+                        title="First page"
+                      >
+                        ««
+                      </button>
+                      <button
+                        className="page-btn"
+                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                        disabled={currentPage === 1}
+                        title="Previous page"
+                      >
+                        «
+                      </button>
+                      <span className="page-info">
+                        Page {currentPage} of {totalPages}
+                        <span className="page-rows">
+                          ({(currentPage - 1) * ROWS_PER_PAGE + 1}-{Math.min(currentPage * ROWS_PER_PAGE, sortedTerms.length)} of {sortedTerms.length})
+                        </span>
+                      </span>
+                      <button
+                        className="page-btn"
+                        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                        disabled={currentPage === totalPages}
+                        title="Next page"
+                      >
+                        »
+                      </button>
+                      <button
+                        className="page-btn"
+                        onClick={() => setCurrentPage(totalPages)}
+                        disabled={currentPage === totalPages}
+                        title="Last page"
+                      >
+                        »»
+                      </button>
+                    </div>
+                  )}
+                </>
               ) : (
                 <div className="no-results">
                   No significantly enriched {type === 'go' ? 'GO terms' : 'phenotypes'} found.
