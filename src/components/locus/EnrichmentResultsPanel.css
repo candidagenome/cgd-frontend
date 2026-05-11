@@ -294,6 +294,13 @@
   font-family: monospace;
 }
 
+.enrichment-table .term-subtext {
+  display: block;
+  font-size: 0.8em;
+  color: #888;
+  font-style: italic;
+}
+
 /* Aspect badges */
 .enrichment-table .aspect-badge {
   display: inline-block;

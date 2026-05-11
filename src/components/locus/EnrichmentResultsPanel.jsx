@@ -134,8 +134,18 @@ function EnrichmentResultsPanel({
     if (type === 'go') {
       return term.go_term;
     } else {
+      // For phenotypes, include mutant_type to distinguish similar observables
       return term.observable;
     }
+  };
+
+  // Get phenotype subtext (mutant_type, qualifier)
+  const getPhenotypeSubtext = (term) => {
+    if (type !== 'phenotype') return null;
+    const parts = [];
+    if (term.mutant_type) parts.push(term.mutant_type);
+    if (term.qualifier) parts.push(term.qualifier);
+    return parts.length > 0 ? parts.join(', ') : null;
   };
 
   // Get term ID for display
@@ -292,6 +302,9 @@ function EnrichmentResultsPanel({
                                 <span className="term-name">{getTermName(term)}</span>
                                 {getTermId(term) && (
                                   <span className="term-id">{getTermId(term)}</span>
+                                )}
+                                {getPhenotypeSubtext(term) && (
+                                  <span className="term-subtext">{getPhenotypeSubtext(term)}</span>
                                 )}
                               </td>
                               {type === 'go' && (
