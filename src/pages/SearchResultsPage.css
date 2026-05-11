@@ -228,6 +228,28 @@
   max-width: 140px;
 }
 
+/* Show Orthologs button in organism section */
+.show-orthologs-btn {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 8px 12px;
+  background: linear-gradient(135deg, #43a047, #2e7d32);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.show-orthologs-btn:hover {
+  background: linear-gradient(135deg, #388e3c, #1b5e20);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
 /* ===========================================
    Results List
    =========================================== */

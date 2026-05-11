@@ -338,6 +338,16 @@ const SearchResultsPage = () => {
                 </li>
               ))}
             </ul>
+            {/* Show Orthologs button - appears when orthologs are available */}
+            {initialResults?.counts_by_category?.orthologs > 0 && selectedCategory !== 'orthologs' && (
+              <button
+                className="show-orthologs-btn"
+                onClick={() => handleCategoryChange('orthologs')}
+                title="Show this gene in all Candida species"
+              >
+                Show Orthologs ({initialResults.counts_by_category.orthologs})
+              </button>
+            )}
           </div>
         )}
 
