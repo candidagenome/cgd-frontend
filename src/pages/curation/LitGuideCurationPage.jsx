@@ -531,6 +531,28 @@ function LitGuideCurationPage() {
     }
   };
 
+  // Handle re-link feature (remove from unlinked list)
+  const handleRelinkFeature = async (featureName, featureNo) => {
+    if (!referenceData) return;
+
+    if (!window.confirm(`Re-link '${featureName}' to this paper? This will remove it from the unlinked list.`)) {
+      return;
+    }
+
+    try {
+      await litguideCurationApi.relinkFeatureToReference(
+        referenceData.reference_no,
+        featureNo.toString(),
+        currentOrganism
+      );
+      setSuccessMessage(`Re-linked '${featureName}' to this paper`);
+      loadReferenceLiterature(referenceData.reference_no, currentOrganism);
+      setTimeout(() => setSuccessMessage(null), 5000);
+    } catch (err) {
+      setError(err.response?.data?.detail || `Failed to re-link '${featureName}'`);
+    }
+  };
+
   // Handle toggle selection for bulk delete
   const handleToggleDeleteSelection = (refpropFeatNo) => {
     setSelectedForDelete((prev) => {
@@ -1609,6 +1631,13 @@ function LitGuideCurationPage() {
                             <Link to={`/locus/${feat.feature_name}`} style={styles.featureLinkInline} target="_blank" rel="noopener noreferrer">
                               {feat.gene_name || feat.feature_name}
                             </Link>
+                            <button
+                              onClick={() => handleRelinkFeature(feat.gene_name || feat.feature_name, feat.feature_no)}
+                              style={styles.relinkButton}
+                              title="Re-link this feature to the paper"
+                            >
+                              ↩
+                            </button>
                             {idx < unlinkedFeatures.length - 1 && ' | '}
                           </span>
                         ))}
@@ -2578,6 +2607,17 @@ const styles = {
   featureLinkInline: {
     color: '#337ab7',
     textDecoration: 'none',
+  },
+  relinkButton: {
+    marginLeft: '4px',
+    padding: '0 4px',
+    fontSize: '0.85rem',
+    backgroundColor: '#5cb85c',
+    color: 'white',
+    border: 'none',
+    borderRadius: '3px',
+    cursor: 'pointer',
+    verticalAlign: 'middle',
   },
   // Assign Topics section styles
   assignSection: {

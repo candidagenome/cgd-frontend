@@ -189,6 +189,26 @@ export const litguideCurationApi = {
   },
 
   /**
+   * Re-link a feature to a reference by removing it from the unlinked list.
+   *
+   * Use this to fix data issues where a feature appears in both
+   * "Public Topics Curated for" AND "Unlinked from" lists.
+   *
+   * @param {number} referenceNo - Reference number
+   * @param {string} featureIdentifier - Feature name, gene name, or feature_no
+   * @param {string} [organismAbbrev] - Optional organism abbreviation
+   * @returns {Promise<Object>}
+   */
+  relinkFeatureToReference: async (referenceNo, featureIdentifier, organismAbbrev = null) => {
+    const payload = { feature_identifier: featureIdentifier };
+    if (organismAbbrev) {
+      payload.organism_abbrev = organismAbbrev;
+    }
+    const response = await api.post(`/api/curation/litguide/reference/${referenceNo}/relink-feature`, payload);
+    return response.data;
+  },
+
+  /**
    * Get curation notes associated with a reference.
    *
    * Returns notes linked to features (via topics) and non-gene topic notes.
