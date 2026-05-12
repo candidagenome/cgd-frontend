@@ -291,7 +291,11 @@ const SearchResultsPage = () => {
 
   // Handle category change
   const handleCategoryChange = async (category) => {
-    if (category === selectedCategory) return;
+    // If clicking the same category, reset organism filter to "All Organisms"
+    if (category === selectedCategory) {
+      setSelectedOrganism(null);
+      return;
+    }
 
     setSelectedCategory(category);
     setCategoryResults(null);
