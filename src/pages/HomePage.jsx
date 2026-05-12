@@ -33,6 +33,26 @@ const MEETINGS = [
 // News items
 const NEWS_ITEMS = [
   {
+    title: (
+      <>
+        New: <em>Candida tropicalis</em> Locus Pages
+      </>
+    ),
+    content: (
+      <>
+        CGD now includes locus pages for <em>Candida tropicalis</em> MYA-3404, expanding our coverage
+        to six <em>Candida</em> species. Browse gene information, orthologs across species, and
+        sequence data for this important pathogen.
+        <br /><br />
+        <Link to="/genome-snapshot/C_tropicalis">View the <em>C. tropicalis</em> Genome Snapshot</Link>
+        {' | '}
+        <Link to="/locus/CTRG_00001">Explore a <em>C. tropicalis</em> locus page</Link>
+      </>
+    ),
+    date: 'May 2026',
+    highlight: true,
+  },
+  {
     title: 'New: Enhanced Expression Tab (Preview)',
     content: (
       <>
