@@ -1,42 +1,120 @@
-# Dataset Upload Scripts
+# Dataset Upload Protocol
 
-Simplified workflow for adding downloadable datasets to CGD.
+Manual workflow for adding downloadable datasets to CGD.
 
-## Workflow
+## Overview
 
 ```
 Local files  →  Prod server  →  Link in CGD Curator Central
 (upload)        (stored)        (web UI)
 ```
 
-## Quick Start
+---
 
-```bash
-cd ~/cgd-frontend/scripts/datasets
+## Upload Protocol
 
-# Download dataset files from paper to your local machine first, then:
-./upload_dataset.sh Shinohara_2025 ~/Downloads/Shinohara_data/
+### 1. Prepare files locally
+
+Download the dataset files from the paper to a folder on your desktop (create and name this folder).
+
+Open Terminal and navigate to your folder:
+
+```
+cd ~/Desktop/your_folder_name
+```
+> `cd` = "change directory" - moves you into the folder. Replace `your_folder_name` with your actual folder name.
+
+Create a new folder named Author_Year (e.g., Areastehfar_2026):
+
+```
+mkdir Areastehfar_2026
+```
+> `mkdir` = "make directory" - creates a new folder.
+
+Move all the downloaded dataset files into the new folder:
+
+```
+mv file1.xlsx file2.csv file3.txt Areastehfar_2026/
+```
+> `mv` = "move" - moves files into the folder. Replace with your actual file names. You can also use `mv *.xlsx *.csv Areastehfar_2026/` to move all files of certain types.
+
+---
+
+### 2. Create a compressed archive
+
+Create a .tar archive containing the folder and all its files:
+
+```
+tar cvf Areastehfar_2026.tar Areastehfar_2026
+```
+> `tar cvf` = create an archive file (c=create, v=verbose, f=filename). This bundles the folder into a single .tar file for easy transfer.
+
+---
+
+### 3. Upload to production server
+
+Copy the .tar file to the production server:
+
+```
+scp Areastehfar_2026.tar cgd-prod:/data/downloads/systematic_results/
+```
+> `scp` = "secure copy" - uploads the file to the server. `cgd-prod` is the server name.
+
+---
+
+### 4. Verify upload on server
+
+Connect to the production server:
+
+```
+ssh cgd-prod
+```
+> `ssh` = opens a remote connection to the server.
+
+Navigate to the downloads folder:
+
+```
+cd /data/downloads/systematic_results/
 ```
 
-## Setup
+List the files to verify the upload:
 
-Uses shared config from `~/cgd-frontend/scripts/config.sh`.
-
-If not already set up, see [../rnaseq/README.md](../rnaseq/README.md) for setup instructions.
-
-## Usage
-
-```bash
-./upload_dataset.sh <author_year> <local_files_path>
-
-# Examples:
-./upload_dataset.sh Shinohara_2025 ~/Downloads/Shinohara_data/    # Upload directory
-./upload_dataset.sh Smith_2024 ~/Downloads/dataset.xlsx           # Upload single file
 ```
+ls -la
+```
+> `ls -la` = lists all files with details (size, date, etc.)
+
+Extract the .tar archive:
+
+```
+tar xvf Areastehfar_2026.tar
+```
+> `tar xvf` = extract the archive (x=extract, v=verbose, f=filename).
+
+Verify the folder and files are there:
+
+```
+ls -la Areastehfar_2026/
+```
+
+Remove the .tar file (no longer needed after extraction):
+
+```
+rm Areastehfar_2026.tar
+```
+> `rm` = "remove" - deletes the archive file to save space.
+
+Exit the server connection when done:
+
+```
+exit
+```
+
+---
 
 ## After Upload: Link in CGD
 
-The script will display these steps after uploading:
+The dataset needs to be linked to its reference paper in CGD Curator Central.
 
 ### 1. Link dataset to reference
 

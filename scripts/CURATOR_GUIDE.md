@@ -50,7 +50,84 @@ echo "VITE_API_URL=https://backend.dev.candidagenome.org" > .env.local
 
 This file is git-ignored and only needs to be created once.
 
-## Making Edits
+## Making Edits via GitHub (Recommended)
+
+This workflow lets you edit files directly on GitHub, then pull them to your laptop for testing.
+
+### 1. Create a New Branch on GitHub
+
+1. Go to: https://github.com/candidagenome/cgd-frontend
+2. Click the branch dropdown (shows "main")
+3. Type a new branch name (e.g., `update-go-help`)
+4. Click "Create branch: update-go-help from main"
+
+### 2. Edit and Commit on GitHub
+
+1. Navigate to the file you want to edit (e.g., `src/pages/help/WhatIsGOHelp.jsx`)
+2. Click the pencil icon (Edit this file)
+3. Make your changes
+4. Scroll down to "Commit changes"
+5. Add a commit message (e.g., "Update GO help page content")
+6. Make sure "Commit directly to the [branch-name] branch" is selected
+7. Click "Commit changes"
+
+### 3. Pull Changes to Your Laptop
+
+Open Terminal and navigate to the frontend:
+
+```bash
+cd ~/cgd-frontend
+```
+
+Check your current branch:
+
+```bash
+git status
+```
+
+**If you're not on the right branch**, follow these steps:
+
+```bash
+# First, save any local changes (if any)
+git stash
+
+# Get the latest branch info from GitHub
+git fetch origin
+
+# Switch to your branch
+git checkout update-go-help
+```
+
+> **Note:** If you see "error: pathspec 'update-go-help' did not match any file(s)", the branch might not exist locally yet. Run `git fetch origin` first, then try `git checkout update-go-help` again.
+
+**If you're already on the right branch**, just pull the latest changes:
+
+```bash
+git pull
+```
+
+### 4. Test Your Changes Locally
+
+```bash
+npm run dev
+```
+
+Copy/paste the localhost URL (e.g., http://localhost:5173/) into a browser and verify your changes look correct.
+
+### 5. Request to Merge
+
+After testing, go back to GitHub and:
+1. Click "Pull requests" tab
+2. Click "New pull request"
+3. Select your branch to merge into `main`
+4. Click "Create pull request"
+5. Ask a developer to review and merge
+
+---
+
+## Making Edits Locally (Alternative)
+
+If you prefer to edit files directly on your laptop:
 
 ### 1. Create a Local Branch
 
@@ -134,9 +211,9 @@ Help doc files are located in `src/pages/help/`:
 
 See all help files in `src/pages/help/`.
 
-## Committing Your Changes
+## Committing Your Changes (Local Editing Only)
 
-After you're happy with your changes:
+If you edited files locally, commit and push them:
 
 ```bash
 # See what files you changed
@@ -152,7 +229,7 @@ git commit -m "docs: update GO help page"
 git push -u origin fix-go-help
 ```
 
-Then ask a developer to review and merge your changes.
+Then go to GitHub and create a pull request to merge your changes.
 
 ## Stopping the Server
 

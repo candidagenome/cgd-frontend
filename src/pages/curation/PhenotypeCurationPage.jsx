@@ -381,46 +381,59 @@ function PhenotypeCurationPage() {
           }
         }
 
-        // Create annotation for each observable
-        for (const observable of section.observables) {
-          const data = {
-            experiment_type: section.experiment_type,
-            mutant_type: section.mutant_type,
-            observable: observable,
-            qualifier: section.qualifier || null,
-            experiment_comment: section.experiment_comment || null,
-          };
+        // Build list of features to annotate (main feature + feature_list)
+        const featuresToAnnotate = [featureName];
+        if (section.feature_list) {
+          const additionalFeatures = section.feature_list
+            .split('|')
+            .map((f) => f.trim())
+            .filter(Boolean);
+          featuresToAnnotate.push(...additionalFeatures);
+        }
 
-          // Add reference identifier (backend accepts reference_no or pubmed)
-          if (refNo) {
-            data.reference_no = refNo;
-          } else if (pubmedId) {
-            data.pubmed = pubmedId;
+        // Create annotation for each feature and observable
+        for (const targetFeature of featuresToAnnotate) {
+          for (const observable of section.observables) {
+            const data = {
+              experiment_type: section.experiment_type,
+              mutant_type: section.mutant_type,
+              observable: observable,
+              qualifier: section.qualifier || null,
+              experiment_comment: section.experiment_comment || null,
+            };
+
+            // Add reference identifier (backend accepts reference_no or pubmed)
+            if (refNo) {
+              data.reference_no = refNo;
+            } else if (pubmedId) {
+              data.pubmed = pubmedId;
+            }
+
+            if (properties.length > 0) {
+              data.properties = properties;
+            }
+
+            // Include organism to disambiguate features with same name across species
+            const organismParam = searchParams.get('organism') || selectedOrganism;
+            if (organismParam) {
+              data.organism = organismParam;
+            }
+
+            await phenotypeCurationApi.createAnnotation(targetFeature, data);
+            successCount++;
           }
-
-          if (properties.length > 0) {
-            data.properties = properties;
-          }
-
-          // Include organism to disambiguate features with same name across species
-          const organismParam = searchParams.get('organism') || selectedOrganism;
-          if (organismParam) {
-            data.organism = organismParam;
-          }
-
-          await phenotypeCurationApi.createAnnotation(featureName, data);
-          successCount++;
         }
       }
 
       if (successCount > 0) {
         setSuccessMessage(`Created ${successCount} annotation(s) successfully`);
         // Keep form data so curator can adjust and submit another annotation
-        // Only clear the observables since those were just submitted
+        // Clear observables and feature_list since those were just submitted
         setAnnotationSections((prev) =>
           prev.map((section) => ({
             ...section,
             observables: [], // Clear observables since they were submitted
+            feature_list: '', // Clear feature_list since those features were annotated
           }))
         );
         loadAnnotations();

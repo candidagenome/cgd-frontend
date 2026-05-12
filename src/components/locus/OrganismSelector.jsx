@@ -7,10 +7,11 @@ const ALL_ORGANISMS_VALUE = '__all__';
 const ORTHOLOG_PREFIX = '__ortholog__';
 const NO_ORTHOLOG_PREFIX = '__no_ortholog__';
 
-// Consistent CGOB organism list for locus pages (excludes C. tropicalis)
+// Consistent CGD organism list for locus pages
 const CGOB_LOCUS_ORGANISMS = [
   'Candida albicans SC5314',
   'Candida dubliniensis CD36',
+  'Candida tropicalis MYA-3404',
   'Candida parapsilosis CDC317',
   'Candida auris B8441',
   'Candida glabrata CBS138',

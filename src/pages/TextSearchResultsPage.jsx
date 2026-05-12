@@ -17,7 +17,7 @@ const DEFAULT_ORGANISMS = [
   { organism_abbrev: 'C_albicans_SC5314', organism_name: 'Candida albicans SC5314' },
   { organism_abbrev: 'C_glabrata_CBS138', organism_name: 'Candida glabrata CBS138' },
   { organism_abbrev: 'C_parapsilosis_CDC317', organism_name: 'Candida parapsilosis CDC317' },
-  { organism_abbrev: 'C_tropicalis_MYA-3404', organism_name: 'Candida tropicalis MYA-3404' },
+  { organism_abbrev: 'C_tropicalis', organism_name: 'Candida tropicalis MYA-3404' },
   { organism_abbrev: 'C_auris_B8441', organism_name: 'Candida auris B8441' },
   { organism_abbrev: 'C_dubliniensis_CD36', organism_name: 'Candida dubliniensis CD36' },
 ];
@@ -106,44 +106,18 @@ const CombinedResultRenderer = (props) => {
   }
 
   if (isPaperTitles) {
-    // For paper_titles: show highlighted title prominently, then author/year/journal below
-    // highlighted_name = title with <mark> tags for search highlighting
-    // citation = "Author (Year) Title. Journal..." format
-    // link = reference page URL (e.g., /reference/CAL0000001)
-    const highlightedTitle = data.highlighted_name || data.name;
-    const citation = data.citation || '';
-    const referenceLink = data.link;
-
-    // Extract author/year and journal from citation
-    // Pattern: "Author(s) (Year) Title. Journal Volume(Issue):Pages"
-    const authorYearMatch = citation.match(/^([^(]+\([0-9]{4}\))/);
-    const authorYear = authorYearMatch ? authorYearMatch[1].trim() : '';
-
-    // Extract journal info (everything after title, which ends with a period before journal)
-    // The title is in highlighted_name, so look for journal after a period followed by space and capital
-    const journalMatch = citation.match(/\.\s+([A-Z][^.]+)$/);
-    const journalInfo = journalMatch ? journalMatch[1].trim() : '';
+    // For paper_titles: show full citation, then links below
+    // citation or highlighted_citation = "Author (Year) Title. Journal..." format with optional highlighting
+    // links = citation links from API (CGD Paper, PubMed, Full Text, etc.)
+    const displayCitation = data.highlighted_citation || data.citation || data.highlighted_name || data.name;
 
     return (
       <div className="combined-result-cell paper-titles-cell">
-        {/* Highlighted title prominently displayed */}
+        {/* Full citation with highlighting */}
         <div
-          className="result-title"
-          dangerouslySetInnerHTML={{ __html: highlightedTitle }}
+          className="result-citation"
+          dangerouslySetInnerHTML={{ __html: displayCitation }}
         />
-        {/* Author/year linked to CGD Paper + journal info */}
-        {authorYear && (
-          <div className="result-meta">
-            {referenceLink ? (
-              <a href={referenceLink} target="_blank" className="author-year-link">
-                {authorYear}
-              </a>
-            ) : (
-              <span className="author-year">{authorYear}</span>
-            )}
-            {journalInfo && <span className="journal-info"> {journalInfo}</span>}
-          </div>
-        )}
         {/* Links right below */}
         {data.links && data.links.length > 0 && (
           <CitationLinksBelow links={data.links} className="search-result-links" target="_blank" />

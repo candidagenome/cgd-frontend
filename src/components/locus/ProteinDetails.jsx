@@ -9,7 +9,7 @@ const AlphaFoldViewer = lazy(() => import('./AlphaFoldViewer'));
 
 // JBrowse2 protein assembly configuration
 // Domain track types to display
-const domainTrackTypes = ['Pfam', 'PANTHER', 'SUPERFAMILY', 'CATH', 'SMART', 'CDD', 'PRINTS', 'ProSitePatterns'];
+const domainTrackTypes = ['Pfam', 'PANTHER', 'SUPERFAMILY', 'CATH', 'SMART', 'CDD', 'PRINTS', 'ProSiteProfiles'];
 
 const proteinAssemblyConfig = {
   'C_albicans_SC5314': {
@@ -26,6 +26,9 @@ const proteinAssemblyConfig = {
   },
   'C_parapsilosis_CDC317': {
     assembly: 'C_parapsilosis_CDC317_prot',
+  },
+  'C_tropicalis': {
+    assembly: 'C_tropicalis_prot',
   },
 };
 
@@ -256,36 +259,38 @@ function ProteinDetails({ data, loading, error, selectedOrganism, onOrganismChan
                 </tr>
               )}
 
-              {/* Structural Information Section - always show when protein data exists */}
-              <tr className="section-with-divider section-grey-bg">
-                <th style={{ verticalAlign: 'top' }}>Structural Information</th>
-                <td>
-                  <div style={{ marginBottom: '10px', fontWeight: '600' }}>AlphaFold Protein Structure</div>
-                  {showAlphaFold ? (
-                    <Suspense fallback={<div className="loading">Loading 3D viewer...</div>}>
-                      <AlphaFoldViewer
-                        key={orgData.alphafold_info?.uniprot_id || selectedOrganism}
-                        uniprotId={orgData.alphafold_info?.uniprot_id}
-                      />
-                    </Suspense>
-                  ) : (
-                    <button
-                      onClick={() => setShowAlphaFold(true)}
-                      style={{
-                        padding: '10px 20px',
-                        backgroundColor: '#1976d2',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontSize: '14px'
-                      }}
-                    >
-                      Load 3D Structure
-                    </button>
-                  )}
-                </td>
-              </tr>
+              {/* Structural Information Section - only show when AlphaFold data is available */}
+              {orgData.alphafold_info && (
+                <tr className="section-with-divider section-grey-bg">
+                  <th style={{ verticalAlign: 'top' }}>Structural Information</th>
+                  <td>
+                    <div style={{ marginBottom: '10px', fontWeight: '600' }}>AlphaFold Protein Structure</div>
+                    {showAlphaFold ? (
+                      <Suspense fallback={<div className="loading">Loading 3D viewer...</div>}>
+                        <AlphaFoldViewer
+                          key={orgData.alphafold_info?.uniprot_id || selectedOrganism}
+                          uniprotId={orgData.alphafold_info?.uniprot_id}
+                        />
+                      </Suspense>
+                    ) : (
+                      <button
+                        onClick={() => setShowAlphaFold(true)}
+                        style={{
+                          padding: '10px 20px',
+                          backgroundColor: '#1976d2',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontSize: '14px'
+                        }}
+                      >
+                        Load 3D Structure
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              )}
 
               {/* Conserved Domains Section - always show when protein data exists */}
               <tr className="section-with-divider section-grey-bg">

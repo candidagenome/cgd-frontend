@@ -28,6 +28,16 @@ const getStatusStyle = (status) => {
   return { color: '#666' };
 };
 
+// CGD organisms - these can be navigated to in the locus pages
+const CGD_ORGANISMS = new Set([
+  'Candida albicans SC5314',
+  'Candida dubliniensis CD36',
+  'Candida tropicalis MYA-3404',
+  'Candida parapsilosis CDC317',
+  'Candida auris B8441',
+  'Candida glabrata CBS138',
+]);
+
 function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismChange, locusName }) {
   // State for lazy-loaded alignment viewers
   const [showProteinAlignment, setShowProteinAlignment] = useState(false);
@@ -36,6 +46,43 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
   // Get available organisms from the data - memoize to prevent new array reference each render
   const organisms = useMemo(() => {
     return data?.results ? Object.keys(data.results) : [];
+  }, [data?.results]);
+
+  // Extract orthologs for navigation to other CGD organisms
+  const orthologOrganisms = useMemo(() => {
+    if (!data?.results) return [];
+
+    const orthologs = [];
+    const seenOrganisms = new Set();
+
+    // Look through all organism results for orthologs in CGD organisms
+    Object.values(data.results).forEach(orgData => {
+      const orthologList = orgData?.ortholog_cluster?.orthologs || [];
+      orthologList.forEach(orth => {
+        if (orth.is_query) return; // Skip the query gene itself
+
+        const orgName = orth.organism_name;
+        if (!orgName || seenOrganisms.has(orgName)) return;
+
+        // Include if source is CGD, or if organism is a CGD organism (even with EnsemblFungi source)
+        const isCGDSource = orth.source === 'CGD';
+        const isCGDOrganism = CGD_ORGANISMS.has(orgName);
+
+        if (isCGDSource || isCGDOrganism) {
+          // For CGD source, use feature_name; for EnsemblFungi, use sequence_id
+          const featureName = orth.feature_name || orth.sequence_id;
+          if (featureName) {
+            seenOrganisms.add(orgName);
+            orthologs.push({
+              organism: orgName,
+              feature_name: featureName,
+            });
+          }
+        }
+      });
+    });
+
+    return orthologs;
   }, [data?.results]);
 
   // Set default organism if not already set and data is available
@@ -73,6 +120,7 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
         selectedOrganism={selectedOrganism}
         onOrganismChange={onOrganismChange}
         dataType="homology"
+        orthologOrganisms={orthologOrganisms}
       />
 
       {/* Display data for selected organism */}
@@ -106,6 +154,11 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                             <td style={{ padding: '8px' }}>
                               {orth.source === 'CGD' ? (
                                 <a href={`/locus/${orth.feature_name}`} target="_blank" rel="noopener noreferrer">
+                                  {orth.sequence_id}
+                                </a>
+                              ) : CGD_ORGANISMS.has(orth.organism_name) ? (
+                                // Link to CGD locus page for CGD organisms even if source is EnsemblFungi
+                                <a href={`/locus/${orth.sequence_id}`} target="_blank" rel="noopener noreferrer">
                                   {orth.sequence_id}
                                 </a>
                               ) : orth.url ? (
@@ -234,19 +287,13 @@ function HomologyDetails({ data, loading, error, selectedOrganism, onOrganismCha
                     <div style={{ marginBottom: '8px' }}>
                       Candida Gene Order Browser
                     </div>
-                    {orgData.ortholog_cluster.cluster_url ? (
-                      <a
-                        href={orgData.ortholog_cluster.cluster_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        View CGOB cluster and synteny information
-                      </a>
-                    ) : (
-                      <a href="http://cgob3.ucd.ie/" target="_blank" rel="noopener noreferrer">
-                        CGOB
-                      </a>
-                    )}
+                    <a
+                      href={orgData.ortholog_cluster.cluster_url || `http://cgob3.ucd.ie/cgob.pl?gene=${locusName}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View CGOB cluster and synteny information
+                    </a>
                   </td>
                 </tr>
               )}

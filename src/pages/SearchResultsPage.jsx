@@ -93,7 +93,7 @@ const CATEGORY_LABELS = {
   go_terms: 'GO Terms',
   phenotypes: 'Phenotypes',
   references: 'References',
-  orthologs: 'C. albicans Orthologs',
+  orthologs: 'Orthologs',
 };
 
 const CATEGORY_ORDER = ['genes', 'descriptions', 'cgdid', 'go_terms', 'phenotypes', 'references', 'orthologs'];
@@ -291,7 +291,11 @@ const SearchResultsPage = () => {
 
   // Handle category change
   const handleCategoryChange = async (category) => {
-    if (category === selectedCategory) return;
+    // If clicking the same category, reset organism filter to "All Organisms"
+    if (category === selectedCategory) {
+      setSelectedOrganism(null);
+      return;
+    }
 
     setSelectedCategory(category);
     setCategoryResults(null);
@@ -338,6 +342,16 @@ const SearchResultsPage = () => {
                 </li>
               ))}
             </ul>
+            {/* Show Orthologs button - appears when orthologs are available */}
+            {initialResults?.counts_by_category?.orthologs > 0 && selectedCategory !== 'orthologs' && (
+              <button
+                className="show-orthologs-btn"
+                onClick={() => handleCategoryChange('orthologs')}
+                title="Show this gene in all Candida species"
+              >
+                Show Orthologs ({initialResults.counts_by_category.orthologs})
+              </button>
+            )}
           </div>
         )}
 

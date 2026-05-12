@@ -62,12 +62,21 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
   const baseWidthRef = useRef(0);
   const queryGeneXRef = useRef(0); // Store query gene's x position for centering
   const queryGeneRelativeXRef = useRef(0.5); // Store query gene's relative position (0-1)
+  const isMountedRef = useRef(true); // Track if component is mounted
+
+  // Track mount status to prevent state updates after unmount
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   const dateStamp = new Date().toISOString().split('T')[0];
 
   // Load synteny data for a gene
   const loadSyntenyData = useCallback(async (geneName, flankingOverride = null, preserveZoom = false) => {
-    if (!geneName) return;
+    if (!geneName || !isMountedRef.current) return;
 
     setLoading(true);
     setError(null);
@@ -77,6 +86,10 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
 
     try {
       const data = await locusApi.getSyntenyData(geneName, flankingToUse);
+
+      // Check if still mounted before updating state
+      if (!isMountedRef.current) return;
+
       setSyntenyData(data);
       setCurrentFlankingCount(flankingToUse);
 
@@ -95,10 +108,16 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
       });
       setVisibleSpecies(visible);
     } catch (err) {
+      // Check if still mounted before updating state
+      if (!isMountedRef.current) return;
+
       setError(err.response?.data?.detail || err.message || 'Failed to load synteny data');
       setSyntenyData(null);
     } finally {
-      setLoading(false);
+      // Check if still mounted before updating state
+      if (isMountedRef.current) {
+        setLoading(false);
+      }
     }
   }, [baseFlankingCount]);
 
@@ -162,11 +181,14 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
   useEffect(() => {
     if (!containerRef.current || !syntenyData) return;
 
+    // Store ref locally for cleanup
+    const container = containerRef.current;
+
     const regions = syntenyData.synteny_regions || {};
     const connections = syntenyData.ortholog_connections || [];
 
     // Clear existing SVG
-    d3.select(containerRef.current).selectAll('svg').remove();
+    d3.select(container).selectAll('svg').remove();
 
     // Filter to visible species
     const visibleRegions = Object.entries(regions)
@@ -601,6 +623,13 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
       svg.style('cursor', 'default');
     }
 
+    // Cleanup function to remove D3 elements when component unmounts
+    return () => {
+      if (container) {
+        d3.select(container).selectAll('svg').remove();
+      }
+      svgRef.current = null;
+    };
   }, [syntenyData, visibleSpecies, handleGeneClick, geneToOrtholog, zoomLevel, panOffset]);
 
   // Handle hover highlighting - fade non-matching elements when a gene is hovered
@@ -1081,7 +1110,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
               {tooltip.content.orthologId && (
                 <>
                   <span className="tooltip-separator">|</span>
-                  <span>Ortholog: {tooltip.content.orthologId}</span>
+                  <span>Ortholog: {tooltip.content.geneName || tooltip.content.featureName}</span>
                 </>
               )}
               <span className="tooltip-separator">|</span>

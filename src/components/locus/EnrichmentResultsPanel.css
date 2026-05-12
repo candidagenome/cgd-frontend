@@ -1,0 +1,482 @@
+/* Enrichment Results Panel Styles */
+
+.enrichment-results-panel {
+  margin-top: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: #fff;
+  overflow: hidden;
+}
+
+/* Header */
+.enrichment-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #f5f5f5;
+  border-bottom: 1px solid #e0e0e0;
+  cursor: pointer;
+  user-select: none;
+}
+
+.enrichment-panel-header:hover {
+  background: #eeeeee;
+}
+
+.enrichment-panel-header .header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.enrichment-panel-header h4 {
+  margin: 0;
+  font-size: 1em;
+  font-weight: 600;
+  color: #333;
+}
+
+.enrichment-panel-header .collapse-icon {
+  color: #666;
+  font-size: 0.8em;
+  transition: transform 0.2s ease;
+}
+
+.enrichment-panel-header .term-count {
+  color: #666;
+  font-size: 0.9em;
+  font-weight: normal;
+}
+
+.enrichment-panel-header .header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.enrichment-panel-header .loading-indicator {
+  color: #1976d2;
+  font-size: 0.85em;
+  font-style: italic;
+}
+
+.enrichment-panel-header .close-btn {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #999;
+  font-size: 1.2em;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.enrichment-panel-header .close-btn:hover {
+  background: #e0e0e0;
+  color: #333;
+}
+
+/* Collapsed state */
+.enrichment-results-panel.collapsed .enrichment-panel-header {
+  border-bottom: none;
+}
+
+/* Content */
+.enrichment-panel-content {
+  padding: 16px;
+}
+
+/* Loading State */
+.enrichment-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.enrichment-loading .loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e0e0e0;
+  border-top-color: #1976d2;
+  border-radius: 50%;
+  animation: enrichment-spin 1s linear infinite;
+  margin-bottom: 12px;
+}
+
+@keyframes enrichment-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.enrichment-loading p {
+  color: #666;
+  margin: 0;
+}
+
+/* Error State */
+.enrichment-error {
+  padding: 20px;
+  background: #ffebee;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.enrichment-error p {
+  color: #c62828;
+  margin: 0 0 12px 0;
+}
+
+.enrichment-error .retry-btn {
+  padding: 8px 16px;
+  background: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.enrichment-error .retry-btn:hover {
+  background: #1565c0;
+}
+
+/* Summary */
+.enrichment-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #e3f2fd;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 0.9em;
+  color: #1565c0;
+}
+
+/* Filters */
+.enrichment-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: #fafafa;
+  border-radius: 6px;
+  font-size: 0.9em;
+}
+
+.enrichment-filters label {
+  color: #555;
+  font-weight: 500;
+}
+
+.enrichment-filters .aspect-filter-select {
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 0.95em;
+  color: #333;
+  cursor: pointer;
+}
+
+.enrichment-filters .aspect-filter-select:hover {
+  border-color: #1976d2;
+}
+
+.enrichment-filters .aspect-filter-select:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.15);
+}
+
+.enrichment-filters .filter-count {
+  color: #888;
+  font-size: 0.9em;
+  margin-left: 8px;
+}
+
+.enrichment-summary .summary-sep {
+  color: #90caf9;
+}
+
+/* Table Wrapper */
+.enrichment-table-wrapper {
+  overflow-x: auto;
+}
+
+/* Table */
+.enrichment-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+
+.enrichment-table th,
+.enrichment-table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.enrichment-table th {
+  background: #fafafa;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+}
+
+.enrichment-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.enrichment-table th.sortable:hover {
+  background: #f0f0f0;
+}
+
+.enrichment-table th.sorted {
+  background: #e8f4fd;
+  color: #1565c0;
+}
+
+.enrichment-table th .sort-icon {
+  margin-left: 4px;
+  font-size: 0.8em;
+}
+
+/* Column widths */
+.enrichment-table .expand-col {
+  width: 30px;
+  text-align: center;
+  padding: 10px 8px;
+}
+
+.enrichment-table .term-col {
+  min-width: 200px;
+}
+
+.enrichment-table .aspect-col {
+  width: 80px;
+}
+
+.enrichment-table .count-col {
+  width: 60px;
+  text-align: right;
+}
+
+.enrichment-table .fold-col,
+.enrichment-table .pval-col,
+.enrichment-table .fdr-col {
+  width: 80px;
+  text-align: right;
+}
+
+.enrichment-table .genes-col {
+  min-width: 180px;
+  max-width: 280px;
+}
+
+.enrichment-table .genes-inline {
+  display: block;
+  font-size: 0.85em;
+  color: #555;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Row styles */
+.enrichment-table .term-row {
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.enrichment-table .term-row:hover {
+  background: #f5f5f5;
+}
+
+.enrichment-table .term-row.expanded {
+  background: #e3f2fd;
+}
+
+.enrichment-table .expand-icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  line-height: 14px;
+  text-align: center;
+  background: #e0e0e0;
+  border-radius: 3px;
+  color: #666;
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+.enrichment-table .term-row.expanded .expand-icon {
+  background: #1976d2;
+  color: white;
+}
+
+/* Term name and ID */
+.enrichment-table .term-name {
+  display: block;
+  color: #333;
+}
+
+.enrichment-table .term-id {
+  display: block;
+  font-size: 0.85em;
+  color: #666;
+  font-family: monospace;
+}
+
+.enrichment-table .term-subtext {
+  display: block;
+  font-size: 0.8em;
+  color: #888;
+  font-style: italic;
+}
+
+/* Aspect badges */
+.enrichment-table .aspect-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.8em;
+  font-weight: 500;
+}
+
+.enrichment-table .aspect-badge.aspect-p {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.enrichment-table .aspect-badge.aspect-f {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.enrichment-table .aspect-badge.aspect-c {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+/* Gene list row */
+.enrichment-table .gene-list-row td {
+  padding: 12px 16px;
+  background: #fafafa;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.enrichment-table .gene-list {
+  line-height: 1.8;
+}
+
+.enrichment-table .gene-list strong {
+  color: #555;
+  margin-right: 8px;
+}
+
+.enrichment-table .gene-list a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.enrichment-table .gene-list a:hover {
+  text-decoration: underline;
+}
+
+/* No results */
+.enrichment-panel-content .no-results {
+  padding: 30px 20px;
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}
+
+/* Pagination */
+.enrichment-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 0;
+  margin-top: 12px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.enrichment-pagination .page-btn {
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85em;
+  color: #333;
+  min-width: 32px;
+}
+
+.enrichment-pagination .page-btn:hover:not(:disabled) {
+  background: #f5f5f5;
+  border-color: #1976d2;
+  color: #1976d2;
+}
+
+.enrichment-pagination .page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.enrichment-pagination .page-info {
+  font-size: 0.9em;
+  color: #555;
+  padding: 0 8px;
+}
+
+.enrichment-pagination .page-rows {
+  color: #888;
+  margin-left: 6px;
+  font-size: 0.85em;
+}
+
+/* Warnings */
+.enrichment-warnings {
+  margin-top: 16px;
+  padding: 12px;
+  background: #fff3e0;
+  border-radius: 6px;
+}
+
+.enrichment-warnings p {
+  margin: 0;
+  color: #e65100;
+  font-size: 0.9em;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .enrichment-table {
+    font-size: 0.85em;
+  }
+
+  .enrichment-table th,
+  .enrichment-table td {
+    padding: 8px 6px;
+  }
+
+  .enrichment-summary {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .enrichment-summary .summary-sep {
+    display: none;
+  }
+}

@@ -242,9 +242,57 @@
 }
 
 .similar-genes-export-toolbar .analyze-link:hover {
+  background-color: #666;
+  border-color: #666;
+  color: #fff;
+}
+
+/* Analyze buttons - green accent */
+.similar-genes-export-toolbar .analyze-btn {
+  background-color: #e8f5e9;
+  border-color: #81c784;
+  color: #2e7d32;
+}
+
+.similar-genes-export-toolbar .analyze-btn:hover:not(:disabled) {
   background-color: #2e7d32;
   border-color: #2e7d32;
   color: #fff;
+}
+
+.similar-genes-export-toolbar .analyze-btn:disabled {
+  background-color: #f5f5f5;
+  border-color: #ccc;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* Manual only toggle */
+.similar-genes-export-toolbar .manual-only-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 6px;
+  padding: 4px 8px;
+  font-size: 0.8rem;
+  color: #555;
+  background: #f5f5f5;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.similar-genes-export-toolbar .manual-only-toggle:hover {
+  background: #e8e8e8;
+}
+
+.similar-genes-export-toolbar .manual-only-toggle input[type="checkbox"] {
+  margin: 0;
+  cursor: pointer;
+}
+
+.similar-genes-export-toolbar .manual-only-toggle span {
+  white-space: nowrap;
 }
 
 /* Grid Wrapper */
