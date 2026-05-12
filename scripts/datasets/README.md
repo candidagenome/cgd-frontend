@@ -79,6 +79,10 @@ tar xvf Areastehfar_2026.tar
 ls -la Areastehfar_2026/
 # Check that all expected files are present
 
+# Remove the .tar file (no longer needed after extraction)
+rm Areastehfar_2026.tar
+# Explanation: 'rm' means "remove" - this deletes the archive file to save space
+
 # Exit the server connection when done
 exit
 ```
