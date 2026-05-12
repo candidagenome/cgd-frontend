@@ -1,42 +1,93 @@
-# Dataset Upload Scripts
+# Dataset Upload Protocol
 
-Simplified workflow for adding downloadable datasets to CGD.
+Manual workflow for adding downloadable datasets to CGD.
 
-## Workflow
+## Overview
 
 ```
 Local files  →  Prod server  →  Link in CGD Curator Central
 (upload)        (stored)        (web UI)
 ```
 
-## Quick Start
+## Upload Protocol
+
+### 1. Prepare files locally
 
 ```bash
-cd ~/cgd-frontend/scripts/datasets
+# Download the dataset files from the paper to the UPLOADS-AWS folder on your desktop
+# (This is a shared folder that syncs with AWS)
 
-# Download dataset files from paper to your local machine first, then:
-./upload_dataset.sh Shinohara_2025 ~/Downloads/Shinohara_data/
+# Open Terminal and navigate to the UPLOADS-AWS folder
+cd ~/Desktop/UPLOADS-AWS
+# Explanation: 'cd' means "change directory" - this moves you into the folder
+
+# Create a new folder named Author_Year (e.g., Areastehfar_2026)
+mkdir Areastehfar_2026
+# Explanation: 'mkdir' means "make directory" - this creates a new folder
+
+# Move all the downloaded dataset files into the new folder
+mv file1.xlsx file2.csv file3.txt Areastehfar_2026/
+# Explanation: 'mv' means "move" - this moves files into the folder
+# Replace file1.xlsx, file2.csv, etc. with your actual file names
+# You can also use: mv *.xlsx *.csv Areastehfar_2026/ to move all files of certain types
 ```
 
-## Setup
-
-Uses shared config from `~/cgd-frontend/scripts/config.sh`.
-
-If not already set up, see [../rnaseq/README.md](../rnaseq/README.md) for setup instructions.
-
-## Usage
+### 2. Create a compressed archive
 
 ```bash
-./upload_dataset.sh <author_year> <local_files_path>
-
-# Examples:
-./upload_dataset.sh Shinohara_2025 ~/Downloads/Shinohara_data/    # Upload directory
-./upload_dataset.sh Smith_2024 ~/Downloads/dataset.xlsx           # Upload single file
+# Create a .tar archive containing the folder and all its files
+tar cvf Areastehfar_2026.tar Areastehfar_2026
+# Explanation: 'tar cvf' creates an archive file
+#   c = create a new archive
+#   v = verbose (show files being added)
+#   f = use the following filename
+# This bundles the folder into a single .tar file for easy transfer
 ```
+
+### 3. Upload to production server
+
+```bash
+# Copy the .tar file to the production server
+scp Areastehfar_2026.tar cgd-prod:/data/downloads/systematic_results/
+# Explanation: 'scp' means "secure copy" - this uploads the file to the server
+# cgd-prod is the server name, followed by the destination path
+```
+
+### 4. Verify upload on server
+
+```bash
+# Connect to the production server
+ssh cgd-prod
+# Explanation: 'ssh' opens a remote connection to the server
+
+# Navigate to the downloads folder
+cd /data/downloads/systematic_results/
+# Explanation: this moves you to the folder where datasets are stored
+
+# List the files to verify the upload
+ls -la
+# Explanation: 'ls -la' lists all files with details (size, date, etc.)
+
+# Extract the .tar archive
+tar xvf Areastehfar_2026.tar
+# Explanation: 'tar xvf' extracts the archive
+#   x = extract files
+#   v = verbose (show files being extracted)
+#   f = use the following filename
+
+# Verify the folder and files are there
+ls -la Areastehfar_2026/
+# Check that all expected files are present
+
+# Exit the server connection when done
+exit
+```
+
+---
 
 ## After Upload: Link in CGD
 
-The script will display these steps after uploading:
+The dataset needs to be linked to its reference paper in CGD Curator Central.
 
 ### 1. Link dataset to reference
 
