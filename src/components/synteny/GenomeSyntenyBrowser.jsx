@@ -1110,7 +1110,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
               {tooltip.content.orthologId && (
                 <>
                   <span className="tooltip-separator">|</span>
-                  <span>Ortholog: {tooltip.content.orthologId}</span>
+                  <span>Ortholog: {tooltip.content.geneName || tooltip.content.featureName}</span>
                 </>
               )}
               <span className="tooltip-separator">|</span>
