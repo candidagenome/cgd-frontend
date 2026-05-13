@@ -35,8 +35,6 @@ const CALBICANS_PREFIXES = ['C1_', 'orf19.', 'Ca21chr', 'C1-'];
 // Column widths (in characters)
 const COL_NUM = 2;      // Row number
 const COL_ID = 13;      // Sequence ID
-const COL_COV = 7;      // Coverage
-const COL_PID = 7;      // Percent identity
 const COL_GAP = 5;      // Gap before sequence
 
 /**
@@ -247,8 +245,8 @@ function AlignmentViewer({ sequences, alignmentType, referenceId }) {
 
   const title = alignmentType === 'protein' ? 'Protein Sequence Alignment' : 'Coding Sequence Alignment';
 
-  // Header prefix for ruler line
-  const headerPrefix = ' '.repeat(COL_NUM + 1) + pad('cov', COL_ID, true) + pad('pid', COL_COV, true) + ' '.repeat(COL_PID);
+  // Header prefix for ruler line (no cov/pid columns now)
+  const headerPrefix = ' '.repeat(COL_NUM + 1 + COL_ID);
 
   return (
     <div style={{ marginBottom: '20px' }}>
@@ -288,12 +286,14 @@ function AlignmentViewer({ sequences, alignmentType, referenceId }) {
           <div style={{ marginBottom: '15px', fontSize: '13px' }}>
             <div style={{ marginBottom: '5px' }}>
               <strong>Reference sequence (1):</strong> {sortedSequences[0]?.sequence_id}
+              {sortedSequences[0]?.organism_name && (
+                <span style={{ color: '#666', marginLeft: '8px' }}>
+                  (<em>{sortedSequences[0].organism_name}</em>)
+                </span>
+              )}
             </div>
             <div style={{ marginBottom: '5px', color: '#666' }}>
-              Identities normalized by aligned length.
-            </div>
-            <div style={{ marginBottom: '5px', color: '#666' }}>
-              Colored by: identity &gt;= 80%
+              Identities normalized by aligned length. Colored by: identity &gt;= 80%
             </div>
             {alignmentType === 'protein' ? (
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', fontSize: '12px', marginLeft: '20px' }}>
@@ -313,6 +313,38 @@ function AlignmentViewer({ sequences, alignmentType, referenceId }) {
             )}
           </div>
 
+          {/* Sequence Statistics Table - shown once at the top */}
+          <div style={{ marginBottom: '15px' }}>
+            <table style={{ borderCollapse: 'collapse', fontSize: '12px' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid #ddd' }}>
+                  <th style={{ padding: '4px 8px', textAlign: 'left' }}>#</th>
+                  <th style={{ padding: '4px 8px', textAlign: 'left' }}>Sequence ID</th>
+                  <th style={{ padding: '4px 8px', textAlign: 'left' }}>Organism</th>
+                  <th style={{ padding: '4px 8px', textAlign: 'right' }}>Coverage</th>
+                  <th style={{ padding: '4px 8px', textAlign: 'right' }}>Identity</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sortedSequences.map((seq, idx) => (
+                  <tr key={seq.sequence_id} style={{ borderBottom: '1px solid #eee' }}>
+                    <td style={{ padding: '4px 8px', color: '#666' }}>{idx + 1}</td>
+                    <td style={{ padding: '4px 8px', fontFamily: 'monospace' }}>{seq.sequence_id}</td>
+                    <td style={{ padding: '4px 8px', fontStyle: 'italic', color: '#666' }}>
+                      {seq.organism_name || '-'}
+                    </td>
+                    <td style={{ padding: '4px 8px', textAlign: 'right', fontFamily: 'monospace' }}>
+                      {seq.stats.coverage.toFixed(1)}%
+                    </td>
+                    <td style={{ padding: '4px 8px', textAlign: 'right', fontFamily: 'monospace' }}>
+                      {seq.stats.identity.toFixed(1)}%
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
           {/* Alignment blocks */}
           <div style={{ fontFamily: 'monospace', fontSize: '13px', lineHeight: '1.4' }}>
             {blocks.map(({ start, end, blockIdx }) => (
@@ -327,17 +359,18 @@ function AlignmentViewer({ sequences, alignmentType, referenceId }) {
                   const seqSlice = seq.sequence.slice(start, end);
                   const rowNum = pad(String(seqIdx + 1), COL_NUM, true);
                   const seqId = pad(seq.sequence_id, COL_ID);
-                  const cov = pad(seq.stats.coverage.toFixed(1) + '%', COL_COV, true);
-                  const pid = pad(seq.stats.identity.toFixed(1) + '%', COL_PID, true);
                   const gap = ' '.repeat(COL_GAP);
 
                   return (
                     <div key={seq.sequence_id} style={{ whiteSpace: 'pre' }}>
                       <span style={{ color: '#666' }}>{rowNum}</span>
                       <span> </span>
-                      <span>{seqId}</span>
-                      <span style={{ color: '#666' }}>{cov}</span>
-                      <span style={{ color: '#666' }}>{pid}</span>
+                      <span
+                        title={seq.organism_name || seq.sequence_id}
+                        style={{ cursor: 'help' }}
+                      >
+                        {seqId}
+                      </span>
                       <span>{gap}</span>
                       <span>
                         {seqSlice.split('').map((char, charIdx) => {
