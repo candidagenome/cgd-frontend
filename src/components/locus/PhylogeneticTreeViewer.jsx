@@ -261,22 +261,26 @@ function PhylogeneticTreeViewer({ newickTree, leafCount, orthologs }) {
 
       // Draw children and vertical connector
       if (node.children && node.children.length > 0) {
-        // Get y positions of all children
-        const childYs = node.children.map(child => {
-          const childPos = positions.get(child);
-          return childPos ? yScale(childPos.y) : y;
-        });
-        const minChildY = Math.min(...childYs);
-        const maxChildY = Math.max(...childYs);
+        // Only draw vertical connector if there are 2+ children
+        // (single child doesn't need a vertical line)
+        if (node.children.length > 1) {
+          // Get y positions of all children
+          const childYs = node.children.map(child => {
+            const childPos = positions.get(child);
+            return childPos ? yScale(childPos.y) : y;
+          });
+          const minChildY = Math.min(...childYs);
+          const maxChildY = Math.max(...childYs);
 
-        // Draw single vertical line spanning all children
-        g.append('line')
-          .attr('x1', x)
-          .attr('y1', minChildY)
-          .attr('x2', x)
-          .attr('y2', maxChildY)
-          .attr('stroke', '#555')
-          .attr('stroke-width', 1.5);
+          // Draw single vertical line spanning all children
+          g.append('line')
+            .attr('x1', x)
+            .attr('y1', minChildY)
+            .attr('x2', x)
+            .attr('y2', maxChildY)
+            .attr('stroke', '#555')
+            .attr('stroke-width', 1.5);
+        }
 
         // Recursively draw children
         for (const child of node.children) {
