@@ -173,12 +173,18 @@ function PhylogeneticTreeViewer({ newickTree, leafCount, orthologs }) {
   const [hoveredGene, setHoveredGene] = useState(null);
   const svgRef = useRef(null);
   const containerRef = useRef(null);
+  const organismMappingRef = useRef({});
 
   // Build name mapping from orthologs
   const nameMapping = useMemo(() => buildNameMapping(orthologs), [orthologs]);
 
   // Build organism mapping from orthologs
   const organismMapping = useMemo(() => buildOrganismMapping(orthologs), [orthologs]);
+
+  // Keep ref updated with latest organism mapping
+  useEffect(() => {
+    organismMappingRef.current = organismMapping;
+  }, [organismMapping]);
 
   // Parse the Newick tree
   const treeData = useMemo(() => {
@@ -280,10 +286,9 @@ function PhylogeneticTreeViewer({ newickTree, leafCount, orthologs }) {
 
       // Draw label for leaf nodes
       if (isLeaf && node.name) {
-        // Try to find organism by displayed name, original name, or feature_name
-        const organism = organismMapping[node.name] ||
-                        organismMapping[node.originalName] ||
-                        null;
+        // Store node info for lookup at hover time
+        const nodeName = node.name;
+        const nodeOriginalName = node.originalName;
 
         g.append('text')
           .attr('x', x + 8)
@@ -297,7 +302,12 @@ function PhylogeneticTreeViewer({ newickTree, leafCount, orthologs }) {
           .text(node.name)
           .on('mouseenter', function() {
             d3.select(this).attr('fill', '#1976d2').attr('font-weight', 'bold');
-            setHoveredGene({ name: node.name, organism });
+            // Look up organism at hover time using ref (not stale closure)
+            const currentMapping = organismMappingRef.current;
+            const organism = currentMapping[nodeName] ||
+                            currentMapping[nodeOriginalName] ||
+                            null;
+            setHoveredGene({ name: nodeName, organism });
           })
           .on('mouseleave', function() {
             d3.select(this).attr('fill', '#222').attr('font-weight', 'normal');
