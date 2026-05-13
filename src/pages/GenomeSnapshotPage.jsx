@@ -245,6 +245,8 @@ function GenomeSnapshotPage() {
   const [error, setError] = useState(null);
   const [goSlimData, setGoSlimData] = useState(null);
   const [goSlimLoading, setGoSlimLoading] = useState(false);
+  const [chrInventory, setChrInventory] = useState(null);
+  const [chrInventoryLoading, setChrInventoryLoading] = useState(false);
 
   // Handle hash link scrolling (React Router doesn't handle these well)
   const scrollToSection = (e, sectionId) => {
@@ -317,6 +319,28 @@ function GenomeSnapshotPage() {
       }
     };
     fetchGoSlimData();
+  }, [organism]);
+
+  // Fetch chromosome inventory data when organism changes
+  useEffect(() => {
+    if (!organism) {
+      return;
+    }
+
+    const fetchChrInventory = async () => {
+      setChrInventoryLoading(true);
+      try {
+        const response = await genomeSnapshotApi.getChromosomeInventory(organism);
+        if (response.success) {
+          setChrInventory(response);
+        }
+      } catch (err) {
+        console.error('Failed to fetch chromosome inventory:', err);
+      } finally {
+        setChrInventoryLoading(false);
+      }
+    };
+    fetchChrInventory();
   }, [organism]);
 
   // Show organism selection if no organism specified
@@ -426,6 +450,7 @@ function GenomeSnapshotPage() {
           <ol className="toc-list">
             <li><a href="#pieChart" onClick={(e) => scrollToSection(e, 'pieChart')}>Graphical View of Protein Coding Genes</a></li>
             <li><a href="#genomeInventory" onClick={(e) => scrollToSection(e, 'genomeInventory')}>Genome Inventory</a></li>
+            <li><a href="#chromosomeTable" onClick={(e) => scrollToSection(e, 'chromosomeTable')}>Chromosome Feature Inventory</a></li>
             <li><a href="#goAnnotations" onClick={(e) => scrollToSection(e, 'goAnnotations')}>Summary of GO annotations</a></li>
             <li><a href="#barCharts" onClick={(e) => scrollToSection(e, 'barCharts')}>Distribution of Gene Products by Process, Function, and Component</a></li>
           </ol>
@@ -642,6 +667,233 @@ function GenomeSnapshotPage() {
               )}
             </tbody>
           </table>
+        </section>
+
+        {/* Chromosome Feature Inventory Table */}
+        <section className="info-section" id="chromosomeTable">
+          <h3>Chromosome Feature Inventory</h3>
+          <p>
+            This table reports the number and types of features annotated per chromosome.
+            Select the chromosome identifier to access more information on that chromosome.
+          </p>
+
+          {chrInventoryLoading ? (
+            <div className="loading-state">
+              <span className="loading-spinner"></span>
+              Loading chromosome data...
+            </div>
+          ) : chrInventory && chrInventory.chromosomes && chrInventory.chromosomes.length > 0 ? (
+            <div className="chromosome-table-wrapper">
+              <table className="chromosome-inventory-table">
+                <thead>
+                  <tr>
+                    <th rowSpan="2">Feature Type</th>
+                    <th rowSpan="2">Total</th>
+                    <th colSpan={chrInventory.chromosomes.length + (chrInventory.mitochondrial ? 2 : 1)}>
+                      Chromosome
+                    </th>
+                  </tr>
+                  <tr>
+                    {chrInventory.chromosomes.map((chr) => (
+                      <th key={chr.chromosome} className="chr-header">
+                        {chr.chromosome_display}
+                      </th>
+                    ))}
+                    <th className="chr-header">Nuclear</th>
+                    {chrInventory.mitochondrial && (
+                      <th className="chr-header">Mito</th>
+                    )}
+                  </tr>
+                </thead>
+                <tbody>
+                  {/* Total ORFs row */}
+                  <tr>
+                    <td>Total ORFs</td>
+                    <td>{chrInventory.grand_totals?.total_orfs?.toLocaleString() || 0}</td>
+                    {chrInventory.chromosomes.map((chr) => (
+                      <td key={chr.chromosome}>{chr.total_orfs.toLocaleString()}</td>
+                    ))}
+                    <td>{chrInventory.nuclear_totals?.total_orfs?.toLocaleString() || 0}</td>
+                    {chrInventory.mitochondrial && (
+                      <td>{chrInventory.mitochondrial.total_orfs.toLocaleString()}</td>
+                    )}
+                  </tr>
+
+                  {/* Verified ORFs */}
+                  {chrInventory.feature_types?.includes('Verified ORFs') && (
+                    <tr>
+                      <td className="indent">
+                        <a href={`/feature-search/results?organism=${organism}&qualifier=Verified&featuretype=ORF`}>
+                          Verified ORFs
+                        </a>
+                      </td>
+                      <td>{chrInventory.grand_totals?.verified_orfs?.toLocaleString() || 0}</td>
+                      {chrInventory.chromosomes.map((chr) => (
+                        <td key={chr.chromosome}>{chr.verified_orfs.toLocaleString()}</td>
+                      ))}
+                      <td>{chrInventory.nuclear_totals?.verified_orfs?.toLocaleString() || 0}</td>
+                      {chrInventory.mitochondrial && (
+                        <td>{chrInventory.mitochondrial.verified_orfs.toLocaleString()}</td>
+                      )}
+                    </tr>
+                  )}
+
+                  {/* Uncharacterized ORFs */}
+                  {chrInventory.feature_types?.includes('Uncharacterized ORFs') && (
+                    <tr>
+                      <td className="indent">
+                        <a href={`/feature-search/results?organism=${organism}&qualifier=Uncharacterized&featuretype=ORF`}>
+                          Uncharacterized ORFs
+                        </a>
+                      </td>
+                      <td>{chrInventory.grand_totals?.uncharacterized_orfs?.toLocaleString() || 0}</td>
+                      {chrInventory.chromosomes.map((chr) => (
+                        <td key={chr.chromosome}>{chr.uncharacterized_orfs.toLocaleString()}</td>
+                      ))}
+                      <td>{chrInventory.nuclear_totals?.uncharacterized_orfs?.toLocaleString() || 0}</td>
+                      {chrInventory.mitochondrial && (
+                        <td>{chrInventory.mitochondrial.uncharacterized_orfs.toLocaleString()}</td>
+                      )}
+                    </tr>
+                  )}
+
+                  {/* Dubious ORFs */}
+                  {chrInventory.feature_types?.includes('Dubious ORFs') && (
+                    <tr>
+                      <td className="indent">
+                        <a href={`/feature-search/results?organism=${organism}&qualifier=Dubious&featuretype=ORF`}>
+                          Dubious ORFs
+                        </a>
+                      </td>
+                      <td>{chrInventory.grand_totals?.dubious_orfs?.toLocaleString() || 0}</td>
+                      {chrInventory.chromosomes.map((chr) => (
+                        <td key={chr.chromosome}>{chr.dubious_orfs.toLocaleString()}</td>
+                      ))}
+                      <td>{chrInventory.nuclear_totals?.dubious_orfs?.toLocaleString() || 0}</td>
+                      {chrInventory.mitochondrial && (
+                        <td>{chrInventory.mitochondrial.dubious_orfs.toLocaleString()}</td>
+                      )}
+                    </tr>
+                  )}
+
+                  {/* tRNA */}
+                  {chrInventory.feature_types?.includes('tRNA') && (
+                    <tr>
+                      <td>
+                        <a href={`/feature-search/results?organism=${organism}&featuretype=tRNA`}>tRNA</a>
+                      </td>
+                      <td>{chrInventory.grand_totals?.trna?.toLocaleString() || 0}</td>
+                      {chrInventory.chromosomes.map((chr) => (
+                        <td key={chr.chromosome}>{chr.trna.toLocaleString()}</td>
+                      ))}
+                      <td>{chrInventory.nuclear_totals?.trna?.toLocaleString() || 0}</td>
+                      {chrInventory.mitochondrial && (
+                        <td>{chrInventory.mitochondrial.trna.toLocaleString()}</td>
+                      )}
+                    </tr>
+                  )}
+
+                  {/* snoRNA */}
+                  {chrInventory.feature_types?.includes('snoRNA') && (
+                    <tr>
+                      <td>
+                        <a href={`/feature-search/results?organism=${organism}&featuretype=snoRNA`}>snoRNA</a>
+                      </td>
+                      <td>{chrInventory.grand_totals?.snorna?.toLocaleString() || 0}</td>
+                      {chrInventory.chromosomes.map((chr) => (
+                        <td key={chr.chromosome}>{chr.snorna.toLocaleString()}</td>
+                      ))}
+                      <td>{chrInventory.nuclear_totals?.snorna?.toLocaleString() || 0}</td>
+                      {chrInventory.mitochondrial && (
+                        <td>{chrInventory.mitochondrial.snorna.toLocaleString()}</td>
+                      )}
+                    </tr>
+                  )}
+
+                  {/* rRNA */}
+                  {chrInventory.feature_types?.includes('rRNA') && (
+                    <tr>
+                      <td>
+                        <a href={`/feature-search/results?organism=${organism}&featuretype=rRNA`}>rRNA</a>
+                      </td>
+                      <td>{chrInventory.grand_totals?.rrna?.toLocaleString() || 0}</td>
+                      {chrInventory.chromosomes.map((chr) => (
+                        <td key={chr.chromosome}>{chr.rrna.toLocaleString()}</td>
+                      ))}
+                      <td>{chrInventory.nuclear_totals?.rrna?.toLocaleString() || 0}</td>
+                      {chrInventory.mitochondrial && (
+                        <td>{chrInventory.mitochondrial.rrna.toLocaleString()}</td>
+                      )}
+                    </tr>
+                  )}
+
+                  {/* ncRNA */}
+                  {chrInventory.feature_types?.includes('ncRNA') && (
+                    <tr>
+                      <td>
+                        <a href={`/feature-search/results?organism=${organism}&featuretype=ncRNA`}>ncRNA</a>
+                      </td>
+                      <td>{chrInventory.grand_totals?.ncrna?.toLocaleString() || 0}</td>
+                      {chrInventory.chromosomes.map((chr) => (
+                        <td key={chr.chromosome}>{chr.ncrna.toLocaleString()}</td>
+                      ))}
+                      <td>{chrInventory.nuclear_totals?.ncrna?.toLocaleString() || 0}</td>
+                      {chrInventory.mitochondrial && (
+                        <td>{chrInventory.mitochondrial.ncrna.toLocaleString()}</td>
+                      )}
+                    </tr>
+                  )}
+
+                  {/* Pseudogene */}
+                  {chrInventory.feature_types?.includes('Pseudogene') && (
+                    <tr>
+                      <td>
+                        <a href={`/feature-search/results?organism=${organism}&featuretype=pseudogene`}>Pseudogene</a>
+                      </td>
+                      <td>{chrInventory.grand_totals?.pseudogene?.toLocaleString() || 0}</td>
+                      {chrInventory.chromosomes.map((chr) => (
+                        <td key={chr.chromosome}>{chr.pseudogene.toLocaleString()}</td>
+                      ))}
+                      <td>{chrInventory.nuclear_totals?.pseudogene?.toLocaleString() || 0}</td>
+                      {chrInventory.mitochondrial && (
+                        <td>{chrInventory.mitochondrial.pseudogene.toLocaleString()}</td>
+                      )}
+                    </tr>
+                  )}
+
+                  {/* Total features row */}
+                  <tr className="total-row">
+                    <td><strong>Total</strong></td>
+                    <td><strong>{chrInventory.grand_totals?.total_features?.toLocaleString() || 0}</strong></td>
+                    {chrInventory.chromosomes.map((chr) => (
+                      <td key={chr.chromosome}><strong>{chr.total_features.toLocaleString()}</strong></td>
+                    ))}
+                    <td><strong>{chrInventory.nuclear_totals?.total_features?.toLocaleString() || 0}</strong></td>
+                    {chrInventory.mitochondrial && (
+                      <td><strong>{chrInventory.mitochondrial.total_features.toLocaleString()}</strong></td>
+                    )}
+                  </tr>
+
+                  {/* Chromosome length row */}
+                  <tr>
+                    <td><strong>Chromosome length (bp)</strong></td>
+                    <td>{chrInventory.grand_totals?.length_bp?.toLocaleString() || 0}</td>
+                    {chrInventory.chromosomes.map((chr) => (
+                      <td key={chr.chromosome}>{chr.length_bp.toLocaleString()}</td>
+                    ))}
+                    <td>{chrInventory.nuclear_totals?.length_bp?.toLocaleString() || 0}</td>
+                    {chrInventory.mitochondrial && (
+                      <td>{chrInventory.mitochondrial.length_bp.toLocaleString()}</td>
+                    )}
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p style={{ color: '#666', fontStyle: 'italic' }}>
+              No chromosome data available for this organism.
+            </p>
+          )}
         </section>
 
         {/* GO Annotations Section */}
