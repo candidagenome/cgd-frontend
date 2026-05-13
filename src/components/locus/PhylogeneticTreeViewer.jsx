@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import Tree from 'react-d3-tree';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import * as d3 from 'd3';
 
 /**
  * Build a mapping from feature_name to display name (sequence_id which includes gene name)
@@ -11,7 +11,6 @@ function buildNameMapping(orthologs) {
 
   for (const orth of orthologs) {
     if (orth.feature_name && orth.sequence_id) {
-      // sequence_id is like "ACT1/C1_13700W_A" or just "C1_13700W_A"
       mapping[orth.feature_name] = orth.sequence_id;
     }
   }
@@ -19,18 +18,16 @@ function buildNameMapping(orthologs) {
 }
 
 /**
- * Parse Newick format string into hierarchical tree structure
- * for react-d3-tree
+ * Parse Newick format into a tree structure with proper branch lengths
  */
-function parseNewick(newickStr, nameMapping = {}) {
+function parseNewick(newickStr) {
   let idx = 0;
   const str = newickStr.trim();
 
   function parseNode() {
-    const node = { name: '', children: [], branchLength: 0 };
+    const node = { name: '', length: 0, children: null };
 
     if (str[idx] === '(') {
-      // Internal node with children
       idx++; // skip '('
       node.children = [];
 
@@ -58,31 +55,17 @@ function parseNewick(newickStr, nameMapping = {}) {
     // Split name and branch length
     const colonIdx = nameAndLength.indexOf(':');
     if (colonIdx !== -1) {
-      node.name = nameAndLength.substring(0, colonIdx);
-      node.branchLength = parseFloat(nameAndLength.substring(colonIdx + 1)) || 0;
+      node.name = nameAndLength.substring(0, colonIdx).trim();
+      node.length = parseFloat(nameAndLength.substring(colonIdx + 1)) || 0;
     } else {
-      node.name = nameAndLength;
-    }
-
-    // Clean up name
-    node.name = node.name.trim();
-
-    // Apply name mapping (e.g., C1_13700W_A -> ACT1/C1_13700W_A)
-    if (node.name && nameMapping[node.name]) {
-      node.name = nameMapping[node.name];
-    }
-
-    // If no children, it's a leaf
-    if (node.children && node.children.length === 0) {
-      delete node.children;
+      node.name = nameAndLength.trim();
     }
 
     return node;
   }
 
   try {
-    const tree = parseNode();
-    return tree;
+    return parseNode();
   } catch (e) {
     console.error('Error parsing Newick:', e);
     return null;
@@ -90,57 +73,228 @@ function parseNewick(newickStr, nameMapping = {}) {
 }
 
 /**
- * Custom node renderer for the tree
+ * Apply name mapping to all nodes in the tree
  */
-const renderCustomNode = ({ nodeDatum }) => {
-  const isLeaf = !nodeDatum.children;
+function applyNameMapping(node, mapping) {
+  if (!node) return;
 
-  return (
-    <g>
-      <circle
-        r={isLeaf ? 5 : 4}
-        fill={isLeaf ? "#2e7d32" : "#666"}
-      />
-      {nodeDatum.name && (
-        <text
-          x={isLeaf ? 10 : -10}
-          y={5}
-          textAnchor={isLeaf ? "start" : "end"}
-          style={{
-            fontSize: '14px',
-            fontFamily: 'monospace',
-            fontWeight: '500',
-            fill: '#222',
-          }}
-        >
-          {nodeDatum.name}
-        </text>
-      )}
-    </g>
-  );
-};
+  if (node.name && mapping[node.name]) {
+    node.name = mapping[node.name];
+  }
+
+  if (node.children) {
+    node.children.forEach(child => applyNameMapping(child, mapping));
+  }
+}
 
 /**
- * Phylogenetic tree visualization component
+ * Get all leaf nodes from the tree
+ */
+function getLeaves(node) {
+  if (!node) return [];
+  if (!node.children || node.children.length === 0) {
+    return [node];
+  }
+  return node.children.flatMap(getLeaves);
+}
+
+/**
+ * Calculate the maximum depth (sum of branch lengths from root to any leaf)
+ */
+function getMaxDepth(node, currentDepth = 0) {
+  const nodeDepth = currentDepth + (node.length || 0);
+
+  if (!node.children || node.children.length === 0) {
+    return nodeDepth;
+  }
+
+  return Math.max(...node.children.map(child => getMaxDepth(child, nodeDepth)));
+}
+
+/**
+ * Assign x positions (depth from root) and y positions (leaf ordering) to all nodes
+ */
+function layoutTree(node, xOffset = 0, yCounter = { value: 0 }, positions = new Map()) {
+  const x = xOffset + (node.length || 0);
+
+  if (!node.children || node.children.length === 0) {
+    // Leaf node
+    const y = yCounter.value;
+    yCounter.value += 1;
+    positions.set(node, { x, y });
+    return { minY: y, maxY: y };
+  }
+
+  // Internal node - layout children first
+  let minY = Infinity;
+  let maxY = -Infinity;
+
+  for (const child of node.children) {
+    const childBounds = layoutTree(child, x, yCounter, positions);
+    minY = Math.min(minY, childBounds.minY);
+    maxY = Math.max(maxY, childBounds.maxY);
+  }
+
+  // Place internal node at vertical center of its children
+  const y = (minY + maxY) / 2;
+  positions.set(node, { x, y });
+
+  return { minY, maxY };
+}
+
+/**
+ * Phylogenetic tree visualization component using D3 directly
  */
 function PhylogeneticTreeViewer({ newickTree, leafCount, orthologs }) {
   const [showRaw, setShowRaw] = useState(false);
+  const svgRef = useRef(null);
+  const containerRef = useRef(null);
 
-  // Build name mapping from orthologs (feature_name -> sequence_id with gene name)
-  const nameMapping = useMemo(() => {
-    return buildNameMapping(orthologs);
-  }, [orthologs]);
+  // Build name mapping from orthologs
+  const nameMapping = useMemo(() => buildNameMapping(orthologs), [orthologs]);
 
-  // Parse the Newick tree into hierarchical format
+  // Parse the Newick tree
   const treeData = useMemo(() => {
     if (!newickTree) return null;
-    const parsed = parseNewick(newickTree, nameMapping);
+    const parsed = parseNewick(newickTree);
+    if (parsed) {
+      applyNameMapping(parsed, nameMapping);
+    }
     return parsed;
   }, [newickTree, nameMapping]);
 
-  // Calculate tree dimensions - larger for better readability
-  const numLeaves = leafCount || 10;
-  const treeHeight = Math.max(600, numLeaves * 55);
+  // Render the tree using D3
+  useEffect(() => {
+    if (!treeData || !containerRef.current) return;
+
+    const container = containerRef.current;
+    const leaves = getLeaves(treeData);
+    const numLeaves = leaves.length;
+
+    // Layout configuration
+    const margin = { top: 20, right: 200, bottom: 20, left: 20 };
+    const rowHeight = 28;
+    const height = numLeaves * rowHeight + margin.top + margin.bottom;
+    const width = container.clientWidth || 800;
+    const treeWidth = width - margin.left - margin.right;
+
+    // Clear previous SVG
+    d3.select(container).selectAll('svg').remove();
+
+    // Create SVG
+    const svg = d3.select(container)
+      .append('svg')
+      .attr('width', width)
+      .attr('height', height)
+      .attr('class', 'phylo-tree-svg');
+
+    svgRef.current = svg.node();
+
+    const g = svg.append('g')
+      .attr('transform', `translate(${margin.left},${margin.top})`);
+
+    // Calculate tree layout
+    const positions = new Map();
+    layoutTree(treeData, 0, { value: 0 }, positions);
+
+    // Get scales
+    const maxDepth = getMaxDepth(treeData);
+    const xScale = d3.scaleLinear()
+      .domain([0, maxDepth])
+      .range([0, treeWidth]);
+
+    const yScale = d3.scaleLinear()
+      .domain([0, numLeaves - 1])
+      .range([0, (numLeaves - 1) * rowHeight]);
+
+    // Draw branches recursively
+    function drawBranches(node, parentX = null, parentY = null) {
+      const pos = positions.get(node);
+      if (!pos) return;
+
+      const x = xScale(pos.x);
+      const y = yScale(pos.y);
+
+      // Draw branch from parent to this node (elbow style)
+      if (parentX !== null && parentY !== null) {
+        // Horizontal line from parent's x to this node's x at parent's y
+        g.append('line')
+          .attr('x1', parentX)
+          .attr('y1', parentY)
+          .attr('x2', parentX)
+          .attr('y2', y)
+          .attr('stroke', '#555')
+          .attr('stroke-width', 1.5);
+
+        // Vertical line at this node's x
+        g.append('line')
+          .attr('x1', parentX)
+          .attr('y1', y)
+          .attr('x2', x)
+          .attr('y2', y)
+          .attr('stroke', '#555')
+          .attr('stroke-width', 1.5);
+      }
+
+      // Draw children
+      if (node.children && node.children.length > 0) {
+        for (const child of node.children) {
+          drawBranches(child, x, y);
+        }
+      }
+
+      // Draw node
+      const isLeaf = !node.children || node.children.length === 0;
+      g.append('circle')
+        .attr('cx', x)
+        .attr('cy', y)
+        .attr('r', isLeaf ? 4 : 3)
+        .attr('fill', isLeaf ? '#2e7d32' : '#666');
+
+      // Draw label for leaf nodes
+      if (isLeaf && node.name) {
+        g.append('text')
+          .attr('x', x + 8)
+          .attr('y', y)
+          .attr('dy', '0.35em')
+          .attr('font-size', '13px')
+          .attr('font-family', 'monospace')
+          .attr('fill', '#222')
+          .text(node.name);
+      }
+    }
+
+    // Start drawing from root
+    const rootPos = positions.get(treeData);
+    if (rootPos) {
+      drawBranches(treeData);
+    }
+
+    // Add scale bar
+    const scaleBarLength = maxDepth * 0.1; // 10% of total tree depth
+    const scaleBarPixels = xScale(scaleBarLength) - xScale(0);
+    const scaleBarY = height - margin.bottom - 5;
+
+    g.append('line')
+      .attr('x1', 10)
+      .attr('y1', scaleBarY)
+      .attr('x2', 10 + scaleBarPixels)
+      .attr('y2', scaleBarY)
+      .attr('stroke', '#333')
+      .attr('stroke-width', 2);
+
+    g.append('text')
+      .attr('x', 10 + scaleBarPixels / 2)
+      .attr('y', scaleBarY + 15)
+      .attr('text-anchor', 'middle')
+      .attr('font-size', '11px')
+      .attr('fill', '#333')
+      .text(scaleBarLength.toFixed(3) + ' subs/site');
+
+    return () => {
+      d3.select(container).selectAll('svg').remove();
+    };
+  }, [treeData]);
 
   if (!newickTree) {
     return <div style={{ color: '#666', fontStyle: 'italic' }}>No tree data available</div>;
@@ -172,32 +326,23 @@ function PhylogeneticTreeViewer({ newickTree, leafCount, orthologs }) {
     );
   }
 
+  const leaves = getLeaves(treeData);
+  const treeHeight = Math.max(400, leaves.length * 28 + 60);
+
   return (
     <div>
       {/* Tree visualization container */}
       <div
+        ref={containerRef}
         style={{
           backgroundColor: '#fff',
           border: '1px solid #ddd',
           borderRadius: '4px',
           width: '100%',
-          height: `${treeHeight}px`,
-          overflow: 'hidden',
+          minHeight: `${treeHeight}px`,
+          overflow: 'auto',
         }}
-      >
-        <Tree
-          data={treeData}
-          orientation="horizontal"
-          pathFunc="elbow"
-          translate={{ x: 30, y: treeHeight / 2 }}
-          nodeSize={{ x: 100, y: 50 }}
-          renderCustomNodeElement={renderCustomNode}
-          separation={{ siblings: 1.2, nonSiblings: 1.5 }}
-          zoom={0.9}
-          enableLegacyTransitions={false}
-          pathClassFunc={() => 'tree-branch'}
-        />
-      </div>
+      />
 
       {/* Toggle for raw Newick display */}
       <div style={{ marginTop: '10px' }}>
@@ -237,15 +382,6 @@ function PhylogeneticTreeViewer({ newickTree, leafCount, orthologs }) {
           {newickTree}
         </div>
       )}
-
-      {/* CSS for tree branches */}
-      <style>{`
-        .tree-branch {
-          stroke: #444;
-          stroke-width: 2px;
-          fill: none;
-        }
-      `}</style>
     </div>
   );
 }
