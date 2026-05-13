@@ -290,7 +290,13 @@ function PhylogeneticTreeViewer({ newickTree, leafCount, orthologs }) {
         const nodeName = node.name;
         const nodeOriginalName = node.originalName;
 
-        g.append('text')
+        // Look up organism for this node
+        const currentMapping = organismMappingRef.current;
+        const organism = currentMapping[nodeName] ||
+                        currentMapping[nodeOriginalName] ||
+                        null;
+
+        const textEl = g.append('text')
           .attr('x', x + 8)
           .attr('y', y)
           .attr('dy', '0.35em')
@@ -299,20 +305,22 @@ function PhylogeneticTreeViewer({ newickTree, leafCount, orthologs }) {
           .attr('fill', '#222')
           .attr('class', 'gene-label')
           .style('cursor', 'pointer')
-          .text(node.name)
-          .on('mouseenter', function() {
-            d3.select(this).attr('fill', '#1976d2').attr('font-weight', 'bold');
-            // Look up organism at hover time using ref (not stale closure)
-            const currentMapping = organismMappingRef.current;
-            const organism = currentMapping[nodeName] ||
-                            currentMapping[nodeOriginalName] ||
-                            null;
-            setHoveredGene({ name: nodeName, organism });
-          })
-          .on('mouseleave', function() {
-            d3.select(this).attr('fill', '#222').attr('font-weight', 'normal');
-            setHoveredGene(null);
-          });
+          .style('pointer-events', 'all')
+          .text(node.name);
+
+        // Add native DOM event listeners (D3's .on() doesn't work reliably with SVG text)
+        const textNode = textEl.node();
+        textNode.addEventListener('mouseenter', () => {
+          textEl.attr('fill', '#1976d2').attr('font-weight', 'bold');
+          const org = organismMappingRef.current[nodeName] ||
+                     organismMappingRef.current[nodeOriginalName] ||
+                     null;
+          setHoveredGene({ name: nodeName, organism: org });
+        });
+        textNode.addEventListener('mouseleave', () => {
+          textEl.attr('fill', '#222').attr('font-weight', 'normal');
+          setHoveredGene(null);
+        });
       }
     }
 
@@ -408,16 +416,6 @@ function PhylogeneticTreeViewer({ newickTree, leafCount, orthologs }) {
           </>
         ) : (
           <span>Hover over a gene name to see organism</span>
-        )}
-      </div>
-
-      {/* Debug info - remove after fixing */}
-      <div style={{ fontSize: '10px', color: '#999', padding: '4px', backgroundColor: '#f0f0f0' }}>
-        DEBUG: orthologs={orthologs ? orthologs.length : 'null'},
-        mapping keys={Object.keys(organismMapping).length},
-        ref keys={Object.keys(organismMappingRef.current).length}
-        {orthologs && orthologs.length > 0 && (
-          <span> | First: {orthologs[0]?.sequence_id} → {orthologs[0]?.organism_name}</span>
         )}
       </div>
 
