@@ -400,18 +400,14 @@ function PhylogeneticTreeViewer({ newickTree, leafCount, orthologs }) {
         {hoveredGene ? (
           <>
             <strong>{hoveredGene.name}</strong>
-            {hoveredGene.organism ? (
+            {hoveredGene.organism && (
               <span style={{ marginLeft: '8px', fontStyle: 'italic' }}>
                 {hoveredGene.organism}
-              </span>
-            ) : (
-              <span style={{ marginLeft: '8px', color: '#ffcdd2' }}>
-                (organism not found - mapping has {Object.keys(organismMapping).length} entries)
               </span>
             )}
           </>
         ) : (
-          <span>Hover over a gene name to see organism ({Object.keys(organismMapping).length} organisms loaded)</span>
+          <span>Hover over a gene name to see organism</span>
         )}
       </div>
 
