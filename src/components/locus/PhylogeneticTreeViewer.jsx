@@ -18,6 +18,26 @@ function buildNameMapping(orthologs) {
 }
 
 /**
+ * Build a mapping from display name (sequence_id) to organism name
+ * e.g., "ACT1/C1_13700W_A" -> "Candida albicans SC5314"
+ */
+function buildOrganismMapping(orthologs) {
+  const mapping = {};
+  if (!orthologs) return mapping;
+
+  for (const orth of orthologs) {
+    // Map both feature_name and sequence_id to organism
+    if (orth.feature_name && orth.organism_name) {
+      mapping[orth.feature_name] = orth.organism_name;
+    }
+    if (orth.sequence_id && orth.organism_name) {
+      mapping[orth.sequence_id] = orth.organism_name;
+    }
+  }
+  return mapping;
+}
+
+/**
  * Parse Newick format into a tree structure with proper branch lengths
  */
 function parseNewick(newickStr) {
@@ -147,11 +167,15 @@ function layoutTree(node, xOffset = 0, yCounter = { value: 0 }, positions = new 
  */
 function PhylogeneticTreeViewer({ newickTree, leafCount, orthologs }) {
   const [showRaw, setShowRaw] = useState(false);
+  const [hoveredGene, setHoveredGene] = useState(null);
   const svgRef = useRef(null);
   const containerRef = useRef(null);
 
   // Build name mapping from orthologs
   const nameMapping = useMemo(() => buildNameMapping(orthologs), [orthologs]);
+
+  // Build organism mapping from orthologs
+  const organismMapping = useMemo(() => buildOrganismMapping(orthologs), [orthologs]);
 
   // Parse the Newick tree
   const treeData = useMemo(() => {
@@ -253,6 +277,8 @@ function PhylogeneticTreeViewer({ newickTree, leafCount, orthologs }) {
 
       // Draw label for leaf nodes
       if (isLeaf && node.name) {
+        const organism = organismMapping[node.name] || null;
+
         g.append('text')
           .attr('x', x + 8)
           .attr('y', y)
@@ -260,7 +286,17 @@ function PhylogeneticTreeViewer({ newickTree, leafCount, orthologs }) {
           .attr('font-size', '13px')
           .attr('font-family', 'monospace')
           .attr('fill', '#222')
-          .text(node.name);
+          .attr('class', 'gene-label')
+          .style('cursor', 'pointer')
+          .text(node.name)
+          .on('mouseenter', function() {
+            d3.select(this).attr('fill', '#1976d2').attr('font-weight', 'bold');
+            setHoveredGene({ name: node.name, organism });
+          })
+          .on('mouseleave', function() {
+            d3.select(this).attr('fill', '#222').attr('font-weight', 'normal');
+            setHoveredGene(null);
+          });
       }
     }
 
@@ -294,7 +330,7 @@ function PhylogeneticTreeViewer({ newickTree, leafCount, orthologs }) {
     return () => {
       d3.select(container).selectAll('svg').remove();
     };
-  }, [treeData]);
+  }, [treeData, organismMapping]);
 
   if (!newickTree) {
     return <div style={{ color: '#666', fontStyle: 'italic' }}>No tree data available</div>;
@@ -331,13 +367,42 @@ function PhylogeneticTreeViewer({ newickTree, leafCount, orthologs }) {
 
   return (
     <div>
+      {/* Organism tooltip bar - shows instantly on hover */}
+      <div
+        style={{
+          backgroundColor: hoveredGene ? '#1976d2' : '#f5f5f5',
+          color: hoveredGene ? '#fff' : '#666',
+          padding: '6px 12px',
+          fontSize: '12px',
+          borderRadius: '4px 4px 0 0',
+          border: '1px solid #ddd',
+          borderBottom: 'none',
+          minHeight: '20px',
+          transition: 'background-color 0.15s, color 0.15s',
+        }}
+      >
+        {hoveredGene ? (
+          <>
+            <strong>{hoveredGene.name}</strong>
+            {hoveredGene.organism && (
+              <span style={{ marginLeft: '8px', fontStyle: 'italic' }}>
+                {hoveredGene.organism}
+              </span>
+            )}
+          </>
+        ) : (
+          <span>Hover over a gene name to see organism</span>
+        )}
+      </div>
+
       {/* Tree visualization container */}
       <div
         ref={containerRef}
         style={{
           backgroundColor: '#fff',
           border: '1px solid #ddd',
-          borderRadius: '4px',
+          borderTop: 'none',
+          borderRadius: '0 0 4px 4px',
           width: '100%',
           minHeight: `${treeHeight}px`,
           overflow: 'auto',
