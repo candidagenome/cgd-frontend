@@ -221,6 +221,7 @@ function AlignmentViewer({ sequences, alignmentType, referenceId }) {
   const [showColorKey, setShowColorKey] = useState(false);
   const [showCGDOnly, setShowCGDOnly] = useState(false);
   const [compactMode, setCompactMode] = useState(true);
+  const [hoveredGene, setHoveredGene] = useState(null);
   const alignmentRef = useRef(null);
   const [blockSize, setBlockSize] = useState(BLOCK_SIZE_DESKTOP);
 
@@ -471,6 +472,34 @@ function AlignmentViewer({ sequences, alignmentType, referenceId }) {
             </div>
           )}
 
+          {/* Organism tooltip bar - shows instantly on hover */}
+          <div
+            style={{
+              backgroundColor: hoveredGene ? '#1976d2' : '#f5f5f5',
+              color: hoveredGene ? '#fff' : '#666',
+              padding: '6px 12px',
+              fontSize: '12px',
+              borderRadius: '3px 3px 0 0',
+              border: '1px solid #ddd',
+              borderBottom: 'none',
+              minHeight: '20px',
+              transition: 'background-color 0.15s, color 0.15s',
+            }}
+          >
+            {hoveredGene ? (
+              <>
+                <strong>{hoveredGene.sequence_id}</strong>
+                {hoveredGene.organism_name && (
+                  <span style={{ marginLeft: '8px', fontStyle: 'italic' }}>
+                    {hoveredGene.organism_name}
+                  </span>
+                )}
+              </>
+            ) : (
+              <span>Hover over a sequence ID to see organism</span>
+            )}
+          </div>
+
           {/* Scrollable alignment viewer */}
           <div
             ref={alignmentRef}
@@ -479,7 +508,8 @@ function AlignmentViewer({ sequences, alignmentType, referenceId }) {
               overflowY: 'auto',
               overflowX: 'auto',
               border: '1px solid #eee',
-              borderRadius: '3px',
+              borderTop: 'none',
+              borderRadius: '0 0 3px 3px',
               backgroundColor: '#fafafa',
             }}
           >
@@ -532,18 +562,23 @@ function AlignmentViewer({ sequences, alignmentType, referenceId }) {
                         </span>
                         {/* Sequence ID - sticky */}
                         <span
-                          title={seq.organism_name || seq.sequence_id}
+                          onMouseEnter={() => setHoveredGene({
+                            sequence_id: seq.sequence_id,
+                            organism_name: seq.organism_name,
+                          })}
+                          onMouseLeave={() => setHoveredGene(null)}
                           style={{
                             display: 'inline-block',
                             width: seqIdWidth,
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
-                            cursor: 'help',
+                            cursor: 'pointer',
                             position: 'sticky',
                             left: '2ch',
-                            backgroundColor: '#fafafa',
+                            backgroundColor: hoveredGene?.sequence_id === seq.sequence_id ? '#e3f2fd' : '#fafafa',
                             zIndex: 1,
                             paddingLeft: '1ch',
+                            transition: 'background-color 0.1s',
                           }}
                         >
                           {seq.sequence_id}
