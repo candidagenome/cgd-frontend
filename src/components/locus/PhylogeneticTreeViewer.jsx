@@ -411,6 +411,16 @@ function PhylogeneticTreeViewer({ newickTree, leafCount, orthologs }) {
         )}
       </div>
 
+      {/* Debug info - remove after fixing */}
+      <div style={{ fontSize: '10px', color: '#999', padding: '4px', backgroundColor: '#f0f0f0' }}>
+        DEBUG: orthologs={orthologs ? orthologs.length : 'null'},
+        mapping keys={Object.keys(organismMapping).length},
+        ref keys={Object.keys(organismMappingRef.current).length}
+        {orthologs && orthologs.length > 0 && (
+          <span> | First: {orthologs[0]?.sequence_id} → {orthologs[0]?.organism_name}</span>
+        )}
+      </div>
+
       {/* Tree visualization container */}
       <div
         ref={containerRef}
