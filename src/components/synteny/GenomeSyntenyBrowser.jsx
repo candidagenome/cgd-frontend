@@ -199,7 +199,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
     if (visibleRegions.length === 0) return;
 
     // Layout configuration - these stay constant regardless of zoom
-    const margin = { top: 16, right: 40, bottom: 16, left: 120 };
+    const margin = { top: 16, right: 40, bottom: 50, left: 120 }; // Increased bottom for scale bar
     const trackHeight = 40;
     const trackSpacing = 52;  // Increased for better readability
     const geneHeight = 24;
@@ -269,13 +269,35 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
       .attr('class', 'panned-group')
       .attr('transform', `translate(${currentPan},0)`);
 
+    // Find query gene's ortholog_id FIRST (needed for alignment calculation)
+    let queryOrthologId = null;
+    const querySpecies = syntenyData.query_gene?.organism;
+    visibleRegions.forEach(region => {
+      const genes = region.genes || [];
+      const queryGene = genes.find(g => g.is_query);
+      if (queryGene) {
+        queryOrthologId = geneToOrtholog[queryGene.feature_name];
+      }
+    });
+
     // Create scales for each species track (each has its own coordinate range)
+    // Also find the ortholog midpoint for alignment
     const speciesData = visibleRegions.map((region, idx) => {
       const genes = region.genes || [];
       // Use both start and stop for min/max since Crick strand genes have start > stop
       const allCoords = genes.flatMap(g => [g.start, g.stop]);
       const minCoord = allCoords.length > 0 ? Math.min(...allCoords) : 0;
       const maxCoord = allCoords.length > 0 ? Math.max(...allCoords) : 1000;
+
+      // Find the ortholog (query gene or its ortholog in this species) midpoint
+      let orthologMidpoint = null;
+      genes.forEach(gene => {
+        const orthologId = geneToOrtholog[gene.feature_name];
+        if (gene.is_query || (orthologId && orthologId === queryOrthologId)) {
+          orthologMidpoint = (Math.min(gene.start, gene.stop) + Math.max(gene.start, gene.stop)) / 2;
+        }
+      });
+
       return {
         ...region,
         index: idx,
@@ -283,6 +305,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
         maxCoord,
         span: maxCoord - minCoord,
         yPosition: idx * (trackHeight + trackSpacing),
+        orthologMidpoint,
       };
     });
 
@@ -294,11 +317,24 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
     // Create a single global scale (bp per pixel) based on the largest span
     const bpPerPixel = totalDomain / effectiveWidth;
 
-    // Create x scales for each track, centered within the available width
+    // Calculate the target x-coordinate where all orthologs should align (viewport center)
+    const alignmentTargetX = effectiveWidth / 2;
+
+    // Create x scales for each track, aligned by ortholog position
     const xScales = {};
     speciesData.forEach(sd => {
       const regionWidth = sd.span / bpPerPixel;
-      const xOffset = (effectiveWidth - regionWidth) / 2;
+
+      // Calculate xOffset to align ortholog at the target x-coordinate
+      let xOffset;
+      if (sd.orthologMidpoint !== null) {
+        // Position so ortholog midpoint lands at alignmentTargetX
+        const orthologRelativePos = (sd.orthologMidpoint - sd.minCoord) / bpPerPixel;
+        xOffset = alignmentTargetX - orthologRelativePos;
+      } else {
+        // No ortholog in this species - fall back to centering the region
+        xOffset = (effectiveWidth - regionWidth) / 2;
+      }
 
       xScales[sd.species] = (coord) => {
         const relativePos = (coord - sd.minCoord) / bpPerPixel;
@@ -308,7 +344,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
       xScales[sd.species].regionWidth = regionWidth;
     });
 
-    // Find and store query gene position for centering
+    // Find and store query gene position for centering (used for pan calculations)
     let queryGeneX = effectiveWidth / 2; // default to center
     let queryGeneRelative = 0.5; // relative position (0-1)
     speciesData.forEach(sd => {
@@ -325,17 +361,6 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
     });
     queryGeneXRef.current = queryGeneX;
     queryGeneRelativeXRef.current = queryGeneRelative;
-
-    // Find query gene's ortholog_id and species for color coding
-    let queryOrthologId = null;
-    const querySpecies = syntenyData.query_gene?.organism;
-    speciesData.forEach(sd => {
-      const genes = sd.genes || [];
-      const queryGene = genes.find(g => g.is_query);
-      if (queryGene) {
-        queryOrthologId = geneToOrtholog[queryGene.feature_name];
-      }
-    });
 
     // Draw each species track
     speciesData.forEach(sd => {
@@ -604,6 +629,74 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
       });
 
     }
+
+    // Draw scale bar at the bottom to show consistent scaling
+    const scaleBarGroup = g.append('g')
+      .attr('class', 'scale-bar-group')
+      .attr('transform', `translate(0, ${height - margin.top - margin.bottom + 15})`);
+
+    // Calculate a nice round scale bar length based on bpPerPixel
+    // Choose a scale that results in a bar between 50-150 pixels wide
+    const targetPixelWidth = 100;
+    const targetBp = targetPixelWidth * bpPerPixel;
+
+    // Find the nearest "nice" number (1, 2, 5, 10, 20, 50, 100 kb, etc.)
+    const magnitude = Math.pow(10, Math.floor(Math.log10(targetBp)));
+    const normalized = targetBp / magnitude;
+    let niceNumber;
+    if (normalized < 1.5) niceNumber = 1;
+    else if (normalized < 3.5) niceNumber = 2;
+    else if (normalized < 7.5) niceNumber = 5;
+    else niceNumber = 10;
+
+    const scaleBarBp = niceNumber * magnitude;
+    const scaleBarWidth = scaleBarBp / bpPerPixel;
+
+    // Format the label (show as kb if >= 1000 bp)
+    let scaleLabel;
+    if (scaleBarBp >= 1000) {
+      scaleLabel = `${scaleBarBp / 1000} kb`;
+    } else {
+      scaleLabel = `${scaleBarBp} bp`;
+    }
+
+    // Position scale bar at the right side of the visualization
+    const scaleBarX = baseWidth - scaleBarWidth - 20;
+
+    // Draw scale bar line
+    scaleBarGroup.append('line')
+      .attr('x1', scaleBarX)
+      .attr('x2', scaleBarX + scaleBarWidth)
+      .attr('y1', 0)
+      .attr('y2', 0)
+      .attr('stroke', '#333')
+      .attr('stroke-width', 2);
+
+    // Draw end caps
+    scaleBarGroup.append('line')
+      .attr('x1', scaleBarX)
+      .attr('x2', scaleBarX)
+      .attr('y1', -4)
+      .attr('y2', 4)
+      .attr('stroke', '#333')
+      .attr('stroke-width', 2);
+
+    scaleBarGroup.append('line')
+      .attr('x1', scaleBarX + scaleBarWidth)
+      .attr('x2', scaleBarX + scaleBarWidth)
+      .attr('y1', -4)
+      .attr('y2', 4)
+      .attr('stroke', '#333')
+      .attr('stroke-width', 2);
+
+    // Add label
+    scaleBarGroup.append('text')
+      .attr('x', scaleBarX + scaleBarWidth / 2)
+      .attr('y', 16)
+      .attr('text-anchor', 'middle')
+      .attr('font-size', '11px')
+      .attr('fill', '#333')
+      .text(scaleLabel);
 
     // Setup drag behavior for panning (only when zoomed in beyond 100%)
     if (currentZoom > 1 && effectiveWidth > baseWidth) {
