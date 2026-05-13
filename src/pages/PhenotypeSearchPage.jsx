@@ -223,36 +223,53 @@ function PhenotypeSearchPage() {
       results = results.filter((r) => r.organism === selectedOrganism);
     }
 
-    // Filter by quick search text (case-insensitive)
+    // Filter by quick search text (case-insensitive, supports multiple terms with AND logic)
     if (appliedQuickFilter.trim()) {
-      const searchLower = appliedQuickFilter.toLowerCase().trim();
-      results = results.filter((r) => {
-        const searchFields = [
-          r.gene_name,
-          r.feature_name,
-          r.organism,
-          r.experiment_type,
-          r.experiment_comment,
-          r.mutant_type,
-          r.strain,
-          r.observable,
-          r.qualifier,
-          ...(r.details || []).map((d) => `${d.property_type} ${d.property_value}`),
-          // Search citation fields: full citation, display name, title, journal, pubmed, authors
-          ...(r.references || []).filter(Boolean).flatMap((ref) => [
-            ref.citation,
-            ref.display_name,
-            ref.title,
-            ref.journal_name || ref.journal,
-            ref.pubmed_id || ref.pubmed,
-            // Extract author names
-            ...(Array.isArray(ref.authors)
-              ? ref.authors.filter(Boolean).map((a) => (typeof a === 'string' ? a : a?.author_name))
-              : []),
-          ]),
-        ];
-        return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
-      });
+      // Split by spaces to support multiple search terms (AND logic)
+      // Filter out empty strings and common words like "and"
+      const searchTerms = appliedQuickFilter
+        .toLowerCase()
+        .trim()
+        .split(/\s+/)
+        .filter((term) => term && term !== 'and' && term !== 'or');
+
+      if (searchTerms.length > 0) {
+        results = results.filter((r) => {
+          const searchFields = [
+            r.gene_name,
+            r.feature_name,
+            r.organism,
+            r.experiment_type,
+            r.experiment_comment,
+            r.mutant_type,
+            r.strain,
+            r.observable,
+            r.qualifier,
+            ...(r.details || []).map((d) => `${d.property_type} ${d.property_value}`),
+            // Search citation fields: full citation, display name, title, journal, pubmed, authors
+            ...(r.references || []).filter(Boolean).flatMap((ref) => [
+              ref.citation,
+              ref.display_name,
+              ref.title,
+              ref.journal_name || ref.journal,
+              ref.pubmed_id || ref.pubmed,
+              // Extract author names
+              ...(Array.isArray(ref.authors)
+                ? ref.authors.filter(Boolean).map((a) => (typeof a === 'string' ? a : a?.author_name))
+                : []),
+            ]),
+          ];
+
+          // Combine all searchable text into one string for matching
+          const combinedText = searchFields
+            .filter(Boolean)
+            .map((f) => String(f).toLowerCase())
+            .join(' ');
+
+          // ALL search terms must be found (AND logic)
+          return searchTerms.every((term) => combinedText.includes(term));
+        });
+      }
     }
 
     return results;
@@ -795,7 +812,7 @@ function PhenotypeSearchPage() {
     };
 
     return (
-      <div className="analyze-section">
+      <div id="analyze-section" className="analyze-section">
         <div className="analyze-header">
           Analyze gene list: further analyze the gene list displayed above or download information for this list
         </div>
@@ -880,6 +897,12 @@ function PhenotypeSearchPage() {
       {hasSearched && (
         <nav className="page-nav">
           <Link to="/phenotype/search">New Search</Link>
+          {data?.results?.length > 0 && (
+            <>
+              <span className="nav-separator">|</span>
+              <a href="#analyze-section" className="nav-link">Analyze Gene List</a>
+            </>
+          )}
         </nav>
       )}
 

@@ -49,6 +49,20 @@
   text-decoration: underline;
 }
 
+.phenotype-search-page .page-nav .nav-separator {
+  color: #999;
+  margin: 0 8px;
+}
+
+.phenotype-search-page .page-nav .nav-link {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+.phenotype-search-page .page-nav .nav-link:hover {
+  text-decoration: underline;
+}
+
 /* Divider */
 .phenotype-search-page .divider {
   border-top: 1px solid #ccc;
