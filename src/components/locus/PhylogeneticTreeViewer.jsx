@@ -93,10 +93,13 @@ function parseNewick(newickStr) {
 }
 
 /**
- * Apply name mapping to all nodes in the tree
+ * Apply name mapping to all nodes in the tree, preserving original name for lookups
  */
 function applyNameMapping(node, mapping) {
   if (!node) return;
+
+  // Store original name for organism lookup
+  node.originalName = node.name;
 
   if (node.name && mapping[node.name]) {
     node.name = mapping[node.name];
@@ -277,7 +280,10 @@ function PhylogeneticTreeViewer({ newickTree, leafCount, orthologs }) {
 
       // Draw label for leaf nodes
       if (isLeaf && node.name) {
-        const organism = organismMapping[node.name] || null;
+        // Try to find organism by displayed name, original name, or feature_name
+        const organism = organismMapping[node.name] ||
+                        organismMapping[node.originalName] ||
+                        null;
 
         g.append('text')
           .attr('x', x + 8)
