@@ -241,25 +241,15 @@ function PhylogeneticTreeViewer({ newickTree, leafCount, orthologs }) {
       .range([0, (numLeaves - 1) * rowHeight]);
 
     // Draw branches recursively
-    function drawBranches(node, parentX = null, parentY = null) {
+    function drawBranches(node, parentX = null) {
       const pos = positions.get(node);
       if (!pos) return;
 
       const x = xScale(pos.x);
       const y = yScale(pos.y);
 
-      // Draw branch from parent to this node (elbow style)
-      if (parentX !== null && parentY !== null) {
-        // Horizontal line from parent's x to this node's x at parent's y
-        g.append('line')
-          .attr('x1', parentX)
-          .attr('y1', parentY)
-          .attr('x2', parentX)
-          .attr('y2', y)
-          .attr('stroke', '#555')
-          .attr('stroke-width', 1.5);
-
-        // Vertical line at this node's x
+      // Draw horizontal line from parent to this node
+      if (parentX !== null) {
         g.append('line')
           .attr('x1', parentX)
           .attr('y1', y)
@@ -269,10 +259,28 @@ function PhylogeneticTreeViewer({ newickTree, leafCount, orthologs }) {
           .attr('stroke-width', 1.5);
       }
 
-      // Draw children
+      // Draw children and vertical connector
       if (node.children && node.children.length > 0) {
+        // Get y positions of all children
+        const childYs = node.children.map(child => {
+          const childPos = positions.get(child);
+          return childPos ? yScale(childPos.y) : y;
+        });
+        const minChildY = Math.min(...childYs);
+        const maxChildY = Math.max(...childYs);
+
+        // Draw single vertical line spanning all children
+        g.append('line')
+          .attr('x1', x)
+          .attr('y1', minChildY)
+          .attr('x2', x)
+          .attr('y2', maxChildY)
+          .attr('stroke', '#555')
+          .attr('stroke-width', 1.5);
+
+        // Recursively draw children
         for (const child of node.children) {
-          drawBranches(child, x, y);
+          drawBranches(child, x);
         }
       }
 
