@@ -342,27 +342,6 @@ function PhylogeneticTreeViewer({ newickTree, leafCount, orthologs }) {
       drawBranches(treeData);
     }
 
-    // Add scale bar
-    const scaleBarLength = maxDepth * 0.1; // 10% of total tree depth
-    const scaleBarPixels = xScale(scaleBarLength) - xScale(0);
-    const scaleBarY = height - margin.bottom - 5;
-
-    g.append('line')
-      .attr('x1', 10)
-      .attr('y1', scaleBarY)
-      .attr('x2', 10 + scaleBarPixels)
-      .attr('y2', scaleBarY)
-      .attr('stroke', '#333')
-      .attr('stroke-width', 2);
-
-    g.append('text')
-      .attr('x', 10 + scaleBarPixels / 2)
-      .attr('y', scaleBarY + 15)
-      .attr('text-anchor', 'middle')
-      .attr('font-size', '11px')
-      .attr('fill', '#333')
-      .text(scaleBarLength.toFixed(3) + ' subs/site');
-
     return () => {
       d3.select(container).selectAll('svg').remove();
     };
