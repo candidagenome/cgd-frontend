@@ -6,26 +6,38 @@ import './ChromosomePage.css';
 // JBrowse assembly configuration with default tracks
 const jbrowseConfig = {
   'C_albicans_SC5314': {
+    assembly: 'C_albicans_SC5314',
     geneTrack: 'TranscribedFeatures',
     defaultTracks: 'DNA,TranscribedFeatures',
   },
   'C_auris_B8441': {
+    assembly: 'C_auris_B8441',
     geneTrack: 'C_auris_B8441_features.sorted.gff',
     defaultTracks: 'C_auris_B8441_features.sorted.gff',
   },
   'C_dubliniensis_CD36': {
+    assembly: 'C_dubliniensis_CD36',
     geneTrack: 'C_dubliniensis_CD36_features.sorted.gff',
     defaultTracks: 'C_dubliniensis_CD36_features.sorted.gff',
   },
   'C_glabrata_CBS138': {
+    assembly: 'C_glabrata_CBS138',
     geneTrack: 'C_glabrata_CBS138_features.sorted.gff',
     defaultTracks: 'C_glabrata_CBS138_features.sorted.gff',
   },
   'C_parapsilosis_CDC317': {
+    assembly: 'C_parapsilosis_CDC317',
     geneTrack: 'C_parapsilosis_CDC317_features.sorted.gff',
     defaultTracks: 'C_parapsilosis_CDC317_features.sorted.gff',
   },
   'C_tropicalis_MYA3404': {
+    assembly: 'C_tropicalis_MYA3404',
+    geneTrack: 'TranscribedFeatures_ctrop',
+    defaultTracks: 'DNA_ctrop,TranscribedFeatures_ctrop',
+  },
+  // Alias for organism_abbrev without strain suffix
+  'C_tropicalis': {
+    assembly: 'C_tropicalis_MYA3404',
     geneTrack: 'TranscribedFeatures_ctrop',
     defaultTracks: 'DNA_ctrop,TranscribedFeatures_ctrop',
   },
@@ -316,10 +328,10 @@ function ChromosomePage() {
               <div className="links-section">
                 <h4>External Links</h4>
                 <ul>
-                  {chromosome.organism_abbrev && (
+                  {chromosome.organism_abbrev && jbrowseConfig[chromosome.organism_abbrev] && (
                     <li>
                       <a
-                        href={`/jbrowse2/?assembly=${chromosome.organism_abbrev}&loc=${chromosome.feature_name}&tracks=${jbrowseConfig[chromosome.organism_abbrev]?.defaultTracks || 'DNA'}`}
+                        href={`/jbrowse2/?assembly=${jbrowseConfig[chromosome.organism_abbrev].assembly}&loc=${chromosome.feature_name}&tracks=${jbrowseConfig[chromosome.organism_abbrev].defaultTracks}`}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
