@@ -225,12 +225,29 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
 
         if (hasExons) {
           // Gene has introns - draw outline and fill only exons
-          // First draw light grey background for introns (to cover chromosome line)
-          geneGroup.append('rect')
-            .attr('x', x)
-            .attr('y', y)
-            .attr('width', geneWidth)
-            .attr('height', geneHeight)
+          // First draw arrow-shaped background for introns (to cover chromosome line)
+          let bgPoints;
+          if (gene.strand === 'W') {
+            // Watson strand - arrow pointing right
+            bgPoints = [
+              [x, y],
+              [x + geneWidth - 6, y],
+              [x + geneWidth, y + geneHeight / 2],
+              [x + geneWidth - 6, y + geneHeight],
+              [x, y + geneHeight],
+            ];
+          } else {
+            // Crick strand - arrow pointing left
+            bgPoints = [
+              [x, y + geneHeight / 2],
+              [x + 6, y],
+              [x + geneWidth, y],
+              [x + geneWidth, y + geneHeight],
+              [x + 6, y + geneHeight],
+            ];
+          }
+          geneGroup.append('polygon')
+            .attr('points', bgPoints.map(p => p.join(',')).join(' '))
             .attr('fill', '#e8e8e8');
 
           // Draw filled exons
