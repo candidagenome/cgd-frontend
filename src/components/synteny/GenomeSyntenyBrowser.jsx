@@ -462,12 +462,9 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
 
         if (hasExons) {
           // Gene has introns - draw outline and fill only exons
-          // First draw light grey background for introns (to cover chromosome line)
-          geneGroup.append('rect')
-            .attr('x', x)
-            .attr('y', y)
-            .attr('width', geneWidth)
-            .attr('height', geneHeight)
+          // First draw arrow-shaped background for introns (to cover chromosome line)
+          geneGroup.append('polygon')
+            .attr('points', points.map(p => p.join(',')).join(' '))
             .attr('fill', '#e8e8e8');
 
           // Draw filled exons
