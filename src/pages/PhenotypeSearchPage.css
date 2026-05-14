@@ -347,6 +347,74 @@
   white-space: nowrap;
 }
 
+.filter-input-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Filter info icon with tooltip */
+.filter-info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  font-size: 14px;
+  color: #1976d2;
+  cursor: help;
+  position: relative;
+  margin-right: 4px;
+}
+
+.filter-info-icon:hover {
+  color: #1565c0;
+}
+
+.filter-info-tooltip {
+  display: none;
+  position: absolute;
+  top: 24px;
+  left: 0;
+  width: 300px;
+  padding: 12px 14px;
+  background: #333;
+  color: #fff;
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 1.5;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  z-index: 1000;
+  white-space: normal;
+}
+
+.filter-info-tooltip strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.filter-info-tooltip ul {
+  margin: 0 0 8px 0;
+  padding-left: 18px;
+}
+
+.filter-info-tooltip li {
+  margin-bottom: 4px;
+}
+
+.filter-info-tooltip em {
+  display: block;
+  color: #aaa;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.filter-info-icon:hover .filter-info-tooltip {
+  display: block;
+}
+
 .organism-dropdown {
   padding: 6px 10px;
   border: 1px solid #ccc;

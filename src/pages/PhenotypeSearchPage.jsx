@@ -699,34 +699,52 @@ function PhenotypeSearchPage() {
 
         {/* Quick Search */}
         <div className="filter-group">
-          <label htmlFor="quick-filter">Filter results: </label>
-          <input
-            type="text"
-            id="quick-filter"
-            value={pendingQuickFilter}
-            onChange={(e) => setPendingQuickFilter(e.target.value)}
-            placeholder="Type to filter..."
-            className="quick-filter-input"
-          />
-          <button
-            type="button"
-            className="apply-filter-btn"
-            onClick={applyFilter}
-            disabled={!hasPendingChanges}
-            style={{ padding: '6px 12px', border: 'none', background: hasPendingChanges ? '#1976d2' : '#90caf9', color: 'white', fontWeight: 500, cursor: hasPendingChanges ? 'pointer' : 'not-allowed', borderRadius: '4px', fontSize: '14px', marginLeft: '4px' }}
-          >
-            Apply
-          </button>
-          {(appliedQuickFilter || pendingQuickFilter) && (
+          <label htmlFor="quick-filter">
+            Filter results:{' '}
+            <span className="filter-info-icon" title="Filter usage instructions">
+              ⓘ
+              <span className="filter-info-tooltip">
+                <strong>Filter Usage:</strong>
+                <ul>
+                  <li>Enter one or more search terms separated by spaces</li>
+                  <li>Multiple terms use AND logic (all terms must match)</li>
+                  <li>Search is case-insensitive</li>
+                  <li>Words &quot;and&quot; and &quot;or&quot; are ignored</li>
+                  <li>Terms can appear in any column</li>
+                </ul>
+                <em>Example: &quot;biofilm hyphal&quot; finds rows containing both terms</em>
+              </span>
+            </span>
+          </label>
+          <div className="filter-input-group">
+            <input
+              type="text"
+              id="quick-filter"
+              value={pendingQuickFilter}
+              onChange={(e) => setPendingQuickFilter(e.target.value)}
+              placeholder="Type to filter..."
+              className="quick-filter-input"
+            />
             <button
               type="button"
-              className="clear-filter-btn"
-              onClick={clearQuickFilter}
-              title="Clear filter"
+              className="apply-filter-btn"
+              onClick={applyFilter}
+              disabled={!hasPendingChanges}
+              style={{ padding: '6px 12px', border: 'none', background: hasPendingChanges ? '#1976d2' : '#90caf9', color: 'white', fontWeight: 500, cursor: hasPendingChanges ? 'pointer' : 'not-allowed', borderRadius: '4px', fontSize: '14px', marginLeft: '4px' }}
             >
-              ×
+              Apply
             </button>
-          )}
+            {(appliedQuickFilter || pendingQuickFilter) && (
+              <button
+                type="button"
+                className="clear-filter-btn"
+                onClick={clearQuickFilter}
+                title="Clear filter"
+              >
+                ×
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Filter status */}
