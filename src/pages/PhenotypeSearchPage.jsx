@@ -223,36 +223,53 @@ function PhenotypeSearchPage() {
       results = results.filter((r) => r.organism === selectedOrganism);
     }
 
-    // Filter by quick search text (case-insensitive)
+    // Filter by quick search text (case-insensitive, supports multiple terms with AND logic)
     if (appliedQuickFilter.trim()) {
-      const searchLower = appliedQuickFilter.toLowerCase().trim();
-      results = results.filter((r) => {
-        const searchFields = [
-          r.gene_name,
-          r.feature_name,
-          r.organism,
-          r.experiment_type,
-          r.experiment_comment,
-          r.mutant_type,
-          r.strain,
-          r.observable,
-          r.qualifier,
-          ...(r.details || []).map((d) => `${d.property_type} ${d.property_value}`),
-          // Search citation fields: full citation, display name, title, journal, pubmed, authors
-          ...(r.references || []).filter(Boolean).flatMap((ref) => [
-            ref.citation,
-            ref.display_name,
-            ref.title,
-            ref.journal_name || ref.journal,
-            ref.pubmed_id || ref.pubmed,
-            // Extract author names
-            ...(Array.isArray(ref.authors)
-              ? ref.authors.filter(Boolean).map((a) => (typeof a === 'string' ? a : a?.author_name))
-              : []),
-          ]),
-        ];
-        return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
-      });
+      // Split by spaces to support multiple search terms (AND logic)
+      // Filter out empty strings and common words like "and"
+      const searchTerms = appliedQuickFilter
+        .toLowerCase()
+        .trim()
+        .split(/\s+/)
+        .filter((term) => term && term !== 'and' && term !== 'or');
+
+      if (searchTerms.length > 0) {
+        results = results.filter((r) => {
+          const searchFields = [
+            r.gene_name,
+            r.feature_name,
+            r.organism,
+            r.experiment_type,
+            r.experiment_comment,
+            r.mutant_type,
+            r.strain,
+            r.observable,
+            r.qualifier,
+            ...(r.details || []).map((d) => `${d.property_type} ${d.property_value}`),
+            // Search citation fields: full citation, display name, title, journal, pubmed, authors
+            ...(r.references || []).filter(Boolean).flatMap((ref) => [
+              ref.citation,
+              ref.display_name,
+              ref.title,
+              ref.journal_name || ref.journal,
+              ref.pubmed_id || ref.pubmed,
+              // Extract author names
+              ...(Array.isArray(ref.authors)
+                ? ref.authors.filter(Boolean).map((a) => (typeof a === 'string' ? a : a?.author_name))
+                : []),
+            ]),
+          ];
+
+          // Combine all searchable text into one string for matching
+          const combinedText = searchFields
+            .filter(Boolean)
+            .map((f) => String(f).toLowerCase())
+            .join(' ');
+
+          // ALL search terms must be found (AND logic)
+          return searchTerms.every((term) => combinedText.includes(term));
+        });
+      }
     }
 
     return results;
@@ -682,34 +699,52 @@ function PhenotypeSearchPage() {
 
         {/* Quick Search */}
         <div className="filter-group">
-          <label htmlFor="quick-filter">Filter results: </label>
-          <input
-            type="text"
-            id="quick-filter"
-            value={pendingQuickFilter}
-            onChange={(e) => setPendingQuickFilter(e.target.value)}
-            placeholder="Type to filter..."
-            className="quick-filter-input"
-          />
-          <button
-            type="button"
-            className="apply-filter-btn"
-            onClick={applyFilter}
-            disabled={!hasPendingChanges}
-            style={{ padding: '6px 12px', border: 'none', background: hasPendingChanges ? '#1976d2' : '#90caf9', color: 'white', fontWeight: 500, cursor: hasPendingChanges ? 'pointer' : 'not-allowed', borderRadius: '4px', fontSize: '14px', marginLeft: '4px' }}
-          >
-            Apply
-          </button>
-          {(appliedQuickFilter || pendingQuickFilter) && (
+          <label htmlFor="quick-filter">
+            Filter results:{' '}
+            <span className="filter-info-icon" title="Filter usage instructions">
+              ⓘ
+              <span className="filter-info-tooltip">
+                <strong>Filter Usage:</strong>
+                <ul>
+                  <li>Enter one or more search terms separated by spaces</li>
+                  <li>Multiple terms use AND logic (all terms must match)</li>
+                  <li>Search is case-insensitive</li>
+                  <li>Words &quot;and&quot; and &quot;or&quot; are ignored</li>
+                  <li>Terms can appear in any column</li>
+                </ul>
+                <em>Example: &quot;biofilm hyphal&quot; finds rows containing both terms</em>
+              </span>
+            </span>
+          </label>
+          <div className="filter-input-group">
+            <input
+              type="text"
+              id="quick-filter"
+              value={pendingQuickFilter}
+              onChange={(e) => setPendingQuickFilter(e.target.value)}
+              placeholder="Type to filter..."
+              className="quick-filter-input"
+            />
             <button
               type="button"
-              className="clear-filter-btn"
-              onClick={clearQuickFilter}
-              title="Clear filter"
+              className="apply-filter-btn"
+              onClick={applyFilter}
+              disabled={!hasPendingChanges}
+              style={{ padding: '6px 12px', border: 'none', background: hasPendingChanges ? '#1976d2' : '#90caf9', color: 'white', fontWeight: 500, cursor: hasPendingChanges ? 'pointer' : 'not-allowed', borderRadius: '4px', fontSize: '14px', marginLeft: '4px' }}
             >
-              ×
+              Apply
             </button>
-          )}
+            {(appliedQuickFilter || pendingQuickFilter) && (
+              <button
+                type="button"
+                className="clear-filter-btn"
+                onClick={clearQuickFilter}
+                title="Clear filter"
+              >
+                ×
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Filter status */}
@@ -784,18 +819,31 @@ function PhenotypeSearchPage() {
   };
 
   const renderAnalyzeSection = () => {
-    if (!data || !data.results || data.results.length === 0) return null;
+    if (!filteredResults || filteredResults.length === 0) return null;
 
-    // Get unique gene names for the gene list
-    const geneList = [...new Set(data.results.map((r) => r.feature_name))];
+    // Get unique gene names from filtered results (respects organism and text filters)
+    const geneList = [...new Set(filteredResults.map((r) => r.feature_name))];
 
-    // Helper to store gene list before navigating
+    // Check if all genes are from the same organism (required for GO tools)
+    const uniqueOrganisms = [...new Set(filteredResults.map((r) => r.organism))];
+    const hasSingleOrganism = uniqueOrganisms.length === 1;
+    const organismName = hasSingleOrganism ? uniqueOrganisms[0] : null;
+
+    // Helper to store gene list and organism before navigating to GO tools
+    const handleGoToolClick = () => {
+      localStorage.setItem('phenotypeSearchGeneList', JSON.stringify(geneList));
+      if (organismName) {
+        localStorage.setItem('phenotypeSearchOrganism', organismName);
+      }
+    };
+
+    // Helper for non-GO tools (batch download, etc.)
     const handleToolClick = () => {
       localStorage.setItem('phenotypeSearchGeneList', JSON.stringify(geneList));
     };
 
     return (
-      <div className="analyze-section">
+      <div id="analyze-section" className="analyze-section">
         <div className="analyze-header">
           Analyze gene list: further analyze the gene list displayed above or download information for this list
         </div>
@@ -804,27 +852,39 @@ function PhenotypeSearchPage() {
             <tr>
               <td className="analyze-label">Further Analysis:</td>
               <td>
-                <a
-                  href="/go-term-finder"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="analyze-link"
-                  onClick={handleToolClick}
-                >
-                  GO Term Finder
-                </a>
+                {hasSingleOrganism ? (
+                  <a
+                    href="/go-term-finder"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="analyze-link"
+                    onClick={handleGoToolClick}
+                  >
+                    GO Term Finder
+                  </a>
+                ) : (
+                  <span className="analyze-link-disabled" title="Filter to a single organism to use GO Term Finder">
+                    GO Term Finder
+                  </span>
+                )}
                 <span className="analyze-desc">Find common features of genes in list</span>
               </td>
               <td>
-                <a
-                  href="/go-slim-mapper"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="analyze-link"
-                  onClick={handleToolClick}
-                >
-                  GO Slim Mapper
-                </a>
+                {hasSingleOrganism ? (
+                  <a
+                    href="/go-slim-mapper"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="analyze-link"
+                    onClick={handleGoToolClick}
+                  >
+                    GO Slim Mapper
+                  </a>
+                ) : (
+                  <span className="analyze-link-disabled" title="Filter to a single organism to use GO Slim Mapper">
+                    GO Slim Mapper
+                  </span>
+                )}
                 <span className="analyze-desc">Sort genes into broad categories</span>
               </td>
               <td>
@@ -880,6 +940,12 @@ function PhenotypeSearchPage() {
       {hasSearched && (
         <nav className="page-nav">
           <Link to="/phenotype/search">New Search</Link>
+          {data?.results?.length > 0 && (
+            <>
+              <span className="nav-separator">|</span>
+              <a href="#analyze-section" className="nav-link">Analyze Gene List</a>
+            </>
+          )}
         </nav>
       )}
 

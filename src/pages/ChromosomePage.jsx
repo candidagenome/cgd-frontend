@@ -3,14 +3,52 @@ import { Link, useParams, useSearchParams } from 'react-router-dom';
 import chromosomeApi from '../api/chromosomeApi';
 import './ChromosomePage.css';
 
+// JBrowse assembly configuration with default tracks
+const jbrowseConfig = {
+  'C_albicans_SC5314': {
+    assembly: 'C_albicans_SC5314',
+    geneTrack: 'TranscribedFeatures',
+    defaultTracks: 'DNA,TranscribedFeatures',
+  },
+  'C_auris_B8441': {
+    assembly: 'C_auris_B8441',
+    geneTrack: 'C_auris_B8441_features.sorted.gff',
+    defaultTracks: 'C_auris_B8441_features.sorted.gff',
+  },
+  'C_dubliniensis_CD36': {
+    assembly: 'C_dubliniensis_CD36',
+    geneTrack: 'C_dubliniensis_CD36_features.sorted.gff',
+    defaultTracks: 'C_dubliniensis_CD36_features.sorted.gff',
+  },
+  'C_glabrata_CBS138': {
+    assembly: 'C_glabrata_CBS138',
+    geneTrack: 'C_glabrata_CBS138_features.sorted.gff',
+    defaultTracks: 'C_glabrata_CBS138_features.sorted.gff',
+  },
+  'C_parapsilosis_CDC317': {
+    assembly: 'C_parapsilosis_CDC317',
+    geneTrack: 'C_parapsilosis_CDC317_features.sorted.gff',
+    defaultTracks: 'C_parapsilosis_CDC317_features.sorted.gff',
+  },
+  'C_tropicalis_MYA3404': {
+    assembly: 'C_tropicalis_MYA3404',
+    geneTrack: '',
+    defaultTracks: '',  // Track names TBD - users can select manually
+  },
+  // Alias for organism_abbrev without strain suffix
+  'C_tropicalis': {
+    assembly: 'C_tropicalis_MYA3404',
+    geneTrack: '',
+    defaultTracks: '',  // Track names TBD - users can select manually
+  },
+};
+
 function ChromosomePage() {
   const { name } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [chromosome, setChromosome] = useState(null);
   const [history, setHistory] = useState(null);
-  const [references, setReferences] = useState(null);
-  const [summaryNotes, setSummaryNotes] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -49,45 +87,11 @@ function ChromosomePage() {
       }
     };
 
-    const fetchReferences = async () => {
-      if (activeTab === 'references' && !references) {
-        try {
-          const data = await chromosomeApi.getReferences(name);
-          setReferences(data);
-        } catch (err) {
-          console.error('References error:', err);
-        }
-      }
-    };
-
-    const fetchSummary = async () => {
-      if (activeTab === 'summary' && !summaryNotes) {
-        try {
-          const data = await chromosomeApi.getSummaryNotes(name);
-          setSummaryNotes(data);
-        } catch (err) {
-          console.error('Summary error:', err);
-        }
-      }
-    };
-
     fetchHistory();
-    fetchReferences();
-    fetchSummary();
-  }, [activeTab, name, history, references, summaryNotes]);
+  }, [activeTab, name, history]);
 
   const handleTabChange = (tab) => {
     setSearchParams({ tab });
-  };
-
-  const formatDate = (dateStr) => {
-    if (!dateStr) return 'N/A';
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
   };
 
   const formatNumber = (num) => {
@@ -243,18 +247,6 @@ function ChromosomePage() {
           >
             History
           </button>
-          <button
-            className={`tab ${activeTab === 'references' ? 'active' : ''}`}
-            onClick={() => handleTabChange('references')}
-          >
-            References
-          </button>
-          <button
-            className={`tab ${activeTab === 'summary' ? 'active' : ''}`}
-            onClick={() => handleTabChange('summary')}
-          >
-            Summary Notes
-          </button>
         </div>
 
         {/* Tab Content */}
@@ -288,24 +280,17 @@ function ChromosomePage() {
               <div className="links-section">
                 <h4>External Links</h4>
                 <ul>
-                  <li>
-                    <a
-                      href={`/jbrowse2/?assembly=C_albicans_SC5314&loc=${chromosome.feature_name}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      View in JBrowse
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href={`https://www.ncbi.nlm.nih.gov/nuccore/${chromosome.dbxref_id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      NCBI Nucleotide
-                    </a>
-                  </li>
+                  {chromosome.organism_abbrev && jbrowseConfig[chromosome.organism_abbrev] && (
+                    <li>
+                      <a
+                        href={`/jbrowse2/?assembly=${jbrowseConfig[chromosome.organism_abbrev].assembly}&loc=${chromosome.feature_name}${jbrowseConfig[chromosome.organism_abbrev].defaultTracks ? `&tracks=${jbrowseConfig[chromosome.organism_abbrev].defaultTracks}` : ''}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View in JBrowse
+                      </a>
+                    </li>
+                  )}
                 </ul>
               </div>
             </div>
@@ -413,75 +398,6 @@ function ChromosomePage() {
             </div>
           )}
 
-          {activeTab === 'references' && (
-            <div className="references-tab">
-              <h3>References</h3>
-
-              {!references ? (
-                <div className="loading-inline">Loading references...</div>
-              ) : references.references?.length > 0 ? (
-                <table className="references-table">
-                  <thead>
-                    <tr>
-                      <th>Year</th>
-                      <th>Citation</th>
-                      <th>PubMed</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {references.references.map((ref, idx) => (
-                      <tr key={idx}>
-                        <td>{ref.year}</td>
-                        <td>
-                          <Link to={`/reference/${ref.reference_no}`}>
-                            {ref.title || ref.citation}
-                          </Link>
-                        </td>
-                        <td>
-                          {ref.pubmed ? (
-                            <a
-                              href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {ref.pubmed}
-                            </a>
-                          ) : (
-                            '-'
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : (
-                <p className="no-data">No references found for this chromosome.</p>
-              )}
-            </div>
-          )}
-
-          {activeTab === 'summary' && (
-            <div className="summary-tab">
-              <h3>Summary Notes</h3>
-
-              {!summaryNotes ? (
-                <div className="loading-inline">Loading summary notes...</div>
-              ) : summaryNotes.summary_notes?.length > 0 ? (
-                <div className="summary-notes">
-                  {summaryNotes.summary_notes.map((note, idx) => (
-                    <div key={idx} className="summary-paragraph">
-                      <p>{note.paragraph_text}</p>
-                      <div className="paragraph-meta">
-                        Last edited: {formatDate(note.date_edited)}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="no-data">No summary notes available for this chromosome.</p>
-              )}
-            </div>
-          )}
         </div>
       </div>
     </div>

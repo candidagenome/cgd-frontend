@@ -6,6 +6,59 @@ import { searchApi } from '../api/searchApi';
 import { CitationLinksBelow } from '../utils/formatCitation.jsx';
 import './SearchResultsPage.css';
 
+// Helper function to strip HTML tags from text
+const stripHtml = (html) => {
+  if (!html) return '';
+  return html.replace(/<[^>]*>/g, '');
+};
+
+// Helper function to download results as CSV or TSV
+const downloadResults = (results, format, query) => {
+  const separator = format === 'csv' ? ',' : '\t';
+  const extension = format === 'csv' ? 'csv' : 'tsv';
+
+  // Define columns to export
+  const headers = ['Name', 'ID', 'Description', 'Organism', 'Category', 'Link'];
+
+  // Build rows
+  const rows = results.map(r => {
+    const name = stripHtml(r.highlighted_name || r.name || '');
+    const id = r.id || '';
+    const description = stripHtml(r.highlighted_description || r.description || '');
+    const organism = r.organism || '';
+    const category = r.category || '';
+    const link = r.link || '';
+
+    // Escape values for CSV (wrap in quotes if contains separator, quote, or newline)
+    const escapeValue = (val) => {
+      const str = String(val);
+      if (format === 'csv' && (str.includes(',') || str.includes('"') || str.includes('\n'))) {
+        return '"' + str.replace(/"/g, '""') + '"';
+      }
+      if (format === 'tsv' && (str.includes('\t') || str.includes('\n'))) {
+        return str.replace(/\t/g, ' ').replace(/\n/g, ' ');
+      }
+      return str;
+    };
+
+    return [name, id, description, organism, category, link].map(escapeValue).join(separator);
+  });
+
+  // Combine headers and rows
+  const content = [headers.join(separator), ...rows].join('\n');
+
+  // Create and trigger download
+  const blob = new Blob([content], { type: format === 'csv' ? 'text/csv;charset=utf-8;' : 'text/tab-separated-values;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `search_results_${query.replace(/[^a-zA-Z0-9]/g, '_')}.${extension}`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+};
+
 // Register AG Grid modules once
 if (!ModuleRegistry.__cgdRegistered) {
   ModuleRegistry.registerModules([AllCommunityModule]);
@@ -488,7 +541,7 @@ const SearchResultsPage = () => {
     return (
       <div>
         {/* Quick Filter Box */}
-        <div className="filter-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 15px', background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '4px', marginBottom: '10px' }}>
+        <div className="filter-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 15px', background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '4px', marginBottom: '10px', flexWrap: 'wrap' }}>
           <label htmlFor="quick-filter" style={{ fontWeight: 500, color: '#333', whiteSpace: 'nowrap' }}>Filter results: </label>
           <input
             type="text"
@@ -521,6 +574,26 @@ const SearchResultsPage = () => {
               Showing {filteredResults.length} of {organismFiltered.length} results
             </span>
           )}
+          <div style={{ marginLeft: 'auto', display: 'flex', gap: '8px' }}>
+            <button
+              type="button"
+              onClick={() => downloadResults(filteredResults, 'csv', query)}
+              disabled={filteredResults.length === 0}
+              style={{ padding: '6px 12px', border: '1px solid #4caf50', background: '#fff', color: '#4caf50', fontWeight: 500, cursor: filteredResults.length > 0 ? 'pointer' : 'not-allowed', borderRadius: '4px', fontSize: '13px', opacity: filteredResults.length > 0 ? 1 : 0.5 }}
+              title="Download results as CSV"
+            >
+              CSV
+            </button>
+            <button
+              type="button"
+              onClick={() => downloadResults(filteredResults, 'tsv', query)}
+              disabled={filteredResults.length === 0}
+              style={{ padding: '6px 12px', border: '1px solid #2196f3', background: '#fff', color: '#2196f3', fontWeight: 500, cursor: filteredResults.length > 0 ? 'pointer' : 'not-allowed', borderRadius: '4px', fontSize: '13px', opacity: filteredResults.length > 0 ? 1 : 0.5 }}
+              title="Download results as TSV"
+            >
+              TSV
+            </button>
+          </div>
         </div>
 
         <div className="ag-grid-wrapper">

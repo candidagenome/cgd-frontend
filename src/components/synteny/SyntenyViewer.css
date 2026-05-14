@@ -92,12 +92,20 @@
 }
 
 .gene-group {
-  transition: opacity 0.15s ease;
+  /* No opacity transition - handled by D3 to prevent flicker */
 }
 
 .gene-group:hover .gene-shape {
   stroke-width: 2;
   filter: brightness(0.9);
+}
+
+.gene-shape {
+  transition: stroke-width 0.15s ease-out, filter 0.15s ease-out;
+}
+
+.ortholog-connection {
+  transition: fill-opacity 0.2s ease-out, stroke-opacity 0.2s ease-out;
 }
 
 .gene-label {
@@ -193,6 +201,11 @@
 .legend-box.singleton {
   background-color: #95a5a6;
   border-color: #7f8c8d;
+}
+
+.legend-box.intron {
+  background-color: #e8e8e8;
+  border-color: #999;
 }
 
 .legend-arrow {

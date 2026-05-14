@@ -811,6 +811,67 @@
   margin-bottom: 4px;
 }
 
+/* Chromosome Inventory Table */
+.chromosome-table-wrapper {
+  overflow-x: auto;
+  margin: 15px 0;
+}
+
+.chromosome-inventory-table {
+  border-collapse: collapse;
+  font-size: 0.85em;
+  min-width: 100%;
+}
+
+.chromosome-inventory-table th,
+.chromosome-inventory-table td {
+  border: 1px solid #ddd;
+  padding: 6px 8px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.chromosome-inventory-table th {
+  background-color: #FFCC33;
+  font-weight: bold;
+}
+
+.chromosome-inventory-table .chr-header {
+  background-color: #FFF5CC;
+  font-weight: normal;
+  min-width: 50px;
+}
+
+.chromosome-inventory-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.chromosome-inventory-table td:first-child {
+  text-align: left;
+  min-width: 150px;
+}
+
+.chromosome-inventory-table td.indent {
+  padding-left: 20px;
+}
+
+.chromosome-inventory-table .total-row {
+  background-color: #DCDCDC;
+}
+
+.chromosome-inventory-table .total-row td {
+  font-weight: bold;
+}
+
+.chromosome-inventory-table a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.chromosome-inventory-table a:hover {
+  text-decoration: underline;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .info-page {

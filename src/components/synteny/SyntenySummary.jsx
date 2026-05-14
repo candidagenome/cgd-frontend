@@ -151,6 +151,9 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
       .attr('height', height)
       .attr('class', 'synteny-summary-svg');
 
+    // Create defs for clip paths
+    const defs = svg.append('defs');
+
     const g = svg.append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
 
@@ -160,6 +163,16 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
       const allCoords = genes.flatMap(gene => [gene.start, gene.stop]);
       const minCoord = allCoords.length > 0 ? Math.min(...allCoords) : 0;
       const maxCoord = allCoords.length > 0 ? Math.max(...allCoords) : 1000;
+
+      // Find the ortholog (query gene or its ortholog in this species) midpoint
+      let orthologMidpoint = null;
+      genes.forEach(gene => {
+        const orthologId = geneToOrtholog[gene.feature_name];
+        if (gene.is_query || (orthologId && orthologId === queryOrthologId)) {
+          orthologMidpoint = (Math.min(gene.start, gene.stop) + Math.max(gene.start, gene.stop)) / 2;
+        }
+      });
+
       return {
         ...region,
         index: idx,
@@ -167,6 +180,7 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
         maxCoord,
         span: maxCoord - minCoord,
         yPosition: idx * (trackHeight + trackSpacing),
+        orthologMidpoint,
       };
     });
 
@@ -178,11 +192,24 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
     // Create a single global scale (bp per pixel) based on the largest span
     const bpPerPixel = totalDomain / width;
 
-    // Create x scales for each species track, centered within the available width
+    // Calculate the target x-coordinate where all orthologs should align (viewport center)
+    const alignmentTargetX = width / 2;
+
+    // Create x scales for each species track, aligned by ortholog position
     const xScales = {};
     speciesData.forEach(sd => {
       const regionWidth = sd.span / bpPerPixel;
-      const xOffset = (width - regionWidth) / 2;
+
+      // Calculate xOffset to align ortholog at the center
+      let xOffset;
+      if (sd.orthologMidpoint !== null) {
+        // Position so ortholog midpoint lands at center
+        const orthologRelativePos = (sd.orthologMidpoint - sd.minCoord) / bpPerPixel;
+        xOffset = alignmentTargetX - orthologRelativePos;
+      } else {
+        // No ortholog in this species - fall back to centering the region
+        xOffset = (width - regionWidth) / 2;
+      }
 
       xScales[sd.species] = (coord) => {
         const relativePos = (coord - sd.minCoord) / bpPerPixel;
@@ -247,7 +274,7 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
         const arrowSize = Math.min(6, Math.max(3, geneWidth * 0.25));
         const isForward = gene.strand === 'W' || gene.strand === '+';
 
-        // Gene shape
+        // Gene shape (arrow polygon points)
         const points = isForward
           ? [
               [x, y],
@@ -264,12 +291,55 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
               [x + arrowSize, y + geneHeight],
             ];
 
-        trackGroup.append('polygon')
-          .attr('points', points.map(p => p.join(',')).join(' '))
-          .attr('fill', fillColor)
-          .attr('stroke', isQueryGene ? '#b71c1c' : '#888')
-          .attr('stroke-width', isQueryGene ? 1.5 : 0.5)
-          .attr('class', 'gene-shape');
+        // Check if gene has introns (multiple exons)
+        const hasExons = gene.exons && gene.exons.length > 1;
+
+        if (hasExons) {
+          // Gene has introns - use clipPath for arrow shape
+          const clipId = `mini-gene-clip-${gene.feature_name.replace(/[^a-zA-Z0-9]/g, '_')}-${sd.index}`;
+          defs.append('clipPath')
+            .attr('id', clipId)
+            .append('polygon')
+            .attr('points', points.map(p => p.join(',')).join(' '));
+
+          // Arrow-shaped background for introns
+          trackGroup.append('polygon')
+            .attr('points', points.map(p => p.join(',')).join(' '))
+            .attr('fill', '#e8e8e8');
+
+          // Draw exons clipped to arrow shape
+          const exonGroup = trackGroup.append('g')
+            .attr('clip-path', `url(#${clipId})`);
+
+          gene.exons.forEach(exon => {
+            const exonLeft = Math.min(exon.start, exon.stop);
+            const exonRight = Math.max(exon.start, exon.stop);
+            const exonX = xScale(exonLeft);
+            const exonWidth = Math.max(xScale(exonRight) - exonX, 2);
+            exonGroup.append('rect')
+              .attr('x', exonX)
+              .attr('y', y)
+              .attr('width', exonWidth)
+              .attr('height', geneHeight)
+              .attr('fill', fillColor);
+          });
+
+          // Draw arrow outline on top
+          trackGroup.append('polygon')
+            .attr('points', points.map(p => p.join(',')).join(' '))
+            .attr('fill', 'none')
+            .attr('stroke', isQueryGene ? '#b71c1c' : '#888')
+            .attr('stroke-width', isQueryGene ? 1.5 : 0.5)
+            .attr('class', 'gene-shape');
+        } else {
+          // No introns - draw solid arrow
+          trackGroup.append('polygon')
+            .attr('points', points.map(p => p.join(',')).join(' '))
+            .attr('fill', fillColor)
+            .attr('stroke', isQueryGene ? '#b71c1c' : '#888')
+            .attr('stroke-width', isQueryGene ? 1.5 : 0.5)
+            .attr('class', 'gene-shape');
+        }
 
         // Only show label for query gene or query orthologs
         if ((gene.is_query || (orthologId === queryOrthologId)) && geneWidth > 25) {

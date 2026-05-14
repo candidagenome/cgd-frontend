@@ -33,6 +33,17 @@ const genomeSnapshotApi = {
     const response = await api.get(`/api/genome-snapshot/${encodeURIComponent(organismAbbrev)}/go-slim`);
     return response.data;
   },
+
+  /**
+   * Get chromosome feature inventory for genome snapshot
+   *
+   * @param {string} organismAbbrev - Organism abbreviation (e.g., C_albicans_SC5314)
+   * @returns {Promise<Object>} Chromosome inventory with feature counts
+   */
+  getChromosomeInventory: async (organismAbbrev) => {
+    const response = await api.get(`/api/genome-snapshot/${encodeURIComponent(organismAbbrev)}/chromosome-inventory`);
+    return response.data;
+  },
 };
 
 export default genomeSnapshotApi;

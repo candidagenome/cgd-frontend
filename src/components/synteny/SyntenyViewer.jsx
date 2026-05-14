@@ -41,6 +41,7 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
   const [syntenyData, setSyntenyData] = useState(null);
   const [visibleSpecies, setVisibleSpecies] = useState({});
   const [tooltip, setTooltip] = useState({ show: false, content: null });
+  const hoverTimeoutRef = useRef(null); // Debounce hover changes
 
   const navigate = useNavigate();
   const dateStamp = new Date().toISOString().split('T')[0];
@@ -111,6 +112,9 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
       .attr('class', 'synteny-svg');
 
     svgRef.current = svg.node();
+
+    // Create defs for clip paths
+    svg.append('defs');
 
     const g = svg.append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
@@ -218,43 +222,143 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
           fillColor = COLORS.singletonGene;
         }
 
-        // Gene rectangle with direction indicator
-        if (gene.strand === 'W') {
-          // Watson strand - arrow pointing right
-          const points = [
-            [x, y],
-            [x + geneWidth - 6, y],
-            [x + geneWidth, y + geneHeight / 2],
-            [x + geneWidth - 6, y + geneHeight],
-            [x, y + geneHeight],
-          ];
+        const hasExons = gene.exons && gene.exons.length > 1;
+        const strokeColor = gene.is_query ? '#c0392b' : '#666';
+        const strokeWidth = gene.is_query ? 2 : 1;
+
+        if (hasExons) {
+          // Gene has introns - draw outline and fill only exons
+          // Calculate arrow points
+          let arrowPoints;
+          if (gene.strand === 'W') {
+            // Watson strand - arrow pointing right
+            arrowPoints = [
+              [x, y],
+              [x + geneWidth - 6, y],
+              [x + geneWidth, y + geneHeight / 2],
+              [x + geneWidth - 6, y + geneHeight],
+              [x, y + geneHeight],
+            ];
+          } else {
+            // Crick strand - arrow pointing left
+            arrowPoints = [
+              [x, y + geneHeight / 2],
+              [x + 6, y],
+              [x + geneWidth, y],
+              [x + geneWidth, y + geneHeight],
+              [x + 6, y + geneHeight],
+            ];
+          }
+
+          // Create a unique clip path for this gene's arrow shape
+          const clipId = `gene-clip-${gene.feature_name.replace(/[^a-zA-Z0-9]/g, '_')}-${sd.index}`;
+          svg.select('defs').append('clipPath')
+            .attr('id', clipId)
+            .append('polygon')
+            .attr('points', arrowPoints.map(p => p.join(',')).join(' '));
+
+          // First draw arrow-shaped background for introns (to cover chromosome line)
           geneGroup.append('polygon')
-            .attr('points', points.map(p => p.join(',')).join(' '))
-            .attr('fill', fillColor)
-            .attr('stroke', gene.is_query ? '#c0392b' : '#666')
-            .attr('stroke-width', gene.is_query ? 2 : 1)
-            .attr('class', 'gene-shape');
+            .attr('points', arrowPoints.map(p => p.join(',')).join(' '))
+            .attr('fill', '#e8e8e8');
+
+          // Draw filled exons - clipped to arrow shape
+          const exonGroup = geneGroup.append('g')
+            .attr('clip-path', `url(#${clipId})`);
+
+          gene.exons.forEach(exon => {
+            const exonX = xScale(exon.start);
+            const exonWidth = Math.max(xScale(exon.stop) - exonX, 2);
+            exonGroup.append('rect')
+              .attr('x', exonX)
+              .attr('y', y)
+              .attr('width', exonWidth)
+              .attr('height', geneHeight)
+              .attr('fill', fillColor)
+              .attr('class', 'exon-shape')
+              .style('pointer-events', 'none');
+          });
+
+          // Draw gene outline with direction indicator on top
+          geneGroup.append('polygon')
+            .attr('points', arrowPoints.map(p => p.join(',')).join(' '))
+            .attr('fill', 'none')
+            .attr('stroke', strokeColor)
+            .attr('stroke-width', strokeWidth)
+            .attr('class', 'gene-outline');
+
+          // Add invisible hit area on top to capture mouse events
+          geneGroup.append('rect')
+            .attr('x', x)
+            .attr('y', y)
+            .attr('width', geneWidth)
+            .attr('height', geneHeight)
+            .attr('fill', 'rgba(0,0,0,0)')
+            .style('pointer-events', 'all')
+            .attr('class', 'gene-hit-area');
         } else {
-          // Crick strand - arrow pointing left
-          const points = [
-            [x, y + geneHeight / 2],
-            [x + 6, y],
-            [x + geneWidth, y],
-            [x + geneWidth, y + geneHeight],
-            [x + 6, y + geneHeight],
-          ];
-          geneGroup.append('polygon')
-            .attr('points', points.map(p => p.join(',')).join(' '))
-            .attr('fill', fillColor)
-            .attr('stroke', gene.is_query ? '#c0392b' : '#666')
-            .attr('stroke-width', gene.is_query ? 2 : 1)
-            .attr('class', 'gene-shape');
+          // No introns - draw solid filled gene as before
+          if (gene.strand === 'W') {
+            // Watson strand - arrow pointing right
+            const points = [
+              [x, y],
+              [x + geneWidth - 6, y],
+              [x + geneWidth, y + geneHeight / 2],
+              [x + geneWidth - 6, y + geneHeight],
+              [x, y + geneHeight],
+            ];
+            geneGroup.append('polygon')
+              .attr('points', points.map(p => p.join(',')).join(' '))
+              .attr('fill', fillColor)
+              .attr('stroke', strokeColor)
+              .attr('stroke-width', strokeWidth)
+              .attr('class', 'gene-shape');
+          } else {
+            // Crick strand - arrow pointing left
+            const points = [
+              [x, y + geneHeight / 2],
+              [x + 6, y],
+              [x + geneWidth, y],
+              [x + geneWidth, y + geneHeight],
+              [x + 6, y + geneHeight],
+            ];
+            geneGroup.append('polygon')
+              .attr('points', points.map(p => p.join(',')).join(' '))
+              .attr('fill', fillColor)
+              .attr('stroke', strokeColor)
+              .attr('stroke-width', strokeWidth)
+              .attr('class', 'gene-shape');
+          }
         }
 
-        // Gene label (only show for query gene or if enough space)
-        if (gene.is_query || geneWidth > 50) {
+        // Gene label - position in largest exon for genes with introns
+        const rawLabel = gene.gene_name || gene.feature_name || '';
+
+        // For genes with introns, find the largest exon for label placement
+        let labelX = x + geneWidth / 2;
+        let labelWidth = geneWidth;
+        if (hasExons && gene.exons.length > 0) {
+          // Find the largest exon
+          let largestExon = gene.exons[0];
+          let largestWidth = 0;
+          gene.exons.forEach(exon => {
+            const exonW = xScale(exon.stop) - xScale(exon.start);
+            if (exonW > largestWidth) {
+              largestWidth = exonW;
+              largestExon = exon;
+            }
+          });
+          labelX = xScale(largestExon.start) + (xScale(largestExon.stop) - xScale(largestExon.start)) / 2;
+          labelWidth = Math.max(xScale(largestExon.stop) - xScale(largestExon.start), 4);
+        }
+
+        // Estimate ~6px per character at 10px font size
+        const maxChars = Math.max(3, Math.floor((labelWidth - 10) / 6));
+        const labelText = rawLabel.length > maxChars ? rawLabel.substring(0, maxChars) : rawLabel;
+
+        if (gene.is_query || labelWidth > 50) {
           geneGroup.append('text')
-            .attr('x', x + geneWidth / 2)
+            .attr('x', labelX)
             .attr('y', y + geneHeight / 2)
             .attr('text-anchor', 'middle')
             .attr('dominant-baseline', 'middle')
@@ -262,7 +366,7 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
             .style('font-size', '10px')
             .style('fill', '#fff')
             .style('pointer-events', 'none')
-            .text(gene.gene_name || gene.feature_name.substring(0, 8));
+            .text(labelText);
         }
 
         // Click handler
@@ -270,6 +374,11 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
 
         // Hover handlers for tooltip
         geneGroup.on('mouseenter', () => {
+          // Clear any pending mouseleave timeout
+          if (hoverTimeoutRef.current) {
+            clearTimeout(hoverTimeoutRef.current);
+            hoverTimeoutRef.current = null;
+          }
           setTooltip({
             show: true,
             content: {
@@ -279,12 +388,16 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
               stop: gene.stop,
               strand: gene.strand === 'W' ? 'Watson (+)' : 'Crick (-)',
               orthologId: orthologId,
+              exonCount: gene.exons ? gene.exons.length : 0,
             },
           });
         });
 
         geneGroup.on('mouseleave', () => {
-          setTooltip({ show: false, content: null });
+          // Debounce mouseleave to prevent flicker
+          hoverTimeoutRef.current = setTimeout(() => {
+            setTooltip({ show: false, content: null });
+          }, 50);
         });
       });
     });
@@ -543,6 +656,12 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
                 <span>Ortholog: {tooltip.content.orthologId}</span>
               </>
             )}
+            {tooltip.content.exonCount > 1 && (
+              <>
+                <span className="tooltip-separator">|</span>
+                <span>{tooltip.content.exonCount} exons</span>
+              </>
+            )}
             <span className="tooltip-hint">(Click to view locus)</span>
           </>
         ) : (
@@ -571,6 +690,10 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
           <span className="legend-item">
             <span className="legend-box singleton"></span>
             Species-specific
+          </span>
+          <span className="legend-item">
+            <span className="legend-box intron"></span>
+            Intron
           </span>
           <span className="legend-item">
             <span className="legend-arrow watson"></span>

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 
 // Amino acid color categories - lighter/pastel colors
 const AA_COLORS = {
@@ -26,18 +26,23 @@ const NT_COLORS = {
   'C': '#C8E8C8', 'T': '#C8E8C8',
 };
 
-const BLOCK_SIZE = 50;
+const BLOCK_SIZE_DESKTOP = 100;  // 100 positions per line for desktop
+const BLOCK_SIZE_COMPACT = 150;  // 150 positions for compact mode
+const BLOCK_SIZE_MOBILE = 50;    // 50 positions for mobile/fallback
 const IDENTITY_THRESHOLD = 0.8;
+
+// CGD core species for filtering
+const CGD_CORE_SPECIES = new Set([
+  'Candida albicans SC5314',
+  'Candida dubliniensis CD36',
+  'Candida tropicalis MYA-3404',
+  'Candida parapsilosis CDC317',
+  'Candida auris B8441',
+  'Candida glabrata CBS138',
+]);
 
 // Prefixes for C. albicans SC5314 sequences (should be reference)
 const CALBICANS_PREFIXES = ['C1_', 'orf19.', 'Ca21chr', 'C1-'];
-
-// Column widths (in characters)
-const COL_NUM = 2;      // Row number
-const COL_ID = 13;      // Sequence ID
-const COL_COV = 7;      // Coverage
-const COL_PID = 7;      // Percent identity
-const COL_GAP = 5;      // Gap before sequence
 
 /**
  * Calculate coverage and percent identity relative to reference
@@ -100,61 +105,35 @@ function calculateColumnConservation(sequences, refIndex) {
 }
 
 /**
- * Pad string to width (left or right aligned)
- */
-function pad(str, width, alignRight = false) {
-  const s = String(str);
-  if (s.length >= width) return s.substring(0, width);
-  const padding = ' '.repeat(width - s.length);
-  return alignRight ? padding + s : s + padding;
-}
-
-/**
  * Build position ruler string
- * Format: "  1 [        .         .         .         .         : 50"
- * - [ only at position 1
- * - ] only at the final position
- * - : at positions 50, 150, 250, 350 (every 50 not divisible by 100)
- * - digit at positions 100, 200, 300 (hundreds marker)
- * - . at every 10th position
  */
 function buildRuler(start, end, totalLength) {
   const blockLen = end - start;
   let ruler = '';
 
   for (let i = 0; i < blockLen; i++) {
-    const pos = start + i + 1; // 1-based position
+    const pos = start + i + 1;
 
     if (pos === 1) {
-      // Opening bracket only at position 1
       ruler += '[';
     } else if (pos === totalLength) {
-      // Closing bracket at final position
       ruler += ']';
     } else if (pos % 100 === 0) {
-      // Hundreds marker - ones digit only (1, 2, 3, ... 9, 0, 1, ...)
       ruler += String((pos / 100) % 10);
     } else if (pos % 50 === 0) {
-      // Colon at 50, 150, 250, etc.
       ruler += ':';
     } else if (pos % 10 === 0) {
-      // Dot at every 10th position
       ruler += '.';
     } else {
       ruler += ' ';
     }
   }
 
-  // Start position (right-aligned, 4 chars) followed by space - shifted right by 1
-  const startStr = pad(String(start + 1), 4, true) + ' ';
-  // End position - add extra space to shift right by 1
-  const endStr = '  ' + end;
-
-  return startStr + ruler + endStr;
+  return ruler;
 }
 
 /**
- * Render residue (amino acid or nucleotide) with optional coloring
+ * Render residue with optional coloring
  */
 function Residue({ char, shouldColor, isProtein }) {
   if (char === '-') {
@@ -175,12 +154,94 @@ function Residue({ char, shouldColor, isProtein }) {
 }
 
 /**
+ * Color key legend component
+ */
+function ColorKeyPopover({ isProtein, onClose }) {
+  const colors = isProtein ? [
+    { color: '#B8D4E8', label: 'Hydrophobic (A,I,L,M,V)' },
+    { color: '#D4C4E8', label: 'Aromatic (F,W,Y)' },
+    { color: '#C8E8C8', label: 'Polar (N,Q,S,T)' },
+    { color: '#F8C4C4', label: 'Negative (D,E)' },
+    { color: '#C4E8E8', label: 'Positive (H,K,R)' },
+    { color: '#F8DCC4', label: 'Backbone (G,P)' },
+    { color: '#F8F4C4', label: 'Cysteine (C)' },
+  ] : [
+    { color: '#B8D4E8', label: 'Purine (A,G)' },
+    { color: '#C8E8C8', label: 'Pyrimidine (C,T)' },
+  ];
+
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        top: '100%',
+        left: 0,
+        zIndex: 100,
+        backgroundColor: '#fff',
+        border: '1px solid #ddd',
+        borderRadius: '4px',
+        padding: '10px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+        minWidth: '200px',
+      }}
+    >
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+        <strong style={{ fontSize: '12px' }}>Color Key</strong>
+        <button
+          onClick={onClose}
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            fontSize: '14px',
+            color: '#666',
+          }}
+        >
+          ×
+        </button>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '11px' }}>
+        {colors.map(({ color, label }) => (
+          <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ backgroundColor: color, width: '14px', height: '14px', display: 'inline-block' }} />
+            <span>{label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/**
  * Main alignment viewer component
  */
 function AlignmentViewer({ sequences, alignmentType, referenceId }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
+  const [showColorKey, setShowColorKey] = useState(false);
+  const [showCGDOnly, setShowCGDOnly] = useState(false);
+  const [compactMode, setCompactMode] = useState(true);
+  const [hoveredGene, setHoveredGene] = useState(null);
+  const alignmentRef = useRef(null);
+  const [blockSize, setBlockSize] = useState(BLOCK_SIZE_DESKTOP);
 
-  // Find reference sequence index - prefer C. albicans SC5314 sequence
+  // Detect screen size for responsive block size
+  useEffect(() => {
+    const updateBlockSize = () => {
+      if (window.innerWidth < 768) {
+        setBlockSize(BLOCK_SIZE_MOBILE);
+      } else if (compactMode) {
+        setBlockSize(BLOCK_SIZE_COMPACT);
+      } else {
+        setBlockSize(BLOCK_SIZE_DESKTOP);
+      }
+    };
+    updateBlockSize();
+    window.addEventListener('resize', updateBlockSize);
+    return () => window.removeEventListener('resize', updateBlockSize);
+  }, [compactMode]);
+
+  // Find reference sequence index
   const actualRefIndex = useMemo(() => {
     if (referenceId) {
       const idx = sequences.findIndex(s => s.sequence_id === referenceId);
@@ -197,7 +258,7 @@ function AlignmentViewer({ sequences, alignmentType, referenceId }) {
     return 0;
   }, [sequences, referenceId]);
 
-  // Calculate stats for all sequences relative to reference
+  // Calculate stats for all sequences
   const sequenceStats = useMemo(() => {
     if (!sequences.length) return [];
     const refSeq = sequences[actualRefIndex]?.sequence || '';
@@ -215,7 +276,7 @@ function AlignmentViewer({ sequences, alignmentType, referenceId }) {
     return calculateColumnConservation(sequences, actualRefIndex);
   }, [sequences, actualRefIndex]);
 
-  // Sort sequences: reference first, then by identity descending
+  // Sort and filter sequences
   const sortedSequences = useMemo(() => {
     const withStats = sequences.map((seq, idx) => ({
       ...seq,
@@ -223,32 +284,48 @@ function AlignmentViewer({ sequences, alignmentType, referenceId }) {
       stats: sequenceStats[idx] || { coverage: 0, identity: 0 },
     }));
 
-    return withStats.sort((a, b) => {
+    let filtered = withStats;
+    if (showCGDOnly) {
+      filtered = withStats.filter(seq =>
+        seq.organism_name && CGD_CORE_SPECIES.has(seq.organism_name)
+      );
+    }
+
+    return filtered.sort((a, b) => {
       if (a.originalIndex === actualRefIndex) return -1;
       if (b.originalIndex === actualRefIndex) return 1;
       return b.stats.identity - a.stats.identity;
     });
-  }, [sequences, sequenceStats, actualRefIndex]);
+  }, [sequences, sequenceStats, actualRefIndex, showCGDOnly]);
+
+  // Count CGD core species
+  const cgdCoreCount = useMemo(() => {
+    return sequences.filter(seq =>
+      seq.organism_name && CGD_CORE_SPECIES.has(seq.organism_name)
+    ).length;
+  }, [sequences]);
 
   if (!sequences.length) {
     return <div style={{ color: '#666', fontStyle: 'italic' }}>No alignment data</div>;
   }
 
   const alignmentLength = sequences[0]?.sequence?.length || 0;
-  const numBlocks = Math.ceil(alignmentLength / BLOCK_SIZE);
+  const numBlocks = Math.ceil(alignmentLength / blockSize);
 
-  // Generate blocks
   const blocks = [];
   for (let blockIdx = 0; blockIdx < numBlocks; blockIdx++) {
-    const start = blockIdx * BLOCK_SIZE;
-    const end = Math.min(start + BLOCK_SIZE, alignmentLength);
+    const start = blockIdx * blockSize;
+    const end = Math.min(start + blockSize, alignmentLength);
     blocks.push({ start, end, blockIdx });
   }
 
   const title = alignmentType === 'protein' ? 'Protein Sequence Alignment' : 'Coding Sequence Alignment';
+  const refSeq = sortedSequences[0];
 
-  // Header prefix for ruler line
-  const headerPrefix = ' '.repeat(COL_NUM + 1) + pad('cov', COL_ID, true) + pad('pid', COL_COV, true) + ' '.repeat(COL_PID);
+  // Styles
+  const fontSize = compactMode ? '11px' : '13px';
+  const lineHeight = compactMode ? '1.15' : '1.4';
+  const seqIdWidth = compactMode ? '11ch' : '13ch';
 
   return (
     <div style={{ marginBottom: '20px' }}>
@@ -279,96 +356,272 @@ function AlignmentViewer({ sequences, alignmentType, referenceId }) {
             border: '1px solid #ddd',
             borderTop: 'none',
             borderRadius: '0 0 4px 4px',
-            padding: '15px',
+            padding: '12px 15px',
             backgroundColor: '#fff',
-            overflowX: 'auto',
           }}
         >
-          {/* Legend */}
-          <div style={{ marginBottom: '15px', fontSize: '13px' }}>
-            <div style={{ marginBottom: '5px' }}>
-              <strong>Reference sequence (1):</strong> {sortedSequences[0]?.sequence_id}
+          {/* Compact summary header */}
+          <div style={{ marginBottom: '10px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '8px', fontSize: '13px' }}>
+              <span>
+                <strong>Reference:</strong> {refSeq?.sequence_id}
+                {refSeq?.organism_name && (
+                  <span style={{ color: '#666' }}> ({refSeq.organism_name})</span>
+                )}
+              </span>
+              <span style={{ color: '#999' }}>|</span>
+              <span>{sortedSequences.length} sequences</span>
+              <span style={{ color: '#999' }}>|</span>
+              <span>Identity ≥80% colored</span>
             </div>
-            <div style={{ marginBottom: '5px', color: '#666' }}>
-              Identities normalized by aligned length.
-            </div>
-            <div style={{ marginBottom: '5px', color: '#666' }}>
-              Colored by: identity &gt;= 80%
-            </div>
-            {alignmentType === 'protein' ? (
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', fontSize: '12px', marginLeft: '20px' }}>
-                <span><span style={{ backgroundColor: '#B8D4E8', padding: '0 4px' }}>&nbsp;</span> Hydrophobic (A, I, L, M, V)</span>
-                <span><span style={{ backgroundColor: '#D4C4E8', padding: '0 4px' }}>&nbsp;</span> Aromatic (F, W, Y)</span>
-                <span><span style={{ backgroundColor: '#C8E8C8', padding: '0 4px' }}>&nbsp;</span> Polar (N, Q, S, T)</span>
-                <span><span style={{ backgroundColor: '#F8C4C4', padding: '0 4px' }}>&nbsp;</span> Negative charge (D, E)</span>
-                <span><span style={{ backgroundColor: '#C4E8E8', padding: '0 4px' }}>&nbsp;</span> Positive charge (H, K, R)</span>
-                <span><span style={{ backgroundColor: '#F8DCC4', padding: '0 4px' }}>&nbsp;</span> Backbone change (G, P)</span>
-                <span><span style={{ backgroundColor: '#F8F4C4', padding: '0 4px' }}>&nbsp;</span> Cysteine (C)</span>
+
+            {/* Action buttons */}
+            <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginTop: '8px' }}>
+              <button
+                onClick={(e) => { e.stopPropagation(); setShowDetails(!showDetails); }}
+                style={{
+                  padding: '4px 10px',
+                  fontSize: '12px',
+                  border: '1px solid #ccc',
+                  borderRadius: '3px',
+                  backgroundColor: showDetails ? '#e3f2fd' : '#fff',
+                  cursor: 'pointer',
+                }}
+              >
+                {showDetails ? 'Hide' : 'Show'} sequence details
+              </button>
+
+              <div style={{ position: 'relative' }}>
+                <button
+                  onClick={(e) => { e.stopPropagation(); setShowColorKey(!showColorKey); }}
+                  style={{
+                    padding: '4px 10px',
+                    fontSize: '12px',
+                    border: '1px solid #ccc',
+                    borderRadius: '3px',
+                    backgroundColor: showColorKey ? '#e3f2fd' : '#fff',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Color key
+                </button>
+                {showColorKey && (
+                  <ColorKeyPopover
+                    isProtein={alignmentType === 'protein'}
+                    onClose={() => setShowColorKey(false)}
+                  />
+                )}
               </div>
+
+              <span style={{ color: '#ddd' }}>|</span>
+
+              {/* Display controls */}
+              <label style={{ fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={showCGDOnly}
+                  onChange={(e) => setShowCGDOnly(e.target.checked)}
+                  onClick={(e) => e.stopPropagation()}
+                />
+                CGD core only ({cgdCoreCount})
+              </label>
+
+              <label style={{ fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={compactMode}
+                  onChange={(e) => setCompactMode(e.target.checked)}
+                  onClick={(e) => e.stopPropagation()}
+                />
+                Compact
+              </label>
+            </div>
+          </div>
+
+          {/* Expandable sequence details table */}
+          {showDetails && (
+            <div style={{ marginBottom: '12px', maxHeight: '200px', overflowY: 'auto', border: '1px solid #eee', borderRadius: '3px' }}>
+              <table style={{ borderCollapse: 'collapse', fontSize: '11px', width: '100%' }}>
+                <thead>
+                  <tr style={{ backgroundColor: '#f9f9f9', position: 'sticky', top: 0 }}>
+                    <th style={{ padding: '4px 6px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>#</th>
+                    <th style={{ padding: '4px 6px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Sequence ID</th>
+                    <th style={{ padding: '4px 6px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Organism</th>
+                    <th style={{ padding: '4px 6px', textAlign: 'right', borderBottom: '1px solid #ddd' }}>Cov</th>
+                    <th style={{ padding: '4px 6px', textAlign: 'right', borderBottom: '1px solid #ddd' }}>ID</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sortedSequences.map((seq, idx) => (
+                    <tr key={seq.sequence_id}>
+                      <td style={{ padding: '3px 6px', color: '#666' }}>{idx + 1}</td>
+                      <td style={{ padding: '3px 6px', fontFamily: 'monospace' }}>{seq.sequence_id}</td>
+                      <td style={{ padding: '3px 6px', fontStyle: 'italic', color: '#666' }}>
+                        {seq.organism_name || '-'}
+                      </td>
+                      <td style={{ padding: '3px 6px', textAlign: 'right', fontFamily: 'monospace' }}>
+                        {seq.stats.coverage.toFixed(1)}%
+                      </td>
+                      <td style={{ padding: '3px 6px', textAlign: 'right', fontFamily: 'monospace' }}>
+                        {seq.stats.identity.toFixed(1)}%
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {/* Organism tooltip bar - shows instantly on hover */}
+          <div
+            style={{
+              backgroundColor: hoveredGene ? '#1976d2' : '#f5f5f5',
+              color: hoveredGene ? '#fff' : '#666',
+              padding: '6px 12px',
+              fontSize: '12px',
+              borderRadius: '3px 3px 0 0',
+              border: '1px solid #ddd',
+              borderBottom: 'none',
+              minHeight: '20px',
+              transition: 'background-color 0.15s, color 0.15s',
+            }}
+          >
+            {hoveredGene ? (
+              <>
+                <strong>{hoveredGene.sequence_id}</strong>
+                {hoveredGene.organism_name && (
+                  <span style={{ marginLeft: '8px', fontStyle: 'italic' }}>
+                    {hoveredGene.organism_name}
+                  </span>
+                )}
+              </>
             ) : (
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', fontSize: '12px', marginLeft: '20px' }}>
-                <span><span style={{ backgroundColor: '#B8D4E8', padding: '0 4px' }}>&nbsp;</span> Purine (A, G)</span>
-                <span><span style={{ backgroundColor: '#C8E8C8', padding: '0 4px' }}>&nbsp;</span> Pyrimidine (C, T)</span>
-              </div>
+              <span>Hover over a sequence ID to see organism</span>
             )}
           </div>
 
-          {/* Alignment blocks */}
-          <div style={{ fontFamily: 'monospace', fontSize: '13px', lineHeight: '1.4' }}>
-            {blocks.map(({ start, end, blockIdx }) => (
-              <div key={blockIdx} style={{ marginBottom: '15px' }}>
-                {/* Position ruler */}
-                <div style={{ color: '#666', whiteSpace: 'pre' }}>
-                  {headerPrefix}{buildRuler(start, end, alignmentLength)}
+          {/* Scrollable alignment viewer */}
+          <div
+            ref={alignmentRef}
+            style={{
+              maxHeight: '500px',
+              overflowY: 'auto',
+              overflowX: 'auto',
+              border: '1px solid #eee',
+              borderTop: 'none',
+              borderRadius: '0 0 3px 3px',
+              backgroundColor: '#fafafa',
+            }}
+          >
+            <div style={{
+              fontFamily: 'monospace',
+              fontSize,
+              lineHeight,
+              padding: '8px',
+              minWidth: 'fit-content',
+            }}>
+              {blocks.map(({ start, end, blockIdx }) => (
+                <div key={blockIdx} style={{ marginBottom: compactMode ? '8px' : '12px' }}>
+                  {/* Position ruler - sticky header */}
+                  <div style={{
+                    color: '#888',
+                    whiteSpace: 'pre',
+                    position: 'sticky',
+                    top: 0,
+                    backgroundColor: '#fafafa',
+                    zIndex: 1,
+                    paddingBottom: '2px',
+                  }}>
+                    <span style={{ display: 'inline-block', width: '2ch', textAlign: 'right' }}></span>
+                    <span style={{ display: 'inline-block', width: seqIdWidth }}></span>
+                    <span style={{ display: 'inline-block', width: '5ch', textAlign: 'right', marginRight: '1ch' }}>
+                      {start + 1}
+                    </span>
+                    <span>{buildRuler(start, end, alignmentLength)}</span>
+                    <span style={{ marginLeft: '1ch' }}>{end}</span>
+                  </div>
+
+                  {/* Sequences */}
+                  {sortedSequences.map((seq, seqIdx) => {
+                    const seqSlice = seq.sequence.slice(start, end);
+
+                    return (
+                      <div key={seq.sequence_id} style={{ whiteSpace: 'pre', display: 'flex' }}>
+                        {/* Row number - sticky */}
+                        <span style={{
+                          display: 'inline-block',
+                          width: '2ch',
+                          textAlign: 'right',
+                          color: '#999',
+                          position: 'sticky',
+                          left: 0,
+                          backgroundColor: '#fafafa',
+                          zIndex: 1,
+                        }}>
+                          {seqIdx + 1}
+                        </span>
+                        {/* Sequence ID - sticky */}
+                        <span
+                          onMouseEnter={() => setHoveredGene({
+                            sequence_id: seq.sequence_id,
+                            organism_name: seq.organism_name,
+                          })}
+                          onMouseLeave={() => setHoveredGene(null)}
+                          style={{
+                            display: 'inline-block',
+                            width: seqIdWidth,
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            cursor: 'pointer',
+                            position: 'sticky',
+                            left: '2ch',
+                            backgroundColor: hoveredGene?.sequence_id === seq.sequence_id ? '#e3f2fd' : '#fafafa',
+                            zIndex: 1,
+                            paddingLeft: '1ch',
+                            transition: 'background-color 0.1s',
+                          }}
+                        >
+                          {seq.sequence_id}
+                        </span>
+                        {/* Spacer */}
+                        <span style={{ display: 'inline-block', width: '6ch' }}></span>
+                        {/* Sequence */}
+                        <span>
+                          {seqSlice.split('').map((char, charIdx) => {
+                            const globalPos = start + charIdx;
+                            const shouldColor = conservation[globalPos] >= IDENTITY_THRESHOLD;
+                            return (
+                              <Residue
+                                key={charIdx}
+                                char={char}
+                                shouldColor={shouldColor}
+                                isProtein={alignmentType === 'protein'}
+                              />
+                            );
+                          })}
+                        </span>
+                      </div>
+                    );
+                  })}
                 </div>
-
-                {/* Sequences */}
-                {sortedSequences.map((seq, seqIdx) => {
-                  const seqSlice = seq.sequence.slice(start, end);
-                  const rowNum = pad(String(seqIdx + 1), COL_NUM, true);
-                  const seqId = pad(seq.sequence_id, COL_ID);
-                  const cov = pad(seq.stats.coverage.toFixed(1) + '%', COL_COV, true);
-                  const pid = pad(seq.stats.identity.toFixed(1) + '%', COL_PID, true);
-                  const gap = ' '.repeat(COL_GAP);
-
-                  return (
-                    <div key={seq.sequence_id} style={{ whiteSpace: 'pre' }}>
-                      <span style={{ color: '#666' }}>{rowNum}</span>
-                      <span> </span>
-                      <span>{seqId}</span>
-                      <span style={{ color: '#666' }}>{cov}</span>
-                      <span style={{ color: '#666' }}>{pid}</span>
-                      <span>{gap}</span>
-                      <span>
-                        {seqSlice.split('').map((char, charIdx) => {
-                          const globalPos = start + charIdx;
-                          const shouldColor = conservation[globalPos] >= IDENTITY_THRESHOLD;
-                          return (
-                            <Residue
-                              key={charIdx}
-                              char={char}
-                              shouldColor={shouldColor}
-                              isProtein={alignmentType === 'protein'}
-                            />
-                          );
-                        })}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
-          {/* Summary */}
+          {/* Summary footer */}
           <div style={{
-            marginTop: '10px',
-            fontSize: '12px',
+            marginTop: '8px',
+            fontSize: '11px',
             color: '#666',
-            borderTop: '1px solid #eee',
-            paddingTop: '10px'
+            display: 'flex',
+            justifyContent: 'space-between',
           }}>
-            {sortedSequences.length} sequences, {alignmentLength} {alignmentType === 'protein' ? 'residues' : 'nucleotides'}
+            <span>
+              {sortedSequences.length} sequences, {alignmentLength} {alignmentType === 'protein' ? 'residues' : 'nucleotides'}
+            </span>
+            <span>
+              {blockSize} positions/line
+            </span>
           </div>
         </div>
       )}
