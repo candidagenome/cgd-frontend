@@ -64,6 +64,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
   const queryGeneXRef = useRef(0); // Store query gene's x position for centering
   const queryGeneRelativeXRef = useRef(0.5); // Store query gene's relative position (0-1)
   const isMountedRef = useRef(true); // Track if component is mounted
+  const lastRenderStateRef = useRef(null); // Track last render state to prevent unnecessary redraws
 
   // Track mount status to prevent state updates after unmount
   useEffect(() => {
@@ -184,6 +185,17 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
 
     // Store ref locally for cleanup
     const container = containerRef.current;
+    const currentContainerWidth = container.clientWidth;
+
+    // Create a render state key to detect if we actually need to redraw
+    const visibleSpeciesKey = Object.entries(visibleSpecies).filter(([, v]) => v).map(([k]) => k).sort().join(',');
+    const renderStateKey = `${syntenyData.query_gene?.feature_name}|${currentContainerWidth}|${zoomLevel}|${panOffset}|${visibleSpeciesKey}`;
+
+    // Skip redraw if nothing meaningful has changed (prevents flashing)
+    if (lastRenderStateRef.current === renderStateKey) {
+      return;
+    }
+    lastRenderStateRef.current = renderStateKey;
 
     const regions = syntenyData.synteny_regions || {};
     const connections = syntenyData.ortholog_connections || [];
