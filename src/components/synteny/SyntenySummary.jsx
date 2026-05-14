@@ -163,6 +163,16 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
       const allCoords = genes.flatMap(gene => [gene.start, gene.stop]);
       const minCoord = allCoords.length > 0 ? Math.min(...allCoords) : 0;
       const maxCoord = allCoords.length > 0 ? Math.max(...allCoords) : 1000;
+
+      // Find the ortholog (query gene or its ortholog in this species) midpoint
+      let orthologMidpoint = null;
+      genes.forEach(gene => {
+        const orthologId = geneToOrtholog[gene.feature_name];
+        if (gene.is_query || (orthologId && orthologId === queryOrthologId)) {
+          orthologMidpoint = (Math.min(gene.start, gene.stop) + Math.max(gene.start, gene.stop)) / 2;
+        }
+      });
+
       return {
         ...region,
         index: idx,
@@ -170,6 +180,7 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
         maxCoord,
         span: maxCoord - minCoord,
         yPosition: idx * (trackHeight + trackSpacing),
+        orthologMidpoint,
       };
     });
 
@@ -181,11 +192,24 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
     // Create a single global scale (bp per pixel) based on the largest span
     const bpPerPixel = totalDomain / width;
 
-    // Create x scales for each species track, centered within the available width
+    // Calculate the target x-coordinate where all orthologs should align (viewport center)
+    const alignmentTargetX = width / 2;
+
+    // Create x scales for each species track, aligned by ortholog position
     const xScales = {};
     speciesData.forEach(sd => {
       const regionWidth = sd.span / bpPerPixel;
-      const xOffset = (width - regionWidth) / 2;
+
+      // Calculate xOffset to align ortholog at the center
+      let xOffset;
+      if (sd.orthologMidpoint !== null) {
+        // Position so ortholog midpoint lands at center
+        const orthologRelativePos = (sd.orthologMidpoint - sd.minCoord) / bpPerPixel;
+        xOffset = alignmentTargetX - orthologRelativePos;
+      } else {
+        // No ortholog in this species - fall back to centering the region
+        xOffset = (width - regionWidth) / 2;
+      }
 
       xScales[sd.species] = (coord) => {
         const relativePos = (coord - sd.minCoord) / bpPerPixel;
