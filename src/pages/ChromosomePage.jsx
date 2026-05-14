@@ -288,24 +288,17 @@ function ChromosomePage() {
               <div className="links-section">
                 <h4>External Links</h4>
                 <ul>
-                  <li>
-                    <a
-                      href={`/jbrowse2/?assembly=C_albicans_SC5314&loc=${chromosome.feature_name}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      View in JBrowse
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href={`https://www.ncbi.nlm.nih.gov/nuccore/${chromosome.dbxref_id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      NCBI Nucleotide
-                    </a>
-                  </li>
+                  {chromosome.organism_abbrev && (
+                    <li>
+                      <a
+                        href={`/jbrowse2/?assembly=${chromosome.organism_abbrev}&loc=${chromosome.feature_name}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View in JBrowse
+                      </a>
+                    </li>
+                  )}
                 </ul>
               </div>
             </div>
