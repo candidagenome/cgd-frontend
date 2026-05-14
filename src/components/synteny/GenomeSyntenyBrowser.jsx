@@ -462,18 +462,28 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
 
         if (hasExons) {
           // Gene has introns - draw outline and fill only exons
+          // Create a unique clip path for this gene's arrow shape
+          const clipId = `gene-clip-${gene.feature_name.replace(/[^a-zA-Z0-9]/g, '_')}-${sd.index}`;
+          defs.append('clipPath')
+            .attr('id', clipId)
+            .append('polygon')
+            .attr('points', points.map(p => p.join(',')).join(' '));
+
           // First draw arrow-shaped background for introns (to cover chromosome line)
           geneGroup.append('polygon')
             .attr('points', points.map(p => p.join(',')).join(' '))
             .attr('fill', '#e8e8e8');
 
-          // Draw filled exons
+          // Draw filled exons - clipped to arrow shape
+          const exonGroup = geneGroup.append('g')
+            .attr('clip-path', `url(#${clipId})`);
+
           gene.exons.forEach(exon => {
             const exonLeft = Math.min(exon.start, exon.stop);
             const exonRight = Math.max(exon.start, exon.stop);
             const exonX = xScale(exonLeft);
             const exonWidth = Math.max(xScale(exonRight) - exonX, 2);
-            geneGroup.append('rect')
+            exonGroup.append('rect')
               .attr('x', exonX)
               .attr('y', y)
               .attr('width', exonWidth)
@@ -492,11 +502,8 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
             .attr('class', 'gene-shape gene-outline');
 
           // Add invisible hit area on top to capture mouse events
-          geneGroup.append('rect')
-            .attr('x', x)
-            .attr('y', y)
-            .attr('width', geneWidth)
-            .attr('height', geneHeight)
+          geneGroup.append('polygon')
+            .attr('points', points.map(p => p.join(',')).join(' '))
             .attr('fill', 'rgba(0,0,0,0)')
             .style('pointer-events', 'all')
             .attr('class', 'gene-hit-area');
