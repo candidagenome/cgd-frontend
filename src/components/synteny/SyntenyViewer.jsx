@@ -218,37 +218,98 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
           fillColor = COLORS.singletonGene;
         }
 
-        // Gene rectangle with direction indicator
-        if (gene.strand === 'W') {
-          // Watson strand - arrow pointing right
-          const points = [
-            [x, y],
-            [x + geneWidth - 6, y],
-            [x + geneWidth, y + geneHeight / 2],
-            [x + geneWidth - 6, y + geneHeight],
-            [x, y + geneHeight],
-          ];
-          geneGroup.append('polygon')
-            .attr('points', points.map(p => p.join(',')).join(' '))
-            .attr('fill', fillColor)
-            .attr('stroke', gene.is_query ? '#c0392b' : '#666')
-            .attr('stroke-width', gene.is_query ? 2 : 1)
-            .attr('class', 'gene-shape');
+        const hasExons = gene.exons && gene.exons.length > 1;
+        const strokeColor = gene.is_query ? '#c0392b' : '#666';
+        const strokeWidth = gene.is_query ? 2 : 1;
+
+        if (hasExons) {
+          // Gene has introns - draw outline and fill only exons
+          // First draw white background for the whole gene (to cover chromosome line)
+          geneGroup.append('rect')
+            .attr('x', x)
+            .attr('y', y)
+            .attr('width', geneWidth)
+            .attr('height', geneHeight)
+            .attr('fill', '#fff');
+
+          // Draw filled exons
+          gene.exons.forEach(exon => {
+            const exonX = xScale(exon.start);
+            const exonWidth = Math.max(xScale(exon.stop) - exonX, 2);
+            geneGroup.append('rect')
+              .attr('x', exonX)
+              .attr('y', y)
+              .attr('width', exonWidth)
+              .attr('height', geneHeight)
+              .attr('fill', fillColor)
+              .attr('class', 'exon-shape');
+          });
+
+          // Draw gene outline with direction indicator on top
+          if (gene.strand === 'W') {
+            // Watson strand - arrow pointing right
+            const points = [
+              [x, y],
+              [x + geneWidth - 6, y],
+              [x + geneWidth, y + geneHeight / 2],
+              [x + geneWidth - 6, y + geneHeight],
+              [x, y + geneHeight],
+            ];
+            geneGroup.append('polygon')
+              .attr('points', points.map(p => p.join(',')).join(' '))
+              .attr('fill', 'none')
+              .attr('stroke', strokeColor)
+              .attr('stroke-width', strokeWidth)
+              .attr('class', 'gene-outline');
+          } else {
+            // Crick strand - arrow pointing left
+            const points = [
+              [x, y + geneHeight / 2],
+              [x + 6, y],
+              [x + geneWidth, y],
+              [x + geneWidth, y + geneHeight],
+              [x + 6, y + geneHeight],
+            ];
+            geneGroup.append('polygon')
+              .attr('points', points.map(p => p.join(',')).join(' '))
+              .attr('fill', 'none')
+              .attr('stroke', strokeColor)
+              .attr('stroke-width', strokeWidth)
+              .attr('class', 'gene-outline');
+          }
         } else {
-          // Crick strand - arrow pointing left
-          const points = [
-            [x, y + geneHeight / 2],
-            [x + 6, y],
-            [x + geneWidth, y],
-            [x + geneWidth, y + geneHeight],
-            [x + 6, y + geneHeight],
-          ];
-          geneGroup.append('polygon')
-            .attr('points', points.map(p => p.join(',')).join(' '))
-            .attr('fill', fillColor)
-            .attr('stroke', gene.is_query ? '#c0392b' : '#666')
-            .attr('stroke-width', gene.is_query ? 2 : 1)
-            .attr('class', 'gene-shape');
+          // No introns - draw solid filled gene as before
+          if (gene.strand === 'W') {
+            // Watson strand - arrow pointing right
+            const points = [
+              [x, y],
+              [x + geneWidth - 6, y],
+              [x + geneWidth, y + geneHeight / 2],
+              [x + geneWidth - 6, y + geneHeight],
+              [x, y + geneHeight],
+            ];
+            geneGroup.append('polygon')
+              .attr('points', points.map(p => p.join(',')).join(' '))
+              .attr('fill', fillColor)
+              .attr('stroke', strokeColor)
+              .attr('stroke-width', strokeWidth)
+              .attr('class', 'gene-shape');
+          } else {
+            // Crick strand - arrow pointing left
+            const points = [
+              [x, y + geneHeight / 2],
+              [x + 6, y],
+              [x + geneWidth, y],
+              [x + geneWidth, y + geneHeight],
+              [x + 6, y + geneHeight],
+            ];
+            geneGroup.append('polygon')
+              .attr('points', points.map(p => p.join(',')).join(' '))
+              .attr('fill', fillColor)
+              .attr('stroke', strokeColor)
+              .attr('stroke-width', strokeWidth)
+              .attr('class', 'gene-shape');
+          }
         }
 
         // Gene label (only show for query gene or if enough space)
@@ -279,6 +340,7 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
               stop: gene.stop,
               strand: gene.strand === 'W' ? 'Watson (+)' : 'Crick (-)',
               orthologId: orthologId,
+              exonCount: gene.exons ? gene.exons.length : 0,
             },
           });
         });
@@ -541,6 +603,12 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
               <>
                 <span className="tooltip-separator">|</span>
                 <span>Ortholog: {tooltip.content.orthologId}</span>
+              </>
+            )}
+            {tooltip.content.exonCount > 1 && (
+              <>
+                <span className="tooltip-separator">|</span>
+                <span>{tooltip.content.exonCount} exons</span>
               </>
             )}
             <span className="tooltip-hint">(Click to view locus)</span>

@@ -456,12 +456,50 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
               [x + arrowSize, y + geneHeight],
             ];
 
-        const genePolygon = geneGroup.append('polygon')
-          .attr('points', points.map(p => p.join(',')).join(' '))
-          .attr('fill', fillColor)
-          .attr('stroke', strokeColor)
-          .attr('stroke-width', strokeWidth)
-          .attr('class', 'gene-shape');
+        // Check if gene has introns (multiple exons)
+        const hasExons = gene.exons && gene.exons.length > 1;
+
+        if (hasExons) {
+          // Gene has introns - draw outline and fill only exons
+          // First draw white background for the whole gene (to cover chromosome line)
+          geneGroup.append('rect')
+            .attr('x', x)
+            .attr('y', y)
+            .attr('width', geneWidth)
+            .attr('height', geneHeight)
+            .attr('fill', '#fff');
+
+          // Draw filled exons
+          gene.exons.forEach(exon => {
+            const exonLeft = Math.min(exon.start, exon.stop);
+            const exonRight = Math.max(exon.start, exon.stop);
+            const exonX = xScale(exonLeft);
+            const exonWidth = Math.max(xScale(exonRight) - exonX, 2);
+            geneGroup.append('rect')
+              .attr('x', exonX)
+              .attr('y', y)
+              .attr('width', exonWidth)
+              .attr('height', geneHeight)
+              .attr('fill', fillColor)
+              .attr('class', 'exon-shape');
+          });
+
+          // Draw gene outline on top
+          geneGroup.append('polygon')
+            .attr('points', points.map(p => p.join(',')).join(' '))
+            .attr('fill', 'none')
+            .attr('stroke', strokeColor)
+            .attr('stroke-width', strokeWidth)
+            .attr('class', 'gene-shape gene-outline');
+        } else {
+          // No introns - draw solid filled gene
+          geneGroup.append('polygon')
+            .attr('points', points.map(p => p.join(',')).join(' '))
+            .attr('fill', fillColor)
+            .attr('stroke', strokeColor)
+            .attr('stroke-width', strokeWidth)
+            .attr('class', 'gene-shape');
+        }
 
 
         // Gene label - smart truncation based on available width
@@ -508,6 +546,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
               orthologId: orthologId,
               isQuery: gene.is_query,
               organism: sd.species,
+              exonCount: gene.exons ? gene.exons.length : 0,
             },
           });
           // Highlight connections for this gene's ortholog group
@@ -1206,6 +1245,12 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
                   <span>Ortholog: {tooltip.content.geneName || tooltip.content.featureName}</span>
                 </>
               )}
+              {tooltip.content.exonCount > 1 && (
+                <>
+                  <span className="tooltip-separator">|</span>
+                  <span>{tooltip.content.exonCount} exons</span>
+                </>
+              )}
               <span className="tooltip-separator">|</span>
               <span className="tooltip-organism">
                 {SPECIES_ABBREV[tooltip.content.organism] || tooltip.content.organism}
@@ -1323,6 +1368,12 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
                   <div className="gene-popup-row">
                     <span className="label">Ortholog Cluster:</span>
                     <span className="value">{geneToOrtholog[selectedGene.feature_name]}</span>
+                  </div>
+                )}
+                {selectedGene.exons && selectedGene.exons.length > 1 && (
+                  <div className="gene-popup-row">
+                    <span className="label">Structure:</span>
+                    <span className="value">{selectedGene.exons.length} exons ({selectedGene.exons.length - 1} introns)</span>
                   </div>
                 )}
               </div>
