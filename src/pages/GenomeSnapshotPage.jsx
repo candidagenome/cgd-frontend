@@ -698,9 +698,19 @@ function GenomeSnapshotPage() {
                     : chr.chromosome_display
                 }));
             } else if (organism === 'C_glabrata_CBS138') {
-              // For C. glabrata, filter out the duplicate mito chromosome
-              displayChromosomes = displayChromosomes
-                .filter(chr => chr.chromosome !== 'mito_C_glabrata_CBS138');
+              // For C. glabrata, rename chromosome displays:
+              // - The main one (ChrM_C_glabrata_CBS138) with many genes should display as "ChrM"
+              // - The mito one (mito_C_glabrata_CBS138) with ~20 genes should display as "Mito"
+              displayChromosomes = displayChromosomes.map(chr => {
+                if (chr.chromosome_display === 'Mito' && chr.chromosome !== 'mito_C_glabrata_CBS138') {
+                  // This is the main ChrM that was mislabeled as Mito
+                  return { ...chr, chromosome_display: 'ChrM' };
+                } else if (chr.chromosome === 'mito_C_glabrata_CBS138') {
+                  // This is the actual mitochondrial chromosome
+                  return { ...chr, chromosome_display: 'Mito' };
+                }
+                return chr;
+              });
             }
 
             return (
