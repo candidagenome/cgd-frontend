@@ -807,7 +807,9 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
     };
   }, [syntenyData, visibleSpecies, handleGeneClick, geneToOrtholog, zoomLevel, panOffset]);
 
-  // Handle hover highlighting - fade non-matching elements when a gene is hovered
+  // Handle hover highlighting - DISABLED to prevent flashing
+  // TODO: Investigate why specific genes cause infinite flashing loop
+  /*
   useEffect(() => {
     if (!containerRef.current) return;
 
@@ -872,6 +874,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
       });
     }
   }, [hoveredOrtholog]);
+  */
 
   // Calculate pan offset to center query gene at a given zoom level
   const calculateCenterOffset = useCallback((targetZoom) => {
