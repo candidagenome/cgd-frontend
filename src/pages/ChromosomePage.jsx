@@ -32,14 +32,14 @@ const jbrowseConfig = {
   },
   'C_tropicalis_MYA3404': {
     assembly: 'C_tropicalis_MYA3404',
-    geneTrack: 'TranscribedFeatures_ctrop',
-    defaultTracks: 'DNA_ctrop,TranscribedFeatures_ctrop',
+    geneTrack: '',
+    defaultTracks: '',  // Track names TBD - users can select manually
   },
   // Alias for organism_abbrev without strain suffix
   'C_tropicalis': {
     assembly: 'C_tropicalis_MYA3404',
-    geneTrack: 'TranscribedFeatures_ctrop',
-    defaultTracks: 'DNA_ctrop,TranscribedFeatures_ctrop',
+    geneTrack: '',
+    defaultTracks: '',  // Track names TBD - users can select manually
   },
 };
 
@@ -331,7 +331,7 @@ function ChromosomePage() {
                   {chromosome.organism_abbrev && jbrowseConfig[chromosome.organism_abbrev] && (
                     <li>
                       <a
-                        href={`/jbrowse2/?assembly=${jbrowseConfig[chromosome.organism_abbrev].assembly}&loc=${chromosome.feature_name}&tracks=${jbrowseConfig[chromosome.organism_abbrev].defaultTracks}`}
+                        href={`/jbrowse2/?assembly=${jbrowseConfig[chromosome.organism_abbrev].assembly}&loc=${chromosome.feature_name}${jbrowseConfig[chromosome.organism_abbrev].defaultTracks ? `&tracks=${jbrowseConfig[chromosome.organism_abbrev].defaultTracks}` : ''}`}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
