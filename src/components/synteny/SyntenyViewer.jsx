@@ -41,6 +41,7 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
   const [syntenyData, setSyntenyData] = useState(null);
   const [visibleSpecies, setVisibleSpecies] = useState({});
   const [tooltip, setTooltip] = useState({ show: false, content: null });
+  const hoverTimeoutRef = useRef(null); // Debounce hover changes
 
   const navigate = useNavigate();
   const dateStamp = new Date().toISOString().split('T')[0];
@@ -230,8 +231,7 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
             .attr('y', y)
             .attr('width', geneWidth)
             .attr('height', geneHeight)
-            .attr('fill', '#e8e8e8')
-            .style('pointer-events', 'none');
+            .attr('fill', '#e8e8e8');
 
           // Draw filled exons
           gene.exons.forEach(exon => {
@@ -279,6 +279,16 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
               .attr('stroke-width', strokeWidth)
               .attr('class', 'gene-outline');
           }
+
+          // Add invisible hit area on top to capture mouse events
+          geneGroup.append('rect')
+            .attr('x', x)
+            .attr('y', y)
+            .attr('width', geneWidth)
+            .attr('height', geneHeight)
+            .attr('fill', 'rgba(0,0,0,0)')
+            .style('pointer-events', 'all')
+            .attr('class', 'gene-hit-area');
         } else {
           // No introns - draw solid filled gene as before
           if (gene.strand === 'W') {
@@ -314,24 +324,40 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
           }
         }
 
-        // Gene label - truncate if longer than gene width
+        // Gene label - position in largest exon for genes with introns
         const rawLabel = gene.gene_name || gene.feature_name || '';
+
+        // For genes with introns, find the largest exon for label placement
+        let labelX = x + geneWidth / 2;
+        let labelWidth = geneWidth;
+        if (hasExons && gene.exons.length > 0) {
+          // Find the largest exon
+          let largestExon = gene.exons[0];
+          let largestWidth = 0;
+          gene.exons.forEach(exon => {
+            const exonW = xScale(exon.stop) - xScale(exon.start);
+            if (exonW > largestWidth) {
+              largestWidth = exonW;
+              largestExon = exon;
+            }
+          });
+          labelX = xScale(largestExon.start) + (xScale(largestExon.stop) - xScale(largestExon.start)) / 2;
+          labelWidth = Math.max(xScale(largestExon.stop) - xScale(largestExon.start), 4);
+        }
+
         // Estimate ~6px per character at 10px font size
-        const maxChars = Math.max(3, Math.floor((geneWidth - 10) / 6));
+        const maxChars = Math.max(3, Math.floor((labelWidth - 10) / 6));
         const labelText = rawLabel.length > maxChars ? rawLabel.substring(0, maxChars) : rawLabel;
 
-        if (gene.is_query || geneWidth > 50) {
+        if (gene.is_query || labelWidth > 50) {
           geneGroup.append('text')
-            .attr('x', x + geneWidth / 2)
+            .attr('x', labelX)
             .attr('y', y + geneHeight / 2)
             .attr('text-anchor', 'middle')
             .attr('dominant-baseline', 'middle')
             .attr('class', 'gene-label')
             .style('font-size', '10px')
             .style('fill', '#fff')
-            .style('stroke', 'rgba(0,0,0,0.4)')
-            .style('stroke-width', '1px')
-            .style('paint-order', 'stroke fill')
             .style('pointer-events', 'none')
             .text(labelText);
         }
@@ -341,6 +367,11 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
 
         // Hover handlers for tooltip
         geneGroup.on('mouseenter', () => {
+          // Clear any pending mouseleave timeout
+          if (hoverTimeoutRef.current) {
+            clearTimeout(hoverTimeoutRef.current);
+            hoverTimeoutRef.current = null;
+          }
           setTooltip({
             show: true,
             content: {
@@ -356,7 +387,10 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
         });
 
         geneGroup.on('mouseleave', () => {
-          setTooltip({ show: false, content: null });
+          // Debounce mouseleave to prevent flicker
+          hoverTimeoutRef.current = setTimeout(() => {
+            setTooltip({ show: false, content: null });
+          }, 50);
         });
       });
     });

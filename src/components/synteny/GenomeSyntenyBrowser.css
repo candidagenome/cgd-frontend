@@ -424,7 +424,7 @@
 }
 
 .gene-group {
-  transition: opacity 0.2s ease-out;
+  /* No opacity transition - handled by D3 to prevent flicker */
 }
 
 .gene-group:hover .gene-shape {

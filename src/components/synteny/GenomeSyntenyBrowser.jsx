@@ -56,6 +56,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
 
   // Refs
   const containerRef = useRef(null);
+  const hoverTimeoutRef = useRef(null); // Debounce hover changes
   const svgRef = useRef(null);
   const zoomRef = useRef(null);
   const transformRef = useRef({ k: 1, x: 0 });
@@ -467,8 +468,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
             .attr('y', y)
             .attr('width', geneWidth)
             .attr('height', geneHeight)
-            .attr('fill', '#e8e8e8')
-            .style('pointer-events', 'none');
+            .attr('fill', '#e8e8e8');
 
           // Draw filled exons
           gene.exons.forEach(exon => {
@@ -493,6 +493,16 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
             .attr('stroke', strokeColor)
             .attr('stroke-width', strokeWidth)
             .attr('class', 'gene-shape gene-outline');
+
+          // Add invisible hit area on top to capture mouse events
+          geneGroup.append('rect')
+            .attr('x', x)
+            .attr('y', y)
+            .attr('width', geneWidth)
+            .attr('height', geneHeight)
+            .attr('fill', 'rgba(0,0,0,0)')
+            .style('pointer-events', 'all')
+            .attr('class', 'gene-hit-area');
         } else {
           // No introns - draw solid filled gene
           geneGroup.append('polygon')
@@ -504,26 +514,46 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
         }
 
 
-        // Gene label - truncate if longer than gene width
+        // Gene label - position in largest exon for genes with introns
         const rawLabel = gene.gene_name || gene.feature_name || '';
+
+        // For genes with introns, find the largest exon for label placement
+        let labelX = x + geneWidth / 2;
+        let labelWidth = geneWidth;
+        if (hasExons && gene.exons.length > 0) {
+          // Find the largest exon
+          let largestExon = gene.exons[0];
+          let largestWidth = 0;
+          gene.exons.forEach(exon => {
+            const exonLeft = Math.min(exon.start, exon.stop);
+            const exonRight = Math.max(exon.start, exon.stop);
+            const exonW = xScale(exonRight) - xScale(exonLeft);
+            if (exonW > largestWidth) {
+              largestWidth = exonW;
+              largestExon = exon;
+            }
+          });
+          const exonLeft = Math.min(largestExon.start, largestExon.stop);
+          const exonRight = Math.max(largestExon.start, largestExon.stop);
+          labelX = xScale(exonLeft) + (xScale(exonRight) - xScale(exonLeft)) / 2;
+          labelWidth = Math.max(xScale(exonRight) - xScale(exonLeft), 4);
+        }
+
         // Estimate ~6px per character at 9px font size
-        const maxChars = Math.max(3, Math.floor((geneWidth - 10) / 6));
+        const maxChars = Math.max(3, Math.floor((labelWidth - 10) / 6));
         const labelText = rawLabel.length > maxChars ? rawLabel.substring(0, maxChars) : rawLabel;
         // Show label if query gene or enough space for at least 3 chars
-        const showLabel = gene.is_query || geneWidth > 30;
+        const showLabel = gene.is_query || labelWidth > 30;
 
         if (showLabel) {
           geneGroup.append('text')
-            .attr('x', x + geneWidth / 2)
+            .attr('x', labelX)
             .attr('y', y + geneHeight / 2)
             .attr('text-anchor', 'middle')
             .attr('dominant-baseline', 'middle')
             .attr('class', 'gene-label')
             .style('font-size', '9px')
             .style('fill', '#fff')
-            .style('stroke', 'rgba(0,0,0,0.4)')
-            .style('stroke-width', '1px')
-            .style('paint-order', 'stroke fill')
             .style('pointer-events', 'none')
             .text(labelText);
         }
@@ -540,6 +570,11 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
 
         // Hover handlers - highlight this gene's ortholog connections
         geneGroup.on('mouseenter', () => {
+          // Clear any pending mouseleave timeout
+          if (hoverTimeoutRef.current) {
+            clearTimeout(hoverTimeoutRef.current);
+            hoverTimeoutRef.current = null;
+          }
           setTooltip({
             show: true,
             content: {
@@ -561,8 +596,11 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
         });
 
         geneGroup.on('mouseleave', () => {
-          setTooltip({ show: false, content: null });
-          setHoveredOrtholog(null);
+          // Debounce mouseleave to prevent flicker
+          hoverTimeoutRef.current = setTimeout(() => {
+            setTooltip({ show: false, content: null });
+            setHoveredOrtholog(null);
+          }, 50);
         });
       });
     });
@@ -797,15 +835,12 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
       // or multiple genes in the same ortholog cluster
       const shouldHighlight = hasVisibleConnections || matchingGeneCount > 1;
 
-      // Fade/highlight genes
+      // Fade/highlight genes - only change opacity on non-hovered genes
       svg.selectAll('.gene-group').each(function() {
         const el = d3.select(this);
         const ortholog = el.attr('data-ortholog');
-        if (ortholog === hoveredOrtholog) {
-          el.style('opacity', 1);
-          el.select('.gene-shape').attr('stroke-width', 2);
-        } else {
-          // Softer fade if no connections to show
+        if (ortholog !== hoveredOrtholog) {
+          // Only fade non-hovered genes
           el.style('opacity', shouldHighlight ? 0.3 : 0.6);
         }
       });
@@ -824,16 +859,8 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
         }
       });
     } else {
-      // Reset all to default state
-      svg.selectAll('.gene-group')
-        .style('opacity', 1)
-        .select('.gene-shape')
-        .attr('stroke-width', function() {
-          const parent = d3.select(this.parentNode);
-          const stroke = parent.select('.gene-shape').attr('stroke');
-          // Query gene and query orthologs have red strokes
-          return (stroke === '#b71c1c' || stroke === '#c62828') ? 2 : 1;
-        });
+      // Reset all to default state - just restore opacity
+      svg.selectAll('.gene-group').style('opacity', 1);
 
       // Reset ribbon connections to their base opacity
       svg.selectAll('.ortholog-connection').each(function() {
