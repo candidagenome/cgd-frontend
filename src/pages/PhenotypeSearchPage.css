@@ -776,6 +776,14 @@
   text-decoration: underline;
 }
 
+.analyze-link-disabled {
+  color: #999;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 4px;
+  cursor: not-allowed;
+}
+
 .analyze-link-btn {
   color: #0066cc;
   background: none;

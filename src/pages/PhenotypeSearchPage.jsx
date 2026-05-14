@@ -824,7 +824,20 @@ function PhenotypeSearchPage() {
     // Get unique gene names from filtered results (respects organism and text filters)
     const geneList = [...new Set(filteredResults.map((r) => r.feature_name))];
 
-    // Helper to store gene list before navigating
+    // Check if all genes are from the same organism (required for GO tools)
+    const uniqueOrganisms = [...new Set(filteredResults.map((r) => r.organism))];
+    const hasSingleOrganism = uniqueOrganisms.length === 1;
+    const organismName = hasSingleOrganism ? uniqueOrganisms[0] : null;
+
+    // Helper to store gene list and organism before navigating to GO tools
+    const handleGoToolClick = () => {
+      localStorage.setItem('phenotypeSearchGeneList', JSON.stringify(geneList));
+      if (organismName) {
+        localStorage.setItem('phenotypeSearchOrganism', organismName);
+      }
+    };
+
+    // Helper for non-GO tools (batch download, etc.)
     const handleToolClick = () => {
       localStorage.setItem('phenotypeSearchGeneList', JSON.stringify(geneList));
     };
@@ -839,27 +852,39 @@ function PhenotypeSearchPage() {
             <tr>
               <td className="analyze-label">Further Analysis:</td>
               <td>
-                <a
-                  href="/go-term-finder"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="analyze-link"
-                  onClick={handleToolClick}
-                >
-                  GO Term Finder
-                </a>
+                {hasSingleOrganism ? (
+                  <a
+                    href="/go-term-finder"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="analyze-link"
+                    onClick={handleGoToolClick}
+                  >
+                    GO Term Finder
+                  </a>
+                ) : (
+                  <span className="analyze-link-disabled" title="Filter to a single organism to use GO Term Finder">
+                    GO Term Finder
+                  </span>
+                )}
                 <span className="analyze-desc">Find common features of genes in list</span>
               </td>
               <td>
-                <a
-                  href="/go-slim-mapper"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="analyze-link"
-                  onClick={handleToolClick}
-                >
-                  GO Slim Mapper
-                </a>
+                {hasSingleOrganism ? (
+                  <a
+                    href="/go-slim-mapper"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="analyze-link"
+                    onClick={handleGoToolClick}
+                  >
+                    GO Slim Mapper
+                  </a>
+                ) : (
+                  <span className="analyze-link-disabled" title="Filter to a single organism to use GO Slim Mapper">
+                    GO Slim Mapper
+                  </span>
+                )}
                 <span className="analyze-desc">Sort genes into broad categories</span>
               </td>
               <td>
