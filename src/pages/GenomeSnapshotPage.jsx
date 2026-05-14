@@ -689,20 +689,18 @@ function GenomeSnapshotPage() {
                   <tr>
                     <th rowSpan="2">Feature Type</th>
                     <th rowSpan="2">Total</th>
-                    <th colSpan={chrInventory.chromosomes.length + (chrInventory.mitochondrial ? 2 : 1)}>
+                    <th colSpan={chrInventory.chromosomes.length}>
                       Chromosome
                     </th>
                   </tr>
                   <tr>
                     {chrInventory.chromosomes.map((chr) => (
                       <th key={chr.chromosome} className="chr-header">
-                        {chr.chromosome_display}
+                        <a href={`/locus/${chr.chromosome}`} title={`View ${chr.chromosome}`}>
+                          {chr.chromosome_display}
+                        </a>
                       </th>
                     ))}
-                    <th className="chr-header">Nuclear</th>
-                    {chrInventory.mitochondrial && (
-                      <th className="chr-header">Mito</th>
-                    )}
                   </tr>
                 </thead>
                 <tbody>
@@ -713,10 +711,6 @@ function GenomeSnapshotPage() {
                     {chrInventory.chromosomes.map((chr) => (
                       <td key={chr.chromosome}>{chr.total_orfs.toLocaleString()}</td>
                     ))}
-                    <td>{chrInventory.nuclear_totals?.total_orfs?.toLocaleString() || 0}</td>
-                    {chrInventory.mitochondrial && (
-                      <td>{chrInventory.mitochondrial.total_orfs.toLocaleString()}</td>
-                    )}
                   </tr>
 
                   {/* Verified ORFs */}
@@ -731,10 +725,6 @@ function GenomeSnapshotPage() {
                       {chrInventory.chromosomes.map((chr) => (
                         <td key={chr.chromosome}>{chr.verified_orfs.toLocaleString()}</td>
                       ))}
-                      <td>{chrInventory.nuclear_totals?.verified_orfs?.toLocaleString() || 0}</td>
-                      {chrInventory.mitochondrial && (
-                        <td>{chrInventory.mitochondrial.verified_orfs.toLocaleString()}</td>
-                      )}
                     </tr>
                   )}
 
@@ -750,10 +740,6 @@ function GenomeSnapshotPage() {
                       {chrInventory.chromosomes.map((chr) => (
                         <td key={chr.chromosome}>{chr.uncharacterized_orfs.toLocaleString()}</td>
                       ))}
-                      <td>{chrInventory.nuclear_totals?.uncharacterized_orfs?.toLocaleString() || 0}</td>
-                      {chrInventory.mitochondrial && (
-                        <td>{chrInventory.mitochondrial.uncharacterized_orfs.toLocaleString()}</td>
-                      )}
                     </tr>
                   )}
 
@@ -769,10 +755,6 @@ function GenomeSnapshotPage() {
                       {chrInventory.chromosomes.map((chr) => (
                         <td key={chr.chromosome}>{chr.dubious_orfs.toLocaleString()}</td>
                       ))}
-                      <td>{chrInventory.nuclear_totals?.dubious_orfs?.toLocaleString() || 0}</td>
-                      {chrInventory.mitochondrial && (
-                        <td>{chrInventory.mitochondrial.dubious_orfs.toLocaleString()}</td>
-                      )}
                     </tr>
                   )}
 
@@ -786,10 +768,6 @@ function GenomeSnapshotPage() {
                       {chrInventory.chromosomes.map((chr) => (
                         <td key={chr.chromosome}>{chr.trna.toLocaleString()}</td>
                       ))}
-                      <td>{chrInventory.nuclear_totals?.trna?.toLocaleString() || 0}</td>
-                      {chrInventory.mitochondrial && (
-                        <td>{chrInventory.mitochondrial.trna.toLocaleString()}</td>
-                      )}
                     </tr>
                   )}
 
@@ -803,10 +781,6 @@ function GenomeSnapshotPage() {
                       {chrInventory.chromosomes.map((chr) => (
                         <td key={chr.chromosome}>{chr.snorna.toLocaleString()}</td>
                       ))}
-                      <td>{chrInventory.nuclear_totals?.snorna?.toLocaleString() || 0}</td>
-                      {chrInventory.mitochondrial && (
-                        <td>{chrInventory.mitochondrial.snorna.toLocaleString()}</td>
-                      )}
                     </tr>
                   )}
 
@@ -820,10 +794,6 @@ function GenomeSnapshotPage() {
                       {chrInventory.chromosomes.map((chr) => (
                         <td key={chr.chromosome}>{chr.rrna.toLocaleString()}</td>
                       ))}
-                      <td>{chrInventory.nuclear_totals?.rrna?.toLocaleString() || 0}</td>
-                      {chrInventory.mitochondrial && (
-                        <td>{chrInventory.mitochondrial.rrna.toLocaleString()}</td>
-                      )}
                     </tr>
                   )}
 
@@ -837,10 +807,6 @@ function GenomeSnapshotPage() {
                       {chrInventory.chromosomes.map((chr) => (
                         <td key={chr.chromosome}>{chr.ncrna.toLocaleString()}</td>
                       ))}
-                      <td>{chrInventory.nuclear_totals?.ncrna?.toLocaleString() || 0}</td>
-                      {chrInventory.mitochondrial && (
-                        <td>{chrInventory.mitochondrial.ncrna.toLocaleString()}</td>
-                      )}
                     </tr>
                   )}
 
@@ -854,10 +820,6 @@ function GenomeSnapshotPage() {
                       {chrInventory.chromosomes.map((chr) => (
                         <td key={chr.chromosome}>{chr.pseudogene.toLocaleString()}</td>
                       ))}
-                      <td>{chrInventory.nuclear_totals?.pseudogene?.toLocaleString() || 0}</td>
-                      {chrInventory.mitochondrial && (
-                        <td>{chrInventory.mitochondrial.pseudogene.toLocaleString()}</td>
-                      )}
                     </tr>
                   )}
 
@@ -868,10 +830,6 @@ function GenomeSnapshotPage() {
                     {chrInventory.chromosomes.map((chr) => (
                       <td key={chr.chromosome}><strong>{chr.total_features.toLocaleString()}</strong></td>
                     ))}
-                    <td><strong>{chrInventory.nuclear_totals?.total_features?.toLocaleString() || 0}</strong></td>
-                    {chrInventory.mitochondrial && (
-                      <td><strong>{chrInventory.mitochondrial.total_features.toLocaleString()}</strong></td>
-                    )}
                   </tr>
 
                   {/* Chromosome length row */}
@@ -881,10 +839,6 @@ function GenomeSnapshotPage() {
                     {chrInventory.chromosomes.map((chr) => (
                       <td key={chr.chromosome}>{chr.length_bp.toLocaleString()}</td>
                     ))}
-                    <td>{chrInventory.nuclear_totals?.length_bp?.toLocaleString() || 0}</td>
-                    {chrInventory.mitochondrial && (
-                      <td>{chrInventory.mitochondrial.length_bp.toLocaleString()}</td>
-                    )}
                   </tr>
                 </tbody>
               </table>
