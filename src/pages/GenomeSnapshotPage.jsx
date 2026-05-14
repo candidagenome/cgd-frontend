@@ -683,19 +683,25 @@ function GenomeSnapshotPage() {
               Loading chromosome data...
             </div>
           ) : chrInventory && chrInventory.chromosomes && chrInventory.chromosomes.length > 0 ? (() => {
-            // For C. albicans, filter out B chromosomes and rename A chromosomes
-            // (1A→1, 2A→2, RA→R, etc.)
-            const isAlbicans = organism === 'C_albicans_SC5314';
-            const displayChromosomes = isAlbicans
-              ? chrInventory.chromosomes
-                  .filter(chr => !chr.chromosome_display.endsWith('B'))
-                  .map(chr => ({
-                    ...chr,
-                    chromosome_display: chr.chromosome_display.endsWith('A')
-                      ? chr.chromosome_display.slice(0, -1)
-                      : chr.chromosome_display
-                  }))
-              : chrInventory.chromosomes;
+            // Apply organism-specific chromosome filtering/renaming
+            let displayChromosomes = chrInventory.chromosomes;
+
+            if (organism === 'C_albicans_SC5314') {
+              // For C. albicans, filter out B chromosomes and rename A chromosomes
+              // (1A→1, 2A→2, RA→R, etc.)
+              displayChromosomes = displayChromosomes
+                .filter(chr => !chr.chromosome_display.endsWith('B'))
+                .map(chr => ({
+                  ...chr,
+                  chromosome_display: chr.chromosome_display.endsWith('A')
+                    ? chr.chromosome_display.slice(0, -1)
+                    : chr.chromosome_display
+                }));
+            } else if (organism === 'C_glabrata_CBS138') {
+              // For C. glabrata, filter out the duplicate mito chromosome
+              displayChromosomes = displayChromosomes
+                .filter(chr => chr.chromosome !== 'mito_C_glabrata_CBS138');
+            }
 
             return (
             <div className="chromosome-table-wrapper">
