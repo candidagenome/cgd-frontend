@@ -5,6 +5,11 @@ import './InfoPages.css';
 const ToolsPage = () => {
   const tools = [
     {
+      title: 'Ortholog Converter',
+      url: '/ortholog-converter',
+      description: 'Convert gene lists between Candida species or to S. cerevisiae for functional analysis'
+    },
+    {
       title: 'PatMatch',
       url: '/patmatch',
       description: 'Search for short nucleotide or peptide sequences, or sequence patterns, in Candida genomes'
@@ -23,6 +28,11 @@ const ToolsPage = () => {
       title: 'Restriction Mapper',
       url: '/restriction-mapper',
       description: 'Find restriction enzyme sites in Candida sequences'
+    },
+    {
+      title: 'Synteny Browser',
+      url: '/synteny-browser',
+      description: 'Compare syntenic regions across Candida species'
     }
   ];
 
