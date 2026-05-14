@@ -1,6 +1,8 @@
-import React from 'react';
-import GenomeSyntenyBrowser from '../components/synteny/GenomeSyntenyBrowser';
+import React, { Suspense, lazy } from 'react';
 import './SyntenyBrowserPage.css';
+
+// Lazy load to match HomologyDetails and avoid dual import issues
+const GenomeSyntenyBrowser = lazy(() => import('../components/synteny/GenomeSyntenyBrowser'));
 
 function SyntenyBrowserPage() {
   return (
@@ -14,7 +16,9 @@ function SyntenyBrowserPage() {
       </div>
 
       <div className="browser-wrapper">
-        <GenomeSyntenyBrowser />
+        <Suspense fallback={<div className="loading-state">Loading synteny browser...</div>}>
+          <GenomeSyntenyBrowser />
+        </Suspense>
       </div>
 
       <div className="page-help">
