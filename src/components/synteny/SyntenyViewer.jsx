@@ -224,13 +224,13 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
 
         if (hasExons) {
           // Gene has introns - draw outline and fill only exons
-          // First draw white background for the whole gene (to cover chromosome line)
+          // First draw light grey background for introns (to cover chromosome line)
           geneGroup.append('rect')
             .attr('x', x)
             .attr('y', y)
             .attr('width', geneWidth)
             .attr('height', geneHeight)
-            .attr('fill', '#fff');
+            .attr('fill', '#e8e8e8');
 
           // Draw filled exons
           gene.exons.forEach(exon => {
@@ -322,8 +322,11 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
             .attr('class', 'gene-label')
             .style('font-size', '10px')
             .style('fill', '#fff')
+            .style('stroke', '#333')
+            .style('stroke-width', '2px')
+            .style('paint-order', 'stroke fill')
             .style('pointer-events', 'none')
-            .text(gene.gene_name || gene.feature_name.substring(0, 8));
+            .text(gene.gene_name || gene.feature_name);
         }
 
         // Click handler
