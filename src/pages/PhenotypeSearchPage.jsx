@@ -819,10 +819,10 @@ function PhenotypeSearchPage() {
   };
 
   const renderAnalyzeSection = () => {
-    if (!data || !data.results || data.results.length === 0) return null;
+    if (!filteredResults || filteredResults.length === 0) return null;
 
-    // Get unique gene names for the gene list
-    const geneList = [...new Set(data.results.map((r) => r.feature_name))];
+    // Get unique gene names from filtered results (respects organism and text filters)
+    const geneList = [...new Set(filteredResults.map((r) => r.feature_name))];
 
     // Helper to store gene list before navigating
     const handleToolClick = () => {
