@@ -696,7 +696,7 @@ function GenomeSnapshotPage() {
                   <tr>
                     {chrInventory.chromosomes.map((chr) => (
                       <th key={chr.chromosome} className="chr-header">
-                        <a href={`/locus/${chr.chromosome}`} title={`View ${chr.chromosome}`}>
+                        <a href={`/chromosome/${chr.chromosome}`} title={`View ${chr.chromosome}`}>
                           {chr.chromosome_display}
                         </a>
                       </th>
