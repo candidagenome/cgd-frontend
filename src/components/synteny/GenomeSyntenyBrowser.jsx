@@ -502,9 +502,12 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
         }
 
 
-        // Gene label - show full name (or standard name if available)
-        const labelText = gene.gene_name || gene.feature_name || '';
-        // Show label if query gene or enough space
+        // Gene label - truncate if longer than gene width
+        const rawLabel = gene.gene_name || gene.feature_name || '';
+        // Estimate ~6px per character at 9px font size
+        const maxChars = Math.max(3, Math.floor((geneWidth - 10) / 6));
+        const labelText = rawLabel.length > maxChars ? rawLabel.substring(0, maxChars) : rawLabel;
+        // Show label if query gene or enough space for at least 3 chars
         const showLabel = gene.is_query || geneWidth > 30;
 
         if (showLabel) {
@@ -1287,6 +1290,10 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
           <span className="legend-item">
             <span className="legend-box singleton" />
             Species-specific
+          </span>
+          <span className="legend-item">
+            <span className="legend-box intron" />
+            Intron
           </span>
           <span className="legend-item">
             <span className="legend-arrow watson" />

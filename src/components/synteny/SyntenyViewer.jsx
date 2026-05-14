@@ -312,7 +312,12 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
           }
         }
 
-        // Gene label (only show for query gene or if enough space)
+        // Gene label - truncate if longer than gene width
+        const rawLabel = gene.gene_name || gene.feature_name || '';
+        // Estimate ~6px per character at 10px font size
+        const maxChars = Math.max(3, Math.floor((geneWidth - 10) / 6));
+        const labelText = rawLabel.length > maxChars ? rawLabel.substring(0, maxChars) : rawLabel;
+
         if (gene.is_query || geneWidth > 50) {
           geneGroup.append('text')
             .attr('x', x + geneWidth / 2)
@@ -326,7 +331,7 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
             .style('stroke-width', '2px')
             .style('paint-order', 'stroke fill')
             .style('pointer-events', 'none')
-            .text(gene.gene_name || gene.feature_name);
+            .text(labelText);
         }
 
         // Click handler
@@ -642,6 +647,10 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
           <span className="legend-item">
             <span className="legend-box singleton"></span>
             Species-specific
+          </span>
+          <span className="legend-item">
+            <span className="legend-box intron"></span>
+            Intron
           </span>
           <span className="legend-item">
             <span className="legend-arrow watson"></span>

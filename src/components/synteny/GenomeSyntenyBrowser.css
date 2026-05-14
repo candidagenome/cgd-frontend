@@ -646,6 +646,11 @@
   border-color: #7f8c8d;
 }
 
+.legend-box.intron {
+  background-color: #e8e8e8;
+  border-color: #999;
+}
+
 .legend-arrow {
   display: inline-block;
   width: 0;
