@@ -113,6 +113,9 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
 
     svgRef.current = svg.node();
 
+    // Create defs for clip paths
+    svg.append('defs');
+
     const g = svg.append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
 
@@ -225,11 +228,11 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
 
         if (hasExons) {
           // Gene has introns - draw outline and fill only exons
-          // First draw arrow-shaped background for introns (to cover chromosome line)
-          let bgPoints;
+          // Calculate arrow points
+          let arrowPoints;
           if (gene.strand === 'W') {
             // Watson strand - arrow pointing right
-            bgPoints = [
+            arrowPoints = [
               [x, y],
               [x + geneWidth - 6, y],
               [x + geneWidth, y + geneHeight / 2],
@@ -238,7 +241,7 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
             ];
           } else {
             // Crick strand - arrow pointing left
-            bgPoints = [
+            arrowPoints = [
               [x, y + geneHeight / 2],
               [x + 6, y],
               [x + geneWidth, y],
@@ -246,15 +249,27 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
               [x + 6, y + geneHeight],
             ];
           }
+
+          // Create a unique clip path for this gene's arrow shape
+          const clipId = `gene-clip-${gene.feature_name.replace(/[^a-zA-Z0-9]/g, '_')}-${sd.index}`;
+          svg.select('defs').append('clipPath')
+            .attr('id', clipId)
+            .append('polygon')
+            .attr('points', arrowPoints.map(p => p.join(',')).join(' '));
+
+          // First draw arrow-shaped background for introns (to cover chromosome line)
           geneGroup.append('polygon')
-            .attr('points', bgPoints.map(p => p.join(',')).join(' '))
+            .attr('points', arrowPoints.map(p => p.join(',')).join(' '))
             .attr('fill', '#e8e8e8');
 
-          // Draw filled exons
+          // Draw filled exons - clipped to arrow shape
+          const exonGroup = geneGroup.append('g')
+            .attr('clip-path', `url(#${clipId})`);
+
           gene.exons.forEach(exon => {
             const exonX = xScale(exon.start);
             const exonWidth = Math.max(xScale(exon.stop) - exonX, 2);
-            geneGroup.append('rect')
+            exonGroup.append('rect')
               .attr('x', exonX)
               .attr('y', y)
               .attr('width', exonWidth)
@@ -265,37 +280,12 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
           });
 
           // Draw gene outline with direction indicator on top
-          if (gene.strand === 'W') {
-            // Watson strand - arrow pointing right
-            const points = [
-              [x, y],
-              [x + geneWidth - 6, y],
-              [x + geneWidth, y + geneHeight / 2],
-              [x + geneWidth - 6, y + geneHeight],
-              [x, y + geneHeight],
-            ];
-            geneGroup.append('polygon')
-              .attr('points', points.map(p => p.join(',')).join(' '))
-              .attr('fill', 'none')
-              .attr('stroke', strokeColor)
-              .attr('stroke-width', strokeWidth)
-              .attr('class', 'gene-outline');
-          } else {
-            // Crick strand - arrow pointing left
-            const points = [
-              [x, y + geneHeight / 2],
-              [x + 6, y],
-              [x + geneWidth, y],
-              [x + geneWidth, y + geneHeight],
-              [x + 6, y + geneHeight],
-            ];
-            geneGroup.append('polygon')
-              .attr('points', points.map(p => p.join(',')).join(' '))
-              .attr('fill', 'none')
-              .attr('stroke', strokeColor)
-              .attr('stroke-width', strokeWidth)
-              .attr('class', 'gene-outline');
-          }
+          geneGroup.append('polygon')
+            .attr('points', arrowPoints.map(p => p.join(',')).join(' '))
+            .attr('fill', 'none')
+            .attr('stroke', strokeColor)
+            .attr('stroke-width', strokeWidth)
+            .attr('class', 'gene-outline');
 
           // Add invisible hit area on top to capture mouse events
           geneGroup.append('rect')
