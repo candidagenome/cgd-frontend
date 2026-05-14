@@ -467,7 +467,8 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
             .attr('y', y)
             .attr('width', geneWidth)
             .attr('height', geneHeight)
-            .attr('fill', '#e8e8e8');
+            .attr('fill', '#e8e8e8')
+            .style('pointer-events', 'none');
 
           // Draw filled exons
           gene.exons.forEach(exon => {
@@ -481,7 +482,8 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
               .attr('width', exonWidth)
               .attr('height', geneHeight)
               .attr('fill', fillColor)
-              .attr('class', 'exon-shape');
+              .attr('class', 'exon-shape')
+              .style('pointer-events', 'none');
           });
 
           // Draw gene outline on top

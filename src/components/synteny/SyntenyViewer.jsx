@@ -230,7 +230,8 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
             .attr('y', y)
             .attr('width', geneWidth)
             .attr('height', geneHeight)
-            .attr('fill', '#e8e8e8');
+            .attr('fill', '#e8e8e8')
+            .style('pointer-events', 'none');
 
           // Draw filled exons
           gene.exons.forEach(exon => {
@@ -242,7 +243,8 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
               .attr('width', exonWidth)
               .attr('height', geneHeight)
               .attr('fill', fillColor)
-              .attr('class', 'exon-shape');
+              .attr('class', 'exon-shape')
+              .style('pointer-events', 'none');
           });
 
           // Draw gene outline with direction indicator on top
