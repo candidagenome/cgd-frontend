@@ -327,8 +327,8 @@ function SyntenyViewer({ locusName, queryOrganism, flankingCount = 10 }) {
             .attr('class', 'gene-label')
             .style('font-size', '10px')
             .style('fill', '#fff')
-            .style('stroke', '#333')
-            .style('stroke-width', '2px')
+            .style('stroke', 'rgba(0,0,0,0.4)')
+            .style('stroke-width', '1px')
             .style('paint-order', 'stroke fill')
             .style('pointer-events', 'none')
             .text(labelText);

@@ -519,8 +519,8 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
             .attr('class', 'gene-label')
             .style('font-size', '9px')
             .style('fill', '#fff')
-            .style('stroke', '#333')
-            .style('stroke-width', '2px')
+            .style('stroke', 'rgba(0,0,0,0.4)')
+            .style('stroke-width', '1px')
             .style('paint-order', 'stroke fill')
             .style('pointer-events', 'none')
             .text(labelText);
