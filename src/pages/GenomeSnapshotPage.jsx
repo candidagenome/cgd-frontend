@@ -682,19 +682,34 @@ function GenomeSnapshotPage() {
               <span className="loading-spinner"></span>
               Loading chromosome data...
             </div>
-          ) : chrInventory && chrInventory.chromosomes && chrInventory.chromosomes.length > 0 ? (
+          ) : chrInventory && chrInventory.chromosomes && chrInventory.chromosomes.length > 0 ? (() => {
+            // For C. albicans, filter out B chromosomes and rename A chromosomes
+            // (1A→1, 2A→2, RA→R, etc.)
+            const isAlbicans = organism === 'C_albicans_SC5314';
+            const displayChromosomes = isAlbicans
+              ? chrInventory.chromosomes
+                  .filter(chr => !chr.chromosome_display.endsWith('B'))
+                  .map(chr => ({
+                    ...chr,
+                    chromosome_display: chr.chromosome_display.endsWith('A')
+                      ? chr.chromosome_display.slice(0, -1)
+                      : chr.chromosome_display
+                  }))
+              : chrInventory.chromosomes;
+
+            return (
             <div className="chromosome-table-wrapper">
               <table className="chromosome-inventory-table">
                 <thead>
                   <tr>
                     <th rowSpan="2">Feature Type</th>
                     <th rowSpan="2">Total</th>
-                    <th colSpan={chrInventory.chromosomes.length}>
+                    <th colSpan={displayChromosomes.length}>
                       Chromosome
                     </th>
                   </tr>
                   <tr>
-                    {chrInventory.chromosomes.map((chr) => (
+                    {displayChromosomes.map((chr) => (
                       <th key={chr.chromosome} className="chr-header">
                         <a href={`/chromosome/${chr.chromosome}`} title={`View ${chr.chromosome}`}>
                           {chr.chromosome_display}
@@ -708,7 +723,7 @@ function GenomeSnapshotPage() {
                   <tr>
                     <td>Total ORFs</td>
                     <td>{chrInventory.grand_totals?.total_orfs?.toLocaleString() || 0}</td>
-                    {chrInventory.chromosomes.map((chr) => (
+                    {displayChromosomes.map((chr) => (
                       <td key={chr.chromosome}>{chr.total_orfs.toLocaleString()}</td>
                     ))}
                   </tr>
@@ -722,7 +737,7 @@ function GenomeSnapshotPage() {
                         </a>
                       </td>
                       <td>{chrInventory.grand_totals?.verified_orfs?.toLocaleString() || 0}</td>
-                      {chrInventory.chromosomes.map((chr) => (
+                      {displayChromosomes.map((chr) => (
                         <td key={chr.chromosome}>{chr.verified_orfs.toLocaleString()}</td>
                       ))}
                     </tr>
@@ -737,7 +752,7 @@ function GenomeSnapshotPage() {
                         </a>
                       </td>
                       <td>{chrInventory.grand_totals?.uncharacterized_orfs?.toLocaleString() || 0}</td>
-                      {chrInventory.chromosomes.map((chr) => (
+                      {displayChromosomes.map((chr) => (
                         <td key={chr.chromosome}>{chr.uncharacterized_orfs.toLocaleString()}</td>
                       ))}
                     </tr>
@@ -752,7 +767,7 @@ function GenomeSnapshotPage() {
                         </a>
                       </td>
                       <td>{chrInventory.grand_totals?.dubious_orfs?.toLocaleString() || 0}</td>
-                      {chrInventory.chromosomes.map((chr) => (
+                      {displayChromosomes.map((chr) => (
                         <td key={chr.chromosome}>{chr.dubious_orfs.toLocaleString()}</td>
                       ))}
                     </tr>
@@ -765,7 +780,7 @@ function GenomeSnapshotPage() {
                         <a href={`/feature-search/results?organism=${organism}&featuretype=tRNA`}>tRNA</a>
                       </td>
                       <td>{chrInventory.grand_totals?.trna?.toLocaleString() || 0}</td>
-                      {chrInventory.chromosomes.map((chr) => (
+                      {displayChromosomes.map((chr) => (
                         <td key={chr.chromosome}>{chr.trna.toLocaleString()}</td>
                       ))}
                     </tr>
@@ -778,7 +793,7 @@ function GenomeSnapshotPage() {
                         <a href={`/feature-search/results?organism=${organism}&featuretype=snoRNA`}>snoRNA</a>
                       </td>
                       <td>{chrInventory.grand_totals?.snorna?.toLocaleString() || 0}</td>
-                      {chrInventory.chromosomes.map((chr) => (
+                      {displayChromosomes.map((chr) => (
                         <td key={chr.chromosome}>{chr.snorna.toLocaleString()}</td>
                       ))}
                     </tr>
@@ -791,7 +806,7 @@ function GenomeSnapshotPage() {
                         <a href={`/feature-search/results?organism=${organism}&featuretype=rRNA`}>rRNA</a>
                       </td>
                       <td>{chrInventory.grand_totals?.rrna?.toLocaleString() || 0}</td>
-                      {chrInventory.chromosomes.map((chr) => (
+                      {displayChromosomes.map((chr) => (
                         <td key={chr.chromosome}>{chr.rrna.toLocaleString()}</td>
                       ))}
                     </tr>
@@ -804,7 +819,7 @@ function GenomeSnapshotPage() {
                         <a href={`/feature-search/results?organism=${organism}&featuretype=ncRNA`}>ncRNA</a>
                       </td>
                       <td>{chrInventory.grand_totals?.ncrna?.toLocaleString() || 0}</td>
-                      {chrInventory.chromosomes.map((chr) => (
+                      {displayChromosomes.map((chr) => (
                         <td key={chr.chromosome}>{chr.ncrna.toLocaleString()}</td>
                       ))}
                     </tr>
@@ -817,7 +832,7 @@ function GenomeSnapshotPage() {
                         <a href={`/feature-search/results?organism=${organism}&featuretype=pseudogene`}>Pseudogene</a>
                       </td>
                       <td>{chrInventory.grand_totals?.pseudogene?.toLocaleString() || 0}</td>
-                      {chrInventory.chromosomes.map((chr) => (
+                      {displayChromosomes.map((chr) => (
                         <td key={chr.chromosome}>{chr.pseudogene.toLocaleString()}</td>
                       ))}
                     </tr>
@@ -827,7 +842,7 @@ function GenomeSnapshotPage() {
                   <tr className="total-row">
                     <td><strong>Total</strong></td>
                     <td><strong>{chrInventory.grand_totals?.total_features?.toLocaleString() || 0}</strong></td>
-                    {chrInventory.chromosomes.map((chr) => (
+                    {displayChromosomes.map((chr) => (
                       <td key={chr.chromosome}><strong>{chr.total_features.toLocaleString()}</strong></td>
                     ))}
                   </tr>
@@ -836,14 +851,15 @@ function GenomeSnapshotPage() {
                   <tr>
                     <td><strong>Chromosome length (bp)</strong></td>
                     <td>{chrInventory.grand_totals?.length_bp?.toLocaleString() || 0}</td>
-                    {chrInventory.chromosomes.map((chr) => (
+                    {displayChromosomes.map((chr) => (
                       <td key={chr.chromosome}>{chr.length_bp.toLocaleString()}</td>
                     ))}
                   </tr>
                 </tbody>
               </table>
             </div>
-          ) : (
+            );
+          })() : (
             <p style={{ color: '#666', fontStyle: 'italic' }}>
               No chromosome data available for this organism.
             </p>
