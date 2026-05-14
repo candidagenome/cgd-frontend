@@ -49,8 +49,6 @@ function ChromosomePage() {
 
   const [chromosome, setChromosome] = useState(null);
   const [history, setHistory] = useState(null);
-  const [references, setReferences] = useState(null);
-  const [summaryNotes, setSummaryNotes] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -89,45 +87,11 @@ function ChromosomePage() {
       }
     };
 
-    const fetchReferences = async () => {
-      if (activeTab === 'references' && !references) {
-        try {
-          const data = await chromosomeApi.getReferences(name);
-          setReferences(data);
-        } catch (err) {
-          console.error('References error:', err);
-        }
-      }
-    };
-
-    const fetchSummary = async () => {
-      if (activeTab === 'summary' && !summaryNotes) {
-        try {
-          const data = await chromosomeApi.getSummaryNotes(name);
-          setSummaryNotes(data);
-        } catch (err) {
-          console.error('Summary error:', err);
-        }
-      }
-    };
-
     fetchHistory();
-    fetchReferences();
-    fetchSummary();
-  }, [activeTab, name, history, references, summaryNotes]);
+  }, [activeTab, name, history]);
 
   const handleTabChange = (tab) => {
     setSearchParams({ tab });
-  };
-
-  const formatDate = (dateStr) => {
-    if (!dateStr) return 'N/A';
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
   };
 
   const formatNumber = (num) => {
@@ -283,18 +247,6 @@ function ChromosomePage() {
           >
             History
           </button>
-          <button
-            className={`tab ${activeTab === 'references' ? 'active' : ''}`}
-            onClick={() => handleTabChange('references')}
-          >
-            References
-          </button>
-          <button
-            className={`tab ${activeTab === 'summary' ? 'active' : ''}`}
-            onClick={() => handleTabChange('summary')}
-          >
-            Summary Notes
-          </button>
         </div>
 
         {/* Tab Content */}
@@ -446,75 +398,6 @@ function ChromosomePage() {
             </div>
           )}
 
-          {activeTab === 'references' && (
-            <div className="references-tab">
-              <h3>References</h3>
-
-              {!references ? (
-                <div className="loading-inline">Loading references...</div>
-              ) : references.references?.length > 0 ? (
-                <table className="references-table">
-                  <thead>
-                    <tr>
-                      <th>Year</th>
-                      <th>Citation</th>
-                      <th>PubMed</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {references.references.map((ref, idx) => (
-                      <tr key={idx}>
-                        <td>{ref.year}</td>
-                        <td>
-                          <Link to={`/reference/${ref.reference_no}`}>
-                            {ref.title || ref.citation}
-                          </Link>
-                        </td>
-                        <td>
-                          {ref.pubmed ? (
-                            <a
-                              href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmed}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {ref.pubmed}
-                            </a>
-                          ) : (
-                            '-'
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : (
-                <p className="no-data">No references found for this chromosome.</p>
-              )}
-            </div>
-          )}
-
-          {activeTab === 'summary' && (
-            <div className="summary-tab">
-              <h3>Summary Notes</h3>
-
-              {!summaryNotes ? (
-                <div className="loading-inline">Loading summary notes...</div>
-              ) : summaryNotes.summary_notes?.length > 0 ? (
-                <div className="summary-notes">
-                  {summaryNotes.summary_notes.map((note, idx) => (
-                    <div key={idx} className="summary-paragraph">
-                      <p>{note.paragraph_text}</p>
-                      <div className="paragraph-meta">
-                        Last edited: {formatDate(note.date_edited)}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="no-data">No summary notes available for this chromosome.</p>
-              )}
-            </div>
-          )}
         </div>
       </div>
     </div>
