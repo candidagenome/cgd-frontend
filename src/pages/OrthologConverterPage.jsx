@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { orthologApi } from '../api/orthologApi';
 import './OrthologConverterPage.css';
 
@@ -11,10 +11,9 @@ const ORGANISM_DISPLAY_NAMES = {
   C_auris_B8441: 'C. auris B8441',
   C_glabrata_CBS138: 'C. glabrata CBS138',
   S_cerevisiae: 'S. cerevisiae (SGD)',
-  S_pombe: 'S. pombe (PomBase)',
-  A_nidulans: 'A. nidulans (AspGD)',
-  N_crassa: 'N. crassa',
 };
+
+const ITEMS_PER_PAGE = 10;
 
 function OrthologConverterPage() {
   // State
@@ -25,6 +24,73 @@ function OrthologConverterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [loadingTargets, setLoadingTargets] = useState(true);
+
+  // Pagination and sorting state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortColumn, setSortColumn] = useState(null);
+  const [sortDirection, setSortDirection] = useState('asc');
+  const [filterText, setFilterText] = useState('');
+
+  // Reset pagination when results change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [results]);
+
+  // Filter and sort results
+  const processedResults = useMemo(() => {
+    if (!results?.results) return [];
+
+    let filtered = results.results;
+
+    // Apply filter
+    if (filterText.trim()) {
+      const searchTerm = filterText.toLowerCase();
+      filtered = filtered.filter(
+        (r) =>
+          r.input_id?.toLowerCase().includes(searchTerm) ||
+          r.input_gene_name?.toLowerCase().includes(searchTerm) ||
+          r.ortholog_id?.toLowerCase().includes(searchTerm) ||
+          r.ortholog_gene_name?.toLowerCase().includes(searchTerm) ||
+          r.relationship?.toLowerCase().includes(searchTerm)
+      );
+    }
+
+    // Apply sorting
+    if (sortColumn) {
+      filtered = [...filtered].sort((a, b) => {
+        const aVal = a[sortColumn] || '';
+        const bVal = b[sortColumn] || '';
+        const comparison = aVal.toString().localeCompare(bVal.toString());
+        return sortDirection === 'asc' ? comparison : -comparison;
+      });
+    }
+
+    return filtered;
+  }, [results, filterText, sortColumn, sortDirection]);
+
+  // Pagination calculations
+  const totalPages = Math.ceil(processedResults.length / ITEMS_PER_PAGE);
+  const paginatedResults = useMemo(() => {
+    const startIdx = (currentPage - 1) * ITEMS_PER_PAGE;
+    return processedResults.slice(startIdx, startIdx + ITEMS_PER_PAGE);
+  }, [processedResults, currentPage]);
+
+  // Handle column sort
+  const handleSort = (column) => {
+    if (sortColumn === column) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortColumn(column);
+      setSortDirection('asc');
+    }
+    setCurrentPage(1);
+  };
+
+  // Get sort indicator
+  const getSortIndicator = (column) => {
+    if (sortColumn !== column) return ' ↕';
+    return sortDirection === 'asc' ? ' ↑' : ' ↓';
+  };
 
   // Load available targets on mount
   useEffect(() => {
@@ -255,20 +321,22 @@ function OrthologConverterPage() {
 
                 <div className="target-group">
                   <h3>CGD Species</h3>
-                  {cgdTargets.map((t) => (
-                    <label key={t.id} className="target-option">
-                      <input
-                        type="radio"
-                        name="target"
-                        value={t.id}
-                        checked={targetOrganism === t.id}
-                        onChange={(e) => setTargetOrganism(e.target.value)}
-                      />
-                      <span className="target-name">
-                        <em>{t.name}</em>
-                      </span>
-                    </label>
-                  ))}
+                  <div className="cgd-species-grid">
+                    {cgdTargets.map((t) => (
+                      <label key={t.id} className="target-option">
+                        <input
+                          type="radio"
+                          name="target"
+                          value={t.id}
+                          checked={targetOrganism === t.id}
+                          onChange={(e) => setTargetOrganism(e.target.value)}
+                        />
+                        <span className="target-name">
+                          <em>{t.name}</em>
+                        </span>
+                      </label>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
@@ -324,23 +392,70 @@ function OrthologConverterPage() {
               </div>
             </div>
 
+            {/* Filter and pagination info */}
+            <div className="results-controls">
+              <div className="filter-container">
+                <input
+                  type="text"
+                  className="filter-input"
+                  placeholder="Filter results..."
+                  value={filterText}
+                  onChange={(e) => {
+                    setFilterText(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                />
+                {filterText && (
+                  <button
+                    type="button"
+                    className="filter-clear"
+                    onClick={() => setFilterText('')}
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+              <div className="pagination-info">
+                Showing {processedResults.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}
+                -{Math.min(currentPage * ITEMS_PER_PAGE, processedResults.length)} of{' '}
+                {processedResults.length} results
+                {filterText && ` (filtered from ${results.results.length})`}
+              </div>
+            </div>
+
             <div className="results-table-container">
               <table className="results-table">
                 <thead>
                   <tr>
-                    <th>Input Gene</th>
-                    <th>Input Name</th>
-                    <th>Input Organism</th>
-                    <th>Ortholog ID</th>
-                    <th>Ortholog Name</th>
-                    <th>Target Organism</th>
-                    <th>Relationship</th>
-                    <th>Cluster</th>
+                    <th className="sortable" onClick={() => handleSort('input_id')}>
+                      Input Gene{getSortIndicator('input_id')}
+                    </th>
+                    <th className="sortable" onClick={() => handleSort('input_gene_name')}>
+                      Input Name{getSortIndicator('input_gene_name')}
+                    </th>
+                    <th className="sortable" onClick={() => handleSort('input_organism')}>
+                      Input Organism{getSortIndicator('input_organism')}
+                    </th>
+                    <th className="sortable" onClick={() => handleSort('ortholog_id')}>
+                      Ortholog ID{getSortIndicator('ortholog_id')}
+                    </th>
+                    <th className="sortable" onClick={() => handleSort('ortholog_gene_name')}>
+                      Ortholog Name{getSortIndicator('ortholog_gene_name')}
+                    </th>
+                    <th className="sortable" onClick={() => handleSort('target_organism')}>
+                      Target Organism{getSortIndicator('target_organism')}
+                    </th>
+                    <th className="sortable" onClick={() => handleSort('relationship')}>
+                      Relationship{getSortIndicator('relationship')}
+                    </th>
+                    <th className="sortable" onClick={() => handleSort('cluster_id')}>
+                      Cluster{getSortIndicator('cluster_id')}
+                    </th>
                     <th>Notes</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {results.results.map((r, idx) => (
+                  {paginatedResults.map((r, idx) => (
                     <tr key={idx} className={r.found ? '' : 'not-found-row'}>
                       <td className="input-id">{r.input_id}</td>
                       <td>{r.input_gene_name || '-'}</td>
@@ -350,13 +465,9 @@ function OrthologConverterPage() {
                       <td className="ortholog-id">
                         {r.ortholog_url && r.ortholog_id ? (
                           <a
-                            href={
-                              r.ortholog_url.startsWith('http')
-                                ? r.ortholog_url
-                                : r.ortholog_url
-                            }
-                            target={r.ortholog_url.startsWith('http') ? '_blank' : '_self'}
-                            rel={r.ortholog_url.startsWith('http') ? 'noopener noreferrer' : ''}
+                            href={r.ortholog_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
                           >
                             {r.ortholog_id}
                           </a>
@@ -393,6 +504,47 @@ function OrthologConverterPage() {
                 </tbody>
               </table>
             </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="pagination-controls">
+                <button
+                  type="button"
+                  className="pagination-btn"
+                  onClick={() => setCurrentPage(1)}
+                  disabled={currentPage === 1}
+                >
+                  « First
+                </button>
+                <button
+                  type="button"
+                  className="pagination-btn"
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  ‹ Prev
+                </button>
+                <span className="pagination-pages">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  type="button"
+                  className="pagination-btn"
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  Next ›
+                </button>
+                <button
+                  type="button"
+                  className="pagination-btn"
+                  onClick={() => setCurrentPage(totalPages)}
+                  disabled={currentPage === totalPages}
+                >
+                  Last »
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

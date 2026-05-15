@@ -200,6 +200,17 @@
   font-style: normal;
 }
 
+/* CGD Species Grid - 3 rows, 2 columns */
+.cgd-species-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 16px;
+}
+
+.cgd-species-grid .target-option {
+  margin: 0;
+}
+
 /* Convert Button */
 .convert-section {
   display: flex;
@@ -424,6 +435,109 @@
   color: #3730a3;
 }
 
+/* Results Controls - Filter & Pagination Info */
+.results-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.filter-container {
+  position: relative;
+  flex: 1;
+  max-width: 300px;
+}
+
+.filter-input {
+  width: 100%;
+  padding: 8px 32px 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  box-sizing: border-box;
+}
+
+.filter-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.filter-clear {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.filter-clear:hover {
+  color: #6b7280;
+}
+
+.pagination-info {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* Sortable Table Headers */
+.results-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.15s ease;
+}
+
+.results-table th.sortable:hover {
+  background: #e5e7eb;
+}
+
+/* Pagination Controls */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.pagination-btn {
+  padding: 8px 16px;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-pages {
+  padding: 0 16px;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
 /* Help Section */
 .ortholog-converter-page .page-help {
   background: #f9fafb;
@@ -506,5 +620,27 @@
   .action-btn {
     flex: 1;
     text-align: center;
+  }
+
+  .cgd-species-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .results-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-container {
+    max-width: none;
+  }
+
+  .pagination-controls {
+    flex-wrap: wrap;
+  }
+
+  .pagination-btn {
+    padding: 6px 12px;
+    font-size: 0.8rem;
   }
 }
