@@ -23,12 +23,61 @@ const formatLocusName = (result) => {
   return result.feature_name;
 };
 
+// Recursive component to render observable tree
+function ObservableTreeNode({ node, onSelect, level = 0 }) {
+  const [expanded, setExpanded] = useState(level === 0); // Expand first level by default
+  const hasChildren = node.children && node.children.length > 0;
+
+  return (
+    <div className="observable-tree-node" style={{ marginLeft: level * 20 }}>
+      <div className="observable-tree-item">
+        {hasChildren && (
+          <button
+            className="observable-tree-toggle"
+            onClick={() => setExpanded(!expanded)}
+            type="button"
+          >
+            {expanded ? '−' : '+'}
+          </button>
+        )}
+        {!hasChildren && <span className="observable-tree-spacer" />}
+        <button
+          type="button"
+          className="observable-tree-label"
+          onClick={() => onSelect(node.term)}
+        >
+          <span className="observable-term">{node.term}</span>
+          {node.count > 0 && <span className="observable-count">({node.count})</span>}
+        </button>
+      </div>
+      {hasChildren && expanded && (
+        <div className="observable-tree-children">
+          {node.children.map((child) => (
+            <ObservableTreeNode
+              key={child.cv_term_no}
+              node={child}
+              onSelect={onSelect}
+              level={level + 1}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function PhenotypeSearchPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   // Form state - search query (simplified form only uses query)
   const [query, setQuery] = useState('');
+
+  // Observable tree state
+  const [observableTree, setObservableTree] = useState([]);
+  const [observableTreeLoading, setObservableTreeLoading] = useState(false);
+  const [observableTreeError, setObservableTreeError] = useState(null);
+  const [showObservableSelector, setShowObservableSelector] = useState(false);
 
   // Results state
   const [data, setData] = useState(null);
@@ -56,6 +105,37 @@ function PhenotypeSearchPage() {
   };
 
   const hasPendingChanges = pendingQuickFilter !== appliedQuickFilter;
+
+  // Load observable tree when selector is opened
+  const loadObservableTree = async () => {
+    if (observableTree.length > 0) return; // Already loaded
+
+    setObservableTreeLoading(true);
+    setObservableTreeError(null);
+    try {
+      const response = await phenotypeApi.getObservableTree();
+      setObservableTree(response.tree || []);
+    } catch (err) {
+      console.error('Failed to load observable tree:', err);
+      setObservableTreeError('Failed to load observable terms');
+    } finally {
+      setObservableTreeLoading(false);
+    }
+  };
+
+  // Handle observable selection - search by that observable
+  const handleObservableSelect = (term) => {
+    window.open(`/phenotype/search?observable=${encodeURIComponent(term)}`, '_blank');
+  };
+
+  // Toggle observable selector and load data if needed
+  const toggleObservableSelector = () => {
+    const newState = !showObservableSelector;
+    setShowObservableSelector(newState);
+    if (newState && observableTree.length === 0) {
+      loadObservableTree();
+    }
+  };
 
   // Parse URL parameters and perform search if present
   useEffect(() => {
@@ -552,15 +632,43 @@ function PhenotypeSearchPage() {
 
         <div className="browse-section">
           <span>OR: </span>
-          <a
-            href="/phenotype/terms"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="browse-terms-link"
+          <button
+            type="button"
+            className="toggle-selector-btn"
+            onClick={toggleObservableSelector}
           >
-            Browse phenotype terms
-          </a>
+            {showObservableSelector ? 'Hide Observable Terms ▲' : 'Browse Observable Terms ▼'}
+          </button>
         </div>
+
+        {/* Observable Tree Selector */}
+        {showObservableSelector && (
+          <div className="observable-selector">
+            <p className="selector-help">
+              Click on an observable term to search for all phenotypes with that observable.
+            </p>
+            {observableTreeLoading && (
+              <div className="loading-inline">Loading observable terms...</div>
+            )}
+            {observableTreeError && (
+              <div className="error-inline">{observableTreeError}</div>
+            )}
+            {!observableTreeLoading && !observableTreeError && observableTree.length > 0 && (
+              <div className="observable-tree">
+                {observableTree.map((node) => (
+                  <ObservableTreeNode
+                    key={node.cv_term_no}
+                    node={node}
+                    onSelect={handleObservableSelect}
+                  />
+                ))}
+              </div>
+            )}
+            {!observableTreeLoading && !observableTreeError && observableTree.length === 0 && (
+              <div className="no-observables">No observable terms found.</div>
+            )}
+          </div>
+        )}
       </div>
     );
   };

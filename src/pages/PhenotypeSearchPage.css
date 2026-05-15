@@ -206,6 +206,135 @@
   text-decoration: none;
 }
 
+/* Observable Selector Button */
+.toggle-selector-btn {
+  color: #0066cc;
+  text-decoration: none;
+  border: 1px solid #0066cc;
+  background: #fff;
+  padding: 8px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.toggle-selector-btn:hover {
+  background: #0066cc;
+  color: #fff;
+}
+
+/* Observable Tree Selector */
+.observable-selector {
+  margin-top: 15px;
+  padding: 15px;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.selector-help {
+  margin: 0 0 12px 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.observable-tree {
+  font-size: 0.95rem;
+}
+
+.observable-tree-node {
+  margin-bottom: 2px;
+}
+
+.observable-tree-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.observable-tree-toggle {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  background: #e0e0e0;
+  color: #333;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.observable-tree-toggle:hover {
+  background: #d0d0d0;
+}
+
+.observable-tree-spacer {
+  width: 20px;
+  flex-shrink: 0;
+}
+
+.observable-tree-label {
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.observable-tree-label:hover {
+  background: #e3f2fd;
+}
+
+.observable-tree-label .observable-term {
+  color: #0066cc;
+}
+
+.observable-tree-label .observable-count {
+  color: #666;
+  font-size: 0.85em;
+}
+
+.observable-tree-children {
+  margin-left: 4px;
+  border-left: 1px solid #ddd;
+  padding-left: 4px;
+}
+
+.loading-inline {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+}
+
+.error-inline {
+  padding: 15px;
+  text-align: center;
+  color: #c62828;
+  background: #fff3f3;
+  border-radius: 4px;
+}
+
+.no-observables {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+}
+
 /* Legacy styles kept for compatibility */
 .form-input {
   padding: 8px 12px;
