@@ -67,6 +67,7 @@ const HeaderNav = () => {
       to: '/tools',
       submenu: [
         // { label: 'CRISPR Guide Designer', to: '/crispr' },  // TODO: Enable when CRISPR tool is ready
+        { label: 'Ortholog Converter', to: '/ortholog-converter' },
         { label: 'PatMatch', to: '/patmatch' },
         { label: 'Primers', to: '/webprimer' },
         { label: 'Phenotype Search', to: '/phenotype/search' },
