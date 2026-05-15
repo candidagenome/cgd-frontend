@@ -266,7 +266,7 @@ function OrthologConverterPage() {
               value={geneInput}
               onChange={(e) => setGeneInput(e.target.value)}
               placeholder="ACT1&#10;ERG11&#10;C1_00010W_A&#10;CDC19&#10;..."
-              rows={12}
+              rows={6}
             />
             <div className="input-actions">
               <label className="file-upload-btn">
