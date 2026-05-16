@@ -1,23 +1,4 @@
 #!/bin/bash
-#
-# 02_align_reads.sh - Align FASTQ reads to reference genome using HISAT2
-#
-# Usage:
-#   ./02_align_reads.sh <SPECIES> <FASTQ_DIR> <SAMPLE_NAME> [OUTPUT_DIR]
-#
-# Examples:
-#   ./02_align_reads.sh C_auris_B8441 /data/tmp/fastq SRR12345678
-#   ./02_align_reads.sh C_albicans_SC5314 ./fastq control_rep1 ./output
-#
-# Input:
-#   - Single-end: <SAMPLE_NAME>.fastq.gz or <SAMPLE_NAME>_1.fastq.gz
-#   - Paired-end: <SAMPLE_NAME>_1.fastq.gz and <SAMPLE_NAME>_2.fastq.gz
-#
-# Output:
-#   - <SAMPLE_NAME>.sorted.bam
-#   - <SAMPLE_NAME>.sorted.bam.bai
-#
-
 set -e
 
 # Activate conda environment if available
@@ -31,63 +12,46 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-# Script directory for config
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Parse arguments
 SPECIES="$1"
 FASTQ_DIR="$2"
 SAMPLE_NAME="$3"
 OUTPUT_DIR="${4:-/data/tmp/dataset_import/aligned}"
 
-# Validate arguments
 if [ -z "$SPECIES" ] || [ -z "$FASTQ_DIR" ] || [ -z "$SAMPLE_NAME" ]; then
-    echo -e "${RED}Error: Missing required arguments${NC}"
-    echo ""
-    echo "Usage: $0 <SPECIES> <FASTQ_DIR> <SAMPLE_NAME> [OUTPUT_DIR]"
-    echo ""
-    echo "Species options:"
-    echo "  C_albicans_SC5314"
-    echo "  C_auris_B8441"
-    echo "  C_glabrata_CBS138"
-    echo "  C_dubliniensis_CD36"
-    echo "  C_parapsilosis_CDC317"
-    echo "  C_tropicalis_MYA3404"
+    echo -e "${RED}Usage: $0 <SPECIES> <FASTQ_DIR> <SAMPLE_NAME> [OUTPUT_DIR]${NC}"
     exit 1
 fi
 
-# Configuration - adjust paths as needed
 THREADS=8
 HISAT2_EXTRA_ARGS="--dta"
+GENOME_BASE="/data/genomes"
 
-# Base genome directory - adjust for your environment
-GENOME_BASE="${GENOME_BASE:-$HOME/work/cgd-backend/data/sequence}"
-
-# Species-specific paths (should match config.yaml)
 case "$SPECIES" in
     C_albicans_SC5314)
-        GENOME_FASTA="$GENOME_BASE/C_albicans_SC5314_A22/C_albicans_SC5314_chromosomes.fasta"
-        HISAT2_INDEX="$GENOME_BASE/C_albicans_SC5314_A22/hisat2_index/C_albicans_SC5314"
+        GENOME_FASTA="$GENOME_BASE/C_albicans_SC5314_A22_current_chromosomes.fasta"
+        HISAT2_INDEX="$GENOME_BASE/hisat2_index/C_albicans_SC5314"
         ;;
     C_auris_B8441)
-        GENOME_FASTA="$GENOME_BASE/C_auris_B8441/C_auris_B8441_chromosomes.fasta"
-        HISAT2_INDEX="$GENOME_BASE/C_auris_B8441/hisat2_index/C_auris_B8441"
+        GENOME_FASTA="$GENOME_BASE/C_auris_B8441_current_chromosomes.fasta"
+        HISAT2_INDEX="$GENOME_BASE/hisat2_index/C_auris_B8441"
         ;;
     C_glabrata_CBS138)
-        GENOME_FASTA="$GENOME_BASE/C_glabrata_CBS138/C_glabrata_CBS138_chromosomes.fasta"
-        HISAT2_INDEX="$GENOME_BASE/C_glabrata_CBS138/hisat2_index/C_glabrata_CBS138"
+        GENOME_FASTA="$GENOME_BASE/C_glabrata_CBS138_current_chromosomes.fasta"
+        HISAT2_INDEX="$GENOME_BASE/hisat2_index/C_glabrata_CBS138"
         ;;
     C_dubliniensis_CD36)
-        GENOME_FASTA="$GENOME_BASE/C_dubliniensis_CD36/C_dubliniensis_CD36_chromosomes.fasta"
-        HISAT2_INDEX="$GENOME_BASE/C_dubliniensis_CD36/hisat2_index/C_dubliniensis_CD36"
+        GENOME_FASTA="$GENOME_BASE/C_dubliniensis_CD36_current_chromosomes.fasta"
+        HISAT2_INDEX="$GENOME_BASE/hisat2_index/C_dubliniensis_CD36"
         ;;
     C_parapsilosis_CDC317)
-        GENOME_FASTA="$GENOME_BASE/C_parapsilosis_CDC317/C_parapsilosis_CDC317_chromosomes.fasta"
-        HISAT2_INDEX="$GENOME_BASE/C_parapsilosis_CDC317/hisat2_index/C_parapsilosis_CDC317"
+        GENOME_FASTA="$GENOME_BASE/C_parapsilosis_CDC317_current_chromosomes.fasta"
+        HISAT2_INDEX="$GENOME_BASE/hisat2_index/C_parapsilosis_CDC317"
         ;;
     C_tropicalis_MYA3404)
-        GENOME_FASTA="$GENOME_BASE/C_tropicalis_MYA-3404/C_tropicalis_MYA-3404_chromosomes.fasta"
-        HISAT2_INDEX="$GENOME_BASE/C_tropicalis_MYA-3404/hisat2_index/C_tropicalis_MYA-3404"
+        GENOME_FASTA="$GENOME_BASE/C_tropicalis_current_chromosomes.fasta"
+        HISAT2_INDEX="$GENOME_BASE/hisat2_index/C_tropicalis"
         ;;
     *)
         echo -e "${RED}Error: Unknown species: $SPECIES${NC}"
@@ -95,125 +59,39 @@ case "$SPECIES" in
         ;;
 esac
 
-# Check HISAT2 index exists, build if necessary
+# Build index if needed
 if [ ! -f "${HISAT2_INDEX}.1.ht2" ]; then
-    echo -e "${YELLOW}HISAT2 index not found, building...${NC}"
-
-    # Check genome FASTA exists
-    if [ ! -f "$GENOME_FASTA" ]; then
-        echo -e "${RED}Error: Genome FASTA not found: $GENOME_FASTA${NC}"
-        exit 1
-    fi
-
-    # Create index directory
-    INDEX_DIR=$(dirname "$HISAT2_INDEX")
-    mkdir -p "$INDEX_DIR"
-
-    # Build HISAT2 index
-    echo "Building HISAT2 index from: $GENOME_FASTA"
-    echo "Index will be saved to: $HISAT2_INDEX"
+    echo -e "${YELLOW}Building HISAT2 index...${NC}"
+    mkdir -p $(dirname "$HISAT2_INDEX")
     hisat2-build -p $THREADS "$GENOME_FASTA" "$HISAT2_INDEX"
-
-    echo -e "${GREEN}HISAT2 index built successfully${NC}"
 fi
 
-# Create output directory
 mkdir -p "$OUTPUT_DIR"
 
-echo -e "${GREEN}=== CGD Read Alignment ===${NC}"
-echo "Species: $SPECIES"
-echo "Sample: $SAMPLE_NAME"
-echo "FASTQ Dir: $FASTQ_DIR"
-echo "Output: $OUTPUT_DIR"
-echo "Threads: $THREADS"
-echo ""
+echo -e "${GREEN}=== Aligning $SAMPLE_NAME ===${NC}"
 
-# Detect input files (paired-end vs single-end)
-R1=""
-R2=""
-
+# Detect input files
 if [ -f "$FASTQ_DIR/${SAMPLE_NAME}_1.fastq.gz" ]; then
     R1="$FASTQ_DIR/${SAMPLE_NAME}_1.fastq.gz"
-    if [ -f "$FASTQ_DIR/${SAMPLE_NAME}_2.fastq.gz" ]; then
-        R2="$FASTQ_DIR/${SAMPLE_NAME}_2.fastq.gz"
-        echo "Detected: Paired-end reads"
-    else
-        echo "Detected: Single-end reads (R1 only)"
-    fi
+    [ -f "$FASTQ_DIR/${SAMPLE_NAME}_2.fastq.gz" ] && R2="$FASTQ_DIR/${SAMPLE_NAME}_2.fastq.gz"
 elif [ -f "$FASTQ_DIR/${SAMPLE_NAME}.fastq.gz" ]; then
     R1="$FASTQ_DIR/${SAMPLE_NAME}.fastq.gz"
-    echo "Detected: Single-end reads"
 else
-    echo -e "${RED}Error: No FASTQ files found for sample $SAMPLE_NAME${NC}"
-    echo "Looking for:"
-    echo "  $FASTQ_DIR/${SAMPLE_NAME}.fastq.gz"
-    echo "  $FASTQ_DIR/${SAMPLE_NAME}_1.fastq.gz"
+    echo -e "${RED}Error: No FASTQ for $SAMPLE_NAME${NC}"
     exit 1
 fi
 
-# Output files
-SAM_FILE="$OUTPUT_DIR/${SAMPLE_NAME}.sam"
-BAM_FILE="$OUTPUT_DIR/${SAMPLE_NAME}.bam"
 SORTED_BAM="$OUTPUT_DIR/${SAMPLE_NAME}.sorted.bam"
-ALIGN_LOG="$OUTPUT_DIR/${SAMPLE_NAME}.align.log"
-
-# Check if already done
-if [ -f "$SORTED_BAM" ] && [ -f "${SORTED_BAM}.bai" ]; then
-    echo -e "${YELLOW}Output already exists: $SORTED_BAM${NC}"
-    echo "Delete to re-run alignment"
-    exit 0
-fi
-
-# Step 1: Align with HISAT2
-echo -e "${YELLOW}Step 1: Aligning with HISAT2...${NC}"
+[ -f "$SORTED_BAM" ] && echo "Already exists: $SORTED_BAM" && exit 0
 
 if [ -n "$R2" ]; then
-    # Paired-end
-    hisat2 -p $THREADS $HISAT2_EXTRA_ARGS \
-        -x "$HISAT2_INDEX" \
-        -1 "$R1" \
-        -2 "$R2" \
-        -S "$SAM_FILE" \
-        2> "$ALIGN_LOG"
+    hisat2 -p $THREADS $HISAT2_EXTRA_ARGS -x "$HISAT2_INDEX" -1 "$R1" -2 "$R2" 2>"$OUTPUT_DIR/${SAMPLE_NAME}.log" | \
+        samtools view -@ $THREADS -bS - | samtools sort -@ $THREADS -o "$SORTED_BAM"
 else
-    # Single-end
-    hisat2 -p $THREADS $HISAT2_EXTRA_ARGS \
-        -x "$HISAT2_INDEX" \
-        -U "$R1" \
-        -S "$SAM_FILE" \
-        2> "$ALIGN_LOG"
+    hisat2 -p $THREADS $HISAT2_EXTRA_ARGS -x "$HISAT2_INDEX" -U "$R1" 2>"$OUTPUT_DIR/${SAMPLE_NAME}.log" | \
+        samtools view -@ $THREADS -bS - | samtools sort -@ $THREADS -o "$SORTED_BAM"
 fi
 
-# Print alignment stats
-echo ""
-echo "Alignment statistics:"
-tail -5 "$ALIGN_LOG"
-echo ""
-
-# Step 2: Convert to BAM
-echo -e "${YELLOW}Step 2: Converting to BAM...${NC}"
-samtools view -@ $THREADS -bS "$SAM_FILE" > "$BAM_FILE"
-
-# Step 3: Sort BAM
-echo -e "${YELLOW}Step 3: Sorting BAM...${NC}"
-samtools sort -@ $THREADS -o "$SORTED_BAM" "$BAM_FILE"
-
-# Step 4: Index BAM
-echo -e "${YELLOW}Step 4: Indexing BAM...${NC}"
 samtools index -@ $THREADS "$SORTED_BAM"
-
-# Step 5: Cleanup intermediate files
-echo -e "${YELLOW}Step 5: Cleaning up...${NC}"
-rm -f "$SAM_FILE" "$BAM_FILE"
-
-# Calculate alignment rate
-TOTAL_READS=$(grep "reads; of these:" "$ALIGN_LOG" | awk '{print $1}')
-ALIGNED_RATE=$(grep "overall alignment rate" "$ALIGN_LOG" | awk '{print $1}')
-
-echo ""
-echo -e "${GREEN}=== Alignment Complete ===${NC}"
-echo "Output: $SORTED_BAM"
-echo "Total reads: $TOTAL_READS"
-echo "Alignment rate: $ALIGNED_RATE"
-echo ""
-ls -lh "$SORTED_BAM"
+tail -5 "$OUTPUT_DIR/${SAMPLE_NAME}.log"
+echo -e "${GREEN}Done: $SORTED_BAM${NC}"
