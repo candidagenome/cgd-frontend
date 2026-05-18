@@ -8,21 +8,23 @@ export const orthologApi = {
   },
 
   // Convert gene list to orthologs
-  convert: async (geneIds, targetOrganism) => {
+  convert: async (geneIds, targetOrganism, sourceOrganism = 'CGD') => {
     const response = await api.post('/api/orthologs/convert', {
       gene_ids: geneIds,
       target_organism: targetOrganism,
+      source_organism: sourceOrganism,
     });
     return response.data;
   },
 
   // Download conversion results as CSV/TSV
-  downloadConversion: async (geneIds, targetOrganism, format = 'csv') => {
+  downloadConversion: async (geneIds, targetOrganism, format = 'csv', sourceOrganism = 'CGD') => {
     const response = await api.post(
       `/api/orthologs/convert/download?format=${format}`,
       {
         gene_ids: geneIds,
         target_organism: targetOrganism,
+        source_organism: sourceOrganism,
       },
       {
         responseType: 'blob',
@@ -32,12 +34,13 @@ export const orthologApi = {
   },
 
   // Get just the ortholog IDs as plain text
-  getOrthologIdsOnly: async (geneIds, targetOrganism, includeMissing = false) => {
+  getOrthologIdsOnly: async (geneIds, targetOrganism, includeMissing = false, sourceOrganism = 'CGD') => {
     const response = await api.post(
       `/api/orthologs/convert/ids-only?include_missing=${includeMissing}`,
       {
         gene_ids: geneIds,
         target_organism: targetOrganism,
+        source_organism: sourceOrganism,
       },
       {
         responseType: 'text',

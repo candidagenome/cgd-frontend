@@ -29,8 +29,10 @@ const ITEMS_PER_PAGE = 10;
 function OrthologConverterPage() {
   // State
   const [geneInput, setGeneInput] = useState('');
+  const [sourceOrganism, setSourceOrganism] = useState('CGD');
   const [targetOrganism, setTargetOrganism] = useState('S_cerevisiae');
   const [targets, setTargets] = useState([]);
+  const [sources, setSources] = useState([]);
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -104,12 +106,16 @@ function OrthologConverterPage() {
     return sortDirection === 'asc' ? ' ↑' : ' ↓';
   };
 
-  // Load available targets on mount
+  // Load available targets and sources on mount
   useEffect(() => {
     const loadTargets = async () => {
       try {
         const data = await orthologApi.getTargets();
         setTargets(data.targets || []);
+        setSources(data.sources || [
+          { id: 'CGD', name: 'CGD Species', description: 'Enter CGD gene names, systematic names, or CGD IDs' },
+          { id: 'S_cerevisiae', name: 'S. cerevisiae (SGD)', description: 'Enter S. cerevisiae gene names (e.g., ACT1, ERG11)' },
+        ]);
       } catch (err) {
         console.error('Failed to load targets:', err);
         // Use default targets if API fails
@@ -122,12 +128,26 @@ function OrthologConverterPage() {
           { id: 'C_parapsilosis_CDC317', name: 'Candida parapsilosis CDC317', source: 'CGD', is_external: false },
           { id: 'C_auris_B8441', name: 'Candida auris B8441', source: 'CGD', is_external: false },
         ]);
+        setSources([
+          { id: 'CGD', name: 'CGD Species', description: 'Enter CGD gene names, systematic names, or CGD IDs' },
+          { id: 'S_cerevisiae', name: 'S. cerevisiae (SGD)', description: 'Enter S. cerevisiae gene names (e.g., ACT1, ERG11)' },
+        ]);
       } finally {
         setLoadingTargets(false);
       }
     };
     loadTargets();
   }, []);
+
+  // When source changes, adjust target if needed
+  useEffect(() => {
+    if (sourceOrganism === 'S_cerevisiae') {
+      // S. cerevisiae can only convert to CGD species, not to itself
+      if (targetOrganism === 'S_cerevisiae') {
+        setTargetOrganism('C_albicans_SC5314');
+      }
+    }
+  }, [sourceOrganism, targetOrganism]);
 
   // Parse gene input into array
   const parseGeneInput = useCallback((input) => {
@@ -150,7 +170,7 @@ function OrthologConverterPage() {
     setResults(null);
 
     try {
-      const data = await orthologApi.convert(geneIds, targetOrganism);
+      const data = await orthologApi.convert(geneIds, targetOrganism, sourceOrganism);
       setResults(data);
     } catch (err) {
       console.error('Conversion error:', err);
@@ -179,7 +199,7 @@ function OrthologConverterPage() {
   const handleDownloadCSV = async () => {
     const geneIds = parseGeneInput(geneInput);
     try {
-      const blob = await orthologApi.downloadConversion(geneIds, targetOrganism, 'csv');
+      const blob = await orthologApi.downloadConversion(geneIds, targetOrganism, 'csv', sourceOrganism);
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -197,7 +217,7 @@ function OrthologConverterPage() {
   const handleDownloadTSV = async () => {
     const geneIds = parseGeneInput(geneInput);
     try {
-      const blob = await orthologApi.downloadConversion(geneIds, targetOrganism, 'tsv');
+      const blob = await orthologApi.downloadConversion(geneIds, targetOrganism, 'tsv', sourceOrganism);
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -247,9 +267,20 @@ function OrthologConverterPage() {
     }
   };
 
-  // Group targets by type
+  // Group targets by type, filtering based on source organism
   const cgdTargets = targets.filter((t) => !t.is_external);
-  const externalTargets = targets.filter((t) => t.is_external);
+  // When source is S. cerevisiae, don't show S. cerevisiae as target
+  const externalTargets = targets.filter((t) => {
+    if (!t.is_external) return false;
+    if (sourceOrganism === 'S_cerevisiae' && t.id === 'S_cerevisiae') return false;
+    return true;
+  });
+
+  // Get current source info for help text
+  const currentSource = sources.find((s) => s.id === sourceOrganism);
+  const inputPlaceholder = sourceOrganism === 'S_cerevisiae'
+    ? 'ACT1\nERG11\nCDC19\nYFL039C\n...'
+    : 'ACT1\nERG11\nC1_00010W_A\nCDC19\n...';
 
   const geneCount = parseGeneInput(geneInput).length;
 
@@ -268,16 +299,35 @@ function OrthologConverterPage() {
         {/* Input Section */}
         <div className="input-section">
           <div className="input-panel">
-            <h2>1. Enter Gene List</h2>
+            <h2>1. Select Source &amp; Enter Genes</h2>
+
+            {/* Source organism selector */}
+            <div className="source-selector">
+              <label className="source-label">Source:</label>
+              <div className="source-options">
+                {sources.map((s) => (
+                  <label key={s.id} className="source-option">
+                    <input
+                      type="radio"
+                      name="source"
+                      value={s.id}
+                      checked={sourceOrganism === s.id}
+                      onChange={(e) => setSourceOrganism(e.target.value)}
+                    />
+                    <span>{s.name}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
             <p className="input-help">
-              Enter gene names, systematic names, or CGD IDs (one per line, or separated by
-              commas/tabs/spaces)
+              {currentSource?.description || 'Enter gene identifiers (one per line, or separated by commas/tabs/spaces)'}
             </p>
             <textarea
               className="gene-input"
               value={geneInput}
               onChange={(e) => setGeneInput(e.target.value)}
-              placeholder="ACT1&#10;ERG11&#10;C1_00010W_A&#10;CDC19&#10;..."
+              placeholder={inputPlaceholder}
               rows={6}
             />
             <div className="input-actions">
@@ -307,29 +357,31 @@ function OrthologConverterPage() {
               <div className="loading-targets">Loading organisms...</div>
             ) : (
               <div className="target-groups">
-                <div className="target-group">
-                  <h3>External Databases</h3>
-                  {externalTargets.map((t) => (
-                    <label key={t.id} className="target-option">
-                      <input
-                        type="radio"
-                        name="target"
-                        value={t.id}
-                        checked={targetOrganism === t.id}
-                        onChange={(e) => setTargetOrganism(e.target.value)}
-                      />
-                      <span className="target-name">
-                        <em>{t.name.split(' ').slice(0, 2).join(' ')}</em>
-                        {t.name.includes('(') && (
-                          <span className="target-source">
-                            {' '}
-                            ({t.name.split('(')[1]?.replace(')', '') || t.source})
-                          </span>
-                        )}
-                      </span>
-                    </label>
-                  ))}
-                </div>
+                {externalTargets.length > 0 && (
+                  <div className="target-group">
+                    <h3>External Databases</h3>
+                    {externalTargets.map((t) => (
+                      <label key={t.id} className="target-option">
+                        <input
+                          type="radio"
+                          name="target"
+                          value={t.id}
+                          checked={targetOrganism === t.id}
+                          onChange={(e) => setTargetOrganism(e.target.value)}
+                        />
+                        <span className="target-name">
+                          <em>{t.name.split(' ').slice(0, 2).join(' ')}</em>
+                          {t.name.includes('(') && (
+                            <span className="target-source">
+                              {' '}
+                              ({t.name.split('(')[1]?.replace(')', '') || t.source})
+                            </span>
+                          )}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                )}
 
                 <div className="target-group">
                   <h3>CGD Species</h3>
