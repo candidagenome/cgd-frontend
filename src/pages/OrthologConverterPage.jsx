@@ -1,6 +1,17 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { orthologApi } from '../api/orthologApi';
 import './OrthologConverterPage.css';
+
+/**
+ * Strip allele designation (_A, _B, etc.) from a gene/feature name.
+ * e.g., "C1_03280W_A" -> "C1_03280W"
+ */
+const stripAlleleDesignation = (name) => {
+  if (!name) return name;
+  // Match pattern: ends with _A, _B, etc. (single uppercase letter after underscore)
+  return name.replace(/_[A-Z]$/, '');
+};
 
 // Display names for organisms
 const ORGANISM_DISPLAY_NAMES = {
@@ -51,6 +62,7 @@ function OrthologConverterPage() {
           r.input_gene_name?.toLowerCase().includes(searchTerm) ||
           r.ortholog_id?.toLowerCase().includes(searchTerm) ||
           r.ortholog_gene_name?.toLowerCase().includes(searchTerm) ||
+          r.ortholog_description?.toLowerCase().includes(searchTerm) ||
           r.relationship?.toLowerCase().includes(searchTerm)
       );
     }
@@ -442,6 +454,9 @@ function OrthologConverterPage() {
                     <th className="sortable" onClick={() => handleSort('ortholog_gene_name')}>
                       Ortholog Name{getSortIndicator('ortholog_gene_name')}
                     </th>
+                    <th className="sortable" onClick={() => handleSort('ortholog_description')}>
+                      Ortholog Description{getSortIndicator('ortholog_description')}
+                    </th>
                     <th className="sortable" onClick={() => handleSort('target_organism')}>
                       Target Organism{getSortIndicator('target_organism')}
                     </th>
@@ -449,58 +464,75 @@ function OrthologConverterPage() {
                       Relationship{getSortIndicator('relationship')}
                     </th>
                     <th className="sortable" onClick={() => handleSort('cluster_id')}>
-                      Cluster{getSortIndicator('cluster_id')}
+                      Synteny{getSortIndicator('cluster_id')}
                     </th>
                     <th>Notes</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {paginatedResults.map((r, idx) => (
-                    <tr key={idx} className={r.found ? '' : 'not-found-row'}>
-                      <td className="input-id">{r.input_id}</td>
-                      <td>{r.input_gene_name || '-'}</td>
-                      <td className="organism-cell">
-                        {r.input_organism ? <em>{r.input_organism}</em> : '-'}
-                      </td>
-                      <td className="ortholog-id">
-                        {r.ortholog_url && r.ortholog_id ? (
-                          <a
-                            href={r.ortholog_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {r.ortholog_id}
-                          </a>
-                        ) : (
-                          r.ortholog_id || '-'
-                        )}
-                      </td>
-                      <td>{r.ortholog_gene_name || '-'}</td>
-                      <td className="organism-cell">
-                        {r.target_organism ? <em>{r.target_organism}</em> : '-'}
-                      </td>
-                      <td>
-                        <span className={`relationship-badge ${getRelationshipClass(r.relationship)}`}>
-                          {r.relationship || '-'}
-                        </span>
-                      </td>
-                      <td className="cluster-cell">
-                        {r.cluster_id ? (
-                          <a
-                            href={`http://cgob3.ucd.ie/cgob.pl?gene=${r.input_feature_name || r.input_id}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            title="View in CGOB"
-                          >
-                            {r.cluster_id}
-                          </a>
-                        ) : (
-                          '-'
-                        )}
-                      </td>
-                      <td className="notes-cell">{r.notes || ''}</td>
-                    </tr>
-                  ))}
+                  {paginatedResults.map((r, idx) => {
+                    // Strip allele designation for links
+                    const inputFeatureForLink = stripAlleleDesignation(r.input_feature_name);
+                    const inputFeatureForSynteny = stripAlleleDesignation(r.input_feature_name || r.input_id);
+
+                    return (
+                      <tr key={idx} className={r.found ? '' : 'not-found-row'}>
+                        <td className="input-id">
+                          {r.found && inputFeatureForLink ? (
+                            <Link to={`/locus/${inputFeatureForLink}`}>
+                              {r.input_feature_name || r.input_id}
+                            </Link>
+                          ) : (
+                            r.input_id
+                          )}
+                        </td>
+                        <td>{r.input_gene_name || '-'}</td>
+                        <td className="organism-cell">
+                          {r.input_organism ? <em>{r.input_organism}</em> : '-'}
+                        </td>
+                        <td className="ortholog-id">
+                          {r.ortholog_url && r.ortholog_id ? (
+                            r.ortholog_url.startsWith('/') ? (
+                              <Link to={r.ortholog_url}>{r.ortholog_id}</Link>
+                            ) : (
+                              <a
+                                href={r.ortholog_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {r.ortholog_id}
+                              </a>
+                            )
+                          ) : (
+                            r.ortholog_id || '-'
+                          )}
+                        </td>
+                        <td>{r.ortholog_gene_name || '-'}</td>
+                        <td className="description-cell">{r.ortholog_description || '-'}</td>
+                        <td className="organism-cell">
+                          {r.target_organism ? <em>{r.target_organism}</em> : '-'}
+                        </td>
+                        <td>
+                          <span className={`relationship-badge ${getRelationshipClass(r.relationship)}`}>
+                            {r.relationship || '-'}
+                          </span>
+                        </td>
+                        <td className="cluster-cell">
+                          {r.cluster_id && inputFeatureForSynteny ? (
+                            <Link
+                              to={`/synteny?gene=${inputFeatureForSynteny}`}
+                              title="View in CGD Synteny Browser"
+                            >
+                              {r.cluster_id}
+                            </Link>
+                          ) : (
+                            '-'
+                          )}
+                        </td>
+                        <td className="notes-cell">{r.notes || ''}</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

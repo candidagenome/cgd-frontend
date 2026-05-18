@@ -359,6 +359,15 @@
   font-weight: 500;
 }
 
+.input-id a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.input-id a:hover {
+  text-decoration: underline;
+}
+
 .ortholog-id {
   font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
 }
@@ -393,6 +402,12 @@
   max-width: 200px;
   font-size: 0.8rem;
   color: #6b7280;
+}
+
+.description-cell {
+  max-width: 250px;
+  font-size: 0.85rem;
+  color: #4b5563;
 }
 
 /* Relationship Badges */
