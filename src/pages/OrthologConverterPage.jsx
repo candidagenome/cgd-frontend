@@ -114,7 +114,7 @@ function OrthologConverterPage() {
         setTargets(data.targets || []);
         setSources(data.sources || [
           { id: 'CGD', name: 'CGD Species', description: 'Enter CGD gene names, systematic names, or CGD IDs' },
-          { id: 'S_cerevisiae', name: 'S. cerevisiae (SGD)', description: 'Enter S. cerevisiae systematic names (e.g., YFL039C, YNL055C)' },
+          { id: 'S_cerevisiae', name: 'S. cerevisiae (SGD)', description: 'Enter S. cerevisiae gene names (e.g., ACT1, ERG11) or systematic names' },
         ]);
       } catch (err) {
         console.error('Failed to load targets:', err);
@@ -130,7 +130,7 @@ function OrthologConverterPage() {
         ]);
         setSources([
           { id: 'CGD', name: 'CGD Species', description: 'Enter CGD gene names, systematic names, or CGD IDs' },
-          { id: 'S_cerevisiae', name: 'S. cerevisiae (SGD)', description: 'Enter S. cerevisiae systematic names (e.g., YFL039C, YNL055C)' },
+          { id: 'S_cerevisiae', name: 'S. cerevisiae (SGD)', description: 'Enter S. cerevisiae gene names (e.g., ACT1, ERG11) or systematic names' },
         ]);
       } finally {
         setLoadingTargets(false);
@@ -279,7 +279,7 @@ function OrthologConverterPage() {
   // Get current source info for help text
   const currentSource = sources.find((s) => s.id === sourceOrganism);
   const inputPlaceholder = sourceOrganism === 'S_cerevisiae'
-    ? 'YFL039C\nYNL055C\nYAL003W\nYNR001C\n...'
+    ? 'ACT1\nERG11\nCDC19\nYFL039C\n...'
     : 'ACT1\nERG11\nC1_00010W_A\nCDC19\n...';
 
   const geneCount = parseGeneInput(geneInput).length;
@@ -634,8 +634,7 @@ function OrthologConverterPage() {
             <strong>For CGD species:</strong> Enter gene names (ACT1), systematic names (C1_00010W_A), or CGD IDs.
           </li>
           <li>
-            <strong>For S. cerevisiae:</strong> Enter systematic names (YFL039C, YNL055C). Standard gene names
-            like ACT1 are not currently supported for reverse lookup.
+            <strong>For S. cerevisiae:</strong> Enter gene names (ACT1, ERG11) or systematic names (YFL039C).
           </li>
           <li>
             <strong>Select target:</strong> Choose the organism you want to convert to. Popular
