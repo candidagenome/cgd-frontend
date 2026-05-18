@@ -439,26 +439,14 @@ function OrthologConverterPage() {
               <table className="results-table">
                 <thead>
                   <tr>
-                    <th className="sortable" onClick={() => handleSort('input_id')}>
-                      Input Gene{getSortIndicator('input_id')}
-                    </th>
                     <th className="sortable" onClick={() => handleSort('input_gene_name')}>
-                      Input Name{getSortIndicator('input_gene_name')}
-                    </th>
-                    <th className="sortable" onClick={() => handleSort('input_organism')}>
-                      Input Organism{getSortIndicator('input_organism')}
-                    </th>
-                    <th className="sortable" onClick={() => handleSort('ortholog_id')}>
-                      Ortholog ID{getSortIndicator('ortholog_id')}
+                      Input Gene{getSortIndicator('input_gene_name')}
                     </th>
                     <th className="sortable" onClick={() => handleSort('ortholog_gene_name')}>
-                      Ortholog Name{getSortIndicator('ortholog_gene_name')}
+                      Ortholog{getSortIndicator('ortholog_gene_name')}
                     </th>
                     <th className="sortable" onClick={() => handleSort('ortholog_description')}>
-                      Ortholog Description{getSortIndicator('ortholog_description')}
-                    </th>
-                    <th className="sortable" onClick={() => handleSort('target_organism')}>
-                      Target Organism{getSortIndicator('target_organism')}
+                      Description{getSortIndicator('ortholog_description')}
                     </th>
                     <th className="sortable" onClick={() => handleSort('relationship')}>
                       Relationship{getSortIndicator('relationship')}
@@ -474,44 +462,45 @@ function OrthologConverterPage() {
                     // Strip allele designation for links
                     const inputFeatureForLink = stripAlleleDesignation(r.input_feature_name);
                     const inputFeatureForSynteny = stripAlleleDesignation(r.input_feature_name || r.input_id);
+                    // Display gene name if available, otherwise systematic name (stripped)
+                    const inputDisplayName = r.input_gene_name || stripAlleleDesignation(r.input_feature_name) || r.input_id;
+                    const inputSystematic = stripAlleleDesignation(r.input_feature_name);
+                    // For ortholog, show gene name if available
+                    const orthologDisplayName = r.ortholog_gene_name || r.ortholog_id;
 
                     return (
                       <tr key={idx} className={r.found ? '' : 'not-found-row'}>
-                        <td className="input-id">
+                        <td className="gene-cell">
                           {r.found && inputFeatureForLink ? (
                             <Link to={`/locus/${inputFeatureForLink}`}>
-                              {r.input_feature_name || r.input_id}
+                              <span className="gene-name">{inputDisplayName}</span>
+                              {r.input_gene_name && inputSystematic && (
+                                <span className="systematic-name">{inputSystematic}</span>
+                              )}
                             </Link>
                           ) : (
-                            r.input_id
+                            <span className="gene-name">{r.input_id}</span>
                           )}
                         </td>
-                        <td>{r.input_gene_name || '-'}</td>
-                        <td className="organism-cell">
-                          {r.input_organism ? <em>{r.input_organism}</em> : '-'}
-                        </td>
-                        <td className="ortholog-id">
+                        <td className="gene-cell">
                           {r.ortholog_url && r.ortholog_id ? (
                             r.ortholog_url.startsWith('/') ? (
-                              <Link to={r.ortholog_url}>{r.ortholog_id}</Link>
+                              <Link to={r.ortholog_url}>
+                                <span className="gene-name">{orthologDisplayName}</span>
+                                {r.ortholog_gene_name && r.ortholog_id && (
+                                  <span className="systematic-name">{r.ortholog_id}</span>
+                                )}
+                              </Link>
                             ) : (
-                              <a
-                                href={r.ortholog_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                {r.ortholog_id}
+                              <a href={r.ortholog_url} target="_blank" rel="noopener noreferrer">
+                                <span className="gene-name">{orthologDisplayName}</span>
                               </a>
                             )
                           ) : (
-                            r.ortholog_id || '-'
+                            r.ortholog_id ? <span className="gene-name">{r.ortholog_id}</span> : '-'
                           )}
                         </td>
-                        <td>{r.ortholog_gene_name || '-'}</td>
                         <td className="description-cell">{r.ortholog_description || '-'}</td>
-                        <td className="organism-cell">
-                          {r.target_organism ? <em>{r.target_organism}</em> : '-'}
-                        </td>
                         <td>
                           <span className={`relationship-badge ${getRelationshipClass(r.relationship)}`}>
                             {r.relationship || '-'}

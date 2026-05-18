@@ -354,38 +354,30 @@
   background: #fee2e2 !important;
 }
 
-.input-id {
-  font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+.gene-cell {
+  min-width: 100px;
+}
+
+.gene-cell a {
+  color: #2563eb;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gene-cell a:hover {
+  text-decoration: underline;
+}
+
+.gene-cell .gene-name {
   font-weight: 500;
 }
 
-.input-id a {
-  color: #2563eb;
-  text-decoration: none;
-}
-
-.input-id a:hover {
-  text-decoration: underline;
-}
-
-.ortholog-id {
+.gene-cell .systematic-name {
+  font-size: 0.75rem;
+  color: #6b7280;
   font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
-}
-
-.ortholog-id a {
-  color: #2563eb;
-  text-decoration: none;
-}
-
-.ortholog-id a:hover {
-  text-decoration: underline;
-}
-
-.organism-cell {
-  max-width: 180px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .cluster-cell a {
