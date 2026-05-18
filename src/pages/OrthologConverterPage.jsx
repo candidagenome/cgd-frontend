@@ -114,7 +114,7 @@ function OrthologConverterPage() {
         setTargets(data.targets || []);
         setSources(data.sources || [
           { id: 'CGD', name: 'CGD Species', description: 'Enter CGD gene names, systematic names, or CGD IDs' },
-          { id: 'S_cerevisiae', name: 'S. cerevisiae (SGD)', description: 'Enter S. cerevisiae gene names (e.g., ACT1, ERG11)' },
+          { id: 'S_cerevisiae', name: 'S. cerevisiae (SGD)', description: 'Enter S. cerevisiae systematic names (e.g., YFL039C, YNL055C)' },
         ]);
       } catch (err) {
         console.error('Failed to load targets:', err);
@@ -130,7 +130,7 @@ function OrthologConverterPage() {
         ]);
         setSources([
           { id: 'CGD', name: 'CGD Species', description: 'Enter CGD gene names, systematic names, or CGD IDs' },
-          { id: 'S_cerevisiae', name: 'S. cerevisiae (SGD)', description: 'Enter S. cerevisiae gene names (e.g., ACT1, ERG11)' },
+          { id: 'S_cerevisiae', name: 'S. cerevisiae (SGD)', description: 'Enter S. cerevisiae systematic names (e.g., YFL039C, YNL055C)' },
         ]);
       } finally {
         setLoadingTargets(false);
@@ -279,7 +279,7 @@ function OrthologConverterPage() {
   // Get current source info for help text
   const currentSource = sources.find((s) => s.id === sourceOrganism);
   const inputPlaceholder = sourceOrganism === 'S_cerevisiae'
-    ? 'ACT1\nERG11\nCDC19\nYFL039C\n...'
+    ? 'YFL039C\nYNL055C\nYAL003W\nYNR001C\n...'
     : 'ACT1\nERG11\nC1_00010W_A\nCDC19\n...';
 
   const geneCount = parseGeneInput(geneInput).length;
@@ -436,7 +436,7 @@ function OrthologConverterPage() {
                   <strong>{results.total_input}</strong> input genes
                 </span>
                 <span className="summary-item">
-                  <strong>{results.found_count}</strong> found in CGD
+                  <strong>{results.found_count}</strong> found{sourceOrganism === 'S_cerevisiae' ? '' : ' in CGD'}
                 </span>
                 <span className="summary-item">
                   <strong>{results.converted_count}</strong> with orthologs in{' '}
@@ -631,8 +631,11 @@ function OrthologConverterPage() {
         <h2>How to Use</h2>
         <ul>
           <li>
-            <strong>Enter genes:</strong> Paste or type gene identifiers in the text box, or upload
-            a text file. Accepts gene names (ACT1), systematic names (C1_00010W_A), or CGD IDs.
+            <strong>For CGD species:</strong> Enter gene names (ACT1), systematic names (C1_00010W_A), or CGD IDs.
+          </li>
+          <li>
+            <strong>For S. cerevisiae:</strong> Enter systematic names (YFL039C, YNL055C). Standard gene names
+            like ACT1 are not currently supported for reverse lookup.
           </li>
           <li>
             <strong>Select target:</strong> Choose the organism you want to convert to. Popular
