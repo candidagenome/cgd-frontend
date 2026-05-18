@@ -1,0 +1,535 @@
+[
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28790270_density",
+    "name": "Wang 2024 AR0382 In Vitro Biofilm Rep1 (density)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28790270_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": ["C_auris_B8441"],
+    "category": ["RNA-seq", "Wang_2024", "AR0382 In Vitro", "Density"],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28790270_density-LinearWiggleDisplay",
+        "defaultRendering": "density"
+      }
+    ]
+  },
+  {
+    "type": "AlignmentsTrack",
+    "trackId": "Wang2024_SRR28790270_alignments",
+    "name": "Wang 2024 AR0382 In Vitro Biofilm Rep1 (alignments)",
+    "adapter": {
+      "type": "BamAdapter",
+      "bamLocation": {
+        "uri": "Wang2024_SRR28790270.bam",
+        "locationType": "UriLocation"
+      },
+      "index": {
+        "location": {
+          "uri": "Wang2024_SRR28790270.bam.bai",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "assemblyNames": ["C_auris_B8441"],
+    "category": ["RNA-seq", "Wang_2024", "AR0382 In Vitro", "Alignments"]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28790272_density",
+    "name": "Wang 2024 AR0382 In Vitro Biofilm Rep2 (density)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28790272_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": ["C_auris_B8441"],
+    "category": ["RNA-seq", "Wang_2024", "AR0382 In Vitro", "Density"],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28790272_density-LinearWiggleDisplay",
+        "defaultRendering": "density"
+      }
+    ]
+  },
+  {
+    "type": "AlignmentsTrack",
+    "trackId": "Wang2024_SRR28790272_alignments",
+    "name": "Wang 2024 AR0382 In Vitro Biofilm Rep2 (alignments)",
+    "adapter": {
+      "type": "BamAdapter",
+      "bamLocation": {
+        "uri": "Wang2024_SRR28790272.bam",
+        "locationType": "UriLocation"
+      },
+      "index": {
+        "location": {
+          "uri": "Wang2024_SRR28790272.bam.bai",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "assemblyNames": ["C_auris_B8441"],
+    "category": ["RNA-seq", "Wang_2024", "AR0382 In Vitro", "Alignments"]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28790274_density",
+    "name": "Wang 2024 AR0382 In Vitro Biofilm Rep3 (density)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28790274_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": ["C_auris_B8441"],
+    "category": ["RNA-seq", "Wang_2024", "AR0382 In Vitro", "Density"],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28790274_density-LinearWiggleDisplay",
+        "defaultRendering": "density"
+      }
+    ]
+  },
+  {
+    "type": "AlignmentsTrack",
+    "trackId": "Wang2024_SRR28790274_alignments",
+    "name": "Wang 2024 AR0382 In Vitro Biofilm Rep3 (alignments)",
+    "adapter": {
+      "type": "BamAdapter",
+      "bamLocation": {
+        "uri": "Wang2024_SRR28790274.bam",
+        "locationType": "UriLocation"
+      },
+      "index": {
+        "location": {
+          "uri": "Wang2024_SRR28790274.bam.bai",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "assemblyNames": ["C_auris_B8441"],
+    "category": ["RNA-seq", "Wang_2024", "AR0382 In Vitro", "Alignments"]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28791430_density",
+    "name": "Wang 2024 AR0382 In Vivo Catheter Rep1 (density)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28791430_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": ["C_auris_B8441"],
+    "category": ["RNA-seq", "Wang_2024", "AR0382 In Vivo", "Density"],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28791430_density-LinearWiggleDisplay",
+        "defaultRendering": "density"
+      }
+    ]
+  },
+  {
+    "type": "AlignmentsTrack",
+    "trackId": "Wang2024_SRR28791430_alignments",
+    "name": "Wang 2024 AR0382 In Vivo Catheter Rep1 (alignments)",
+    "adapter": {
+      "type": "BamAdapter",
+      "bamLocation": {
+        "uri": "Wang2024_SRR28791430.bam",
+        "locationType": "UriLocation"
+      },
+      "index": {
+        "location": {
+          "uri": "Wang2024_SRR28791430.bam.bai",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "assemblyNames": ["C_auris_B8441"],
+    "category": ["RNA-seq", "Wang_2024", "AR0382 In Vivo", "Alignments"]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28791431_density",
+    "name": "Wang 2024 AR0382 In Vivo Catheter Rep2 (density)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28791431_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": ["C_auris_B8441"],
+    "category": ["RNA-seq", "Wang_2024", "AR0382 In Vivo", "Density"],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28791431_density-LinearWiggleDisplay",
+        "defaultRendering": "density"
+      }
+    ]
+  },
+  {
+    "type": "AlignmentsTrack",
+    "trackId": "Wang2024_SRR28791431_alignments",
+    "name": "Wang 2024 AR0382 In Vivo Catheter Rep2 (alignments)",
+    "adapter": {
+      "type": "BamAdapter",
+      "bamLocation": {
+        "uri": "Wang2024_SRR28791431.bam",
+        "locationType": "UriLocation"
+      },
+      "index": {
+        "location": {
+          "uri": "Wang2024_SRR28791431.bam.bai",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "assemblyNames": ["C_auris_B8441"],
+    "category": ["RNA-seq", "Wang_2024", "AR0382 In Vivo", "Alignments"]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28791432_density",
+    "name": "Wang 2024 AR0382 In Vivo Catheter Rep3 (density)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28791432_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": ["C_auris_B8441"],
+    "category": ["RNA-seq", "Wang_2024", "AR0382 In Vivo", "Density"],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28791432_density-LinearWiggleDisplay",
+        "defaultRendering": "density"
+      }
+    ]
+  },
+  {
+    "type": "AlignmentsTrack",
+    "trackId": "Wang2024_SRR28791432_alignments",
+    "name": "Wang 2024 AR0382 In Vivo Catheter Rep3 (alignments)",
+    "adapter": {
+      "type": "BamAdapter",
+      "bamLocation": {
+        "uri": "Wang2024_SRR28791432.bam",
+        "locationType": "UriLocation"
+      },
+      "index": {
+        "location": {
+          "uri": "Wang2024_SRR28791432.bam.bai",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "assemblyNames": ["C_auris_B8441"],
+    "category": ["RNA-seq", "Wang_2024", "AR0382 In Vivo", "Alignments"]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28790276_density",
+    "name": "Wang 2024 AR0387 In Vitro Biofilm Rep1 (density)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28790276_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": ["C_auris_B8441"],
+    "category": ["RNA-seq", "Wang_2024", "AR0387 In Vitro", "Density"],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28790276_density-LinearWiggleDisplay",
+        "defaultRendering": "density"
+      }
+    ]
+  },
+  {
+    "type": "AlignmentsTrack",
+    "trackId": "Wang2024_SRR28790276_alignments",
+    "name": "Wang 2024 AR0387 In Vitro Biofilm Rep1 (alignments)",
+    "adapter": {
+      "type": "BamAdapter",
+      "bamLocation": {
+        "uri": "Wang2024_SRR28790276.bam",
+        "locationType": "UriLocation"
+      },
+      "index": {
+        "location": {
+          "uri": "Wang2024_SRR28790276.bam.bai",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "assemblyNames": ["C_auris_B8441"],
+    "category": ["RNA-seq", "Wang_2024", "AR0387 In Vitro", "Alignments"]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28790278_density",
+    "name": "Wang 2024 AR0387 In Vitro Biofilm Rep2 (density)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28790278_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": ["C_auris_B8441"],
+    "category": ["RNA-seq", "Wang_2024", "AR0387 In Vitro", "Density"],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28790278_density-LinearWiggleDisplay",
+        "defaultRendering": "density"
+      }
+    ]
+  },
+  {
+    "type": "AlignmentsTrack",
+    "trackId": "Wang2024_SRR28790278_alignments",
+    "name": "Wang 2024 AR0387 In Vitro Biofilm Rep2 (alignments)",
+    "adapter": {
+      "type": "BamAdapter",
+      "bamLocation": {
+        "uri": "Wang2024_SRR28790278.bam",
+        "locationType": "UriLocation"
+      },
+      "index": {
+        "location": {
+          "uri": "Wang2024_SRR28790278.bam.bai",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "assemblyNames": ["C_auris_B8441"],
+    "category": ["RNA-seq", "Wang_2024", "AR0387 In Vitro", "Alignments"]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28790280_density",
+    "name": "Wang 2024 AR0387 In Vitro Biofilm Rep3 (density)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28790280_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": ["C_auris_B8441"],
+    "category": ["RNA-seq", "Wang_2024", "AR0387 In Vitro", "Density"],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28790280_density-LinearWiggleDisplay",
+        "defaultRendering": "density"
+      }
+    ]
+  },
+  {
+    "type": "AlignmentsTrack",
+    "trackId": "Wang2024_SRR28790280_alignments",
+    "name": "Wang 2024 AR0387 In Vitro Biofilm Rep3 (alignments)",
+    "adapter": {
+      "type": "BamAdapter",
+      "bamLocation": {
+        "uri": "Wang2024_SRR28790280.bam",
+        "locationType": "UriLocation"
+      },
+      "index": {
+        "location": {
+          "uri": "Wang2024_SRR28790280.bam.bai",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "assemblyNames": ["C_auris_B8441"],
+    "category": ["RNA-seq", "Wang_2024", "AR0387 In Vitro", "Alignments"]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28791433_density",
+    "name": "Wang 2024 AR0387 In Vivo Catheter Rep1 (density)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28791433_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": ["C_auris_B8441"],
+    "category": ["RNA-seq", "Wang_2024", "AR0387 In Vivo", "Density"],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28791433_density-LinearWiggleDisplay",
+        "defaultRendering": "density"
+      }
+    ]
+  },
+  {
+    "type": "AlignmentsTrack",
+    "trackId": "Wang2024_SRR28791433_alignments",
+    "name": "Wang 2024 AR0387 In Vivo Catheter Rep1 (alignments)",
+    "adapter": {
+      "type": "BamAdapter",
+      "bamLocation": {
+        "uri": "Wang2024_SRR28791433.bam",
+        "locationType": "UriLocation"
+      },
+      "index": {
+        "location": {
+          "uri": "Wang2024_SRR28791433.bam.bai",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "assemblyNames": ["C_auris_B8441"],
+    "category": ["RNA-seq", "Wang_2024", "AR0387 In Vivo", "Alignments"]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28791434_density",
+    "name": "Wang 2024 AR0387 In Vivo Catheter Rep2 (density)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28791434_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": ["C_auris_B8441"],
+    "category": ["RNA-seq", "Wang_2024", "AR0387 In Vivo", "Density"],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28791434_density-LinearWiggleDisplay",
+        "defaultRendering": "density"
+      }
+    ]
+  },
+  {
+    "type": "AlignmentsTrack",
+    "trackId": "Wang2024_SRR28791434_alignments",
+    "name": "Wang 2024 AR0387 In Vivo Catheter Rep2 (alignments)",
+    "adapter": {
+      "type": "BamAdapter",
+      "bamLocation": {
+        "uri": "Wang2024_SRR28791434.bam",
+        "locationType": "UriLocation"
+      },
+      "index": {
+        "location": {
+          "uri": "Wang2024_SRR28791434.bam.bai",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "assemblyNames": ["C_auris_B8441"],
+    "category": ["RNA-seq", "Wang_2024", "AR0387 In Vivo", "Alignments"]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28791437_density",
+    "name": "Wang 2024 AR0387 In Vivo Catheter Rep3 (density)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28791437_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": ["C_auris_B8441"],
+    "category": ["RNA-seq", "Wang_2024", "AR0387 In Vivo", "Density"],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28791437_density-LinearWiggleDisplay",
+        "defaultRendering": "density"
+      }
+    ]
+  },
+  {
+    "type": "AlignmentsTrack",
+    "trackId": "Wang2024_SRR28791437_alignments",
+    "name": "Wang 2024 AR0387 In Vivo Catheter Rep3 (alignments)",
+    "adapter": {
+      "type": "BamAdapter",
+      "bamLocation": {
+        "uri": "Wang2024_SRR28791437.bam",
+        "locationType": "UriLocation"
+      },
+      "index": {
+        "location": {
+          "uri": "Wang2024_SRR28791437.bam.bai",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "assemblyNames": ["C_auris_B8441"],
+    "category": ["RNA-seq", "Wang_2024", "AR0387 In Vivo", "Alignments"]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28791438_density",
+    "name": "Wang 2024 AR0387 In Vivo Catheter Rep4 (density)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28791438_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": ["C_auris_B8441"],
+    "category": ["RNA-seq", "Wang_2024", "AR0387 In Vivo", "Density"],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28791438_density-LinearWiggleDisplay",
+        "defaultRendering": "density"
+      }
+    ]
+  },
+  {
+    "type": "AlignmentsTrack",
+    "trackId": "Wang2024_SRR28791438_alignments",
+    "name": "Wang 2024 AR0387 In Vivo Catheter Rep4 (alignments)",
+    "adapter": {
+      "type": "BamAdapter",
+      "bamLocation": {
+        "uri": "Wang2024_SRR28791438.bam",
+        "locationType": "UriLocation"
+      },
+      "index": {
+        "location": {
+          "uri": "Wang2024_SRR28791438.bam.bai",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "assemblyNames": ["C_auris_B8441"],
+    "category": ["RNA-seq", "Wang_2024", "AR0387 In Vivo", "Alignments"]
+  }
+]
