@@ -459,15 +459,16 @@ function OrthologConverterPage() {
                 </thead>
                 <tbody>
                   {paginatedResults.map((r, idx) => {
-                    // Strip allele designation for links
+                    // Strip allele designation for links and display
                     const inputFeatureForLink = stripAlleleDesignation(r.input_feature_name);
                     // Use gene name for synteny search (works better), fallback to systematic
                     const inputForSynteny = r.input_gene_name || stripAlleleDesignation(r.input_feature_name || r.input_id);
                     // Display gene name if available, otherwise systematic name (stripped)
                     const inputDisplayName = r.input_gene_name || stripAlleleDesignation(r.input_feature_name) || r.input_id;
                     const inputSystematic = stripAlleleDesignation(r.input_feature_name);
-                    // For ortholog, show gene name if available
-                    const orthologDisplayName = r.ortholog_gene_name || r.ortholog_id;
+                    // For ortholog, strip allele designation from systematic names
+                    const orthologSystematic = stripAlleleDesignation(r.ortholog_id);
+                    const orthologDisplayName = r.ortholog_gene_name || orthologSystematic;
 
                     return (
                       <tr key={idx} className={r.found ? '' : 'not-found-row'}>
@@ -488,8 +489,8 @@ function OrthologConverterPage() {
                             r.ortholog_url.startsWith('/') ? (
                               <Link to={r.ortholog_url} target="_blank" rel="noopener noreferrer">
                                 <span className="gene-name">{orthologDisplayName}</span>
-                                {r.ortholog_gene_name && r.ortholog_id && (
-                                  <span className="systematic-name">{r.ortholog_id}</span>
+                                {r.ortholog_gene_name && orthologSystematic && (
+                                  <span className="systematic-name">{orthologSystematic}</span>
                                 )}
                               </Link>
                             ) : (
@@ -498,7 +499,7 @@ function OrthologConverterPage() {
                               </a>
                             )
                           ) : (
-                            r.ortholog_id ? <span className="gene-name">{r.ortholog_id}</span> : '-'
+                            r.ortholog_id ? <span className="gene-name">{orthologSystematic}</span> : '-'
                           )}
                         </td>
                         <td className="description-cell">{r.ortholog_description || '-'}</td>
@@ -515,7 +516,7 @@ function OrthologConverterPage() {
                               rel="noopener noreferrer"
                               title="View in CGD Synteny Browser"
                             >
-                              {r.cluster_id}
+                              {stripAlleleDesignation(r.cluster_id)}
                             </Link>
                           ) : (
                             '-'
