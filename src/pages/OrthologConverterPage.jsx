@@ -510,7 +510,7 @@ function OrthologConverterPage() {
                         <td className="cluster-cell">
                           {r.cluster_id && inputForSynteny ? (
                             <Link
-                              to={`/synteny?gene=${inputForSynteny}`}
+                              to={`/synteny-browser?gene=${inputForSynteny}`}
                               target="_blank"
                               rel="noopener noreferrer"
                               title="View in CGD Synteny Browser"
