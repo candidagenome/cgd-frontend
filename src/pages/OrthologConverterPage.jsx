@@ -548,6 +548,9 @@ function OrthologConverterPage() {
                             ) : (
                               <a href={r.ortholog_url} target="_blank" rel="noopener noreferrer">
                                 <span className="gene-name">{orthologDisplayName}</span>
+                                {r.ortholog_gene_name && orthologSystematic && r.ortholog_gene_name !== orthologSystematic && (
+                                  <span className="systematic-name">{orthologSystematic}</span>
+                                )}
                               </a>
                             )
                           ) : (
