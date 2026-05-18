@@ -2,7 +2,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Balla2023_SRR23266136_coverage",
-    "name": "Balla 2023 Sample1 (SRR23266136)",
+    "name": "Balla et al DGE in the presence of tyrosol (biol rep 3) (SRR23266136)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -28,7 +28,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Balla2023_SRR23266136_density",
-    "name": "Balla 2023 Sample1 (SRR23266136) (density)",
+    "name": "Balla et al DGE in the presence of tyrosol (biol rep 3) (SRR23266136) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -55,7 +55,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Balla2023_SRR23266136_alignments",
-    "name": "Balla 2023 Sample1 (SRR23266136) (alignments)",
+    "name": "Balla et al DGE in the presence of tyrosol (biol rep 3) (SRR23266136) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -87,7 +87,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Balla2023_SRR23266137_coverage",
-    "name": "Balla 2023 Sample2 (SRR23266137)",
+    "name": "Balla et al DGE in the presence of tyrosol (biol rep 2) (SRR23266137)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -113,7 +113,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Balla2023_SRR23266137_density",
-    "name": "Balla 2023 Sample2 (SRR23266137) (density)",
+    "name": "Balla et al DGE in the presence of tyrosol (biol rep 2) (SRR23266137) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -140,7 +140,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Balla2023_SRR23266137_alignments",
-    "name": "Balla 2023 Sample2 (SRR23266137) (alignments)",
+    "name": "Balla et al DGE in the presence of tyrosol (biol rep 2) (SRR23266137) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -172,7 +172,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Balla2023_SRR23266138_coverage",
-    "name": "Balla 2023 Sample3 (SRR23266138)",
+    "name": "Balla et al DGE in the presence of tyrosol (biol rep 1) (SRR23266138)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -198,7 +198,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Balla2023_SRR23266138_density",
-    "name": "Balla 2023 Sample3 (SRR23266138) (density)",
+    "name": "Balla et al DGE in the presence of tyrosol (biol rep 1) (SRR23266138) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -225,7 +225,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Balla2023_SRR23266138_alignments",
-    "name": "Balla 2023 Sample3 (SRR23266138) (alignments)",
+    "name": "Balla et al DGE in the presence of tyrosol (biol rep 1) (SRR23266138) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -257,7 +257,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Balla2023_SRR23266139_coverage",
-    "name": "Balla 2023 Sample4 (SRR23266139)",
+    "name": "Balla et al control (biol rep 3) (SRR23266139)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -283,7 +283,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Balla2023_SRR23266139_density",
-    "name": "Balla 2023 Sample4 (SRR23266139) (density)",
+    "name": "Balla et al control (biol rep 3) (SRR23266139) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -310,7 +310,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Balla2023_SRR23266139_alignments",
-    "name": "Balla 2023 Sample4 (SRR23266139) (alignments)",
+    "name": "Balla et al control (biol rep 3) (SRR23266139) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -342,7 +342,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Balla2023_SRR23266140_coverage",
-    "name": "Balla 2023 Sample5 (SRR23266140)",
+    "name": "Balla et al control (biol rep 2) (SRR23266140)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -368,7 +368,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Balla2023_SRR23266140_density",
-    "name": "Balla 2023 Sample5 (SRR23266140) (density)",
+    "name": "Balla et al control (biol rep 2) (SRR23266140) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -395,7 +395,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Balla2023_SRR23266140_alignments",
-    "name": "Balla 2023 Sample5 (SRR23266140) (alignments)",
+    "name": "Balla et al control (biol rep 2) (SRR23266140) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -427,7 +427,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Balla2023_SRR23266141_coverage",
-    "name": "Balla 2023 Sample6 (SRR23266141)",
+    "name": "Balla et al control (biol rep 1) (SRR23266141)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -453,7 +453,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Balla2023_SRR23266141_density",
-    "name": "Balla 2023 Sample6 (SRR23266141) (density)",
+    "name": "Balla et al control (biol rep 1) (SRR23266141) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -480,7 +480,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Balla2023_SRR23266141_alignments",
-    "name": "Balla 2023 Sample6 (SRR23266141) (alignments)",
+    "name": "Balla et al control (biol rep 1) (SRR23266141) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -512,7 +512,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805771_coverage",
-    "name": "Biermann 2022 Sample1 (SRR17805771)",
+    "name": "Biermann et al control (strain B11221_mrr1a; biol rep 1) (SRR17805771)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -538,7 +538,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805771_density",
-    "name": "Biermann 2022 Sample1 (SRR17805771) (density)",
+    "name": "Biermann et al control (strain B11221_mrr1a; biol rep 1) (SRR17805771) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -565,7 +565,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Biermann2022_SRR17805771_alignments",
-    "name": "Biermann 2022 Sample1 (SRR17805771) (alignments)",
+    "name": "Biermann et al control (strain B11221_mrr1a; biol rep 1) (SRR17805771) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -597,7 +597,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805772_coverage",
-    "name": "Biermann 2022 Sample2 (SRR17805772)",
+    "name": "Biermann et al DGE in presence of benomyl (strain B11221; biol rep 3) (SRR17805772)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -623,7 +623,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805772_density",
-    "name": "Biermann 2022 Sample2 (SRR17805772) (density)",
+    "name": "Biermann et al DGE in presence of benomyl (strain B11221; biol rep 3) (SRR17805772) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -650,7 +650,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Biermann2022_SRR17805772_alignments",
-    "name": "Biermann 2022 Sample2 (SRR17805772) (alignments)",
+    "name": "Biermann et al DGE in presence of benomyl (strain B11221; biol rep 3) (SRR17805772) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -682,7 +682,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805773_coverage",
-    "name": "Biermann 2022 Sample3 (SRR17805773)",
+    "name": "Biermann et al DGE in presence of benomyl (strain B11221; biol rep 2) (SRR17805773)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -708,7 +708,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805773_density",
-    "name": "Biermann 2022 Sample3 (SRR17805773) (density)",
+    "name": "Biermann et al DGE in presence of benomyl (strain B11221; biol rep 2) (SRR17805773) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -735,7 +735,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Biermann2022_SRR17805773_alignments",
-    "name": "Biermann 2022 Sample3 (SRR17805773) (alignments)",
+    "name": "Biermann et al DGE in presence of benomyl (strain B11221; biol rep 2) (SRR17805773) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -767,7 +767,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805774_coverage",
-    "name": "Biermann 2022 Sample4 (SRR17805774)",
+    "name": "Biermann et al DGE in presence of benomyl (strain B11221; biol rep 1) (SRR17805774)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -793,7 +793,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805774_density",
-    "name": "Biermann 2022 Sample4 (SRR17805774) (density)",
+    "name": "Biermann et al DGE in presence of benomyl (strain B11221; biol rep 1) (SRR17805774) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -820,7 +820,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Biermann2022_SRR17805774_alignments",
-    "name": "Biermann 2022 Sample4 (SRR17805774) (alignments)",
+    "name": "Biermann et al DGE in presence of benomyl (strain B11221; biol rep 1) (SRR17805774) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -852,7 +852,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805775_coverage",
-    "name": "Biermann 2022 Sample5 (SRR17805775)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain B11221; biol rep 3) (SRR17805775)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -878,7 +878,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805775_density",
-    "name": "Biermann 2022 Sample5 (SRR17805775) (density)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain B11221; biol rep 3) (SRR17805775) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -905,7 +905,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Biermann2022_SRR17805775_alignments",
-    "name": "Biermann 2022 Sample5 (SRR17805775) (alignments)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain B11221; biol rep 3) (SRR17805775) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -937,7 +937,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805776_coverage",
-    "name": "Biermann 2022 Sample6 (SRR17805776)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain B11221; biol rep 2) (SRR17805776)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -963,7 +963,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805776_density",
-    "name": "Biermann 2022 Sample6 (SRR17805776) (density)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain B11221; biol rep 2) (SRR17805776) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -990,7 +990,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Biermann2022_SRR17805776_alignments",
-    "name": "Biermann 2022 Sample6 (SRR17805776) (alignments)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain B11221; biol rep 2) (SRR17805776) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -1022,7 +1022,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805777_coverage",
-    "name": "Biermann 2022 Sample7 (SRR17805777)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain B11221; biol rep 1) (SRR17805777)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -1048,7 +1048,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805777_density",
-    "name": "Biermann 2022 Sample7 (SRR17805777) (density)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain B11221; biol rep 1) (SRR17805777) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -1075,7 +1075,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Biermann2022_SRR17805777_alignments",
-    "name": "Biermann 2022 Sample7 (SRR17805777) (alignments)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain B11221; biol rep 1) (SRR17805777) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -1107,7 +1107,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805778_coverage",
-    "name": "Biermann 2022 Sample8 (SRR17805778)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain ARO390; biol rep 3) (SRR17805778)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -1133,7 +1133,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805778_density",
-    "name": "Biermann 2022 Sample8 (SRR17805778) (density)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain ARO390; biol rep 3) (SRR17805778) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -1160,7 +1160,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Biermann2022_SRR17805778_alignments",
-    "name": "Biermann 2022 Sample8 (SRR17805778) (alignments)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain ARO390; biol rep 3) (SRR17805778) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -1192,7 +1192,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805779_coverage",
-    "name": "Biermann 2022 Sample9 (SRR17805779)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain ARO390; biol rep 2) (SRR17805779)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -1218,7 +1218,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805779_density",
-    "name": "Biermann 2022 Sample9 (SRR17805779) (density)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain ARO390; biol rep 2) (SRR17805779) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -1245,7 +1245,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Biermann2022_SRR17805779_alignments",
-    "name": "Biermann 2022 Sample9 (SRR17805779) (alignments)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain ARO390; biol rep 2) (SRR17805779) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -1277,7 +1277,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805780_coverage",
-    "name": "Biermann 2022 Sample10 (SRR17805780)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain ARO390; biol rep 1) (SRR17805780)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -1303,7 +1303,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805780_density",
-    "name": "Biermann 2022 Sample10 (SRR17805780) (density)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain ARO390; biol rep 1) (SRR17805780) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -1330,7 +1330,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Biermann2022_SRR17805780_alignments",
-    "name": "Biermann 2022 Sample10 (SRR17805780) (alignments)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain ARO390; biol rep 1) (SRR17805780) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -1362,7 +1362,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805781_coverage",
-    "name": "Biermann 2022 Sample11 (SRR17805781)",
+    "name": "Biermann et al control (strain ARO390; biol rep 3) (SRR17805781)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -1388,7 +1388,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805781_density",
-    "name": "Biermann 2022 Sample11 (SRR17805781) (density)",
+    "name": "Biermann et al control (strain ARO390; biol rep 3) (SRR17805781) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -1415,7 +1415,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Biermann2022_SRR17805781_alignments",
-    "name": "Biermann 2022 Sample11 (SRR17805781) (alignments)",
+    "name": "Biermann et al control (strain ARO390; biol rep 3) (SRR17805781) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -1447,7 +1447,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805782_coverage",
-    "name": "Biermann 2022 Sample12 (SRR17805782)",
+    "name": "Biermann et al control (strain B11221; biol rep 3) (SRR17805782)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -1473,7 +1473,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805782_density",
-    "name": "Biermann 2022 Sample12 (SRR17805782) (density)",
+    "name": "Biermann et al control (strain B11221; biol rep 3) (SRR17805782) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -1500,7 +1500,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Biermann2022_SRR17805782_alignments",
-    "name": "Biermann 2022 Sample12 (SRR17805782) (alignments)",
+    "name": "Biermann et al control (strain B11221; biol rep 3) (SRR17805782) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -1532,7 +1532,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805783_coverage",
-    "name": "Biermann 2022 Sample13 (SRR17805783)",
+    "name": "Biermann et al control (strain ARO390; biol rep 2) (SRR17805783)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -1558,7 +1558,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805783_density",
-    "name": "Biermann 2022 Sample13 (SRR17805783) (density)",
+    "name": "Biermann et al control (strain ARO390; biol rep 2) (SRR17805783) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -1585,7 +1585,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Biermann2022_SRR17805783_alignments",
-    "name": "Biermann 2022 Sample13 (SRR17805783) (alignments)",
+    "name": "Biermann et al control (strain ARO390; biol rep 2) (SRR17805783) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -1617,7 +1617,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805784_coverage",
-    "name": "Biermann 2022 Sample14 (SRR17805784)",
+    "name": "Biermann et al control (strain ARO390; biol rep 1) (SRR17805784)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -1643,7 +1643,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805784_density",
-    "name": "Biermann 2022 Sample14 (SRR17805784) (density)",
+    "name": "Biermann et al control (strain ARO390; biol rep 1) (SRR17805784) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -1670,7 +1670,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Biermann2022_SRR17805784_alignments",
-    "name": "Biermann 2022 Sample14 (SRR17805784) (alignments)",
+    "name": "Biermann et al control (strain ARO390; biol rep 1) (SRR17805784) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -1702,7 +1702,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805785_coverage",
-    "name": "Biermann 2022 Sample15 (SRR17805785)",
+    "name": "Biermann et al DGE in presence of benomyl (strain B11221_mrr1a; biol rep 3) (SRR17805785)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -1728,7 +1728,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805785_density",
-    "name": "Biermann 2022 Sample15 (SRR17805785) (density)",
+    "name": "Biermann et al DGE in presence of benomyl (strain B11221_mrr1a; biol rep 3) (SRR17805785) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -1755,7 +1755,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Biermann2022_SRR17805785_alignments",
-    "name": "Biermann 2022 Sample15 (SRR17805785) (alignments)",
+    "name": "Biermann et al DGE in presence of benomyl (strain B11221_mrr1a; biol rep 3) (SRR17805785) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -1787,7 +1787,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805786_coverage",
-    "name": "Biermann 2022 Sample16 (SRR17805786)",
+    "name": "Biermann et al DGE in presence of benomyl (strain B11221_mrr1a; biol rep 2) (SRR17805786)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -1813,7 +1813,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805786_density",
-    "name": "Biermann 2022 Sample16 (SRR17805786) (density)",
+    "name": "Biermann et al DGE in presence of benomyl (strain B11221_mrr1a; biol rep 2) (SRR17805786) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -1840,7 +1840,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Biermann2022_SRR17805786_alignments",
-    "name": "Biermann 2022 Sample16 (SRR17805786) (alignments)",
+    "name": "Biermann et al DGE in presence of benomyl (strain B11221_mrr1a; biol rep 2) (SRR17805786) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -1872,7 +1872,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805787_coverage",
-    "name": "Biermann 2022 Sample17 (SRR17805787)",
+    "name": "Biermann et al DGE in presence of benomyl (strain B11221_mrr1a; biol rep 1) (SRR17805787)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -1898,7 +1898,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805787_density",
-    "name": "Biermann 2022 Sample17 (SRR17805787) (density)",
+    "name": "Biermann et al DGE in presence of benomyl (strain B11221_mrr1a; biol rep 1) (SRR17805787) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -1925,7 +1925,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Biermann2022_SRR17805787_alignments",
-    "name": "Biermann 2022 Sample17 (SRR17805787) (alignments)",
+    "name": "Biermann et al DGE in presence of benomyl (strain B11221_mrr1a; biol rep 1) (SRR17805787) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -1957,7 +1957,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805788_coverage",
-    "name": "Biermann 2022 Sample18 (SRR17805788)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain B11221_mrr1a; biol rep 3) (SRR17805788)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -1983,7 +1983,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805788_density",
-    "name": "Biermann 2022 Sample18 (SRR17805788) (density)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain B11221_mrr1a; biol rep 3) (SRR17805788) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -2010,7 +2010,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Biermann2022_SRR17805788_alignments",
-    "name": "Biermann 2022 Sample18 (SRR17805788) (alignments)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain B11221_mrr1a; biol rep 3) (SRR17805788) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -2042,7 +2042,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805789_coverage",
-    "name": "Biermann 2022 Sample19 (SRR17805789)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain B11221_mrr1a; biol rep 2) (SRR17805789)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -2068,7 +2068,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805789_density",
-    "name": "Biermann 2022 Sample19 (SRR17805789) (density)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain B11221_mrr1a; biol rep 2) (SRR17805789) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -2095,7 +2095,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Biermann2022_SRR17805789_alignments",
-    "name": "Biermann 2022 Sample19 (SRR17805789) (alignments)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain B11221_mrr1a; biol rep 2) (SRR17805789) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -2127,7 +2127,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805790_coverage",
-    "name": "Biermann 2022 Sample20 (SRR17805790)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain B11221_mrr1a; biol rep 1) (SRR17805790)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -2153,7 +2153,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805790_density",
-    "name": "Biermann 2022 Sample20 (SRR17805790) (density)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain B11221_mrr1a; biol rep 1) (SRR17805790) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -2180,7 +2180,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Biermann2022_SRR17805790_alignments",
-    "name": "Biermann 2022 Sample20 (SRR17805790) (alignments)",
+    "name": "Biermann et al DGE in presence of methylglyoxal (strain B11221_mrr1a; biol rep 1) (SRR17805790) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -2212,7 +2212,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805791_coverage",
-    "name": "Biermann 2022 Sample21 (SRR17805791)",
+    "name": "Biermann et al control (strain B11221_mrr1a; biol rep 3) (SRR17805791)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -2238,7 +2238,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805791_density",
-    "name": "Biermann 2022 Sample21 (SRR17805791) (density)",
+    "name": "Biermann et al control (strain B11221_mrr1a; biol rep 3) (SRR17805791) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -2265,7 +2265,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Biermann2022_SRR17805791_alignments",
-    "name": "Biermann 2022 Sample21 (SRR17805791) (alignments)",
+    "name": "Biermann et al control (strain B11221_mrr1a; biol rep 3) (SRR17805791) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -2297,7 +2297,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805792_coverage",
-    "name": "Biermann 2022 Sample22 (SRR17805792)",
+    "name": "Biermann et al control (strain B11221_mrr1a; biol rep 2) (SRR17805792)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -2323,7 +2323,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805792_density",
-    "name": "Biermann 2022 Sample22 (SRR17805792) (density)",
+    "name": "Biermann et al control (strain B11221_mrr1a; biol rep 2) (SRR17805792) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -2350,7 +2350,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Biermann2022_SRR17805792_alignments",
-    "name": "Biermann 2022 Sample22 (SRR17805792) (alignments)",
+    "name": "Biermann et al control (strain B11221_mrr1a; biol rep 2) (SRR17805792) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -2382,7 +2382,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805793_coverage",
-    "name": "Biermann 2022 Sample23 (SRR17805793)",
+    "name": "Biermann et al control (strain B11221; biol rep 2) (SRR17805793)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -2408,7 +2408,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805793_density",
-    "name": "Biermann 2022 Sample23 (SRR17805793) (density)",
+    "name": "Biermann et al control (strain B11221; biol rep 2) (SRR17805793) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -2435,7 +2435,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Biermann2022_SRR17805793_alignments",
-    "name": "Biermann 2022 Sample23 (SRR17805793) (alignments)",
+    "name": "Biermann et al control (strain B11221; biol rep 2) (SRR17805793) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -2467,7 +2467,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805794_coverage",
-    "name": "Biermann 2022 Sample24 (SRR17805794)",
+    "name": "Biermann et al control (strain B11221; biol rep 1) (SRR17805794)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -2493,7 +2493,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Biermann2022_SRR17805794_density",
-    "name": "Biermann 2022 Sample24 (SRR17805794) (density)",
+    "name": "Biermann et al control (strain B11221; biol rep 1) (SRR17805794) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -2520,7 +2520,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Biermann2022_SRR17805794_alignments",
-    "name": "Biermann 2022 Sample24 (SRR17805794) (alignments)",
+    "name": "Biermann et al control (strain B11221; biol rep 1) (SRR17805794) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -2552,7 +2552,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Chow2023_SRR22315644_coverage",
-    "name": "Chow 2023 Sample1 (SRR22315644)",
+    "name": "Chow et al (strain CBS10913_mub1; biol rep 3) (SRR22315644)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -2578,7 +2578,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Chow2023_SRR22315644_density",
-    "name": "Chow 2023 Sample1 (SRR22315644) (density)",
+    "name": "Chow et al (strain CBS10913_mub1; biol rep 3) (SRR22315644) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -2605,7 +2605,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Chow2023_SRR22315644_alignments",
-    "name": "Chow 2023 Sample1 (SRR22315644) (alignments)",
+    "name": "Chow et al (strain CBS10913_mub1; biol rep 3) (SRR22315644) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -2637,7 +2637,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Chow2023_SRR22315645_coverage",
-    "name": "Chow 2023 Sample2 (SRR22315645)",
+    "name": "Chow et al (strain CBS10913_mub1; biol rep 2) (SRR22315645)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -2663,7 +2663,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Chow2023_SRR22315645_density",
-    "name": "Chow 2023 Sample2 (SRR22315645) (density)",
+    "name": "Chow et al (strain CBS10913_mub1; biol rep 2) (SRR22315645) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -2690,7 +2690,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Chow2023_SRR22315645_alignments",
-    "name": "Chow 2023 Sample2 (SRR22315645) (alignments)",
+    "name": "Chow et al (strain CBS10913_mub1; biol rep 2) (SRR22315645) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -2722,7 +2722,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Chow2023_SRR22315646_coverage",
-    "name": "Chow 2023 Sample3 (SRR22315646)",
+    "name": "Chow et al (strain CBS10913_mub1; biol rep 1) (SRR22315646)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -2748,7 +2748,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Chow2023_SRR22315646_density",
-    "name": "Chow 2023 Sample3 (SRR22315646) (density)",
+    "name": "Chow et al (strain CBS10913_mub1; biol rep 1) (SRR22315646) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -2775,7 +2775,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Chow2023_SRR22315646_alignments",
-    "name": "Chow 2023 Sample3 (SRR22315646) (alignments)",
+    "name": "Chow et al (strain CBS10913_mub1; biol rep 1) (SRR22315646) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -2807,7 +2807,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Chow2023_SRR22315647_coverage",
-    "name": "Chow 2023 Sample4 (SRR22315647)",
+    "name": "Chow et al (strain CBS10913_ubr2; biol rep 3) (SRR22315647)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -2833,7 +2833,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Chow2023_SRR22315647_density",
-    "name": "Chow 2023 Sample4 (SRR22315647) (density)",
+    "name": "Chow et al (strain CBS10913_ubr2; biol rep 3) (SRR22315647) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -2860,7 +2860,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Chow2023_SRR22315647_alignments",
-    "name": "Chow 2023 Sample4 (SRR22315647) (alignments)",
+    "name": "Chow et al (strain CBS10913_ubr2; biol rep 3) (SRR22315647) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -2892,7 +2892,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Chow2023_SRR22315648_coverage",
-    "name": "Chow 2023 Sample5 (SRR22315648)",
+    "name": "Chow et al (strain CBS10913_ubr2; biol rep 2) (SRR22315648)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -2918,7 +2918,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Chow2023_SRR22315648_density",
-    "name": "Chow 2023 Sample5 (SRR22315648) (density)",
+    "name": "Chow et al (strain CBS10913_ubr2; biol rep 2) (SRR22315648) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -2945,7 +2945,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Chow2023_SRR22315648_alignments",
-    "name": "Chow 2023 Sample5 (SRR22315648) (alignments)",
+    "name": "Chow et al (strain CBS10913_ubr2; biol rep 2) (SRR22315648) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -2977,7 +2977,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Chow2023_SRR22315649_coverage",
-    "name": "Chow 2023 Sample6 (SRR22315649)",
+    "name": "Chow et al (strain CBS10913_ubr2; biol rep 1) (SRR22315649)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -3003,7 +3003,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Chow2023_SRR22315649_density",
-    "name": "Chow 2023 Sample6 (SRR22315649) (density)",
+    "name": "Chow et al (strain CBS10913_ubr2; biol rep 1) (SRR22315649) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -3030,7 +3030,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Chow2023_SRR22315649_alignments",
-    "name": "Chow 2023 Sample6 (SRR22315649) (alignments)",
+    "name": "Chow et al (strain CBS10913_ubr2; biol rep 1) (SRR22315649) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -3062,7 +3062,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Chow2023_SRR22315650_coverage",
-    "name": "Chow 2023 Sample7 (SRR22315650)",
+    "name": "Chow et al Sample7 (SRR22315650)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -3088,7 +3088,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Chow2023_SRR22315650_density",
-    "name": "Chow 2023 Sample7 (SRR22315650) (density)",
+    "name": "Chow et al Sample7 (SRR22315650) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -3115,7 +3115,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Chow2023_SRR22315650_alignments",
-    "name": "Chow 2023 Sample7 (SRR22315650) (alignments)",
+    "name": "Chow et al Sample7 (SRR22315650) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -3147,7 +3147,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Chow2023_SRR22315651_coverage",
-    "name": "Chow 2023 Sample8 (SRR22315651)",
+    "name": "Chow et al (strain CBS10913; biol rep 2) (SRR22315651)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -3173,7 +3173,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Chow2023_SRR22315651_density",
-    "name": "Chow 2023 Sample8 (SRR22315651) (density)",
+    "name": "Chow et al (strain CBS10913; biol rep 2) (SRR22315651) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -3200,7 +3200,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Chow2023_SRR22315651_alignments",
-    "name": "Chow 2023 Sample8 (SRR22315651) (alignments)",
+    "name": "Chow et al (strain CBS10913; biol rep 2) (SRR22315651) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -3232,7 +3232,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Chow2023_SRR22315652_coverage",
-    "name": "Chow 2023 Sample9 (SRR22315652)",
+    "name": "Chow et al (strain CBS10913; biol rep 1) (SRR22315652)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -3258,7 +3258,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Chow2023_SRR22315652_density",
-    "name": "Chow 2023 Sample9 (SRR22315652) (density)",
+    "name": "Chow et al (strain CBS10913; biol rep 1) (SRR22315652) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -3285,7 +3285,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Chow2023_SRR22315652_alignments",
-    "name": "Chow 2023 Sample9 (SRR22315652) (alignments)",
+    "name": "Chow et al (strain CBS10913; biol rep 1) (SRR22315652) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -3317,7 +3317,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jakab2021_SRR15131027_coverage",
-    "name": "Jakab 2021 Sample1 (SRR15131027)",
+    "name": "Jakab et al control (biol rep 1) (SRR15131027)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -3343,7 +3343,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jakab2021_SRR15131027_density",
-    "name": "Jakab 2021 Sample1 (SRR15131027) (density)",
+    "name": "Jakab et al control (biol rep 1) (SRR15131027) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -3370,7 +3370,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Jakab2021_SRR15131027_alignments",
-    "name": "Jakab 2021 Sample1 (SRR15131027) (alignments)",
+    "name": "Jakab et al control (biol rep 1) (SRR15131027) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -3402,7 +3402,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jakab2021_SRR15131028_coverage",
-    "name": "Jakab 2021 Sample2 (SRR15131028)",
+    "name": "Jakab et al control (biol rep 2) (SRR15131028)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -3428,7 +3428,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jakab2021_SRR15131028_density",
-    "name": "Jakab 2021 Sample2 (SRR15131028) (density)",
+    "name": "Jakab et al control (biol rep 2) (SRR15131028) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -3455,7 +3455,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Jakab2021_SRR15131028_alignments",
-    "name": "Jakab 2021 Sample2 (SRR15131028) (alignments)",
+    "name": "Jakab et al control (biol rep 2) (SRR15131028) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -3487,7 +3487,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jakab2021_SRR15131029_coverage",
-    "name": "Jakab 2021 Sample3 (SRR15131029)",
+    "name": "Jakab et al control (biol rep 3) (SRR15131029)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -3513,7 +3513,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jakab2021_SRR15131029_density",
-    "name": "Jakab 2021 Sample3 (SRR15131029) (density)",
+    "name": "Jakab et al control (biol rep 3) (SRR15131029) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -3540,7 +3540,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Jakab2021_SRR15131029_alignments",
-    "name": "Jakab 2021 Sample3 (SRR15131029) (alignments)",
+    "name": "Jakab et al control (biol rep 3) (SRR15131029) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -3572,7 +3572,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jakab2021_SRR15131030_coverage",
-    "name": "Jakab 2021 Sample4 (SRR15131030)",
+    "name": "Jakab et al DGE in presence of farnesol (biol rep 1) (SRR15131030)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -3598,7 +3598,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jakab2021_SRR15131030_density",
-    "name": "Jakab 2021 Sample4 (SRR15131030) (density)",
+    "name": "Jakab et al DGE in presence of farnesol (biol rep 1) (SRR15131030) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -3625,7 +3625,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Jakab2021_SRR15131030_alignments",
-    "name": "Jakab 2021 Sample4 (SRR15131030) (alignments)",
+    "name": "Jakab et al DGE in presence of farnesol (biol rep 1) (SRR15131030) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -3657,7 +3657,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jakab2021_SRR15131031_coverage",
-    "name": "Jakab 2021 Sample5 (SRR15131031)",
+    "name": "Jakab et al DGE in presence of farnesol (biol rep 2) (SRR15131031)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -3683,7 +3683,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jakab2021_SRR15131031_density",
-    "name": "Jakab 2021 Sample5 (SRR15131031) (density)",
+    "name": "Jakab et al DGE in presence of farnesol (biol rep 2) (SRR15131031) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -3710,7 +3710,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Jakab2021_SRR15131031_alignments",
-    "name": "Jakab 2021 Sample5 (SRR15131031) (alignments)",
+    "name": "Jakab et al DGE in presence of farnesol (biol rep 2) (SRR15131031) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -3742,7 +3742,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jakab2021_SRR15131032_coverage",
-    "name": "Jakab 2021 Sample6 (SRR15131032)",
+    "name": "Jakab et al DGE in presence of farnesol (biol rep 3) (SRR15131032)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -3768,7 +3768,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jakab2021_SRR15131032_density",
-    "name": "Jakab 2021 Sample6 (SRR15131032) (density)",
+    "name": "Jakab et al DGE in presence of farnesol (biol rep 3) (SRR15131032) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -3795,7 +3795,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Jakab2021_SRR15131032_alignments",
-    "name": "Jakab 2021 Sample6 (SRR15131032) (alignments)",
+    "name": "Jakab et al DGE in presence of farnesol (biol rep 3) (SRR15131032) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -3827,7 +3827,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jenull2021_SRR13576978_coverage",
-    "name": "Jenull 2021 Sample1 (SRR13576978)",
+    "name": "Jenull et al  (strain 470140; biol rep 1) (SRR13576978)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -3853,7 +3853,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jenull2021_SRR13576978_density",
-    "name": "Jenull 2021 Sample1 (SRR13576978) (density)",
+    "name": "Jenull et al  (strain 470140; biol rep 1) (SRR13576978) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -3880,7 +3880,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Jenull2021_SRR13576978_alignments",
-    "name": "Jenull 2021 Sample1 (SRR13576978) (alignments)",
+    "name": "Jenull et al  (strain 470140; biol rep 1) (SRR13576978) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -3912,7 +3912,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jenull2021_SRR13576979_coverage",
-    "name": "Jenull 2021 Sample2 (SRR13576979)",
+    "name": "Jenull et al  (strain 470140; biol rep 2) (SRR13576979)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -3938,7 +3938,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jenull2021_SRR13576979_density",
-    "name": "Jenull 2021 Sample2 (SRR13576979) (density)",
+    "name": "Jenull et al  (strain 470140; biol rep 2) (SRR13576979) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -3965,7 +3965,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Jenull2021_SRR13576979_alignments",
-    "name": "Jenull 2021 Sample2 (SRR13576979) (alignments)",
+    "name": "Jenull et al  (strain 470140; biol rep 2) (SRR13576979) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -3997,7 +3997,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jenull2021_SRR13576980_coverage",
-    "name": "Jenull 2021 Sample3 (SRR13576980)",
+    "name": "Jenull et al  (strain 470140; biol rep 3) (SRR13576980)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -4023,7 +4023,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jenull2021_SRR13576980_density",
-    "name": "Jenull 2021 Sample3 (SRR13576980) (density)",
+    "name": "Jenull et al  (strain 470140; biol rep 3) (SRR13576980) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -4050,7 +4050,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Jenull2021_SRR13576980_alignments",
-    "name": "Jenull 2021 Sample3 (SRR13576980) (alignments)",
+    "name": "Jenull et al  (strain 470140; biol rep 3) (SRR13576980) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -4082,7 +4082,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jenull2021_SRR13576981_coverage",
-    "name": "Jenull 2021 Sample4 (SRR13576981)",
+    "name": "Jenull et al  (strain 470147; biol rep 1) (SRR13576981)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -4108,7 +4108,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jenull2021_SRR13576981_density",
-    "name": "Jenull 2021 Sample4 (SRR13576981) (density)",
+    "name": "Jenull et al  (strain 470147; biol rep 1) (SRR13576981) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -4135,7 +4135,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Jenull2021_SRR13576981_alignments",
-    "name": "Jenull 2021 Sample4 (SRR13576981) (alignments)",
+    "name": "Jenull et al  (strain 470147; biol rep 1) (SRR13576981) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -4167,7 +4167,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jenull2021_SRR13576982_coverage",
-    "name": "Jenull 2021 Sample5 (SRR13576982)",
+    "name": "Jenull et al  (strain 470147; biol rep 2) (SRR13576982)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -4193,7 +4193,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jenull2021_SRR13576982_density",
-    "name": "Jenull 2021 Sample5 (SRR13576982) (density)",
+    "name": "Jenull et al  (strain 470147; biol rep 2) (SRR13576982) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -4220,7 +4220,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Jenull2021_SRR13576982_alignments",
-    "name": "Jenull 2021 Sample5 (SRR13576982) (alignments)",
+    "name": "Jenull et al  (strain 470147; biol rep 2) (SRR13576982) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -4252,7 +4252,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jenull2021_SRR13576983_coverage",
-    "name": "Jenull 2021 Sample6 (SRR13576983)",
+    "name": "Jenull et al  (strain 470147; biol rep 3) (SRR13576983)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -4278,7 +4278,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jenull2021_SRR13576983_density",
-    "name": "Jenull 2021 Sample6 (SRR13576983) (density)",
+    "name": "Jenull et al  (strain 470147; biol rep 3) (SRR13576983) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -4305,7 +4305,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Jenull2021_SRR13576983_alignments",
-    "name": "Jenull 2021 Sample6 (SRR13576983) (alignments)",
+    "name": "Jenull et al  (strain 470147; biol rep 3) (SRR13576983) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -4337,7 +4337,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jenull2021_SRR13576984_coverage",
-    "name": "Jenull 2021 Sample7 (SRR13576984)",
+    "name": "Jenull et al  (strain 470154; biol rep 1) (SRR13576984)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -4363,7 +4363,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jenull2021_SRR13576984_density",
-    "name": "Jenull 2021 Sample7 (SRR13576984) (density)",
+    "name": "Jenull et al  (strain 470154; biol rep 1) (SRR13576984) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -4390,7 +4390,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Jenull2021_SRR13576984_alignments",
-    "name": "Jenull 2021 Sample7 (SRR13576984) (alignments)",
+    "name": "Jenull et al  (strain 470154; biol rep 1) (SRR13576984) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -4422,7 +4422,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jenull2021_SRR13576985_coverage",
-    "name": "Jenull 2021 Sample8 (SRR13576985)",
+    "name": "Jenull et al  (strain 470154; biol rep 2) (SRR13576985)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -4448,7 +4448,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jenull2021_SRR13576985_density",
-    "name": "Jenull 2021 Sample8 (SRR13576985) (density)",
+    "name": "Jenull et al  (strain 470154; biol rep 2) (SRR13576985) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -4475,7 +4475,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Jenull2021_SRR13576985_alignments",
-    "name": "Jenull 2021 Sample8 (SRR13576985) (alignments)",
+    "name": "Jenull et al  (strain 470154; biol rep 2) (SRR13576985) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -4507,7 +4507,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jenull2021_SRR13576986_coverage",
-    "name": "Jenull 2021 Sample9 (SRR13576986)",
+    "name": "Jenull et al  (strain 470154; biol rep 3) (SRR13576986)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -4533,7 +4533,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jenull2021_SRR13576986_density",
-    "name": "Jenull 2021 Sample9 (SRR13576986) (density)",
+    "name": "Jenull et al  (strain 470154; biol rep 3) (SRR13576986) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -4560,7 +4560,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Jenull2021_SRR13576986_alignments",
-    "name": "Jenull 2021 Sample9 (SRR13576986) (alignments)",
+    "name": "Jenull et al  (strain 470154; biol rep 3) (SRR13576986) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -4592,7 +4592,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jenull2021_SRR13576987_coverage",
-    "name": "Jenull 2021 Sample10 (SRR13576987)",
+    "name": "Jenull et al  (strain CBS10913; biol rep 1) (SRR13576987)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -4618,7 +4618,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jenull2021_SRR13576987_density",
-    "name": "Jenull 2021 Sample10 (SRR13576987) (density)",
+    "name": "Jenull et al  (strain CBS10913; biol rep 1) (SRR13576987) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -4645,7 +4645,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Jenull2021_SRR13576987_alignments",
-    "name": "Jenull 2021 Sample10 (SRR13576987) (alignments)",
+    "name": "Jenull et al  (strain CBS10913; biol rep 1) (SRR13576987) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -4677,7 +4677,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jenull2021_SRR13576988_coverage",
-    "name": "Jenull 2021 Sample11 (SRR13576988)",
+    "name": "Jenull et al  (strain CBS10913; biol rep 2) (SRR13576988)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -4703,7 +4703,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jenull2021_SRR13576988_density",
-    "name": "Jenull 2021 Sample11 (SRR13576988) (density)",
+    "name": "Jenull et al  (strain CBS10913; biol rep 2) (SRR13576988) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -4730,7 +4730,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Jenull2021_SRR13576988_alignments",
-    "name": "Jenull 2021 Sample11 (SRR13576988) (alignments)",
+    "name": "Jenull et al  (strain CBS10913; biol rep 2) (SRR13576988) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -4762,7 +4762,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jenull2021_SRR13576989_coverage",
-    "name": "Jenull 2021 Sample12 (SRR13576989)",
+    "name": "Jenull et al  (strain CBS10913; biol rep 3) (SRR13576989)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -4788,7 +4788,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Jenull2021_SRR13576989_density",
-    "name": "Jenull 2021 Sample12 (SRR13576989) (density)",
+    "name": "Jenull et al  (strain CBS10913; biol rep 3) (SRR13576989) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -4815,7 +4815,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Jenull2021_SRR13576989_alignments",
-    "name": "Jenull 2021 Sample12 (SRR13576989) (alignments)",
+    "name": "Jenull et al  (strain CBS10913; biol rep 3) (SRR13576989) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -4847,7 +4847,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915334_coverage",
-    "name": "Pelletier 2024 Sample1 (SRR24915334)",
+    "name": "Pelletier et al (UACa11; control; biol rep 3; tech rep 1) (SRR24915334)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -4873,7 +4873,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915334_density",
-    "name": "Pelletier 2024 Sample1 (SRR24915334) (density)",
+    "name": "Pelletier et al (UACa11; control; biol rep 3; tech rep 1) (SRR24915334) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -4900,7 +4900,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915334_alignments",
-    "name": "Pelletier 2024 Sample1 (SRR24915334) (alignments)",
+    "name": "Pelletier et al (UACa11; control; biol rep 3; tech rep 1) (SRR24915334) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -4932,7 +4932,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915335_coverage",
-    "name": "Pelletier 2024 Sample2 (SRR24915335)",
+    "name": "Pelletier et al (UACa11; control; biol rep 3; tech rep 2) (SRR24915335)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -4958,7 +4958,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915335_density",
-    "name": "Pelletier 2024 Sample2 (SRR24915335) (density)",
+    "name": "Pelletier et al (UACa11; control; biol rep 3; tech rep 2) (SRR24915335) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -4985,7 +4985,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915335_alignments",
-    "name": "Pelletier 2024 Sample2 (SRR24915335) (alignments)",
+    "name": "Pelletier et al (UACa11; control; biol rep 3; tech rep 2) (SRR24915335) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -5017,7 +5017,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915336_coverage",
-    "name": "Pelletier 2024 Sample3 (SRR24915336)",
+    "name": "Pelletier et al (UACa11; control; biol rep 3; tech rep 3) (SRR24915336)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -5043,7 +5043,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915336_density",
-    "name": "Pelletier 2024 Sample3 (SRR24915336) (density)",
+    "name": "Pelletier et al (UACa11; control; biol rep 3; tech rep 3) (SRR24915336) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -5070,7 +5070,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915336_alignments",
-    "name": "Pelletier 2024 Sample3 (SRR24915336) (alignments)",
+    "name": "Pelletier et al (UACa11; control; biol rep 3; tech rep 3) (SRR24915336) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -5102,7 +5102,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915337_coverage",
-    "name": "Pelletier 2024 Sample4 (SRR24915337)",
+    "name": "Pelletier et al (UACa11; control; biol rep 3; tech rep 4) (SRR24915337)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -5128,7 +5128,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915337_density",
-    "name": "Pelletier 2024 Sample4 (SRR24915337) (density)",
+    "name": "Pelletier et al (UACa11; control; biol rep 3; tech rep 4) (SRR24915337) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -5155,7 +5155,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915337_alignments",
-    "name": "Pelletier 2024 Sample4 (SRR24915337) (alignments)",
+    "name": "Pelletier et al (UACa11; control; biol rep 3; tech rep 4) (SRR24915337) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -5187,7 +5187,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915338_coverage",
-    "name": "Pelletier 2024 Sample5 (SRR24915338)",
+    "name": "Pelletier et al (UACa11; control; biol rep 2; tech rep 1) (SRR24915338)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -5213,7 +5213,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915338_density",
-    "name": "Pelletier 2024 Sample5 (SRR24915338) (density)",
+    "name": "Pelletier et al (UACa11; control; biol rep 2; tech rep 1) (SRR24915338) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -5240,7 +5240,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915338_alignments",
-    "name": "Pelletier 2024 Sample5 (SRR24915338) (alignments)",
+    "name": "Pelletier et al (UACa11; control; biol rep 2; tech rep 1) (SRR24915338) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -5272,7 +5272,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915339_coverage",
-    "name": "Pelletier 2024 Sample6 (SRR24915339)",
+    "name": "Pelletier et al (UACa11; control; biol rep 2; tech rep 2) (SRR24915339)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -5298,7 +5298,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915339_density",
-    "name": "Pelletier 2024 Sample6 (SRR24915339) (density)",
+    "name": "Pelletier et al (UACa11; control; biol rep 2; tech rep 2) (SRR24915339) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -5325,7 +5325,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915339_alignments",
-    "name": "Pelletier 2024 Sample6 (SRR24915339) (alignments)",
+    "name": "Pelletier et al (UACa11; control; biol rep 2; tech rep 2) (SRR24915339) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -5357,7 +5357,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915340_coverage",
-    "name": "Pelletier 2024 Sample7 (SRR24915340)",
+    "name": "Pelletier et al (UACa11; control; biol rep 2; tech rep 3) (SRR24915340)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -5383,7 +5383,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915340_density",
-    "name": "Pelletier 2024 Sample7 (SRR24915340) (density)",
+    "name": "Pelletier et al (UACa11; control; biol rep 2; tech rep 3) (SRR24915340) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -5410,7 +5410,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915340_alignments",
-    "name": "Pelletier 2024 Sample7 (SRR24915340) (alignments)",
+    "name": "Pelletier et al (UACa11; control; biol rep 2; tech rep 3) (SRR24915340) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -5442,7 +5442,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915341_coverage",
-    "name": "Pelletier 2024 Sample8 (SRR24915341)",
+    "name": "Pelletier et al (UACa11; control; biol rep 2; tech rep 4) (SRR24915341)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -5468,7 +5468,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915341_density",
-    "name": "Pelletier 2024 Sample8 (SRR24915341) (density)",
+    "name": "Pelletier et al (UACa11; control; biol rep 2; tech rep 4) (SRR24915341) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -5495,7 +5495,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915341_alignments",
-    "name": "Pelletier 2024 Sample8 (SRR24915341) (alignments)",
+    "name": "Pelletier et al (UACa11; control; biol rep 2; tech rep 4) (SRR24915341) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -5527,7 +5527,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915342_coverage",
-    "name": "Pelletier 2024 Sample9 (SRR24915342)",
+    "name": "Pelletier et al (UACa11; control; biol rep 1; tech rep 1) (SRR24915342)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -5553,7 +5553,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915342_density",
-    "name": "Pelletier 2024 Sample9 (SRR24915342) (density)",
+    "name": "Pelletier et al (UACa11; control; biol rep 1; tech rep 1) (SRR24915342) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -5580,7 +5580,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915342_alignments",
-    "name": "Pelletier 2024 Sample9 (SRR24915342) (alignments)",
+    "name": "Pelletier et al (UACa11; control; biol rep 1; tech rep 1) (SRR24915342) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -5612,7 +5612,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915343_coverage",
-    "name": "Pelletier 2024 Sample10 (SRR24915343)",
+    "name": "Pelletier et al (UACa11; control; biol rep 1; tech rep 2) (SRR24915343)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -5638,7 +5638,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915343_density",
-    "name": "Pelletier 2024 Sample10 (SRR24915343) (density)",
+    "name": "Pelletier et al (UACa11; control; biol rep 1; tech rep 2) (SRR24915343) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -5665,7 +5665,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915343_alignments",
-    "name": "Pelletier 2024 Sample10 (SRR24915343) (alignments)",
+    "name": "Pelletier et al (UACa11; control; biol rep 1; tech rep 2) (SRR24915343) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -5697,7 +5697,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915344_coverage",
-    "name": "Pelletier 2024 Sample11 (SRR24915344)",
+    "name": "Pelletier et al (UACa11; control; biol rep 1; tech rep 3) (SRR24915344)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -5723,7 +5723,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915344_density",
-    "name": "Pelletier 2024 Sample11 (SRR24915344) (density)",
+    "name": "Pelletier et al (UACa11; control; biol rep 1; tech rep 3) (SRR24915344) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -5750,7 +5750,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915344_alignments",
-    "name": "Pelletier 2024 Sample11 (SRR24915344) (alignments)",
+    "name": "Pelletier et al (UACa11; control; biol rep 1; tech rep 3) (SRR24915344) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -5782,7 +5782,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915345_coverage",
-    "name": "Pelletier 2024 Sample12 (SRR24915345)",
+    "name": "Pelletier et al (UACa11; control; biol rep 1; tech rep 4) (SRR24915345)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -5808,7 +5808,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915345_density",
-    "name": "Pelletier 2024 Sample12 (SRR24915345) (density)",
+    "name": "Pelletier et al (UACa11; control; biol rep 1; tech rep 4) (SRR24915345) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -5835,7 +5835,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915345_alignments",
-    "name": "Pelletier 2024 Sample12 (SRR24915345) (alignments)",
+    "name": "Pelletier et al (UACa11; control; biol rep 1; tech rep 4) (SRR24915345) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -5867,7 +5867,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915346_coverage",
-    "name": "Pelletier 2024 Sample13 (SRR24915346)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 3; tech rep 1) (SRR24915346)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -5893,7 +5893,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915346_density",
-    "name": "Pelletier 2024 Sample13 (SRR24915346) (density)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 3; tech rep 1) (SRR24915346) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -5920,7 +5920,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915346_alignments",
-    "name": "Pelletier 2024 Sample13 (SRR24915346) (alignments)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 3; tech rep 1) (SRR24915346) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -5952,7 +5952,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915347_coverage",
-    "name": "Pelletier 2024 Sample14 (SRR24915347)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 3; tech rep 2) (SRR24915347)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -5978,7 +5978,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915347_density",
-    "name": "Pelletier 2024 Sample14 (SRR24915347) (density)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 3; tech rep 2) (SRR24915347) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -6005,7 +6005,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915347_alignments",
-    "name": "Pelletier 2024 Sample14 (SRR24915347) (alignments)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 3; tech rep 2) (SRR24915347) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -6037,7 +6037,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915348_coverage",
-    "name": "Pelletier 2024 Sample15 (SRR24915348)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 3; tech rep 3) (SRR24915348)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -6063,7 +6063,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915348_density",
-    "name": "Pelletier 2024 Sample15 (SRR24915348) (density)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 3; tech rep 3) (SRR24915348) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -6090,7 +6090,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915348_alignments",
-    "name": "Pelletier 2024 Sample15 (SRR24915348) (alignments)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 3; tech rep 3) (SRR24915348) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -6122,7 +6122,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915349_coverage",
-    "name": "Pelletier 2024 Sample16 (SRR24915349)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 3; tech rep 4) (SRR24915349)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -6148,7 +6148,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915349_density",
-    "name": "Pelletier 2024 Sample16 (SRR24915349) (density)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 3; tech rep 4) (SRR24915349) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -6175,7 +6175,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915349_alignments",
-    "name": "Pelletier 2024 Sample16 (SRR24915349) (alignments)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 3; tech rep 4) (SRR24915349) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -6207,7 +6207,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915350_coverage",
-    "name": "Pelletier 2024 Sample17 (SRR24915350)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 2; tech rep 1) (SRR24915350)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -6233,7 +6233,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915350_density",
-    "name": "Pelletier 2024 Sample17 (SRR24915350) (density)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 2; tech rep 1) (SRR24915350) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -6260,7 +6260,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915350_alignments",
-    "name": "Pelletier 2024 Sample17 (SRR24915350) (alignments)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 2; tech rep 1) (SRR24915350) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -6292,7 +6292,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915351_coverage",
-    "name": "Pelletier 2024 Sample18 (SRR24915351)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 2; tech rep 2) (SRR24915351)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -6318,7 +6318,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915351_density",
-    "name": "Pelletier 2024 Sample18 (SRR24915351) (density)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 2; tech rep 2) (SRR24915351) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -6345,7 +6345,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915351_alignments",
-    "name": "Pelletier 2024 Sample18 (SRR24915351) (alignments)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 2; tech rep 2) (SRR24915351) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -6377,7 +6377,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915352_coverage",
-    "name": "Pelletier 2024 Sample19 (SRR24915352)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 2; tech rep 3) (SRR24915352)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -6403,7 +6403,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915352_density",
-    "name": "Pelletier 2024 Sample19 (SRR24915352) (density)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 2; tech rep 3) (SRR24915352) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -6430,7 +6430,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915352_alignments",
-    "name": "Pelletier 2024 Sample19 (SRR24915352) (alignments)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 2; tech rep 3) (SRR24915352) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -6462,7 +6462,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915353_coverage",
-    "name": "Pelletier 2024 Sample20 (SRR24915353)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 2; tech rep 4) (SRR24915353)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -6488,7 +6488,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915353_density",
-    "name": "Pelletier 2024 Sample20 (SRR24915353) (density)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 2; tech rep 4) (SRR24915353) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -6515,7 +6515,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915353_alignments",
-    "name": "Pelletier 2024 Sample20 (SRR24915353) (alignments)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 2; tech rep 4) (SRR24915353) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -6547,7 +6547,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915354_coverage",
-    "name": "Pelletier 2024 Sample21 (SRR24915354)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 1; tech rep 1) (SRR24915354)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -6573,7 +6573,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915354_density",
-    "name": "Pelletier 2024 Sample21 (SRR24915354) (density)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 1; tech rep 1) (SRR24915354) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -6600,7 +6600,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915354_alignments",
-    "name": "Pelletier 2024 Sample21 (SRR24915354) (alignments)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 1; tech rep 1) (SRR24915354) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -6632,7 +6632,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915355_coverage",
-    "name": "Pelletier 2024 Sample22 (SRR24915355)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 1; tech rep 2) (SRR24915355)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -6658,7 +6658,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915355_density",
-    "name": "Pelletier 2024 Sample22 (SRR24915355) (density)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 1; tech rep 2) (SRR24915355) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -6685,7 +6685,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915355_alignments",
-    "name": "Pelletier 2024 Sample22 (SRR24915355) (alignments)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 1; tech rep 2) (SRR24915355) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -6717,7 +6717,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915356_coverage",
-    "name": "Pelletier 2024 Sample23 (SRR24915356)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 1; tech rep 3) (SRR24915356)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -6743,7 +6743,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915356_density",
-    "name": "Pelletier 2024 Sample23 (SRR24915356) (density)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 1; tech rep 3) (SRR24915356) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -6770,7 +6770,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915356_alignments",
-    "name": "Pelletier 2024 Sample23 (SRR24915356) (alignments)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 1; tech rep 3) (SRR24915356) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -6802,7 +6802,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915357_coverage",
-    "name": "Pelletier 2024 Sample24 (SRR24915357)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 1; tech rep 4) (SRR24915357)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -6828,7 +6828,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915357_density",
-    "name": "Pelletier 2024 Sample24 (SRR24915357) (density)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 1; tech rep 4) (SRR24915357) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -6855,7 +6855,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915357_alignments",
-    "name": "Pelletier 2024 Sample24 (SRR24915357) (alignments)",
+    "name": "Pelletier et al (UACa11; Sabouraud's dextrose; biol rep 1; tech rep 4) (SRR24915357) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -6887,7 +6887,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915358_coverage",
-    "name": "Pelletier 2024 Sample25 (SRR24915358)",
+    "name": "Pelletier et al (UACa20; control; biol rep 3; tech rep 1) (SRR24915358)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -6913,7 +6913,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915358_density",
-    "name": "Pelletier 2024 Sample25 (SRR24915358) (density)",
+    "name": "Pelletier et al (UACa20; control; biol rep 3; tech rep 1) (SRR24915358) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -6940,7 +6940,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915358_alignments",
-    "name": "Pelletier 2024 Sample25 (SRR24915358) (alignments)",
+    "name": "Pelletier et al (UACa20; control; biol rep 3; tech rep 1) (SRR24915358) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -6972,7 +6972,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915359_coverage",
-    "name": "Pelletier 2024 Sample26 (SRR24915359)",
+    "name": "Pelletier et al (UACa20; control; biol rep 3; tech rep 2) (SRR24915359)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -6998,7 +6998,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915359_density",
-    "name": "Pelletier 2024 Sample26 (SRR24915359) (density)",
+    "name": "Pelletier et al (UACa20; control; biol rep 3; tech rep 2) (SRR24915359) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -7025,7 +7025,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915359_alignments",
-    "name": "Pelletier 2024 Sample26 (SRR24915359) (alignments)",
+    "name": "Pelletier et al (UACa20; control; biol rep 3; tech rep 2) (SRR24915359) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -7057,7 +7057,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915360_coverage",
-    "name": "Pelletier 2024 Sample27 (SRR24915360)",
+    "name": "Pelletier et al (UACa20; control; biol rep 3; tech rep 3) (SRR24915360)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -7083,7 +7083,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915360_density",
-    "name": "Pelletier 2024 Sample27 (SRR24915360) (density)",
+    "name": "Pelletier et al (UACa20; control; biol rep 3; tech rep 3) (SRR24915360) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -7110,7 +7110,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915360_alignments",
-    "name": "Pelletier 2024 Sample27 (SRR24915360) (alignments)",
+    "name": "Pelletier et al (UACa20; control; biol rep 3; tech rep 3) (SRR24915360) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -7142,7 +7142,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915361_coverage",
-    "name": "Pelletier 2024 Sample28 (SRR24915361)",
+    "name": "Pelletier et al (UACa20; control; biol rep 3; tech rep 4) (SRR24915361)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -7168,7 +7168,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915361_density",
-    "name": "Pelletier 2024 Sample28 (SRR24915361) (density)",
+    "name": "Pelletier et al (UACa20; control; biol rep 3; tech rep 4) (SRR24915361) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -7195,7 +7195,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915361_alignments",
-    "name": "Pelletier 2024 Sample28 (SRR24915361) (alignments)",
+    "name": "Pelletier et al (UACa20; control; biol rep 3; tech rep 4) (SRR24915361) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -7227,7 +7227,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915362_coverage",
-    "name": "Pelletier 2024 Sample29 (SRR24915362)",
+    "name": "Pelletier et al (UACa11; control; biol rep 2; tech rep 1) (SRR24915362)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -7253,7 +7253,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915362_density",
-    "name": "Pelletier 2024 Sample29 (SRR24915362) (density)",
+    "name": "Pelletier et al (UACa11; control; biol rep 2; tech rep 1) (SRR24915362) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -7280,7 +7280,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915362_alignments",
-    "name": "Pelletier 2024 Sample29 (SRR24915362) (alignments)",
+    "name": "Pelletier et al (UACa11; control; biol rep 2; tech rep 1) (SRR24915362) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -7312,7 +7312,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915363_coverage",
-    "name": "Pelletier 2024 Sample30 (SRR24915363)",
+    "name": "Pelletier et al (UACa20; control; biol rep 2; tech rep 2) (SRR24915363)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -7338,7 +7338,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915363_density",
-    "name": "Pelletier 2024 Sample30 (SRR24915363) (density)",
+    "name": "Pelletier et al (UACa20; control; biol rep 2; tech rep 2) (SRR24915363) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -7365,7 +7365,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915363_alignments",
-    "name": "Pelletier 2024 Sample30 (SRR24915363) (alignments)",
+    "name": "Pelletier et al (UACa20; control; biol rep 2; tech rep 2) (SRR24915363) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -7397,7 +7397,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915364_coverage",
-    "name": "Pelletier 2024 Sample31 (SRR24915364)",
+    "name": "Pelletier et al (UACa20; control; biol rep 2; tech rep 3) (SRR24915364)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -7423,7 +7423,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915364_density",
-    "name": "Pelletier 2024 Sample31 (SRR24915364) (density)",
+    "name": "Pelletier et al (UACa20; control; biol rep 2; tech rep 3) (SRR24915364) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -7450,7 +7450,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915364_alignments",
-    "name": "Pelletier 2024 Sample31 (SRR24915364) (alignments)",
+    "name": "Pelletier et al (UACa20; control; biol rep 2; tech rep 3) (SRR24915364) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -7482,7 +7482,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915365_coverage",
-    "name": "Pelletier 2024 Sample32 (SRR24915365)",
+    "name": "Pelletier et al (UACa20; control; biol rep 2; tech rep 4) (SRR24915365)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -7508,7 +7508,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915365_density",
-    "name": "Pelletier 2024 Sample32 (SRR24915365) (density)",
+    "name": "Pelletier et al (UACa20; control; biol rep 2; tech rep 4) (SRR24915365) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -7535,7 +7535,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915365_alignments",
-    "name": "Pelletier 2024 Sample32 (SRR24915365) (alignments)",
+    "name": "Pelletier et al (UACa20; control; biol rep 2; tech rep 4) (SRR24915365) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -7567,7 +7567,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915366_coverage",
-    "name": "Pelletier 2024 Sample33 (SRR24915366)",
+    "name": "Pelletier et al (UACa20; control; biol rep 1; tech rep 1) (SRR24915366)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -7593,7 +7593,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915366_density",
-    "name": "Pelletier 2024 Sample33 (SRR24915366) (density)",
+    "name": "Pelletier et al (UACa20; control; biol rep 1; tech rep 1) (SRR24915366) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -7620,7 +7620,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915366_alignments",
-    "name": "Pelletier 2024 Sample33 (SRR24915366) (alignments)",
+    "name": "Pelletier et al (UACa20; control; biol rep 1; tech rep 1) (SRR24915366) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -7652,7 +7652,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915367_coverage",
-    "name": "Pelletier 2024 Sample34 (SRR24915367)",
+    "name": "Pelletier et al (UACa20; control; biol rep 1; tech rep 2) (SRR24915367)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -7678,7 +7678,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915367_density",
-    "name": "Pelletier 2024 Sample34 (SRR24915367) (density)",
+    "name": "Pelletier et al (UACa20; control; biol rep 1; tech rep 2) (SRR24915367) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -7705,7 +7705,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915367_alignments",
-    "name": "Pelletier 2024 Sample34 (SRR24915367) (alignments)",
+    "name": "Pelletier et al (UACa20; control; biol rep 1; tech rep 2) (SRR24915367) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -7737,7 +7737,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915368_coverage",
-    "name": "Pelletier 2024 Sample35 (SRR24915368)",
+    "name": "Pelletier et al (UACa20; control; biol rep 1; tech rep 3) (SRR24915368)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -7763,7 +7763,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915368_density",
-    "name": "Pelletier 2024 Sample35 (SRR24915368) (density)",
+    "name": "Pelletier et al (UACa20; control; biol rep 1; tech rep 3) (SRR24915368) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -7790,7 +7790,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915368_alignments",
-    "name": "Pelletier 2024 Sample35 (SRR24915368) (alignments)",
+    "name": "Pelletier et al (UACa20; control; biol rep 1; tech rep 3) (SRR24915368) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -7822,7 +7822,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915369_coverage",
-    "name": "Pelletier 2024 Sample36 (SRR24915369)",
+    "name": "Pelletier et al (UACa20; control; biol rep 1; tech rep 4) (SRR24915369)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -7848,7 +7848,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915369_density",
-    "name": "Pelletier 2024 Sample36 (SRR24915369) (density)",
+    "name": "Pelletier et al (UACa20; control; biol rep 1; tech rep 4) (SRR24915369) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -7875,7 +7875,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915369_alignments",
-    "name": "Pelletier 2024 Sample36 (SRR24915369) (alignments)",
+    "name": "Pelletier et al (UACa20; control; biol rep 1; tech rep 4) (SRR24915369) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -7907,7 +7907,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915370_coverage",
-    "name": "Pelletier 2024 Sample37 (SRR24915370)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 3; tech rep 1) (SRR24915370)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -7933,7 +7933,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915370_density",
-    "name": "Pelletier 2024 Sample37 (SRR24915370) (density)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 3; tech rep 1) (SRR24915370) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -7960,7 +7960,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915370_alignments",
-    "name": "Pelletier 2024 Sample37 (SRR24915370) (alignments)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 3; tech rep 1) (SRR24915370) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -7992,7 +7992,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915371_coverage",
-    "name": "Pelletier 2024 Sample38 (SRR24915371)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 3; tech rep 2) (SRR24915371)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -8018,7 +8018,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915371_density",
-    "name": "Pelletier 2024 Sample38 (SRR24915371) (density)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 3; tech rep 2) (SRR24915371) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -8045,7 +8045,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915371_alignments",
-    "name": "Pelletier 2024 Sample38 (SRR24915371) (alignments)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 3; tech rep 2) (SRR24915371) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -8077,7 +8077,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915372_coverage",
-    "name": "Pelletier 2024 Sample39 (SRR24915372)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 3; tech rep 3) (SRR24915372)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -8103,7 +8103,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915372_density",
-    "name": "Pelletier 2024 Sample39 (SRR24915372) (density)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 3; tech rep 3) (SRR24915372) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -8130,7 +8130,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915372_alignments",
-    "name": "Pelletier 2024 Sample39 (SRR24915372) (alignments)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 3; tech rep 3) (SRR24915372) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -8162,7 +8162,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915373_coverage",
-    "name": "Pelletier 2024 Sample40 (SRR24915373)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 3; tech rep 4) (SRR24915373)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -8188,7 +8188,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915373_density",
-    "name": "Pelletier 2024 Sample40 (SRR24915373) (density)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 3; tech rep 4) (SRR24915373) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -8215,7 +8215,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915373_alignments",
-    "name": "Pelletier 2024 Sample40 (SRR24915373) (alignments)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 3; tech rep 4) (SRR24915373) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -8247,7 +8247,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915374_coverage",
-    "name": "Pelletier 2024 Sample41 (SRR24915374)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 2; tech rep 1) (SRR24915374)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -8273,7 +8273,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915374_density",
-    "name": "Pelletier 2024 Sample41 (SRR24915374) (density)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 2; tech rep 1) (SRR24915374) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -8300,7 +8300,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915374_alignments",
-    "name": "Pelletier 2024 Sample41 (SRR24915374) (alignments)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 2; tech rep 1) (SRR24915374) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -8332,7 +8332,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915375_coverage",
-    "name": "Pelletier 2024 Sample42 (SRR24915375)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 2; tech rep 2) (SRR24915375)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -8358,7 +8358,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915375_density",
-    "name": "Pelletier 2024 Sample42 (SRR24915375) (density)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 2; tech rep 2) (SRR24915375) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -8385,7 +8385,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915375_alignments",
-    "name": "Pelletier 2024 Sample42 (SRR24915375) (alignments)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 2; tech rep 2) (SRR24915375) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -8417,7 +8417,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915376_coverage",
-    "name": "Pelletier 2024 Sample43 (SRR24915376)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 2; tech rep 3) (SRR24915376)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -8443,7 +8443,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915376_density",
-    "name": "Pelletier 2024 Sample43 (SRR24915376) (density)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 2; tech rep 3) (SRR24915376) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -8470,7 +8470,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915376_alignments",
-    "name": "Pelletier 2024 Sample43 (SRR24915376) (alignments)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 2; tech rep 3) (SRR24915376) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -8502,7 +8502,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915377_coverage",
-    "name": "Pelletier 2024 Sample44 (SRR24915377)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 2; tech rep 4) (SRR24915377)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -8528,7 +8528,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915377_density",
-    "name": "Pelletier 2024 Sample44 (SRR24915377) (density)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 2; tech rep 4) (SRR24915377) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -8555,7 +8555,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915377_alignments",
-    "name": "Pelletier 2024 Sample44 (SRR24915377) (alignments)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 2; tech rep 4) (SRR24915377) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -8587,7 +8587,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915378_coverage",
-    "name": "Pelletier 2024 Sample45 (SRR24915378)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 1; tech rep 1) (SRR24915378)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -8613,7 +8613,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915378_density",
-    "name": "Pelletier 2024 Sample45 (SRR24915378) (density)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 1; tech rep 1) (SRR24915378) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -8640,7 +8640,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915378_alignments",
-    "name": "Pelletier 2024 Sample45 (SRR24915378) (alignments)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 1; tech rep 1) (SRR24915378) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -8672,7 +8672,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915379_coverage",
-    "name": "Pelletier 2024 Sample46 (SRR24915379)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 1; tech rep 2) (SRR24915379)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -8698,7 +8698,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915379_density",
-    "name": "Pelletier 2024 Sample46 (SRR24915379) (density)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 1; tech rep 2) (SRR24915379) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -8725,7 +8725,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915379_alignments",
-    "name": "Pelletier 2024 Sample46 (SRR24915379) (alignments)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 1; tech rep 2) (SRR24915379) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -8757,7 +8757,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915380_coverage",
-    "name": "Pelletier 2024 Sample47 (SRR24915380)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 1; tech rep 3) (SRR24915380)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -8783,7 +8783,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915380_density",
-    "name": "Pelletier 2024 Sample47 (SRR24915380) (density)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 1; tech rep 3) (SRR24915380) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -8810,7 +8810,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915380_alignments",
-    "name": "Pelletier 2024 Sample47 (SRR24915380) (alignments)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 1; tech rep 3) (SRR24915380) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -8842,7 +8842,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915381_coverage",
-    "name": "Pelletier 2024 Sample48 (SRR24915381)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 1; tech rep 4) (SRR24915381)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -8868,7 +8868,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Pelletier2024_SRR24915381_density",
-    "name": "Pelletier 2024 Sample48 (SRR24915381) (density)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 1; tech rep 4) (SRR24915381) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -8895,7 +8895,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Pelletier2024_SRR24915381_alignments",
-    "name": "Pelletier 2024 Sample48 (SRR24915381) (alignments)",
+    "name": "Pelletier et al (UACa20; Sabouraud's dextrose; biol rep 1; tech rep 4) (SRR24915381) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -8927,7 +8927,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Shivarathri2022_SRR17259761_coverage",
-    "name": "Shivarathri 2022 Sample1 (SRR17259761)",
+    "name": "Shivarathri et al (resistant isolate 1, rep 1) (SRR17259761)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -8953,7 +8953,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Shivarathri2022_SRR17259761_density",
-    "name": "Shivarathri 2022 Sample1 (SRR17259761) (density)",
+    "name": "Shivarathri et al (resistant isolate 1, rep 1) (SRR17259761) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -8980,7 +8980,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Shivarathri2022_SRR17259761_alignments",
-    "name": "Shivarathri 2022 Sample1 (SRR17259761) (alignments)",
+    "name": "Shivarathri et al (resistant isolate 1, rep 1) (SRR17259761) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -9012,7 +9012,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Shivarathri2022_SRR17259762_coverage",
-    "name": "Shivarathri 2022 Sample2 (SRR17259762)",
+    "name": "Shivarathri et al (resistant isolate 1, rep 2) (SRR17259762)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -9038,7 +9038,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Shivarathri2022_SRR17259762_density",
-    "name": "Shivarathri 2022 Sample2 (SRR17259762) (density)",
+    "name": "Shivarathri et al (resistant isolate 1, rep 2) (SRR17259762) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -9065,7 +9065,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Shivarathri2022_SRR17259762_alignments",
-    "name": "Shivarathri 2022 Sample2 (SRR17259762) (alignments)",
+    "name": "Shivarathri et al (resistant isolate 1, rep 2) (SRR17259762) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -9097,7 +9097,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Shivarathri2022_SRR17259763_coverage",
-    "name": "Shivarathri 2022 Sample3 (SRR17259763)",
+    "name": "Shivarathri et al (resistant isolate 1, rep 3) (SRR17259763)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -9123,7 +9123,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Shivarathri2022_SRR17259763_density",
-    "name": "Shivarathri 2022 Sample3 (SRR17259763) (density)",
+    "name": "Shivarathri et al (resistant isolate 1, rep 3) (SRR17259763) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -9150,7 +9150,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Shivarathri2022_SRR17259763_alignments",
-    "name": "Shivarathri 2022 Sample3 (SRR17259763) (alignments)",
+    "name": "Shivarathri et al (resistant isolate 1, rep 3) (SRR17259763) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -9182,7 +9182,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Shivarathri2022_SRR17259764_coverage",
-    "name": "Shivarathri 2022 Sample4 (SRR17259764)",
+    "name": "Shivarathri et al (resistant isolate 2, rep 1) (SRR17259764)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -9208,7 +9208,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Shivarathri2022_SRR17259764_density",
-    "name": "Shivarathri 2022 Sample4 (SRR17259764) (density)",
+    "name": "Shivarathri et al (resistant isolate 2, rep 1) (SRR17259764) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -9235,7 +9235,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Shivarathri2022_SRR17259764_alignments",
-    "name": "Shivarathri 2022 Sample4 (SRR17259764) (alignments)",
+    "name": "Shivarathri et al (resistant isolate 2, rep 1) (SRR17259764) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -9267,7 +9267,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Shivarathri2022_SRR17259765_coverage",
-    "name": "Shivarathri 2022 Sample5 (SRR17259765)",
+    "name": "Shivarathri et al (resistant isolate 2, rep 2) (SRR17259765)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -9293,7 +9293,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Shivarathri2022_SRR17259765_density",
-    "name": "Shivarathri 2022 Sample5 (SRR17259765) (density)",
+    "name": "Shivarathri et al (resistant isolate 2, rep 2) (SRR17259765) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -9320,7 +9320,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Shivarathri2022_SRR17259765_alignments",
-    "name": "Shivarathri 2022 Sample5 (SRR17259765) (alignments)",
+    "name": "Shivarathri et al (resistant isolate 2, rep 2) (SRR17259765) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -9352,7 +9352,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Shivarathri2022_SRR17259766_coverage",
-    "name": "Shivarathri 2022 Sample6 (SRR17259766)",
+    "name": "Shivarathri et al (resistant isolate 2, rep 3) (SRR17259766)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -9378,7 +9378,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Shivarathri2022_SRR17259766_density",
-    "name": "Shivarathri 2022 Sample6 (SRR17259766) (density)",
+    "name": "Shivarathri et al (resistant isolate 2, rep 3) (SRR17259766) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -9405,7 +9405,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Shivarathri2022_SRR17259766_alignments",
-    "name": "Shivarathri 2022 Sample6 (SRR17259766) (alignments)",
+    "name": "Shivarathri et al (resistant isolate 2, rep 3) (SRR17259766) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -9437,7 +9437,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Shivarathri2022_SRR17259767_coverage",
-    "name": "Shivarathri 2022 Sample7 (SRR17259767)",
+    "name": "Shivarathri et al (resistant isolate 3, rep 1) (SRR17259767)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -9463,7 +9463,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Shivarathri2022_SRR17259767_density",
-    "name": "Shivarathri 2022 Sample7 (SRR17259767) (density)",
+    "name": "Shivarathri et al (resistant isolate 3, rep 1) (SRR17259767) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -9490,7 +9490,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Shivarathri2022_SRR17259767_alignments",
-    "name": "Shivarathri 2022 Sample7 (SRR17259767) (alignments)",
+    "name": "Shivarathri et al (resistant isolate 3, rep 1) (SRR17259767) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -9522,7 +9522,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Shivarathri2022_SRR17259768_coverage",
-    "name": "Shivarathri 2022 Sample8 (SRR17259768)",
+    "name": "Shivarathri et al (resistant isolate 3, rep 2) (SRR17259768)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -9548,7 +9548,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Shivarathri2022_SRR17259768_density",
-    "name": "Shivarathri 2022 Sample8 (SRR17259768) (density)",
+    "name": "Shivarathri et al (resistant isolate 3, rep 2) (SRR17259768) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -9575,7 +9575,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Shivarathri2022_SRR17259768_alignments",
-    "name": "Shivarathri 2022 Sample8 (SRR17259768) (alignments)",
+    "name": "Shivarathri et al (resistant isolate 3, rep 2) (SRR17259768) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -9607,7 +9607,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Shivarathri2022_SRR17259769_coverage",
-    "name": "Shivarathri 2022 Sample9 (SRR17259769)",
+    "name": "Shivarathri et al (resistant isolate 3, rep 3) (SRR17259769)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -9633,7 +9633,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Shivarathri2022_SRR17259769_density",
-    "name": "Shivarathri 2022 Sample9 (SRR17259769) (density)",
+    "name": "Shivarathri et al (resistant isolate 3, rep 3) (SRR17259769) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -9660,7 +9660,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Shivarathri2022_SRR17259769_alignments",
-    "name": "Shivarathri 2022 Sample9 (SRR17259769) (alignments)",
+    "name": "Shivarathri et al (resistant isolate 3, rep 3) (SRR17259769) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -9692,7 +9692,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Shivarathri2022_SRR17259770_coverage",
-    "name": "Shivarathri 2022 Sample10 (SRR17259770)",
+    "name": "Shivarathri et al (susceptible isolate, rep 1) (SRR17259770)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -9718,7 +9718,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Shivarathri2022_SRR17259770_density",
-    "name": "Shivarathri 2022 Sample10 (SRR17259770) (density)",
+    "name": "Shivarathri et al (susceptible isolate, rep 1) (SRR17259770) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -9745,7 +9745,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Shivarathri2022_SRR17259770_alignments",
-    "name": "Shivarathri 2022 Sample10 (SRR17259770) (alignments)",
+    "name": "Shivarathri et al (susceptible isolate, rep 1) (SRR17259770) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -9777,7 +9777,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Shivarathri2022_SRR17259771_coverage",
-    "name": "Shivarathri 2022 Sample11 (SRR17259771)",
+    "name": "Shivarathri et al (susceptible isolate, rep 2) (SRR17259771)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -9803,7 +9803,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Shivarathri2022_SRR17259771_density",
-    "name": "Shivarathri 2022 Sample11 (SRR17259771) (density)",
+    "name": "Shivarathri et al (susceptible isolate, rep 2) (SRR17259771) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -9830,7 +9830,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Shivarathri2022_SRR17259771_alignments",
-    "name": "Shivarathri 2022 Sample11 (SRR17259771) (alignments)",
+    "name": "Shivarathri et al (susceptible isolate, rep 2) (SRR17259771) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -9862,7 +9862,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Shivarathri2022_SRR17259772_coverage",
-    "name": "Shivarathri 2022 Sample12 (SRR17259772)",
+    "name": "Shivarathri et al (susceptible isolate, rep 3) (SRR17259772)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -9888,7 +9888,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Shivarathri2022_SRR17259772_density",
-    "name": "Shivarathri 2022 Sample12 (SRR17259772) (density)",
+    "name": "Shivarathri et al (susceptible isolate, rep 3) (SRR17259772) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -9915,7 +9915,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Shivarathri2022_SRR17259772_alignments",
-    "name": "Shivarathri 2022 Sample12 (SRR17259772) (alignments)",
+    "name": "Shivarathri et al (susceptible isolate, rep 3) (SRR17259772) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -9947,7 +9947,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Simm2022_SRR14758158_coverage",
-    "name": "Simm 2022 Sample1 (SRR14758158)",
+    "name": "Simm et al control (tech rep a; biol rep 1) (SRR14758158)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -9973,7 +9973,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Simm2022_SRR14758158_density",
-    "name": "Simm 2022 Sample1 (SRR14758158) (density)",
+    "name": "Simm et al control (tech rep a; biol rep 1) (SRR14758158) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -10000,7 +10000,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Simm2022_SRR14758158_alignments",
-    "name": "Simm 2022 Sample1 (SRR14758158) (alignments)",
+    "name": "Simm et al control (tech rep a; biol rep 1) (SRR14758158) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -10032,7 +10032,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Simm2022_SRR14758159_coverage",
-    "name": "Simm 2022 Sample2 (SRR14758159)",
+    "name": "Simm et al control (tech rep b; biol rep 1) (SRR14758159)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -10058,7 +10058,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Simm2022_SRR14758159_density",
-    "name": "Simm 2022 Sample2 (SRR14758159) (density)",
+    "name": "Simm et al control (tech rep b; biol rep 1) (SRR14758159) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -10085,7 +10085,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Simm2022_SRR14758159_alignments",
-    "name": "Simm 2022 Sample2 (SRR14758159) (alignments)",
+    "name": "Simm et al control (tech rep b; biol rep 1) (SRR14758159) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -10117,7 +10117,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Simm2022_SRR14758160_coverage",
-    "name": "Simm 2022 Sample3 (SRR14758160)",
+    "name": "Simm et al control (tech rep a; biol rep 2) (SRR14758160)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -10143,7 +10143,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Simm2022_SRR14758160_density",
-    "name": "Simm 2022 Sample3 (SRR14758160) (density)",
+    "name": "Simm et al control (tech rep a; biol rep 2) (SRR14758160) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -10170,7 +10170,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Simm2022_SRR14758160_alignments",
-    "name": "Simm 2022 Sample3 (SRR14758160) (alignments)",
+    "name": "Simm et al control (tech rep a; biol rep 2) (SRR14758160) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -10202,7 +10202,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Simm2022_SRR14758161_coverage",
-    "name": "Simm 2022 Sample4 (SRR14758161)",
+    "name": "Simm et al control (tech rep b; biol rep 2) (SRR14758161)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -10228,7 +10228,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Simm2022_SRR14758161_density",
-    "name": "Simm 2022 Sample4 (SRR14758161) (density)",
+    "name": "Simm et al control (tech rep b; biol rep 2) (SRR14758161) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -10255,7 +10255,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Simm2022_SRR14758161_alignments",
-    "name": "Simm 2022 Sample4 (SRR14758161) (alignments)",
+    "name": "Simm et al control (tech rep b; biol rep 2) (SRR14758161) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -10287,7 +10287,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Simm2022_SRR14758162_coverage",
-    "name": "Simm 2022 Sample5 (SRR14758162)",
+    "name": "Simm et al control (tech rep a; biol rep 3) (SRR14758162)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -10313,7 +10313,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Simm2022_SRR14758162_density",
-    "name": "Simm 2022 Sample5 (SRR14758162) (density)",
+    "name": "Simm et al control (tech rep a; biol rep 3) (SRR14758162) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -10340,7 +10340,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Simm2022_SRR14758162_alignments",
-    "name": "Simm 2022 Sample5 (SRR14758162) (alignments)",
+    "name": "Simm et al control (tech rep a; biol rep 3) (SRR14758162) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -10372,7 +10372,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Simm2022_SRR14758163_coverage",
-    "name": "Simm 2022 Sample6 (SRR14758163)",
+    "name": "Simm et al control (tech rep b; biol rep 3) (SRR14758163)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -10398,7 +10398,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Simm2022_SRR14758163_density",
-    "name": "Simm 2022 Sample6 (SRR14758163) (density)",
+    "name": "Simm et al control (tech rep b; biol rep 3) (SRR14758163) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -10425,7 +10425,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Simm2022_SRR14758163_alignments",
-    "name": "Simm 2022 Sample6 (SRR14758163) (alignments)",
+    "name": "Simm et al control (tech rep b; biol rep 3) (SRR14758163) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -10457,7 +10457,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Simm2022_SRR14758164_coverage",
-    "name": "Simm 2022 Sample7 (SRR14758164)",
+    "name": "Simm et al DGE in presence of pyrvinium pamoate (tech rep a; biol rep 1) (SRR14758164)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -10483,7 +10483,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Simm2022_SRR14758164_density",
-    "name": "Simm 2022 Sample7 (SRR14758164) (density)",
+    "name": "Simm et al DGE in presence of pyrvinium pamoate (tech rep a; biol rep 1) (SRR14758164) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -10510,7 +10510,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Simm2022_SRR14758164_alignments",
-    "name": "Simm 2022 Sample7 (SRR14758164) (alignments)",
+    "name": "Simm et al DGE in presence of pyrvinium pamoate (tech rep a; biol rep 1) (SRR14758164) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -10542,7 +10542,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Simm2022_SRR14758165_coverage",
-    "name": "Simm 2022 Sample8 (SRR14758165)",
+    "name": "Simm et al DGE in presence of pyrvinium pamoate (tech rep b; biol rep 1) (SRR14758165)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -10568,7 +10568,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Simm2022_SRR14758165_density",
-    "name": "Simm 2022 Sample8 (SRR14758165) (density)",
+    "name": "Simm et al DGE in presence of pyrvinium pamoate (tech rep b; biol rep 1) (SRR14758165) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -10595,7 +10595,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Simm2022_SRR14758165_alignments",
-    "name": "Simm 2022 Sample8 (SRR14758165) (alignments)",
+    "name": "Simm et al DGE in presence of pyrvinium pamoate (tech rep b; biol rep 1) (SRR14758165) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -10627,7 +10627,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Simm2022_SRR14758166_coverage",
-    "name": "Simm 2022 Sample9 (SRR14758166)",
+    "name": "Simm et al DGE in presence of pyrvinium pamoate (tech rep a; biol rep 2) (SRR14758166)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -10653,7 +10653,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Simm2022_SRR14758166_density",
-    "name": "Simm 2022 Sample9 (SRR14758166) (density)",
+    "name": "Simm et al DGE in presence of pyrvinium pamoate (tech rep a; biol rep 2) (SRR14758166) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -10680,7 +10680,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Simm2022_SRR14758166_alignments",
-    "name": "Simm 2022 Sample9 (SRR14758166) (alignments)",
+    "name": "Simm et al DGE in presence of pyrvinium pamoate (tech rep a; biol rep 2) (SRR14758166) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -10712,7 +10712,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Simm2022_SRR14758167_coverage",
-    "name": "Simm 2022 Sample10 (SRR14758167)",
+    "name": "Simm et al DGE in presence of pyrvinium pamoate (tech rep b; biol rep 2) (SRR14758167)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -10738,7 +10738,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Simm2022_SRR14758167_density",
-    "name": "Simm 2022 Sample10 (SRR14758167) (density)",
+    "name": "Simm et al DGE in presence of pyrvinium pamoate (tech rep b; biol rep 2) (SRR14758167) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -10765,7 +10765,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Simm2022_SRR14758167_alignments",
-    "name": "Simm 2022 Sample10 (SRR14758167) (alignments)",
+    "name": "Simm et al DGE in presence of pyrvinium pamoate (tech rep b; biol rep 2) (SRR14758167) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -10797,7 +10797,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Simm2022_SRR14758168_coverage",
-    "name": "Simm 2022 Sample11 (SRR14758168)",
+    "name": "Simm et al DGE in presence of pyrvinium pamoate (tech rep a; biol rep 3) (SRR14758168)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -10823,7 +10823,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Simm2022_SRR14758168_density",
-    "name": "Simm 2022 Sample11 (SRR14758168) (density)",
+    "name": "Simm et al DGE in presence of pyrvinium pamoate (tech rep a; biol rep 3) (SRR14758168) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -10850,7 +10850,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Simm2022_SRR14758168_alignments",
-    "name": "Simm 2022 Sample11 (SRR14758168) (alignments)",
+    "name": "Simm et al DGE in presence of pyrvinium pamoate (tech rep a; biol rep 3) (SRR14758168) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -10882,7 +10882,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Simm2022_SRR14758169_coverage",
-    "name": "Simm 2022 Sample12 (SRR14758169)",
+    "name": "Simm et al DGE in presence of pyrvinium pamoate (tech rep b; biol rep 3) (SRR14758169)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -10908,7 +10908,7 @@
   {
     "type": "QuantitativeTrack",
     "trackId": "Simm2022_SRR14758169_density",
-    "name": "Simm 2022 Sample12 (SRR14758169) (density)",
+    "name": "Simm et al DGE in presence of pyrvinium pamoate (tech rep b; biol rep 3) (SRR14758169) (density)",
     "adapter": {
       "type": "BigWigAdapter",
       "bigWigLocation": {
@@ -10935,7 +10935,7 @@
   {
     "type": "AlignmentsTrack",
     "trackId": "Simm2022_SRR14758169_alignments",
-    "name": "Simm 2022 Sample12 (SRR14758169) (alignments)",
+    "name": "Simm et al DGE in presence of pyrvinium pamoate (tech rep b; biol rep 3) (SRR14758169) (alignments)",
     "adapter": {
       "type": "BamAdapter",
       "bamLocation": {
@@ -10961,6 +10961,1111 @@
       {
         "type": "LinearAlignmentsDisplay",
         "displayId": "Simm2022_SRR14758169_alignments_display"
+      }
+    ]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28790270_coverage",
+    "name": "Wang et al (AR0382; In Vitro Biofilm; rep 1) (SRR28790270)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28790270_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Coverage"
+    ],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28790270_coverage_display"
+      }
+    ]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28790270_density",
+    "name": "Wang et al (AR0382; In Vitro Biofilm; rep 1) (SRR28790270) (density)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28790270_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Density"
+    ],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28790270_density_display",
+        "defaultRendering": "density"
+      }
+    ]
+  },
+  {
+    "type": "AlignmentsTrack",
+    "trackId": "Wang2024_SRR28790270_alignments",
+    "name": "Wang et al (AR0382; In Vitro Biofilm; rep 1) (SRR28790270) (alignments)",
+    "adapter": {
+      "type": "BamAdapter",
+      "bamLocation": {
+        "uri": "Wang2024_SRR28790270.bam",
+        "locationType": "UriLocation"
+      },
+      "index": {
+        "location": {
+          "uri": "Wang2024_SRR28790270.bam.bai",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Alignments"
+    ],
+    "displays": [
+      {
+        "type": "LinearAlignmentsDisplay",
+        "displayId": "Wang2024_SRR28790270_alignments_display"
+      }
+    ]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28790272_coverage",
+    "name": "Wang et al (AR0382; In Vitro Biofilm; rep 2) (SRR28790272)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28790272_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Coverage"
+    ],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28790272_coverage_display"
+      }
+    ]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28790272_density",
+    "name": "Wang et al (AR0382; In Vitro Biofilm; rep 2) (SRR28790272) (density)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28790272_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Density"
+    ],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28790272_density_display",
+        "defaultRendering": "density"
+      }
+    ]
+  },
+  {
+    "type": "AlignmentsTrack",
+    "trackId": "Wang2024_SRR28790272_alignments",
+    "name": "Wang et al (AR0382; In Vitro Biofilm; rep 2) (SRR28790272) (alignments)",
+    "adapter": {
+      "type": "BamAdapter",
+      "bamLocation": {
+        "uri": "Wang2024_SRR28790272.bam",
+        "locationType": "UriLocation"
+      },
+      "index": {
+        "location": {
+          "uri": "Wang2024_SRR28790272.bam.bai",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Alignments"
+    ],
+    "displays": [
+      {
+        "type": "LinearAlignmentsDisplay",
+        "displayId": "Wang2024_SRR28790272_alignments_display"
+      }
+    ]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28790274_coverage",
+    "name": "Wang et al (AR0382; In Vitro Biofilm; rep 3) (SRR28790274)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28790274_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Coverage"
+    ],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28790274_coverage_display"
+      }
+    ]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28790274_density",
+    "name": "Wang et al (AR0382; In Vitro Biofilm; rep 3) (SRR28790274) (density)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28790274_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Density"
+    ],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28790274_density_display",
+        "defaultRendering": "density"
+      }
+    ]
+  },
+  {
+    "type": "AlignmentsTrack",
+    "trackId": "Wang2024_SRR28790274_alignments",
+    "name": "Wang et al (AR0382; In Vitro Biofilm; rep 3) (SRR28790274) (alignments)",
+    "adapter": {
+      "type": "BamAdapter",
+      "bamLocation": {
+        "uri": "Wang2024_SRR28790274.bam",
+        "locationType": "UriLocation"
+      },
+      "index": {
+        "location": {
+          "uri": "Wang2024_SRR28790274.bam.bai",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Alignments"
+    ],
+    "displays": [
+      {
+        "type": "LinearAlignmentsDisplay",
+        "displayId": "Wang2024_SRR28790274_alignments_display"
+      }
+    ]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28790276_coverage",
+    "name": "Wang et al (AR0387; In Vitro Biofilm; rep 1) (SRR28790276)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28790276_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Coverage"
+    ],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28790276_coverage_display"
+      }
+    ]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28790276_density",
+    "name": "Wang et al (AR0387; In Vitro Biofilm; rep 1) (SRR28790276) (density)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28790276_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Density"
+    ],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28790276_density_display",
+        "defaultRendering": "density"
+      }
+    ]
+  },
+  {
+    "type": "AlignmentsTrack",
+    "trackId": "Wang2024_SRR28790276_alignments",
+    "name": "Wang et al (AR0387; In Vitro Biofilm; rep 1) (SRR28790276) (alignments)",
+    "adapter": {
+      "type": "BamAdapter",
+      "bamLocation": {
+        "uri": "Wang2024_SRR28790276.bam",
+        "locationType": "UriLocation"
+      },
+      "index": {
+        "location": {
+          "uri": "Wang2024_SRR28790276.bam.bai",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Alignments"
+    ],
+    "displays": [
+      {
+        "type": "LinearAlignmentsDisplay",
+        "displayId": "Wang2024_SRR28790276_alignments_display"
+      }
+    ]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28790278_coverage",
+    "name": "Wang et al (AR0387; In Vitro Biofilm; rep 2) (SRR28790278)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28790278_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Coverage"
+    ],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28790278_coverage_display"
+      }
+    ]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28790278_density",
+    "name": "Wang et al (AR0387; In Vitro Biofilm; rep 2) (SRR28790278) (density)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28790278_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Density"
+    ],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28790278_density_display",
+        "defaultRendering": "density"
+      }
+    ]
+  },
+  {
+    "type": "AlignmentsTrack",
+    "trackId": "Wang2024_SRR28790278_alignments",
+    "name": "Wang et al (AR0387; In Vitro Biofilm; rep 2) (SRR28790278) (alignments)",
+    "adapter": {
+      "type": "BamAdapter",
+      "bamLocation": {
+        "uri": "Wang2024_SRR28790278.bam",
+        "locationType": "UriLocation"
+      },
+      "index": {
+        "location": {
+          "uri": "Wang2024_SRR28790278.bam.bai",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Alignments"
+    ],
+    "displays": [
+      {
+        "type": "LinearAlignmentsDisplay",
+        "displayId": "Wang2024_SRR28790278_alignments_display"
+      }
+    ]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28790280_coverage",
+    "name": "Wang et al (AR0387; In Vitro Biofilm; rep 3) (SRR28790280)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28790280_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Coverage"
+    ],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28790280_coverage_display"
+      }
+    ]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28790280_density",
+    "name": "Wang et al (AR0387; In Vitro Biofilm; rep 3) (SRR28790280) (density)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28790280_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Density"
+    ],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28790280_density_display",
+        "defaultRendering": "density"
+      }
+    ]
+  },
+  {
+    "type": "AlignmentsTrack",
+    "trackId": "Wang2024_SRR28790280_alignments",
+    "name": "Wang et al (AR0387; In Vitro Biofilm; rep 3) (SRR28790280) (alignments)",
+    "adapter": {
+      "type": "BamAdapter",
+      "bamLocation": {
+        "uri": "Wang2024_SRR28790280.bam",
+        "locationType": "UriLocation"
+      },
+      "index": {
+        "location": {
+          "uri": "Wang2024_SRR28790280.bam.bai",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Alignments"
+    ],
+    "displays": [
+      {
+        "type": "LinearAlignmentsDisplay",
+        "displayId": "Wang2024_SRR28790280_alignments_display"
+      }
+    ]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28791430_coverage",
+    "name": "Wang et al (AR0382; In Vivo Catheter; rep 1) (SRR28791430)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28791430_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Coverage"
+    ],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28791430_coverage_display"
+      }
+    ]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28791430_density",
+    "name": "Wang et al (AR0382; In Vivo Catheter; rep 1) (SRR28791430) (density)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28791430_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Density"
+    ],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28791430_density_display",
+        "defaultRendering": "density"
+      }
+    ]
+  },
+  {
+    "type": "AlignmentsTrack",
+    "trackId": "Wang2024_SRR28791430_alignments",
+    "name": "Wang et al (AR0382; In Vivo Catheter; rep 1) (SRR28791430) (alignments)",
+    "adapter": {
+      "type": "BamAdapter",
+      "bamLocation": {
+        "uri": "Wang2024_SRR28791430.bam",
+        "locationType": "UriLocation"
+      },
+      "index": {
+        "location": {
+          "uri": "Wang2024_SRR28791430.bam.bai",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Alignments"
+    ],
+    "displays": [
+      {
+        "type": "LinearAlignmentsDisplay",
+        "displayId": "Wang2024_SRR28791430_alignments_display"
+      }
+    ]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28791431_coverage",
+    "name": "Wang et al (AR0382; In Vivo Catheter; rep 2) (SRR28791431)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28791431_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Coverage"
+    ],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28791431_coverage_display"
+      }
+    ]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28791431_density",
+    "name": "Wang et al (AR0382; In Vivo Catheter; rep 2) (SRR28791431) (density)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28791431_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Density"
+    ],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28791431_density_display",
+        "defaultRendering": "density"
+      }
+    ]
+  },
+  {
+    "type": "AlignmentsTrack",
+    "trackId": "Wang2024_SRR28791431_alignments",
+    "name": "Wang et al (AR0382; In Vivo Catheter; rep 2) (SRR28791431) (alignments)",
+    "adapter": {
+      "type": "BamAdapter",
+      "bamLocation": {
+        "uri": "Wang2024_SRR28791431.bam",
+        "locationType": "UriLocation"
+      },
+      "index": {
+        "location": {
+          "uri": "Wang2024_SRR28791431.bam.bai",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Alignments"
+    ],
+    "displays": [
+      {
+        "type": "LinearAlignmentsDisplay",
+        "displayId": "Wang2024_SRR28791431_alignments_display"
+      }
+    ]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28791432_coverage",
+    "name": "Wang et al (AR0382; In Vivo Catheter; rep 3) (SRR28791432)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28791432_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Coverage"
+    ],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28791432_coverage_display"
+      }
+    ]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28791432_density",
+    "name": "Wang et al (AR0382; In Vivo Catheter; rep 3) (SRR28791432) (density)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28791432_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Density"
+    ],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28791432_density_display",
+        "defaultRendering": "density"
+      }
+    ]
+  },
+  {
+    "type": "AlignmentsTrack",
+    "trackId": "Wang2024_SRR28791432_alignments",
+    "name": "Wang et al (AR0382; In Vivo Catheter; rep 3) (SRR28791432) (alignments)",
+    "adapter": {
+      "type": "BamAdapter",
+      "bamLocation": {
+        "uri": "Wang2024_SRR28791432.bam",
+        "locationType": "UriLocation"
+      },
+      "index": {
+        "location": {
+          "uri": "Wang2024_SRR28791432.bam.bai",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Alignments"
+    ],
+    "displays": [
+      {
+        "type": "LinearAlignmentsDisplay",
+        "displayId": "Wang2024_SRR28791432_alignments_display"
+      }
+    ]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28791433_coverage",
+    "name": "Wang et al (AR0387; In Vivo Catheter; rep 1) (SRR28791433)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28791433_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Coverage"
+    ],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28791433_coverage_display"
+      }
+    ]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28791433_density",
+    "name": "Wang et al (AR0387; In Vivo Catheter; rep 1) (SRR28791433) (density)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28791433_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Density"
+    ],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28791433_density_display",
+        "defaultRendering": "density"
+      }
+    ]
+  },
+  {
+    "type": "AlignmentsTrack",
+    "trackId": "Wang2024_SRR28791433_alignments",
+    "name": "Wang et al (AR0387; In Vivo Catheter; rep 1) (SRR28791433) (alignments)",
+    "adapter": {
+      "type": "BamAdapter",
+      "bamLocation": {
+        "uri": "Wang2024_SRR28791433.bam",
+        "locationType": "UriLocation"
+      },
+      "index": {
+        "location": {
+          "uri": "Wang2024_SRR28791433.bam.bai",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Alignments"
+    ],
+    "displays": [
+      {
+        "type": "LinearAlignmentsDisplay",
+        "displayId": "Wang2024_SRR28791433_alignments_display"
+      }
+    ]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28791434_coverage",
+    "name": "Wang et al (AR0387; In Vivo Catheter; rep 2) (SRR28791434)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28791434_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Coverage"
+    ],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28791434_coverage_display"
+      }
+    ]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28791434_density",
+    "name": "Wang et al (AR0387; In Vivo Catheter; rep 2) (SRR28791434) (density)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28791434_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Density"
+    ],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28791434_density_display",
+        "defaultRendering": "density"
+      }
+    ]
+  },
+  {
+    "type": "AlignmentsTrack",
+    "trackId": "Wang2024_SRR28791434_alignments",
+    "name": "Wang et al (AR0387; In Vivo Catheter; rep 2) (SRR28791434) (alignments)",
+    "adapter": {
+      "type": "BamAdapter",
+      "bamLocation": {
+        "uri": "Wang2024_SRR28791434.bam",
+        "locationType": "UriLocation"
+      },
+      "index": {
+        "location": {
+          "uri": "Wang2024_SRR28791434.bam.bai",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Alignments"
+    ],
+    "displays": [
+      {
+        "type": "LinearAlignmentsDisplay",
+        "displayId": "Wang2024_SRR28791434_alignments_display"
+      }
+    ]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28791437_coverage",
+    "name": "Wang et al (AR0387; In Vivo Catheter; rep 3) (SRR28791437)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28791437_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Coverage"
+    ],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28791437_coverage_display"
+      }
+    ]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28791437_density",
+    "name": "Wang et al (AR0387; In Vivo Catheter; rep 3) (SRR28791437) (density)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28791437_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Density"
+    ],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28791437_density_display",
+        "defaultRendering": "density"
+      }
+    ]
+  },
+  {
+    "type": "AlignmentsTrack",
+    "trackId": "Wang2024_SRR28791437_alignments",
+    "name": "Wang et al (AR0387; In Vivo Catheter; rep 3) (SRR28791437) (alignments)",
+    "adapter": {
+      "type": "BamAdapter",
+      "bamLocation": {
+        "uri": "Wang2024_SRR28791437.bam",
+        "locationType": "UriLocation"
+      },
+      "index": {
+        "location": {
+          "uri": "Wang2024_SRR28791437.bam.bai",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Alignments"
+    ],
+    "displays": [
+      {
+        "type": "LinearAlignmentsDisplay",
+        "displayId": "Wang2024_SRR28791437_alignments_display"
+      }
+    ]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28791438_coverage",
+    "name": "Wang et al (AR0387; In Vivo Catheter; rep 4) (SRR28791438)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28791438_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Coverage"
+    ],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28791438_coverage_display"
+      }
+    ]
+  },
+  {
+    "type": "QuantitativeTrack",
+    "trackId": "Wang2024_SRR28791438_density",
+    "name": "Wang et al (AR0387; In Vivo Catheter; rep 4) (SRR28791438) (density)",
+    "adapter": {
+      "type": "BigWigAdapter",
+      "bigWigLocation": {
+        "uri": "Wang2024_SRR28791438_coverage.bigwig",
+        "locationType": "UriLocation"
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Density"
+    ],
+    "displays": [
+      {
+        "type": "LinearWiggleDisplay",
+        "displayId": "Wang2024_SRR28791438_density_display",
+        "defaultRendering": "density"
+      }
+    ]
+  },
+  {
+    "type": "AlignmentsTrack",
+    "trackId": "Wang2024_SRR28791438_alignments",
+    "name": "Wang et al (AR0387; In Vivo Catheter; rep 4) (SRR28791438) (alignments)",
+    "adapter": {
+      "type": "BamAdapter",
+      "bamLocation": {
+        "uri": "Wang2024_SRR28791438.bam",
+        "locationType": "UriLocation"
+      },
+      "index": {
+        "location": {
+          "uri": "Wang2024_SRR28791438.bam.bai",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "assemblyNames": [
+      "C_auris_B8441"
+    ],
+    "category": [
+      "RNA-seq",
+      "Wang_2024",
+      "Alignments"
+    ],
+    "displays": [
+      {
+        "type": "LinearAlignmentsDisplay",
+        "displayId": "Wang2024_SRR28791438_alignments_display"
       }
     ]
   }
