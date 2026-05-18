@@ -814,12 +814,14 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
       svg.style('cursor', 'default');
     }
 
-    // Cleanup function to remove D3 elements when component unmounts
+    // Cleanup function to remove D3 elements when component unmounts or re-renders
     return () => {
       if (container) {
         d3.select(container).selectAll('svg').remove();
       }
       svgRef.current = null;
+      // Reset render state so next effect run will redraw
+      lastRenderStateRef.current = null;
     };
   }, [syntenyData, visibleSpecies, handleGeneClick, geneToOrtholog, zoomLevel, panOffset]);
 
