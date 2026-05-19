@@ -33,6 +33,22 @@ const MEETINGS = [
 // News items
 const NEWS_ITEMS = [
   {
+    title: 'New: Ortholog Converter Tool',
+    content: (
+      <>
+        Convert gene identifiers between <em>Candida</em> species and <em>S. cerevisiae</em> with our
+        new Ortholog Converter tool. Upload a list of genes and instantly map them to orthologs in
+        other species, with options to filter by identity threshold.
+        <br /><br />
+        <Link to="/ortholog-converter">Try the Ortholog Converter</Link>
+        {' | '}
+        <Link to="/tools">View all Tools</Link>
+      </>
+    ),
+    date: 'May 2026',
+    highlight: true,
+  },
+  {
     title: (
       <>
         New: <em>Candida tropicalis</em> Locus Pages
