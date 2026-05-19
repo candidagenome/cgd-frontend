@@ -14,6 +14,7 @@ See `RNA-seq_metadata_template.tsv` for an example.
 
 ### Step 2: Start the Pipeline
 ```bash
+ssh cgd-dev
 cd ~/work/cgd-frontend/docs/rnaseq/scripts/
 
 bash run_rnaseq_pipeline.sh ../MyStudy_2024_metadata.tsv C_auris_B8441
