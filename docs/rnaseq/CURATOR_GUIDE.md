@@ -107,11 +107,14 @@ grep FAILED /data/tmp/rnaseq_import/MyStudy_2024/progress.txt
 
 ### Strandedness Options
 In the Samples sheet, set the `Strandedness` column for each sample:
-- **RF** - Reverse/first-strand (most common for Illumina dUTP stranded libraries)
-- **FR** - Forward/second-strand
-- **Blank** - Unstranded (safe default if unknown)
 
-**Tip:** If not stated in BioProject, check SRA metadata for library prep method. dUTP method = RF. When in doubt, leave blank - alignment will still work.
+| Value | Library Type | Description |
+|-------|--------------|-------------|
+| **RF** | First-strand | dUTP method - most common (TruSeq Stranded, NEBNext) |
+| **FR** | Second-strand | Less common |
+| (blank) | Unstranded | Safe default if unknown |
+
+**Tip:** dUTP = first-strand = **RF**. If not stated in BioProject, check SRA metadata for library prep method. When in doubt, leave blank - alignment will still work.
 
 ### Sample Field Descriptions
 
