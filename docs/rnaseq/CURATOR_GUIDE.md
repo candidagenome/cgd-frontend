@@ -5,9 +5,25 @@
 ### Step 1: Fill in Metadata
 Use the Excel template to fill in study + sample information:
 - **Study sheet**: Study_ID, PMID, Organism, Category
-- **Samples sheet**: SRR_ID, Condition_Label, Bucket
+- **Samples sheet**: See column guide below
 
 See `RNA-seq_metadata_template.xlsx` for an example.
+
+#### Samples Sheet Columns
+
+| Column | Required | Notes |
+|--------|----------|-------|
+| SRR_ID | **Yes** | SRA run accession |
+| Condition_Label | **Yes** | Human-readable label for JBrowse/Expression tab |
+| Bucket | **Yes** | control, mutation, stress, kill_candida, basic_biology |
+| Replicate | Optional | Replicate number (1, 2, 3...) |
+| Strain | Optional | Strain name (e.g., "SC5314", "ago1Δ/Δ") |
+| Treatment | Optional | External conditions (drugs, temp, media) |
+| Timepoint | Optional | For time-course experiments (e.g., "0h", "2h") |
+| Strandedness | Optional | RF, FR, or blank for unstranded (see below) |
+| Align_Pct | Auto-filled | Filled by `extract_alignment_stats.py` after pipeline |
+| Status | Auto-filled | OK or FAILED based on alignment % |
+| Notes | Optional | Any notes |
 
 ### Step 2: Upload and Start the Pipeline
 First, upload your metadata file from your laptop:
@@ -93,7 +109,9 @@ grep FAILED /data/tmp/rnaseq_import/MyStudy_2024/progress.txt
 In the Samples sheet, set the `Strandedness` column for each sample:
 - **RF** - Reverse/first-strand (most common for Illumina dUTP stranded libraries)
 - **FR** - Forward/second-strand
-- Leave blank for unstranded
+- **Blank** - Unstranded (safe default if unknown)
+
+**Tip:** If not stated in BioProject, check SRA metadata for library prep method. dUTP method = RF. When in doubt, leave blank - alignment will still work.
 
 ### Sample Field Descriptions
 
