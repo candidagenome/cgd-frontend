@@ -41,10 +41,22 @@ bash run_rnaseq_pipeline.sh ../MyStudy_2024_metadata.xlsx C_auris_B8441
 
 **Organisms:** `C_auris_B8441`, `C_albicans_SC5314`, `C_glabrata_CBS138`, `C_dubliniensis_CD36`, `C_parapsilosis_CDC317`
 
+#### Running in Background (Recommended)
+Since the pipeline takes hours to complete, run it in the background so you can log out:
+```bash
+cd ~/work/cgd-frontend/docs/rnaseq/scripts/
+
+nohup bash run_rnaseq_pipeline.sh ../MyStudy_2024_metadata.xlsx C_auris_B8441 > ../MyStudy_2024.log 2>&1 &
+```
+This runs the pipeline in the background. You can safely log out and check progress later.
+
 ### Step 3: Check Progress
 ```bash
-# View live progress
+# View progress (works even after logging back in)
 tail -f /data/tmp/rnaseq_import/MyStudy_2024/pipeline_*.log
+
+# Or check the nohup output file
+tail -f ~/work/cgd-frontend/docs/rnaseq/MyStudy_2024.log
 
 # Check which samples completed
 cat /data/tmp/rnaseq_import/MyStudy_2024/progress.txt
@@ -75,7 +87,7 @@ Then notify developer to deploy the configs.
 ### If Pipeline Fails or Stops
 Just run the same command again - it will **resume from where it left off**:
 ```bash
-bash run_rnaseq_pipeline.sh ../MyStudy_2024_metadata.xlsx C_auris_B8441
+nohup bash run_rnaseq_pipeline.sh ../MyStudy_2024_metadata.xlsx C_auris_B8441 > ../MyStudy_2024.log 2>&1 &
 ```
 
 ### Check for Failed Samples
