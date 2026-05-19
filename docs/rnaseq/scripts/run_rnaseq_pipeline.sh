@@ -2,47 +2,98 @@
 # =============================================================================
 # RNA-seq Processing Pipeline for Curators
 # =============================================================================
-# Processes RNA-seq data from metadata TSV: FASTQ → BAM → BigWig
+# Processes RNA-seq data from metadata (XLSX or TSV): FASTQ → BAM → BigWig
 # Supports resume from interrupted runs.
 #
 # Usage:
-#   bash run_rnaseq_pipeline.sh <metadata.tsv> <organism>
+#   bash run_rnaseq_pipeline.sh <metadata.xlsx> <organism>
 #
 # Example:
-#   bash run_rnaseq_pipeline.sh Iracane_2021_metadata.tsv C_auris_B8441
+#   bash run_rnaseq_pipeline.sh Iracane_2021_metadata.xlsx C_auris_B8441
 #
 # Organisms: C_auris_B8441, C_albicans_SC5314, C_glabrata_CBS138,
 #            C_dubliniensis_CD36, C_parapsilosis_CDC317
 #
 # After completion, run:
-#   python extract_alignment_stats.py <metadata.tsv> <work_dir>/logs/
-#   python import_rnaseq.py <metadata.tsv>
+#   python extract_alignment_stats.py <metadata.xlsx> <work_dir>/logs/
+#   python import_rnaseq.py <metadata.xlsx>
 # =============================================================================
 
 set -e
 
 # Check arguments
 if [ $# -lt 2 ]; then
-    echo "Usage: bash run_rnaseq_pipeline.sh <metadata.tsv> <organism>"
+    echo "Usage: bash run_rnaseq_pipeline.sh <metadata.xlsx> <organism>"
     echo ""
     echo "Organisms: C_auris_B8441, C_albicans_SC5314, C_glabrata_CBS138,"
     echo "           C_dubliniensis_CD36, C_parapsilosis_CDC317"
     exit 1
 fi
 
-METADATA_TSV=$1
+METADATA_FILE=$1
 ORGANISM=$2
 
 # Validate metadata file
-if [ ! -f "$METADATA_TSV" ]; then
-    echo "ERROR: Metadata file not found: $METADATA_TSV"
+if [ ! -f "$METADATA_FILE" ]; then
+    echo "ERROR: Metadata file not found: $METADATA_FILE"
     exit 1
 fi
 
+# Function to extract data from xlsx or tsv
+extract_study_id() {
+    local file=$1
+    if [[ "$file" == *.xlsx ]]; then
+        python3 -c "
+from openpyxl import load_workbook
+wb = load_workbook('$file', read_only=True)
+if 'Study' in wb.sheetnames:
+    ws = wb['Study']
+    rows = list(ws.iter_rows(values_only=True))
+    if len(rows) >= 2:
+        headers = [str(h).strip() if h else '' for h in rows[0]]
+        if 'Study_ID' in headers:
+            idx = headers.index('Study_ID')
+            print(rows[1][idx] if rows[1][idx] else '')
+wb.close()
+" 2>/dev/null
+    else
+        grep -A1 "## STUDY METADATA" "$file" 2>/dev/null | tail -1 | cut -f1
+    fi
+}
+
+extract_srr_ids() {
+    local file=$1
+    if [[ "$file" == *.xlsx ]]; then
+        python3 -c "
+from openpyxl import load_workbook
+wb = load_workbook('$file', read_only=True)
+if 'Samples' in wb.sheetnames:
+    ws = wb['Samples']
+    rows = list(ws.iter_rows(values_only=True))
+    if rows:
+        headers = [str(h).strip() if h else '' for h in rows[0]]
+        srr_idx = headers.index('SRR_ID') if 'SRR_ID' in headers else 0
+        for row in rows[1:]:
+            if row[srr_idx]:
+                print(str(row[srr_idx]).strip())
+wb.close()
+"
+    else
+        awk -F'\t' '
+            /^## SAMPLE METADATA/ { in_samples=1; next }
+            /^##/ { in_samples=0 }
+            in_samples && !/^#/ && !/^SRR_ID/ && NF>0 { print \$1 }
+        ' "$file"
+    fi
+}
+
 # Extract study ID from metadata
-STUDY_ID=$(grep -A1 "## STUDY METADATA" "$METADATA_TSV" | tail -1 | cut -f1)
+STUDY_ID=$(extract_study_id "$METADATA_FILE")
 if [ -z "$STUDY_ID" ] || [ "$STUDY_ID" = "Study_ID" ]; then
-    STUDY_ID=$(basename "$METADATA_TSV" .tsv | sed 's/_metadata//')
+    # Fallback to filename
+    BASENAME=$(basename "$METADATA_FILE")
+    STUDY_ID=${BASENAME%.*}
+    STUDY_ID=${STUDY_ID%_metadata}
 fi
 
 echo "=============================================="
@@ -50,7 +101,7 @@ echo "RNA-seq Pipeline"
 echo "=============================================="
 echo "Study:    $STUDY_ID"
 echo "Organism: $ORGANISM"
-echo "Metadata: $METADATA_TSV"
+echo "Metadata: $METADATA_FILE"
 echo "=============================================="
 
 # Configuration
@@ -89,12 +140,8 @@ if [ -f ~/miniconda3/bin/activate ]; then
     source ~/miniconda3/bin/activate biotools 2>/dev/null || true
 fi
 
-# Extract SRR IDs from metadata (skip header)
-SAMPLES=$(awk -F'\t' '
-    /^## SAMPLE METADATA/ { in_samples=1; next }
-    /^##/ { in_samples=0 }
-    in_samples && !/^#/ && !/^SRR_ID/ && NF>0 { print $1 }
-' "$METADATA_TSV")
+# Extract SRR IDs from metadata
+SAMPLES=$(extract_srr_ids "$METADATA_FILE")
 
 TOTAL=$(echo "$SAMPLES" | wc -w | tr -d ' ')
 echo "Found $TOTAL samples to process"
@@ -220,8 +267,8 @@ echo "Output: $OUTPUT_DIR"
 echo "Logs:   $LOG_DIR"
 echo ""
 echo "Next steps:"
-echo "  1. python extract_alignment_stats.py $METADATA_TSV $LOG_DIR"
-echo "  2. python import_rnaseq.py $METADATA_TSV"
+echo "  1. python extract_alignment_stats.py $METADATA_FILE $LOG_DIR"
+echo "  2. python import_rnaseq.py $METADATA_FILE"
 echo "=============================================="
 
 if [ $FAILED -gt 0 ]; then

@@ -2,34 +2,86 @@
 """
 RNA-seq Dataset Import Script
 =============================
-Reads curator-provided metadata TSV and generates:
+Reads curator-provided metadata (XLSX or TSV) and generates:
 1. JBrowse2 track configuration (JSON)
 2. Expression service configuration (Python snippet)
 3. JBrowse2 symlink creation script (Bash)
 
 Usage:
-    python import_rnaseq.py <metadata.tsv> [--output-dir <dir>]
+    python import_rnaseq.py <metadata.xlsx> [--output-dir <dir>]
 
 Example:
-    python import_rnaseq.py Shivarathri_2022_metadata.tsv --output-dir ./output
+    python import_rnaseq.py Shivarathri_2022_metadata.xlsx --output-dir ./output
 """
 
 import argparse
-import csv
 import json
 import sys
 from pathlib import Path
 from typing import Dict, List, Optional
 
+try:
+    from openpyxl import load_workbook
+    HAS_OPENPYXL = True
+except ImportError:
+    HAS_OPENPYXL = False
+
 
 ALIGNMENT_THRESHOLD = 85.0  # Minimum alignment percentage
 
 
-def parse_metadata_tsv(filepath: str) -> tuple[dict, list[dict], list[dict]]:
+def parse_metadata_xlsx(filepath: str) -> tuple[dict, list[dict]]:
+    """Parse the metadata XLSX file.
+
+    Expects two sheets:
+    - "Study": Study metadata (Study_ID, PMID, Organism, Category)
+    - "Samples": Sample metadata (SRR_ID, Condition_Label, Bucket, etc.)
+
+    Returns:
+        Tuple of (study_info dict, list of sample dicts)
+    """
+    if not HAS_OPENPYXL:
+        print("ERROR: openpyxl is required for xlsx files. Install with: pip install openpyxl")
+        sys.exit(1)
+
+    wb = load_workbook(filepath, read_only=True)
+
+    # Parse Study sheet
+    study_info = {}
+    if 'Study' in wb.sheetnames:
+        ws = wb['Study']
+        rows = list(ws.iter_rows(values_only=True))
+        if len(rows) >= 2:
+            headers = [str(h).strip() if h else '' for h in rows[0]]
+            values = rows[1]
+            for i, header in enumerate(headers):
+                if header and i < len(values) and values[i]:
+                    study_info[header] = str(values[i]).strip()
+
+    # Parse Samples sheet
+    samples = []
+    if 'Samples' in wb.sheetnames:
+        ws = wb['Samples']
+        rows = list(ws.iter_rows(values_only=True))
+        if rows:
+            headers = [str(h).strip() if h else '' for h in rows[0]]
+            for row in rows[1:]:
+                sample = {}
+                for i, header in enumerate(headers):
+                    if header and i < len(row) and row[i] is not None:
+                        sample[header] = str(row[i]).strip()
+                if sample.get('SRR_ID'):
+                    samples.append(sample)
+
+    wb.close()
+    return study_info, samples
+
+
+def parse_metadata_tsv(filepath: str) -> tuple[dict, list[dict]]:
     """Parse the metadata TSV file.
 
     Returns:
-        Tuple of (study_info dict, list of passed sample dicts, list of failed sample dicts)
+        Tuple of (study_info dict, list of sample dicts)
     """
     study_info = {}
     samples = []
@@ -78,6 +130,28 @@ def parse_metadata_tsv(filepath: str) -> tuple[dict, list[dict], list[dict]]:
                             sample[headers[i]] = val
                     if sample.get('SRR_ID'):
                         samples.append(sample)
+
+    return study_info, samples
+
+
+def parse_metadata(filepath: str) -> tuple[dict, list[dict], list[dict]]:
+    """Parse metadata file (XLSX or TSV).
+
+    Returns:
+        Tuple of (study_info dict, list of passed sample dicts, list of failed sample dicts)
+    """
+    filepath_lower = filepath.lower()
+
+    if filepath_lower.endswith('.xlsx'):
+        study_info, samples = parse_metadata_xlsx(filepath)
+    elif filepath_lower.endswith('.tsv') or filepath_lower.endswith('.txt'):
+        study_info, samples = parse_metadata_tsv(filepath)
+    else:
+        # Try to detect format
+        try:
+            study_info, samples = parse_metadata_xlsx(filepath)
+        except Exception:
+            study_info, samples = parse_metadata_tsv(filepath)
 
     # Separate passed and failed samples
     passed_samples = []
@@ -245,22 +319,22 @@ Total failed: {len(failed_samples)}
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Import RNA-seq dataset from metadata TSV',
+        description='Import RNA-seq dataset from metadata file (XLSX or TSV)',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog='''
 Examples:
-  python import_rnaseq.py Shivarathri_2022_metadata.tsv
-  python import_rnaseq.py Wang_2024_metadata.tsv --output-dir ./output
+  python import_rnaseq.py Shivarathri_2022_metadata.xlsx
+  python import_rnaseq.py Wang_2024_metadata.xlsx --output-dir ./output
         '''
     )
-    parser.add_argument('metadata_tsv', help='Path to metadata TSV file')
+    parser.add_argument('metadata_file', help='Path to metadata file (XLSX or TSV)')
     parser.add_argument('--output-dir', '-o', default='.', help='Output directory (default: current)')
 
     args = parser.parse_args()
 
     # Parse metadata
-    print(f"Reading metadata from: {args.metadata_tsv}")
-    study_info, passed_samples, failed_samples = parse_metadata_tsv(args.metadata_tsv)
+    print(f"Reading metadata from: {args.metadata_file}")
+    study_info, passed_samples, failed_samples = parse_metadata(args.metadata_file)
 
     if not study_info.get('Study_ID'):
         print("ERROR: No Study_ID found in metadata file")

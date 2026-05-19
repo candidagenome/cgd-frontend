@@ -6,11 +6,12 @@
 
 Quick workflow:
 ```
-1. Fill metadata TSV     →  MyStudy_metadata.tsv
-2. Run pipeline          →  bash run_rnaseq_pipeline.sh metadata.tsv ORGANISM
-3. Extract stats         →  python extract_alignment_stats.py metadata.tsv logs/
-4. Generate configs      →  python import_rnaseq.py metadata.tsv
-5. Notify developer      →  Deploy to JBrowse2
+1. Fill metadata XLSX    →  MyStudy_metadata.xlsx
+2. Upload to server      →  scp metadata.xlsx cgd-dev:~/work/cgd-frontend/docs/rnaseq/
+3. Run pipeline          →  bash run_rnaseq_pipeline.sh metadata.xlsx ORGANISM
+4. Extract stats         →  python extract_alignment_stats.py metadata.xlsx logs/
+5. Generate configs      →  python import_rnaseq.py metadata.xlsx
+6. Notify developer      →  Deploy to JBrowse2
 ```
 
 ## Scripts
@@ -25,8 +26,8 @@ Quick workflow:
 
 | File | Purpose |
 |------|---------|
-| `RNA-seq_metadata_BLANK.tsv` | Empty template for new studies |
-| `RNA-seq_metadata_template.tsv` | Example with sample data |
+| `RNA-seq_metadata_BLANK.xlsx` | Empty template for new studies |
+| `RNA-seq_metadata_template.xlsx` | Example with sample data |
 | `RNA-seq_metadata_README.md` | Field descriptions |
 
 ## Processing Status
