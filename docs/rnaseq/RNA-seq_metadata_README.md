@@ -38,7 +38,14 @@ Save as TSV and pass the filename to the import pipeline.
 | Strain | Strain if different | B11221, mrr1a mutant |
 | Treatment | Treatment details | Caspofungin 15min |
 | Timepoint | Time point | 15min, 2h |
+| Align_Pct | Alignment percentage | 92.5 (from HISAT2 output) |
+| Status | OK or FAILED | OK, FAILED (if <85%) |
 | Notes | Additional info | Sensitive isolate |
+
+## Quality Control
+- Samples with alignment percentage **below 85%** should be marked as `FAILED`
+- Failed samples will be excluded from JBrowse2 tracks and expression analysis
+- A summary of failed samples is included in the generated output
 
 ## Category Options
 - Stress Response
