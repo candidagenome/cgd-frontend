@@ -1,46 +1,51 @@
-# RNA-Seq Dataset Processing Status
+# RNA-Seq Dataset Import
 
-## Overview
+## For Curators
 
-This directory tracks the status of RNA-Seq dataset processing for CGD organisms.
+**See [CURATOR_GUIDE.md](CURATOR_GUIDE.md) for step-by-step instructions.**
 
-**Processing server:** `cgd-frontend-dev`
-**Pipeline scripts:** `scripts/dataset_import/`
-**Data source:** `../cgd/DataSets_to_import.xlsx`
+Quick workflow:
+```
+1. Fill metadata TSV     →  MyStudy_metadata.tsv
+2. Run pipeline          →  bash run_rnaseq_pipeline.sh metadata.tsv ORGANISM
+3. Extract stats         →  python extract_alignment_stats.py metadata.tsv logs/
+4. Generate configs      →  python import_rnaseq.py metadata.tsv
+5. Notify developer      →  Deploy to JBrowse2
+```
 
-## Species Summary
+## Scripts
 
-| Species | Completed Studies | Total Samples | In Progress | Next Priority |
-|---------|-------------------|---------------|-------------|---------------|
-| [C. albicans SC5314](C_albicans_SC5314_studies.md) | 10 | 202 | Iracane_2024 | Wu Y, Yau KPS |
-| [C. auris B8441](C_auris_B8441_studies.md) | 9 | 142 | - | Kean_2018 |
-| [C. glabrata CBS138](C_glabrata_CBS138_studies.md) | 5 | 50 | - | Raj_2024, Rana_2025 |
-| [C. dubliniensis CD36](C_dubliniensis_CD36_studies.md) | 2 | 13 | - | Meza-Devalos |
-| [C. parapsilosis CDC317](C_parapsilosis_CDC317_studies.md) | 3 | 58 | - | - |
+| Script | Purpose |
+|--------|---------|
+| `scripts/run_rnaseq_pipeline.sh` | Main pipeline (FASTQ → BigWig) |
+| `scripts/extract_alignment_stats.py` | Parse HISAT2 logs, update metadata |
+| `scripts/import_rnaseq.py` | Generate JBrowse2 + expression configs |
 
-**Total: 29 completed studies, 465 samples**
+## Templates
 
-## Recent Completions
+| File | Purpose |
+|------|---------|
+| `RNA-seq_metadata_BLANK.tsv` | Empty template for new studies |
+| `RNA-seq_metadata_template.tsv` | Example with sample data |
+| `RNA-seq_metadata_README.md` | Field descriptions |
 
-**Wang_2024 (C. auris)** - PRJNA1086003 - Completed 2025-05-17
-- 13 samples: AR0382/AR0387 strains, In Vitro Biofilm vs In Vivo Catheter
-- Expression tab and JBrowse tracks configured
+## Processing Status
 
-## Pipeline Workflow
+| Species | Studies | Samples |
+|---------|---------|---------|
+| C. albicans SC5314 | 10 | 202 |
+| C. auris B8441 | 9 | 142 |
+| C. glabrata CBS138 | 5 | 50 |
+| C. dubliniensis CD36 | 2 | 13 |
+| C. parapsilosis CDC317 | 3 | 58 |
 
-1. Download FASTQ from SRA: `01_download_sra.sh`
-2. Align with HISAT2: `02_align_reads.sh`
-3. Generate BigWig: `03_generate_bigwig.sh`
-4. Copy to production server when ready
+**Total: 29 studies, 465 samples**
 
-## File Locations
+## Server Locations
 
 | Location | Description |
 |----------|-------------|
-| `/data/tmp/dataset_import/` | Working directory for processing |
-| `/data/HTS/<species>/bam/<study>/` | Final output location |
-| `/data/genomes/` | Reference genomes and HISAT2 indices |
-
-## Last Updated
-
-2025-05-17
+| `/data/tmp/rnaseq_import/` | Pipeline working directory |
+| `/data/HTS/<organism>/bam/` | Final BigWig output |
+| `/data/genomes/hisat2_index/` | HISAT2 indices |
+| `/data/jbrowse2/` | JBrowse2 track files |
