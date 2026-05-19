@@ -109,7 +109,7 @@ def parse_metadata_tsv(filepath: str) -> tuple[dict, list[dict], list[dict]]:
 
 
 def generate_jbrowse2_tracks(study_info: dict, samples: list[dict]) -> list[dict]:
-    """Generate JBrowse2 track configuration."""
+    """Generate JBrowse2 track configuration (Coverage tracks only)."""
     tracks = []
     study_id = study_info.get('Study_ID', 'Unknown')
     prefix = study_id.replace('_', '')
@@ -118,7 +118,7 @@ def generate_jbrowse2_tracks(study_info: dict, samples: list[dict]) -> list[dict
         srr_id = sample.get('SRR_ID', '')
         label = sample.get('Condition_Label', srr_id)
 
-        # Coverage track
+        # Coverage track only (BigWig) - no BAM/alignments tracks
         tracks.append({
             "type": "QuantitativeTrack",
             "trackId": f"{prefix}_{srr_id}_coverage",
@@ -131,57 +131,10 @@ def generate_jbrowse2_tracks(study_info: dict, samples: list[dict]) -> list[dict
                 }
             },
             "assemblyNames": [study_info.get('Organism', 'C_auris_B8441')],
-            "category": ["RNA-seq", study_id, "Coverage"],
+            "category": ["RNA-seq", study_id],
             "displays": [{
                 "type": "LinearWiggleDisplay",
                 "displayId": f"{prefix}_{srr_id}_coverage_display"
-            }]
-        })
-
-        # Density track
-        tracks.append({
-            "type": "QuantitativeTrack",
-            "trackId": f"{prefix}_{srr_id}_density",
-            "name": f"{label} ({srr_id}) (density)",
-            "adapter": {
-                "type": "BigWigAdapter",
-                "bigWigLocation": {
-                    "uri": f"{prefix}_{srr_id}_coverage.bigwig",
-                    "locationType": "UriLocation"
-                }
-            },
-            "assemblyNames": [study_info.get('Organism', 'C_auris_B8441')],
-            "category": ["RNA-seq", study_id, "Density"],
-            "displays": [{
-                "type": "LinearWiggleDisplay",
-                "displayId": f"{prefix}_{srr_id}_density_display",
-                "defaultRendering": "density"
-            }]
-        })
-
-        # Alignments track
-        tracks.append({
-            "type": "AlignmentsTrack",
-            "trackId": f"{prefix}_{srr_id}_alignments",
-            "name": f"{label} ({srr_id}) (alignments)",
-            "adapter": {
-                "type": "BamAdapter",
-                "bamLocation": {
-                    "uri": f"{prefix}_{srr_id}.bam",
-                    "locationType": "UriLocation"
-                },
-                "index": {
-                    "location": {
-                        "uri": f"{prefix}_{srr_id}.bam.bai",
-                        "locationType": "UriLocation"
-                    }
-                }
-            },
-            "assemblyNames": [study_info.get('Organism', 'C_auris_B8441')],
-            "category": ["RNA-seq", study_id, "Alignments"],
-            "displays": [{
-                "type": "LinearAlignmentsDisplay",
-                "displayId": f"{prefix}_{srr_id}_alignments_display"
             }]
         })
 
@@ -253,8 +206,6 @@ echo "Creating symlinks for {study_id}..."
     for sample in samples:
         srr_id = sample.get('SRR_ID', '')
         script += f'''# {sample.get('Condition_Label', srr_id)}
-ln -sf $HTS_DIR/{srr_id}/{srr_id}_sorted_hits.bam $JBROWSE_DIR/{prefix}_{srr_id}.bam
-ln -sf $HTS_DIR/{srr_id}/{srr_id}_sorted_hits.bam.bai $JBROWSE_DIR/{prefix}_{srr_id}.bam.bai
 ln -sf $HTS_DIR/{srr_id}/{srr_id}_sorted_hits.bigwig $JBROWSE_DIR/{prefix}_{srr_id}_coverage.bigwig
 
 '''
