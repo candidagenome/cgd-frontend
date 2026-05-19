@@ -106,20 +106,25 @@ Human-readable label that appears in JBrowse track names and Expression tab drop
 
 **Bucket**
 Groups samples for Expression tab fold-change display:
-- `control` - baseline/reference conditions (first control sample is used for fold-change calculations)
+- `control` - wild-type/baseline (first control sample is used for fold-change calculations)
 - `basic_biology` - general experimental conditions
+- `mutation` - mutant strains
 - `stress` - stress-related conditions
 - `kill_candida` - antifungal treatments
 
-Example: When comparing mutant vs wild-type, wild-type samples = `control`, mutant samples = `basic_biology`
+Example: When comparing mutant vs wild-type, wild-type samples = `control`, mutant samples = `mutation`
 
 **Treatment**
-Free-text field describing the treatment applied. Examples:
+Free-text field for **external conditions applied** (drugs, temperature, media changes). Examples:
 - `Untreated`
 - `Fluconazole 1 μg/mL`
 - `Heat shock 42°C 30min`
 - `Hypoxia`
 - Leave blank if not applicable
+
+**Note:** Mutations are NOT treatments. Capture mutations in:
+- **Condition_Label** - e.g., "AGO1 mutant (rep 1)"
+- **Strain** column - e.g., "ago1Δ/Δ" or "SC5314 ago1Δ"
 
 ### Quality Threshold
 Samples with alignment rate **< 85%** are automatically excluded from JBrowse2 tracks.
