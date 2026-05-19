@@ -426,7 +426,7 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
                       {isExpanded && (
                         <div className="study-conditions">
                           <div className="control-info">
-                            Control: {study.control_id}
+                            Fold change vs: <strong>{study.control_label || study.control_id}</strong>
                           </div>
                           <div className="conditions-grid">
                             {visibleConditions.map(condition => {
@@ -505,8 +505,8 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
               {/* Attribution */}
               <div className="expression-attribution">
                 <p>
-                  Values show fold change vs control (1.0 = no change).
-                  Data from RNA-seq experiments.
+                  Values show fold change relative to study-specific control (1.0 = no change).
+                  Expand each study to see the specific control condition.
                 </p>
               </div>
             </>
