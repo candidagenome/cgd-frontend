@@ -95,5 +95,31 @@ In the Samples sheet, set the `Strandedness` column for each sample:
 - **FR** - Forward/second-strand
 - Leave blank for unstranded
 
+### Sample Field Descriptions
+
+**Condition_Label**
+Human-readable label that appears in JBrowse track names and Expression tab dropdowns.
+- Use descriptive text, not internal IDs
+- The SRR ID is automatically appended, so don't include it
+- Example: "Iracane et al long RNA strain AGO1 mutant (biol rep 3)"
+- Not: "Iracane_longRNA_SC5314_AGO1-mutant_rep3"
+
+**Bucket**
+Groups samples for Expression tab fold-change display:
+- `control` - baseline/reference conditions (first control sample is used for fold-change calculations)
+- `basic_biology` - general experimental conditions
+- `stress` - stress-related conditions
+- `kill_candida` - antifungal treatments
+
+Example: When comparing mutant vs wild-type, wild-type samples = `control`, mutant samples = `basic_biology`
+
+**Treatment**
+Free-text field describing the treatment applied. Examples:
+- `Untreated`
+- `Fluconazole 1 μg/mL`
+- `Heat shock 42°C 30min`
+- `Hypoxia`
+- Leave blank if not applicable
+
 ### Quality Threshold
 Samples with alignment rate **< 85%** are automatically excluded from JBrowse2 tracks.
