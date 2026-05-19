@@ -245,15 +245,15 @@ for SRR in $SAMPLES; do
             PAIRED=false
         fi
 
-        # Get strandedness (RF, FR, or empty for unstranded)
+        # Get strandedness (RF/first-strand, FR/second-strand, or empty for unstranded)
         STRANDEDNESS=$(get_strandedness "$METADATA_FILE" "$SRR")
         STRAND_OPT=""
-        if [ "$STRANDEDNESS" = "RF" ] || [ "$STRANDEDNESS" = "R" ]; then
+        if [ "$STRANDEDNESS" = "RF" ] || [ "$STRANDEDNESS" = "R" ] || [ "$STRANDEDNESS" = "FIRST-STRAND" ]; then
             STRAND_OPT="--rna-strandness RF"
-            echo "[$(date)] Strandedness: RF (reverse/first-strand)" >> "$SAMPLE_LOG"
-        elif [ "$STRANDEDNESS" = "FR" ] || [ "$STRANDEDNESS" = "F" ]; then
+            echo "[$(date)] Strandedness: RF (first-strand)" >> "$SAMPLE_LOG"
+        elif [ "$STRANDEDNESS" = "FR" ] || [ "$STRANDEDNESS" = "F" ] || [ "$STRANDEDNESS" = "SECOND-STRAND" ]; then
             STRAND_OPT="--rna-strandness FR"
-            echo "[$(date)] Strandedness: FR (forward/second-strand)" >> "$SAMPLE_LOG"
+            echo "[$(date)] Strandedness: FR (second-strand)" >> "$SAMPLE_LOG"
         else
             echo "[$(date)] Strandedness: unstranded" >> "$SAMPLE_LOG"
         fi
