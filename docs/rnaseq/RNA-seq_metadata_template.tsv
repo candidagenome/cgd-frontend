@@ -1,0 +1,12 @@
+## STUDY METADATA
+Study_ID	PMID	NCBI_BioProject	GEO_Accession	Organism	Category	Publication_Title
+Shivarathri_2022	35652307	PRJNA797998	GSE194127	C_auris_B8441	Antifungal Response	Transcriptome analysis reveals amphotericin B resistance
+
+## SAMPLE METADATA
+SRR_ID	Condition_Label	Bucket	Replicate	Strain	Treatment	Timepoint	Notes
+SRR17259761	AmpB Sensitive (rep 1)	control	1	B8441	Untreated		Sensitive isolate
+SRR17259762	AmpB Sensitive (rep 2)	control	2	B8441	Untreated		Sensitive isolate
+SRR17259763	AmpB Sensitive (rep 3)	control	3	B8441	Untreated		Sensitive isolate
+SRR17259767	AmpB Resistant (rep 1)	kill_candida	1	B8441	Untreated		Resistant isolate
+SRR17259768	AmpB Resistant (rep 2)	kill_candida	2	B8441	Untreated		Resistant isolate
+SRR17259769	AmpB Resistant (rep 3)	kill_candida	3	B8441	Untreated		Resistant isolate
