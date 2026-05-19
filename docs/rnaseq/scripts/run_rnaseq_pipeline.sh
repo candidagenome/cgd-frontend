@@ -87,6 +87,46 @@ wb.close()
     fi
 }
 
+# Get strandedness for a specific SRR_ID (returns RF, FR, or empty for unstranded)
+get_strandedness() {
+    local file=$1
+    local srr_id=$2
+    if [[ "$file" == *.xlsx ]]; then
+        python3 -c "
+from openpyxl import load_workbook
+wb = load_workbook('$file', read_only=True)
+if 'Samples' in wb.sheetnames:
+    ws = wb['Samples']
+    rows = list(ws.iter_rows(values_only=True))
+    if rows:
+        headers = [str(h).strip() if h else '' for h in rows[0]]
+        srr_idx = headers.index('SRR_ID') if 'SRR_ID' in headers else 0
+        strand_idx = headers.index('Strandedness') if 'Strandedness' in headers else -1
+        if strand_idx >= 0:
+            for row in rows[1:]:
+                if row[srr_idx] and str(row[srr_idx]).strip() == '$srr_id':
+                    val = row[strand_idx] if strand_idx < len(row) else None
+                    if val:
+                        print(str(val).strip().upper())
+                    break
+wb.close()
+" 2>/dev/null
+    else
+        awk -F'\t' -v srr="$srr_id" '
+            /^## SAMPLE METADATA/ { in_samples=1; next }
+            /^##/ { in_samples=0 }
+            in_samples && !/^#/ && NR==1 {
+                for (i=1; i<=NF; i++) {
+                    if ($i == "Strandedness") strand_col = i
+                }
+            }
+            in_samples && $1 == srr && strand_col {
+                print toupper($strand_col)
+            }
+        ' "$file"
+    fi
+}
+
 # Extract study ID from metadata
 STUDY_ID=$(extract_study_id "$METADATA_FILE")
 if [ -z "$STUDY_ID" ] || [ "$STUDY_ID" = "Study_ID" ]; then
@@ -205,18 +245,31 @@ for SRR in $SAMPLES; do
             PAIRED=false
         fi
 
+        # Get strandedness (RF, FR, or empty for unstranded)
+        STRANDEDNESS=$(get_strandedness "$METADATA_FILE" "$SRR")
+        STRAND_OPT=""
+        if [ "$STRANDEDNESS" = "RF" ] || [ "$STRANDEDNESS" = "R" ]; then
+            STRAND_OPT="--rna-strandness RF"
+            echo "[$(date)] Strandedness: RF (reverse/first-strand)" >> "$SAMPLE_LOG"
+        elif [ "$STRANDEDNESS" = "FR" ] || [ "$STRANDEDNESS" = "F" ]; then
+            STRAND_OPT="--rna-strandness FR"
+            echo "[$(date)] Strandedness: FR (forward/second-strand)" >> "$SAMPLE_LOG"
+        else
+            echo "[$(date)] Strandedness: unstranded" >> "$SAMPLE_LOG"
+        fi
+
         # Align with HISAT2
         echo "[$(date)] Aligning with HISAT2..." >> "$SAMPLE_LOG"
         mkdir -p "$OUTPUT_DIR/${SRR}"
 
         if [ "$PAIRED" = true ]; then
-            hisat2 -p $THREADS --dta -x "$HISAT2_INDEX" \
+            hisat2 -p $THREADS --dta -x "$HISAT2_INDEX" $STRAND_OPT \
                 -1 "$FASTQ_DIR/${SRR}_1.fastq.gz" \
                 -2 "$FASTQ_DIR/${SRR}_2.fastq.gz" 2>> "$SAMPLE_LOG" | \
                 samtools view -@ $THREADS -bS - | \
                 samtools sort -@ $THREADS -o "$OUTPUT_DIR/${SRR}/${SRR}_sorted_hits.bam" -
         else
-            hisat2 -p $THREADS --dta -x "$HISAT2_INDEX" \
+            hisat2 -p $THREADS --dta -x "$HISAT2_INDEX" $STRAND_OPT \
                 -U "$FASTQ_DIR/${SRR}_1.fastq.gz" 2>> "$SAMPLE_LOG" | \
                 samtools view -@ $THREADS -bS - | \
                 samtools sort -@ $THREADS -o "$OUTPUT_DIR/${SRR}/${SRR}_sorted_hits.bam" -

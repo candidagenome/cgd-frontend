@@ -87,5 +87,13 @@ grep FAILED /data/tmp/rnaseq_import/MyStudy_2024/progress.txt
 - Mutation Comparison
 - DNA Damage Response
 
+**Multiple categories:** Use comma-separated values (e.g., "Biofilm, Stress Response")
+
+### Strandedness Options
+In the Samples sheet, set the `Strandedness` column for each sample:
+- **RF** - Reverse/first-strand (most common for Illumina dUTP stranded libraries)
+- **FR** - Forward/second-strand
+- Leave blank for unstranded
+
 ### Quality Threshold
 Samples with alignment rate **< 85%** are automatically excluded from JBrowse2 tracks.
