@@ -57,6 +57,7 @@ Save as TSV and pass the filename to the import pipeline.
 - Immune Response
 - Cell Type Switching
 - Strain Comparison
+- Mutation Comparison
 - DNA Damage Response
 - Colony Morphology
 - Biofilm/Transcription Factors
