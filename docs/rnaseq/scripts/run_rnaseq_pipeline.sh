@@ -21,6 +21,33 @@
 
 set -e
 
+# Slack webhook URL (from environment variable)
+SLACK_WEBHOOK_URL="${SLACK_WEBHOOK_URL:-}"
+
+# Function to send Slack message
+send_slack_message() {
+    local message=$1
+    local is_error=${2:-false}
+
+    if [ -z "$SLACK_WEBHOOK_URL" ]; then
+        return
+    fi
+
+    local emoji=":white_check_mark:"
+    if [ "$is_error" = "true" ]; then
+        emoji=":x:"
+    fi
+
+    local payload=$(cat <<EOF
+{"text": "${emoji} RNA-seq Pipeline: ${message}"}
+EOF
+)
+
+    curl -s -X POST -H 'Content-type: application/json' \
+        --data "$payload" \
+        "$SLACK_WEBHOOK_URL" > /dev/null 2>&1 || true
+}
+
 # Check arguments
 if [ $# -lt 2 ]; then
     echo "Usage: bash run_rnaseq_pipeline.sh <metadata.xlsx> <organism>"
@@ -324,9 +351,13 @@ echo "  1. python extract_alignment_stats.py $METADATA_FILE $LOG_DIR"
 echo "  2. python import_rnaseq.py $METADATA_FILE"
 echo "=============================================="
 
+# Send Slack notification
 if [ $FAILED -gt 0 ]; then
+    send_slack_message "*${STUDY_ID}* (${ORGANISM}): Completed with errors - ${FAILED}/${TOTAL} samples failed. Check logs: ${LOG_DIR}" true
     echo ""
     echo "WARNING: $FAILED sample(s) failed. Check logs for details."
     echo "To retry failed samples, run this script again."
     exit 1
+else
+    send_slack_message "*${STUDY_ID}* (${ORGANISM}): Successfully processed ${TOTAL} samples. Output: ${OUTPUT_DIR}"
 fi
