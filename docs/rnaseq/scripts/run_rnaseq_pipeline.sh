@@ -66,6 +66,11 @@ if [ ! -f "$METADATA_FILE" ]; then
     exit 1
 fi
 
+# Activate conda environment early (needed for openpyxl to read xlsx files)
+if [ -f ~/miniconda3/bin/activate ]; then
+    source ~/miniconda3/bin/activate biotools 2>/dev/null || true
+fi
+
 # Function to extract data from xlsx or tsv
 extract_study_id() {
     local file=$1
@@ -201,11 +206,6 @@ echo "Work directory: $WORK_DIR"
 echo "Output directory: $OUTPUT_DIR"
 echo "Log file: $MAIN_LOG"
 echo ""
-
-# Activate conda environment
-if [ -f ~/miniconda3/bin/activate ]; then
-    source ~/miniconda3/bin/activate biotools 2>/dev/null || true
-fi
 
 # Extract SRR IDs from metadata
 SAMPLES=$(extract_srr_ids "$METADATA_FILE")
