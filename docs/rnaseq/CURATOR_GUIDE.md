@@ -31,32 +31,40 @@ First, upload your metadata file from your laptop:
 scp MyStudy_2024_metadata.xlsx cgd-dev:~/work/cgd-frontend/docs/rnaseq/
 ```
 
-Then SSH to the server and run the pipeline:
+Then SSH to the server and run the pipeline in the background:
 ```bash
 ssh cgd-dev
 cd ~/work/cgd-frontend/docs/rnaseq/scripts/
 
-bash run_rnaseq_pipeline.sh ../MyStudy_2024_metadata.xlsx C_auris_B8441
+nohup bash run_rnaseq_pipeline.sh ../MyStudy_2024_metadata.xlsx C_auris_B8441 > ../MyStudy_2024.log 2>&1 &
 ```
+
+**IMPORTANT:** Run this command ONCE. It starts the pipeline in the background so you can log out safely.
 
 **Organisms:** `C_auris_B8441`, `C_albicans_SC5314`, `C_glabrata_CBS138`, `C_dubliniensis_CD36`, `C_parapsilosis_CDC317`
 
-#### Running in Background (Recommended)
-Since the pipeline takes hours to complete, run it in the background so you can log out:
-```bash
-cd ~/work/cgd-frontend/docs/rnaseq/scripts/
-
-nohup bash run_rnaseq_pipeline.sh ../MyStudy_2024_metadata.xlsx C_auris_B8441 > ../MyStudy_2024.log 2>&1 &
+#### How to Know It's Running
+After running the command, you should see output like:
 ```
-This runs the pipeline in the background. You can safely log out and check progress later.
+[1] 12345
+```
+This `[1] 12345` means the job is running in the background with process ID 12345. You can now safely log out.
+
+**If you see `[1]+ Exit 1` or similar**, the job failed immediately. Check the log file for errors:
+```bash
+cat ~/work/cgd-frontend/docs/rnaseq/MyStudy_2024.log
+```
 
 ### Step 3: Check Progress
 ```bash
-# View progress (works even after logging back in)
-tail -f /data/tmp/rnaseq_import/MyStudy_2024/pipeline_*.log
+# Check if pipeline is still running
+ps aux | grep run_rnaseq_pipeline
 
-# Or check the nohup output file
+# View the output log
 tail -f ~/work/cgd-frontend/docs/rnaseq/MyStudy_2024.log
+
+# View detailed pipeline progress
+tail -f /data/tmp/rnaseq_import/MyStudy_2024/pipeline_*.log
 
 # Check which samples completed
 cat /data/tmp/rnaseq_import/MyStudy_2024/progress.txt
