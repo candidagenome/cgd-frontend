@@ -293,13 +293,13 @@ for SRR in $SAMPLES; do
             hisat2 -p $THREADS --dta -x "$HISAT2_INDEX" $STRAND_OPT \
                 -1 "$FASTQ_DIR/${SRR}_1.fastq.gz" \
                 -2 "$FASTQ_DIR/${SRR}_2.fastq.gz" 2>> "$SAMPLE_LOG" | \
-                samtools view -@ $THREADS -bS - | \
-                samtools sort -@ $THREADS -o "$OUTPUT_DIR/${SRR}/${SRR}_sorted_hits.bam" -
+                samtools view -@ 4 -bS - | \
+                samtools sort -@ 4 -m 1G -o "$OUTPUT_DIR/${SRR}/${SRR}_sorted_hits.bam" -
         else
             hisat2 -p $THREADS --dta -x "$HISAT2_INDEX" $STRAND_OPT \
                 -U "$FASTQ_DIR/${SRR}_1.fastq.gz" 2>> "$SAMPLE_LOG" | \
-                samtools view -@ $THREADS -bS - | \
-                samtools sort -@ $THREADS -o "$OUTPUT_DIR/${SRR}/${SRR}_sorted_hits.bam" -
+                samtools view -@ 4 -bS - | \
+                samtools sort -@ 4 -m 1G -o "$OUTPUT_DIR/${SRR}/${SRR}_sorted_hits.bam" -
         fi
 
         # Index BAM

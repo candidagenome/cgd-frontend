@@ -22,6 +22,7 @@ const batchDownloadApi = {
       flank_left: params.flankLeft || 0,
       flank_right: params.flankRight || 0,
       compress: params.compress !== false,
+      use_systematic_names: params.useSystematicNames || false,
     };
     if (params.genes && params.genes.length > 0) {
       requestBody.genes = params.genes;
@@ -47,6 +48,7 @@ const batchDownloadApi = {
       flank_left: params.flankLeft || 0,
       flank_right: params.flankRight || 0,
       compress: params.compress !== false,
+      use_systematic_names: params.useSystematicNames || false,
     };
     if (params.genes && params.genes.length > 0) {
       requestBody.genes = params.genes;

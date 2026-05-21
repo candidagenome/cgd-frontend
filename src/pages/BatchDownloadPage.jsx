@@ -63,6 +63,7 @@ function BatchDownloadPage() {
   const [flankLeft, setFlankLeft] = useState('');
   const [flankRight, setFlankRight] = useState('');
   const [compress, setCompress] = useState(true);
+  const [useSystematicNames, setUseSystematicNames] = useState(false);
 
   // Chromosome region state
   const [chromosomeData, setChromosomeData] = useState(null);
@@ -147,6 +148,7 @@ function BatchDownloadPage() {
         flankLeft: flankLeft ? parseInt(flankLeft, 10) : 0,
         flankRight: flankRight ? parseInt(flankRight, 10) : 0,
         compress,
+        useSystematicNames,
       });
       setMetadata(result);
     } catch (err) {
@@ -194,6 +196,7 @@ function BatchDownloadPage() {
         flankLeft: flankLeft ? parseInt(flankLeft, 10) : 0,
         flankRight: flankRight ? parseInt(flankRight, 10) : 0,
         compress,
+        useSystematicNames,
       });
 
       // Create download link
@@ -581,6 +584,17 @@ function BatchDownloadPage() {
                 onChange={(e) => setCompress(e.target.checked)}
               />
               <label htmlFor="compress">Compress output files (gzip)</label>
+            </div>
+            <div className="checkbox-group">
+              <input
+                type="checkbox"
+                id="useSystematicNames"
+                checked={useSystematicNames}
+                onChange={(e) => setUseSystematicNames(e.target.checked)}
+              />
+              <label htmlFor="useSystematicNames">
+                Use systematic names in FASTA headers (e.g., C1_00010W_A instead of gene name)
+              </label>
             </div>
           </div>
 
