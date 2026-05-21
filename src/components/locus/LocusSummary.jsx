@@ -21,31 +21,37 @@ function LocusSummary({
   const feature = data;
 
   // ---------- JBrowse2 URL helpers ----------
+  // JBrowse2 track configuration - only Reference Sequence and Gene Features by default
   const assemblyConfig = {
     'C_albicans_SC5314': {
       assembly: 'C_albicans_SC5314',
       geneTrack: 'TranscribedFeatures',
-      defaultTracks: 'DNA,TranscribedFeatures,segal_hapA_transposon_hits,segal_hapA_transposon_reads,hapA_alb_dub_phyloP_scores,hapA_CanLod_phyloP_scores,hapA_CTG_phyloP_scores,hapA_Sacc_phyloP_scores,bruno_nOxi_hapA_coverage',
+      defaultTracks: 'DNA,TranscribedFeatures',
     },
     'C_auris_B8441': {
       assembly: 'C_auris_B8441',
       geneTrack: 'C_auris_B8441_features.sorted.gff',
-      defaultTracks: 'C_auris_B8441_features.sorted.gff,auris_phyloP_scores,AurLus_phyloP_scores,CTG_C_auris_phyloP_scores,Sacc_C_auris_phyloP_scores',
+      defaultTracks: 'C_auris_B8441-ReferenceSequenceTrack,C_auris_B8441_features.sorted.gff',
     },
     'C_dubliniensis_CD36': {
       assembly: 'C_dubliniensis_CD36',
       geneTrack: 'C_dubliniensis_CD36_features.sorted.gff',
-      defaultTracks: 'C_dubliniensis_CD36_features.sorted.gff,alb_dub_C_dub_phyloP_scores,CanLod_C_dub_phyloP_scores,CTG_C_dub_phyloP_scores,Sacc_C_dub_phyloP_scores',
+      defaultTracks: 'C_dubliniensis_CD36-ReferenceSequenceTrack,C_dubliniensis_CD36_features.sorted.gff',
     },
     'C_glabrata_CBS138': {
       assembly: 'C_glabrata_CBS138',
       geneTrack: 'C_glabrata_CBS138_features.sorted.gff',
-      defaultTracks: 'C_glabrata_CBS138_features.sorted.gff,glab_phyloP_scores,CanNak_C_glab_phyloP_scores,WGD_C_glab_phyloP_scores,Sacc_C_glab_phyloP_scores',
+      defaultTracks: 'C_glabrata_CBS138-ReferenceSequenceTrack,C_glabrata_CBS138_features.sorted.gff',
     },
     'C_parapsilosis_CDC317': {
       assembly: 'C_parapsilosis_CDC317',
       geneTrack: 'C_parapsilosis_CDC317_features.sorted.gff',
-      defaultTracks: 'C_parapsilosis_CDC317_features.sorted.gff,para_phyloP_scores,CanLod_C_para_phyloP_scores,CTG_C_para_phyloP_scores,Sacc_C_para_phyloP_scores',
+      defaultTracks: 'C_parapsilosis_CDC317-ReferenceSequenceTrack,C_parapsilosis_CDC317_features.sorted.gff',
+    },
+    'C_tropicalis_MYA3404': {
+      assembly: 'C_tropicalis_MYA3404',
+      geneTrack: 'C_tropicalis_features.sorted.gff',
+      defaultTracks: 'C_tropicalis_MYA3404-ReferenceSequenceTrack,C_tropicalis_features.sorted.gff',
     },
   };
 
