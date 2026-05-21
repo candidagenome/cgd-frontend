@@ -75,6 +75,9 @@ cat /data/tmp/rnaseq_import/MyStudy_2024/logs/SRR12345678.log
 
 ### Step 4: After Completion
 ```bash
+# First, activate the conda environment (required for Python scripts)
+source ~/miniconda3/bin/activate biotools
+
 # Extract alignment stats and update metadata
 python extract_alignment_stats.py ../MyStudy_2024_metadata.xlsx /data/tmp/rnaseq_import/MyStudy_2024/logs/
 
