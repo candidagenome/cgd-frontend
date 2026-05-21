@@ -237,13 +237,16 @@ function OrfPieChart({ verified, uncharacterized, dubious, organismName }) {
 
 // Assembly reference PMIDs for each organism
 const ASSEMBLY_REFERENCES = {
-  C_albicans_SC5314: { pmid: '24025428', assembly: 'Assembly 22' },
-  C_auris_B8441: { pmid: '39177371', assembly: 'Current Assembly' },
-  C_glabrata_CBS138: { pmid: '32068314', assembly: 'Current Assembly' },
-  C_parapsilosis_CDC317: { pmid: '22192698', assembly: 'Current Assembly' },
-  C_dubliniensis_CD36: { pmid: '19745113', assembly: 'Current Assembly' },
-  C_tropicalis: { pmid: '32469306', assembly: 'Current Assembly' },
-  C_tropicalis_MYA3404: { pmid: '32469306', assembly: 'Current Assembly' },
+  C_albicans_SC5314: [{ pmid: '24025428', assembly: 'Assembly 22' }],
+  C_auris_B8441: [
+    { pmid: '39177371', assembly: 'Nuclear Genome' },
+    { pmid: '33193142', assembly: 'Mitochondrial Genome' },
+  ],
+  C_glabrata_CBS138: [{ pmid: '32068314', assembly: 'Current Assembly' }],
+  C_parapsilosis_CDC317: [{ pmid: '22192698', assembly: 'Current Assembly' }],
+  C_dubliniensis_CD36: [{ pmid: '19745113', assembly: 'Current Assembly' }],
+  C_tropicalis: [{ pmid: '32469306', assembly: 'Current Assembly' }],
+  C_tropicalis_MYA3404: [{ pmid: '32469306', assembly: 'Current Assembly' }],
 };
 
 function GenomeSnapshotPage() {
@@ -449,15 +452,20 @@ function GenomeSnapshotPage() {
         {/* Assembly Reference */}
         {ASSEMBLY_REFERENCES[organism] && (
           <p style={{ marginBottom: '15px' }}>
-            <strong>Assembly Reference:</strong>{' '}
-            <a
-              href={`https://pubmed.ncbi.nlm.nih.gov/${ASSEMBLY_REFERENCES[organism].pmid}/`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              PMID: {ASSEMBLY_REFERENCES[organism].pmid}
-            </a>
-            {' '}({ASSEMBLY_REFERENCES[organism].assembly})
+            <strong>Assembly Reference{ASSEMBLY_REFERENCES[organism].length > 1 ? 's' : ''}:</strong>{' '}
+            {ASSEMBLY_REFERENCES[organism].map((ref, idx) => (
+              <span key={ref.pmid}>
+                {idx > 0 && ' | '}
+                <a
+                  href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pmid}/`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  PMID: {ref.pmid}
+                </a>
+                {' '}({ref.assembly})
+              </span>
+            ))}
           </p>
         )}
 

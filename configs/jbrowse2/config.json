@@ -37,6 +37,24 @@
       }
     },
     {
+      "name": "C_auris_B8441_mito",
+      "sequence": {
+        "type": "ReferenceSequenceTrack",
+        "trackId": "C_auris_B8441_mito-ReferenceSequenceTrack",
+        "adapter": {
+          "type": "IndexedFastaAdapter",
+          "fastaLocation": {
+            "uri": "C_auris_B8441_mito.fasta",
+            "locationType": "UriLocation"
+          },
+          "faiLocation": {
+            "uri": "C_auris_B8441_mito.fasta.fai",
+            "locationType": "UriLocation"
+          }
+        }
+      }
+    },
+    {
       "name": "C_dubliniensis_CD36",
       "sequence": {
         "type": "ReferenceSequenceTrack",
@@ -10630,6 +10648,44 @@
       "category": [
         "Coverage",
         "Holland_2014"
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_auris_B8441_mito_features",
+      "name": "Mitochondrial Features",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "C_auris_mito.gff3.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "C_auris_mito.gff3.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_auris_B8441_mito"
+      ],
+      "category": [
+        "Annotations"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_auris_B8441_mito_features-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "jexl:get(feature,'type')=='CDS'?'darkblue':get(feature,'type')=='tRNA'?'green':get(feature,'type')=='rRNA'?'purple':'gray'",
+            "height": 12,
+            "showLabels": true,
+            "showDescriptions": true
+          }
+        }
       ]
     }
   ],

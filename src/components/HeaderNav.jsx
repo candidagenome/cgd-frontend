@@ -28,6 +28,7 @@ const HeaderNav = () => {
       submenu: [
         { label: 'C. albicans', href: '/jbrowse2/?assembly=C_albicans_SC5314&loc=Ca22chr1A_C_albicans_SC5314:115518..129521&tracks=DNA,TranscribedFeatures', external: true },
         { label: 'C. auris', href: '/jbrowse2/?assembly=C_auris_B8441&loc=Chr4_C_auris_B8441:120307..131992&tracks=C_auris_B8441-ReferenceSequenceTrack,C_auris_B8441_features.sorted.gff', external: true },
+        { label: 'C. auris (mitochondrion)', href: '/jbrowse2/?assembly=C_auris_B8441_mito&loc=MT849287.1_C_auris_B8441_mito:1..28212&tracks=C_auris_B8441_mito-ReferenceSequenceTrack,C_auris_B8441_mito_features', external: true },
         { label: 'C. dubliniensis', href: '/jbrowse2/?assembly=C_dubliniensis_CD36&loc=Chr1_C_dubliniensis_CD36:131096..145475&tracks=C_dubliniensis_CD36-ReferenceSequenceTrack,C_dubliniensis_CD36_features.sorted.gff', external: true },
         { label: 'C. glabrata', href: '/jbrowse2/?assembly=C_glabrata_CBS138&loc=ChrA_C_glabrata_CBS138:1..100000&tracks=C_glabrata_CBS138-ReferenceSequenceTrack,C_glabrata_CBS138_features.sorted.gff', external: true },
         { label: 'C. parapsilosis', href: '/jbrowse2/?assembly=C_parapsilosis_CDC317&loc=Contig005504_C_parapsilosis_CDC317:1..100000&tracks=C_parapsilosis_CDC317-ReferenceSequenceTrack,C_parapsilosis_CDC317_features.sorted.gff', external: true },
