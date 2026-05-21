@@ -820,58 +820,6 @@
     },
     {
       "type": "VariantTrack",
-      "trackId": "A22A_WO1.vcf",
-      "name": "WO-1 Variants (HapA)",
-      "adapter": {
-        "type": "VcfTabixAdapter",
-        "vcfGzLocation": {
-          "uri": "A22A_WO1.vcf.gz",
-          "locationType": "UriLocation"
-        },
-        "index": {
-          "location": {
-            "uri": "A22A_WO1.vcf.gz.tbi",
-            "locationType": "UriLocation"
-          },
-          "indexType": "TBI"
-        }
-      },
-      "assemblyNames": [
-        "C_albicans_SC5314"
-      ],
-      "category": [
-        "Variants",
-        "WO-1"
-      ]
-    },
-    {
-      "type": "VariantTrack",
-      "trackId": "WO1_HapB.vcf",
-      "name": "WO-1 Variants (HapB)",
-      "adapter": {
-        "type": "VcfTabixAdapter",
-        "vcfGzLocation": {
-          "uri": "WO1_HapB.vcf.gz",
-          "locationType": "UriLocation"
-        },
-        "index": {
-          "location": {
-            "uri": "WO1_HapB.vcf.gz.tbi",
-            "locationType": "UriLocation"
-          },
-          "indexType": "TBI"
-        }
-      },
-      "assemblyNames": [
-        "C_albicans_SC5314"
-      ],
-      "category": [
-        "Variants",
-        "WO-1"
-      ]
-    },
-    {
-      "type": "VariantTrack",
       "trackId": "Muzzey_HapA_chr1A.vcf",
       "name": "Muzzey 2013 chr1A Variants (HapA)",
       "adapter": {
