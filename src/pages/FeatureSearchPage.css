@@ -381,3 +381,10 @@
     width: 100%;
   }
 }
+
+/* Show all assemblies checkbox */
+.feature-search-page .show-all-assemblies {
+  margin-top: 8px;
+  font-size: 0.85em;
+  color: #666;
+}
