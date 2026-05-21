@@ -49,7 +49,10 @@ wget -O sample.fastq.gz ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR279/007/SRR2791120
 ```
 
 - Downloads compressed FASTQ files directly from ENA FTP servers
-- Supports both single-end (`_1.fastq.gz`) and paired-end (`_1.fastq.gz`, `_2.fastq.gz`) reads
+- Supports both single-end and paired-end reads:
+  - **Single-end**: One file per sample (`SRR123456_1.fastq.gz`)
+  - **Paired-end**: Two files per sample (`SRR123456_1.fastq.gz` + `SRR123456_2.fastq.gz`)
+  - Note: Paired-end `_1` and `_2` files are forward/reverse reads from the **same sample**, not separate samples
 
 ---
 
