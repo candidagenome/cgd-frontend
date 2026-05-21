@@ -11,6 +11,73 @@ FASTQ (raw reads) → BAM (aligned reads) → BigWig (coverage track)
 
 ---
 
+## Installation (AWS EC2 / Amazon Linux)
+
+### Option 1: Conda (Recommended)
+
+Conda manages all dependencies automatically:
+
+```bash
+# Install Miniconda (if not already installed)
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh -b -p $HOME/miniconda3
+source $HOME/miniconda3/bin/activate
+
+# Create environment with all required tools
+conda create -n biotools -c bioconda -c conda-forge \
+    hisat2 \
+    samtools \
+    deeptools \
+    openpyxl \
+    python=3.11 \
+    -y
+
+# Activate environment
+conda activate biotools
+
+# Verify installations
+hisat2 --version
+samtools --version
+bamCoverage --version
+```
+
+### Option 2: Manual Installation
+
+```bash
+# Install system dependencies (Amazon Linux 2023)
+sudo dnf install -y wget gcc make zlib-devel ncurses-devel
+
+# HISAT2
+wget https://cloud.biohpc.swmed.edu/index.php/s/oTtGWbWjaxsQ2Ho/download -O hisat2-2.2.1-Linux_x86_64.zip
+unzip hisat2-2.2.1-Linux_x86_64.zip
+sudo mv hisat2-2.2.1 /opt/
+sudo ln -s /opt/hisat2-2.2.1/hisat2* /usr/local/bin/
+
+# samtools
+wget https://github.com/samtools/samtools/releases/download/1.19/samtools-1.19.tar.bz2
+tar -xjf samtools-1.19.tar.bz2
+cd samtools-1.19
+./configure --prefix=/usr/local
+make -j8
+sudo make install
+cd ..
+
+# deepTools (requires Python)
+pip install deeptools
+```
+
+### Required Tools Summary
+
+| Tool | Version | Purpose |
+|------|---------|---------|
+| hisat2 | 2.2.1+ | Splice-aware read alignment |
+| samtools | 1.19+ | BAM manipulation |
+| deepTools (bamCoverage) | 3.5+ | BigWig generation |
+| wget | any | FASTQ download |
+| Python + openpyxl | 3.9+ | Metadata parsing |
+
+---
+
 ## Data Sources
 
 ### Where to Find Datasets
@@ -49,7 +116,10 @@ wget -O sample.fastq.gz ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR279/007/SRR2791120
 ```
 
 - Downloads compressed FASTQ files directly from ENA FTP servers
-- Supports both single-end (`_1.fastq.gz`) and paired-end (`_1.fastq.gz`, `_2.fastq.gz`) reads
+- Supports both single-end and paired-end reads:
+  - **Single-end**: One file per sample (`SRR123456_1.fastq.gz`)
+  - **Paired-end**: Two files per sample (`SRR123456_1.fastq.gz` + `SRR123456_2.fastq.gz`)
+  - Note: Paired-end `_1` and `_2` files are forward/reverse reads from the **same sample**, not separate samples
 
 ---
 
@@ -224,6 +294,29 @@ Location: `/data/genomes/hisat2_index/`
 | C. glabrata CBS138 | `C_glabrata_CBS138` |
 | C. dubliniensis CD36 | `C_dubliniensis_CD36` |
 | C. parapsilosis CDC317 | `C_parapsilosis_CDC317` |
+
+### Building a New HISAT2 Index
+
+To add a new organism, build a HISAT2 index from the reference genome FASTA:
+
+```bash
+# Usage
+hisat2-build -p <threads> <reference.fasta> <output_prefix>
+
+# Example: Index C. albicans genome
+hisat2-build -p 8 /data/genomes/C_albicans_SC5314.fasta /data/genomes/hisat2_index/C_albicans_SC5314
+```
+
+**Parameters:**
+| Parameter | Description |
+|-----------|-------------|
+| `-p 8` | Number of threads |
+| `reference.fasta` | Input genome FASTA file |
+| `output_prefix` | Output path/prefix (creates `.1.ht2` through `.8.ht2` files) |
+
+**Output:** Creates 8 index files (e.g., `C_albicans_SC5314.1.ht2` ... `C_albicans_SC5314.8.ht2`)
+
+**Time:** ~5-15 minutes for fungal genomes (~15 MB)
 
 ---
 
