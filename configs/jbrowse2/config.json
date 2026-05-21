@@ -8384,6 +8384,2305 @@
         "Coverage",
         "Zhang_2024"
       ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Bhakt_2022_SRR19158459_coverage",
+      "name": "Bhakt 2022 SRR19158459 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Bhakt_2022/SRR19158459/SRR19158459_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Bhakt_2022"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Bhakt_2022_SRR19158460_coverage",
+      "name": "Bhakt 2022 SRR19158460 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Bhakt_2022/SRR19158460/SRR19158460_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Bhakt_2022"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Bhakt_2022_SRR19158461_coverage",
+      "name": "Bhakt 2022 SRR19158461 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Bhakt_2022/SRR19158461/SRR19158461_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Bhakt_2022"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Bhakt_2022_SRR19158463_coverage",
+      "name": "Bhakt 2022 SRR19158463 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Bhakt_2022/SRR19158463/SRR19158463_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Bhakt_2022"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Bhakt_2022_SRR19158464_coverage",
+      "name": "Bhakt 2022 SRR19158464 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Bhakt_2022/SRR19158464/SRR19158464_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Bhakt_2022"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Bhakt_2022_SRR19158465_coverage",
+      "name": "Bhakt 2022 SRR19158465 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Bhakt_2022/SRR19158465/SRR19158465_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Bhakt_2022"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Bhakt_2022_SRR19158466_coverage",
+      "name": "Bhakt 2022 SRR19158466 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Bhakt_2022/SRR19158466/SRR19158466_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Bhakt_2022"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Kumar_2024_SRR24895737_coverage",
+      "name": "Kumar 2024 SRR24895737 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Kumar_2024/SRR24895737/SRR24895737_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Kumar_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Kumar_2024_SRR24895738_coverage",
+      "name": "Kumar 2024 SRR24895738 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Kumar_2024/SRR24895738/SRR24895738_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Kumar_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Kumar_2024_SRR24895739_coverage",
+      "name": "Kumar 2024 SRR24895739 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Kumar_2024/SRR24895739/SRR24895739_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Kumar_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Kumar_2024_SRR24895740_coverage",
+      "name": "Kumar 2024 SRR24895740 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Kumar_2024/SRR24895740/SRR24895740_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Kumar_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Kumar_2024_SRR24895742_coverage",
+      "name": "Kumar 2024 SRR24895742 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Kumar_2024/SRR24895742/SRR24895742_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Kumar_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Kumar_2024_SRR24895743_coverage",
+      "name": "Kumar 2024 SRR24895743 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Kumar_2024/SRR24895743/SRR24895743_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Kumar_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Kumar_2024_SRR24895744_coverage",
+      "name": "Kumar 2024 SRR24895744 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Kumar_2024/SRR24895744/SRR24895744_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Kumar_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Kumar_2024_SRR24895745_coverage",
+      "name": "Kumar 2024 SRR24895745 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Kumar_2024/SRR24895745/SRR24895745_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Kumar_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Kumar_2024_SRR24895746_coverage",
+      "name": "Kumar 2024 SRR24895746 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Kumar_2024/SRR24895746/SRR24895746_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Kumar_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Kumar_2024_SRR24895747_coverage",
+      "name": "Kumar 2024 SRR24895747 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Kumar_2024/SRR24895747/SRR24895747_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Kumar_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Kumar_2024_SRR24895748_coverage",
+      "name": "Kumar 2024 SRR24895748 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Kumar_2024/SRR24895748/SRR24895748_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Kumar_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Kumar_2024_SRR24895750_coverage",
+      "name": "Kumar 2024 SRR24895750 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Kumar_2024/SRR24895750/SRR24895750_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Kumar_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Kumar_2024_SRR24895751_coverage",
+      "name": "Kumar 2024 SRR24895751 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Kumar_2024/SRR24895751/SRR24895751_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Kumar_2024"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Linde_2015_SRR1582640_coverage",
+      "name": "Linde 2015 SRR1582640 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Linde_2015/SRR1582640/SRR1582640_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Linde_2015"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Linde_2015_SRR1582641_coverage",
+      "name": "Linde 2015 SRR1582641 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Linde_2015/SRR1582641/SRR1582641_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Linde_2015"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Linde_2015_SRR1582642_coverage",
+      "name": "Linde 2015 SRR1582642 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Linde_2015/SRR1582642/SRR1582642_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Linde_2015"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Linde_2015_SRR1582643_coverage",
+      "name": "Linde 2015 SRR1582643 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Linde_2015/SRR1582643/SRR1582643_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Linde_2015"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Linde_2015_SRR1582644_coverage",
+      "name": "Linde 2015 SRR1582644 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Linde_2015/SRR1582644/SRR1582644_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Linde_2015"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Linde_2015_SRR1582645_coverage",
+      "name": "Linde 2015 SRR1582645 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Linde_2015/SRR1582645/SRR1582645_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Linde_2015"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Linde_2015_SRR1582646_coverage",
+      "name": "Linde 2015 SRR1582646 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Linde_2015/SRR1582646/SRR1582646_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Linde_2015"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Linde_2015_SRR1582647_coverage",
+      "name": "Linde 2015 SRR1582647 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Linde_2015/SRR1582647/SRR1582647_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Linde_2015"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Linde_2015_SRR1582648_coverage",
+      "name": "Linde 2015 SRR1582648 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Linde_2015/SRR1582648/SRR1582648_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Linde_2015"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Linde_2015_SRR1582649_coverage",
+      "name": "Linde 2015 SRR1582649 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Linde_2015/SRR1582649/SRR1582649_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Linde_2015"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Linde_2015_SRR1582650_coverage",
+      "name": "Linde 2015 SRR1582650 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Linde_2015/SRR1582650/SRR1582650_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Linde_2015"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Linde_2015_SRR1582651_coverage",
+      "name": "Linde 2015 SRR1582651 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Linde_2015/SRR1582651/SRR1582651_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Linde_2015"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Ni_2023_SRR24529946_coverage",
+      "name": "Ni 2023 SRR24529946 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Ni_2023/SRR24529946/SRR24529946_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Ni_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Ni_2023_SRR24529947_coverage",
+      "name": "Ni 2023 SRR24529947 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Ni_2023/SRR24529947/SRR24529947_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Ni_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Ni_2023_SRR24529948_coverage",
+      "name": "Ni 2023 SRR24529948 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Ni_2023/SRR24529948/SRR24529948_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Ni_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Ni_2023_SRR24529950_coverage",
+      "name": "Ni 2023 SRR24529950 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Ni_2023/SRR24529950/SRR24529950_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Ni_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Ni_2023_SRR24529951_coverage",
+      "name": "Ni 2023 SRR24529951 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Ni_2023/SRR24529951/SRR24529951_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Ni_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Ni_2023_SRR24529952_coverage",
+      "name": "Ni 2023 SRR24529952 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Ni_2023/SRR24529952/SRR24529952_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Ni_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Ni_2023_SRR24529953_coverage",
+      "name": "Ni 2023 SRR24529953 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Ni_2023/SRR24529953/SRR24529953_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Ni_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Ni_2023_SRR24529954_coverage",
+      "name": "Ni 2023 SRR24529954 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Ni_2023/SRR24529954/SRR24529954_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Ni_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Ni_2023_SRR24529956_coverage",
+      "name": "Ni 2023 SRR24529956 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Ni_2023/SRR24529956/SRR24529956_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Ni_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Ni_2023_SRR24529961_coverage",
+      "name": "Ni 2023 SRR24529961 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Ni_2023/SRR24529961/SRR24529961_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Ni_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Ni_2023_SRR24529962_coverage",
+      "name": "Ni 2023 SRR24529962 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Ni_2023/SRR24529962/SRR24529962_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Ni_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Ni_2023_SRR24529963_coverage",
+      "name": "Ni 2023 SRR24529963 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Ni_2023/SRR24529963/SRR24529963_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Ni_2023"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Vu_2021_SRR15532683_coverage",
+      "name": "Vu 2021 SRR15532683 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Vu_2021/SRR15532683/SRR15532683_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Vu_2021"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Vu_2021_SRR15532684_coverage",
+      "name": "Vu 2021 SRR15532684 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Vu_2021/SRR15532684/SRR15532684_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Vu_2021"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Vu_2021_SRR15532685_coverage",
+      "name": "Vu 2021 SRR15532685 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Vu_2021/SRR15532685/SRR15532685_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Vu_2021"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Vu_2021_SRR15532686_coverage",
+      "name": "Vu 2021 SRR15532686 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Vu_2021/SRR15532686/SRR15532686_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Vu_2021"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Vu_2021_SRR15532687_coverage",
+      "name": "Vu 2021 SRR15532687 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Vu_2021/SRR15532687/SRR15532687_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Vu_2021"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_glabrata_CBS138_Vu_2021_SRR15532688_coverage",
+      "name": "Vu 2021 SRR15532688 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_glabrata_CBS138/bam/Vu_2021/SRR15532688/SRR15532688_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_glabrata_CBS138"
+      ],
+      "category": [
+        "Coverage",
+        "Vu_2021"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_dubliniensis_CD36_Grumaz_2013_SRR604750_coverage",
+      "name": "Grumaz 2013 SRR604750 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_dubliniensis_CD36/bam/Grumaz_2013/SRR604750/SRR604750_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36"
+      ],
+      "category": [
+        "Coverage",
+        "Grumaz_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_dubliniensis_CD36_Grumaz_2013_SRR604752_coverage",
+      "name": "Grumaz 2013 SRR604752 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_dubliniensis_CD36/bam/Grumaz_2013/SRR604752/SRR604752_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36"
+      ],
+      "category": [
+        "Coverage",
+        "Grumaz_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_dubliniensis_CD36_Grumaz_2013_SRR604753_coverage",
+      "name": "Grumaz 2013 SRR604753 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_dubliniensis_CD36/bam/Grumaz_2013/SRR604753/SRR604753_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36"
+      ],
+      "category": [
+        "Coverage",
+        "Grumaz_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_dubliniensis_CD36_Grumaz_2013_SRR771365_coverage",
+      "name": "Grumaz 2013 SRR771365 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_dubliniensis_CD36/bam/Grumaz_2013/SRR771365/SRR771365_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36"
+      ],
+      "category": [
+        "Coverage",
+        "Grumaz_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_dubliniensis_CD36_Grumaz_2013_SRR771366_coverage",
+      "name": "Grumaz 2013 SRR771366 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_dubliniensis_CD36/bam/Grumaz_2013/SRR771366/SRR771366_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36"
+      ],
+      "category": [
+        "Coverage",
+        "Grumaz_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_dubliniensis_CD36_Singh-Babakh_2021_SRR13833829_coverage",
+      "name": "Singh Babakh 2021 SRR13833829 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_dubliniensis_CD36/bam/Singh-Babakh_2021/SRR13833829/SRR13833829_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36"
+      ],
+      "category": [
+        "Coverage",
+        "Singh-Babakh_2021"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_dubliniensis_CD36_Singh-Babakh_2021_SRR13833830_coverage",
+      "name": "Singh Babakh 2021 SRR13833830 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_dubliniensis_CD36/bam/Singh-Babakh_2021/SRR13833830/SRR13833830_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36"
+      ],
+      "category": [
+        "Coverage",
+        "Singh-Babakh_2021"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_dubliniensis_CD36_Singh-Babakh_2021_SRR13833831_coverage",
+      "name": "Singh Babakh 2021 SRR13833831 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_dubliniensis_CD36/bam/Singh-Babakh_2021/SRR13833831/SRR13833831_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36"
+      ],
+      "category": [
+        "Coverage",
+        "Singh-Babakh_2021"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_dubliniensis_CD36_Singh-Babakh_2021_SRR13833832_coverage",
+      "name": "Singh Babakh 2021 SRR13833832 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_dubliniensis_CD36/bam/Singh-Babakh_2021/SRR13833832/SRR13833832_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36"
+      ],
+      "category": [
+        "Coverage",
+        "Singh-Babakh_2021"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_dubliniensis_CD36_Singh-Babakh_2021_SRR13833833_coverage",
+      "name": "Singh Babakh 2021 SRR13833833 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_dubliniensis_CD36/bam/Singh-Babakh_2021/SRR13833833/SRR13833833_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36"
+      ],
+      "category": [
+        "Coverage",
+        "Singh-Babakh_2021"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_dubliniensis_CD36_Singh-Babakh_2021_SRR13833834_coverage",
+      "name": "Singh Babakh 2021 SRR13833834 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_dubliniensis_CD36/bam/Singh-Babakh_2021/SRR13833834/SRR13833834_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36"
+      ],
+      "category": [
+        "Coverage",
+        "Singh-Babakh_2021"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_dubliniensis_CD36_Singh-Babakh_2021_SRR13833835_coverage",
+      "name": "Singh Babakh 2021 SRR13833835 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_dubliniensis_CD36/bam/Singh-Babakh_2021/SRR13833835/SRR13833835_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36"
+      ],
+      "category": [
+        "Coverage",
+        "Singh-Babakh_2021"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_dubliniensis_CD36_Singh-Babakh_2021_SRR13833836_coverage",
+      "name": "Singh Babakh 2021 SRR13833836 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_dubliniensis_CD36/bam/Singh-Babakh_2021/SRR13833836/SRR13833836_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_dubliniensis_CD36"
+      ],
+      "category": [
+        "Coverage",
+        "Singh-Babakh_2021"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Connolly_2013_SRR575493_coverage",
+      "name": "Connolly 2013 SRR575493 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Connolly_2013/SRR575493/SRR575493_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Connolly_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Connolly_2013_SRR575494_coverage",
+      "name": "Connolly 2013 SRR575494 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Connolly_2013/SRR575494/SRR575494_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Connolly_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Connolly_2013_SRR575495_coverage",
+      "name": "Connolly 2013 SRR575495 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Connolly_2013/SRR575495/SRR575495_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Connolly_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Connolly_2013_SRR575496_coverage",
+      "name": "Connolly 2013 SRR575496 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Connolly_2013/SRR575496/SRR575496_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Connolly_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Connolly_2013_SRR575497_coverage",
+      "name": "Connolly 2013 SRR575497 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Connolly_2013/SRR575497/SRR575497_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Connolly_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Connolly_2013_SRR575498_coverage",
+      "name": "Connolly 2013 SRR575498 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Connolly_2013/SRR575498/SRR575498_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Connolly_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Connolly_2013_SRR575499_coverage",
+      "name": "Connolly 2013 SRR575499 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Connolly_2013/SRR575499/SRR575499_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Connolly_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Connolly_2013_SRR575500_coverage",
+      "name": "Connolly 2013 SRR575500 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Connolly_2013/SRR575500/SRR575500_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Connolly_2013"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Guida_2011_SRR352253_coverage",
+      "name": "Guida 2011 SRR352253 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Guida_2011/SRR352253/SRR352253_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Guida_2011"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Guida_2011_SRR352254_coverage",
+      "name": "Guida 2011 SRR352254 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Guida_2011/SRR352254/SRR352254_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Guida_2011"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Guida_2011_SRR352255_coverage",
+      "name": "Guida 2011 SRR352255 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Guida_2011/SRR352255/SRR352255_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Guida_2011"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Guida_2011_SRR352256_coverage",
+      "name": "Guida 2011 SRR352256 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Guida_2011/SRR352256/SRR352256_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Guida_2011"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Guida_2011_SRR352257_coverage",
+      "name": "Guida 2011 SRR352257 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Guida_2011/SRR352257/SRR352257_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Guida_2011"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Guida_2011_SRR352258_coverage",
+      "name": "Guida 2011 SRR352258 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Guida_2011/SRR352258/SRR352258_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Guida_2011"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Guida_2011_SRR352259_coverage",
+      "name": "Guida 2011 SRR352259 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Guida_2011/SRR352259/SRR352259_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Guida_2011"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Guida_2011_SRR352260_coverage",
+      "name": "Guida 2011 SRR352260 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Guida_2011/SRR352260/SRR352260_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Guida_2011"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Guida_2011_SRR352261_coverage",
+      "name": "Guida 2011 SRR352261 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Guida_2011/SRR352261/SRR352261_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Guida_2011"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Guida_2011_SRR352262_coverage",
+      "name": "Guida 2011 SRR352262 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Guida_2011/SRR352262/SRR352262_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Guida_2011"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Guida_2011_SRR352263_coverage",
+      "name": "Guida 2011 SRR352263 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Guida_2011/SRR352263/SRR352263_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Guida_2011"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Guida_2011_SRR352264_coverage",
+      "name": "Guida 2011 SRR352264 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Guida_2011/SRR352264/SRR352264_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Guida_2011"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Guida_2011_SRR352265_coverage",
+      "name": "Guida 2011 SRR352265 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Guida_2011/SRR352265/SRR352265_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Guida_2011"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Guida_2011_SRR352266_coverage",
+      "name": "Guida 2011 SRR352266 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Guida_2011/SRR352266/SRR352266_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Guida_2011"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Guida_2011_SRR352267_coverage",
+      "name": "Guida 2011 SRR352267 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Guida_2011/SRR352267/SRR352267_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Guida_2011"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Guida_2011_SRR352268_coverage",
+      "name": "Guida 2011 SRR352268 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Guida_2011/SRR352268/SRR352268_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Guida_2011"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Guida_2011_SRR352269_coverage",
+      "name": "Guida 2011 SRR352269 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Guida_2011/SRR352269/SRR352269_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Guida_2011"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Guida_2011_SRR352270_coverage",
+      "name": "Guida 2011 SRR352270 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Guida_2011/SRR352270/SRR352270_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Guida_2011"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Guida_2011_SRR352271_coverage",
+      "name": "Guida 2011 SRR352271 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Guida_2011/SRR352271/SRR352271_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Guida_2011"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Guida_2011_SRR352272_coverage",
+      "name": "Guida 2011 SRR352272 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Guida_2011/SRR352272/SRR352272_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Guida_2011"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Guida_2011_SRR352273_coverage",
+      "name": "Guida 2011 SRR352273 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Guida_2011/SRR352273/SRR352273_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Guida_2011"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Guida_2011_SRR352274_coverage",
+      "name": "Guida 2011 SRR352274 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Guida_2011/SRR352274/SRR352274_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Guida_2011"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Guida_2011_SRR352275_coverage",
+      "name": "Guida 2011 SRR352275 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Guida_2011/SRR352275/SRR352275_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Guida_2011"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Guida_2011_SRR352276_coverage",
+      "name": "Guida 2011 SRR352276 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Guida_2011/SRR352276/SRR352276_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Guida_2011"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Guida_2011_SRR352277_coverage",
+      "name": "Guida 2011 SRR352277 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Guida_2011/SRR352277/SRR352277_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Guida_2011"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Guida_2011_SRR352278_coverage",
+      "name": "Guida 2011 SRR352278 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Guida_2011/SRR352278/SRR352278_sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Guida_2011"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Holland_2014_ace2_1_coverage",
+      "name": "Holland 2014 ace2_1 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Holland_2014/ace2_1/sorted_hits_bam2wig/sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Holland_2014"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Holland_2014_ace2_2_coverage",
+      "name": "Holland 2014 ace2_2 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Holland_2014/ace2_2/sorted_hits_bam2wig/sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Holland_2014"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Holland_2014_ace2_3_coverage",
+      "name": "Holland 2014 ace2_3 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Holland_2014/ace2_3/sorted_hits_bam2wig/sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Holland_2014"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Holland_2014_bcr1_1_coverage",
+      "name": "Holland 2014 bcr1_1 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Holland_2014/bcr1_1/sorted_hits_bam2wig/sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Holland_2014"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Holland_2014_bcr1_2_coverage",
+      "name": "Holland 2014 bcr1_2 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Holland_2014/bcr1_2/sorted_hits_bam2wig/sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Holland_2014"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Holland_2014_bcr1_3_coverage",
+      "name": "Holland 2014 bcr1_3 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Holland_2014/bcr1_3/sorted_hits_bam2wig/sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Holland_2014"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Holland_2014_cph2_1_coverage",
+      "name": "Holland 2014 cph2_1 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Holland_2014/cph2_1/sorted_hits_bam2wig/sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Holland_2014"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Holland_2014_cph2_2_coverage",
+      "name": "Holland 2014 cph2_2 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Holland_2014/cph2_2/sorted_hits_bam2wig/sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Holland_2014"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Holland_2014_cph2_3_coverage",
+      "name": "Holland 2014 cph2_3 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Holland_2014/cph2_3/sorted_hits_bam2wig/sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Holland_2014"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Holland_2014_czf1_1_coverage",
+      "name": "Holland 2014 czf1_1 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Holland_2014/czf1_1/sorted_hits_bam2wig/sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Holland_2014"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Holland_2014_czf1_2_coverage",
+      "name": "Holland 2014 czf1_2 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Holland_2014/czf1_2/sorted_hits_bam2wig/sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Holland_2014"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Holland_2014_czf1_3_coverage",
+      "name": "Holland 2014 czf1_3 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Holland_2014/czf1_3/sorted_hits_bam2wig/sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Holland_2014"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Holland_2014_efg1_1_coverage",
+      "name": "Holland 2014 efg1_1 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Holland_2014/efg1_1/sorted_hits_bam2wig/sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Holland_2014"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Holland_2014_efg1_2_coverage",
+      "name": "Holland 2014 efg1_2 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Holland_2014/efg1_2/sorted_hits_bam2wig/sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Holland_2014"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Holland_2014_efg1_3_coverage",
+      "name": "Holland 2014 efg1_3 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Holland_2014/efg1_3/sorted_hits_bam2wig/sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Holland_2014"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Holland_2014_ume6_1_coverage",
+      "name": "Holland 2014 ume6_1 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Holland_2014/ume6_1/sorted_hits_bam2wig/sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Holland_2014"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Holland_2014_ume6_2_coverage",
+      "name": "Holland 2014 ume6_2 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Holland_2014/ume6_2/sorted_hits_bam2wig/sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Holland_2014"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Holland_2014_ume6_3_coverage",
+      "name": "Holland 2014 ume6_3 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Holland_2014/ume6_3/sorted_hits_bam2wig/sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Holland_2014"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Holland_2014_wt_film_1_coverage",
+      "name": "Holland 2014 wt_film_1 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Holland_2014/wt_film_1/sorted_hits_bam2wig/sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Holland_2014"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Holland_2014_wt_film_2_coverage",
+      "name": "Holland 2014 wt_film_2 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Holland_2014/wt_film_2/sorted_hits_bam2wig/sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Holland_2014"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Holland_2014_wt_film_3_coverage",
+      "name": "Holland 2014 wt_film_3 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Holland_2014/wt_film_3/sorted_hits_bam2wig/sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Holland_2014"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Holland_2014_wt_plnk_1_coverage",
+      "name": "Holland 2014 wt_plnk_1 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Holland_2014/wt_plnk_1/sorted_hits_bam2wig/sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Holland_2014"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Holland_2014_wt_plnk_2_coverage",
+      "name": "Holland 2014 wt_plnk_2 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Holland_2014/wt_plnk_2/sorted_hits_bam2wig/sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Holland_2014"
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "C_parapsilosis_CDC317_Holland_2014_wt_plnk_3_coverage",
+      "name": "Holland 2014 wt_plnk_3 Coverage",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "/data/HTS/C_parapsilosis_CDC317/bam/Holland_2014/wt_plnk_3/sorted_hits_bam2wig/sorted_hits.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_parapsilosis_CDC317"
+      ],
+      "category": [
+        "Coverage",
+        "Holland_2014"
+      ]
     }
   ],
   "aggregateTextSearchAdapters": [
