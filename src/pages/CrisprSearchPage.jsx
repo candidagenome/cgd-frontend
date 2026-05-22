@@ -45,7 +45,6 @@ function CrisprSearchPage() {
 
   // Config state (loaded from API)
   const [organisms, setOrganisms] = useState(DEFAULT_ORGANISMS);
-  const [configLoaded, setConfigLoaded] = useState(false);
 
   // Gene preview state
   const [genePreview, setGenePreview] = useState(null);
@@ -64,11 +63,9 @@ function CrisprSearchPage() {
         if (config.organisms && config.organisms.length > 0) {
           setOrganisms(config.organisms);
         }
-        setConfigLoaded(true);
       } catch (err) {
         console.error('Failed to load CRISPR config:', err);
         // Use defaults if config fails to load
-        setConfigLoaded(true);
       }
     };
     loadConfig();

@@ -7,7 +7,6 @@ import './CrisprResultsPage.css';
 function CrisprResultsPage() {
   const navigate = useNavigate();
   const [results, setResults] = useState(null);
-  const [params, setParams] = useState(null);
   const [expandedGuides, setExpandedGuides] = useState(new Set());
   const [sortField, setSortField] = useState('rank');
   const [sortDirection, setSortDirection] = useState('asc');
@@ -16,14 +15,10 @@ function CrisprResultsPage() {
   // Load results from session storage
   useEffect(() => {
     const storedResults = sessionStorage.getItem('crisprResults');
-    const storedParams = sessionStorage.getItem('crisprParams');
 
     if (storedResults) {
       const parsed = JSON.parse(storedResults);
       setResults(parsed);
-    }
-    if (storedParams) {
-      setParams(JSON.parse(storedParams));
     }
   }, []);
 
@@ -90,7 +85,9 @@ function CrisprResultsPage() {
 
   // Check if guide is recommended (high specificity + decent efficiency)
   const isRecommended = (guide) => {
-    return guide.specificity_score >= 100 && guide.efficiency_score >= 50;
+    return guide.offtarget_checked !== false &&
+      guide.specificity_score >= 100 &&
+      guide.efficiency_score >= 50;
   };
 
   // Format mismatch positions for display
