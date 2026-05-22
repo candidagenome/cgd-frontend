@@ -91,7 +91,7 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
       const labelPlacementByRank = new Map();
       const minLabelSpacing = 24;
       const maxLanes = 4;
-      const nudgeOffsets = allowNudge ? [0, -12, 12, -24, 24] : [0];
+      const nudgeOffsets = allowNudge ? [0, -12, 6, -24, 18] : [0];
 
       strandGuides.forEach((guide) => {
         const guideX = xScale(guide.position);
