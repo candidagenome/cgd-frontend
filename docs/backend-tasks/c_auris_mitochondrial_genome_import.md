@@ -138,6 +138,31 @@ curl "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=MT
 
 3. Navigation menu already includes "C. auris (mitochondrion)" link to JBrowse2
 
+## Import Script
+
+A Python script is available to load the mitochondrial genome data:
+
+```bash
+# Location
+cgd-backend/scripts/load_c_auris_mitochondrial_genome.py
+
+# Dry run (preview changes without modifying database)
+python scripts/load_c_auris_mitochondrial_genome.py --dry-run
+
+# Load data into database
+python scripts/load_c_auris_mitochondrial_genome.py
+
+# With verbose output
+python scripts/load_c_auris_mitochondrial_genome.py --verbose
+```
+
+The script:
+1. Downloads the GenBank file from NCBI (or uses a cached/provided file)
+2. Creates a GenomeVersion record for the mitochondrial genome
+3. Creates a chromosome Feature and Seq record
+4. Creates Feature and FeatLocation records for all genes (CDS, tRNA, rRNA)
+5. Creates protein Seq records for CDS features
+
 ## Related Commits
 
 - `32f15ed` - feat(jbrowse2): add C. auris mitochondrial genome assembly
