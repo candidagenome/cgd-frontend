@@ -86,12 +86,11 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
     const markerHeight = 25;
     const markerWidth = 3;
 
-    const assignLabelLanes = (strandGuides, allowNudge = false) => {
+    const assignLabelLanes = (strandGuides) => {
       const lanes = [];
       const labelPlacementByRank = new Map();
       const minLabelSpacing = 24;
       const maxLanes = 4;
-      const nudgeOffsets = allowNudge ? [0, -12, 6, -24, 18] : [0];
 
       strandGuides.forEach((guide) => {
         const guideX = xScale(guide.position);
@@ -102,23 +101,18 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
             lanes[lane] = [];
           }
 
-          for (const offset of nudgeOffsets) {
-            const labelX = guideX + offset;
-            const hasCollision = lanes[lane].some(existingX => Math.abs(labelX - existingX) < minLabelSpacing);
+          const hasCollision = lanes[lane].some(existingX => Math.abs(guideX - existingX) < minLabelSpacing);
 
-            if (!hasCollision) {
-              lanes[lane].push(labelX);
-              placement = { lane, offset };
-              break;
-            }
+          if (!hasCollision) {
+            lanes[lane].push(guideX);
+            placement = { lane };
           }
         }
 
         if (!placement) {
           const lane = maxLanes - 1;
-          const labelX = guideX;
-          lanes[lane].push(labelX);
-          placement = { lane, offset: 0 };
+          lanes[lane].push(guideX);
+          placement = { lane };
         }
 
         labelPlacementByRank.set(guide.rank, placement);
@@ -131,7 +125,7 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
     const topGuides = guides.filter(g => g.strand === '+').sort((a, b) => a.position - b.position);
     const bottomGuides = guides.filter(g => g.strand !== '+').sort((a, b) => a.position - b.position);
     const topLabelPlacements = assignLabelLanes(topGuides);
-    const bottomLabelPlacements = assignLabelLanes(bottomGuides, true);
+    const bottomLabelPlacements = assignLabelLanes(bottomGuides);
     const bottomLaneCount = bottomLabelPlacements.size
       ? Math.max(...Array.from(bottomLabelPlacements.values(), placement => placement.lane)) + 1
       : 1;
@@ -144,7 +138,7 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
       const isTopStrand = guide.strand === '+';
       const markerY = isTopStrand ? geneY - markerHeight + 10 : geneY + geneHeight - 10;
 
-      const labelPlacement = (isTopStrand ? topLabelPlacements : bottomLabelPlacements).get(guide.rank) || { lane: 0, offset: 0 };
+      const labelPlacement = (isTopStrand ? topLabelPlacements : bottomLabelPlacements).get(guide.rank) || { lane: 0 };
 
       // Guide marker group
       const markerGroup = g.append('g')
@@ -175,7 +169,7 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
         : bottomLabelBaseY + (labelPlacement.lane * labelLaneHeight);
 
       markerGroup.append('text')
-        .attr('x', labelPlacement.offset)
+        .attr('x', 0)
         .attr('y', labelY)
         .attr('text-anchor', 'middle')
         .attr('class', 'guide-rank')
