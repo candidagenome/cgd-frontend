@@ -28,8 +28,8 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
     const geneHeight = 30;
     const innerWidth = width - margin.left - margin.right;
     const geneY = 74;
-    const topLabelBaseY = 47;
-    const bottomLabelBaseY = 138;
+    const topLabelBaseY = 52;
+    const bottomLabelBaseY = 142;
     const labelLaneHeight = 15;
 
     const svg = d3.select(svgRef.current)
@@ -86,41 +86,54 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
     const markerHeight = 25;
     const markerWidth = 3;
 
-    const assignLabelLanes = (strandGuides) => {
+    const assignLabelLanes = (strandGuides, allowNudge = false) => {
       const lanes = [];
-      const laneByRank = new Map();
+      const labelPlacementByRank = new Map();
       const minLabelSpacing = 24;
       const maxLanes = 4;
+      const nudgeOffsets = allowNudge ? [0, -12, 12, -24, 24] : [0];
 
       strandGuides.forEach((guide) => {
         const guideX = xScale(guide.position);
-        let assignedLane = lanes.findIndex(lastX => guideX - lastX >= minLabelSpacing);
+        let placement = null;
 
-        if (assignedLane === -1) {
-          if (lanes.length < maxLanes) {
-            assignedLane = lanes.length;
-            lanes.push(guideX);
-          } else {
-            assignedLane = lanes.indexOf(Math.min(...lanes));
-            lanes[assignedLane] = guideX;
+        for (let lane = 0; lane < maxLanes && !placement; lane += 1) {
+          if (!lanes[lane]) {
+            lanes[lane] = [];
           }
-        } else {
-          lanes[assignedLane] = guideX;
+
+          for (const offset of nudgeOffsets) {
+            const labelX = guideX + offset;
+            const hasCollision = lanes[lane].some(existingX => Math.abs(labelX - existingX) < minLabelSpacing);
+
+            if (!hasCollision) {
+              lanes[lane].push(labelX);
+              placement = { lane, offset };
+              break;
+            }
+          }
         }
 
-        laneByRank.set(guide.rank, assignedLane);
+        if (!placement) {
+          const lane = maxLanes - 1;
+          const labelX = guideX;
+          lanes[lane].push(labelX);
+          placement = { lane, offset: 0 };
+        }
+
+        labelPlacementByRank.set(guide.rank, placement);
       });
 
-      return laneByRank;
+      return labelPlacementByRank;
     };
 
     // Sort guides by position and place labels into lanes to avoid overlap
     const topGuides = guides.filter(g => g.strand === '+').sort((a, b) => a.position - b.position);
     const bottomGuides = guides.filter(g => g.strand !== '+').sort((a, b) => a.position - b.position);
-    const topLabelLanes = assignLabelLanes(topGuides);
-    const bottomLabelLanes = assignLabelLanes(bottomGuides);
-    const bottomLaneCount = bottomLabelLanes.size
-      ? Math.max(...bottomLabelLanes.values()) + 1
+    const topLabelPlacements = assignLabelLanes(topGuides);
+    const bottomLabelPlacements = assignLabelLanes(bottomGuides, true);
+    const bottomLaneCount = bottomLabelPlacements.size
+      ? Math.max(...Array.from(bottomLabelPlacements.values(), placement => placement.lane)) + 1
       : 1;
     const axisY = bottomLabelBaseY + ((bottomLaneCount - 1) * labelLaneHeight) + 24;
     const height = margin.top + axisY + margin.bottom;
@@ -131,7 +144,7 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
       const isTopStrand = guide.strand === '+';
       const markerY = isTopStrand ? geneY - markerHeight + 10 : geneY + geneHeight - 10;
 
-      const labelLane = (isTopStrand ? topLabelLanes : bottomLabelLanes).get(guide.rank) || 0;
+      const labelPlacement = (isTopStrand ? topLabelPlacements : bottomLabelPlacements).get(guide.rank) || { lane: 0, offset: 0 };
 
       // Guide marker group
       const markerGroup = g.append('g')
@@ -158,11 +171,11 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
         .attr('fill', colorScale(guide.combinedScore || guide.combined_score || 50));
 
       const labelY = isTopStrand
-        ? topLabelBaseY - (labelLane * labelLaneHeight)
-        : bottomLabelBaseY + (labelLane * labelLaneHeight);
+        ? topLabelBaseY - (labelPlacement.lane * labelLaneHeight)
+        : bottomLabelBaseY + (labelPlacement.lane * labelLaneHeight);
 
       markerGroup.append('text')
-        .attr('x', 0)
+        .attr('x', labelPlacement.offset)
         .attr('y', labelY)
         .attr('text-anchor', 'middle')
         .attr('class', 'guide-rank')
