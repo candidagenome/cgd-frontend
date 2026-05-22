@@ -23,12 +23,16 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
     d3.select(svgRef.current).selectAll('*').remove();
 
     // Dimensions
-    const margin = { top: 72, right: 40, bottom: 96, left: 60 };
+    const margin = { top: 18, right: 40, bottom: 36, left: 60 };
     const width = containerRef.current?.clientWidth || 800;
-    const height = 230;
+    const height = 300;
     const geneHeight = 30;
     const innerWidth = width - margin.left - margin.right;
-    const innerHeight = height - margin.top - margin.bottom;
+    const geneY = 105;
+    const axisY = 246;
+    const topLabelBaseY = 76;
+    const bottomLabelBaseY = 178;
+    const labelLaneHeight = 16;
 
     const svg = d3.select(svgRef.current)
       .attr('width', width)
@@ -44,7 +48,6 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
 
     // Gene body (arrow shape showing direction)
     const arrowWidth = 15;
-    const geneY = innerHeight / 2 - geneHeight / 2;
 
     let geneShape;
     if (strand === '+' || strand === 'W') {
@@ -152,8 +155,8 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
         .attr('fill', colorScale(guide.combinedScore || guide.combined_score || 50));
 
       const labelY = isTopStrand
-        ? markerY - 10 - (labelLane * 16)
-        : geneY + geneHeight + markerHeight + 18 + (labelLane * 16);
+        ? topLabelBaseY - (labelLane * labelLaneHeight)
+        : bottomLabelBaseY + (labelLane * labelLaneHeight);
 
       markerGroup.append('text')
         .attr('x', 0)
@@ -196,7 +199,7 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
 
     g.append('g')
       .attr('class', 'x-axis')
-      .attr('transform', `translate(0,${innerHeight + 5})`)
+      .attr('transform', `translate(0,${axisY})`)
       .call(xAxis);
 
     // Gene name label
@@ -224,7 +227,7 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
 
     // Legend
     const legendX = innerWidth - 190;
-    const legendY = -20;
+    const legendY = 18;
     const legendPadding = 6;
     const legendWidth = 250;
     const legendHeight = 22;
