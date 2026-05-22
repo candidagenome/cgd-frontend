@@ -23,14 +23,14 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
     d3.select(svgRef.current).selectAll('*').remove();
 
     // Dimensions
-    const margin = { top: 18, right: 40, bottom: 36, left: 60 };
+    const margin = { top: 12, right: 40, bottom: 26, left: 60 };
     const width = containerRef.current?.clientWidth || 800;
     const geneHeight = 30;
     const innerWidth = width - margin.left - margin.right;
-    const geneY = 94;
-    const topLabelBaseY = 65;
-    const bottomLabelBaseY = 160;
-    const labelLaneHeight = 16;
+    const geneY = 74;
+    const topLabelBaseY = 47;
+    const bottomLabelBaseY = 138;
+    const labelLaneHeight = 15;
 
     const svg = d3.select(svgRef.current)
       .attr('width', width);
@@ -122,7 +122,7 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
     const bottomLaneCount = bottomLabelLanes.size
       ? Math.max(...bottomLabelLanes.values()) + 1
       : 1;
-    const axisY = bottomLabelBaseY + ((bottomLaneCount - 1) * labelLaneHeight) + 28;
+    const axisY = bottomLabelBaseY + ((bottomLaneCount - 1) * labelLaneHeight) + 24;
     const height = margin.top + axisY + margin.bottom;
     svg.attr('height', height);
 
