@@ -25,18 +25,15 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
     // Dimensions
     const margin = { top: 18, right: 40, bottom: 36, left: 60 };
     const width = containerRef.current?.clientWidth || 800;
-    const height = 300;
     const geneHeight = 30;
     const innerWidth = width - margin.left - margin.right;
-    const geneY = 105;
-    const axisY = 246;
-    const topLabelBaseY = 76;
-    const bottomLabelBaseY = 178;
+    const geneY = 94;
+    const topLabelBaseY = 65;
+    const bottomLabelBaseY = 160;
     const labelLaneHeight = 16;
 
     const svg = d3.select(svgRef.current)
-      .attr('width', width)
-      .attr('height', height);
+      .attr('width', width);
 
     const g = svg.append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
@@ -122,6 +119,12 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
     const bottomGuides = guides.filter(g => g.strand !== '+').sort((a, b) => a.position - b.position);
     const topLabelLanes = assignLabelLanes(topGuides);
     const bottomLabelLanes = assignLabelLanes(bottomGuides);
+    const bottomLaneCount = bottomLabelLanes.size
+      ? Math.max(...bottomLabelLanes.values()) + 1
+      : 1;
+    const axisY = bottomLabelBaseY + ((bottomLaneCount - 1) * labelLaneHeight) + 28;
+    const height = margin.top + axisY + margin.bottom;
+    svg.attr('height', height);
 
     guides.forEach((guide) => {
       const x = xScale(guide.position);
