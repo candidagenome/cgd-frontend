@@ -175,7 +175,8 @@ function CrisprGuideFinderHelp() {
               <tr>
                 <td><strong>Rank</strong></td>
                 <td style={{textAlign: 'left'}}>
-                  Guides ranked by combined score (efficiency + specificity)
+                  Guides ranked by a CHOPCHOP-style penalty. Lower penalty is
+                  better; displayed scores are converted so higher is better.
                 </td>
               </tr>
               <tr>
@@ -334,18 +335,55 @@ function CrisprGuideFinderHelp() {
             The final specificity score is: 100 / (1 + total_penalty/10)
           </p>
 
-          <h3>Combined Score</h3>
+          <h3>CHOPCHOP-style Ranking Penalty</h3>
           <p>
-            The combined score is a weighted average of efficiency and specificity:
+            Guides are ranked using a CHOPCHOP-style penalty model. Lower penalty
+            values are better. The results table still displays high-is-good
+            scores for readability, but the underlying rank prioritizes guides
+            with lower predicted risk.
           </p>
-          <div className="cite-example">
-            <p>
-              Combined = (Efficiency × 0.5) + (Specificity × 0.5)
-            </p>
-          </div>
+          <table className="snapshot-table">
+            <thead>
+              <tr>
+                <th>Ranking Factor</th>
+                <th>Effect on Guide Rank</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Off-targets</strong></td>
+                <td style={{textAlign: 'left'}}>
+                  Off-target penalties dominate ranking. Exact or near-exact
+                  genomic matches receive the strongest penalties.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>GC content</strong></td>
+                <td style={{textAlign: 'left'}}>
+                  Guides outside the 40-70% GC range receive an additional
+                  penalty.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Self-complementarity</strong></td>
+                <td style={{textAlign: 'left'}}>
+                  Guides with predicted internal 4 bp self-complementary stems
+                  receive small penalties because they may form secondary
+                  structures.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Efficiency</strong></td>
+                <td style={{textAlign: 'left'}}>
+                  Higher predicted on-target efficiency lowers the penalty and
+                  improves rank.
+                </td>
+              </tr>
+            </tbody>
+          </table>
           <p>
-            Guides are ranked by combined score by default. You can sort by any
-            individual score by clicking the column header.
+            Position is used as a tie-breaker, so equally scoring knockout
+            guides favor earlier 5&apos; target sites.
           </p>
         </div>
 
@@ -529,6 +567,7 @@ function CrisprGuideFinderHelp() {
           <h3>Scores</h3>
           <ul>
             <li>Efficiency, Specificity, and Combined scores</li>
+            <li>CHOPCHOP-style penalty used for ranking</li>
             <li>GC content percentage</li>
           </ul>
 
@@ -664,6 +703,19 @@ function CrisprGuideFinderHelp() {
               <em>Nature Biotechnology</em> 34:184-191.
               <a
                 href="https://doi.org/10.1038/nbt.3437"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{marginLeft: '8px'}}
+              >
+                DOI
+              </a>
+            </li>
+            <li>
+              Labun K, Montague TG, Krause M, Torres Cleuren YN, Tjeldnes H,
+              Valen E (2019). CHOPCHOP v3: expanding the CRISPR web toolbox beyond
+              genome editing. <em>Nucleic Acids Research</em> 47:W171-W174.
+              <a
+                href="https://doi.org/10.1093/nar/gkz365"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{marginLeft: '8px'}}
