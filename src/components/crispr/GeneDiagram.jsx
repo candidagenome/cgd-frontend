@@ -23,16 +23,17 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
     d3.select(svgRef.current).selectAll('*').remove();
 
     // Dimensions
-    const margin = { top: 40, right: 40, bottom: 80, left: 60 };
+    const margin = { top: 12, right: 40, bottom: 26, left: 60 };
     const width = containerRef.current?.clientWidth || 800;
-    const height = 170;
     const geneHeight = 30;
     const innerWidth = width - margin.left - margin.right;
-    const innerHeight = height - margin.top - margin.bottom;
+    const geneY = 74;
+    const topLabelBaseY = 52;
+    const bottomLabelBaseY = 142;
+    const labelLaneHeight = 15;
 
     const svg = d3.select(svgRef.current)
-      .attr('width', width)
-      .attr('height', height);
+      .attr('width', width);
 
     const g = svg.append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
@@ -44,7 +45,6 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
 
     // Gene body (arrow shape showing direction)
     const arrowWidth = 15;
-    const geneY = innerHeight / 2 - geneHeight / 2;
 
     let geneShape;
     if (strand === '+' || strand === 'W') {
@@ -86,18 +86,59 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
     const markerHeight = 25;
     const markerWidth = 3;
 
-    // Sort guides by position for staggering labels
+    const assignLabelLanes = (strandGuides) => {
+      const lanes = [];
+      const labelPlacementByRank = new Map();
+      const minLabelSpacing = 24;
+      const maxLanes = 4;
+
+      strandGuides.forEach((guide) => {
+        const guideX = xScale(guide.position);
+        let placement = null;
+
+        for (let lane = 0; lane < maxLanes && !placement; lane += 1) {
+          if (!lanes[lane]) {
+            lanes[lane] = [];
+          }
+
+          const hasCollision = lanes[lane].some(existingX => Math.abs(guideX - existingX) < minLabelSpacing);
+
+          if (!hasCollision) {
+            lanes[lane].push(guideX);
+            placement = { lane };
+          }
+        }
+
+        if (!placement) {
+          const lane = maxLanes - 1;
+          lanes[lane].push(guideX);
+          placement = { lane };
+        }
+
+        labelPlacementByRank.set(guide.rank, placement);
+      });
+
+      return labelPlacementByRank;
+    };
+
+    // Sort guides by position and place labels into lanes to avoid overlap
     const topGuides = guides.filter(g => g.strand === '+').sort((a, b) => a.position - b.position);
     const bottomGuides = guides.filter(g => g.strand !== '+').sort((a, b) => a.position - b.position);
+    const topLabelPlacements = assignLabelLanes(topGuides);
+    const bottomLabelPlacements = assignLabelLanes(bottomGuides);
+    const bottomLaneCount = bottomLabelPlacements.size
+      ? Math.max(...Array.from(bottomLabelPlacements.values(), placement => placement.lane)) + 1
+      : 1;
+    const axisY = bottomLabelBaseY + ((bottomLaneCount - 1) * labelLaneHeight) + 24;
+    const height = margin.top + axisY + margin.bottom;
+    svg.attr('height', height);
 
     guides.forEach((guide) => {
       const x = xScale(guide.position);
       const isTopStrand = guide.strand === '+';
       const markerY = isTopStrand ? geneY - markerHeight + 10 : geneY + geneHeight - 10;
 
-      // Get index within strand group for staggering
-      const strandGuides = isTopStrand ? topGuides : bottomGuides;
-      const guideIndex = strandGuides.findIndex(g => g.rank === guide.rank);
+      const labelPlacement = (isTopStrand ? topLabelPlacements : bottomLabelPlacements).get(guide.rank) || { lane: 0 };
 
       // Guide marker group
       const markerGroup = g.append('g')
@@ -123,15 +164,15 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
           : `${-arrowSize},${arrowY - arrowSize} 0,${arrowY} ${arrowSize},${arrowY - arrowSize}`)
         .attr('fill', colorScale(guide.combinedScore || guide.combined_score || 50));
 
-      // Rank label - stagger vertically to avoid overlap
-      const staggerOffset = (guideIndex % 2) * 10;
+      const labelY = isTopStrand
+        ? topLabelBaseY - (labelPlacement.lane * labelLaneHeight)
+        : bottomLabelBaseY + (labelPlacement.lane * labelLaneHeight);
+
       markerGroup.append('text')
         .attr('x', 0)
-        .attr('y', isTopStrand ? markerY - 5 - staggerOffset : innerHeight + 35 + staggerOffset)
+        .attr('y', labelY)
         .attr('text-anchor', 'middle')
         .attr('class', 'guide-rank')
-        .style('font-size', '9px')
-        .style('font-weight', '600')
         .text(guide.rank);
 
       // Mouse events
@@ -168,7 +209,7 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
 
     g.append('g')
       .attr('class', 'x-axis')
-      .attr('transform', `translate(0,${innerHeight + 5})`)
+      .attr('transform', `translate(0,${axisY})`)
       .call(xAxis);
 
     // Gene name label
@@ -196,7 +237,7 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
 
     // Legend
     const legendX = innerWidth - 190;
-    const legendY = -20;
+    const legendY = 18;
     const legendPadding = 6;
     const legendWidth = 250;
     const legendHeight = 22;

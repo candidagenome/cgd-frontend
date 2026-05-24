@@ -8,7 +8,6 @@ function CrisprResultsPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [results, setResults] = useState(null);
-  const [params, setParams] = useState(null);
   const [expandedGuides, setExpandedGuides] = useState(new Set());
   const [sortField, setSortField] = useState('rank');
   const [sortDirection, setSortDirection] = useState('asc');
@@ -21,27 +20,18 @@ function CrisprResultsPage() {
     if (resultKey) {
       // New method: load from localStorage with key
       const storedResults = localStorage.getItem(`crisprResults_${resultKey}`);
-      const storedParams = localStorage.getItem(`crisprParams_${resultKey}`);
 
       if (storedResults) {
         setResults(JSON.parse(storedResults));
         // Clean up localStorage after reading
         localStorage.removeItem(`crisprResults_${resultKey}`);
       }
-      if (storedParams) {
-        setParams(JSON.parse(storedParams));
-        localStorage.removeItem(`crisprParams_${resultKey}`);
-      }
     } else {
       // Fallback: try sessionStorage for backwards compatibility
       const storedResults = sessionStorage.getItem('crisprResults');
-      const storedParams = sessionStorage.getItem('crisprParams');
 
       if (storedResults) {
         setResults(JSON.parse(storedResults));
-      }
-      if (storedParams) {
-        setParams(JSON.parse(storedParams));
       }
     }
   }, [searchParams]);
@@ -109,7 +99,9 @@ function CrisprResultsPage() {
 
   // Check if guide is recommended (high specificity + decent efficiency)
   const isRecommended = (guide) => {
-    return guide.specificity_score >= 100 && guide.efficiency_score >= 50;
+    return guide.offtarget_checked !== false &&
+      guide.specificity_score >= 100 &&
+      guide.efficiency_score >= 50;
   };
 
   // Format mismatch positions for display
