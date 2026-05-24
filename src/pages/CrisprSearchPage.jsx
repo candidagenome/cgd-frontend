@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import crisprApi from '../api/crisprApi';
 import './CrisprSearchPage.css';
 
@@ -29,8 +29,6 @@ const DEFAULT_ORGANISMS = [
 ];
 
 function CrisprSearchPage() {
-  const navigate = useNavigate();
-
   // Form state
   const [inputType, setInputType] = useState('gene'); // 'gene' or 'sequence'
   const [geneName, setGeneName] = useState('');
@@ -139,12 +137,13 @@ function CrisprSearchPage() {
         return;
       }
 
-      // Store results in sessionStorage for results page
-      sessionStorage.setItem('crisprResults', JSON.stringify(results));
-      sessionStorage.setItem('crisprParams', JSON.stringify(params));
+      // Store results in localStorage with unique key for cross-tab access
+      const resultKey = `crispr_${Date.now()}`;
+      localStorage.setItem(`crisprResults_${resultKey}`, JSON.stringify(results));
+      localStorage.setItem(`crisprParams_${resultKey}`, JSON.stringify(params));
 
-      // Navigate to results page
-      navigate('/crispr/results');
+      // Open results page in a new tab
+      window.open(`/crispr/results?key=${resultKey}`, '_blank');
     } catch (err) {
       console.error('CRISPR design error:', err);
       setError(err.response?.data?.detail || err.message || 'Failed to design guides');

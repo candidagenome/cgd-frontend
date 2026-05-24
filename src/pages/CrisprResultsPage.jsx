@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import crisprApi from '../api/crisprApi';
 import GeneDiagram from '../components/crispr/GeneDiagram';
 import './CrisprResultsPage.css';
 
 function CrisprResultsPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [results, setResults] = useState(null);
   const [params, setParams] = useState(null);
   const [expandedGuides, setExpandedGuides] = useState(new Set());
@@ -13,19 +14,37 @@ function CrisprResultsPage() {
   const [sortDirection, setSortDirection] = useState('asc');
   const [downloading, setDownloading] = useState(null);
 
-  // Load results from session storage
+  // Load results from localStorage using key from URL
   useEffect(() => {
-    const storedResults = sessionStorage.getItem('crisprResults');
-    const storedParams = sessionStorage.getItem('crisprParams');
+    const resultKey = searchParams.get('key');
 
-    if (storedResults) {
-      const parsed = JSON.parse(storedResults);
-      setResults(parsed);
+    if (resultKey) {
+      // New method: load from localStorage with key
+      const storedResults = localStorage.getItem(`crisprResults_${resultKey}`);
+      const storedParams = localStorage.getItem(`crisprParams_${resultKey}`);
+
+      if (storedResults) {
+        setResults(JSON.parse(storedResults));
+        // Clean up localStorage after reading
+        localStorage.removeItem(`crisprResults_${resultKey}`);
+      }
+      if (storedParams) {
+        setParams(JSON.parse(storedParams));
+        localStorage.removeItem(`crisprParams_${resultKey}`);
+      }
+    } else {
+      // Fallback: try sessionStorage for backwards compatibility
+      const storedResults = sessionStorage.getItem('crisprResults');
+      const storedParams = sessionStorage.getItem('crisprParams');
+
+      if (storedResults) {
+        setResults(JSON.parse(storedResults));
+      }
+      if (storedParams) {
+        setParams(JSON.parse(storedParams));
+      }
     }
-    if (storedParams) {
-      setParams(JSON.parse(storedParams));
-    }
-  }, []);
+  }, [searchParams]);
 
   // Toggle guide expansion
   const toggleGuide = (rank) => {
