@@ -29,6 +29,7 @@ function FeatureSearchPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [showAdvancedGO, setShowAdvancedGO] = useState(false);
+  const [showAllAssemblies, setShowAllAssemblies] = useState(false);
 
   // Fetch config on mount
   useEffect(() => {
@@ -224,7 +225,15 @@ function FeatureSearchPage() {
   }
 
   // Get chromosomes for current organism
-  const currentChromosomes = config?.chromosomes?.[organism] || [];
+  // For C. albicans, filter to show only Assembly 22 by default
+  const allChromosomes = config?.chromosomes?.[organism] || [];
+  const currentChromosomes = (() => {
+    if (organism === 'C_albicans_SC5314' && !showAllAssemblies) {
+      // Show only Assembly 22 chromosomes (Ca22chr*)
+      return allChromosomes.filter((chr) => chr.startsWith('Ca22chr'));
+    }
+    return allChromosomes;
+  })();
 
   return (
     <div className="feature-search-page">
@@ -363,6 +372,20 @@ function FeatureSearchPage() {
                 <p className="hint">
                   Hold Ctrl (PC) or Cmd (Mac) to select multiple.
                 </p>
+                {organism === 'C_albicans_SC5314' && (
+                  <label className="checkbox-label show-all-assemblies">
+                    <input
+                      type="checkbox"
+                      checked={showAllAssemblies}
+                      onChange={(e) => {
+                        setShowAllAssemblies(e.target.checked);
+                        // Clear chromosome selection when toggling
+                        setChromosomes([]);
+                      }}
+                    />
+                    Show chromosomes from all assemblies (19-22)
+                  </label>
+                )}
               </div>
             </div>
 

@@ -5,13 +5,16 @@ import './GenomeVersionHistoryPage.css';
 
 // Assembly reference PMIDs for each organism
 const ASSEMBLY_REFERENCES = {
-  C_albicans_SC5314: { pmid: '24025428', assembly: 'Assembly 22' },
-  C_auris_B8441: { pmid: '39177371', assembly: 'Current Assembly' },
-  C_glabrata_CBS138: { pmid: '32068314', assembly: 'Current Assembly' },
-  C_parapsilosis_CDC317: { pmid: '22192698', assembly: 'Current Assembly' },
-  C_dubliniensis_CD36: { pmid: '19745113', assembly: 'Current Assembly' },
-  C_tropicalis: { pmid: '32469306', assembly: 'Current Assembly' },
-  C_tropicalis_MYA3404: { pmid: '32469306', assembly: 'Current Assembly' },
+  C_albicans_SC5314: [{ pmid: '24025428', assembly: 'Assembly 22' }],
+  C_auris_B8441: [
+    { pmid: '39177371', assembly: 'Nuclear Genome' },
+    { pmid: '33193142', assembly: 'Mitochondrial Genome' },
+  ],
+  C_glabrata_CBS138: [{ pmid: '32068314', assembly: 'Current Assembly' }],
+  C_parapsilosis_CDC317: [{ pmid: '22192698', assembly: 'Current Assembly' }],
+  C_dubliniensis_CD36: [{ pmid: '19745113', assembly: 'Current Assembly' }],
+  C_tropicalis: [{ pmid: '32469306', assembly: 'Current Assembly' }],
+  C_tropicalis_MYA3404: [{ pmid: '32469306', assembly: 'Current Assembly' }],
 };
 
 function GenomeVersionHistoryPage() {
@@ -188,15 +191,20 @@ function GenomeVersionHistoryPage() {
           {/* Assembly Reference */}
           {ASSEMBLY_REFERENCES[selectedSeqSource] && (
             <p style={{ marginTop: '10px' }}>
-              <strong>Assembly Reference:</strong>{' '}
-              <a
-                href={`https://pubmed.ncbi.nlm.nih.gov/${ASSEMBLY_REFERENCES[selectedSeqSource].pmid}/`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                PMID: {ASSEMBLY_REFERENCES[selectedSeqSource].pmid}
-              </a>
-              {' '}({ASSEMBLY_REFERENCES[selectedSeqSource].assembly})
+              <strong>Assembly Reference{ASSEMBLY_REFERENCES[selectedSeqSource].length > 1 ? 's' : ''}:</strong>{' '}
+              {ASSEMBLY_REFERENCES[selectedSeqSource].map((ref, idx) => (
+                <span key={ref.pmid}>
+                  {idx > 0 && ' | '}
+                  <a
+                    href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pmid}/`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    PMID: {ref.pmid}
+                  </a>
+                  {' '}({ref.assembly})
+                </span>
+              ))}
             </p>
           )}
         </div>

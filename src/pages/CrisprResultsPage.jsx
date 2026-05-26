@@ -1,31 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import crisprApi from '../api/crisprApi';
 import GeneDiagram from '../components/crispr/GeneDiagram';
 import './CrisprResultsPage.css';
 
 function CrisprResultsPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [results, setResults] = useState(null);
-  const [params, setParams] = useState(null);
   const [expandedGuides, setExpandedGuides] = useState(new Set());
   const [sortField, setSortField] = useState('rank');
   const [sortDirection, setSortDirection] = useState('asc');
   const [downloading, setDownloading] = useState(null);
 
-  // Load results from session storage
+  // Load results from localStorage using key from URL
   useEffect(() => {
-    const storedResults = sessionStorage.getItem('crisprResults');
-    const storedParams = sessionStorage.getItem('crisprParams');
+    const resultKey = searchParams.get('key');
 
-    if (storedResults) {
-      const parsed = JSON.parse(storedResults);
-      setResults(parsed);
+    if (resultKey) {
+      // New method: load from localStorage with key
+      const storedResults = localStorage.getItem(`crisprResults_${resultKey}`);
+
+      if (storedResults) {
+        setResults(JSON.parse(storedResults));
+        // Clean up localStorage after reading
+        localStorage.removeItem(`crisprResults_${resultKey}`);
+      }
+    } else {
+      // Fallback: try sessionStorage for backwards compatibility
+      const storedResults = sessionStorage.getItem('crisprResults');
+
+      if (storedResults) {
+        setResults(JSON.parse(storedResults));
+      }
     }
-    if (storedParams) {
-      setParams(JSON.parse(storedParams));
-    }
-  }, []);
+  }, [searchParams]);
 
   // Toggle guide expansion
   const toggleGuide = (rank) => {
@@ -90,7 +99,9 @@ function CrisprResultsPage() {
 
   // Check if guide is recommended (high specificity + decent efficiency)
   const isRecommended = (guide) => {
-    return guide.specificity_score >= 100 && guide.efficiency_score >= 50;
+    return guide.offtarget_checked !== false &&
+      guide.specificity_score >= 100 &&
+      guide.efficiency_score >= 50;
   };
 
   // Format mismatch positions for display

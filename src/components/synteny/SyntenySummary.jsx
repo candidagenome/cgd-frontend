@@ -103,7 +103,9 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
     const totalWithOrthologs = speciesWithQueryOrthologs.size;
     setOrthologCount(totalWithOrthologs);
 
-    // When limiting to maxSpecies, prioritize species with query orthologs
+    // When limiting to maxSpecies, prioritize:
+    // 1. The query gene's own species (ALWAYS include)
+    // 2. Other species with query orthologs
     // while maintaining their relative order in SPECIES_ORDER
     let visibleSpeciesList;
     if (allAvailableSpecies.length <= maxSpecies) {
@@ -115,8 +117,18 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
       const withoutOrthologs = allAvailableSpecies.filter(sp => !speciesWithQueryOrthologs.has(sp));
 
       if (withOrthologs.length >= maxSpecies) {
-        // Enough species with orthologs - take first maxSpecies (maintains order)
-        visibleSpeciesList = withOrthologs.slice(0, maxSpecies);
+        // More orthologs than slots - ensure query species is included
+        const topOrthologs = withOrthologs.slice(0, maxSpecies);
+        if (querySpecies && !topOrthologs.includes(querySpecies) && speciesWithQueryOrthologs.has(querySpecies)) {
+          // Query species has orthologs but isn't in top N - swap it in
+          topOrthologs.pop(); // Remove last one
+          topOrthologs.push(querySpecies);
+          // Re-sort to maintain SPECIES_ORDER
+          topOrthologs.sort((a, b) =>
+            SPECIES_ORDER.indexOf(a) - SPECIES_ORDER.indexOf(b)
+          );
+        }
+        visibleSpeciesList = topOrthologs;
       } else {
         // Include all with orthologs, fill remaining slots from others
         const remaining = maxSpecies - withOrthologs.length;
