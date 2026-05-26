@@ -117,6 +117,11 @@
   vertical-align: middle;
 }
 
+.query-badge.ortholog-badge {
+  background: #ef9a9a;
+  color: #b71c1c;
+}
+
 .header-right {
   flex: 1;
   justify-content: flex-end;

@@ -600,7 +600,8 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
               stop: gene.stop,
               strand: gene.strand === 'W' || gene.strand === '+' ? 'Forward (+)' : 'Reverse (-)',
               orthologId: orthologId,
-              isQuery: gene.is_query,
+              isQueryGene: isQueryGene,
+              isQueryOrtholog: isQueryOrtholog,
               organism: sd.species,
               exonCount: gene.exons ? gene.exons.length : 0,
             },
@@ -1282,7 +1283,8 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
               <span className="tooltip-gene-name">
                 <strong>{tooltip.content.geneName || tooltip.content.featureName}</strong>
               </span>
-              {tooltip.content.isQuery && <span className="query-badge">Query</span>}
+              {tooltip.content.isQueryGene && <span className="query-badge">Query</span>}
+              {tooltip.content.isQueryOrtholog && <span className="query-badge ortholog-badge">Ortholog</span>}
               <span className="tooltip-separator">|</span>
               <span>Systematic: {tooltip.content.featureName}</span>
               <span className="tooltip-separator">|</span>
@@ -1377,7 +1379,14 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
       </div>
 
       {/* Gene Detail Popup */}
-      {selectedGene && (
+      {selectedGene && (() => {
+        const querySpecies = syntenyData?.query_gene?.organism;
+        const queryGeneFeature = syntenyData?.query_gene?.feature_name;
+        const queryOrthologId = queryGeneFeature ? geneToOrtholog[queryGeneFeature] : null;
+        const selectedOrthologId = geneToOrtholog[selectedGene.feature_name];
+        const isPopupQueryGene = selectedGene.is_query && selectedGene.species === querySpecies;
+        const isPopupQueryOrtholog = !isPopupQueryGene && selectedOrthologId && selectedOrthologId === queryOrthologId;
+        return (
         <div className="gene-popup-overlay" onClick={closeGenePopup}>
           <div className="gene-popup" onClick={(e) => e.stopPropagation()}>
             <button className="gene-popup-close" onClick={closeGenePopup} type="button">
@@ -1385,7 +1394,8 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
             </button>
             <div className="gene-popup-header">
               <h3>{selectedGene.gene_name || selectedGene.feature_name}</h3>
-              {selectedGene.is_query && <span className="query-badge">Query Gene</span>}
+              {isPopupQueryGene && <span className="query-badge">Query</span>}
+              {isPopupQueryOrtholog && <span className="query-badge ortholog-badge">Ortholog</span>}
             </div>
 
             <div className="gene-popup-content">
@@ -1458,7 +1468,8 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
             </div>
           </div>
         </div>
-      )}
+        );
+      })()}
     </div>
   );
 }
