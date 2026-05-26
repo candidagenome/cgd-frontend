@@ -27,10 +27,10 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
     const width = containerRef.current?.clientWidth || 800;
     const geneHeight = 30;
     const innerWidth = width - margin.left - margin.right;
-    const geneY = 74;
-    const topLabelBaseY = 52;
-    const bottomLabelBaseY = 142;
-    const labelLaneHeight = 15;
+    const geneY = 90;
+    const topLabelBaseY = 68;
+    const bottomLabelBaseY = 158;
+    const labelLaneHeight = 16;
 
     const svg = d3.select(svgRef.current)
       .attr('width', width);
@@ -89,11 +89,13 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
     const assignLabelLanes = (strandGuides) => {
       const lanes = [];
       const labelPlacementByRank = new Map();
-      const minLabelSpacing = 24;
-      const maxLanes = 4;
+      // Estimate label width based on rank digits (each digit ~7px, plus padding)
+      const getLabelWidth = (rank) => String(rank).length * 7 + 8;
+      const maxLanes = 5;
 
       strandGuides.forEach((guide) => {
         const guideX = xScale(guide.position);
+        const labelWidth = getLabelWidth(guide.rank);
         let placement = null;
 
         for (let lane = 0; lane < maxLanes && !placement; lane += 1) {
@@ -101,18 +103,26 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
             lanes[lane] = [];
           }
 
-          const hasCollision = lanes[lane].some(existingX => Math.abs(guideX - existingX) < minLabelSpacing);
+          // Check collision with existing labels in this lane
+          const hasCollision = lanes[lane].some(existing => {
+            const minSpacing = (labelWidth + existing.width) / 2 + 6;
+            return Math.abs(guideX - existing.x) < minSpacing;
+          });
 
           if (!hasCollision) {
-            lanes[lane].push(guideX);
-            placement = { lane };
+            lanes[lane].push({ x: guideX, width: labelWidth });
+            placement = { lane, xOffset: 0 };
           }
         }
 
+        // If no lane available, use the last lane with a horizontal offset
         if (!placement) {
           const lane = maxLanes - 1;
-          lanes[lane].push(guideX);
-          placement = { lane };
+          // Find a small horizontal offset to avoid direct overlap
+          const existingInLane = lanes[lane].filter(existing => Math.abs(guideX - existing.x) < 20);
+          const xOffset = existingInLane.length > 0 ? (existingInLane.length % 2 === 0 ? 8 : -8) : 0;
+          lanes[lane].push({ x: guideX + xOffset, width: labelWidth });
+          placement = { lane, xOffset };
         }
 
         labelPlacementByRank.set(guide.rank, placement);
@@ -138,7 +148,8 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
       const isTopStrand = guide.strand === '+';
       const markerY = isTopStrand ? geneY - markerHeight + 10 : geneY + geneHeight - 10;
 
-      const labelPlacement = (isTopStrand ? topLabelPlacements : bottomLabelPlacements).get(guide.rank) || { lane: 0 };
+      const labelPlacement = (isTopStrand ? topLabelPlacements : bottomLabelPlacements).get(guide.rank) || { lane: 0, xOffset: 0 };
+      const labelXOffset = labelPlacement.xOffset || 0;
 
       // Guide marker group
       const markerGroup = g.append('g')
@@ -168,8 +179,21 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
         ? topLabelBaseY - (labelPlacement.lane * labelLaneHeight)
         : bottomLabelBaseY + (labelPlacement.lane * labelLaneHeight);
 
+      // Draw leader line connecting label to arrow when label is offset (in higher lanes or horizontally shifted)
+      if (labelPlacement.lane > 0 || labelXOffset !== 0) {
+        const arrowTipY = isTopStrand ? arrowY + arrowSize : arrowY - arrowSize;
+        const labelBottomY = isTopStrand ? labelY + 3 : labelY - 10;
+        markerGroup.append('path')
+          .attr('d', `M0,${arrowTipY} L${labelXOffset},${labelBottomY}`)
+          .attr('stroke', '#999')
+          .attr('stroke-width', 1)
+          .attr('stroke-dasharray', '2,2')
+          .attr('fill', 'none')
+          .attr('class', 'guide-leader-line');
+      }
+
       markerGroup.append('text')
-        .attr('x', 0)
+        .attr('x', labelXOffset)
         .attr('y', labelY)
         .attr('text-anchor', 'middle')
         .attr('class', 'guide-rank')
