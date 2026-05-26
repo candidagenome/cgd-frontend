@@ -98,6 +98,44 @@ C. auris mito features:
   tRNA: 23
 ```
 
+### 2.4 Add ORF Qualifiers
+
+Set the 15 mitochondrial ORFs as "Uncharacterized" (per curator request):
+
+```bash
+# SSH to production backend server
+ssh cgd-backend-prod
+cd /path/to/cgd-backend
+
+# First, do a dry run to verify
+python3 scripts/add_c_auris_mito_qualifiers.py --dry-run
+
+# If dry run looks good, run the actual update
+python3 scripts/add_c_auris_mito_qualifiers.py
+```
+
+Expected dry-run output:
+```
+Found 15 mitochondrial ORFs without feature_qualifier
+ORFs to update:
+  - ATP6_mito (ATP6)
+  - ATP8_mito (ATP8)
+  - ATP9_mito (ATP9)
+  - COB_mito (COB)
+  - COX1_mito (COX1)
+  - COX2_mito (COX2)
+  - COX3_mito (COX3)
+  - NAD1_mito (NAD1)
+  - NAD2_mito (NAD2)
+  - NAD3_mito (NAD3)
+  - NAD4L_mito (NAD4L)
+  - NAD4_mito (NAD4)
+  - NAD5_mito (NAD5)
+  - NAD6_mito (NAD6)
+  - QNR39902_1_mito (no gene name)
+[DRY RUN] Would add 'Uncharacterized' qualifier to 15 ORFs
+```
+
 ---
 
 ## 3. JBrowse2 Track Deployment
@@ -305,9 +343,99 @@ sudo systemctl restart cgd-api
 
 ---
 
+## 8. JBrowse2 Track Maintenance
+
+### 8.1 Issue: Missing Tracks or Metadata
+
+If JBrowse2 is missing tracks (data files exist in `/data/jbrowse2/` but don't appear in the browser), or tracks are missing metadata, use the update script.
+
+**Symptoms:**
+- Species like C. auris show very few tracks despite having data files
+- Tracks display with only author/year/SRR but no descriptive metadata
+- Data symlinks exist in `/data/jbrowse2/` but aren't in `config.json`
+
+### 8.2 Run the Track Update Script
+
+```bash
+# SSH to server (dev or prod)
+ssh cgd-frontend-dev  # or cgd-frontend-prod
+
+# Copy or download the script
+# Script location: cgd-frontend/scripts/update_jbrowse2_tracks.py
+
+# First, do a dry run to see what would be added
+python3 /path/to/update_jbrowse2_tracks.py --dry-run
+
+# If dry run looks good, run the actual update
+python3 /path/to/update_jbrowse2_tracks.py
+
+# The script creates config.json.new - review it then deploy
+cat /data/jbrowse2/config.json.new | python3 -c "import json,sys; d=json.load(sys.stdin); print('Total tracks:', len(d.get('tracks', [])))"
+
+# Backup old config and deploy new one
+cp /data/jbrowse2/config.json /data/jbrowse2/config.json.backup
+mv /data/jbrowse2/config.json.new /data/jbrowse2/config.json
+```
+
+### 8.3 What the Script Does
+
+1. **Reads existing config** - Finds which tracks already exist
+2. **Scans `/data/jbrowse2/`** - Finds all data files (bigwig, BAM, VCF)
+3. **Determines species** - From symlink target paths (e.g., `/data/HTS/C_auris_B8441/...`)
+4. **Loads metadata** - From old JBrowse1 CSV files in `/data/jbrowse/*/`
+5. **Creates track entries** - With proper category, name, and metadata
+6. **Outputs new config** - As `config.json.new` for review
+
+### 8.4 Script Options
+
+```bash
+# Only add coverage tracks (default - skips BAM alignments)
+python3 update_jbrowse2_tracks.py
+
+# Also include BAM alignment tracks
+python3 update_jbrowse2_tracks.py --include-bam
+
+# Dry run - show what would be done
+python3 update_jbrowse2_tracks.py --dry-run
+```
+
+### 8.5 Metadata Source Files
+
+The script reads metadata from these CSV files:
+
+| Species | Metadata File |
+|---------|--------------|
+| C. albicans SC5314 | `/data/jbrowse/C_albicans_SC5314/C_albicans_SC5314_MetaData.csv` |
+| C. auris B8441 | `/data/jbrowse/C_auris_B8441/C_auris_B8441_MetaData.csv` |
+| C. dubliniensis CD36 | `/data/jbrowse/C_dubliniensis_CD36/C_dubliniensis_CD36_MetaData.csv` |
+| C. glabrata CBS138 | `/data/jbrowse/C_glabrata_CBS138/C_glabrata_CBS138_MetaData.csv` |
+| C. parapsilosis CDC317 | `/data/jbrowse/C_parapsilosis_CDC317/C_parapsilosis_CDC317_MetaData.csv` |
+
+These CSVs contain fields: `label, key, description, condition, category, technique, track_type, organism, strain, haplotype, first_author, pubmed_id`
+
+### 8.6 Verify After Update
+
+```bash
+# Check track counts by species
+cat /data/jbrowse2/config.json | python3 -c "
+import json, sys
+from collections import Counter
+d = json.load(sys.stdin)
+species_counts = Counter()
+for t in d.get('tracks', []):
+    for sp in t.get('assemblyNames', []):
+        species_counts[sp] += 1
+for sp, count in sorted(species_counts.items()):
+    print(f'  {sp}: {count} tracks')
+"
+```
+
+---
+
 ## References
 
 - GenBank: [MT849287.1](https://www.ncbi.nlm.nih.gov/nuccore/MT849287.1)
 - PubMed: [33193142](https://pubmed.ncbi.nlm.nih.gov/33193142/) (Misas et al.)
 - Documentation: `docs/backend-tasks/c_auris_mitochondrial_genome_import.md`
 - Import Script: `scripts/load_c_auris_mitochondrial_genome.py`
+- ORF Qualifier Script: `scripts/add_c_auris_mito_qualifiers.py`
