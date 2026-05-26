@@ -125,8 +125,21 @@ def load_metadata_csv(species):
     return metadata
 
 
+def extract_haplotype_from_label(label):
+    """Extract haplotype (HapA/HapB or A/B) from track label."""
+    if '_HapA_' in label or label.endswith('_HapA'):
+        return 'HapA'
+    elif '_HapB_' in label or label.endswith('_HapB'):
+        return 'HapB'
+    elif '_hapA_' in label or label.endswith('_hapA'):
+        return 'HapA'
+    elif '_hapB_' in label or label.endswith('_hapB'):
+        return 'HapB'
+    return None
+
+
 def build_srr_to_metadata_mapping(species):
-    """Build mapping from SRR number to metadata using tracks.conf and CSV."""
+    """Build mapping from SRR+haplotype to metadata using tracks.conf and CSV."""
     tracks_conf = parse_tracks_conf(species)
     metadata_csv = load_metadata_csv(species)
 
@@ -143,6 +156,9 @@ def build_srr_to_metadata_mapping(species):
         if not srr:
             continue
 
+        # Extract haplotype from track label
+        haplotype = extract_haplotype_from_label(track_label)
+
         # Get metadata from CSV
         meta = metadata_csv.get(track_label, {})
 
@@ -150,10 +166,13 @@ def build_srr_to_metadata_mapping(species):
         display_name = track_info.get('key', '')
 
         if display_name or meta:
-            srr_mapping[srr] = {
+            # Use SRR+haplotype as key to distinguish HapA vs HapB
+            key = f"{srr}_{haplotype}" if haplotype else srr
+            srr_mapping[key] = {
                 'display_name': display_name,
                 'track_label': track_label,
                 'url': url,
+                'haplotype': haplotype or meta.get('haplotype', ''),
                 **meta
             }
 
@@ -164,6 +183,15 @@ def extract_srr_from_filename(filename):
     """Extract SRR number from JBrowse2 filename."""
     match = re.search(r'(SRR\d+)', filename)
     return match.group(1) if match else None
+
+
+def extract_haplotype_from_filename(filename):
+    """Extract haplotype from JBrowse2 filename."""
+    if '_HapA_' in filename or 'HapA_' in filename:
+        return 'HapA'
+    elif '_HapB_' in filename or 'HapB_' in filename:
+        return 'HapB'
+    return None
 
 
 def get_species_from_track(track):
@@ -263,18 +291,22 @@ def main():
         if not uri:
             continue
 
-        # Extract SRR from filename
+        # Extract SRR and haplotype from filename
         srr = extract_srr_from_filename(uri)
         if not srr:
             continue
+
+        haplotype = extract_haplotype_from_filename(uri)
 
         # Get species
         species = get_species_from_track(track)
         if not species:
             continue
 
-        # Look up metadata
-        srr_meta = all_srr_mappings.get(species, {}).get(srr)
+        # Look up metadata - try with haplotype first, then without
+        species_mappings = all_srr_mappings.get(species, {})
+        key_with_hap = f"{srr}_{haplotype}" if haplotype else srr
+        srr_meta = species_mappings.get(key_with_hap) or species_mappings.get(srr)
         if not srr_meta:
             not_found_count += 1
             continue
