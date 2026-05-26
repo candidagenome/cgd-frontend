@@ -34,6 +34,52 @@ SPECIES_LIST = [
     "C_parapsilosis_CDC317",
 ]
 
+# Category normalizations to ensure consistent Author_Year format
+CATEGORY_NORMALIZATIONS = {
+    # Glazier
+    "Glazier": "Glazier_2023",
+    # Jenull - different pubmed IDs should be unified
+    "Jenull_et_al._4701": "Jenull_2021",
+    "Jenull_et_al._1091": "Jenull_2021",
+    # Biermann variations
+    "Biermann_et_al._0390": "Biermann_2022",
+    "Biermann_et_al._1122": "Biermann_2022",
+    "Biermann_et_al_2022": "Biermann_2022",
+    # Chow
+    "Chow_et_al._1091": "Chow_2023",
+    "Chow_et_al_2023": "Chow_2023",
+    # Shivarathri
+    "Shivarathri": "Shivarathri_2019",
+    "Shivarathri_et_al.": "Shivarathri_2019",
+    # Pelletier
+    "Pelletier": "Pelletier_2024",
+    # Other et_al variations
+    "Balla_et_al.": "Balla_2020",
+    "Jakab_et_al.": "Jakab_2021",
+    "Simm_et_al.": "Simm_2019",
+    "Bhakt_et_al.": "Bhakt_2022",
+    # Authors without year
+    "Grumaz": "Grumaz_2013",
+    "Kumar": "Kumar_2022",
+    "Zhang": "Zhang_2015",
+    "Ni": "Ni_2009",
+    "Vu": "Vu_2023",
+    "Guida": "Guida_2011",
+    "Connolly": "Connolly_2013",
+    "Linde_&_Duggan": "Linde_2015",
+    # Invalid categories
+    "A": "Unknown",
+    "WO": "Unknown",
+    "Gene Expression": None,  # Will be replaced with author-based category
+}
+
+
+def normalize_category(category):
+    """Normalize category name to consistent Author_Year format."""
+    if category in CATEGORY_NORMALIZATIONS:
+        return CATEGORY_NORMALIZATIONS[category]
+    return category
+
 
 def load_config():
     """Load existing JBrowse2 config."""
@@ -232,6 +278,8 @@ def update_track_with_metadata(track, srr_meta):
             year = year_match.group(1)
 
         author_category = f"{author}_{year}" if year else author
+        # Normalize to ensure consistent naming
+        author_category = normalize_category(author_category)
         new_category = ['Coverage', author_category]
         if old_category != new_category:
             track['category'] = new_category
@@ -324,10 +372,23 @@ def main():
         else:
             already_good_count += 1
 
+    # Normalize all existing categories for consistency
+    print("\nNormalizing categories...")
+    normalized_count = 0
+    for track in tracks:
+        cat = track.get('category', [])
+        if len(cat) >= 2:
+            old_cat = cat[1]
+            new_cat = normalize_category(old_cat)
+            if new_cat and new_cat != old_cat:
+                cat[1] = new_cat
+                normalized_count += 1
+
     print(f"\nResults:")
     print(f"  Tracks updated: {updated_count}")
     print(f"  Already correct: {already_good_count}")
     print(f"  SRR not found in JBrowse1: {not_found_count}")
+    print(f"  Categories normalized: {normalized_count}")
 
     if args.dry_run:
         print("\n[DRY RUN] Would update these tracks (sample):")
