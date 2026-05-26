@@ -215,17 +215,24 @@ def update_track_with_metadata(track, srr_meta):
             track['name'] = new_name
             updated = True
 
-    # Update category if we have category from metadata
-    if srr_meta.get('category'):
+    # Update category - always use author-based category for consistency
+    if srr_meta.get('first_author'):
         old_category = track.get('category', [])
-        # Keep 'Coverage' as first level, add metadata category as second
-        new_category = ['Coverage', srr_meta['category']]
-        if srr_meta.get('first_author'):
-            # Add author_year as subcategory
-            author = srr_meta['first_author'].replace(' ', '_')
-            # Don't duplicate if category already has author
-            if author not in srr_meta['category']:
-                pass  # Keep just the category
+        # Build author_year category (e.g., "Glazier_2023")
+        author = srr_meta['first_author'].replace(' ', '_')
+        # Extract year from pubmed_id or track label if available
+        year = ''
+        if srr_meta.get('pubmed_id'):
+            # Try to get year from existing track label or leave empty
+            pass
+        # Check if track label has year
+        track_label = srr_meta.get('track_label', '')
+        year_match = re.search(r'(\d{4})', track_label)
+        if year_match:
+            year = year_match.group(1)
+
+        author_category = f"{author}_{year}" if year else author
+        new_category = ['Coverage', author_category]
         if old_category != new_category:
             track['category'] = new_category
             updated = True
