@@ -23,22 +23,29 @@
   font-size: 1.75em;
 }
 
+.crispr-search-page .subtitle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
 .crispr-search-page .subtitle {
   color: #666;
-  margin: 0 0 10px 0;
+  margin: 0;
   font-size: 0.95em;
 }
 
 .crispr-search-page .help-button {
   display: inline-block;
-  padding: 6px 14px;
+  padding: 5px 12px;
   border: 1px solid #1976d2;
   border-radius: 4px;
   color: #1976d2;
   text-decoration: none;
-  font-size: 0.9em;
+  font-size: 0.85em;
   font-weight: 500;
-  margin-bottom: 15px;
+  white-space: nowrap;
   transition: background-color 0.2s, color 0.2s;
 }
 
