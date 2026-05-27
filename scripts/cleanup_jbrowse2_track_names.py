@@ -32,6 +32,12 @@ ACCESSION_PATTERN = re.compile(r'\s*[SsEe][Rr][Rr]\d+\s*', re.IGNORECASE)
 # Pattern for accession in parentheses at end: (SRR12345678)
 ACCESSION_PAREN_PATTERN = re.compile(r'\s*\([SsEe][Rr][Rr]\d+\)\s*$', re.IGNORECASE)
 
+# Pattern for Lok et al tracks that need "hap A" added
+LOK_PATTERN = re.compile(r'^Lok et al\s+', re.IGNORECASE)
+
+# Pattern for biological replicate notation: (biol rep N)
+BIOL_REP_PATTERN = re.compile(r'\(biol rep (\d+)\)')
+
 # Default tracks for C. albicans SC5314 (HapA)
 ALBICANS_DEFAULT_TRACKS = [
     "TranscribedFeatures",  # Gene Features
@@ -47,7 +53,7 @@ def load_config():
 
 def clean_track_name(name, counter=None):
     """
-    Clean accession numbers from track name.
+    Clean accession numbers from track name and add hap A for Lok tracks.
 
     If counter is provided, it will be used to distinguish tracks that would
     otherwise have identical names after cleaning.
@@ -58,8 +64,11 @@ def clean_track_name(name, counter=None):
         "Singh Babakh 2021 SRR13833829 Coverage" -> "Singh Babakh 2021 Coverage"
         "Pelletier et al (UACa11; ...) (SRR24915354)" -> "Pelletier et al (UACa11; ...)"
         "Iracane 2024 Longrna Srr27912204 Coverage" -> "Iracane 2024 Longrna Coverage"
+        "Lok et al glucose (biol rep 1) (SRR24872940)" -> "Lok et al glucose (biol rep 1; hap A)"
+        "Lok et al galactose plus fluconazole (SRR26084642)" -> "Lok et al galactose plus fluconazole (hap A)"
     """
     original = name
+    is_lok_track = LOK_PATTERN.search(name) is not None
 
     # First, remove accession numbers in parentheses at the end
     name = ACCESSION_PAREN_PATTERN.sub('', name)
@@ -69,6 +78,18 @@ def clean_track_name(name, counter=None):
 
     # Clean up multiple spaces
     name = re.sub(r'\s+', ' ', name).strip()
+
+    # For Lok tracks, add "hap A" designation
+    if is_lok_track:
+        # Check if it has (biol rep N) - add "; hap A" inside
+        biol_rep_match = BIOL_REP_PATTERN.search(name)
+        if biol_rep_match:
+            # Replace "(biol rep N)" with "(biol rep N; hap A)"
+            rep_num = biol_rep_match.group(1)
+            name = BIOL_REP_PATTERN.sub(f'(biol rep {rep_num}; hap A)', name)
+        else:
+            # No biol rep, add "(hap A)" at the end
+            name = f"{name} (hap A)"
 
     # If counter provided and name would be duplicate, add sample number
     if counter is not None:
@@ -83,12 +104,24 @@ def clean_track_name(name, counter=None):
 
 def get_base_name(name):
     """Get base name without accession for grouping duplicates."""
+    is_lok_track = LOK_PATTERN.search(name) is not None
+
     # Remove accession in parentheses at end
     name = ACCESSION_PAREN_PATTERN.sub('', name)
     # Remove standalone accession
     name = ACCESSION_PATTERN.sub(' ', name)
     # Clean up spaces
     name = re.sub(r'\s+', ' ', name).strip()
+
+    # For Lok tracks, add "hap A" to base name for proper deduplication
+    if is_lok_track:
+        biol_rep_match = BIOL_REP_PATTERN.search(name)
+        if biol_rep_match:
+            rep_num = biol_rep_match.group(1)
+            name = BIOL_REP_PATTERN.sub(f'(biol rep {rep_num}; hap A)', name)
+        else:
+            name = f"{name} (hap A)"
+
     return name
 
 
