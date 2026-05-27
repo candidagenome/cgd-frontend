@@ -375,7 +375,7 @@ function CrisprGuideFinderHelp() {
           </p>
           <p>
             <strong>Key result:</strong> In a benchmark of 20 genes, CGD recovered about
-            50–56% of external tools&apos; strict top-10 guides. When CGD&apos;s top 20
+            55–56% of external tools&apos; strict top-10 guides. When CGD&apos;s top 20
             guides were considered, overlap increased to about 79%, suggesting that most
             differences are due to ranking order rather than missing candidate guides.
           </p>
@@ -414,8 +414,8 @@ function CrisprGuideFinderHelp() {
                 <tbody>
                   <tr>
                     <td>CHOPCHOP top 10 in CGD top 10</td>
-                    <td>78/140</td>
-                    <td><strong>55.7%</strong></td>
+                    <td>79/140</td>
+                    <td><strong>56.4%</strong></td>
                   </tr>
                   <tr>
                     <td>CHOPCHOP top 10 in CRISPOR top 10</td>
@@ -424,8 +424,8 @@ function CrisprGuideFinderHelp() {
                   </tr>
                   <tr>
                     <td>CRISPOR top 10 in CGD top 10</td>
-                    <td>104/200</td>
-                    <td>52.0%</td>
+                    <td>111/200</td>
+                    <td>55.5%</td>
                   </tr>
                 </tbody>
               </table>
