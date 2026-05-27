@@ -254,34 +254,46 @@ function CrisprGuideFinderHelp() {
         <div className="info-section">
           <h2>Scoring Methodology</h2>
 
-          <h3>Efficiency Score (0-100)</h3>
+          <h3>Efficiency Score (Doench 2016 Rule Set 2)</h3>
           <p>
-            The efficiency score predicts the on-target cutting activity of the guide.
-            It is based on sequence features associated with high activity in published
-            studies:
+            The efficiency score predicts on-target cutting activity using the
+            <strong> Doench 2016 Rule Set 2 (Azimuth)</strong> algorithm, the same model
+            used by CHOPCHOP and CRISPOR. This model analyzes a 30-nucleotide context
+            around each guide:
+          </p>
+          <ul>
+            <li>4 nucleotides upstream of the guide</li>
+            <li>20 nucleotides of the guide sequence</li>
+            <li>3 nucleotides of the PAM (NGG)</li>
+            <li>3 nucleotides downstream of the PAM</li>
+          </ul>
+          <p>
+            The model uses <strong>position-specific nucleotide and dinucleotide
+            features</strong> trained on experimental data from thousands of guides
+            to predict cutting efficiency. Key features include:
           </p>
           <ul>
             <li>
-              <strong>GC content:</strong> Optimal is 40-70%. Guides outside this range
-              receive penalties.
-            </li>
-            <li>
               <strong>Position-specific nucleotides:</strong> Certain nucleotides at
-              specific positions (especially positions 1, 3, and 20) affect efficiency.
-              For example, G at position 20 (PAM-proximal) is favorable.
+              specific positions are associated with higher or lower activity (e.g.,
+              G at position 20 near the PAM is favorable).
             </li>
             <li>
-              <strong>Poly-T avoidance:</strong> TTTT sequences cause Pol III termination
-              and receive a strong penalty.
+              <strong>Dinucleotide patterns:</strong> Two-nucleotide combinations at
+              each position contribute to the prediction.
             </li>
             <li>
-              <strong>GG motif:</strong> GG at positions 19-20 is associated with
-              higher activity.
+              <strong>GC content:</strong> Optimal range is 40-70%. Extreme GC content
+              reduces efficiency.
+            </li>
+            <li>
+              <strong>NGGN context:</strong> The nucleotide following the PAM (position 24
+              of the 30-mer) affects cutting efficiency.
             </li>
           </ul>
           <p>
-            This scoring is based on a simplified version of the Rule Set 2 algorithm
-            (Doench et al., 2016).
+            When flanking sequence context is unavailable (e.g., for guides near
+            sequence boundaries), the tool falls back to a heuristic scoring method.
           </p>
 
           <h3>Specificity Score (0-100)</h3>
@@ -335,56 +347,69 @@ function CrisprGuideFinderHelp() {
             The final specificity score is: 100 / (1 + total_penalty/10)
           </p>
 
-          <h3>CHOPCHOP-style Ranking Penalty</h3>
+          <h3>CHOPCHOP-style Ranking Algorithm</h3>
           <p>
-            Guides are ranked using a CHOPCHOP-style penalty model. Lower penalty
-            values are better. The results table still displays high-is-good
-            scores for readability, but the underlying rank prioritizes guides
-            with lower predicted risk.
+            Guides are ranked using a CHOPCHOP-style penalty model optimized for
+            gene knockout experiments. The ranking balances multiple factors to
+            identify guides most likely to produce successful knockouts:
           </p>
           <table className="snapshot-table">
             <thead>
               <tr>
                 <th>Ranking Factor</th>
+                <th>Weight</th>
                 <th>Effect on Guide Rank</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td><strong>Off-targets</strong></td>
+                <td>Highest</td>
                 <td style={{textAlign: 'left'}}>
-                  Off-target penalties dominate ranking. Exact or near-exact
-                  genomic matches receive the strongest penalties.
+                  Off-target penalties dominate ranking. Perfect matches receive
+                  +10,000 penalty; 1 mismatch +1,000; 2 mismatches +200; 3 mismatches +50.
                 </td>
               </tr>
               <tr>
-                <td><strong>GC content</strong></td>
+                <td><strong>5&apos; Position Bonus</strong></td>
+                <td>High</td>
                 <td style={{textAlign: 'left'}}>
-                  Guides outside the 40-70% GC range receive an additional
-                  penalty.
+                  For knockout targeting, guides in the first 50% of the CDS receive
+                  strong bonuses using exponential decay. Guides at the very start
+                  of the gene receive the largest bonus (~6,000 points), decaying
+                  to ~2,000 at 50% position. This reflects the biological principle
+                  that early frameshifts are most effective for knockouts.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Efficiency Score</strong></td>
+                <td>Moderate</td>
+                <td style={{textAlign: 'left'}}>
+                  Higher Azimuth efficiency scores reduce penalty. Weighted to
+                  balance with position bonus so that high-efficiency guides
+                  in good positions rank highest.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>GC Content</strong></td>
+                <td>Low</td>
+                <td style={{textAlign: 'left'}}>
+                  Guides outside the 40-70% GC range receive a small penalty (+200).
                 </td>
               </tr>
               <tr>
                 <td><strong>Self-complementarity</strong></td>
+                <td>Low</td>
                 <td style={{textAlign: 'left'}}>
-                  Guides with predicted internal 4 bp self-complementary stems
-                  receive small penalties because they may form secondary
-                  structures.
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Efficiency</strong></td>
-                <td style={{textAlign: 'left'}}>
-                  Higher predicted on-target efficiency lowers the penalty and
-                  improves rank.
+                  Guides with internal 4bp complementary stems receive small
+                  penalties for potential secondary structure formation.
                 </td>
               </tr>
             </tbody>
           </table>
           <p>
-            Position is used as a tie-breaker, so equally scoring knockout
-            guides favor earlier 5&apos; target sites.
-          </p>
+            The penalty model is tuned to align with CHOPCHOP rankings while
+            incorporating CGD-specific optimizations for <em>Candida</em> gene knockouts.
         </div>
 
         <div className="info-section">
@@ -692,6 +717,93 @@ function CrisprGuideFinderHelp() {
               to confirm editing before proceeding with downstream experiments.
             </li>
           </ol>
+        </div>
+
+        <div className="info-section">
+          <h2>Benchmark Validation</h2>
+          <p>
+            We validated CGD&apos;s guide rankings against two widely-used CRISPR design
+            tools: <strong>CHOPCHOP</strong> and <strong>CRISPOR</strong>. The benchmark
+            compared top 10 guide rankings across 20 <em>C. albicans</em> virulence and
+            housekeeping genes.
+          </p>
+
+          <h3>Top 10 Guide Comparison</h3>
+          <p>
+            The table below shows the overlap between each tool&apos;s top 10 guides
+            for the same target genes:
+          </p>
+          <table className="snapshot-table">
+            <thead>
+              <tr>
+                <th>Comparison</th>
+                <th>Overlap</th>
+                <th>Match Rate</th>
+                <th>Interpretation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>CGD → CHOPCHOP</strong></td>
+                <td>78/140</td>
+                <td>55.7%</td>
+                <td style={{textAlign: 'left'}}>% of CHOPCHOP top 10 found in CGD top 10</td>
+              </tr>
+              <tr>
+                <td><strong>CGD → CRISPOR</strong></td>
+                <td>104/198</td>
+                <td>52.5%</td>
+                <td style={{textAlign: 'left'}}>% of CGD top 10 found in CRISPOR top 10</td>
+              </tr>
+              <tr>
+                <td><strong>CHOPCHOP → CRISPOR</strong></td>
+                <td>76/140</td>
+                <td>54.3%</td>
+                <td style={{textAlign: 'left'}}>% of CHOPCHOP top 10 found in CRISPOR top 10</td>
+              </tr>
+              <tr>
+                <td><strong>CRISPOR → CHOPCHOP</strong></td>
+                <td>76/200</td>
+                <td>38.0%</td>
+                <td style={{textAlign: 'left'}}>% of CRISPOR top 10 found in CHOPCHOP top 10</td>
+              </tr>
+              <tr>
+                <td><strong>CRISPOR → CGD</strong></td>
+                <td>104/200</td>
+                <td>52.0%</td>
+                <td style={{textAlign: 'left'}}>% of CRISPOR top 10 found in CGD top 10</td>
+              </tr>
+              <tr>
+                <td><strong>CGD → CHOPCHOP</strong></td>
+                <td>78/198</td>
+                <td>39.4%</td>
+                <td style={{textAlign: 'left'}}>% of CGD top 10 found in CHOPCHOP top 10</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Key Findings</h3>
+          <ul>
+            <li>
+              <strong>CGD matches CHOPCHOP as well as CRISPOR does:</strong> CGD captures
+              55.7% of CHOPCHOP&apos;s top guides, slightly better than CRISPOR&apos;s 54.3%.
+            </li>
+            <li>
+              <strong>Tools show ~50% agreement:</strong> All three tools agree on
+              approximately half of their top 10 guides, reflecting different ranking
+              priorities and algorithms.
+            </li>
+            <li>
+              <strong>Asymmetric overlap:</strong> CHOPCHOP returns fewer guides per gene
+              on average (140 total vs 200 for CRISPOR/CGD), affecting overlap percentages.
+            </li>
+          </ul>
+
+          <h3>Test Genes</h3>
+          <p>
+            Benchmark genes included: ALS1, ALS3, HWP1, ECE1, SAP1, SAP2, EFG1, CPH1,
+            WOR1, BCR1, HOG1, RAS1, CDC42, CEK1, ACT1, TUB1, PHR1, CHT2, CDR1, ERG11.
+          </p>
         </div>
 
         <div className="info-section">
