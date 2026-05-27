@@ -420,6 +420,13 @@ function CrisprSearchPage() {
                 'Design Guides'
               )}
             </button>
+            {loading && (
+              <p className="loading-message">
+                {checkOfftargets
+                  ? 'Off-target analysis takes 1-2 minutes. Please wait...'
+                  : 'This may take a few seconds...'}
+              </p>
+            )}
           </div>
         </form>
       </div>

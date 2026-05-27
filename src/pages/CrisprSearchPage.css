@@ -363,6 +363,13 @@
   cursor: not-allowed;
 }
 
+.loading-message {
+  margin-top: 12px;
+  color: #666;
+  font-size: 14px;
+  font-style: italic;
+}
+
 /* Loading Spinner */
 .loading-spinner {
   display: inline-block;
