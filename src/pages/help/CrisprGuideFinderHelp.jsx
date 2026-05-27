@@ -410,6 +410,7 @@ function CrisprGuideFinderHelp() {
           <p>
             The penalty model is tuned to align with CHOPCHOP rankings while
             incorporating CGD-specific optimizations for <em>Candida</em> gene knockouts.
+          </p>
         </div>
 
         <div className="info-section">
