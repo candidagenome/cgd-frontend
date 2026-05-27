@@ -98,11 +98,15 @@ function CrisprResultsPage() {
   };
 
   // Check if guide is recommended (high specificity + decent efficiency)
+  // Only recommend guides that have been validated with off-target search
   const isRecommended = (guide) => {
-    return guide.offtarget_checked !== false &&
+    return guide.offtarget_checked === true &&
       guide.specificity_score >= 100 &&
       guide.efficiency_score >= 50;
   };
+
+  // Check if off-target search was performed for any guides
+  const offtargetsChecked = results?.guides?.some(g => g.offtarget_checked === true) ?? false;
 
   // Format mismatch positions for display
   const formatMismatchPositions = (positions) => {
@@ -313,6 +317,27 @@ function CrisprResultsPage() {
           </div>
         )}
 
+        {/* Off-target Status Badge */}
+        <div className={`offtarget-status-badge ${offtargetsChecked ? 'checked' : 'not-checked'}`}>
+          {offtargetsChecked ? (
+            <>
+              <span className="status-icon">✓</span>
+              <span className="status-text">
+                <strong>Off-target search: Completed</strong>
+                <span className="status-detail">Specificity scores verified. Top guides marked as Recommended.</span>
+              </span>
+            </>
+          ) : (
+            <>
+              <span className="status-icon">○</span>
+              <span className="status-text">
+                <strong>Off-target search: Not performed</strong>
+                <span className="status-detail">Specificity scores are not verified. Run with &quot;Check off-targets&quot; enabled for recommendations.</span>
+              </span>
+            </>
+          )}
+        </div>
+
         {/* Warnings */}
         {results.warnings && results.warnings.length > 0 && (
           <div className="warnings-section">
@@ -448,15 +473,26 @@ function CrisprResultsPage() {
                         </span>
                       </td>
                       <td className="col-score">
-                        <span className={`score-badge ${getScoreClass(guide.specificity_score)}`}>
-                          {guide.specificity_score.toFixed(0)}
-                        </span>
+                        {guide.offtarget_checked === true ? (
+                          <span className={`score-badge ${getScoreClass(guide.specificity_score)}`}>
+                            {guide.specificity_score.toFixed(0)}
+                          </span>
+                        ) : (
+                          <span className="score-badge score-unchecked" title="Off-target search not performed">
+                            —
+                          </span>
+                        )}
                       </td>
                       <td className="col-gc">{guide.gc_content.toFixed(0)}%</td>
                       <td className="col-flags">
                         {isRecommended(guide) && (
-                          <span className="flag flag-recommended" title="Recommended: High specificity, good efficiency">
+                          <span className="flag flag-recommended" title="Off-target verified, high specificity, good efficiency">
                             Recommended
+                          </span>
+                        )}
+                        {!offtargetsChecked && (
+                          <span className="flag flag-unchecked" title="Run off-target search to get recommendations">
+                            Not verified
                           </span>
                         )}
                         {guide.has_poly_t && <span className="flag flag-warning" title="Contains TTTT - may cause Pol III termination">T4</span>}
@@ -534,9 +570,13 @@ function CrisprResultsPage() {
                                   </div>
                                   <div className="score-item">
                                     <span className="score-label">Specificity:</span>
-                                    <span className={`score-value ${getScoreClass(guide.specificity_score)}`}>
-                                      {guide.specificity_score.toFixed(1)}
-                                    </span>
+                                    {guide.offtarget_checked === true ? (
+                                      <span className={`score-value ${getScoreClass(guide.specificity_score)}`}>
+                                        {guide.specificity_score.toFixed(1)}
+                                      </span>
+                                    ) : (
+                                      <span className="score-value score-unchecked">Not checked</span>
+                                    )}
                                   </div>
                                   <div className="score-item">
                                     <span className="score-label">Combined:</span>
@@ -550,8 +590,13 @@ function CrisprResultsPage() {
                                   </div>
                                 </div>
                                 <div className="score-methodology">
-                                  Efficiency: Rule Set 2 (Doench 2016), adapted for yeast.
-                                  Specificity: 100 = no off-targets; lower = more off-target risk.
+                                  <strong>Efficiency:</strong> Predicted cutting activity (Doench 2016 Rule Set 2). Higher is better.
+                                  <br />
+                                  <strong>Specificity:</strong> {guide.offtarget_checked === true
+                                    ? '100 = no off-targets detected; lower = more off-target risk.'
+                                    : 'Not verified. Enable "Check off-targets" to validate.'}
+                                  <br />
+                                  <strong>Recommended:</strong> Guide passed efficiency, GC%, and off-target filters.
                                 </div>
                               </div>
 

@@ -186,6 +186,45 @@
   background-color: #1565c0;
 }
 
+/* Off-target Status Badge */
+.offtarget-status-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  font-size: 0.9em;
+}
+
+.offtarget-status-badge.checked {
+  background-color: #d4edda;
+  border: 1px solid #28a745;
+  color: #155724;
+}
+
+.offtarget-status-badge.not-checked {
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+  color: #856404;
+}
+
+.offtarget-status-badge .status-icon {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.offtarget-status-badge .status-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.offtarget-status-badge .status-detail {
+  font-size: 0.9em;
+  opacity: 0.9;
+}
+
 /* Warnings */
 .warnings-section {
   margin-bottom: 15px;
@@ -399,6 +438,12 @@
   color: #c62828;
 }
 
+.score-unchecked {
+  background-color: #e0e0e0;
+  color: #757575;
+  font-style: italic;
+}
+
 /* Flags */
 .flag {
   display: inline-block;
@@ -417,6 +462,12 @@
 .flag-warning {
   background-color: #fff3cd;
   color: #856404;
+}
+
+.flag-unchecked {
+  background-color: #e0e0e0;
+  color: #757575;
+  font-style: italic;
 }
 
 .flag-info {
