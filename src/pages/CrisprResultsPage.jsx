@@ -99,10 +99,13 @@ function CrisprResultsPage() {
 
   // Check if guide is recommended (high specificity + decent efficiency)
   // Only recommend guides that have been validated with off-target search
+  // Also recommend guides where all off-targets are intergenic (no gene disruption)
   const isRecommended = (guide) => {
-    return guide.offtarget_checked === true &&
-      guide.specificity_score >= 100 &&
-      guide.efficiency_score >= 50;
+    if (guide.offtarget_checked !== true || guide.efficiency_score < 50) {
+      return false;
+    }
+    // Recommend if no off-targets OR all off-targets are intergenic
+    return guide.specificity_score >= 100 || guide.all_offtargets_intergenic === true;
   };
 
   // Check if off-target search was performed for any guides
