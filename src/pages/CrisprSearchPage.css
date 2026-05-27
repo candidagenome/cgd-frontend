@@ -25,18 +25,26 @@
 
 .crispr-search-page .subtitle {
   color: #666;
-  margin: 0 0 20px 0;
+  margin: 0 0 10px 0;
   font-size: 0.95em;
 }
 
-.crispr-search-page .subtitle .help-link {
+.crispr-search-page .help-button {
+  display: inline-block;
+  padding: 6px 14px;
+  border: 1px solid #1976d2;
+  border-radius: 4px;
   color: #1976d2;
   text-decoration: none;
+  font-size: 0.9em;
   font-weight: 500;
+  margin-bottom: 15px;
+  transition: background-color 0.2s, color 0.2s;
 }
 
-.crispr-search-page .subtitle .help-link:hover {
-  text-decoration: underline;
+.crispr-search-page .help-button:hover {
+  background-color: #1976d2;
+  color: white;
 }
 
 /* Two-column layout */

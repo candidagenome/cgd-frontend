@@ -155,11 +155,10 @@ function CrisprSearchPage() {
         <h1>CRISPR Guide RNA Designer</h1>
         <p className="subtitle">
           Design sgRNAs for Candida species with efficiency prediction and off-target analysis.
-          {' '}
-          <Link to="/help/crispr" className="help-link">
-            About this tool
-          </Link>
         </p>
+        <Link to="/help/crispr" className="help-button">
+          About this tool
+        </Link>
 
         <form onSubmit={handleSubmit}>
           <div className="form-columns">
