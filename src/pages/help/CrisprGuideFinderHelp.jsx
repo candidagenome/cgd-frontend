@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../InfoPages.css';
 
@@ -7,6 +7,9 @@ import '../InfoPages.css';
  * Written for researchers, not developers.
  */
 function CrisprGuideFinderHelp() {
+  const [showScoringDetails, setShowScoringDetails] = useState(false);
+  const [showBenchmarkDetails, setShowBenchmarkDetails] = useState(false);
+
   return (
     <div className="info-page">
       <div className="info-page-content">
@@ -24,8 +27,8 @@ function CrisprGuideFinderHelp() {
           </p>
           <p>
             This tool is designed to help researchers quickly identify high-quality guides
-            for gene knockout, knockdown, or modification experiments. We recommend validating
-            top candidates experimentally before proceeding with final experiments.
+            for gene knockout, knockdown, or modification experiments. <strong>We recommend
+            validating top candidates experimentally before proceeding with final experiments.</strong>
           </p>
         </div>
 
@@ -49,10 +52,190 @@ function CrisprGuideFinderHelp() {
               guide length
             </li>
             <li>
+              <strong>Enable off-target checking:</strong> Recommended for final guide
+              selection (takes 1-2 minutes)
+            </li>
+            <li>
               <strong>Click &quot;Design Guides&quot;:</strong> The tool will find all
               potential guides and rank them by predicted quality
             </li>
           </ol>
+        </div>
+
+        <div className="info-section">
+          <h2>How to Choose a Good Guide</h2>
+          <p>
+            When selecting guides for your experiment, prioritize guides that:
+          </p>
+          <ul>
+            <li>
+              <strong>Have high specificity</strong> — ideally 100 if off-target checking
+              was performed. This means no off-targets were detected.
+            </li>
+            <li>
+              <strong>Have reasonable efficiency</strong> — higher efficiency scores
+              (50+) predict better cutting activity.
+            </li>
+            <li>
+              <strong>Are in the 5&apos; region</strong> — for knockout experiments,
+              early frameshifts are most effective.
+            </li>
+            <li>
+              <strong>Have moderate GC content</strong> — 40–60% is optimal. Extreme
+              GC can affect stability or cause secondary structures.
+            </li>
+            <li>
+              <strong>Have no warning flags</strong> — avoid guides with Poly-T,
+              off-targets in related genes, or other warnings.
+            </li>
+            <li>
+              <strong>Are marked &quot;Recommended&quot;</strong> — these guides passed
+              computational filters including verified specificity.
+            </li>
+          </ul>
+          <p>
+            <strong>Important:</strong> Always validate 2-3 guides experimentally before
+            proceeding with final experiments.
+          </p>
+        </div>
+
+        <div className="info-section">
+          <h2>Understanding the Results</h2>
+
+          <h3>Guide Table Columns</h3>
+          <table className="snapshot-table">
+            <thead>
+              <tr>
+                <th>Column</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Rank</strong></td>
+                <td style={{textAlign: 'left'}}>
+                  Guides are ranked by a combined penalty score. Lower penalty = better rank.
+                  Top guides are marked with a ★ if they pass quality filters.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Guide Sequence</strong></td>
+                <td style={{textAlign: 'left'}}>
+                  The 20bp (or configured length) guide RNA sequence
+                </td>
+              </tr>
+              <tr>
+                <td><strong>PAM</strong></td>
+                <td style={{textAlign: 'left'}}>
+                  The PAM sequence adjacent to the guide
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Position</strong></td>
+                <td style={{textAlign: 'left'}}>
+                  Position within the target sequence (1-based). (+) indicates
+                  sense strand, (-) indicates antisense strand.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Efficiency</strong></td>
+                <td style={{textAlign: 'left'}}>
+                  Predicted on-target cutting efficiency (0-100). Higher is better.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Specificity</strong></td>
+                <td style={{textAlign: 'left'}}>
+                  Off-target risk score (0-100). 100 = no off-targets detected.
+                  Shows &quot;—&quot; if off-target checking was not performed.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>GC%</strong></td>
+                <td style={{textAlign: 'left'}}>
+                  GC content of the guide. Optimal range is 40-70%.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Flags</strong></td>
+                <td style={{textAlign: 'left'}}>
+                  Status indicators including &quot;Recommended&quot; or warning flags.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>The &quot;Recommended&quot; Badge</h3>
+          <p>
+            A guide is marked <strong>Recommended</strong> when it passes the main quality filters:
+          </p>
+          <ul>
+            <li>Off-target checking was performed and specificity is 100 (no off-targets)</li>
+            <li>Efficiency score is at least 50</li>
+            <li>No major warning flags</li>
+          </ul>
+          <p>
+            <strong>Note:</strong> &quot;Recommended&quot; means the guide passed computational
+            filters. It does not replace experimental validation.
+          </p>
+
+          <h3>Warning Flags</h3>
+          <ul>
+            <li>
+              <strong>Not verified</strong> — Off-target checking was not performed.
+              Specificity is unknown.
+            </li>
+            <li>
+              <strong>OT:N</strong> — Off-target count. Number of potential off-target
+              sites found with 0-3 mismatches.
+            </li>
+            <li>
+              <strong>Related</strong> — Off-targets detected in paralog or ortholog genes.
+              These may affect related biological pathways.
+            </li>
+            <li>
+              <strong>T4</strong> — Guide contains TTTT (Poly-T), which can cause
+              premature termination of RNA Pol III transcription.
+            </li>
+          </ul>
+        </div>
+
+        <div className="info-section">
+          <h2>Off-Target Checking</h2>
+          <p>
+            Off-target analysis identifies potential unintended cut sites across the genome.
+            This is critical for ensuring your guide is specific to your target gene.
+          </p>
+
+          <h3>When Off-Target Checking is Enabled</h3>
+          <ul>
+            <li>Off-target search is performed for the <strong>top-ranked guides</strong></li>
+            <li>Specificity scores are calculated based on off-targets found</li>
+            <li>Guides with no off-targets (specificity 100) are marked &quot;Recommended&quot;</li>
+          </ul>
+
+          <h3>When Off-Target Checking is Disabled or Unavailable</h3>
+          <ul>
+            <li>Specificity shows as &quot;—&quot; (not checked)</li>
+            <li>Guides are ranked by efficiency and position only</li>
+            <li>No guides are marked as &quot;Recommended&quot;</li>
+          </ul>
+          <p>
+            <strong>Important:</strong> Specificity scores are only meaningful when off-target
+            analysis has been performed. If specificity shows &quot;—&quot;, the guide has
+            not been validated for off-targets.
+          </p>
+
+          <h3>Diploid Genome Handling</h3>
+          <p>
+            <em>C. albicans</em> SC5314 is diploid with A and B allele chromosomes.
+            The tool automatically:
+          </p>
+          <ul>
+            <li>Identifies allelic pairs (same position on A and B chromosomes)</li>
+            <li>Excludes the on-target site and its allelic copy from off-target counts</li>
+            <li>Reports only true off-targets in other genes</li>
+          </ul>
         </div>
 
         <div className="info-section">
@@ -73,9 +256,6 @@ function CrisprGuideFinderHelp() {
           </p>
 
           <h3>Target Region</h3>
-          <p>
-            When targeting a gene, you can choose which region to search for guides:
-          </p>
           <table className="snapshot-table">
             <thead>
               <tr>
@@ -89,7 +269,7 @@ function CrisprGuideFinderHelp() {
                 <td><strong>5&apos; Region</strong></td>
                 <td style={{textAlign: 'left'}}>First 20% of coding sequence</td>
                 <td style={{textAlign: 'left'}}>
-                  Recommended for knockouts - early frameshift mutations are most
+                  Recommended for knockouts — early frameshift mutations are most
                   likely to abolish protein function
                 </td>
               </tr>
@@ -128,8 +308,8 @@ function CrisprGuideFinderHelp() {
                 <td><strong>NGG</strong></td>
                 <td>SpCas9</td>
                 <td style={{textAlign: 'left'}}>
-                  Most common CRISPR system. PAM is 3&apos; of the guide.
-                  Works well in <em>Candida</em> species.
+                  Most common CRISPR system. For SpCas9 systems, the PAM is located
+                  immediately 3&apos; of the guide sequence. Works well in <em>Candida</em>.
                 </td>
               </tr>
               <tr>
@@ -152,8 +332,8 @@ function CrisprGuideFinderHelp() {
                 <td><strong>TTTV</strong></td>
                 <td>Cas12a (Cpf1)</td>
                 <td style={{textAlign: 'left'}}>
-                  PAM is 5&apos; of the guide. Creates staggered cuts.
-                  Good for HDR applications.
+                  For Cas12a/Cpf1 systems, the PAM is located 5&apos; of the
+                  guide sequence. Creates staggered cuts; good for HDR.
                 </td>
               </tr>
             </tbody>
@@ -161,324 +341,230 @@ function CrisprGuideFinderHelp() {
         </div>
 
         <div className="info-section">
-          <h2>Understanding the Results</h2>
-
-          <h3>Guide Table Columns</h3>
-          <table className="snapshot-table">
-            <thead>
-              <tr>
-                <th>Column</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Rank</strong></td>
-                <td style={{textAlign: 'left'}}>
-                  Guides ranked by a CHOPCHOP-style penalty. Lower penalty is
-                  better; displayed scores are converted so higher is better.
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Guide Sequence</strong></td>
-                <td style={{textAlign: 'left'}}>
-                  The 20bp (or configured length) guide RNA sequence
-                </td>
-              </tr>
-              <tr>
-                <td><strong>PAM</strong></td>
-                <td style={{textAlign: 'left'}}>
-                  The PAM sequence adjacent to the guide
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Position</strong></td>
-                <td style={{textAlign: 'left'}}>
-                  Position within the target sequence (1-based). (+) indicates
-                  Watson strand, (-) indicates Crick strand.
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Efficiency</strong></td>
-                <td style={{textAlign: 'left'}}>
-                  Predicted on-target cutting efficiency (0-100). Higher is better.
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Specificity</strong></td>
-                <td style={{textAlign: 'left'}}>
-                  Score reflecting off-target risk (0-100). Higher means fewer/weaker
-                  off-targets. 100 = no off-targets detected.
-                </td>
-              </tr>
-              <tr>
-                <td><strong>GC%</strong></td>
-                <td style={{textAlign: 'left'}}>
-                  GC content of the guide. Optimal range is 40-70%.
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Flags</strong></td>
-                <td style={{textAlign: 'left'}}>
-                  Warning indicators for potential issues (see below)
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <h3>Warning Flags</h3>
+          <h2>Limitations and Caveats</h2>
           <ul>
             <li>
-              <strong>OT:N</strong> - Off-target count. Number of potential off-target
-              sites found in the genome with 0-3 mismatches.
+              <strong>Computational predictions:</strong> Efficiency and specificity
+              scores are predictions based on sequence features. Experimental validation
+              is recommended for important guides.
             </li>
             <li>
-              <strong>Related</strong> - Off-targets detected in paralog or ortholog genes
-              of your target. These may have similar biological functions, so off-target
-              cutting could affect related pathways.
+              <strong>Off-target search scope:</strong> Off-target analysis is performed
+              for top-ranked guides only (for performance reasons). Lower-ranked guides
+              may show efficiency scores only; their specificity is not verified unless
+              off-target checking was performed.
             </li>
             <li>
-              <strong>Poly-T</strong> - Guide contains TTTT sequence, which can cause
-              premature termination of RNA Pol III transcription.
+              <strong>Chromatin accessibility:</strong> This tool does not account
+              for chromatin state, which can affect guide efficiency in vivo.
             </li>
             <li>
-              <strong>Low GC</strong> - GC content below 40%, which may reduce stability.
-            </li>
-            <li>
-              <strong>High GC</strong> - GC content above 70%, which may cause secondary
-              structures.
+              <strong>Strain variation:</strong> Guide design is based on the
+              reference genome. Your strain may have sequence polymorphisms
+              affecting guide binding.
             </li>
           </ul>
         </div>
 
         <div className="info-section">
-          <h2>Scoring Methodology</h2>
-
-          <h3>Efficiency Score (Doench 2016 Rule Set 2)</h3>
+          <h2>Benchmark Summary</h2>
           <p>
-            The efficiency score predicts on-target cutting activity using the
-            <strong> Doench 2016 Rule Set 2 (Azimuth)</strong> algorithm, the same model
-            used by CHOPCHOP and CRISPOR. This model analyzes a 30-nucleotide context
-            around each guide:
+            We validated CGD&apos;s guide rankings against two widely-used CRISPR design
+            tools: <strong>CHOPCHOP</strong> and <strong>CRISPOR</strong>, comparing rankings
+            across 20 <em>C. albicans</em> genes.
           </p>
-          <ul>
-            <li>4 nucleotides upstream of the guide</li>
-            <li>20 nucleotides of the guide sequence</li>
-            <li>3 nucleotides of the PAM (NGG)</li>
-            <li>3 nucleotides downstream of the PAM</li>
-          </ul>
           <p>
-            The model uses <strong>position-specific nucleotide and dinucleotide
-            features</strong> trained on experimental data from thousands of guides
-            to predict cutting efficiency. Key features include:
+            <strong>Key result:</strong> In a benchmark of 20 genes, CGD recovered about
+            50–56% of external tools&apos; strict top-10 guides. When CGD&apos;s top 20
+            guides were considered, overlap increased to about 79%, suggesting that most
+            differences are due to ranking order rather than missing candidate guides.
           </p>
-          <ul>
-            <li>
-              <strong>Position-specific nucleotides:</strong> Certain nucleotides at
-              specific positions are associated with higher or lower activity (e.g.,
-              G at position 20 near the PAM is favorable).
-            </li>
-            <li>
-              <strong>Dinucleotide patterns:</strong> Two-nucleotide combinations at
-              each position contribute to the prediction.
-            </li>
-            <li>
-              <strong>GC content:</strong> Optimal range is 40-70%. Extreme GC content
-              reduces efficiency.
-            </li>
-            <li>
-              <strong>NGGN context:</strong> The nucleotide following the PAM (position 24
-              of the 30-mer) affects cutting efficiency.
-            </li>
-          </ul>
           <p>
-            When flanking sequence context is unavailable (e.g., for guides near
-            sequence boundaries), the tool falls back to a heuristic scoring method.
+            Match rate measures overlap between tools, not biological correctness. Each
+            tool uses different efficiency, specificity, filtering, and ranking criteria,
+            so some differences are expected.
           </p>
 
-          <h3>Specificity Score (0-100)</h3>
-          <p>
-            The specificity score reflects the risk of off-target cleavage. It is
-            calculated based on off-target search results:
-          </p>
-          <ul>
-            <li>
-              <strong>100:</strong> No off-targets detected (highest specificity)
-            </li>
-            <li>
-              <strong>Lower scores:</strong> Off-targets found, weighted by mismatch count
-            </li>
-          </ul>
-          <p>
-            Off-targets are weighted by their potential to be cleaved:
-          </p>
-          <table className="snapshot-table">
-            <thead>
-              <tr>
-                <th>Mismatches</th>
-                <th>Penalty</th>
-                <th>Risk Level</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>0 (perfect match)</td>
-                <td>50</td>
-                <td style={{textAlign: 'left'}}>Very high - likely to cut</td>
-              </tr>
-              <tr>
-                <td>1</td>
-                <td>20</td>
-                <td style={{textAlign: 'left'}}>High - may still cut efficiently</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>5</td>
-                <td style={{textAlign: 'left'}}>Moderate - reduced cutting</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>1</td>
-                <td style={{textAlign: 'left'}}>Low - unlikely to cut</td>
-              </tr>
-            </tbody>
-          </table>
-          <p>
-            The final specificity score is: 100 / (1 + total_penalty/10)
-          </p>
+          <button
+            onClick={() => setShowBenchmarkDetails(!showBenchmarkDetails)}
+            style={{
+              background: 'none',
+              border: '1px solid #1976d2',
+              color: '#1976d2',
+              padding: '6px 12px',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              marginTop: '10px'
+            }}
+          >
+            {showBenchmarkDetails ? '▼ Hide detailed comparison' : '▶ Show detailed comparison'}
+          </button>
 
-          <h3>CHOPCHOP-style Ranking Algorithm</h3>
-          <p>
-            Guides are ranked using a CHOPCHOP-style penalty model optimized for
-            gene knockout experiments. The ranking balances multiple factors to
-            identify guides most likely to produce successful knockouts:
-          </p>
-          <table className="snapshot-table">
-            <thead>
-              <tr>
-                <th>Ranking Factor</th>
-                <th>Weight</th>
-                <th>Effect on Guide Rank</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Off-targets</strong></td>
-                <td>Highest</td>
-                <td style={{textAlign: 'left'}}>
-                  Off-target penalties dominate ranking. Perfect matches receive
-                  +10,000 penalty; 1 mismatch +1,000; 2 mismatches +200; 3 mismatches +50.
-                </td>
-              </tr>
-              <tr>
-                <td><strong>5&apos; Position Bonus</strong></td>
-                <td>High</td>
-                <td style={{textAlign: 'left'}}>
-                  For knockout targeting, guides in the first 50% of the CDS receive
-                  strong bonuses using exponential decay. Guides at the very start
-                  of the gene receive the largest bonus (~6,000 points), decaying
-                  to ~2,000 at 50% position. This reflects the biological principle
-                  that early frameshifts are most effective for knockouts.
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Efficiency Score</strong></td>
-                <td>Moderate</td>
-                <td style={{textAlign: 'left'}}>
-                  Higher Azimuth efficiency scores reduce penalty. Weighted to
-                  balance with position bonus so that high-efficiency guides
-                  in good positions rank highest.
-                </td>
-              </tr>
-              <tr>
-                <td><strong>GC Content</strong></td>
-                <td>Low</td>
-                <td style={{textAlign: 'left'}}>
-                  Guides outside the 40-70% GC range receive a small penalty (+200).
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Self-complementarity</strong></td>
-                <td>Low</td>
-                <td style={{textAlign: 'left'}}>
-                  Guides with internal 4bp complementary stems receive small
-                  penalties for potential secondary structure formation.
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <p>
-            The penalty model is tuned to align with CHOPCHOP rankings while
-            incorporating CGD-specific optimizations for <em>Candida</em> gene knockouts.
-          </p>
+          {showBenchmarkDetails && (
+            <div style={{ marginTop: '15px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '4px' }}>
+              <h4>Top 10 Guide Comparison (20 Genes)</h4>
+              <table className="snapshot-table">
+                <thead>
+                  <tr>
+                    <th>Comparison</th>
+                    <th>Overlap</th>
+                    <th>Match Rate</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>CHOPCHOP top 10 in CGD top 10</td>
+                    <td>78/140</td>
+                    <td><strong>55.7%</strong></td>
+                  </tr>
+                  <tr>
+                    <td>CHOPCHOP top 10 in CRISPOR top 10</td>
+                    <td>76/140</td>
+                    <td>54.3%</td>
+                  </tr>
+                  <tr>
+                    <td>CRISPOR top 10 in CGD top 10</td>
+                    <td>104/200</td>
+                    <td>52.0%</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p style={{ fontSize: '0.9em', color: '#666', marginTop: '10px' }}>
+                <em>Note: CHOPCHOP returned fewer than 10 guides for some genes,
+                so CHOPCHOP-based comparisons use 140 possible guides instead of 200.</em>
+              </p>
+
+              <h4>Extended Comparison (Top 20)</h4>
+              <table className="snapshot-table">
+                <thead>
+                  <tr>
+                    <th>Comparison</th>
+                    <th>Match Rate</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>CHOPCHOP top 10 in CGD top 20</td>
+                    <td><strong>78.6%</strong> (110/140)</td>
+                  </tr>
+                  <tr>
+                    <td>CRISPOR top 10 in CGD top 20</td>
+                    <td><strong>79.5%</strong> (159/200)</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p style={{ marginTop: '10px' }}>
+                Test genes: ALS1, ALS3, HWP1, ECE1, SAP1, SAP2, EFG1, CPH1,
+                WOR1, BCR1, HOG1, RAS1, CDC42, CEK1, ACT1, TUB1, PHR1, CHT2, CDR1, ERG11.
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="info-section">
-          <h2>Off-Target Analysis</h2>
+          <h2>Advanced: Scoring Methodology</h2>
           <p>
-            Off-target sites are identified using BLAST against the full genome sequence
-            of the selected organism. The search parameters are optimized for short
-            (20bp) guide sequences.
+            This section provides technical details about how CGD calculates efficiency
+            and ranks guides. Most users can skip this section.
           </p>
 
-          <h3>What is Searched</h3>
-          <ul>
-            <li>All coding sequences (ORFs) in the genome</li>
-            <li>Sites with 0-3 mismatches to your guide</li>
-            <li>Only sites with valid PAM sequences are reported</li>
-          </ul>
+          <button
+            onClick={() => setShowScoringDetails(!showScoringDetails)}
+            style={{
+              background: 'none',
+              border: '1px solid #1976d2',
+              color: '#1976d2',
+              padding: '6px 12px',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              marginTop: '10px'
+            }}
+          >
+            {showScoringDetails ? '▼ Hide scoring details' : '▶ Show scoring details'}
+          </button>
 
-          <h3>Diploid Genome Handling</h3>
-          <p>
-            <em>C. albicans</em> SC5314 is diploid with A and B allele chromosomes.
-            When designing guides for diploid organisms, the tool automatically:
-          </p>
-          <ul>
-            <li>
-              Identifies allelic pairs (same position on A and B chromosomes)
-            </li>
-            <li>
-              Excludes the on-target site and its allelic copy from off-target counts
-            </li>
-            <li>
-              Reports true off-targets in other genes
-            </li>
-          </ul>
-          <p>
-            A guide with specificity 100 means no off-targets were found in other genes;
-            the expected match on the homologous chromosome is not counted as an off-target.
-          </p>
+          {showScoringDetails && (
+            <div style={{ marginTop: '15px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '4px' }}>
+              <h4>Efficiency Score (Doench 2016 Rule Set 2)</h4>
+              <p>
+                The efficiency score uses the <strong>Doench 2016 Rule Set 2 (Azimuth)</strong>
+                algorithm, which is also supported by widely used CRISPR design tools such as
+                CHOPCHOP and CRISPOR. This model analyzes a 30-nucleotide context around each guide:
+              </p>
+              <ul>
+                <li>4 nucleotides upstream of the guide</li>
+                <li>20 nucleotides of the guide sequence</li>
+                <li>3 nucleotides of the PAM (NGG)</li>
+                <li>3 nucleotides downstream of the PAM</li>
+              </ul>
+              <p>
+                The model uses position-specific nucleotide and dinucleotide features trained
+                on experimental data to predict cutting efficiency.
+              </p>
 
-          <h3>Off-Target Details</h3>
-          <p>
-            Expand any guide row to see details of detected off-targets, including:
-          </p>
-          <ul>
-            <li>Chromosome and position</li>
-            <li>Number and position of mismatches</li>
-            <li>Gene name if the off-target is within an ORF</li>
-            <li>CFD score (Cutting Frequency Determination) for likelihood of cutting</li>
-          </ul>
+              <h4>Specificity Score</h4>
+              <p>
+                The specificity score (0-100) reflects off-target risk. Off-targets are weighted
+                by mismatch count:
+              </p>
+              <ul>
+                <li>0 mismatches (perfect match): penalty 50 — very high risk</li>
+                <li>1 mismatch: penalty 20 — high risk</li>
+                <li>2 mismatches: penalty 5 — moderate risk</li>
+                <li>3 mismatches: penalty 1 — low risk</li>
+              </ul>
+              <p>
+                Final score: 100 / (1 + total_penalty/10). A score of 100 means no off-targets
+                were detected.
+              </p>
 
-          <h3>Paralog and Ortholog Warnings</h3>
-          <p>
-            Off-targets in genes related to your target are specially flagged:
-          </p>
-          <ul>
-            <li>
-              <strong>P badge (purple):</strong> Off-target is in a paralog of your
-              target gene (related gene in the same species)
-            </li>
-            <li>
-              <strong>O badge (blue):</strong> Off-target is in an ortholog of your
-              target gene (related gene in another species, if multi-species search)
-            </li>
-          </ul>
-          <p>
-            Off-targets in related genes are particularly important to consider because
-            paralogs often have similar functions. Cutting a paralog could produce
-            phenotypes that confound interpretation of your knockout.
-          </p>
+              <h4>CGD Guide Ranking Algorithm</h4>
+              <p>
+                Guides are ranked by a combined penalty score inspired by CHOPCHOP-style
+                ranking, with CGD-specific adjustments for <em>Candida</em> gene knockout experiments:
+              </p>
+              <table className="snapshot-table">
+                <thead>
+                  <tr>
+                    <th>Factor</th>
+                    <th>Weight</th>
+                    <th>Effect</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Off-targets</strong></td>
+                    <td>Highest</td>
+                    <td style={{textAlign: 'left'}}>
+                      Perfect matches: +10,000; 1mm: +1,000; 2mm: +200; 3mm: +50
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>5&apos; Position</strong></td>
+                    <td>High</td>
+                    <td style={{textAlign: 'left'}}>
+                      Early guides get bonus (up to -6,000 at gene start, decaying to
+                      -2,000 at 50% position)
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Efficiency</strong></td>
+                    <td>Moderate</td>
+                    <td style={{textAlign: 'left'}}>
+                      Higher efficiency reduces penalty
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>GC Content</strong></td>
+                    <td>Low</td>
+                    <td style={{textAlign: 'left'}}>
+                      Penalty if outside 40-70% range
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
 
         <div className="info-section">
@@ -492,7 +578,7 @@ function CrisprGuideFinderHelp() {
           <h3>pX330 (BbsI)</h3>
           <p>
             Addgene plasmid #42230. Human codon-optimized SpCas9 with U6 promoter
-            driving sgRNA expression. Widely used and well-validated.
+            driving sgRNA expression.
           </p>
           <ul>
             <li>Forward primer: 5&apos;-CACCG + guide-3&apos;</li>
@@ -503,11 +589,10 @@ function CrisprGuideFinderHelp() {
           <ul>
             <li>
               If your guide does not start with G, an extra G is added for efficient
-              U6 transcription (the G overhang is part of the primer design).
+              U6 transcription.
             </li>
             <li>
-              Check that your guide sequence does not contain BbsI sites (GAAGAC)
-              which would interfere with cloning.
+              Check that your guide sequence does not contain BbsI sites (GAAGAC).
             </li>
             <li>
               For <em>Candida</em>-specific vectors (e.g., pV1093), contact CGD for
@@ -522,147 +607,21 @@ function CrisprGuideFinderHelp() {
             When you search by gene name, the results page displays biological context
             from CGD to help you understand your target:
           </p>
-
-          <h3>Essentiality</h3>
-          <p>
-            Genes are flagged as &quot;Essential&quot; if they meet certain criteria:
-          </p>
           <ul>
             <li>
-              <strong>GO term evidence:</strong> Annotated with housekeeping functions
-              (ribosome biogenesis, translation, RNA processing, cell cycle)
+              <strong>Essential:</strong> Genes with housekeeping functions or high
+              conservation. May be difficult to delete completely.
             </li>
             <li>
-              <strong>Ortholog conservation:</strong> Orthologs present in 4+ other
-              Candida species, suggesting core cellular function
-            </li>
-          </ul>
-          <p>
-            Essential genes may be difficult to delete completely. Consider using
-            conditional knockdown approaches for these targets.
-          </p>
-
-          <h3>Virulence Categories</h3>
-          <p>
-            Genes associated with virulence are tagged with categories such as:
-          </p>
-          <ul>
-            <li>Adhesins</li>
-            <li>Biofilm formation</li>
-            <li>Morphogenesis</li>
-            <li>Secreted enzymes</li>
-            <li>Stress response</li>
-          </ul>
-
-          <h3>Phenotypes</h3>
-          <p>
-            The phenotype count shows how many experimental phenotypes are annotated
-            for this gene in CGD. Click the link to view the full phenotype data
-            on the gene&apos;s locus page.
-          </p>
-
-          <h3>Orthologs</h3>
-          <p>
-            Shows the number of other Candida species with orthologs of this gene.
-            Highly conserved genes (many orthologs) often have essential functions.
-          </p>
-        </div>
-
-        <div className="info-section">
-          <h2>Expanded View Information</h2>
-          <p>
-            Click on any guide row to expand and see additional details:
-          </p>
-
-          <h3>Target Site</h3>
-          <ul>
-            <li>
-              <strong>Full Target:</strong> The complete target sequence including
-              guide and PAM (23bp for NGG)
+              <strong>Virulence categories:</strong> Adhesins, biofilm formation,
+              morphogenesis, secreted enzymes, stress response.
             </li>
             <li>
-              <strong>Genomic Position:</strong> Chromosome coordinates of the
-              target site
+              <strong>Phenotypes:</strong> Number of experimental phenotypes annotated
+              in CGD.
             </li>
             <li>
-              <strong>View in JBrowse:</strong> Link to visualize the guide location
-              in the CGD genome browser with surrounding genomic context
-            </li>
-          </ul>
-
-          <h3>Scores</h3>
-          <ul>
-            <li>Efficiency, Specificity, and Combined scores</li>
-            <li>CHOPCHOP-style penalty used for ranking</li>
-            <li>GC content percentage</li>
-          </ul>
-
-          <h3>Cloning Primers</h3>
-          <ul>
-            <li>Forward and reverse primers for pX330 cloning</li>
-            <li>Ready to copy and order</li>
-          </ul>
-        </div>
-
-        <div className="info-section">
-          <h2>Downloading Results</h2>
-          <p>
-            Export your results in multiple formats:
-          </p>
-          <ul>
-            <li>
-              <strong>TSV:</strong> Tab-separated values, ideal for Excel or
-              computational analysis
-            </li>
-            <li>
-              <strong>CSV:</strong> Comma-separated values
-            </li>
-            <li>
-              <strong>FASTA:</strong> Guide sequences in FASTA format for
-              downstream analysis
-            </li>
-          </ul>
-          <p>
-            Downloads include all scored guides, primer sequences, and genomic
-            coordinates when available.
-          </p>
-        </div>
-
-        <div className="info-section">
-          <h2>Limitations and Caveats</h2>
-          <p>
-            <strong>Please consider the following when using this tool:</strong>
-          </p>
-          <ul>
-            <li>
-              <strong>Computational predictions:</strong> Efficiency scores are
-              predictions based on sequence features. Experimental validation
-              is recommended for important guides.
-            </li>
-            <li>
-              <strong>Off-target search scope:</strong> Off-target analysis is
-              performed for the top 14 guides only (for performance reasons).
-              Lower-ranked guides show efficiency scores but not validated
-              specificity scores.
-            </li>
-            <li>
-              <strong>PAM validation:</strong> Off-target sites are filtered
-              to require valid PAM sequences, but PAM-adjacent sequences may
-              affect cutting in practice.
-            </li>
-            <li>
-              <strong>Chromatin accessibility:</strong> This tool does not account
-              for chromatin state, which can affect guide efficiency in vivo.
-            </li>
-            <li>
-              <strong>Strain variation:</strong> Guide design is based on the
-              reference genome. Your strain may have sequence polymorphisms
-              affecting guide binding.
-            </li>
-            <li>
-              <strong>Assembly version:</strong> Results are specific to the
-              selected genome assembly. C. albicans SC5314 Assembly 22 is the
-              current default.
+              <strong>Orthologs:</strong> Conservation across other Candida species.
             </li>
           </ul>
         </div>
@@ -682,129 +641,29 @@ function CrisprGuideFinderHelp() {
           </ul>
           <p>
             Off-target search is available for organisms with indexed BLAST databases.
-            If off-target search is not available for your organism, the tool will
-            still design guides and calculate efficiency scores.
           </p>
         </div>
 
         <div className="info-section">
-          <h2>Tips for Successful CRISPR Experiments</h2>
+          <h2>Tips for Successful Experiments</h2>
           <ol>
             <li>
               <strong>Choose multiple guides:</strong> Design and validate 2-3 guides
-              per target. This provides backup options and helps distinguish on-target
-              from off-target effects.
+              per target for backup and to distinguish on-target from off-target effects.
             </li>
             <li>
-              <strong>Prioritize specificity:</strong> For phenotype analysis, off-target
-              effects can confound results. Choose guides with high specificity (100 or
-              close to it).
+              <strong>Prioritize specificity:</strong> For phenotype analysis, choose
+              guides with specificity 100 (no off-targets).
             </li>
             <li>
-              <strong>Consider GC content:</strong> Guides with 40-60% GC are generally
-              most effective. Extreme GC content can cause stability or secondary
-              structure issues.
-            </li>
-            <li>
-              <strong>Avoid Poly-T:</strong> TTTT sequences cause Pol III termination.
-              Guides flagged with Poly-T should be avoided.
-            </li>
-            <li>
-              <strong>Check for SNPs:</strong> If working with a non-reference strain,
-              verify that your target sequence matches the guide design.
+              <strong>Enable off-target checking:</strong> Guides without off-target
+              validation should not be used for final experiments.
             </li>
             <li>
               <strong>Validate experimentally:</strong> Use T7E1 assay or sequencing
-              to confirm editing before proceeding with downstream experiments.
+              to confirm editing before downstream experiments.
             </li>
           </ol>
-        </div>
-
-        <div className="info-section">
-          <h2>Benchmark Validation</h2>
-          <p>
-            We validated CGD&apos;s guide rankings against two widely-used CRISPR design
-            tools: <strong>CHOPCHOP</strong> and <strong>CRISPOR</strong>. The benchmark
-            compared top 10 guide rankings across 20 <em>C. albicans</em> virulence and
-            housekeeping genes.
-          </p>
-
-          <h3>Top 10 Guide Comparison</h3>
-          <p>
-            The table below shows the overlap between each tool&apos;s top 10 guides
-            for the same target genes:
-          </p>
-          <table className="snapshot-table">
-            <thead>
-              <tr>
-                <th>Comparison</th>
-                <th>Overlap</th>
-                <th>Match Rate</th>
-                <th>Interpretation</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>CGD → CHOPCHOP</strong></td>
-                <td>78/140</td>
-                <td>55.7%</td>
-                <td style={{textAlign: 'left'}}>% of CHOPCHOP top 10 found in CGD top 10</td>
-              </tr>
-              <tr>
-                <td><strong>CGD → CRISPOR</strong></td>
-                <td>104/198</td>
-                <td>52.5%</td>
-                <td style={{textAlign: 'left'}}>% of CGD top 10 found in CRISPOR top 10</td>
-              </tr>
-              <tr>
-                <td><strong>CHOPCHOP → CRISPOR</strong></td>
-                <td>76/140</td>
-                <td>54.3%</td>
-                <td style={{textAlign: 'left'}}>% of CHOPCHOP top 10 found in CRISPOR top 10</td>
-              </tr>
-              <tr>
-                <td><strong>CRISPOR → CHOPCHOP</strong></td>
-                <td>76/200</td>
-                <td>38.0%</td>
-                <td style={{textAlign: 'left'}}>% of CRISPOR top 10 found in CHOPCHOP top 10</td>
-              </tr>
-              <tr>
-                <td><strong>CRISPOR → CGD</strong></td>
-                <td>104/200</td>
-                <td>52.0%</td>
-                <td style={{textAlign: 'left'}}>% of CRISPOR top 10 found in CGD top 10</td>
-              </tr>
-              <tr>
-                <td><strong>CGD → CHOPCHOP</strong></td>
-                <td>78/198</td>
-                <td>39.4%</td>
-                <td style={{textAlign: 'left'}}>% of CGD top 10 found in CHOPCHOP top 10</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <h3>Key Findings</h3>
-          <ul>
-            <li>
-              <strong>CGD matches CHOPCHOP as well as CRISPOR does:</strong> CGD captures
-              55.7% of CHOPCHOP&apos;s top guides, slightly better than CRISPOR&apos;s 54.3%.
-            </li>
-            <li>
-              <strong>Tools show ~50% agreement:</strong> All three tools agree on
-              approximately half of their top 10 guides, reflecting different ranking
-              priorities and algorithms.
-            </li>
-            <li>
-              <strong>Asymmetric overlap:</strong> CHOPCHOP returns fewer guides per gene
-              on average (140 total vs 200 for CRISPOR/CGD), affecting overlap percentages.
-            </li>
-          </ul>
-
-          <h3>Test Genes</h3>
-          <p>
-            Benchmark genes included: ALS1, ALS3, HWP1, ECE1, SAP1, SAP2, EFG1, CPH1,
-            WOR1, BCR1, HOG1, RAS1, CDC42, CEK1, ACT1, TUB1, PHR1, CHT2, CDR1, ERG11.
-          </p>
         </div>
 
         <div className="info-section">
@@ -849,19 +708,6 @@ function CrisprGuideFinderHelp() {
                 DOI
               </a>
             </li>
-            <li>
-              Min K, Ichikawa Y, Woolford CA, Mitchell AP (2016). Candida albicans
-              Gene Deletion with a Transient CRISPR-Cas9 System.{' '}
-              <em>mSphere</em> 1:e00130-16.
-              <a
-                href="https://doi.org/10.1128/mSphere.00130-16"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{marginLeft: '8px'}}
-              >
-                DOI
-              </a>
-            </li>
           </ul>
         </div>
 
@@ -872,14 +718,9 @@ function CrisprGuideFinderHelp() {
             your feedback to help improve this tool.
           </p>
           <p>
-            Please <Link to="/contact">contact CGD</Link> with:
+            Please <Link to="/contact">contact CGD</Link> with bug reports,
+            feature suggestions, or questions.
           </p>
-          <ul>
-            <li>Reports of bugs or unexpected behavior</li>
-            <li>Suggestions for additional features</li>
-            <li>Questions about the methodology</li>
-            <li>Requests for additional organisms or CRISPR systems</li>
-          </ul>
         </div>
 
         <div className="info-section">
