@@ -26,6 +26,7 @@ const DEFAULT_ORGANISMS = [
   { tag: 'C_glabrata_CBS138', name: 'Candida glabrata CBS138' },
   { tag: 'C_dubliniensis_CD36', name: 'Candida dubliniensis CD36' },
   { tag: 'C_parapsilosis_CDC317', name: 'Candida parapsilosis CDC317' },
+  { tag: 'C_tropicalis_MYA-3404', name: 'Candida tropicalis MYA-3404' },
 ];
 
 function CrisprSearchPage() {

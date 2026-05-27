@@ -638,6 +638,7 @@ function CrisprGuideFinderHelp() {
             <li><em>Candida glabrata</em> CBS138</li>
             <li><em>Candida dubliniensis</em> CD36</li>
             <li><em>Candida parapsilosis</em> CDC317</li>
+            <li><em>Candida tropicalis</em> MYA-3404</li>
           </ul>
           <p>
             Off-target search is available for organisms with indexed BLAST databases.
