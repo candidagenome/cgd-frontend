@@ -99,39 +99,56 @@ function CrisprSearchPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+
+    // Validate input before doing anything
+    const params = {
+      organism,
+      pam,
+      guide_length: guideLength,
+      target_region: targetRegion,
+      max_guides: maxGuides,
+      check_offtargets: checkOfftargets,
+    };
+
+    if (inputType === 'gene') {
+      if (!geneName.trim()) {
+        setError('Please enter a gene name');
+        return;
+      }
+      params.gene_name = geneName.trim();
+    } else {
+      if (!sequence.trim()) {
+        setError('Please enter a DNA sequence');
+        return;
+      }
+      params.sequence = sequence.trim();
+    }
+
+    // Open new tab BEFORE async call to avoid popup blocker
+    // Browser allows window.open() during direct user action (click)
+    const newTab = window.open('', '_blank');
+    if (newTab) {
+      // Show loading message in new tab while waiting
+      newTab.document.write(`
+        <html>
+          <head><title>Loading CRISPR Results...</title></head>
+          <body style="font-family: sans-serif; padding: 40px; text-align: center;">
+            <h2>Designing CRISPR guides...</h2>
+            <p>Please wait while we analyze your sequence.</p>
+          </body>
+        </html>
+      `);
+    }
+
     setLoading(true);
 
     try {
-      const params = {
-        organism,
-        pam,
-        guide_length: guideLength,
-        target_region: targetRegion,
-        max_guides: maxGuides,
-        check_offtargets: checkOfftargets,
-      };
-
-      if (inputType === 'gene') {
-        if (!geneName.trim()) {
-          setError('Please enter a gene name');
-          setLoading(false);
-          return;
-        }
-        params.gene_name = geneName.trim();
-      } else {
-        if (!sequence.trim()) {
-          setError('Please enter a DNA sequence');
-          setLoading(false);
-          return;
-        }
-        params.sequence = sequence.trim();
-      }
-
       const results = await crisprApi.design(params);
 
       if (!results.success) {
         setError(results.error || 'Design failed');
         setLoading(false);
+        if (newTab) newTab.close();
         return;
       }
 
@@ -140,11 +157,17 @@ function CrisprSearchPage() {
       localStorage.setItem(`crisprResults_${resultKey}`, JSON.stringify(results));
       localStorage.setItem(`crisprParams_${resultKey}`, JSON.stringify(params));
 
-      // Open results page in a new tab
-      window.open(`/crispr/results?key=${resultKey}`, '_blank');
+      // Navigate the already-open tab to results page
+      if (newTab) {
+        newTab.location.href = `/crispr/results?key=${resultKey}`;
+      } else {
+        // Fallback: navigate current tab if popup was blocked
+        window.location.href = `/crispr/results?key=${resultKey}`;
+      }
     } catch (err) {
       console.error('CRISPR design error:', err);
       setError(err.response?.data?.detail || err.message || 'Failed to design guides');
+      if (newTab) newTab.close();
     } finally {
       setLoading(false);
     }
