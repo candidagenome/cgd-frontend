@@ -43,9 +43,23 @@ function GeneDiagram({ geneLength, geneName, strand, guides, upstreamLength = 0,
     // For minus strand genes, flip the scale so position 1 (5' end) appears on the right
     // where the 5' label is displayed
     const isMinusStrand = strand === '-' || strand === 'C';
+
+    // Transform positions relative to ATG (CDS start = position 0)
+    // Upstream: positions 1 to upstreamLength become -upstreamLength to -1
+    // CDS: positions upstreamLength+1 to geneLength become 1 to (geneLength - upstreamLength)
+    const transformPosition = (pos) => {
+      if (upstreamLength > 0) {
+        return pos - upstreamLength; // Upstream becomes negative, CDS becomes positive
+      }
+      return pos;
+    };
+
+    const minPos = transformPosition(1);
+    const maxPos = transformPosition(geneLength);
+
     const xScale = d3.scaleLinear()
-      .domain([1, geneLength])
-      .range(isMinusStrand ? [innerWidth, 0] : [0, innerWidth]);
+      .domain(isMinusStrand ? [maxPos, minPos] : [minPos, maxPos])
+      .range([0, innerWidth]);
 
     // Gene body (arrow shape showing direction)
     const arrowWidth = 15;
@@ -78,14 +92,13 @@ function GeneDiagram({ geneLength, geneName, strand, guides, upstreamLength = 0,
 
     // Draw upstream region overlay if present
     if (upstreamLength > 0) {
-      const cdsStart = upstreamLength + 1;
-      const upstreamStartX = xScale(1);
-      const upstreamEndX = xScale(upstreamLength);
-      const cdsStartX = xScale(cdsStart);
+      // In transformed coordinates: upstream is -upstreamLength to 0, CDS is 1 to end
+      const upstreamStartX = xScale(-upstreamLength);
+      const atgX = xScale(0);
 
       // For minus strand, positions are flipped, so we need to handle the drawing accordingly
-      const leftX = Math.min(upstreamStartX, upstreamEndX);
-      const rightX = Math.max(upstreamStartX, upstreamEndX);
+      const leftX = Math.min(upstreamStartX, atgX);
+      const rightX = Math.max(upstreamStartX, atgX);
       const regionWidth = Math.abs(rightX - leftX);
 
       // Draw upstream region with diagonal stripes pattern
@@ -111,24 +124,15 @@ function GeneDiagram({ geneLength, geneName, strand, guides, upstreamLength = 0,
         .attr('fill', `url(#${patternId})`)
         .attr('class', 'upstream-region');
 
-      // Vertical line at CDS start (ATG)
-      const lineX = isMinusStrand ? Math.min(cdsStartX, upstreamEndX) : Math.max(cdsStartX, upstreamStartX);
+      // Vertical line at CDS start (ATG = position 0)
       g.append('line')
-        .attr('x1', lineX)
+        .attr('x1', atgX)
         .attr('y1', geneY - 5)
-        .attr('x2', lineX)
+        .attr('x2', atgX)
         .attr('y2', geneY + geneHeight + 5)
         .attr('stroke', '#1976d2')
         .attr('stroke-width', 2)
         .attr('class', 'cds-start-line');
-
-      // ATG label
-      g.append('text')
-        .attr('x', lineX)
-        .attr('y', geneY + geneHeight + 18)
-        .attr('text-anchor', 'middle')
-        .attr('class', 'atg-label')
-        .text('ATG');
 
       // Upstream label (centered in upstream region)
       const upstreamCenterX = (leftX + rightX) / 2;
@@ -141,7 +145,7 @@ function GeneDiagram({ geneLength, geneName, strand, guides, upstreamLength = 0,
 
       // CDS label (centered in CDS region)
       const cdsEndX = isMinusStrand ? 0 : innerWidth;
-      const cdsCenterX = (lineX + cdsEndX) / 2;
+      const cdsCenterX = (atgX + cdsEndX) / 2;
       g.append('text')
         .attr('x', cdsCenterX)
         .attr('y', geneY - 8)
@@ -172,7 +176,7 @@ function GeneDiagram({ geneLength, geneName, strand, guides, upstreamLength = 0,
       const maxLanes = 5;
 
       strandGuides.forEach((guide) => {
-        const guideX = xScale(guide.position);
+        const guideX = xScale(transformPosition(guide.position));
         const labelWidth = getLabelWidth(guide.rank);
         let placement = null;
 
@@ -222,7 +226,8 @@ function GeneDiagram({ geneLength, geneName, strand, guides, upstreamLength = 0,
     svg.attr('height', height);
 
     guides.forEach((guide) => {
-      const x = xScale(guide.position);
+      const x = xScale(transformPosition(guide.position));
+      const displayPosition = transformPosition(guide.position);
       const isTopStrand = guide.strand === '+';
       const markerY = isTopStrand ? geneY - markerHeight + 10 : geneY + geneHeight - 10;
 
@@ -285,7 +290,7 @@ function GeneDiagram({ geneLength, geneName, strand, guides, upstreamLength = 0,
             .style('opacity', 0.95);
           tooltip.html(`
             <div class="tooltip-title">Guide #${guide.rank}</div>
-            <div><strong>Position:</strong> ${guide.position} bp (${guide.strand})</div>
+            <div><strong>Position:</strong> ${displayPosition > 0 ? '+' : ''}${displayPosition} (${guide.strand})</div>
             <div><strong>Sequence:</strong> <code>${guide.sequence}</code></div>
             <div><strong>Score:</strong> ${(guide.combinedScore || guide.combined_score || 0).toFixed(1)}</div>
           `)
@@ -304,10 +309,14 @@ function GeneDiagram({ geneLength, geneName, strand, guides, upstreamLength = 0,
         });
     });
 
-    // X-axis (bp scale)
+    // X-axis (bp scale) - show relative to ATG (0)
     const xAxis = d3.axisBottom(xScale)
       .ticks(Math.min(10, Math.floor(geneLength / 100)))
-      .tickFormat(d => `${d} bp`);
+      .tickFormat(d => {
+        if (d === 0) return 'ATG';
+        if (d > 0) return `+${d}`;
+        return `${d}`;
+      });
 
     g.append('g')
       .attr('class', 'x-axis')
