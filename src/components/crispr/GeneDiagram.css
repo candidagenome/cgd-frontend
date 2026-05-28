@@ -38,6 +38,27 @@
   stroke-width: 2;
 }
 
+/* Upstream region */
+.upstream-region {
+  pointer-events: none;
+}
+
+.cds-start-line {
+  pointer-events: none;
+}
+
+.atg-label {
+  font-size: 10px;
+  font-weight: 600;
+  fill: #1976d2;
+}
+
+.region-label {
+  font-size: 10px;
+  font-weight: 500;
+  fill: #666;
+}
+
 /* Guide markers */
 .guide-marker {
   transition: opacity 0.15s;

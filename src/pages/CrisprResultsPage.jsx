@@ -372,6 +372,7 @@ function CrisprResultsPage() {
             geneLength={results.target_length}
             geneName={results.gene_info?.gene_name || results.gene_info?.feature_name || 'Target'}
             strand={results.gene_info?.strand || '+'}
+            upstreamLength={results.upstream_length || 0}
             guides={results.guides.map(g => ({
               position: g.position,
               strand: g.strand,

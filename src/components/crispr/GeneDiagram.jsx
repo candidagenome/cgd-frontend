@@ -10,9 +10,10 @@ import './GeneDiagram.css';
  * @param {string} props.geneName - Gene name for display
  * @param {string} props.strand - Gene strand (+ or -)
  * @param {Array} props.guides - Array of guide objects with position, strand, rank, combinedScore
+ * @param {number} props.upstreamLength - Length of upstream region (0 if no upstream)
  * @param {Function} props.onGuideClick - Optional callback when a guide marker is clicked
  */
-function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
+function GeneDiagram({ geneLength, geneName, strand, guides, upstreamLength = 0, onGuideClick }) {
   const svgRef = useRef(null);
   const containerRef = useRef(null);
 
@@ -74,6 +75,80 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
     g.append('polygon')
       .attr('points', geneShape.map(p => p.join(',')).join(' '))
       .attr('class', 'gene-body');
+
+    // Draw upstream region overlay if present
+    if (upstreamLength > 0) {
+      const cdsStart = upstreamLength + 1;
+      const upstreamStartX = xScale(1);
+      const upstreamEndX = xScale(upstreamLength);
+      const cdsStartX = xScale(cdsStart);
+
+      // For minus strand, positions are flipped, so we need to handle the drawing accordingly
+      const leftX = Math.min(upstreamStartX, upstreamEndX);
+      const rightX = Math.max(upstreamStartX, upstreamEndX);
+      const regionWidth = Math.abs(rightX - leftX);
+
+      // Draw upstream region with diagonal stripes pattern
+      const patternId = 'upstream-pattern';
+      const defs = svg.append('defs');
+      defs.append('pattern')
+        .attr('id', patternId)
+        .attr('patternUnits', 'userSpaceOnUse')
+        .attr('width', 6)
+        .attr('height', 6)
+        .append('path')
+        .attr('d', 'M-1,1 l2,-2 M0,6 l6,-6 M5,7 l2,-2')
+        .attr('stroke', '#1976d2')
+        .attr('stroke-width', 1)
+        .attr('opacity', 0.4);
+
+      // Upstream region rectangle with pattern
+      g.append('rect')
+        .attr('x', leftX)
+        .attr('y', geneY)
+        .attr('width', regionWidth)
+        .attr('height', geneHeight)
+        .attr('fill', `url(#${patternId})`)
+        .attr('class', 'upstream-region');
+
+      // Vertical line at CDS start (ATG)
+      const lineX = isMinusStrand ? Math.min(cdsStartX, upstreamEndX) : Math.max(cdsStartX, upstreamStartX);
+      g.append('line')
+        .attr('x1', lineX)
+        .attr('y1', geneY - 5)
+        .attr('x2', lineX)
+        .attr('y2', geneY + geneHeight + 5)
+        .attr('stroke', '#1976d2')
+        .attr('stroke-width', 2)
+        .attr('class', 'cds-start-line');
+
+      // ATG label
+      g.append('text')
+        .attr('x', lineX)
+        .attr('y', geneY + geneHeight + 18)
+        .attr('text-anchor', 'middle')
+        .attr('class', 'atg-label')
+        .text('ATG');
+
+      // Upstream label (centered in upstream region)
+      const upstreamCenterX = (leftX + rightX) / 2;
+      g.append('text')
+        .attr('x', upstreamCenterX)
+        .attr('y', geneY - 8)
+        .attr('text-anchor', 'middle')
+        .attr('class', 'region-label')
+        .text('Upstream');
+
+      // CDS label (centered in CDS region)
+      const cdsEndX = isMinusStrand ? 0 : innerWidth;
+      const cdsCenterX = (lineX + cdsEndX) / 2;
+      g.append('text')
+        .attr('x', cdsCenterX)
+        .attr('y', geneY - 8)
+        .attr('text-anchor', 'middle')
+        .attr('class', 'region-label')
+        .text('CDS');
+    }
 
     // Color scale for guide scores (green = good, red = poor)
     const colorScale = d3.scaleLinear()
@@ -312,7 +387,7 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
     return () => {
       d3.selectAll('.gene-diagram-tooltip').remove();
     };
-  }, [geneLength, geneName, strand, guides, onGuideClick]);
+  }, [geneLength, geneName, strand, guides, upstreamLength, onGuideClick]);
 
   if (!geneLength || !guides?.length) {
     return null;
