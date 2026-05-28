@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import crisprApi from '../api/crisprApi';
 import './CrisprSearchPage.css';
 
@@ -30,6 +30,8 @@ const DEFAULT_ORGANISMS = [
 ];
 
 function CrisprSearchPage() {
+  const navigate = useNavigate();
+
   // Form state
   const [inputType, setInputType] = useState('gene'); // 'gene' or 'sequence'
   const [geneName, setGeneName] = useState('');
@@ -124,11 +126,6 @@ function CrisprSearchPage() {
       params.sequence = sequence.trim();
     }
 
-    // Open new tab BEFORE async call to avoid popup blocker
-    // Browser allows window.open() during direct user action (click)
-    // Note: Don't use document.write() - Safari blocks it as "insecure"
-    const newTab = window.open('about:blank', '_blank');
-
     setLoading(true);
 
     try {
@@ -137,26 +134,19 @@ function CrisprSearchPage() {
       if (!results.success) {
         setError(results.error || 'Design failed');
         setLoading(false);
-        if (newTab) newTab.close();
         return;
       }
 
-      // Store results in localStorage with unique key for cross-tab access
+      // Store results in localStorage with unique key
       const resultKey = `crispr_${Date.now()}`;
       localStorage.setItem(`crisprResults_${resultKey}`, JSON.stringify(results));
       localStorage.setItem(`crisprParams_${resultKey}`, JSON.stringify(params));
 
-      // Navigate the already-open tab to results page
-      if (newTab) {
-        newTab.location.href = `/crispr/results?key=${resultKey}`;
-      } else {
-        // Fallback: navigate current tab if popup was blocked
-        window.location.href = `/crispr/results?key=${resultKey}`;
-      }
+      // Navigate to results page (same tab - works on all browsers including Safari)
+      navigate(`/crispr/results?key=${resultKey}`);
     } catch (err) {
       console.error('CRISPR design error:', err);
       setError(err.response?.data?.detail || err.message || 'Failed to design guides');
-      if (newTab) newTab.close();
     } finally {
       setLoading(false);
     }
