@@ -483,7 +483,11 @@ function CrisprResultsPage() {
                         <code className="pam">{guide.pam}</code>
                       </td>
                       <td className="col-position">
-                        {guide.position} ({guide.strand})
+                        {(() => {
+                          const upLen = results.upstream_length || 0;
+                          const relPos = guide.position - upLen;
+                          return relPos > 0 ? `+${relPos}` : relPos;
+                        })()} ({guide.strand})
                       </td>
                       <td className="col-score">
                         <span className={`score-badge ${getScoreClass(guide.efficiency_score)}`}>
