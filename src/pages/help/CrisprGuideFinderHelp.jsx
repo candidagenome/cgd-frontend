@@ -44,8 +44,8 @@ function CrisprGuideFinderHelp() {
               working with
             </li>
             <li>
-              <strong>Choose target region:</strong> For gene knockouts, the 5&apos; region
-              (first 20% of CDS) is recommended
+              <strong>Choose target region:</strong> The default &quot;5&apos; Region + Upstream&quot;
+              is recommended for gene knockouts (includes promoter region + first 20% of CDS)
             </li>
             <li>
               <strong>Configure CRISPR system:</strong> Select your PAM sequence and
@@ -266,11 +266,18 @@ function CrisprGuideFinderHelp() {
             </thead>
             <tbody>
               <tr>
-                <td><strong>5&apos; Region</strong></td>
-                <td style={{textAlign: 'left'}}>First 20% of coding sequence</td>
+                <td><strong>5&apos; Region + Upstream (Recommended)</strong></td>
+                <td style={{textAlign: 'left'}}>500bp upstream of ATG + first 20% of CDS</td>
                 <td style={{textAlign: 'left'}}>
-                  Recommended for knockouts — early frameshift mutations are most
-                  likely to abolish protein function
+                  Best for knockouts — includes promoter region for targeting regulatory
+                  elements and early CDS for frameshift mutations. Default option.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>5&apos; Region</strong></td>
+                <td style={{textAlign: 'left'}}>First 20% of coding sequence only</td>
+                <td style={{textAlign: 'left'}}>
+                  For knockouts when you want to avoid affecting the promoter region
                 </td>
               </tr>
               <tr>
@@ -290,6 +297,30 @@ function CrisprGuideFinderHelp() {
               </tr>
             </tbody>
           </table>
+
+          <h3>Why 20% Instead of 50%?</h3>
+          <p>
+            CGD targets the <strong>first 20% of the CDS</strong> for 5&apos; region searches,
+            rather than the first 50% used by some tools. This conservative approach:
+          </p>
+          <ul>
+            <li>
+              <strong>Maximizes knockout effectiveness</strong> — frameshifts near the start
+              codon eliminate more protein function
+            </li>
+            <li>
+              <strong>Avoids internal start codons</strong> — cuts in the first 20% are less
+              likely to produce truncated but partially functional proteins
+            </li>
+            <li>
+              <strong>Reduces off-target risk</strong> — smaller search region means fewer
+              candidate guides to evaluate, allowing more thorough off-target analysis
+            </li>
+          </ul>
+          <p>
+            If you need guides further into the gene, use <strong>Full CDS</strong> to search
+            the entire coding sequence.
+          </p>
         </div>
 
         <div className="info-section">
@@ -373,6 +404,21 @@ function CrisprGuideFinderHelp() {
             tools: <strong>CHOPCHOP</strong> and <strong>CRISPOR</strong>, comparing rankings
             across 20 <em>C. albicans</em> genes.
           </p>
+
+          <h3>Benchmark Methodology</h3>
+          <p>
+            The benchmark compared the <strong>first 500bp of each CDS</strong> across all
+            three tools to ensure a fair comparison. This corresponds to CGD&apos;s &quot;5&apos;
+            Region&quot; setting for most genes (since 500bp is typically &gt;20% of shorter genes
+            but &lt;20% of longer genes).
+          </p>
+          <p>
+            <strong>Note:</strong> CGD&apos;s default &quot;5&apos; Region + Upstream&quot; option
+            also includes 500bp upstream of ATG, which is not available in CHOPCHOP or CRISPOR
+            and was not included in this benchmark.
+          </p>
+
+          <h3>Key Results</h3>
           <p>
             <strong>Key result:</strong> In a benchmark of 20 genes, CGD recovered about
             55–56% of external tools&apos; strict top-10 guides. When CGD&apos;s top 20
