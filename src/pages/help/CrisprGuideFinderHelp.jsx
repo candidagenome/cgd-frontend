@@ -420,8 +420,8 @@ function CrisprGuideFinderHelp() {
           <h3>Key Results</h3>
           <p>
             <strong>Key result:</strong> In a benchmark of 20 genes, CGD recovered about
-            52–59% of external tools&apos; strict top-10 guides. When CGD&apos;s top 20
-            guides were considered, overlap increased to 72–81%, suggesting that most
+            45–48% of external tools&apos; strict top-10 guides. When CGD&apos;s top 20
+            guides were considered, overlap increased to ~70%, suggesting that most
             differences are due to ranking order rather than missing candidate guides.
           </p>
           <p>
@@ -459,8 +459,8 @@ function CrisprGuideFinderHelp() {
                 <tbody>
                   <tr>
                     <td>CHOPCHOP top 10 in CGD top 10</td>
-                    <td>82/140</td>
-                    <td><strong>58.6%</strong></td>
+                    <td>67/140</td>
+                    <td><strong>47.9%</strong></td>
                   </tr>
                   <tr>
                     <td>CHOPCHOP top 10 in CRISPOR top 10</td>
@@ -469,8 +469,8 @@ function CrisprGuideFinderHelp() {
                   </tr>
                   <tr>
                     <td>CRISPOR top 10 in CGD top 10</td>
-                    <td>104/200</td>
-                    <td>52.0%</td>
+                    <td>90/200</td>
+                    <td>45.0%</td>
                   </tr>
                 </tbody>
               </table>
@@ -490,11 +490,11 @@ function CrisprGuideFinderHelp() {
                 <tbody>
                   <tr>
                     <td>CHOPCHOP top 10 in CGD top 20</td>
-                    <td><strong>80.7%</strong> (113/140)</td>
+                    <td><strong>70.7%</strong> (99/140)</td>
                   </tr>
                   <tr>
                     <td>CRISPOR top 10 in CGD top 20</td>
-                    <td><strong>72.0%</strong> (144/200)</td>
+                    <td><strong>68.5%</strong> (137/200)</td>
                   </tr>
                 </tbody>
               </table>

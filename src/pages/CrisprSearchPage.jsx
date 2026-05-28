@@ -264,7 +264,7 @@ function CrisprSearchPage() {
   return (
     <main className="crispr-search-page">
       <div className="crispr-content">
-        <h1>CRISPR Guide RNA Designer</h1>
+        <h1>CRISPR Guide RNA Designer <span style={{fontSize: '0.5em', color: '#666', fontWeight: 'normal'}}>(Preview)</span></h1>
         <div className="subtitle-row">
           <p className="subtitle">
             Design sgRNAs for Candida species with efficiency prediction and off-target analysis.

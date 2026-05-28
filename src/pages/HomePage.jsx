@@ -33,6 +33,25 @@ const MEETINGS = [
 // News items
 const NEWS_ITEMS = [
   {
+    title: 'New: CRISPR Guide RNA Designer (Preview)',
+    content: (
+      <>
+        Design sgRNAs for <em>Candida</em> gene knockout experiments with our new CRISPR Guide RNA
+        Designer. The tool predicts candidate guides, evaluates off-target risks, and generates
+        cloning primers.
+        <p></p>
+        <strong>Note:</strong> Results are computational predictions and should be experimentally
+        validated before use.
+        <br /><br />
+        <Link to="/crispr">Try the CRISPR Guide Designer</Link>
+        {' | '}
+        <Link to="/help/crispr">Learn more</Link>
+      </>
+    ),
+    date: 'May 2026',
+    highlight: true,
+  },
+  {
     title: 'New: Ortholog Converter Tool',
     content: (
       <>

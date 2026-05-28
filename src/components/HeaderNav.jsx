@@ -67,7 +67,7 @@ const HeaderNav = () => {
       label: 'Tools',
       to: '/tools',
       submenu: [
-        // { label: 'CRISPR Guide Designer', to: '/crispr' },  // TODO: Enable when CRISPR tool is ready
+        { label: 'CRISPR Guide Designer (Preview)', to: '/crispr' },
         { label: 'Ortholog Converter', to: '/ortholog-converter' },
         { label: 'PatMatch', to: '/patmatch' },
         { label: 'Primers', to: '/webprimer' },
