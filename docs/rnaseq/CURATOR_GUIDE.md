@@ -172,3 +172,21 @@ Free-text field for **external conditions applied** (drugs, temperature, media c
 
 ### Quality Threshold
 Samples with alignment rate **< 85%** are automatically excluded from JBrowse2 tracks.
+
+#### Overriding the Threshold
+Some datasets (e.g., sRNA studies) may have lower alignment rates due to the nature of the data. You can override the 85% threshold using the `--min-alignment` flag:
+
+```bash
+# Example: Allow samples with ≥65% alignment (for sRNA studies)
+python import_rnaseq.py ../Iracane_2024_sRNA.metadata.xlsx --output-dir ../output/ --min-alignment 65
+```
+
+**When to use this:**
+- sRNA/small RNA studies (typically 60-80% alignment)
+- Studies with known low-complexity or repetitive sequences
+- When alignment rates are consistent across samples but below 85%
+
+**When NOT to use this:**
+- If only 1-2 samples fail threshold (investigate those samples individually)
+- If alignment rates vary wildly between samples (indicates quality issues)
+- If alignment rates are below 50% (data may be unusable)
