@@ -126,19 +126,8 @@ function CrisprSearchPage() {
 
     // Open new tab BEFORE async call to avoid popup blocker
     // Browser allows window.open() during direct user action (click)
-    const newTab = window.open('', '_blank');
-    if (newTab) {
-      // Show loading message in new tab while waiting
-      newTab.document.write(`
-        <html>
-          <head><title>Loading CRISPR Results...</title></head>
-          <body style="font-family: sans-serif; padding: 40px; text-align: center;">
-            <h2>Designing CRISPR guides...</h2>
-            <p>Please wait while we analyze your sequence.</p>
-          </body>
-        </html>
-      `);
-    }
+    // Note: Don't use document.write() - Safari blocks it as "insecure"
+    const newTab = window.open('about:blank', '_blank');
 
     setLoading(true);
 
