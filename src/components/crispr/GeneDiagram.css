@@ -155,6 +155,38 @@
   color: #666;
 }
 
+.gene-diagram-legend .legend-divider {
+  color: #ccc;
+  margin: 0 8px;
+}
+
+.gene-diagram-legend .score-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-style: normal;
+}
+
+.gene-diagram-legend .score-box {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  margin-left: 8px;
+}
+
+.gene-diagram-legend .score-box.high {
+  background-color: #2e7d32;
+}
+
+.gene-diagram-legend .score-box.med {
+  background-color: #f9a825;
+}
+
+.gene-diagram-legend .score-box.low {
+  background-color: #c62828;
+}
+
 /* Tooltip */
 .gene-diagram-tooltip {
   position: absolute;

@@ -346,52 +346,6 @@ function GeneDiagram({ geneLength, geneName, strand, guides, upstreamLength = 0,
       .attr('class', 'end-label')
       .text("3'");
 
-    // Legend
-    const legendX = innerWidth - 190;
-    const legendY = 18;
-    const legendPadding = 6;
-    const legendWidth = 250;
-    const legendHeight = 22;
-    const legendItemSpacing = 65;
-    const legendItems = [
-      { label: 'High', color: '#2e7d32' },
-      { label: 'Med', color: '#f9a825' },
-      { label: 'Low', color: '#c62828' }
-    ];
-
-    // Legend background with padding
-    g.append('rect')
-      .attr('x', legendX - 45 - legendPadding)
-      .attr('y', legendY - legendPadding)
-      .attr('width', legendWidth)
-      .attr('height', legendHeight)
-      .attr('rx', 3)
-      .attr('ry', 3)
-      .attr('fill', '#f5f5f5')
-      .attr('stroke', '#e0e0e0')
-      .attr('stroke-width', 1);
-
-    g.append('text')
-      .attr('x', legendX - 40)
-      .attr('y', legendY + 10)
-      .attr('class', 'legend-title')
-      .text('Score:');
-
-    legendItems.forEach((item, i) => {
-      g.append('rect')
-        .attr('x', legendX + 10 + i * legendItemSpacing)
-        .attr('y', legendY)
-        .attr('width', 12)
-        .attr('height', 12)
-        .attr('fill', item.color);
-
-      g.append('text')
-        .attr('x', legendX + 10 + i * legendItemSpacing + 16)
-        .attr('y', legendY + 10)
-        .attr('class', 'legend-label')
-        .text(item.label);
-    });
-
     // Cleanup tooltip on unmount
     return () => {
       d3.selectAll('.gene-diagram-tooltip').remove();
@@ -415,6 +369,13 @@ function GeneDiagram({ geneLength, geneName, strand, guides, upstreamLength = 0,
         </span>
         <span className="legend-item">
           <span className="marker bottom">▼</span> antisense strand (-)
+        </span>
+        <span className="legend-divider">|</span>
+        <span className="legend-item score-legend">
+          Score:
+          <span className="score-box high"></span> High
+          <span className="score-box med"></span> Med
+          <span className="score-box low"></span> Low
         </span>
       </div>
     </div>
