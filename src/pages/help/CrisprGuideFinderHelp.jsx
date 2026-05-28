@@ -536,7 +536,8 @@ function CrisprGuideFinderHelp() {
                     <td><strong>Off-targets</strong></td>
                     <td>Highest</td>
                     <td style={{textAlign: 'left'}}>
-                      Perfect matches: +10,000; 1mm: +1,000; 2mm: +200; 3mm: +50
+                      Per hit: 0mm: +1,000; 1mm: +800; 2mm: +600; 3mm: +400.
+                      Over 100 hits adds +20,000.
                     </td>
                   </tr>
                   <tr>
