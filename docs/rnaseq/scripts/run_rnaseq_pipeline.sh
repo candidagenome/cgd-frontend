@@ -215,12 +215,30 @@ echo "Found $TOTAL samples to process"
 echo ""
 
 # Function to get ENA FTP URL for an SRR ID
+# ENA URL pattern varies by accession length:
+# - 9 chars (SRRxxxxxx): no subdirectory
+# - 10 chars (SRRxxxxxxx): last 1 digit, zero-padded to 3
+# - 11 chars (SRRxxxxxxxx): last 2 digits, zero-padded to 3
+# - 12 chars (SRRxxxxxxxxx): last 3 digits
 get_ena_url() {
     local srr=$1
     local prefix=${srr:0:6}
-    local suffix=${srr: -2}
-    # ENA URL pattern
-    echo "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/${prefix}/0${suffix}/${srr}"
+    local len=${#srr}
+    local subdir=""
+
+    if [ $len -eq 10 ]; then
+        # 7-digit accession number: use last 1 digit, padded to 3
+        subdir="/00${srr: -1}"
+    elif [ $len -eq 11 ]; then
+        # 8-digit accession number: use last 2 digits, padded to 3
+        subdir="/0${srr: -2}"
+    elif [ $len -eq 12 ]; then
+        # 9-digit accession number: use last 3 digits
+        subdir="/${srr: -3}"
+    fi
+    # 9 chars (6-digit accession) has no subdirectory
+
+    echo "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/${prefix}${subdir}/${srr}"
 }
 
 # Process each sample
