@@ -36,7 +36,7 @@ const NEWS_ITEMS = [
     title: 'New: CRISPR Guide RNA Designer (Preview)',
     content: (
       <>
-        Design sgRNAs for <em>Candida</em> gene knockout experiments with our new CRISPR Guide RNA
+        Design sgRNAs for <em>Candida</em> CRISPRi/CRISPRa/CRISPR cut experiments with our new CRISPR Guide RNA
         Designer. The tool predicts candidate guides, evaluates off-target risks, and generates
         cloning primers.
         <p></p>
