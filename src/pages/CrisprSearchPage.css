@@ -416,6 +416,65 @@
   margin-right: 5px;
 }
 
+/* Gene Autocomplete */
+.autocomplete-wrapper {
+  position: relative;
+}
+
+.gene-autocomplete-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.gene-autocomplete-suggestions .suggestion-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gene-autocomplete-suggestions .suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.gene-autocomplete-suggestions .suggestion-item:hover,
+.gene-autocomplete-suggestions .suggestion-item.selected {
+  background-color: #e3f2fd;
+}
+
+.gene-autocomplete-suggestions .suggestion-text {
+  font-weight: 500;
+  color: #333;
+}
+
+.gene-autocomplete-suggestions .suggestion-text mark {
+  background-color: #fff59d;
+  padding: 0 1px;
+}
+
+.gene-autocomplete-suggestions .suggestion-description {
+  font-size: 0.85em;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* Responsive */
 @media (max-width: 900px) {
   .form-columns {

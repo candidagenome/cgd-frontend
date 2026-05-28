@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import crisprApi from '../api/crisprApi';
+import searchApi from '../api/searchApi';
 import './CrisprSearchPage.css';
 
 // PAM options with descriptions
@@ -13,8 +14,8 @@ const PAM_OPTIONS = [
 
 // Target region options
 const TARGET_REGIONS = [
-  { value: '5_prime', label: "5' Region (Recommended)", description: 'First 20% of CDS - best for knockouts' },
-  { value: '5_prime_upstream', label: "5' Region + Upstream", description: 'First 20% of CDS plus 500bp upstream - includes promoter' },
+  { value: '5_prime_upstream', label: "5' Region + Upstream (Recommended)", description: 'First 20% of CDS plus 500bp upstream - includes promoter' },
+  { value: '5_prime', label: "5' Region", description: 'First 20% of CDS - best for knockouts' },
   { value: '3_prime', label: "3' Region", description: 'Last 20% of CDS' },
   { value: 'full_cds', label: 'Full CDS', description: 'Entire coding sequence' },
 ];
@@ -39,7 +40,7 @@ function CrisprSearchPage() {
   const [organism, setOrganism] = useState('C_albicans_SC5314_A22');
   const [pam, setPam] = useState('NGG');
   const [guideLength, setGuideLength] = useState(20);
-  const [targetRegion, setTargetRegion] = useState('5_prime');
+  const [targetRegion, setTargetRegion] = useState('5_prime_upstream');
   const [maxGuides, setMaxGuides] = useState(20);
   const [checkOfftargets, setCheckOfftargets] = useState(true);
   const [showAdvanced, setShowAdvanced] = useState(false);
@@ -51,6 +52,14 @@ function CrisprSearchPage() {
   const [genePreview, setGenePreview] = useState(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState(null);
+
+  // Autocomplete state
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const geneInputRef = useRef(null);
+  const suggestionsRef = useRef(null);
+  const debounceRef = useRef(null);
 
   // UI state
   const [loading, setLoading] = useState(false);
@@ -70,6 +79,109 @@ function CrisprSearchPage() {
       }
     };
     loadConfig();
+  }, []);
+
+  // Fetch autocomplete suggestions
+  const fetchSuggestions = useCallback(async (query) => {
+    if (query.length < 2) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    try {
+      const result = await searchApi.autocomplete(query, 8);
+      // Filter to only show gene suggestions
+      const geneSuggestions = (result.suggestions || []).filter(s => s.category === 'gene');
+      setSuggestions(geneSuggestions);
+      setShowSuggestions(geneSuggestions.length > 0);
+      setSelectedIndex(-1);
+    } catch (err) {
+      console.error('Autocomplete error:', err);
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
+  }, []);
+
+  // Handle gene input change with debouncing
+  const handleGeneInputChange = (e) => {
+    const value = e.target.value;
+    setGeneName(value);
+
+    // Clear previous debounce timer
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+
+    // Set new debounce timer (300ms delay)
+    debounceRef.current = setTimeout(() => {
+      fetchSuggestions(value);
+    }, 300);
+  };
+
+  // Handle suggestion selection
+  const handleSelectSuggestion = (suggestion) => {
+    setGeneName(suggestion.text);
+    setShowSuggestions(false);
+    setSuggestions([]);
+  };
+
+  // Handle keyboard navigation for autocomplete
+  const handleGeneKeyDown = (e) => {
+    if (!showSuggestions || suggestions.length === 0) {
+      return;
+    }
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setSelectedIndex((prev) =>
+          prev < suggestions.length - 1 ? prev + 1 : prev
+        );
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setSelectedIndex((prev) => (prev > 0 ? prev - 1 : -1));
+        break;
+      case 'Enter':
+        if (selectedIndex >= 0 && selectedIndex < suggestions.length) {
+          e.preventDefault();
+          handleSelectSuggestion(suggestions[selectedIndex]);
+        }
+        break;
+      case 'Escape':
+        setShowSuggestions(false);
+        setSelectedIndex(-1);
+        break;
+      default:
+        break;
+    }
+  };
+
+  // Close suggestions when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        suggestionsRef.current &&
+        !suggestionsRef.current.contains(e.target) &&
+        geneInputRef.current &&
+        !geneInputRef.current.contains(e.target)
+      ) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Cleanup debounce on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+    };
   }, []);
 
   // Load gene preview when gene name changes (debounced)
@@ -194,13 +306,57 @@ function CrisprSearchPage() {
                 {inputType === 'gene' ? (
                   <div className="form-group">
                     <label htmlFor="geneName">Gene Name</label>
-                    <input
-                      type="text"
-                      id="geneName"
-                      value={geneName}
-                      onChange={(e) => setGeneName(e.target.value)}
-                      placeholder="e.g., HOG1, EFG1, ALS3"
-                    />
+                    <div className="autocomplete-wrapper">
+                      <input
+                        ref={geneInputRef}
+                        type="text"
+                        id="geneName"
+                        value={geneName}
+                        onChange={handleGeneInputChange}
+                        onKeyDown={handleGeneKeyDown}
+                        onFocus={() => {
+                          if (suggestions.length > 0) {
+                            setShowSuggestions(true);
+                          }
+                        }}
+                        placeholder="e.g., HOG1, EFG1, ALS3"
+                        autoComplete="off"
+                        aria-autocomplete="list"
+                        aria-expanded={showSuggestions}
+                      />
+                      {showSuggestions && suggestions.length > 0 && (
+                        <ul
+                          ref={suggestionsRef}
+                          className="gene-autocomplete-suggestions"
+                          role="listbox"
+                        >
+                          {suggestions.map((suggestion, index) => (
+                            <li
+                              key={`${suggestion.text}-${index}`}
+                              className={`suggestion-item ${index === selectedIndex ? 'selected' : ''}`}
+                              role="option"
+                              aria-selected={index === selectedIndex}
+                              onClick={() => handleSelectSuggestion(suggestion)}
+                              onMouseEnter={() => setSelectedIndex(index)}
+                            >
+                              <span
+                                className="suggestion-text"
+                                dangerouslySetInnerHTML={{
+                                  __html: suggestion.highlighted_text || suggestion.text
+                                }}
+                              />
+                              {suggestion.description && (
+                                <span className="suggestion-description">
+                                  {suggestion.description.length > 60
+                                    ? suggestion.description.substring(0, 60) + '...'
+                                    : suggestion.description}
+                                </span>
+                              )}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
                     <p className="help-text">
                       Enter a standard gene name, systematic name, or CGD ID
                     </p>

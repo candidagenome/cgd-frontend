@@ -39,9 +39,12 @@ function GeneDiagram({ geneLength, geneName, strand, guides, onGuideClick }) {
       .attr('transform', `translate(${margin.left},${margin.top})`);
 
     // Scale for gene coordinates
+    // For minus strand genes, flip the scale so position 1 (5' end) appears on the right
+    // where the 5' label is displayed
+    const isMinusStrand = strand === '-' || strand === 'C';
     const xScale = d3.scaleLinear()
       .domain([1, geneLength])
-      .range([0, innerWidth]);
+      .range(isMinusStrand ? [innerWidth, 0] : [0, innerWidth]);
 
     // Gene body (arrow shape showing direction)
     const arrowWidth = 15;
