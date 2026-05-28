@@ -408,9 +408,8 @@ function CrisprGuideFinderHelp() {
           <h3>Benchmark Methodology</h3>
           <p>
             The benchmark compared the <strong>first 500bp of each CDS</strong> across all
-            three tools to ensure a fair comparison. This corresponds to CGD&apos;s &quot;5&apos;
-            Region&quot; setting for most genes (since 500bp is typically &gt;20% of shorter genes
-            but &lt;20% of longer genes).
+            three tools to ensure a fair comparison. The same 500bp sequences were used
+            for CGD, CHOPCHOP, and CRISPOR.
           </p>
           <p>
             <strong>Note:</strong> CGD&apos;s default &quot;5&apos; Region + Upstream&quot; option
@@ -421,8 +420,8 @@ function CrisprGuideFinderHelp() {
           <h3>Key Results</h3>
           <p>
             <strong>Key result:</strong> In a benchmark of 20 genes, CGD recovered about
-            55–56% of external tools&apos; strict top-10 guides. When CGD&apos;s top 20
-            guides were considered, overlap increased to about 79%, suggesting that most
+            52–59% of external tools&apos; strict top-10 guides. When CGD&apos;s top 20
+            guides were considered, overlap increased to 72–81%, suggesting that most
             differences are due to ranking order rather than missing candidate guides.
           </p>
           <p>
@@ -460,8 +459,8 @@ function CrisprGuideFinderHelp() {
                 <tbody>
                   <tr>
                     <td>CHOPCHOP top 10 in CGD top 10</td>
-                    <td>79/140</td>
-                    <td><strong>56.4%</strong></td>
+                    <td>82/140</td>
+                    <td><strong>58.6%</strong></td>
                   </tr>
                   <tr>
                     <td>CHOPCHOP top 10 in CRISPOR top 10</td>
@@ -470,8 +469,8 @@ function CrisprGuideFinderHelp() {
                   </tr>
                   <tr>
                     <td>CRISPOR top 10 in CGD top 10</td>
-                    <td>111/200</td>
-                    <td>55.5%</td>
+                    <td>104/200</td>
+                    <td>52.0%</td>
                   </tr>
                 </tbody>
               </table>
@@ -491,11 +490,11 @@ function CrisprGuideFinderHelp() {
                 <tbody>
                   <tr>
                     <td>CHOPCHOP top 10 in CGD top 20</td>
-                    <td><strong>78.6%</strong> (110/140)</td>
+                    <td><strong>80.7%</strong> (113/140)</td>
                   </tr>
                   <tr>
                     <td>CRISPOR top 10 in CGD top 20</td>
-                    <td><strong>79.5%</strong> (159/200)</td>
+                    <td><strong>72.0%</strong> (144/200)</td>
                   </tr>
                 </tbody>
               </table>
