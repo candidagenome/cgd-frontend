@@ -137,13 +137,10 @@ function CrisprSearchPage() {
         return;
       }
 
-      // Store results in localStorage with unique key
-      const resultKey = `crispr_${Date.now()}`;
-      localStorage.setItem(`crisprResults_${resultKey}`, JSON.stringify(results));
-      localStorage.setItem(`crisprParams_${resultKey}`, JSON.stringify(params));
-
-      // Navigate to results page (same tab - works on all browsers including Safari)
-      navigate(`/crispr/results?key=${resultKey}`);
+      // Navigate to results page with state (avoids localStorage issues in Safari)
+      navigate('/crispr/results', {
+        state: { results, params }
+      });
     } catch (err) {
       console.error('CRISPR design error:', err);
       setError(err.response?.data?.detail || err.message || 'Failed to design guides');

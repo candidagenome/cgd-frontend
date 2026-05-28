@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import crisprApi from '../api/crisprApi';
 import GeneDiagram from '../components/crispr/GeneDiagram';
 import './CrisprResultsPage.css';
 
 function CrisprResultsPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const [results, setResults] = useState(null);
   const [expandedGuides, setExpandedGuides] = useState(new Set());
@@ -13,28 +14,41 @@ function CrisprResultsPage() {
   const [sortDirection, setSortDirection] = useState('asc');
   const [downloading, setDownloading] = useState(null);
 
-  // Load results from localStorage using key from URL
+  // Load results from router state, localStorage, or sessionStorage
   useEffect(() => {
+    // First priority: check router state (passed via navigate)
+    if (location.state?.results) {
+      setResults(location.state.results);
+      return;
+    }
+
+    // Second priority: check localStorage with key from URL
     const resultKey = searchParams.get('key');
-
     if (resultKey) {
-      // New method: load from localStorage with key
-      const storedResults = localStorage.getItem(`crisprResults_${resultKey}`);
-
-      if (storedResults) {
-        setResults(JSON.parse(storedResults));
-        // Clean up localStorage after reading
-        localStorage.removeItem(`crisprResults_${resultKey}`);
-      }
-    } else {
-      // Fallback: try sessionStorage for backwards compatibility
-      const storedResults = sessionStorage.getItem('crisprResults');
-
-      if (storedResults) {
-        setResults(JSON.parse(storedResults));
+      try {
+        const storedResults = localStorage.getItem(`crisprResults_${resultKey}`);
+        if (storedResults) {
+          setResults(JSON.parse(storedResults));
+          // Clean up localStorage after reading
+          localStorage.removeItem(`crisprResults_${resultKey}`);
+          return;
+        }
+      } catch (e) {
+        // localStorage may be blocked in Safari private mode
+        console.warn('Could not access localStorage:', e);
       }
     }
-  }, [searchParams]);
+
+    // Last fallback: try sessionStorage for backwards compatibility
+    try {
+      const storedResults = sessionStorage.getItem('crisprResults');
+      if (storedResults) {
+        setResults(JSON.parse(storedResults));
+      }
+    } catch (e) {
+      console.warn('Could not access sessionStorage:', e);
+    }
+  }, [location.state, searchParams]);
 
   // Toggle guide expansion
   const toggleGuide = (rank) => {
