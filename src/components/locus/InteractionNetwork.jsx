@@ -243,36 +243,11 @@ function InteractionNetwork({ interactions, locusName, locusDisplayName }) {
 
         <div className="filter-group">
           <span className="filter-label">Filter by Type:</span>
-          <label>
-            <input
-              type="radio"
-              name="filterType"
-              value="all"
-              checked={filterType === 'all'}
-              onChange={(e) => setFilterType(e.target.value)}
-            />
-            All
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="filterType"
-              value="physical"
-              checked={filterType === 'physical'}
-              onChange={(e) => setFilterType(e.target.value)}
-            />
-            Physical
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="filterType"
-              value="genetic"
-              checked={filterType === 'genetic'}
-              onChange={(e) => setFilterType(e.target.value)}
-            />
-            Genetic
-          </label>
+          <span className="radio-options">
+            <label><input type="radio" name="filterType" value="all" checked={filterType === 'all'} onChange={(e) => setFilterType(e.target.value)} /> All</label>
+            <label><input type="radio" name="filterType" value="physical" checked={filterType === 'physical'} onChange={(e) => setFilterType(e.target.value)} /> Physical</label>
+            <label><input type="radio" name="filterType" value="genetic" checked={filterType === 'genetic'} onChange={(e) => setFilterType(e.target.value)} /> Genetic</label>
+          </span>
         </div>
 
         {maxExperiments > 1 && (

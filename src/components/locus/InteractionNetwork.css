@@ -49,6 +49,12 @@
   white-space: nowrap;
 }
 
+.network-controls .radio-options {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .network-controls label {
   display: inline-flex;
   align-items: center;
