@@ -2153,6 +2153,31 @@ a:hover {
   color: #333;
 }
 
+.interaction-section .section-header-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.interaction-section .section-header-row h3 {
+  font-size: 1.3em;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.interaction-section .section-entry-count {
+  background-color: #e8e8e8;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  color: #555;
+}
+
 .interaction-section h3 {
   font-size: 1.3em;
   color: #333;

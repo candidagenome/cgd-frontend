@@ -318,11 +318,10 @@ function InteractionDetails({ data, loading, error, selectedOrganism, onOrganism
       {/* Physical Interactions Section */}
       {physicalRows.length > 0 && (
         <div className="interaction-section">
-          <h3>Physical Interactions</h3>
-          <p className="section-subtitle">
-            {physicalRows.length} entries for {physicalGeneCount} genes
-          </p>
-
+          <div className="section-header-row">
+            <h3>Physical Interactions</h3>
+            <span className="section-entry-count">{physicalRows.length} entries for {physicalGeneCount} genes</span>
+          </div>
           <div className="table-controls">
             <input
               type="text"
@@ -350,12 +349,11 @@ function InteractionDetails({ data, loading, error, selectedOrganism, onOrganism
 
       {/* Genetic Interactions Section */}
       {geneticRows.length > 0 && (
-        <div className="interaction-section">
-          <h3>Genetic Interactions</h3>
-          <p className="section-subtitle">
-            {geneticRows.length} entries for {geneticGeneCount} genes
-          </p>
-
+        <div className="interaction-section" style={{ marginTop: '2rem' }}>
+          <div className="section-header-row">
+            <h3>Genetic Interactions</h3>
+            <span className="section-entry-count">{geneticRows.length} entries for {geneticGeneCount} genes</span>
+          </div>
           <div className="table-controls">
             <input
               type="text"
