@@ -2122,6 +2122,22 @@ a:hover {
   color: white;
 }
 
+.interaction-circle.string {
+  background-color: #2196f3;
+  color: white;
+}
+
+.string-source-note {
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 15px;
+  font-style: italic;
+}
+
+.string-source-note a {
+  color: #1976d2;
+}
+
 .interaction-circle .circle-label {
   font-size: 0.85em;
   font-weight: 500;

@@ -24,6 +24,7 @@ const GENETIC_TYPES = new Set([
 function InteractionDetails({ data, networkData, loading, networkLoading, error, selectedOrganism, onOrganismChange, orthologOrganisms = [] }) {
   const [physicalFilter, setPhysicalFilter] = useState('');
   const [geneticFilter, setGeneticFilter] = useState('');
+  const [stringFilter, setStringFilter] = useState('');
 
   // Get available organisms from the data
   const organisms = useMemo(() => {
@@ -50,6 +51,11 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
     });
 
     return { physicalInteractions: physical, geneticInteractions: genetic };
+  }, [orgData]);
+
+  // Get STRING interactions
+  const stringInteractions = useMemo(() => {
+    return orgData?.string_interactions || [];
   }, [orgData]);
 
   // Count unique interactors
@@ -224,6 +230,65 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
     },
   ], []);
 
+  // Column definitions for STRING Interactions table
+  const stringColumnDefs = useMemo(() => [
+    {
+      headerName: 'Interactor',
+      field: 'interactor',
+      flex: 0.8,
+      minWidth: 100,
+      cellRenderer: (params) => {
+        const featureName = params.data.interactor_feature_name;
+        const geneName = params.data.interactor;
+        if (!featureName) return geneName || '-';
+        return (
+          <Link to={`/locus/${featureName}`}>
+            {geneName}
+          </Link>
+        );
+      },
+    },
+    {
+      headerName: 'Combined Score',
+      field: 'combined_score',
+      flex: 0.6,
+      minWidth: 110,
+      cellRenderer: (params) => {
+        const score = params.value;
+        const percentage = (score / 10).toFixed(1);
+        return `${score} (${percentage}%)`;
+      },
+    },
+    {
+      headerName: 'Experimental',
+      field: 'experimental_score',
+      flex: 0.5,
+      minWidth: 90,
+      valueFormatter: (params) => params.value || 0,
+    },
+    {
+      headerName: 'Database',
+      field: 'database_score',
+      flex: 0.5,
+      minWidth: 80,
+      valueFormatter: (params) => params.value || 0,
+    },
+    {
+      headerName: 'Text Mining',
+      field: 'textmining_score',
+      flex: 0.5,
+      minWidth: 90,
+      valueFormatter: (params) => params.value || 0,
+    },
+    {
+      headerName: 'Co-expression',
+      field: 'coexpression_score',
+      flex: 0.5,
+      minWidth: 100,
+      valueFormatter: (params) => params.value || 0,
+    },
+  ], []);
+
   const defaultColDef = useMemo(() => ({
     sortable: true,
     resizable: true,
@@ -279,7 +344,7 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
           <a href="https://thebiogrid.org/" target="_blank" rel="noopener noreferrer">BioGRID</a>.
         </p>
 
-        {totalInteractions > 0 ? (
+        {(totalInteractions > 0 || stringInteractions.length > 0) ? (
           <div className="interaction-summary-viz">
             <div className="interaction-circles">
               {physicalInteractions.length > 0 && (
@@ -292,6 +357,12 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
                 <div className="interaction-circle genetic">
                   <span className="circle-label">Genetic</span>
                   <span className="circle-count">{geneticInteractions.length}</span>
+                </div>
+              )}
+              {stringInteractions.length > 0 && (
+                <div className="interaction-circle string">
+                  <span className="circle-label">STRING</span>
+                  <span className="circle-count">{stringInteractions.length}</span>
                 </div>
               )}
             </div>
@@ -365,8 +436,45 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
         </div>
       )}
 
+      {/* STRING Interactions Section */}
+      {stringInteractions.length > 0 && (
+        <div className="interaction-section" style={{ marginTop: '2rem' }}>
+          <div className="section-header-row">
+            <h3>STRING Interactions (Predicted)</h3>
+            <span className="section-entry-count">{stringInteractions.length} interactions</span>
+          </div>
+          <p className="string-source-note">
+            Predicted protein-protein interactions from{' '}
+            <a href="https://string-db.org/" target="_blank" rel="noopener noreferrer">STRING database</a>.
+            Scores range from 0-1000; higher scores indicate higher confidence.
+          </p>
+          <div className="table-controls">
+            <input
+              type="text"
+              placeholder="Filter table..."
+              value={stringFilter}
+              onChange={(e) => setStringFilter(e.target.value)}
+              className="quick-filter-input"
+            />
+          </div>
+
+          <div className="ag-theme-alpine interaction-table" style={{ height: getTableHeight(stringInteractions.length), width: '100%' }}>
+            <AgGridReact
+              rowData={stringInteractions}
+              columnDefs={stringColumnDefs}
+              defaultColDef={defaultColDef}
+              quickFilterText={stringFilter}
+              pagination={true}
+              paginationPageSize={10}
+              paginationPageSizeSelector={[10, 25, 50]}
+              domLayout="normal"
+            />
+          </div>
+        </div>
+      )}
+
       {/* Interaction Network */}
-      {totalInteractions > 0 && (
+      {(totalInteractions > 0 || stringInteractions.length > 0) && (
         <InteractionNetwork
           networkData={networkData?.results?.[currentOrganism]}
           loading={networkLoading}
