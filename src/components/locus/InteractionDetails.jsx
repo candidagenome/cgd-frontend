@@ -301,15 +301,6 @@ function InteractionDetails({ data, loading, error, selectedOrganism, onOrganism
         )}
       </div>
 
-      {/* Interaction Network */}
-      {totalInteractions > 0 && (
-        <InteractionNetwork
-          interactions={orgData?.interactions || []}
-          locusName={orgData?.locus_display_name}
-          locusDisplayName={orgData?.locus_display_name}
-        />
-      )}
-
       {/* Physical Interactions Section */}
       {physicalRows.length > 0 && (
         <div className="interaction-section">
@@ -372,6 +363,15 @@ function InteractionDetails({ data, loading, error, selectedOrganism, onOrganism
             />
           </div>
         </div>
+      )}
+
+      {/* Interaction Network */}
+      {totalInteractions > 0 && (
+        <InteractionNetwork
+          interactions={orgData?.interactions || []}
+          locusName={orgData?.locus_display_name}
+          locusDisplayName={orgData?.locus_display_name}
+        />
       )}
 
       {/* Resources Section */}
