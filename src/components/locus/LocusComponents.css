@@ -2061,6 +2061,161 @@ a:hover {
   font-size: 0.9em;
 }
 
+/* SGD-style Interaction Layout */
+.interaction-overview-section {
+  margin-bottom: 30px;
+}
+
+.interaction-overview-section h2 {
+  font-size: 1.4em;
+  color: #333;
+  margin: 15px 0 10px 0;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.interaction-source-note {
+  color: #666;
+  font-size: 0.95em;
+  margin-bottom: 20px;
+}
+
+.interaction-summary-viz {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.interaction-circles {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 25px;
+}
+
+.interaction-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.interaction-circle:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.interaction-circle.physical {
+  background-color: #9575cd;
+  color: white;
+}
+
+.interaction-circle.genetic {
+  background-color: #81c784;
+  color: white;
+}
+
+.interaction-circle .circle-label {
+  font-size: 0.85em;
+  font-weight: 500;
+}
+
+.interaction-circle .circle-count {
+  font-size: 1.8em;
+  font-weight: bold;
+}
+
+.interaction-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.interaction-stats .stat-row {
+  display: flex;
+  gap: 10px;
+}
+
+.interaction-stats .stat-label {
+  font-weight: 500;
+  color: #555;
+  min-width: 180px;
+}
+
+.interaction-stats .stat-value {
+  color: #333;
+}
+
+.interaction-section h3 {
+  font-size: 1.3em;
+  color: #333;
+  margin: 0 0 5px 0;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.interaction-section .section-subtitle {
+  background-color: #e8e8e8;
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.interaction-table {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+.interaction-resources {
+  padding: 15px 20px;
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 0.95em;
+}
+
+.interaction-resources a {
+  color: #1976d2;
+}
+
+.interaction-resources a:hover {
+  text-decoration: underline;
+}
+
+/* Reference list in table cells */
+.reference-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.reference-list a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.reference-list a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive adjustments for interaction layout */
+@media (max-width: 768px) {
+  .interaction-circles {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
 /* =====================================================
    PROTEIN TAB IMPROVEMENTS
    ===================================================== */
