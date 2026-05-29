@@ -25,6 +25,7 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
   const [physicalFilter, setPhysicalFilter] = useState('');
   const [geneticFilter, setGeneticFilter] = useState('');
   const [stringFilter, setStringFilter] = useState('');
+  const [showStringTable, setShowStringTable] = useState(false);
 
   // Get available organisms from the data
   const organisms = useMemo(() => {
@@ -435,50 +436,63 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
         </div>
       )}
 
-      {/* STRING Interactions Section */}
-      {stringInteractions.length > 0 && (
-        <div className="interaction-section" style={{ marginTop: '2rem' }}>
-          <div className="section-header-row">
-            <h3>STRING Interactions (Predicted)</h3>
-            <span className="section-entry-count">{stringInteractions.length} interactions</span>
-          </div>
-          <p className="string-source-note">
-            Predicted protein-protein interactions from{' '}
-            <a href="https://string-db.org/" target="_blank" rel="noopener noreferrer">STRING database</a>.
-            Scores range from 0-1000; higher scores indicate higher confidence.
-          </p>
-          <div className="table-controls">
-            <input
-              type="text"
-              placeholder="Filter table..."
-              value={stringFilter}
-              onChange={(e) => setStringFilter(e.target.value)}
-              className="quick-filter-input"
-            />
-          </div>
-
-          <div className="ag-theme-alpine interaction-table" style={{ height: getTableHeight(stringInteractions.length, 550, 42), width: '100%' }}>
-            <AgGridReact
-              rowData={stringInteractions}
-              columnDefs={stringColumnDefs}
-              defaultColDef={defaultColDef}
-              quickFilterText={stringFilter}
-              pagination={true}
-              paginationPageSize={10}
-              paginationPageSizeSelector={[10, 25, 50]}
-              domLayout="normal"
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Interaction Network */}
+      {/* Interaction Network - shows all interaction types */}
       {(totalInteractions > 0 || stringInteractions.length > 0) && (
         <InteractionNetwork
           networkData={networkData?.results?.[currentOrganism]}
           loading={networkLoading}
           locusName={orgData?.locus_display_name}
         />
+      )}
+
+      {/* Predicted Functional Associations from STRING */}
+      {stringInteractions.length > 0 && (
+        <div className="interaction-section" style={{ marginTop: '2rem' }}>
+          <div className="section-header-row">
+            <h3>Predicted Functional Associations from STRING</h3>
+            <span className="section-entry-count">{stringInteractions.length} associations</span>
+          </div>
+          <p className="string-source-note">
+            These are predicted protein-protein functional associations from{' '}
+            <a href="https://string-db.org/" target="_blank" rel="noopener noreferrer">STRING</a>.
+            They may include physical interactions, pathway relationships, co-expression, text-mining associations,
+            and other evidence types. Higher-confidence associations are shown in the network above.
+          </p>
+
+          <button
+            className="string-toggle-btn"
+            onClick={() => setShowStringTable(!showStringTable)}
+          >
+            {showStringTable ? '▼ Hide STRING evidence scores' : '▶ Show STRING evidence scores'}
+          </button>
+
+          {showStringTable && (
+            <>
+              <div className="table-controls" style={{ marginTop: '10px' }}>
+                <input
+                  type="text"
+                  placeholder="Filter table..."
+                  value={stringFilter}
+                  onChange={(e) => setStringFilter(e.target.value)}
+                  className="quick-filter-input"
+                />
+              </div>
+
+              <div className="ag-theme-alpine interaction-table" style={{ height: getTableHeight(stringInteractions.length, 550, 42), width: '100%' }}>
+                <AgGridReact
+                  rowData={stringInteractions}
+                  columnDefs={stringColumnDefs}
+                  defaultColDef={defaultColDef}
+                  quickFilterText={stringFilter}
+                  pagination={true}
+                  paginationPageSize={10}
+                  paginationPageSizeSelector={[10, 25, 50]}
+                  domLayout="normal"
+                />
+              </div>
+            </>
+          )}
+        </div>
       )}
 
       {/* Resources Section */}
