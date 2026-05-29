@@ -118,8 +118,8 @@ function InteractionDetails({ data, loading, error, selectedOrganism, onOrganism
     {
       headerName: 'Interactor',
       field: 'interactor_gene_name',
-      flex: 1,
-      minWidth: 120,
+      flex: 0.6,
+      minWidth: 80,
       cellRenderer: (params) => {
         const featureName = params.data.interactor_feature_name;
         const geneName = params.data.interactor_gene_name;
@@ -134,28 +134,36 @@ function InteractionDetails({ data, loading, error, selectedOrganism, onOrganism
     {
       headerName: 'Assay',
       field: 'experiment_type',
-      flex: 1.2,
-      minWidth: 150,
+      flex: 1,
+      minWidth: 160,
+      wrapText: true,
+      autoHeight: true,
+      cellStyle: { 'white-space': 'normal' },
     },
     {
       headerName: 'Action',
       field: 'interactor_action',
-      flex: 0.6,
-      minWidth: 80,
+      flex: 0.4,
+      minWidth: 70,
     },
     {
       headerName: 'Description',
       field: 'description',
-      flex: 1,
-      minWidth: 120,
+      flex: 0.8,
+      minWidth: 100,
+      wrapText: true,
+      autoHeight: true,
+      cellStyle: { 'white-space': 'normal' },
       valueGetter: (params) => params.data.description || '-',
     },
     {
       headerName: 'Reference',
       field: 'references',
-      flex: 1,
-      minWidth: 140,
+      flex: 2.5,
+      minWidth: 400,
       autoHeight: true,
+      wrapText: true,
+      cellStyle: { 'white-space': 'normal', 'line-height': '1.4' },
       cellRenderer: referenceCellRenderer,
     },
   ], []);
@@ -165,8 +173,8 @@ function InteractionDetails({ data, loading, error, selectedOrganism, onOrganism
     {
       headerName: 'Interactor',
       field: 'interactor_gene_name',
-      flex: 1,
-      minWidth: 120,
+      flex: 0.6,
+      minWidth: 80,
       cellRenderer: (params) => {
         const featureName = params.data.interactor_feature_name;
         const geneName = params.data.interactor_gene_name;
@@ -181,28 +189,36 @@ function InteractionDetails({ data, loading, error, selectedOrganism, onOrganism
     {
       headerName: 'Assay',
       field: 'experiment_type',
-      flex: 1.2,
-      minWidth: 150,
+      flex: 1,
+      minWidth: 160,
+      wrapText: true,
+      autoHeight: true,
+      cellStyle: { 'white-space': 'normal' },
     },
     {
       headerName: 'Action',
       field: 'interactor_action',
-      flex: 0.6,
-      minWidth: 80,
+      flex: 0.4,
+      minWidth: 70,
     },
     {
       headerName: 'Phenotype',
       field: 'description',
-      flex: 1,
-      minWidth: 120,
+      flex: 0.8,
+      minWidth: 100,
+      wrapText: true,
+      autoHeight: true,
+      cellStyle: { 'white-space': 'normal' },
       valueGetter: (params) => params.data.description || '-',
     },
     {
       headerName: 'Reference',
       field: 'references',
-      flex: 1,
-      minWidth: 140,
+      flex: 2.5,
+      minWidth: 400,
       autoHeight: true,
+      wrapText: true,
+      cellStyle: { 'white-space': 'normal', 'line-height': '1.4' },
       cellRenderer: referenceCellRenderer,
     },
   ], []);
