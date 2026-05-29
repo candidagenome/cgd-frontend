@@ -237,8 +237,8 @@ function InteractionDetails({ data, loading, error, selectedOrganism, onOrganism
     const pageSize = 10;
     const visibleRows = Math.min(rowCount, pageSize);
     const calculatedHeight = headerHeight + (visibleRows * rowHeight) + paginationHeight;
-    // Min 300px, max 700px
-    return Math.max(300, Math.min(calculatedHeight, 700));
+    // Min 300px, max 730px
+    return Math.max(300, Math.min(calculatedHeight, 730));
   }, []);
 
   if (loading) return <div className="loading">Loading interaction data...</div>;
