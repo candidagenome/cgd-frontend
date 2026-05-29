@@ -2,6 +2,7 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
+import InteractionNetwork from './InteractionNetwork';
 import { renderCitationItem } from '../../utils/formatCitation.jsx';
 import './LocusComponents.css';
 
@@ -299,6 +300,15 @@ function InteractionDetails({ data, loading, error, selectedOrganism, onOrganism
           <p className="no-data">No interactions found for this gene.</p>
         )}
       </div>
+
+      {/* Interaction Network */}
+      {totalInteractions > 0 && (
+        <InteractionNetwork
+          interactions={orgData?.interactions || []}
+          locusName={orgData?.locus_display_name}
+          locusDisplayName={orgData?.locus_display_name}
+        />
+      )}
 
       {/* Physical Interactions Section */}
       {physicalRows.length > 0 && (
