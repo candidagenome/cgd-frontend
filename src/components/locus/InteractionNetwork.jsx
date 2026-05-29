@@ -28,21 +28,42 @@ function InteractionNetwork({ networkData, loading, locusName }) {
     // Find max experiments for slider
     const maxExp = Math.max(1, ...networkData.edges.map(e => e.experiment_count));
 
-    // Get nodes that are connected after filtering
-    const connectedNodeIds = new Set();
-    experimentFilteredEdges.forEach(edge => {
-      connectedNodeIds.add(edge.source);
-      connectedNodeIds.add(edge.target);
-    });
-
-    // Always include query node
+    // Find query node
     const queryNode = networkData.nodes.find(n => n.is_query);
-    if (queryNode) {
-      connectedNodeIds.add(queryNode.id);
+    if (!queryNode) {
+      return { elements: [], maxExperiments: maxExp };
     }
 
-    // Filter nodes
-    const filteredNodes = networkData.nodes.filter(node => connectedNodeIds.has(node.id));
+    // Build adjacency list for BFS to find connected component
+    const adjacency = new Map();
+    experimentFilteredEdges.forEach(edge => {
+      if (!adjacency.has(edge.source)) adjacency.set(edge.source, []);
+      if (!adjacency.has(edge.target)) adjacency.set(edge.target, []);
+      adjacency.get(edge.source).push(edge.target);
+      adjacency.get(edge.target).push(edge.source);
+    });
+
+    // BFS from query node to find all reachable nodes
+    const reachableNodes = new Set([queryNode.id]);
+    const queue = [queryNode.id];
+    while (queue.length > 0) {
+      const current = queue.shift();
+      const neighbors = adjacency.get(current) || [];
+      for (const neighbor of neighbors) {
+        if (!reachableNodes.has(neighbor)) {
+          reachableNodes.add(neighbor);
+          queue.push(neighbor);
+        }
+      }
+    }
+
+    // Filter nodes to only those reachable from query node
+    const filteredNodes = networkData.nodes.filter(node => reachableNodes.has(node.id));
+
+    // Filter edges to only those between reachable nodes
+    const reachableEdges = experimentFilteredEdges.filter(
+      edge => reachableNodes.has(edge.source) && reachableNodes.has(edge.target)
+    );
 
     // Convert to Cytoscape format
     const cyNodes = filteredNodes.map(node => ({
@@ -53,7 +74,7 @@ function InteractionNetwork({ networkData, loading, locusName }) {
       }
     }));
 
-    const cyEdges = experimentFilteredEdges.map((edge, idx) => ({
+    const cyEdges = reachableEdges.map((edge, idx) => ({
       data: {
         id: `edge-${idx}`,
         source: edge.source,
