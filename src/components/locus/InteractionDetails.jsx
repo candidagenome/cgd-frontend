@@ -295,15 +295,14 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
     filter: true,
   }), []);
 
-  // Calculate table height based on row count (with autoHeight rows ~90px each)
-  const getTableHeight = useCallback((rowCount, maxHeight = 850) => {
+  // Calculate table height based on row count
+  const getTableHeight = useCallback((rowCount, maxHeight = 850, rowHeight = 90) => {
     const headerHeight = 48;
-    const rowHeight = 90; // approximate for autoHeight rows with wrapped text
     const paginationHeight = 52;
     const pageSize = 10;
     const visibleRows = Math.min(rowCount, pageSize);
     const calculatedHeight = headerHeight + (visibleRows * rowHeight) + paginationHeight;
-    return Math.max(300, Math.min(calculatedHeight, maxHeight));
+    return Math.max(200, Math.min(calculatedHeight, maxHeight));
   }, []);
 
   if (loading) return <div className="loading">Loading interaction data...</div>;
@@ -458,7 +457,7 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
             />
           </div>
 
-          <div className="ag-theme-alpine interaction-table" style={{ height: getTableHeight(stringInteractions.length), width: '100%' }}>
+          <div className="ag-theme-alpine interaction-table" style={{ height: getTableHeight(stringInteractions.length, 550, 42), width: '100%' }}>
             <AgGridReact
               rowData={stringInteractions}
               columnDefs={stringColumnDefs}
