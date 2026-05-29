@@ -36,23 +36,26 @@
 }
 
 .network-controls .filter-group {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
+  flex-wrap: nowrap;
 }
 
 .network-controls .filter-label {
   font-weight: 500;
   color: #555;
   font-size: 0.9em;
+  white-space: nowrap;
 }
 
 .network-controls label {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 4px;
   font-size: 0.9em;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .network-controls input[type="range"] {
