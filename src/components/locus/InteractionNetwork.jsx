@@ -240,24 +240,16 @@ function InteractionNetwork({ interactions, locusName, locusDisplayName }) {
 
       <div className="network-controls">
         <button className="reset-btn" onClick={handleReset}>Reset</button>
-
-        <div className="filter-group">
-          <span className="filter-label">Filter by Type:</span>
-          <span className="radio-options">
-            <label><input type="radio" name="filterType" value="all" checked={filterType === 'all'} onChange={(e) => setFilterType(e.target.value)} /> All</label>
-            <label><input type="radio" name="filterType" value="physical" checked={filterType === 'physical'} onChange={(e) => setFilterType(e.target.value)} /> Physical</label>
-            <label><input type="radio" name="filterType" value="genetic" checked={filterType === 'genetic'} onChange={(e) => setFilterType(e.target.value)} /> Genetic</label>
-          </span>
-        </div>
-
+        <span className="filter-label">Filter by Type:</span>
+        <label><input type="radio" name="filterType" value="all" checked={filterType === 'all'} onChange={(e) => setFilterType(e.target.value)} /> All</label>
+        <label><input type="radio" name="filterType" value="physical" checked={filterType === 'physical'} onChange={(e) => setFilterType(e.target.value)} /> Physical</label>
+        <label><input type="radio" name="filterType" value="genetic" checked={filterType === 'genetic'} onChange={(e) => setFilterType(e.target.value)} /> Genetic</label>
         {maxExperiments > 1 && (
-          <div className="filter-group">
+          <>
             <span className="filter-label">Min Experiments:</span>
-            <span className="slider-container">
-              <input type="range" min="1" max={maxExperiments} value={minExperiments} onChange={(e) => setMinExperiments(parseInt(e.target.value))} />
-              <span className="filter-value">{minExperiments}</span>
-            </span>
-          </div>
+            <input type="range" min="1" max={maxExperiments} value={minExperiments} onChange={(e) => setMinExperiments(parseInt(e.target.value))} />
+            <span className="filter-value">{minExperiments}</span>
+          </>
         )}
       </div>
 
