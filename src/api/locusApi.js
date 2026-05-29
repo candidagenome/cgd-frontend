@@ -111,6 +111,12 @@ export const locusApi = {
     const response = await api.get(`/api/locus/${encodeURIComponent(name)}/expression_details`);
     return response.data;
   },
+
+  // Get interaction network graph for visualization
+  getInteractionNetwork: async (name, depth = 2) => {
+    const response = await api.get(`/api/locus/${encodeURIComponent(name)}/interaction_network?depth=${depth}`);
+    return response.data;
+  },
 };
 
 export default locusApi;

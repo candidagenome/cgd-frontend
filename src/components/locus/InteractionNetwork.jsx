@@ -2,123 +2,73 @@ import React, { useEffect, useRef, useState, useMemo } from 'react';
 import cytoscape from 'cytoscape';
 import './InteractionNetwork.css';
 
-// Genetic interaction types (from BioGRID)
-const GENETIC_TYPES = new Set([
-  'Dosage Lethality',
-  'Dosage Rescue',
-  'Dosage Growth Defect',
-  'Negative Genetic',
-  'Positive Genetic',
-  'Phenotypic Enhancement',
-  'Phenotypic Suppression',
-  'Synthetic Growth Defect',
-  'Synthetic Haploinsufficiency',
-  'Synthetic Lethality',
-  'Synthetic Rescue',
-]);
-
-function InteractionNetwork({ interactions, locusName, locusDisplayName }) {
+function InteractionNetwork({ networkData, loading, locusName }) {
   const containerRef = useRef(null);
   const cyRef = useRef(null);
   const [filterType, setFilterType] = useState('all'); // 'all', 'physical', 'genetic'
   const [minExperiments, setMinExperiments] = useState(1);
 
-  // Transform interactions into Cytoscape elements (nodes and edges)
+  // Transform API network data into Cytoscape elements
   const { elements, maxExperiments } = useMemo(() => {
-    if (!interactions || interactions.length === 0) {
+    if (!networkData?.nodes || !networkData?.edges) {
       return { elements: [], maxExperiments: 1 };
     }
 
-    const nodes = new Map();
-    const edges = [];
-    const edgeCounts = new Map(); // Track experiment counts per edge
-
-    // Add the current locus as the central node
-    const currentLocusId = locusDisplayName || locusName;
-    nodes.set(currentLocusId, {
-      data: { id: currentLocusId, label: currentLocusId, isCurrent: true }
+    // Filter edges by type
+    const filteredEdges = networkData.edges.filter(edge => {
+      if (filterType === 'all') return true;
+      return edge.interaction_type === filterType;
     });
 
-    interactions.forEach(interaction => {
-      const interactionType = GENETIC_TYPES.has(interaction.experiment_type) ? 'genetic' : 'physical';
+    // Filter edges by experiment count
+    const experimentFilteredEdges = filteredEdges.filter(
+      edge => edge.experiment_count >= minExperiments
+    );
 
-      // Skip if filtered out
-      if (filterType !== 'all' && filterType !== interactionType) {
-        return;
+    // Find max experiments for slider
+    const maxExp = Math.max(1, ...networkData.edges.map(e => e.experiment_count));
+
+    // Get nodes that are connected after filtering
+    const connectedNodeIds = new Set();
+    experimentFilteredEdges.forEach(edge => {
+      connectedNodeIds.add(edge.source);
+      connectedNodeIds.add(edge.target);
+    });
+
+    // Always include query node
+    const queryNode = networkData.nodes.find(n => n.is_query);
+    if (queryNode) {
+      connectedNodeIds.add(queryNode.id);
+    }
+
+    // Filter nodes
+    const filteredNodes = networkData.nodes.filter(node => connectedNodeIds.has(node.id));
+
+    // Convert to Cytoscape format
+    const cyNodes = filteredNodes.map(node => ({
+      data: {
+        id: node.id,
+        label: node.label,
+        isQuery: node.is_query,
       }
+    }));
 
-      interaction.interactors?.forEach(interactor => {
-        const interactorId = interactor.gene_name || interactor.feature_name;
-        if (!interactorId || interactorId === currentLocusId) return;
-
-        // Add interactor node
-        if (!nodes.has(interactorId)) {
-          nodes.set(interactorId, {
-            data: {
-              id: interactorId,
-              label: interactorId,
-              isCurrent: false,
-              featureName: interactor.feature_name
-            }
-          });
-        }
-
-        // Create edge key for counting
-        const edgeKey = [currentLocusId, interactorId, interactionType].sort().join('|');
-        const count = (edgeCounts.get(edgeKey) || 0) + 1;
-        edgeCounts.set(edgeKey, count);
-
-        // Add edge (we'll dedupe later)
-        edges.push({
-          data: {
-            id: `${currentLocusId}-${interactorId}-${interaction.interaction_no}`,
-            source: currentLocusId,
-            target: interactorId,
-            type: interactionType,
-            experimentType: interaction.experiment_type,
-            edgeKey: edgeKey
-          }
-        });
-      });
-    });
-
-    // Deduplicate edges and add experiment counts
-    const seenEdges = new Set();
-    const uniqueEdges = [];
-    let maxExp = 1;
-
-    edges.forEach(edge => {
-      const key = `${edge.data.source}-${edge.data.target}-${edge.data.type}`;
-      if (!seenEdges.has(key)) {
-        seenEdges.add(key);
-        const count = edgeCounts.get(edge.data.edgeKey) || 1;
-        maxExp = Math.max(maxExp, count);
-        uniqueEdges.push({
-          data: {
-            ...edge.data,
-            experimentCount: count
-          }
-        });
+    const cyEdges = experimentFilteredEdges.map((edge, idx) => ({
+      data: {
+        id: `edge-${idx}`,
+        source: edge.source,
+        target: edge.target,
+        type: edge.interaction_type,
+        experimentType: edge.experiment_type,
+        experimentCount: edge.experiment_count,
       }
-    });
-
-    // Filter by minimum experiments
-    const filteredEdges = uniqueEdges.filter(e => e.data.experimentCount >= minExperiments);
-
-    // Only include nodes that have edges after filtering
-    const connectedNodes = new Set([currentLocusId]);
-    filteredEdges.forEach(e => {
-      connectedNodes.add(e.data.source);
-      connectedNodes.add(e.data.target);
-    });
-
-    const filteredNodes = Array.from(nodes.values()).filter(n => connectedNodes.has(n.data.id));
+    }));
 
     return {
-      elements: [...filteredNodes, ...filteredEdges],
-      maxExperiments: maxExp
+      elements: [...cyNodes, ...cyEdges],
+      maxExperiments: maxExp,
     };
-  }, [interactions, locusName, locusDisplayName, filterType, minExperiments]);
+  }, [networkData, filterType, minExperiments]);
 
   // Initialize and update Cytoscape
   useEffect(() => {
@@ -149,7 +99,7 @@ function InteractionNetwork({ interactions, locusName, locusDisplayName }) {
           }
         },
         {
-          selector: 'node[?isCurrent]',
+          selector: 'node[?isQuery]',
           style: {
             'background-color': '#f0c800',
             'text-outline-color': '#f0c800',
@@ -204,9 +154,9 @@ function InteractionNetwork({ interactions, locusName, locusDisplayName }) {
     // Add click handler for nodes
     cyRef.current.on('tap', 'node', (evt) => {
       const node = evt.target;
-      const featureName = node.data('featureName');
-      if (featureName && !node.data('isCurrent')) {
-        window.open(`/locus/${featureName}?tab=interactions`, '_blank');
+      const nodeId = node.data('id');
+      if (nodeId && !node.data('isQuery')) {
+        window.open(`/locus/${nodeId}?tab=interactions`, '_blank');
       }
     });
 
@@ -225,7 +175,16 @@ function InteractionNetwork({ interactions, locusName, locusDisplayName }) {
     }
   };
 
-  if (!interactions || interactions.length === 0) {
+  if (loading) {
+    return (
+      <div className="interaction-network-section">
+        <h3>Interaction Network</h3>
+        <div className="loading">Loading network data...</div>
+      </div>
+    );
+  }
+
+  if (!networkData?.nodes || networkData.nodes.length === 0) {
     return (
       <div className="interaction-network-section">
         <h3>Interaction Network</h3>

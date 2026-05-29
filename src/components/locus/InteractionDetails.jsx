@@ -21,7 +21,7 @@ const GENETIC_TYPES = new Set([
   'Synthetic Rescue',
 ]);
 
-function InteractionDetails({ data, loading, error, selectedOrganism, onOrganismChange, orthologOrganisms = [] }) {
+function InteractionDetails({ data, networkData, loading, networkLoading, error, selectedOrganism, onOrganismChange, orthologOrganisms = [] }) {
   const [physicalFilter, setPhysicalFilter] = useState('');
   const [geneticFilter, setGeneticFilter] = useState('');
 
@@ -368,9 +368,9 @@ function InteractionDetails({ data, loading, error, selectedOrganism, onOrganism
       {/* Interaction Network */}
       {totalInteractions > 0 && (
         <InteractionNetwork
-          interactions={orgData?.interactions || []}
+          networkData={networkData?.results?.[currentOrganism]}
+          loading={networkLoading}
           locusName={orgData?.locus_display_name}
-          locusDisplayName={orgData?.locus_display_name}
         />
       )}
 

@@ -318,7 +318,9 @@ function LocusPage() {
         return (
           <InteractionDetails
             data={data.interactionDetails}
+            networkData={data.interactionNetwork}
             loading={loading.interactionDetails}
+            networkLoading={loading.interactionNetwork}
             error={errors.interactionDetails}
             selectedOrganism={selectedOrganism}
             onOrganismChange={setSelectedOrganism}
