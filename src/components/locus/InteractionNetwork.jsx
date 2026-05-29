@@ -149,6 +149,16 @@ function InteractionNetwork({ networkData, loading, locusName }) {
           }
         },
         {
+          selector: 'edge[type = "string"]',
+          style: {
+            'line-color': '#2196f3',
+            'width': 2,
+            'curve-style': 'bezier',
+            'opacity': 0.7,
+            'line-style': 'dashed',
+          }
+        },
+        {
           selector: 'node:selected',
           style: {
             'border-width': 3,
@@ -224,6 +234,7 @@ function InteractionNetwork({ networkData, loading, locusName }) {
         <label><input type="radio" name="filterType" value="all" checked={filterType === 'all'} onChange={(e) => setFilterType(e.target.value)} /> All</label>
         <label><input type="radio" name="filterType" value="physical" checked={filterType === 'physical'} onChange={(e) => setFilterType(e.target.value)} /> Physical</label>
         <label><input type="radio" name="filterType" value="genetic" checked={filterType === 'genetic'} onChange={(e) => setFilterType(e.target.value)} /> Genetic</label>
+        <label><input type="radio" name="filterType" value="string" checked={filterType === 'string'} onChange={(e) => setFilterType(e.target.value)} /> STRING</label>
         {maxExperiments > 1 && (
           <>
             <span className="filter-label">Min Experiments:</span>
@@ -251,6 +262,10 @@ function InteractionNetwork({ networkData, loading, locusName }) {
         <div className="legend-item">
           <span className="legend-edge genetic"></span>
           <span>Genetic Interaction</span>
+        </div>
+        <div className="legend-item">
+          <span className="legend-edge string"></span>
+          <span>STRING (predicted)</span>
         </div>
       </div>
     </div>

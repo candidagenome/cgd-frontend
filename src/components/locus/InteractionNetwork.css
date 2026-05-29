@@ -138,3 +138,14 @@
 .network-legend .legend-edge.genetic {
   background-color: #9c27b0;
 }
+
+.network-legend .legend-edge.string {
+  background-color: #2196f3;
+  background: repeating-linear-gradient(
+    90deg,
+    #2196f3 0px,
+    #2196f3 6px,
+    transparent 6px,
+    transparent 10px
+  );
+}

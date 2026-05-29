@@ -113,8 +113,13 @@ export const locusApi = {
   },
 
   // Get interaction network graph for visualization
-  getInteractionNetwork: async (name, depth = 2) => {
-    const response = await api.get(`/api/locus/${encodeURIComponent(name)}/interaction_network?depth=${depth}`);
+  getInteractionNetwork: async (name, depth = 2, includeString = true, stringScore = 400) => {
+    const params = new URLSearchParams({
+      depth: depth.toString(),
+      include_string: includeString.toString(),
+      string_score: stringScore.toString(),
+    });
+    const response = await api.get(`/api/locus/${encodeURIComponent(name)}/interaction_network?${params}`);
     return response.data;
   },
 };
