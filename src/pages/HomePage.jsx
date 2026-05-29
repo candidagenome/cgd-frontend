@@ -48,7 +48,7 @@ const NEWS_ITEMS = [
         <Link to="/help/crispr">Learn more</Link>
       </>
     ),
-    date: 'May 2026',
+    date: 'June 2026',
     highlight: true,
   },
   {
