@@ -502,10 +502,6 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
           <a href="https://thebiogrid.org/" target="_blank" rel="noopener noreferrer">BioGRID</a>
           {' | '}
           <a href="https://string-db.org/" target="_blank" rel="noopener noreferrer">STRING</a>
-          {' | '}
-          <a href="https://www.ebi.ac.uk/intact/" target="_blank" rel="noopener noreferrer">IntAct</a>
-          {' | '}
-          <a href="https://dip.doe-mbi.ucla.edu/" target="_blank" rel="noopener noreferrer">DIP</a>
         </div>
       </div>
     </div>
