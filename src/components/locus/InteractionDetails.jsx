@@ -229,10 +229,10 @@ function InteractionDetails({ data, loading, error, selectedOrganism, onOrganism
     filter: true,
   }), []);
 
-  // Calculate table height based on row count (with autoHeight rows ~70px each)
-  const getTableHeight = useCallback((rowCount, maxHeight = 850) => {
+  // Calculate table height based on row count (with autoHeight rows ~90px each)
+  const getTableHeight = useCallback((rowCount, maxHeight = 950) => {
     const headerHeight = 48;
-    const rowHeight = 70; // approximate for autoHeight rows
+    const rowHeight = 90; // approximate for autoHeight rows with wrapped text
     const paginationHeight = 52;
     const pageSize = 10;
     const visibleRows = Math.min(rowCount, pageSize);
@@ -366,7 +366,7 @@ function InteractionDetails({ data, loading, error, selectedOrganism, onOrganism
             />
           </div>
 
-          <div className="ag-theme-alpine interaction-table" style={{ height: getTableHeight(geneticRows.length, 680), width: '100%' }}>
+          <div className="ag-theme-alpine interaction-table" style={{ height: getTableHeight(geneticRows.length, 950), width: '100%' }}>
             <AgGridReact
               rowData={geneticRows}
               columnDefs={geneticColumnDefs}
