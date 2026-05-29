@@ -143,8 +143,8 @@ function InteractionDetails({ data, loading, error, selectedOrganism, onOrganism
     {
       headerName: 'Action',
       field: 'interactor_action',
-      flex: 0.4,
-      minWidth: 70,
+      flex: 0.5,
+      minWidth: 80,
     },
     {
       headerName: 'Description',
@@ -159,8 +159,8 @@ function InteractionDetails({ data, loading, error, selectedOrganism, onOrganism
     {
       headerName: 'Reference',
       field: 'references',
-      flex: 2.5,
-      minWidth: 400,
+      flex: 2,
+      minWidth: 350,
       autoHeight: true,
       wrapText: true,
       cellStyle: { 'white-space': 'normal', 'line-height': '1.4' },
@@ -198,8 +198,8 @@ function InteractionDetails({ data, loading, error, selectedOrganism, onOrganism
     {
       headerName: 'Action',
       field: 'interactor_action',
-      flex: 0.4,
-      minWidth: 70,
+      flex: 0.5,
+      minWidth: 80,
     },
     {
       headerName: 'Phenotype',
@@ -214,8 +214,8 @@ function InteractionDetails({ data, loading, error, selectedOrganism, onOrganism
     {
       headerName: 'Reference',
       field: 'references',
-      flex: 2.5,
-      minWidth: 400,
+      flex: 2,
+      minWidth: 350,
       autoHeight: true,
       wrapText: true,
       cellStyle: { 'white-space': 'normal', 'line-height': '1.4' },
