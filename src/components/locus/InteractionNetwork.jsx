@@ -253,14 +253,10 @@ function InteractionNetwork({ interactions, locusName, locusDisplayName }) {
         {maxExperiments > 1 && (
           <div className="filter-group">
             <span className="filter-label">Min Experiments:</span>
-            <input
-              type="range"
-              min="1"
-              max={maxExperiments}
-              value={minExperiments}
-              onChange={(e) => setMinExperiments(parseInt(e.target.value))}
-            />
-            <span className="filter-value">{minExperiments}</span>
+            <span className="slider-container">
+              <input type="range" min="1" max={maxExperiments} value={minExperiments} onChange={(e) => setMinExperiments(parseInt(e.target.value))} />
+              <span className="filter-value">{minExperiments}</span>
+            </span>
           </div>
         )}
       </div>

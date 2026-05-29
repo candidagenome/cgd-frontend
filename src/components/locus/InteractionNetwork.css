@@ -55,6 +55,12 @@
   gap: 12px;
 }
 
+.network-controls .slider-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .network-controls label {
   display: inline-flex;
   align-items: center;
@@ -66,12 +72,15 @@
 
 .network-controls input[type="range"] {
   width: 100px;
+  vertical-align: middle;
 }
 
 .network-controls .filter-value {
+  display: inline-block;
   min-width: 20px;
   text-align: center;
   font-weight: 500;
+  vertical-align: middle;
 }
 
 .network-container {
