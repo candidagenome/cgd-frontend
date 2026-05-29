@@ -294,21 +294,6 @@ function InteractionDetails({ data, loading, error, selectedOrganism, onOrganism
                 </div>
               )}
             </div>
-
-            <div className="interaction-stats">
-              <div className="stat-row">
-                <span className="stat-label">Physical Interactions:</span>
-                <span className="stat-value">
-                  {physicalInteractions.length} entries for {physicalGeneCount} genes
-                </span>
-              </div>
-              <div className="stat-row">
-                <span className="stat-label">Genetic Interactions:</span>
-                <span className="stat-value">
-                  {geneticInteractions.length} entries for {geneticGeneCount} genes
-                </span>
-              </div>
-            </div>
           </div>
         ) : (
           <p className="no-data">No interactions found for this gene.</p>
