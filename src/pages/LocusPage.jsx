@@ -325,6 +325,7 @@ function LocusPage() {
             selectedOrganism={selectedOrganism}
             onOrganismChange={setSelectedOrganism}
             orthologOrganisms={orthologOrganisms}
+            locusName={name}
           />
         );
 

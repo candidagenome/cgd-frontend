@@ -4,6 +4,7 @@ import { AgGridReact } from 'ag-grid-react';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
 import InteractionNetwork from './InteractionNetwork';
 import { renderCitationItem } from '../../utils/formatCitation.jsx';
+import locusApi from '../../api/locusApi';
 import './LocusComponents.css';
 
 // Genetic interaction types (from BioGRID)
@@ -21,11 +22,15 @@ const GENETIC_TYPES = new Set([
   'Synthetic Rescue',
 ]);
 
-function InteractionDetails({ data, networkData, loading, networkLoading, error, selectedOrganism, onOrganismChange, orthologOrganisms = [] }) {
+function InteractionDetails({ data, networkData, loading, networkLoading, error, selectedOrganism, onOrganismChange, orthologOrganisms = [], locusName }) {
   const [physicalFilter, setPhysicalFilter] = useState('');
   const [geneticFilter, setGeneticFilter] = useState('');
   const [stringFilter, setStringFilter] = useState('');
   const [showStringTable, setShowStringTable] = useState(false);
+  const [showEnrichment, setShowEnrichment] = useState(false);
+  const [enrichment, setEnrichment] = useState(null);
+  const [enrichmentLoading, setEnrichmentLoading] = useState(false);
+  const [enrichmentError, setEnrichmentError] = useState(null);
 
   // Get available organisms from the data
   const organisms = useMemo(() => {
@@ -306,6 +311,26 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
     return Math.max(200, Math.min(calculatedHeight, maxHeight));
   }, []);
 
+  // Lazily fetch STRING functional enrichment when the section is expanded
+  const handleToggleEnrichment = useCallback(async () => {
+    const next = !showEnrichment;
+    setShowEnrichment(next);
+    if (next && !enrichment && !enrichmentLoading && locusName) {
+      setEnrichmentLoading(true);
+      setEnrichmentError(null);
+      try {
+        const resp = await locusApi.getStringEnrichment(locusName);
+        setEnrichment(resp);
+      } catch {
+        setEnrichmentError('Could not load functional enrichment.');
+      } finally {
+        setEnrichmentLoading(false);
+      }
+    }
+  }, [showEnrichment, enrichment, enrichmentLoading, locusName]);
+
+  const orgEnrichment = enrichment?.results?.[currentOrganism] || null;
+
   if (loading) return <div className="loading">Loading interaction data...</div>;
   if (error) return <div className="error">Error: {error}</div>;
   if (!data || !data.results) return <div className="no-data">No interaction data available</div>;
@@ -491,6 +516,65 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
                 />
               </div>
             </>
+          )}
+        </div>
+      )}
+
+      {/* Functional Enrichment of the STRING network */}
+      {stringInteractions.length > 0 && (
+        <div className="interaction-section" style={{ marginTop: '2rem' }}>
+          <div className="section-header-row">
+            <h3>Functional Enrichment of Network (STRING)</h3>
+          </div>
+          <p className="string-source-note">
+            GO terms and pathways over-represented among {orgData.locus_display_name}&apos;s{' '}
+            <a href="https://string-db.org/" target="_blank" rel="noopener noreferrer">STRING</a>{' '}
+            network partners &mdash; i.e. the functions this gene&apos;s neighborhood is enriched for.
+          </p>
+
+          <button className="string-toggle-btn" onClick={handleToggleEnrichment}>
+            {showEnrichment ? '▼ Hide functional enrichment' : '▶ Show functional enrichment'}
+          </button>
+
+          {showEnrichment && (
+            <div style={{ marginTop: '10px' }}>
+              {enrichmentLoading && <div className="loading">Computing enrichment…</div>}
+              {enrichmentError && <div className="error">{enrichmentError}</div>}
+              {!enrichmentLoading && !enrichmentError && (
+                !orgEnrichment || orgEnrichment.terms.length === 0 ? (
+                  <p className="no-data">No significant functional enrichment found.</p>
+                ) : (
+                  <>
+                    <p className="section-entry-count" style={{ marginBottom: '8px' }}>
+                      {orgEnrichment.terms.length} enriched terms across {orgEnrichment.network_size} network genes
+                    </p>
+                    <table className="enrichment-table">
+                      <thead>
+                        <tr>
+                          <th>Category</th>
+                          <th>Term</th>
+                          <th>Genes</th>
+                          <th>FDR</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {orgEnrichment.terms.map((t, i) => (
+                          <tr key={`${t.term}-${i}`}>
+                            <td className="enrichment-cat">{t.category_label}</td>
+                            <td>
+                              {t.description}{' '}
+                              <span className="enrichment-termid">({t.term})</span>
+                            </td>
+                            <td className="enrichment-num">{t.genes}</td>
+                            <td className="enrichment-num">{t.fdr < 0.001 ? t.fdr.toExponential(1) : t.fdr.toFixed(3)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </>
+                )
+              )}
+            </div>
           )}
         </div>
       )}

@@ -100,6 +100,7 @@ function InteractionNetwork({ networkData, loading, locusName }) {
   const [showSharedGo, setShowSharedGo] = useState(false);
   const [showAll, setShowAll] = useState(false); // override the large-network node cap
   const [tooltip, setTooltip] = useState(null); // { x, y, node }
+  const [focusedCategory, setFocusedCategory] = useState(null); // GO legend click-to-isolate
 
   // Map of GO category -> color, stable for the whole network
   const categoryColors = useMemo(
@@ -394,6 +395,11 @@ function InteractionNetwork({ networkData, loading, locusName }) {
             'border-color': '#1976d2',
           }
         },
+        {
+          // Faded elements when a GO function is isolated via the legend
+          selector: '.dimmed',
+          style: { 'opacity': 0.12 }
+        },
       ],
       layout: (colorByGo && hasGoLayout)
         ? {
@@ -462,6 +468,61 @@ function InteractionNetwork({ networkData, loading, locusName }) {
       cyRef.current.fit();
       cyRef.current.center();
     }
+    setFocusedCategory(null);
+  };
+
+  // Isolate a GO function in the graph: dim everything not in that category.
+  useEffect(() => {
+    const cy = cyRef.current;
+    if (!cy) return;
+    cy.batch(() => {
+      cy.elements().removeClass('dimmed');
+      if (focusedCategory) {
+        const keep = cy.nodes().filter(n =>
+          n.data('isQuery') || n.data('goCategory') === focusedCategory
+        );
+        const keepIds = new Set(keep.map(n => n.id()));
+        cy.nodes().forEach(n => { if (!keepIds.has(n.id())) n.addClass('dimmed'); });
+        cy.edges().forEach(e => {
+          if (!(keepIds.has(e.source().id()) && keepIds.has(e.target().id()))) {
+            e.addClass('dimmed');
+          }
+        });
+      }
+    });
+  }, [focusedCategory, elements]);
+
+  const handleExportPng = () => {
+    if (!cyRef.current) return;
+    const png = cyRef.current.png({ full: true, scale: 2, bg: '#ffffff' });
+    const a = document.createElement('a');
+    a.href = png;
+    a.download = `${locusName || 'interaction'}_network.png`;
+    a.click();
+  };
+
+  const handleExportCsv = () => {
+    if (!networkData?.edges) return;
+    const labelById = new Map((networkData.nodes || []).map(n => [n.id, n.label]));
+    const esc = (v) => {
+      const s = v == null ? '' : String(v);
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const header = ['source', 'source_name', 'target', 'target_name', 'type',
+      'experiment_type', 'experiment_count', 'string_score', 'source_db'];
+    const rows = networkData.edges.map(e => [
+      e.source, labelById.get(e.source) || e.source,
+      e.target, labelById.get(e.target) || e.target,
+      e.interaction_type, e.experiment_type, e.experiment_count,
+      e.score ?? '', e.source_db,
+    ].map(esc).join(','));
+    const csv = [header.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${locusName || 'interaction'}_interactions.csv`;
+    a.click();
+    URL.revokeObjectURL(a.href);
   };
 
   if (loading) {
@@ -484,6 +545,10 @@ function InteractionNetwork({ networkData, loading, locusName }) {
 
   const hasGoData = networkData.nodes.some(n => (n.go_terms || []).length > 0);
   const hasSharedGoEdges = (networkData.shared_go_edges || []).length > 0;
+  const hasStringData = (networkData.edges || []).some(e => e.interaction_type === 'string');
+  const stringDeepLink = (hasStringData && networkData.taxon_id && locusName)
+    ? `https://string-db.org/cgi/network?identifiers=${encodeURIComponent(locusName)}&species=${networkData.taxon_id}`
+    : null;
 
   return (
     <div className="interaction-network-section">
@@ -502,6 +567,13 @@ function InteractionNetwork({ networkData, loading, locusName }) {
             <input type="range" min="1" max={maxExperiments} value={minExperiments} onChange={(e) => setMinExperiments(parseInt(e.target.value))} />
             <span className="filter-value">{minExperiments}</span>
           </>
+        )}
+        <span className="network-toolbar-spacer" />
+        <button className="network-tool-btn" onClick={handleExportPng} title="Download network as PNG image">⬇ PNG</button>
+        <button className="network-tool-btn" onClick={handleExportCsv} title="Download interactions as CSV">⬇ CSV</button>
+        {stringDeepLink && (
+          <a className="network-tool-btn" href={stringDeepLink} target="_blank" rel="noopener noreferrer"
+             title="Open the full network on STRING">STRING ↗</a>
         )}
       </div>
 
@@ -617,14 +689,25 @@ function InteractionNetwork({ networkData, loading, locusName }) {
       {colorByGo && categoriesInView.length > 0 && (
         <div className="network-legend go-legend">
           <span className="filter-label">GO function:</span>
+          {focusedCategory && (
+            <button className="go-clear-btn" onClick={() => setFocusedCategory(null)}>
+              ✕ clear focus
+            </button>
+          )}
           {categoriesInView.map(cat => (
-            <div className="legend-item" key={cat}>
+            <button
+              type="button"
+              className={`legend-item legend-clickable${focusedCategory === cat ? ' active' : ''}`}
+              key={cat}
+              onClick={() => setFocusedCategory(focusedCategory === cat ? null : cat)}
+              title={`Isolate "${cat}" in the graph`}
+            >
               <span
                 className="legend-node"
                 style={{ backgroundColor: categoryColors.get(cat) || GO_UNCATEGORIZED }}
               ></span>
               <span>{cat}</span>
-            </div>
+            </button>
           ))}
           {hasOtherCategory && (
             <div className="legend-item" key="__other__">

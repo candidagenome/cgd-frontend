@@ -88,6 +88,56 @@
   flex-wrap: wrap;
 }
 
+.network-toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+.network-controls .network-tool-btn {
+  padding: 5px 12px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85em;
+  color: #333;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.network-controls .network-tool-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.go-legend .legend-clickable {
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 2px 8px;
+  cursor: pointer;
+  font: inherit;
+  color: #555;
+}
+
+.go-legend .legend-clickable:hover {
+  background-color: #eef3f8;
+}
+
+.go-legend .legend-clickable.active {
+  border-color: #1976d2;
+  background-color: #e3f0fb;
+  font-weight: 600;
+}
+
+.go-legend .go-clear-btn {
+  background: none;
+  border: none;
+  color: #1976d2;
+  cursor: pointer;
+  font-size: 0.85em;
+  text-decoration: underline;
+  padding: 0 4px;
+}
+
 .network-controls .go-hint {
   font-size: 0.8em;
   color: #777;

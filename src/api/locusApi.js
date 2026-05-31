@@ -122,6 +122,13 @@ export const locusApi = {
     const response = await api.get(`/api/locus/${encodeURIComponent(name)}/interaction_network?${params}`);
     return response.data;
   },
+
+  // Get STRING functional enrichment of the gene's interaction network
+  getStringEnrichment: async (name, stringScore = 400) => {
+    const params = new URLSearchParams({ string_score: stringScore.toString() });
+    const response = await api.get(`/api/locus/${encodeURIComponent(name)}/string_enrichment?${params}`);
+    return response.data;
+  },
 };
 
 export default locusApi;
