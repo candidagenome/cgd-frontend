@@ -2,16 +2,123 @@ import React, { useEffect, useRef, useState, useMemo } from 'react';
 import cytoscape from 'cytoscape';
 import './InteractionNetwork.css';
 
+// Distinct, color-blind-friendly palette for GO category node coloring.
+// Assigned deterministically by sorted category name so colors are stable
+// across renders.
+const GO_PALETTE = [
+  '#4e79a7', '#59a14f', '#e15759', '#b07aa1', '#76b7b2',
+  '#edc948', '#ff9da7', '#9c755f', '#f28e2b', '#86bcb6',
+  '#d37295', '#a0cbe8', '#8cd17d', '#b6992d', '#499894',
+];
+const GO_UNCATEGORIZED = '#9e9e9e';
+
+// Only the most common GO functions get a distinct color; the long tail is
+// bucketed into a single grey "Other" entry so the legend stays readable on
+// large hub networks (which can otherwise produce 50+ categories).
+const GO_MAX_CATEGORIES = 12;
+
+// Compute a GO-clustered radial layout: query at the center, other genes
+// grouped into angular wedges by GO function (wedge size ∝ group membership),
+// arranged in arcs (multiple rings when a wedge is crowded). This makes the
+// node coloring form contiguous spatial clusters instead of being scattered.
+function computeClusteredPositions(queryId, displayNodes) {
+  const positions = {};
+  positions[queryId] = { x: 0, y: 0 };
+
+  const others = displayNodes.filter(n => n.id !== queryId);
+  if (others.length === 0) return positions;
+
+  const groups = new Map();
+  others.forEach(n => {
+    const key = n.go_category || '__other__';
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(n);
+  });
+  // Largest group first for a balanced, stable arrangement.
+  const groupList = Array.from(groups.entries())
+    .sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
+
+  const total = others.length;
+  const baseR = 160;
+  const ringGap = 80;
+  const nodeSpacing = 72; // approx px between adjacent nodes along an arc
+  const maxRings = 3;     // cap radial depth so populous wedges don't streak outward
+
+  let cursor = -Math.PI / 2; // start at the top
+  groupList.forEach(([, members]) => {
+    const span = (2 * Math.PI * members.length) / total;
+    const pad = Math.min(span * 0.12, 0.14);
+    const usable = Math.max(span - pad, 1e-4);
+    const start = cursor + pad / 2;
+
+    // Nodes per ring: enough to fit the arc, but if that would need more than
+    // maxRings, pack more per ring instead of growing the wedge radially.
+    const perRingByArc = Math.max(1, Math.floor((usable * baseR) / nodeSpacing));
+    const perRing = Math.max(perRingByArc, Math.ceil(members.length / maxRings));
+    members.forEach((n, i) => {
+      const ring = Math.floor(i / perRing);
+      const idxInRing = i % perRing;
+      const countInRing = Math.min(perRing, members.length - ring * perRing);
+      const r = baseR + ring * ringGap;
+      const t = countInRing === 1 ? 0.5 : idxInRing / (countInRing - 1);
+      const ang = start + t * usable;
+      positions[n.id] = { x: r * Math.cos(ang), y: r * Math.sin(ang) };
+    });
+
+    cursor += span;
+  });
+
+  return positions;
+}
+
+function buildCategoryColors(nodes) {
+  const counts = new Map();
+  nodes.forEach(n => {
+    if (n.go_category) {
+      counts.set(n.go_category, (counts.get(n.go_category) || 0) + 1);
+    }
+  });
+  // Most frequent first; tie-break by name for deterministic colors.
+  const top = Array.from(counts.entries())
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .slice(0, GO_MAX_CATEGORIES)
+    .map(([cat]) => cat);
+  const map = new Map();
+  top.forEach((cat, idx) => {
+    map.set(cat, GO_PALETTE[idx % GO_PALETTE.length]);
+  });
+  return map;
+}
+
 function InteractionNetwork({ networkData, loading, locusName }) {
   const containerRef = useRef(null);
   const cyRef = useRef(null);
-  const [filterType, setFilterType] = useState('all'); // 'all', 'physical', 'genetic'
+  const tooltipRef = useRef(null);
+  const [filterType, setFilterType] = useState('all'); // 'all', 'physical', 'genetic', 'string'
   const [minExperiments, setMinExperiments] = useState(1);
+  const [colorByGo, setColorByGo] = useState(true);
+  const [showSharedGo, setShowSharedGo] = useState(false);
+  const [showAll, setShowAll] = useState(false); // override the large-network node cap
+  const [tooltip, setTooltip] = useState(null); // { x, y, node }
+
+  // Map of GO category -> color, stable for the whole network
+  const categoryColors = useMemo(
+    () => buildCategoryColors(networkData?.nodes || []),
+    [networkData?.nodes]
+  );
 
   // Transform API network data into Cytoscape elements
-  const { elements, maxExperiments } = useMemo(() => {
+  const {
+    elements, maxExperiments, categoriesInView, hasOtherCategory,
+    shownNodeCount, totalNodeCount, isCapped, exceedsCap, hasGoLayout,
+  } = useMemo(() => {
+    const EMPTY = {
+      elements: [], maxExperiments: 1, categoriesInView: [], hasOtherCategory: false,
+      shownNodeCount: 0, totalNodeCount: 0, isCapped: false, exceedsCap: false,
+      hasGoLayout: false,
+    };
     if (!networkData?.nodes || !networkData?.edges) {
-      return { elements: [], maxExperiments: 1 };
+      return EMPTY;
     }
 
     // Filter edges by type
@@ -31,7 +138,7 @@ function InteractionNetwork({ networkData, loading, locusName }) {
     // Find query node
     const queryNode = networkData.nodes.find(n => n.is_query);
     if (!queryNode) {
-      return { elements: [], maxExperiments: maxExp };
+      return { ...EMPTY, maxExperiments: maxExp };
     }
 
     // Build adjacency list for BFS to find connected component
@@ -57,39 +164,141 @@ function InteractionNetwork({ networkData, loading, locusName }) {
       }
     }
 
-    // Filter nodes to only those reachable from query node
-    const filteredNodes = networkData.nodes.filter(node => reachableNodes.has(node.id));
-
-    // Filter edges to only those between reachable nodes
-    const reachableEdges = experimentFilteredEdges.filter(
+    // Nodes reachable from the query (before any large-network cap)
+    const reachableNodeList = networkData.nodes.filter(node => reachableNodes.has(node.id));
+    const reachableEdgesAll = experimentFilteredEdges.filter(
       edge => reachableNodes.has(edge.source) && reachableNodes.has(edge.target)
     );
 
-    // Convert to Cytoscape format
-    const cyNodes = filteredNodes.map(node => ({
-      data: {
-        id: node.id,
-        label: node.label,
-        isQuery: node.is_query,
-      }
-    }));
+    // Large-network cap: above NODE_CAP nodes, keep only the query plus the
+    // strongest-evidence interactors (curated BioGRID outranks predicted
+    // STRING; within a tier, higher experiment count / confidence wins).
+    // Nothing is lost — the user can flip "show all".
+    const NODE_CAP = 75;
+    const totalReachable = reachableNodeList.length;
+    let filteredNodes = reachableNodeList;
+    let capped = false;
+    if (!showAll && totalReachable > NODE_CAP) {
+      const nodeScore = new Map(); // id -> { tier, score }
+      reachableEdgesAll.forEach(e => {
+        const isBio = e.interaction_type !== 'string';
+        const tier = isBio ? 1 : 0;
+        const val = isBio ? (e.experiment_count || 1) : (e.score || 0);
+        for (const id of [e.source, e.target]) {
+          const cur = nodeScore.get(id);
+          if (!cur || tier > cur.tier || (tier === cur.tier && val > cur.score)) {
+            nodeScore.set(id, { tier, score: val });
+          }
+        }
+      });
+      const others = reachableNodeList
+        .filter(n => n.id !== queryNode.id)
+        .sort((a, b) => {
+          const sa = nodeScore.get(a.id) || { tier: -1, score: -1 };
+          const sb = nodeScore.get(b.id) || { tier: -1, score: -1 };
+          return sb.tier - sa.tier || sb.score - sa.score || a.label.localeCompare(b.label);
+        });
+      const keepIds = new Set([queryNode.id, ...others.slice(0, NODE_CAP - 1).map(n => n.id)]);
+      filteredNodes = reachableNodeList.filter(n => keepIds.has(n.id));
+      capped = true;
+    }
 
-    const cyEdges = reachableEdges.map((edge, idx) => ({
-      data: {
-        id: `edge-${idx}`,
-        source: edge.source,
-        target: edge.target,
-        type: edge.interaction_type,
-        experimentType: edge.experiment_type,
-        experimentCount: edge.experiment_count,
+    const keptIds = new Set(filteredNodes.map(n => n.id));
+    const reachableEdges = reachableEdgesAll.filter(
+      edge => keptIds.has(edge.source) && keptIds.has(edge.target)
+    );
+
+    // Max STRING score for normalizing STRING edge widths
+    const maxScore = Math.max(
+      1,
+      ...reachableEdges.map(e => e.score || 0)
+    );
+
+    // GO-clustered positions (used by the preset layout when coloring by GO)
+    const clusterPositions = computeClusteredPositions(queryNode.id, filteredNodes);
+    const hasGoLayout = filteredNodes.some(n => n.go_category);
+
+    // Convert to Cytoscape format
+    const cyNodes = filteredNodes.map(node => {
+      const sharedGo = node.shared_go || [];
+      return {
+        data: {
+          id: node.id,
+          label: node.label,
+          isQuery: node.is_query,
+          goCategory: node.go_category || null,
+          goCategoryId: node.go_category_id || null,
+          goTerms: node.go_terms || [],
+          sharedGo,
+          sharedCount: sharedGo.length,
+          color: node.go_category
+            ? (categoryColors.get(node.go_category) || GO_UNCATEGORIZED)
+            : GO_UNCATEGORIZED,
+        },
+        position: { ...clusterPositions[node.id] },
+      };
+    });
+
+    const cyEdges = reachableEdges.map((edge, idx) => {
+      // Edge width encodes evidence strength: experiment count for
+      // curated BioGRID edges, confidence score for STRING edges.
+      let weight;
+      if (edge.interaction_type === 'string') {
+        weight = 1.5 + 4 * ((edge.score || 0) / maxScore);
+      } else {
+        weight = 1.5 + 3 * Math.min(1, (edge.experiment_count - 1) / Math.max(1, maxExp - 1));
       }
-    }));
+      return {
+        data: {
+          id: `edge-${idx}`,
+          source: edge.source,
+          target: edge.target,
+          type: edge.interaction_type,
+          experimentType: edge.experiment_type,
+          experimentCount: edge.experiment_count,
+          score: edge.score || null,
+          weight,
+        }
+      };
+    });
+
+    // Shared-GO overlay edges (between displayed nodes only)
+    const cySharedGoEdges = showSharedGo
+      ? (networkData.shared_go_edges || [])
+          .filter(e => keptIds.has(e.source) && keptIds.has(e.target))
+          .map((edge, idx) => ({
+            data: {
+              id: `sharedgo-${idx}`,
+              source: edge.source,
+              target: edge.target,
+              type: 'shared_go',
+              sharedTerms: edge.shared_terms || [],
+              weight: 1.5,
+            }
+          }))
+      : [];
+
+    // Legend: colored categories present in view (ordered by the palette
+    // assignment = frequency), plus whether any in-view node falls outside
+    // the top-N (rendered grey as "Other").
+    const inView = new Set(filteredNodes.map(n => n.go_category).filter(Boolean));
+    const categories = Array.from(categoryColors.keys()).filter(c => inView.has(c));
+    const hasOther = filteredNodes.some(
+      n => !n.go_category || !categoryColors.has(n.go_category)
+    ) && filteredNodes.some(n => (n.go_terms || []).length > 0);
 
     return {
-      elements: [...cyNodes, ...cyEdges],
+      elements: [...cyNodes, ...cyEdges, ...cySharedGoEdges],
       maxExperiments: maxExp,
+      categoriesInView: categories,
+      hasOtherCategory: hasOther,
+      shownNodeCount: filteredNodes.length,
+      totalNodeCount: totalReachable,
+      isCapped: capped,
+      exceedsCap: totalReachable > NODE_CAP,
+      hasGoLayout,
     };
-  }, [networkData, filterType, minExperiments]);
+  }, [networkData, filterType, minExperiments, showSharedGo, showAll, categoryColors]);
 
   // Initialize and update Cytoscape
   useEffect(() => {
@@ -107,16 +316,25 @@ function InteractionNetwork({ networkData, loading, locusName }) {
         {
           selector: 'node',
           style: {
-            'background-color': '#666',
+            'background-color': colorByGo ? 'data(color)' : '#666',
             'label': 'data(label)',
             'text-valign': 'center',
             'text-halign': 'center',
             'font-size': '10px',
             'color': '#fff',
-            'text-outline-color': '#666',
-            'text-outline-width': 1,
+            'text-outline-color': colorByGo ? 'data(color)' : '#666',
+            'text-outline-width': 2,
             'width': 50,
             'height': 50,
+          }
+        },
+        {
+          // Genes that share a GO Slim term with the query gene
+          selector: 'node[sharedCount > 0]',
+          style: {
+            'border-width': 4,
+            'border-color': '#ff7f0e',
+            'border-style': 'solid',
           }
         },
         {
@@ -126,6 +344,7 @@ function InteractionNetwork({ networkData, loading, locusName }) {
             'text-outline-color': '#f0c800',
             'border-width': 3,
             'border-color': '#c9a600',
+            'border-style': 'solid',
             'width': 60,
             'height': 60,
           }
@@ -134,7 +353,7 @@ function InteractionNetwork({ networkData, loading, locusName }) {
           selector: 'edge[type = "physical"]',
           style: {
             'line-color': '#4caf50',
-            'width': 2,
+            'width': 'data(weight)',
             'curve-style': 'bezier',
             'opacity': 0.7,
           }
@@ -143,7 +362,7 @@ function InteractionNetwork({ networkData, loading, locusName }) {
           selector: 'edge[type = "genetic"]',
           style: {
             'line-color': '#9c27b0',
-            'width': 2,
+            'width': 'data(weight)',
             'curve-style': 'bezier',
             'opacity': 0.7,
           }
@@ -152,10 +371,20 @@ function InteractionNetwork({ networkData, loading, locusName }) {
           selector: 'edge[type = "string"]',
           style: {
             'line-color': '#2196f3',
-            'width': 2,
+            'width': 'data(weight)',
             'curve-style': 'bezier',
             'opacity': 0.7,
             'line-style': 'dashed',
+          }
+        },
+        {
+          selector: 'edge[type = "shared_go"]',
+          style: {
+            'line-color': '#ff7f0e',
+            'width': 'data(weight)',
+            'curve-style': 'bezier',
+            'opacity': 0.45,
+            'line-style': 'dotted',
           }
         },
         {
@@ -166,23 +395,31 @@ function InteractionNetwork({ networkData, loading, locusName }) {
           }
         },
       ],
-      layout: {
-        name: 'cose',
-        animate: false,
-        nodeRepulsion: 8000,
-        idealEdgeLength: 100,
-        nodeOverlap: 20,
-        gravity: 0.5,
-        numIter: 1000,
-        initialTemp: 200,
-        coolingFactor: 0.95,
-        minTemp: 1.0,
-      },
+      layout: (colorByGo && hasGoLayout)
+        ? {
+            // GO-clustered radial layout from precomputed node positions
+            name: 'preset',
+            fit: true,
+            padding: 40,
+          }
+        : {
+            name: 'cose',
+            animate: false,
+            randomize: false, // deterministic layout across re-renders
+            nodeRepulsion: 8000,
+            idealEdgeLength: 100,
+            nodeOverlap: 20,
+            gravity: 0.5,
+            numIter: 1000,
+            initialTemp: 200,
+            coolingFactor: 0.95,
+            minTemp: 1.0,
+          },
       minZoom: 0.3,
       maxZoom: 3,
     });
 
-    // Add click handler for nodes
+    // Click handler: open the interactor's locus page
     cyRef.current.on('tap', 'node', (evt) => {
       const node = evt.target;
       const nodeId = node.data('id');
@@ -191,13 +428,34 @@ function InteractionNetwork({ networkData, loading, locusName }) {
       }
     });
 
+    // Hover tooltip with gene + GO details
+    const showTip = (evt) => {
+      const node = evt.target;
+      const pos = evt.renderedPosition || node.renderedPosition();
+      setTooltip({
+        x: pos.x,
+        y: pos.y,
+        data: {
+          label: node.data('label'),
+          isQuery: node.data('isQuery'),
+          goCategory: node.data('goCategory'),
+          goTerms: node.data('goTerms') || [],
+          sharedGo: node.data('sharedGo') || [],
+        }
+      });
+    };
+    cyRef.current.on('mouseover', 'node', showTip);
+    cyRef.current.on('mouseout', 'node', () => setTooltip(null));
+    // Move tooltip with the node while dragging/panning
+    cyRef.current.on('pan zoom drag', () => setTooltip(null));
+
     return () => {
       if (cyRef.current) {
         cyRef.current.destroy();
         cyRef.current = null;
       }
     };
-  }, [elements]);
+  }, [elements, colorByGo, hasGoLayout]);
 
   const handleReset = () => {
     if (cyRef.current) {
@@ -224,6 +482,9 @@ function InteractionNetwork({ networkData, loading, locusName }) {
     );
   }
 
+  const hasGoData = networkData.nodes.some(n => (n.go_terms || []).length > 0);
+  const hasSharedGoEdges = (networkData.shared_go_edges || []).length > 0;
+
   return (
     <div className="interaction-network-section">
       <h3>Interaction Network</h3>
@@ -244,7 +505,85 @@ function InteractionNetwork({ networkData, loading, locusName }) {
         )}
       </div>
 
-      <div className="network-container" ref={containerRef}></div>
+      {hasGoData && (
+        <div className="network-controls go-controls">
+          <span className="filter-label">GO annotations:</span>
+          <label>
+            <input
+              type="checkbox"
+              checked={colorByGo}
+              onChange={(e) => setColorByGo(e.target.checked)}
+            /> Color nodes by GO function
+          </label>
+          {hasSharedGoEdges && (
+            <label>
+              <input
+                type="checkbox"
+                checked={showSharedGo}
+                onChange={(e) => setShowSharedGo(e.target.checked)}
+              /> Show shared-GO links
+            </label>
+          )}
+          <span className="go-hint">Orange ring = shares a GO term with {locusName || 'this gene'}. Hover a node for details.</span>
+        </div>
+      )}
+
+      {(isCapped || (showAll && exceedsCap)) && (
+        <div className="network-cap-notice">
+          {isCapped ? (
+            <>
+              Showing the <strong>{shownNodeCount}</strong> strongest-evidence interactors
+              of <strong>{totalNodeCount}</strong>.{' '}
+              <button className="link-btn" onClick={() => setShowAll(true)}>Show all {totalNodeCount}</button>
+            </>
+          ) : (
+            <>
+              Showing all <strong>{totalNodeCount}</strong> interactors (dense).{' '}
+              <button className="link-btn" onClick={() => setShowAll(false)}>Show top interactors only</button>
+            </>
+          )}
+        </div>
+      )}
+
+      <div className="network-container-wrapper">
+        <div className="network-container" ref={containerRef}></div>
+        {tooltip && (
+          <div
+            ref={tooltipRef}
+            className="network-tooltip"
+            style={{ left: tooltip.x + 12, top: tooltip.y + 12 }}
+          >
+            <div className="tooltip-title">
+              {tooltip.data.label}
+              {tooltip.data.isQuery && <span className="tooltip-badge">query</span>}
+            </div>
+            {tooltip.data.goCategory && (
+              <div className="tooltip-row">
+                <span className="tooltip-label">Function:</span> {tooltip.data.goCategory}
+              </div>
+            )}
+            {tooltip.data.sharedGo.length > 0 && (
+              <div className="tooltip-shared">
+                <span className="tooltip-label">Shared with {locusName}:</span>
+                <ul>
+                  {tooltip.data.sharedGo.slice(0, 6).map((t, i) => (
+                    <li key={i}>{t.term} <span className="tooltip-aspect">({t.aspect})</span></li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {tooltip.data.goTerms.length > 0 && tooltip.data.sharedGo.length === 0 && (
+              <div className="tooltip-row tooltip-terms">
+                {tooltip.data.goTerms.slice(0, 5).map(t => t.term).join(', ')}
+                {tooltip.data.goTerms.length > 5 ? '…' : ''}
+              </div>
+            )}
+            {!tooltip.data.isQuery && (
+              <div className="tooltip-hint">Click to open locus page</div>
+            )}
+          </div>
+        )}
+      </div>
 
       <div className="network-legend">
         <div className="legend-item">
@@ -267,7 +606,37 @@ function InteractionNetwork({ networkData, loading, locusName }) {
           <span className="legend-edge string"></span>
           <span>STRING (predicted)</span>
         </div>
+        {showSharedGo && (
+          <div className="legend-item">
+            <span className="legend-edge shared-go"></span>
+            <span>Shared GO term</span>
+          </div>
+        )}
       </div>
+
+      {colorByGo && categoriesInView.length > 0 && (
+        <div className="network-legend go-legend">
+          <span className="filter-label">GO function:</span>
+          {categoriesInView.map(cat => (
+            <div className="legend-item" key={cat}>
+              <span
+                className="legend-node"
+                style={{ backgroundColor: categoryColors.get(cat) || GO_UNCATEGORIZED }}
+              ></span>
+              <span>{cat}</span>
+            </div>
+          ))}
+          {hasOtherCategory && (
+            <div className="legend-item" key="__other__">
+              <span
+                className="legend-node"
+                style={{ backgroundColor: GO_UNCATEGORIZED }}
+              ></span>
+              <span>Other / uncategorized</span>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
