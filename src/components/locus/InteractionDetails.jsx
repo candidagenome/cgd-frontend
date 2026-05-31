@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
 import InteractionNetwork from './InteractionNetwork';
+import NetworkEnrichmentTable from './NetworkEnrichmentTable';
 import { renderCitationItem } from '../../utils/formatCitation.jsx';
 import locusApi from '../../api/locusApi';
 import './LocusComponents.css';
@@ -21,12 +22,6 @@ const GENETIC_TYPES = new Set([
   'Synthetic Lethality',
   'Synthetic Rescue',
 ]);
-
-// Format a p-value / FDR: scientific notation when very small, else 3 decimals.
-function fmtPval(v) {
-  if (v == null) return '-';
-  return v < 0.001 ? v.toExponential(1) : v.toFixed(3);
-}
 
 function InteractionDetails({ data, networkData, loading, networkLoading, error, selectedOrganism, onOrganismChange, orthologOrganisms = [], locusName }) {
   const [physicalFilter, setPhysicalFilter] = useState('');
@@ -605,42 +600,39 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
                   {orgCgd.go_terms.length > 0 && (
                     <>
                       <h4 className="enrichment-subhead">GO terms</h4>
-                      <table className="enrichment-table">
-                        <thead>
-                          <tr><th>Category</th><th>Term</th><th>Genes</th><th>Fold</th><th>FDR</th></tr>
-                        </thead>
-                        <tbody>
-                          {orgCgd.go_terms.map((t, i) => (
-                            <tr key={`go-${t.term}-${i}`}>
-                              <td className="enrichment-cat">{t.category_label}</td>
-                              <td>{t.description} <span className="enrichment-termid">({t.term})</span></td>
-                              <td className="enrichment-num">{t.query_count}</td>
-                              <td className="enrichment-num">{t.fold_enrichment.toFixed(1)}×</td>
-                              <td className="enrichment-num">{fmtPval(t.fdr ?? t.p_value)}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                      <NetworkEnrichmentTable
+                        rows={orgCgd.go_terms.map((t, i) => ({
+                          key: `go-${i}`,
+                          category: t.category_label,
+                          description: t.description,
+                          termId: t.term,
+                          count: t.query_count,
+                          fold: t.fold_enrichment,
+                          fdr: t.fdr ?? t.p_value,
+                          genes: t.genes,
+                        }))}
+                        showCategory
+                        showFold
+                      />
                     </>
                   )}
                   {orgCgd.phenotype_terms.length > 0 && (
                     <>
                       <h4 className="enrichment-subhead">Phenotypes</h4>
-                      <table className="enrichment-table">
-                        <thead>
-                          <tr><th>Phenotype</th><th>Genes</th><th>Fold</th><th>FDR</th></tr>
-                        </thead>
-                        <tbody>
-                          {orgCgd.phenotype_terms.map((t, i) => (
-                            <tr key={`ph-${t.term}-${i}`}>
-                              <td>{t.description}</td>
-                              <td className="enrichment-num">{t.query_count}</td>
-                              <td className="enrichment-num">{t.fold_enrichment.toFixed(1)}×</td>
-                              <td className="enrichment-num">{fmtPval(t.fdr ?? t.p_value)}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                      <NetworkEnrichmentTable
+                        rows={orgCgd.phenotype_terms.map((t, i) => ({
+                          key: `ph-${i}`,
+                          category: 'Phenotype',
+                          description: t.description,
+                          termId: null,
+                          count: t.query_count,
+                          fold: t.fold_enrichment,
+                          fdr: t.fdr ?? t.p_value,
+                          genes: t.genes,
+                        }))}
+                        showCategory={false}
+                        showFold
+                      />
                     </>
                   )}
                 </>
@@ -678,29 +670,20 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
                     <p className="section-entry-count" style={{ marginBottom: '8px' }}>
                       {orgEnrichment.terms.length} enriched terms across {orgEnrichment.network_size} network genes
                     </p>
-                    <table className="enrichment-table">
-                      <thead>
-                        <tr>
-                          <th>Category</th>
-                          <th>Term</th>
-                          <th>Genes</th>
-                          <th>FDR</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {orgEnrichment.terms.map((t, i) => (
-                          <tr key={`${t.term}-${i}`}>
-                            <td className="enrichment-cat">{t.category_label}</td>
-                            <td>
-                              {t.description}{' '}
-                              <span className="enrichment-termid">({t.term})</span>
-                            </td>
-                            <td className="enrichment-num">{t.genes}</td>
-                            <td className="enrichment-num">{t.fdr < 0.001 ? t.fdr.toExponential(1) : t.fdr.toFixed(3)}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                    <NetworkEnrichmentTable
+                      rows={orgEnrichment.terms.map((t, i) => ({
+                        key: `st-${i}`,
+                        category: t.category_label,
+                        description: t.description,
+                        termId: t.term,
+                        count: t.genes,
+                        fold: null,
+                        fdr: t.fdr,
+                        genes: t.gene_list || [],
+                      }))}
+                      showCategory
+                      showFold={false}
+                    />
                   </>
                 )
               )}

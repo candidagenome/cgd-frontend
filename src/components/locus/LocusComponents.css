@@ -2206,6 +2206,35 @@ a:hover {
   cursor: pointer;
 }
 
+.enrichment-aggrid {
+  margin-bottom: 12px;
+}
+
+.enrichment-aggrid .enrich-genes-cell {
+  line-height: 1.5;
+  white-space: normal;
+  padding: 4px 0;
+}
+
+.enrichment-aggrid .enrich-term-id {
+  color: #999;
+  font-size: 0.9em;
+}
+
+.enrich-more-btn {
+  background: none;
+  border: none;
+  color: #1976d2;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.9em;
+  padding: 0 0 0 2px;
+}
+
+.enrich-more-btn:hover {
+  text-decoration: underline;
+}
+
 .interaction-circle .circle-label {
   font-size: 0.85em;
   font-weight: 500;
