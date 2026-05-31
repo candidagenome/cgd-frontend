@@ -6,6 +6,8 @@ import InteractionNetwork from './InteractionNetwork';
 import NetworkEnrichmentTable from './NetworkEnrichmentTable';
 import { renderCitationItem } from '../../utils/formatCitation.jsx';
 import locusApi from '../../api/locusApi';
+import { goTermFinderApi } from '../../api/goTermFinderApi';
+import { phenotypeEnrichmentApi } from '../../api/phenotypeEnrichmentApi';
 import './LocusComponents.css';
 
 // Genetic interaction types (from BioGRID)
@@ -32,12 +34,11 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
   const [enrichment, setEnrichment] = useState(null);
   const [enrichmentLoading, setEnrichmentLoading] = useState(false);
   const [enrichmentError, setEnrichmentError] = useState(null);
-  // CGD-native (GO Term Finder + Phenotype Enrichment) enrichment
-  const [showCgdEnrichment, setShowCgdEnrichment] = useState(false);
-  const [cgdEnrichment, setCgdEnrichment] = useState(null);
-  const [cgdLoading, setCgdLoading] = useState(false);
-  const [cgdError, setCgdError] = useState(null);
-  const [cgdIncludeString, setCgdIncludeString] = useState(false);
+  // Export / Analyze toolbar (CGD GO Term Finder + Phenotype Enrichment over interactors)
+  const [copyFeedback, setCopyFeedback] = useState(null);
+  const [goEnrichment, setGoEnrichment] = useState({ loading: false, data: null, error: null, show: false });
+  const [phenoEnrichment, setPhenoEnrichment] = useState({ loading: false, data: null, error: null, show: false });
+  const [goManualOnly, setGoManualOnly] = useState(false);
 
   // Get available organisms from the data
   const organisms = useMemo(() => {
@@ -338,35 +339,141 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
 
   const orgEnrichment = enrichment?.results?.[currentOrganism] || null;
 
-  // CGD-native enrichment (GO Term Finder + Phenotype Enrichment over the network)
-  const fetchCgdEnrichment = useCallback(async (includeString) => {
-    if (!locusName) return;
-    setCgdLoading(true);
-    setCgdError(null);
+  // Curated BioGRID interaction partners (matches the Physical + Genetic
+  // tables), deduped, query excluded. STRING-predicted partners are NOT
+  // included so the gene count matches the visible interactors.
+  const interactorGenes = useMemo(() => {
+    if (!orgData) return [];
+    const queryUpper = (orgData.locus_display_name || '').toUpperCase();
+    const byKey = new Map();
+    const add = (featureName, geneName) => {
+      const key = (geneName || featureName || '').toUpperCase();
+      if (!key || key === queryUpper) return;
+      if (!byKey.has(key)) byKey.set(key, { feature_name: featureName || null, gene_name: geneName || null });
+    };
+    (orgData.interactions || []).forEach(i =>
+      (i.interactors || []).forEach(int => add(int.feature_name, int.gene_name))
+    );
+    return [...byKey.values()];
+  }, [orgData]);
+
+  const geneNamesForApi = useMemo(
+    () => interactorGenes.map(g => g.feature_name || g.gene_name).filter(Boolean),
+    [interactorGenes]
+  );
+  const organismNo = orgData?.organism_no;
+
+  // Store gene list + organism for the GO Term Finder / GO Slim Mapper pages
+  const handleAnalyzeGeneList = useCallback(() => {
+    localStorage.setItem('phenotypeSearchGeneList', JSON.stringify(geneNamesForApi));
+    if (currentOrganism) localStorage.setItem('phenotypeSearchOrganism', currentOrganism);
+  }, [geneNamesForApi, currentOrganism]);
+
+  const handleCopyGeneList = useCallback(async () => {
+    const text = interactorGenes.map(g => g.gene_name || g.feature_name).join('\n');
     try {
-      const resp = await locusApi.getNetworkEnrichment(locusName, includeString);
-      setCgdEnrichment(resp);
+      await navigator.clipboard.writeText(text);
+      setCopyFeedback('copied');
     } catch {
-      setCgdError('Could not load CGD enrichment.');
-    } finally {
-      setCgdLoading(false);
+      setCopyFeedback('error');
     }
-  }, [locusName]);
+    setTimeout(() => setCopyFeedback(null), 2000);
+  }, [interactorGenes]);
 
-  const handleToggleCgdEnrichment = useCallback(() => {
-    const next = !showCgdEnrichment;
-    setShowCgdEnrichment(next);
-    if (next && !cgdEnrichment && !cgdLoading) {
-      fetchCgdEnrichment(cgdIncludeString);
+  const handleDownloadGeneCsv = useCallback(() => {
+    const header = ['gene_name', 'systematic_name'];
+    const rows = interactorGenes.map(g => [g.gene_name || '', g.feature_name || '']);
+    const csv = [
+      `# Interaction partners of ${orgData?.locus_display_name || locusName}`,
+      header.join(','),
+      ...rows.map(r => r.map(c => `"${c}"`).join(',')),
+    ].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${orgData?.locus_display_name || locusName}_interactors.csv`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }, [interactorGenes, orgData, locusName]);
+
+  const handleGoEnrichment = useCallback(async () => {
+    if (!organismNo || geneNamesForApi.length === 0) {
+      setGoEnrichment({ loading: false, data: null, show: true,
+        error: 'No interaction partners available for enrichment.' });
+      return;
     }
-  }, [showCgdEnrichment, cgdEnrichment, cgdLoading, cgdIncludeString, fetchCgdEnrichment]);
+    setGoEnrichment({ loading: true, data: null, error: null, show: true });
+    try {
+      const params = {
+        genes: geneNamesForApi, organism_no: organismNo, ontology: 'all',
+        p_value_cutoff: 0.05, correction_method: 'bh', min_genes_in_term: 2,
+      };
+      if (goManualOnly) params.annotation_types = ['manually_curated'];
+      const result = await goTermFinderApi.runAnalysis(params);
+      setGoEnrichment({ loading: false, data: result, error: null, show: true });
+    } catch (err) {
+      setGoEnrichment({ loading: false, data: null, show: true,
+        error: err.response?.data?.detail || err.message || 'GO enrichment failed' });
+    }
+  }, [organismNo, geneNamesForApi, goManualOnly]);
 
-  const handleCgdIncludeStringChange = useCallback((val) => {
-    setCgdIncludeString(val);
-    fetchCgdEnrichment(val);
-  }, [fetchCgdEnrichment]);
+  const handlePhenotypeEnrichment = useCallback(async () => {
+    if (!organismNo || geneNamesForApi.length === 0) {
+      setPhenoEnrichment({ loading: false, data: null, show: true,
+        error: 'No interaction partners available for enrichment.' });
+      return;
+    }
+    setPhenoEnrichment({ loading: true, data: null, error: null, show: true });
+    try {
+      const result = await phenotypeEnrichmentApi.runAnalysis({
+        genes: geneNamesForApi, organism_no: organismNo,
+        p_value_cutoff: 0.05, correction_method: 'bh', min_genes_in_term: 2,
+      });
+      setPhenoEnrichment({ loading: false, data: result, error: null, show: true });
+    } catch (err) {
+      setPhenoEnrichment({ loading: false, data: null, show: true,
+        error: err.response?.data?.detail || err.message || 'Phenotype enrichment failed' });
+    }
+  }, [organismNo, geneNamesForApi]);
 
-  const orgCgd = cgdEnrichment?.results?.[currentOrganism] || null;
+  // Normalize GO Term Finder / Phenotype API results into NetworkEnrichmentTable rows
+  const goRows = useMemo(() => {
+    const r = goEnrichment.data?.result;
+    if (!r) return [];
+    const all = [...(r.process_terms || []), ...(r.function_terms || []), ...(r.component_terms || [])];
+    all.sort((a, b) => (a.fdr ?? a.p_value) - (b.fdr ?? b.p_value));
+    return all.map((t, i) => ({
+      key: `go-${t.goid}-${i}`,
+      category: t.aspect_name,
+      description: t.go_term,
+      termId: t.goid,
+      termUrl: `/go/${t.goid}`,
+      count: t.query_count,
+      fold: t.fold_enrichment,
+      fdr: t.fdr ?? t.p_value,
+      genes: (t.genes || []).map(g => ({ label: g.gene_name || g.systematic_name, feature_name: g.systematic_name })),
+    }));
+  }, [goEnrichment.data]);
+
+  const phenoRows = useMemo(() => {
+    const r = phenoEnrichment.data?.result;
+    if (!r) return [];
+    const all = [...(r.enriched_phenotypes || [])];
+    all.sort((a, b) => (a.fdr ?? a.p_value) - (b.fdr ?? b.p_value));
+    return all.map((p, i) => {
+      const extra = [p.qualifier, p.mutant_type].filter(Boolean).join(', ');
+      return {
+        key: `ph-${p.phenotype_no}-${i}`,
+        description: extra ? `${p.observable} (${extra})` : p.observable,
+        termId: null,
+        termUrl: `/phenotype/search?observable=${encodeURIComponent(p.observable)}`,
+        count: p.query_count,
+        fold: p.fold_enrichment,
+        fdr: p.fdr ?? p.p_value,
+        genes: (p.genes || []).map(g => ({ label: g.gene_name || g.systematic_name, feature_name: g.systematic_name })),
+      };
+    });
+  }, [phenoEnrichment.data]);
 
   if (loading) return <div className="loading">Loading interaction data...</div>;
   if (error) return <div className="error">Error: {error}</div>;
@@ -507,6 +614,78 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
         />
       )}
 
+      {/* Export & Analyze the interaction partners (CGD GO + Phenotype enrichment) */}
+      {interactorGenes.length > 0 && (
+        <div className="interaction-section" style={{ marginTop: '2rem' }}>
+          <div className="similar-genes-export-toolbar">
+            <span className="export-label">Export ({interactorGenes.length} genes):</span>
+            <button className="export-btn" onClick={handleCopyGeneList} title="Copy interactor gene names to clipboard">
+              {copyFeedback === 'copied' ? 'Copied!' : copyFeedback === 'error' ? 'Error' : 'Copy Gene List'}
+            </button>
+            <button className="export-btn" onClick={handleDownloadGeneCsv} title="Download interactor gene list as CSV">
+              Download CSV
+            </button>
+            <span className="export-separator">|</span>
+            <span className="export-label">Analyze:</span>
+            <button
+              className="export-btn analyze-btn"
+              onClick={handleGoEnrichment}
+              disabled={goEnrichment.loading || !organismNo}
+              title="Find enriched GO terms among the interaction partners"
+            >
+              {goEnrichment.loading ? 'Analyzing…' : 'GO Enrichment'}
+            </button>
+            <label className="manual-only-toggle" title="Exclude computational annotations (IEA, ISO, etc.)">
+              <input type="checkbox" checked={goManualOnly} onChange={(e) => setGoManualOnly(e.target.checked)} />
+              <span>Manual only</span>
+            </label>
+            <button
+              className="export-btn analyze-btn"
+              onClick={handlePhenotypeEnrichment}
+              disabled={phenoEnrichment.loading || !organismNo}
+              title="Find enriched phenotypes among the interaction partners"
+            >
+              {phenoEnrichment.loading ? 'Analyzing…' : 'Phenotype Enrichment'}
+            </button>
+            <span className="export-separator">|</span>
+            <a href="/go-term-finder" target="_blank" rel="noopener noreferrer"
+               className="export-btn analyze-link" onClick={handleAnalyzeGeneList}
+               title="Open GO Term Finder in a new tab">GO Term Finder ↗</a>
+            <a href="/go-slim-mapper" target="_blank" rel="noopener noreferrer"
+               className="export-btn analyze-link" onClick={handleAnalyzeGeneList}
+               title="Open GO Slim Mapper in a new tab">GO Slim Mapper ↗</a>
+          </div>
+
+          {/* GO Enrichment results */}
+          {goEnrichment.show && (
+            <div style={{ marginTop: '14px' }}>
+              <h4 className="enrichment-subhead">GO Enrichment</h4>
+              {goEnrichment.loading && <div className="loading">Running GO enrichment…</div>}
+              {goEnrichment.error && <div className="error">{goEnrichment.error}</div>}
+              {!goEnrichment.loading && !goEnrichment.error && (
+                goRows.length === 0
+                  ? <p className="no-data">No significantly enriched GO terms found.</p>
+                  : <NetworkEnrichmentTable rows={goRows} showCategory showFold pageSize={10} />
+              )}
+            </div>
+          )}
+
+          {/* Phenotype Enrichment results */}
+          {phenoEnrichment.show && (
+            <div style={{ marginTop: '14px' }}>
+              <h4 className="enrichment-subhead">Phenotype Enrichment</h4>
+              {phenoEnrichment.loading && <div className="loading">Running phenotype enrichment…</div>}
+              {phenoEnrichment.error && <div className="error">{phenoEnrichment.error}</div>}
+              {!phenoEnrichment.loading && !phenoEnrichment.error && (
+                phenoRows.length === 0
+                  ? <p className="no-data">No significantly enriched phenotypes found.</p>
+                  : <NetworkEnrichmentTable rows={phenoRows} showCategory={false} showFold pageSize={10} />
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Predicted Functional Associations from STRING */}
       {stringInteractions.length > 0 && (
         <div className="interaction-section" style={{ marginTop: '2rem' }}>
@@ -557,90 +736,6 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
         </div>
       )}
 
-      {/* CGD-native enrichment: GO Term Finder + Phenotype Enrichment */}
-      {(totalInteractions > 0 || stringInteractions.length > 0) && (
-        <div className="interaction-section" style={{ marginTop: '2rem' }}>
-          <div className="section-header-row">
-            <h3>Network Enrichment (CGD GO &amp; Phenotype)</h3>
-          </div>
-          <p className="string-source-note">
-            GO terms and phenotypes over-represented among {orgData.locus_display_name}&apos;s
-            interaction partners, computed against CGD&apos;s own curated annotations
-            (the GO Term Finder and Phenotype Enrichment engines).
-          </p>
-
-          <button className="string-toggle-btn" onClick={handleToggleCgdEnrichment}>
-            {showCgdEnrichment ? '▼ Hide CGD enrichment' : '▶ Show CGD enrichment'}
-          </button>
-
-          {showCgdEnrichment && (
-            <div style={{ marginTop: '10px' }}>
-              <label className="cgd-enrich-toggle">
-                <input
-                  type="checkbox"
-                  checked={cgdIncludeString}
-                  onChange={(e) => handleCgdIncludeStringChange(e.target.checked)}
-                  disabled={cgdLoading}
-                /> Include STRING-predicted partners in the gene set
-              </label>
-
-              {cgdLoading && <div className="loading">Computing enrichment…</div>}
-              {cgdError && <div className="error">{cgdError}</div>}
-              {!cgdLoading && !cgdError && orgCgd && (
-                <>
-                  <p className="section-entry-count" style={{ margin: '8px 0' }}>
-                    Gene set: {orgCgd.gene_count} genes
-                    ({orgCgd.include_string ? 'curated + STRING' : 'curated BioGRID only'})
-                  </p>
-                  {orgCgd.go_terms.length === 0 && orgCgd.phenotype_terms.length === 0 && (
-                    <p className="no-data">
-                      No significant enrichment{orgCgd.gene_count < 3 ? ' (too few interactors)' : ''}.
-                    </p>
-                  )}
-                  {orgCgd.go_terms.length > 0 && (
-                    <>
-                      <h4 className="enrichment-subhead">GO terms</h4>
-                      <NetworkEnrichmentTable
-                        rows={orgCgd.go_terms.map((t, i) => ({
-                          key: `go-${i}`,
-                          category: t.category_label,
-                          description: t.description,
-                          termId: t.term,
-                          count: t.query_count,
-                          fold: t.fold_enrichment,
-                          fdr: t.fdr ?? t.p_value,
-                          genes: t.genes,
-                        }))}
-                        showCategory
-                        showFold
-                      />
-                    </>
-                  )}
-                  {orgCgd.phenotype_terms.length > 0 && (
-                    <>
-                      <h4 className="enrichment-subhead">Phenotypes</h4>
-                      <NetworkEnrichmentTable
-                        rows={orgCgd.phenotype_terms.map((t, i) => ({
-                          key: `ph-${i}`,
-                          category: 'Phenotype',
-                          description: t.description,
-                          termId: null,
-                          count: t.query_count,
-                          fold: t.fold_enrichment,
-                          fdr: t.fdr ?? t.p_value,
-                          genes: t.genes,
-                        }))}
-                        showCategory={false}
-                        showFold
-                      />
-                    </>
-                  )}
-                </>
-              )}
-            </div>
-          )}
-        </div>
-      )}
 
       {/* Functional Enrichment of the STRING network */}
       {stringInteractions.length > 0 && (

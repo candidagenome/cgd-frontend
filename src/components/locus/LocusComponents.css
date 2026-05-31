@@ -4705,3 +4705,108 @@ a:hover {
 .view-heatmap-btn .btn-icon {
   font-size: 1.1em;
 }
+
+/* Export & Analyze toolbar (reused from coexpression tab) */
+.similar-genes-export-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  background-color: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+.similar-genes-export-toolbar .export-label {
+  font-size: 0.9em;
+  color: #555;
+  font-weight: 500;
+}
+
+.similar-genes-export-toolbar .export-btn {
+  padding: 6px 14px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.85em;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.similar-genes-export-toolbar .export-btn:hover {
+  background-color: #1976d2;
+  border-color: #1976d2;
+  color: #fff;
+}
+
+.similar-genes-export-toolbar .export-btn:active {
+  background-color: #1565c0;
+  border-color: #1565c0;
+}
+
+.similar-genes-export-toolbar .export-separator {
+  color: #ccc;
+  margin: 0 5px;
+}
+
+.similar-genes-export-toolbar .analyze-link {
+  text-decoration: none;
+  display: inline-block;
+}
+
+.similar-genes-export-toolbar .analyze-link:hover {
+  background-color: #666;
+  border-color: #666;
+  color: #fff;
+}
+
+/* Analyze buttons - green accent */
+.similar-genes-export-toolbar .analyze-btn {
+  background-color: #e8f5e9;
+  border-color: #81c784;
+  color: #2e7d32;
+}
+
+.similar-genes-export-toolbar .analyze-btn:hover:not(:disabled) {
+  background-color: #2e7d32;
+  border-color: #2e7d32;
+  color: #fff;
+}
+
+.similar-genes-export-toolbar .analyze-btn:disabled {
+  background-color: #f5f5f5;
+  border-color: #ccc;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* Manual only toggle */
+.similar-genes-export-toolbar .manual-only-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 6px;
+  padding: 4px 8px;
+  font-size: 0.8rem;
+  color: #555;
+  background: #f5f5f5;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.similar-genes-export-toolbar .manual-only-toggle:hover {
+  background: #e8e8e8;
+}
+
+.similar-genes-export-toolbar .manual-only-toggle input[type="checkbox"] {
+  margin: 0;
+  cursor: pointer;
+}
+
+.similar-genes-export-toolbar .manual-only-toggle span {
+  white-space: nowrap;
+}

@@ -46,11 +46,13 @@ const GenesRenderer = (props) => {
  * AgGrid table for enrichment results with a hit-gene column.
  *
  * @param {Array} rows - normalized rows: { key, category, description, termId,
- *                       count, fold (nullable), fdr, genes: [{label, feature_name}] }
+ *                       termUrl (optional), count, fold (nullable), fdr,
+ *                       genes: [{label, feature_name}] }
  * @param {boolean} showCategory - show the Category column
  * @param {boolean} showFold - show the Fold-enrichment column
+ * @param {number} pageSize - rows per page (enables pagination when set)
  */
-function NetworkEnrichmentTable({ rows, showCategory = true, showFold = true }) {
+function NetworkEnrichmentTable({ rows, showCategory = true, showFold = true, pageSize = null }) {
   const gridRef = useRef(null);
   const [expanded, setExpanded] = useState(new Set());
 
@@ -78,7 +80,13 @@ function NetworkEnrichmentTable({ rows, showCategory = true, showFold = true }) 
       wrapText: true, autoHeight: true,
       cellRenderer: (p) => (
         <span>
-          {p.data.description}
+          {p.data.termUrl ? (
+            <Link to={p.data.termUrl} target="_blank" rel="noopener noreferrer">
+              {p.data.description}
+            </Link>
+          ) : (
+            p.data.description
+          )}
           {p.data.termId ? <span className="enrich-term-id"> ({p.data.termId})</span> : null}
         </span>
       ),
@@ -115,6 +123,8 @@ function NetworkEnrichmentTable({ rows, showCategory = true, showFold = true }) 
         defaultColDef={defaultColDef}
         context={context}
         domLayout="autoHeight"
+        pagination={!!pageSize}
+        paginationPageSize={pageSize || 100}
         suppressCellFocus={true}
       />
     </div>
