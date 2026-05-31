@@ -22,6 +22,12 @@ const GENETIC_TYPES = new Set([
   'Synthetic Rescue',
 ]);
 
+// Format a p-value / FDR: scientific notation when very small, else 3 decimals.
+function fmtPval(v) {
+  if (v == null) return '-';
+  return v < 0.001 ? v.toExponential(1) : v.toFixed(3);
+}
+
 function InteractionDetails({ data, networkData, loading, networkLoading, error, selectedOrganism, onOrganismChange, orthologOrganisms = [], locusName }) {
   const [physicalFilter, setPhysicalFilter] = useState('');
   const [geneticFilter, setGeneticFilter] = useState('');
@@ -31,6 +37,12 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
   const [enrichment, setEnrichment] = useState(null);
   const [enrichmentLoading, setEnrichmentLoading] = useState(false);
   const [enrichmentError, setEnrichmentError] = useState(null);
+  // CGD-native (GO Term Finder + Phenotype Enrichment) enrichment
+  const [showCgdEnrichment, setShowCgdEnrichment] = useState(false);
+  const [cgdEnrichment, setCgdEnrichment] = useState(null);
+  const [cgdLoading, setCgdLoading] = useState(false);
+  const [cgdError, setCgdError] = useState(null);
+  const [cgdIncludeString, setCgdIncludeString] = useState(false);
 
   // Get available organisms from the data
   const organisms = useMemo(() => {
@@ -331,6 +343,36 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
 
   const orgEnrichment = enrichment?.results?.[currentOrganism] || null;
 
+  // CGD-native enrichment (GO Term Finder + Phenotype Enrichment over the network)
+  const fetchCgdEnrichment = useCallback(async (includeString) => {
+    if (!locusName) return;
+    setCgdLoading(true);
+    setCgdError(null);
+    try {
+      const resp = await locusApi.getNetworkEnrichment(locusName, includeString);
+      setCgdEnrichment(resp);
+    } catch {
+      setCgdError('Could not load CGD enrichment.');
+    } finally {
+      setCgdLoading(false);
+    }
+  }, [locusName]);
+
+  const handleToggleCgdEnrichment = useCallback(() => {
+    const next = !showCgdEnrichment;
+    setShowCgdEnrichment(next);
+    if (next && !cgdEnrichment && !cgdLoading) {
+      fetchCgdEnrichment(cgdIncludeString);
+    }
+  }, [showCgdEnrichment, cgdEnrichment, cgdLoading, cgdIncludeString, fetchCgdEnrichment]);
+
+  const handleCgdIncludeStringChange = useCallback((val) => {
+    setCgdIncludeString(val);
+    fetchCgdEnrichment(val);
+  }, [fetchCgdEnrichment]);
+
+  const orgCgd = cgdEnrichment?.results?.[currentOrganism] || null;
+
   if (loading) return <div className="loading">Loading interaction data...</div>;
   if (error) return <div className="error">Error: {error}</div>;
   if (!data || !data.results) return <div className="no-data">No interaction data available</div>;
@@ -516,6 +558,94 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
                 />
               </div>
             </>
+          )}
+        </div>
+      )}
+
+      {/* CGD-native enrichment: GO Term Finder + Phenotype Enrichment */}
+      {(totalInteractions > 0 || stringInteractions.length > 0) && (
+        <div className="interaction-section" style={{ marginTop: '2rem' }}>
+          <div className="section-header-row">
+            <h3>Network Enrichment (CGD GO &amp; Phenotype)</h3>
+          </div>
+          <p className="string-source-note">
+            GO terms and phenotypes over-represented among {orgData.locus_display_name}&apos;s
+            interaction partners, computed against CGD&apos;s own curated annotations
+            (the GO Term Finder and Phenotype Enrichment engines).
+          </p>
+
+          <button className="string-toggle-btn" onClick={handleToggleCgdEnrichment}>
+            {showCgdEnrichment ? '▼ Hide CGD enrichment' : '▶ Show CGD enrichment'}
+          </button>
+
+          {showCgdEnrichment && (
+            <div style={{ marginTop: '10px' }}>
+              <label className="cgd-enrich-toggle">
+                <input
+                  type="checkbox"
+                  checked={cgdIncludeString}
+                  onChange={(e) => handleCgdIncludeStringChange(e.target.checked)}
+                  disabled={cgdLoading}
+                /> Include STRING-predicted partners in the gene set
+              </label>
+
+              {cgdLoading && <div className="loading">Computing enrichment…</div>}
+              {cgdError && <div className="error">{cgdError}</div>}
+              {!cgdLoading && !cgdError && orgCgd && (
+                <>
+                  <p className="section-entry-count" style={{ margin: '8px 0' }}>
+                    Gene set: {orgCgd.gene_count} genes
+                    ({orgCgd.include_string ? 'curated + STRING' : 'curated BioGRID only'})
+                  </p>
+                  {orgCgd.go_terms.length === 0 && orgCgd.phenotype_terms.length === 0 && (
+                    <p className="no-data">
+                      No significant enrichment{orgCgd.gene_count < 3 ? ' (too few interactors)' : ''}.
+                    </p>
+                  )}
+                  {orgCgd.go_terms.length > 0 && (
+                    <>
+                      <h4 className="enrichment-subhead">GO terms</h4>
+                      <table className="enrichment-table">
+                        <thead>
+                          <tr><th>Category</th><th>Term</th><th>Genes</th><th>Fold</th><th>FDR</th></tr>
+                        </thead>
+                        <tbody>
+                          {orgCgd.go_terms.map((t, i) => (
+                            <tr key={`go-${t.term}-${i}`}>
+                              <td className="enrichment-cat">{t.category_label}</td>
+                              <td>{t.description} <span className="enrichment-termid">({t.term})</span></td>
+                              <td className="enrichment-num">{t.query_count}</td>
+                              <td className="enrichment-num">{t.fold_enrichment.toFixed(1)}×</td>
+                              <td className="enrichment-num">{fmtPval(t.fdr ?? t.p_value)}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </>
+                  )}
+                  {orgCgd.phenotype_terms.length > 0 && (
+                    <>
+                      <h4 className="enrichment-subhead">Phenotypes</h4>
+                      <table className="enrichment-table">
+                        <thead>
+                          <tr><th>Phenotype</th><th>Genes</th><th>Fold</th><th>FDR</th></tr>
+                        </thead>
+                        <tbody>
+                          {orgCgd.phenotype_terms.map((t, i) => (
+                            <tr key={`ph-${t.term}-${i}`}>
+                              <td>{t.description}</td>
+                              <td className="enrichment-num">{t.query_count}</td>
+                              <td className="enrichment-num">{t.fold_enrichment.toFixed(1)}×</td>
+                              <td className="enrichment-num">{fmtPval(t.fdr ?? t.p_value)}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </>
+                  )}
+                </>
+              )}
+            </div>
           )}
         </div>
       )}

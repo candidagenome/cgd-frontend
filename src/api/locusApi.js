@@ -129,6 +129,13 @@ export const locusApi = {
     const response = await api.get(`/api/locus/${encodeURIComponent(name)}/string_enrichment?${params}`);
     return response.data;
   },
+
+  // Get CGD-native GO + phenotype enrichment of the gene's interaction network
+  getNetworkEnrichment: async (name, includeString = false) => {
+    const params = new URLSearchParams({ include_string: includeString.toString() });
+    const response = await api.get(`/api/locus/${encodeURIComponent(name)}/network_enrichment?${params}`);
+    return response.data;
+  },
 };
 
 export default locusApi;

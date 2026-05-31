@@ -2190,6 +2190,22 @@ a:hover {
   font-variant-numeric: tabular-nums;
 }
 
+.enrichment-subhead {
+  margin: 14px 0 4px 0;
+  font-size: 0.95em;
+  color: #444;
+}
+
+.cgd-enrich-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88em;
+  color: #555;
+  margin-bottom: 4px;
+  cursor: pointer;
+}
+
 .interaction-circle .circle-label {
   font-size: 0.85em;
   font-weight: 500;
