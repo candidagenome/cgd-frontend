@@ -4711,7 +4711,7 @@ a:hover {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   padding: 10px 15px;
   background-color: #f5f5f5;
   border: 1px solid #e0e0e0;
@@ -4726,7 +4726,8 @@ a:hover {
 }
 
 .similar-genes-export-toolbar .export-btn {
-  padding: 6px 14px;
+  padding: 6px 10px;
+  white-space: nowrap;
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -4749,7 +4750,7 @@ a:hover {
 
 .similar-genes-export-toolbar .export-separator {
   color: #ccc;
-  margin: 0 5px;
+  margin: 0 2px;
 }
 
 .similar-genes-export-toolbar .analyze-link {
@@ -4788,8 +4789,9 @@ a:hover {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  margin-left: 6px;
-  padding: 4px 8px;
+  margin-left: 2px;
+  padding: 4px 6px;
+  white-space: nowrap;
   font-size: 0.8rem;
   color: #555;
   background: #f5f5f5;

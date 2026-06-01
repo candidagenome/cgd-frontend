@@ -620,10 +620,10 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
           <div className="similar-genes-export-toolbar">
             <span className="export-label">Export ({interactorGenes.length} genes):</span>
             <button className="export-btn" onClick={handleCopyGeneList} title="Copy interactor gene names to clipboard">
-              {copyFeedback === 'copied' ? 'Copied!' : copyFeedback === 'error' ? 'Error' : 'Copy Gene List'}
+              {copyFeedback === 'copied' ? 'Copied!' : copyFeedback === 'error' ? 'Error' : 'Copy'}
             </button>
             <button className="export-btn" onClick={handleDownloadGeneCsv} title="Download interactor gene list as CSV">
-              Download CSV
+              CSV
             </button>
             <span className="export-separator">|</span>
             <span className="export-label">Analyze:</span>
@@ -633,9 +633,9 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
               disabled={goEnrichment.loading || !organismNo}
               title="Find enriched GO terms among the interaction partners"
             >
-              {goEnrichment.loading ? 'Analyzing…' : 'GO Enrichment'}
+              {goEnrichment.loading ? 'Analyzing…' : 'GO Enrich'}
             </button>
-            <label className="manual-only-toggle" title="Exclude computational annotations (IEA, ISO, etc.)">
+            <label className="manual-only-toggle" title="Exclude computational annotations (IEA, ISO, etc.) from GO enrichment">
               <input type="checkbox" checked={goManualOnly} onChange={(e) => setGoManualOnly(e.target.checked)} />
               <span>Manual only</span>
             </label>
@@ -645,15 +645,16 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
               disabled={phenoEnrichment.loading || !organismNo}
               title="Find enriched phenotypes among the interaction partners"
             >
-              {phenoEnrichment.loading ? 'Analyzing…' : 'Phenotype Enrichment'}
+              {phenoEnrichment.loading ? 'Analyzing…' : 'Phenotype'}
             </button>
             <span className="export-separator">|</span>
+            <span className="export-label">GO Tools:</span>
             <a href="/go-term-finder" target="_blank" rel="noopener noreferrer"
                className="export-btn analyze-link" onClick={handleAnalyzeGeneList}
-               title="Open GO Term Finder in a new tab">GO Term Finder ↗</a>
+               title="Open GO Term Finder in a new tab">Term Finder ↗</a>
             <a href="/go-slim-mapper" target="_blank" rel="noopener noreferrer"
                className="export-btn analyze-link" onClick={handleAnalyzeGeneList}
-               title="Open GO Slim Mapper in a new tab">GO Slim Mapper ↗</a>
+               title="Open GO Slim Mapper in a new tab">Slim Mapper ↗</a>
           </div>
 
           {/* GO Enrichment results */}
