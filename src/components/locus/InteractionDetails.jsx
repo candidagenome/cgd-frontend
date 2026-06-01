@@ -789,9 +789,9 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
       )}
 
       {/* Resources Section */}
-      <div className="interaction-section">
-        <h3>Resources</h3>
-        <div className="interaction-resources">
+      <div className="interaction-section" style={{ marginTop: '2.5rem' }}>
+        <h3 style={{ marginBottom: 0, paddingBottom: '6px' }}>Resources</h3>
+        <div className="interaction-resources" style={{ marginTop: '4px' }}>
           <a href="https://thebiogrid.org/" target="_blank" rel="noopener noreferrer">BioGRID</a>
           {' | '}
           <a href="https://string-db.org/" target="_blank" rel="noopener noreferrer">STRING</a>
