@@ -140,6 +140,7 @@ import CrisprGuideFinderHelp from './pages/help/CrisprGuideFinderHelp';
 import ExpressionHelp from './pages/help/ExpressionHelp';
 
 import ScrollToTop from './components/ScrollToTop';
+import Analytics from './components/Analytics';
 import './App.css';
 
 function App() {
@@ -147,6 +148,7 @@ function App() {
     <AuthProvider>
     <Router>
       <ScrollToTop />
+      <Analytics />
       <div className="app">
         {/* =========================
             CGD-style Header (legacy-like)
