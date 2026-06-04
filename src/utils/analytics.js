@@ -1,10 +1,10 @@
 // Google Analytics 4 (gtag.js) integration.
 //
 // Tracking is gated on the VITE_GA_ID env var: it activates only when that var
-// is set at build time. By design the id is provided only for the production
-// build (see .env.production), so local dev and other environments are not
-// tracked -- this mirrors the legacy CGD Perl app, which set the tracking id
-// only in its production config.
+// is set at build time. By design the id is provided only on the production
+// server (set in /opt/cgd_frontend/.env and baked in by `npm run build`), so
+// local dev and other environments are not tracked -- this mirrors the legacy
+// CGD Perl app, which set the tracking id only in its production config.
 
 const GA_ID = import.meta.env.VITE_GA_ID;
 
