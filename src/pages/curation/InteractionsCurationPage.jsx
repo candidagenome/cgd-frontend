@@ -253,7 +253,7 @@ function InteractionsCurationPage() {
                     <th style={styles.th}>Interactor</th>
                     <th style={styles.th}>Experiment Type</th>
                     <th style={styles.th}>Source</th>
-                    <th style={styles.th}>Description</th>
+                    <th style={styles.th}>{section.key === 'genetic' ? 'Phenotype' : 'Description'}</th>
                     <th style={styles.th}>Reference(s)</th>
                     <th style={styles.th}></th>
                   </tr>
@@ -319,7 +319,7 @@ function InteractionsCurationPage() {
                 type="text"
                 value={form.description}
                 onChange={(e) => updateForm(section.key, 'description', e.target.value)}
-                placeholder="Description (optional)"
+                placeholder={section.key === 'genetic' ? 'Phenotype (optional)' : 'Description (optional)'}
                 maxLength={240}
                 style={styles.addInput}
               />

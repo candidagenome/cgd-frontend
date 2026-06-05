@@ -8,6 +8,7 @@ import { renderCitationItem } from '../../utils/formatCitation.jsx';
 import locusApi from '../../api/locusApi';
 import { goTermFinderApi } from '../../api/goTermFinderApi';
 import { phenotypeEnrichmentApi } from '../../api/phenotypeEnrichmentApi';
+import { venn as vennCompute, normalizeSolution, scaleSolution, computeTextCentres } from '@upsetjs/venn.js';
 import './LocusComponents.css';
 
 // Genetic interaction types (from BioGRID)
@@ -91,7 +92,8 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
   }, [physicalInteractions, geneticInteractions]);
 
   // Build a 3-set Venn (Physical / Genetic / STRING) over shared interactor
-  // genes. Region counts = number of interactor genes in each overlap.
+  // genes. `size` is the inclusive overlap size (for the area-proportional
+  // layout); `count` is the exclusive region count (shown as the label).
   const vennData = useMemo(() => {
     const keyOf = (gn, fn) => (gn || fn || '').toUpperCase();
     const P = new Set();
@@ -122,12 +124,59 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
       else if (inS) sOnly++;
     });
 
+    const sizes = { P: P.size, G: G.size, S: S.size };
+    const areas = [];
+    if (sizes.P) areas.push({ sets: ['Physical'], size: sizes.P, count: pOnly });
+    if (sizes.G) areas.push({ sets: ['Genetic'], size: sizes.G, count: gOnly });
+    if (sizes.S) areas.push({ sets: ['STRING'], size: sizes.S, count: sOnly });
+    if (pg + pgs) areas.push({ sets: ['Physical', 'Genetic'], size: pg + pgs, count: pg });
+    if (ps + pgs) areas.push({ sets: ['Physical', 'STRING'], size: ps + pgs, count: ps });
+    if (gs + pgs) areas.push({ sets: ['Genetic', 'STRING'], size: gs + pgs, count: gs });
+    if (pgs) areas.push({ sets: ['Physical', 'Genetic', 'STRING'], size: pgs, count: pgs });
+
     return {
-      sizes: { P: P.size, G: G.size, S: S.size },
-      regions: { pgs, pg, ps, gs, pOnly, gOnly, sOnly },
-      present: { P: P.size > 0, G: G.size > 0, S: S.size > 0 },
+      sizes,
+      areas,
+      present: { P: sizes.P > 0, G: sizes.G > 0, S: sizes.S > 0 },
     };
   }, [physicalInteractions, geneticInteractions, stringInteractions]);
+
+  // Area-proportional Venn layout (circle positions + region/label centres).
+  const VENN_FILL = { Physical: '#9575cd', Genetic: '#81c784', STRING: '#2196f3' };
+  const VENN_STROKE = { Physical: '#6f54a8', Genetic: '#5aa05e', STRING: '#1976d2' };
+  const vennLayout = useMemo(() => {
+    const areas = vennData.areas;
+    if (!areas.length) return null;
+    try {
+      const layoutAreas = areas.map(a => ({ sets: a.sets, size: a.size }));
+      let solution = vennCompute(layoutAreas);
+      solution = normalizeSolution(solution, Math.PI / 2);
+      const circles = scaleSolution(solution, 300, 270, 38);
+      const centres = computeTextCentres(circles, layoutAreas);
+
+      // Place each set name just outside its circle, away from the cluster centre.
+      const list = Object.values(circles);
+      const cx = list.reduce((s, c) => s + c.x, 0) / list.length;
+      const cy = list.reduce((s, c) => s + c.y, 0) / list.length;
+      const labels = Object.entries(circles).map(([name, c]) => {
+        let dx = c.x - cx, dy = c.y - cy;
+        const len = Math.hypot(dx, dy) || 1;
+        dx /= len; dy /= len;
+        if (Math.hypot(c.x - cx, c.y - cy) < 1) { dx = 0; dy = -1; } // lone circle -> above
+        const anchor = dx > 0.3 ? 'start' : dx < -0.3 ? 'end' : 'middle';
+        return {
+          name,
+          x: c.x + dx * (c.radius + 12),
+          y: c.y + dy * (c.radius + 14),
+          anchor,
+        };
+      });
+
+      return { circles, centres, labels };
+    } catch {
+      return null;
+    }
+  }, [vennData]);
 
   // Flatten interactions for table display
   const flattenInteractions = useCallback((interactions) => {
@@ -570,41 +619,41 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
 
         {(totalInteractions > 0 || stringInteractions.length > 0) ? (
           <div className="interaction-summary-viz">
-            <svg
-              className="interaction-venn"
-              viewBox="0 0 300 280"
-              width="320"
-              role="img"
-              aria-label="Venn diagram of physical, genetic, and STRING interaction partners"
-            >
-              {vennData.present.P && (
-                <circle cx="112" cy="112" r="80" fill="#9575cd" fillOpacity="0.5" stroke="#6f54a8" />
-              )}
-              {vennData.present.G && (
-                <circle cx="188" cy="112" r="80" fill="#81c784" fillOpacity="0.5" stroke="#5aa05e" />
-              )}
-              {vennData.present.S && (
-                <circle cx="150" cy="178" r="80" fill="#2196f3" fillOpacity="0.4" stroke="#1976d2" />
-              )}
-
-              {vennData.present.P && (
-                <text x="58" y="44" className="venn-set-label" textAnchor="start">Physical</text>
-              )}
-              {vennData.present.G && (
-                <text x="242" y="44" className="venn-set-label" textAnchor="end">Genetic</text>
-              )}
-              {vennData.present.S && (
-                <text x="150" y="272" className="venn-set-label" textAnchor="middle">STRING</text>
-              )}
-
-              {vennData.regions.pOnly > 0 && <text x="78" y="102" className="venn-count">{vennData.regions.pOnly}</text>}
-              {vennData.regions.gOnly > 0 && <text x="222" y="102" className="venn-count">{vennData.regions.gOnly}</text>}
-              {vennData.regions.sOnly > 0 && <text x="150" y="212" className="venn-count">{vennData.regions.sOnly}</text>}
-              {vennData.regions.pg > 0 && <text x="150" y="84" className="venn-count">{vennData.regions.pg}</text>}
-              {vennData.regions.ps > 0 && <text x="104" y="166" className="venn-count">{vennData.regions.ps}</text>}
-              {vennData.regions.gs > 0 && <text x="196" y="166" className="venn-count">{vennData.regions.gs}</text>}
-              {vennData.regions.pgs > 0 && <text x="150" y="136" className="venn-count">{vennData.regions.pgs}</text>}
-            </svg>
+            {vennLayout && (
+              <svg
+                className="interaction-venn"
+                viewBox="0 0 300 270"
+                width="320"
+                role="img"
+                aria-label="Area-proportional Venn diagram of physical, genetic, and STRING interaction partners"
+              >
+                {Object.entries(vennLayout.circles).map(([name, c]) => (
+                  <circle
+                    key={`c-${name}`}
+                    cx={c.x}
+                    cy={c.y}
+                    r={c.radius}
+                    fill={VENN_FILL[name]}
+                    fillOpacity={name === 'STRING' ? 0.4 : 0.5}
+                    stroke={VENN_STROKE[name]}
+                  />
+                ))}
+                {vennLayout.labels.map((l) => (
+                  <text key={`l-${l.name}`} x={l.x} y={l.y} className="venn-set-label" textAnchor={l.anchor}>
+                    {l.name}
+                  </text>
+                ))}
+                {vennData.areas.map((a) => {
+                  const centre = vennLayout.centres[a.sets.toString()];
+                  if (!centre || !a.count) return null;
+                  return (
+                    <text key={`n-${a.sets.join('_')}`} x={centre.x} y={centre.y} className="venn-count">
+                      {a.count}
+                    </text>
+                  );
+                })}
+              </svg>
+            )}
 
             <div className="interaction-venn-legend">
               {vennData.present.P && (
