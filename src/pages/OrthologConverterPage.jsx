@@ -518,6 +518,19 @@ function OrthologConverterPage() {
                     // Display gene name if available, otherwise systematic name (stripped)
                     const inputDisplayName = r.input_gene_name || stripAlleleDesignation(r.input_feature_name) || r.input_id;
                     const inputSystematic = stripAlleleDesignation(r.input_feature_name);
+                    // Secondary line under the gene name: prefer what the user actually
+                    // entered (e.g. an ORF name like YDR300C, or an SGDID). If that's the
+                    // same as the gene name shown above, fall back to the systematic
+                    // name / SGDID so a second identifier is still visible.
+                    const inputSecondaryCandidate =
+                      r.input_id && r.input_id.toUpperCase() !== (r.input_gene_name || '').toUpperCase()
+                        ? r.input_id
+                        : inputSystematic;
+                    const inputSecondary =
+                      inputSecondaryCandidate &&
+                      inputSecondaryCandidate.toUpperCase() !== (inputDisplayName || '').toUpperCase()
+                        ? inputSecondaryCandidate
+                        : null;
                     // For ortholog, strip allele designation from systematic names
                     const orthologSystematic = stripAlleleDesignation(r.ortholog_id);
                     const orthologDisplayName = r.ortholog_gene_name || orthologSystematic;
@@ -528,8 +541,8 @@ function OrthologConverterPage() {
                           {r.found && inputFeatureForLink ? (
                             <Link to={`/locus/${inputFeatureForLink}`} target="_blank" rel="noopener noreferrer">
                               <span className="gene-name">{inputDisplayName}</span>
-                              {r.input_gene_name && inputSystematic && (
-                                <span className="systematic-name">{inputSystematic}</span>
+                              {inputSecondary && (
+                                <span className="systematic-name">{inputSecondary}</span>
                               )}
                             </Link>
                           ) : (
