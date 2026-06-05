@@ -98,8 +98,12 @@ function InteractionsCurationPage() {
   const handleAdd = async (sectionKey, e) => {
     e.preventDefault();
     const form = forms[sectionKey];
-    if (!form.interactor.trim() || !form.experiment_type || !form.pubmed) {
+    if (!form.interactor.trim() || !form.experiment_type || !form.pubmed.trim()) {
       setError('Interacting gene, experiment type, and PubMed ID are all required.');
+      return;
+    }
+    if (!/^\d+$/.test(form.pubmed.trim())) {
+      setError('PubMed ID must be numeric.');
       return;
     }
     setSubmitting((p) => ({ ...p, [sectionKey]: true }));
@@ -110,7 +114,7 @@ function InteractionsCurationPage() {
         organism: organismParam || null,
         interactor: form.interactor.trim(),
         experiment_type: form.experiment_type,
-        pubmed: Number(form.pubmed),
+        pubmed: Number(form.pubmed.trim()),
         description: form.description.trim() || null,
       });
       setSuccess(`Added ${sectionKey} interaction with ${form.interactor.trim()}.`);
@@ -312,7 +316,8 @@ function InteractionsCurationPage() {
                 ))}
               </select>
               <input
-                type="number"
+                type="text"
+                inputMode="numeric"
                 value={form.pubmed}
                 onChange={(e) => updateForm(section.key, 'pubmed', e.target.value)}
                 placeholder="PubMed ID"
