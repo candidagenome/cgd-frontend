@@ -154,23 +154,15 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
       const circles = scaleSolution(solution, 300, 270, 38);
       const centres = computeTextCentres(circles, layoutAreas);
 
-      // Place each set name just outside its circle, away from the cluster centre.
-      const list = Object.values(circles);
-      const cx = list.reduce((s, c) => s + c.x, 0) / list.length;
-      const cy = list.reduce((s, c) => s + c.y, 0) / list.length;
-      const labels = Object.entries(circles).map(([name, c]) => {
-        let dx = c.x - cx, dy = c.y - cy;
-        const len = Math.hypot(dx, dy) || 1;
-        dx /= len; dy /= len;
-        if (Math.hypot(c.x - cx, c.y - cy) < 1) { dx = 0; dy = -1; } // lone circle -> above
-        const anchor = dx > 0.3 ? 'start' : dx < -0.3 ? 'end' : 'middle';
-        return {
-          name,
-          x: c.x + dx * (c.radius + 12),
-          y: c.y + dy * (c.radius + 14),
-          anchor,
-        };
-      });
+      // Place each set name centered just above its own circle. (Pushing labels
+      // radially outward clipped them at the edges and collided when sets sit
+      // close together.)
+      const labels = Object.entries(circles).map(([name, c]) => ({
+        name,
+        x: c.x,
+        y: c.y - c.radius - 8,
+        anchor: 'middle',
+      }));
 
       return { circles, centres, labels };
     } catch {
