@@ -90,6 +90,45 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
     };
   }, [physicalInteractions, geneticInteractions]);
 
+  // Build a 3-set Venn (Physical / Genetic / STRING) over shared interactor
+  // genes. Region counts = number of interactor genes in each overlap.
+  const vennData = useMemo(() => {
+    const keyOf = (gn, fn) => (gn || fn || '').toUpperCase();
+    const P = new Set();
+    const G = new Set();
+    const S = new Set();
+    physicalInteractions.forEach(i => i.interactors?.forEach(int => {
+      const k = keyOf(int.gene_name, int.feature_name);
+      if (k) P.add(k);
+    }));
+    geneticInteractions.forEach(i => i.interactors?.forEach(int => {
+      const k = keyOf(int.gene_name, int.feature_name);
+      if (k) G.add(k);
+    }));
+    stringInteractions.forEach(s => {
+      const k = keyOf(s.interactor, s.interactor_feature_name);
+      if (k) S.add(k);
+    });
+
+    let pgs = 0, pg = 0, ps = 0, gs = 0, pOnly = 0, gOnly = 0, sOnly = 0;
+    new Set([...P, ...G, ...S]).forEach(k => {
+      const inP = P.has(k), inG = G.has(k), inS = S.has(k);
+      if (inP && inG && inS) pgs++;
+      else if (inP && inG) pg++;
+      else if (inP && inS) ps++;
+      else if (inG && inS) gs++;
+      else if (inP) pOnly++;
+      else if (inG) gOnly++;
+      else if (inS) sOnly++;
+    });
+
+    return {
+      sizes: { P: P.size, G: G.size, S: S.size },
+      regions: { pgs, pg, ps, gs, pOnly, gOnly, sOnly },
+      present: { P: P.size > 0, G: G.size > 0, S: S.size > 0 },
+    };
+  }, [physicalInteractions, geneticInteractions, stringInteractions]);
+
   // Flatten interactions for table display
   const flattenInteractions = useCallback((interactions) => {
     const rows = [];
@@ -168,6 +207,13 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
       minWidth: 80,
     },
     {
+      headerName: 'Source',
+      field: 'source',
+      flex: 0.5,
+      minWidth: 90,
+      valueGetter: (params) => params.data.source || '-',
+    },
+    {
       headerName: 'Description',
       field: 'description',
       flex: 0.8,
@@ -221,6 +267,13 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
       field: 'interactor_action',
       flex: 0.5,
       minWidth: 80,
+    },
+    {
+      headerName: 'Source',
+      field: 'source',
+      flex: 0.5,
+      minWidth: 90,
+      valueGetter: (params) => params.data.source || '-',
     },
     {
       headerName: 'Phenotype',
@@ -509,32 +562,62 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
         <h2>{orgData.locus_display_name} Interactions</h2>
 
         <p className="interaction-source-note">
-          Source: All physical and genetic interaction annotations listed in CGD are curated by{' '}
+          Source: All physical and genetic interaction annotations listed in CGD are curated by CGD and{' '}
           <a href="https://thebiogrid.org/" target="_blank" rel="noopener noreferrer">BioGRID</a>.
+          {' '}STRING associations are computational predictions from{' '}
+          <a href="https://string-db.org/" target="_blank" rel="noopener noreferrer">STRING</a>, not manually curated.
         </p>
 
         {(totalInteractions > 0 || stringInteractions.length > 0) ? (
           <div className="interaction-summary-viz">
-            <div className="interaction-circles">
-              {physicalInteractions.length > 0 && (
-                <div className="interaction-circle physical">
-                  <span className="circle-label">Physical</span>
-                  <span className="circle-count">{physicalInteractions.length}</span>
-                </div>
+            <svg
+              className="interaction-venn"
+              viewBox="0 0 300 280"
+              width="320"
+              role="img"
+              aria-label="Venn diagram of physical, genetic, and STRING interaction partners"
+            >
+              {vennData.present.P && (
+                <circle cx="112" cy="112" r="80" fill="#9575cd" fillOpacity="0.5" stroke="#6f54a8" />
               )}
-              {geneticInteractions.length > 0 && (
-                <div className="interaction-circle genetic">
-                  <span className="circle-label">Genetic</span>
-                  <span className="circle-count">{geneticInteractions.length}</span>
-                </div>
+              {vennData.present.G && (
+                <circle cx="188" cy="112" r="80" fill="#81c784" fillOpacity="0.5" stroke="#5aa05e" />
               )}
-              {stringInteractions.length > 0 && (
-                <div className="interaction-circle string">
-                  <span className="circle-label">STRING</span>
-                  <span className="circle-count">{stringInteractions.length}</span>
-                </div>
+              {vennData.present.S && (
+                <circle cx="150" cy="178" r="80" fill="#2196f3" fillOpacity="0.4" stroke="#1976d2" />
+              )}
+
+              {vennData.present.P && (
+                <text x="58" y="44" className="venn-set-label" textAnchor="start">Physical</text>
+              )}
+              {vennData.present.G && (
+                <text x="242" y="44" className="venn-set-label" textAnchor="end">Genetic</text>
+              )}
+              {vennData.present.S && (
+                <text x="150" y="272" className="venn-set-label" textAnchor="middle">STRING</text>
+              )}
+
+              {vennData.regions.pOnly > 0 && <text x="78" y="102" className="venn-count">{vennData.regions.pOnly}</text>}
+              {vennData.regions.gOnly > 0 && <text x="222" y="102" className="venn-count">{vennData.regions.gOnly}</text>}
+              {vennData.regions.sOnly > 0 && <text x="150" y="212" className="venn-count">{vennData.regions.sOnly}</text>}
+              {vennData.regions.pg > 0 && <text x="150" y="84" className="venn-count">{vennData.regions.pg}</text>}
+              {vennData.regions.ps > 0 && <text x="104" y="166" className="venn-count">{vennData.regions.ps}</text>}
+              {vennData.regions.gs > 0 && <text x="196" y="166" className="venn-count">{vennData.regions.gs}</text>}
+              {vennData.regions.pgs > 0 && <text x="150" y="136" className="venn-count">{vennData.regions.pgs}</text>}
+            </svg>
+
+            <div className="interaction-venn-legend">
+              {vennData.present.P && (
+                <span className="venn-legend-item"><span className="venn-swatch physical" />Physical ({vennData.sizes.P})</span>
+              )}
+              {vennData.present.G && (
+                <span className="venn-legend-item"><span className="venn-swatch genetic" />Genetic ({vennData.sizes.G})</span>
+              )}
+              {vennData.present.S && (
+                <span className="venn-legend-item"><span className="venn-swatch string" />STRING ({vennData.sizes.S})</span>
               )}
             </div>
+            <p className="venn-caption">Counts are interactor genes; overlaps are genes shared between interaction types.</p>
           </div>
         ) : (
           <p className="no-data">No interactions found for this gene.</p>

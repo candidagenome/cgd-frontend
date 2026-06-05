@@ -2095,6 +2095,61 @@ a:hover {
   margin-bottom: 25px;
 }
 
+/* Physical / Genetic / STRING overlap Venn diagram */
+.interaction-venn {
+  display: block;
+  margin: 0 auto 10px;
+  max-width: 320px;
+  height: auto;
+}
+
+.interaction-venn .venn-set-label {
+  font-size: 15px;
+  font-weight: 700;
+  fill: #333;
+}
+
+.interaction-venn .venn-count {
+  font-size: 14px;
+  font-weight: 600;
+  fill: #1a1a1a;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.interaction-venn-legend {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  font-size: 0.9em;
+  color: #333;
+}
+
+.venn-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.venn-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+}
+
+.venn-swatch.physical { background-color: #9575cd; }
+.venn-swatch.genetic { background-color: #81c784; }
+.venn-swatch.string { background-color: #2196f3; }
+
+.venn-caption {
+  text-align: center;
+  font-size: 0.82em;
+  color: #777;
+  margin: 6px 0 0;
+}
+
 .interaction-circle {
   width: 120px;
   height: 120px;
