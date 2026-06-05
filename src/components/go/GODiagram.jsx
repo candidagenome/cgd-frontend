@@ -18,6 +18,7 @@ function GODiagram({ goid }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [hierarchyData, setHierarchyData] = useState(null);
+  const [hideEmptyChildren, setHideEmptyChildren] = useState(false);
 
   const navigate = useNavigate();
 
@@ -51,8 +52,25 @@ function GODiagram({ goid }) {
       cyRef.current.destroy();
     }
 
+    // Identify the focus term's level so we can distinguish child (descendant)
+    // terms, which sit below the focus, from ancestors, which sit above it.
+    const focusNode = hierarchyData.nodes.find(n => n.is_focus);
+    const focusLevel = focusNode ? focusNode.level : -Infinity;
+
+    // When the filter is on, drop child terms with no direct assignments.
+    // Ancestors and the focus term itself are always kept.
+    const visibleNodes = hideEmptyChildren
+      ? hierarchyData.nodes.filter(node => {
+          const isChild = node.level > focusLevel;
+          const geneCount = node.direct_gene_count || 0;
+          return !(isChild && geneCount === 0);
+        })
+      : hierarchyData.nodes;
+
+    const visibleIds = new Set(visibleNodes.map(node => node.goid));
+
     // Build nodes array for Cytoscape
-    const nodes = hierarchyData.nodes.map(node => {
+    const nodes = visibleNodes.map(node => {
       // Format label with gene count
       const geneCount = node.direct_gene_count || 0;
       const label = `${node.go_term} (${geneCount})`;
@@ -72,16 +90,18 @@ function GODiagram({ goid }) {
       };
     });
 
-    // Build edges array for Cytoscape
-    const edges = hierarchyData.edges.map((edge, idx) => ({
-      data: {
-        id: `edge-${idx}`,
-        source: edge.source,
-        target: edge.target,
-        relationshipType: edge.relationship_type,
-        label: edge.relationship_type === 'part_of' ? 'part of' : 'is a',
-      },
-    }));
+    // Build edges array for Cytoscape, keeping only edges between visible nodes
+    const edges = hierarchyData.edges
+      .filter(edge => visibleIds.has(edge.source) && visibleIds.has(edge.target))
+      .map((edge, idx) => ({
+        data: {
+          id: `edge-${idx}`,
+          source: edge.source,
+          target: edge.target,
+          relationshipType: edge.relationship_type,
+          label: edge.relationship_type === 'part_of' ? 'part of' : 'is a',
+        },
+      }));
 
     // Create Cytoscape instance
     const cy = cytoscape({
@@ -176,7 +196,7 @@ function GODiagram({ goid }) {
         cyRef.current = null;
       }
     };
-  }, [hierarchyData, goid, navigate]);
+  }, [hierarchyData, goid, navigate, hideEmptyChildren]);
 
   // Handle PNG download
   const handleDownload = () => {
@@ -233,8 +253,31 @@ function GODiagram({ goid }) {
     );
   }
 
+  // Count child (descendant) terms with no direct assignments, which the
+  // filter would hide. Used to label the toggle and to disable it when there
+  // is nothing to hide.
+  const focusNode = hierarchyData.nodes.find(n => n.is_focus);
+  const focusLevel = focusNode ? focusNode.level : -Infinity;
+  const emptyChildCount = hierarchyData.nodes.filter(
+    node => node.level > focusLevel && (node.direct_gene_count || 0) === 0
+  ).length;
+
   return (
     <div className="go-diagram-container">
+      <div className="go-diagram-controls">
+        <label className="go-diagram-filter">
+          <input
+            type="checkbox"
+            checked={hideEmptyChildren}
+            disabled={emptyChildCount === 0}
+            onChange={(e) => setHideEmptyChildren(e.target.checked)}
+          />
+          Hide child terms with no assignments
+          {emptyChildCount > 0 && (
+            <span className="go-diagram-filter-count"> ({emptyChildCount})</span>
+          )}
+        </label>
+      </div>
       <div className="go-diagram-canvas" ref={containerRef}></div>
       <div className="go-diagram-footer">
         <div className="go-diagram-legend">
