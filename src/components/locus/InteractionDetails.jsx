@@ -30,6 +30,7 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
   const [physicalFilter, setPhysicalFilter] = useState('');
   const [geneticFilter, setGeneticFilter] = useState('');
   const [stringFilter, setStringFilter] = useState('');
+  const [inferredFilter, setInferredFilter] = useState('');
   const [showStringTable, setShowStringTable] = useState(false);
   const [showEnrichment, setShowEnrichment] = useState(false);
   const [enrichment, setEnrichment] = useState(null);
@@ -412,6 +413,75 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
     },
   ], []);
 
+  // Orthology-inferred interactions (transferred from the C. albicans ortholog)
+  const inferredInteractions = useMemo(() => orgData?.inferred_interactions || [], [orgData]);
+
+  const inferredColumnDefs = useMemo(() => [
+    {
+      headerName: 'Interactor',
+      field: 'interactor_gene_name',
+      flex: 0.7,
+      minWidth: 90,
+      cellRenderer: (params) => {
+        const fn = params.data.interactor_feature_name;
+        const gn = params.data.interactor_gene_name;
+        if (!fn) return gn || '-';
+        return <Link to={`/locus/${fn}`}>{gn || fn}</Link>;
+      },
+    },
+    {
+      headerName: 'Type',
+      field: 'interaction_type',
+      flex: 0.4,
+      minWidth: 80,
+    },
+    {
+      headerName: 'C. albicans evidence',
+      field: 'source_partner_name',
+      flex: 1,
+      minWidth: 180,
+      wrapText: true,
+      autoHeight: true,
+      cellStyle: { 'white-space': 'normal' },
+      cellRenderer: (params) => {
+        const d = params.data;
+        const g = d.source_gene_feature_name
+          ? <Link to={`/locus/${d.source_gene_feature_name}`}>{d.source_gene_name}</Link>
+          : (d.source_gene_name || '?');
+        const p = d.source_partner_feature_name
+          ? <Link to={`/locus/${d.source_partner_feature_name}`}>{d.source_partner_name}</Link>
+          : (d.source_partner_name || '?');
+        return <span>{g}{' – '}{p}</span>;
+      },
+    },
+    {
+      headerName: 'Assay',
+      field: 'experiment_type',
+      flex: 0.9,
+      minWidth: 140,
+      wrapText: true,
+      autoHeight: true,
+      cellStyle: { 'white-space': 'normal' },
+    },
+    {
+      headerName: 'Ortholog',
+      field: 'ortholog_method',
+      flex: 0.4,
+      minWidth: 90,
+      valueGetter: (params) => params.data.ortholog_method || '-',
+    },
+    {
+      headerName: 'Reference',
+      field: 'references',
+      flex: 1.6,
+      minWidth: 300,
+      autoHeight: true,
+      wrapText: true,
+      cellStyle: { 'white-space': 'normal', 'line-height': '1.4' },
+      cellRenderer: referenceCellRenderer,
+    },
+  ], []);
+
   const defaultColDef = useMemo(() => ({
     sortable: true,
     resizable: true,
@@ -735,6 +805,45 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
               columnDefs={geneticColumnDefs}
               defaultColDef={defaultColDef}
               quickFilterText={geneticFilter}
+              pagination={true}
+              paginationPageSize={10}
+              paginationPageSizeSelector={[10, 25, 50]}
+              domLayout="normal"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Orthology-inferred interactions (from the C. albicans ortholog) */}
+      {inferredInteractions.length > 0 && (
+        <div className="interaction-section" style={{ marginTop: '2rem' }}>
+          <div className="section-header-row">
+            <h3>Interactions inferred from the C. albicans ortholog</h3>
+            <span className="section-entry-count">{inferredInteractions.length} inferred</span>
+          </div>
+          <p className="string-source-note">
+            <strong>Predicted, not curated.</strong> Each row is a curated{' '}
+            <em>C. albicans</em> interaction transferred across CGD orthologs: the
+            C. albicans ortholog of this gene interacts with the C. albicans gene shown
+            under &quot;C. albicans evidence&quot;, whose ortholog in this species is the
+            listed interactor. Confidence depends on the ortholog method and on interaction
+            conservation between species.
+          </p>
+          <div className="table-controls">
+            <input
+              type="text"
+              placeholder="Filter table..."
+              value={inferredFilter}
+              onChange={(e) => setInferredFilter(e.target.value)}
+              className="quick-filter-input"
+            />
+          </div>
+          <div className="ag-theme-alpine interaction-table" style={{ height: getTableHeight(inferredInteractions.length), width: '100%' }}>
+            <AgGridReact
+              rowData={inferredInteractions}
+              columnDefs={inferredColumnDefs}
+              defaultColDef={defaultColDef}
+              quickFilterText={inferredFilter}
               pagination={true}
               paginationPageSize={10}
               paginationPageSizeSelector={[10, 25, 50]}
