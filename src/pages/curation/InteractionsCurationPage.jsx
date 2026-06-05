@@ -15,6 +15,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import interactionsCurationApi from '../../api/interactionsCurationApi';
 import { getOrganisms } from '../../api/litReviewApi';
 import { filterAllowedOrganisms } from '../../constants/organisms';
+import { renderCitationItem } from '../../utils/formatCitation.jsx';
 
 const SECTIONS = [
   { key: 'physical', label: 'Physical Interactions' },
@@ -140,19 +141,10 @@ function InteractionsCurationPage() {
     }
   };
 
-  const renderReferences = (refs) =>
-    (refs || []).map((r, i) => (
-      <span key={i}>
-        {i > 0 && '; '}
-        {r.pubmed ? (
-          <a href={`https://pubmed.ncbi.nlm.nih.gov/${r.pubmed}`} target="_blank" rel="noopener noreferrer">
-            {r.citation || `PMID:${r.pubmed}`}
-          </a>
-        ) : (
-          r.citation || '-'
-        )}
-      </span>
-    ));
+  const renderReferences = (refs) => {
+    if (!refs || refs.length === 0) return '-';
+    return refs.map((r, i) => <div key={i}>{renderCitationItem(r)}</div>);
+  };
 
   const renderPartners = (partners) =>
     (partners || []).map((p, i) => (
