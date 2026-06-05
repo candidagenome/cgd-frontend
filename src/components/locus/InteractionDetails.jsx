@@ -154,15 +154,30 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
       const circles = scaleSolution(solution, 300, 270, 38);
       const centres = computeTextCentres(circles, layoutAreas);
 
-      // Place each set name centered just above its own circle. (Pushing labels
-      // radially outward clipped them at the edges and collided when sets sit
-      // close together.)
+      // Set names sit centered just above their own circle. Resolve horizontal
+      // collisions (e.g. a small circle sandwiched between two others) by
+      // nudging overlapping labels apart on x, then clamp to the viewBox.
+      const CHAR_W = 7.2;
+      const GAP = 6;
       const labels = Object.entries(circles).map(([name, c]) => ({
         name,
         x: c.x,
         y: c.y - c.radius - 8,
+        w: name.length * CHAR_W,
         anchor: 'middle',
       }));
+      labels.sort((a, b) => a.x - b.x);
+      for (let i = 1; i < labels.length; i++) {
+        const prev = labels[i - 1];
+        const cur = labels[i];
+        const minDx = prev.w / 2 + cur.w / 2 + GAP;
+        if (cur.x - prev.x < minDx) cur.x = prev.x + minDx;
+      }
+      const last = labels[labels.length - 1];
+      const overRight = (last.x + last.w / 2) - 296;
+      if (overRight > 0) labels.forEach((l) => { l.x -= overRight; });
+      const overLeft = 4 - (labels[0].x - labels[0].w / 2);
+      if (overLeft > 0) labels.forEach((l) => { l.x += overLeft; });
 
       return { circles, centres, labels };
     } catch {
