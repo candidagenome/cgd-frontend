@@ -694,7 +694,9 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
           <a href="https://string-db.org/" target="_blank" rel="noopener noreferrer">STRING</a>, not manually curated.
         </p>
 
-        {(totalInteractions > 0 || stringInteractions.length > 0) ? (
+        {totalInteractions > 0 ? (
+          /* Curated interactions exist: the multi-set Physical/Genetic/STRING
+             overlap Venn is meaningful. */
           <div className="interaction-summary-viz">
             {vennLayout && (
               <svg
@@ -744,6 +746,20 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
               )}
             </div>
             <p className="venn-caption">Counts are interactor genes; overlaps are genes shared between interaction types.</p>
+          </div>
+        ) : (stringInteractions.length > 0 || inferredInteractions.length > 0) ? (
+          /* No curated interactions (e.g. non-C. albicans species): a Venn would
+             be a single circle, so show plain count badges instead. */
+          <div className="interaction-summary-viz">
+            <div className="interaction-venn-legend">
+              {stringInteractions.length > 0 && (
+                <span className="venn-legend-item"><span className="venn-swatch string" />STRING ({stringInteractions.length})</span>
+              )}
+              {inferredInteractions.length > 0 && (
+                <span className="venn-legend-item"><span className="venn-swatch inferred" />Inferred from C. albicans ortholog ({inferredInteractions.length})</span>
+              )}
+            </div>
+            <p className="venn-caption">No curated interactions in this species; counts are computational predictions.</p>
           </div>
         ) : (
           <p className="no-data">No interactions found for this gene.</p>
