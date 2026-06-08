@@ -2142,7 +2142,6 @@ a:hover {
 .venn-swatch.physical { background-color: #9575cd; }
 .venn-swatch.genetic { background-color: #81c784; }
 .venn-swatch.string { background-color: #2196f3; }
-.venn-swatch.inferred { background-color: #ffb74d; }
 
 .venn-caption {
   text-align: center;

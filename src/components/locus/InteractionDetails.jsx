@@ -753,10 +753,10 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
           <div className="interaction-summary-viz">
             <div className="interaction-venn-legend">
               {stringInteractions.length > 0 && (
-                <span className="venn-legend-item"><span className="venn-swatch string" />STRING ({stringInteractions.length})</span>
+                <span className="venn-legend-item">STRING ({stringInteractions.length})</span>
               )}
               {inferredInteractions.length > 0 && (
-                <span className="venn-legend-item"><span className="venn-swatch inferred" />Inferred from C. albicans ortholog ({inferredInteractions.length})</span>
+                <span className="venn-legend-item">Inferred from C. albicans ortholog ({inferredInteractions.length})</span>
               )}
             </div>
             <p className="venn-caption">No curated interactions in this species; counts are computational predictions.</p>
