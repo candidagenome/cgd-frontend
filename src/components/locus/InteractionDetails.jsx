@@ -32,6 +32,8 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
   const [stringFilter, setStringFilter] = useState('');
   const [inferredFilter, setInferredFilter] = useState('');
   const [showStringTable, setShowStringTable] = useState(false);
+  // Which Venn region's gene list is expanded (keyed like area `sets`, e.g. "Physical,STRING")
+  const [selectedRegion, setSelectedRegion] = useState(null);
   const [showEnrichment, setShowEnrichment] = useState(false);
   const [enrichment, setEnrichment] = useState(null);
   const [enrichmentLoading, setEnrichmentLoading] = useState(false);
@@ -100,44 +102,71 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
     const P = new Set();
     const G = new Set();
     const S = new Set();
+    // key -> { name, feature } for rendering linked gene lists per region.
+    const info = {};
+    const remember = (key, name, feature) => {
+      if (!key) return;
+      const e = info[key] || (info[key] = { name: null, feature: null });
+      if (name && !e.name) e.name = name;
+      if (feature && !e.feature) e.feature = feature;
+    };
     physicalInteractions.forEach(i => i.interactors?.forEach(int => {
       const k = keyOf(int.gene_name, int.feature_name);
-      if (k) P.add(k);
+      if (k) { P.add(k); remember(k, int.gene_name, int.feature_name); }
     }));
     geneticInteractions.forEach(i => i.interactors?.forEach(int => {
       const k = keyOf(int.gene_name, int.feature_name);
-      if (k) G.add(k);
+      if (k) { G.add(k); remember(k, int.gene_name, int.feature_name); }
     }));
     stringInteractions.forEach(s => {
       const k = keyOf(s.interactor, s.interactor_feature_name);
-      if (k) S.add(k);
+      if (k) { S.add(k); remember(k, s.interactor, s.interactor_feature_name); }
     });
 
-    let pgs = 0, pg = 0, ps = 0, gs = 0, pOnly = 0, gOnly = 0, sOnly = 0;
+    // Bucket each gene into its exclusive region (keyed like the area `sets`).
+    const buckets = {};
+    const bucket = (sets, k) => { (buckets[sets.toString()] ||= []).push(k); };
     new Set([...P, ...G, ...S]).forEach(k => {
       const inP = P.has(k), inG = G.has(k), inS = S.has(k);
-      if (inP && inG && inS) pgs++;
-      else if (inP && inG) pg++;
-      else if (inP && inS) ps++;
-      else if (inG && inS) gs++;
-      else if (inP) pOnly++;
-      else if (inG) gOnly++;
-      else if (inS) sOnly++;
+      if (inP && inG && inS) bucket(['Physical', 'Genetic', 'STRING'], k);
+      else if (inP && inG) bucket(['Physical', 'Genetic'], k);
+      else if (inP && inS) bucket(['Physical', 'STRING'], k);
+      else if (inG && inS) bucket(['Genetic', 'STRING'], k);
+      else if (inP) bucket(['Physical'], k);
+      else if (inG) bucket(['Genetic'], k);
+      else if (inS) bucket(['STRING'], k);
     });
 
+    const countOf = (sets) => (buckets[sets.toString()] || []).length;
     const sizes = { P: P.size, G: G.size, S: S.size };
     const areas = [];
-    if (sizes.P) areas.push({ sets: ['Physical'], size: sizes.P, count: pOnly });
-    if (sizes.G) areas.push({ sets: ['Genetic'], size: sizes.G, count: gOnly });
-    if (sizes.S) areas.push({ sets: ['STRING'], size: sizes.S, count: sOnly });
-    if (pg + pgs) areas.push({ sets: ['Physical', 'Genetic'], size: pg + pgs, count: pg });
-    if (ps + pgs) areas.push({ sets: ['Physical', 'STRING'], size: ps + pgs, count: ps });
-    if (gs + pgs) areas.push({ sets: ['Genetic', 'STRING'], size: gs + pgs, count: gs });
-    if (pgs) areas.push({ sets: ['Physical', 'Genetic', 'STRING'], size: pgs, count: pgs });
+    if (sizes.P) areas.push({ sets: ['Physical'], size: sizes.P, count: countOf(['Physical']) });
+    if (sizes.G) areas.push({ sets: ['Genetic'], size: sizes.G, count: countOf(['Genetic']) });
+    if (sizes.S) areas.push({ sets: ['STRING'], size: sizes.S, count: countOf(['STRING']) });
+    if (countOf(['Physical', 'Genetic']) + countOf(['Physical', 'Genetic', 'STRING']))
+      areas.push({ sets: ['Physical', 'Genetic'], size: countOf(['Physical', 'Genetic']) + countOf(['Physical', 'Genetic', 'STRING']), count: countOf(['Physical', 'Genetic']) });
+    if (countOf(['Physical', 'STRING']) + countOf(['Physical', 'Genetic', 'STRING']))
+      areas.push({ sets: ['Physical', 'STRING'], size: countOf(['Physical', 'STRING']) + countOf(['Physical', 'Genetic', 'STRING']), count: countOf(['Physical', 'STRING']) });
+    if (countOf(['Genetic', 'STRING']) + countOf(['Physical', 'Genetic', 'STRING']))
+      areas.push({ sets: ['Genetic', 'STRING'], size: countOf(['Genetic', 'STRING']) + countOf(['Physical', 'Genetic', 'STRING']), count: countOf(['Genetic', 'STRING']) });
+    if (countOf(['Physical', 'Genetic', 'STRING']))
+      areas.push({ sets: ['Physical', 'Genetic', 'STRING'], size: countOf(['Physical', 'Genetic', 'STRING']), count: countOf(['Physical', 'Genetic', 'STRING']) });
+
+    // Resolve each region's gene keys to sorted, link-ready display objects.
+    const regionGenes = {};
+    Object.entries(buckets).forEach(([id, keys]) => {
+      const sets = id.split(',');
+      const label = sets.length === 1 ? `${sets[0]} only` : sets.join(' & ');
+      const genes = keys
+        .map(k => ({ name: info[k].name || info[k].feature || k, feature: info[k].feature }))
+        .sort((a, b) => a.name.localeCompare(b.name));
+      regionGenes[id] = { label, genes };
+    });
 
     return {
       sizes,
       areas,
+      regionGenes,
       present: { P: sizes.P > 0, G: sizes.G > 0, S: sizes.S > 0 },
     };
   }, [physicalInteractions, geneticInteractions, stringInteractions]);
@@ -723,10 +752,27 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
                   </text>
                 ))}
                 {vennData.areas.map((a) => {
-                  const centre = vennLayout.centres[a.sets.toString()];
+                  const id = a.sets.toString();
+                  const centre = vennLayout.centres[id];
                   if (!centre || !a.count) return null;
+                  const isSelected = selectedRegion === id;
                   return (
-                    <text key={`n-${a.sets.join('_')}`} x={centre.x} y={centre.y} className="venn-count">
+                    <text
+                      key={`n-${a.sets.join('_')}`}
+                      x={centre.x}
+                      y={centre.y}
+                      className={`venn-count venn-count-link${isSelected ? ' selected' : ''}`}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Show ${a.count} ${vennData.regionGenes[id]?.label} gene${a.count === 1 ? '' : 's'}`}
+                      onClick={() => setSelectedRegion(isSelected ? null : id)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          setSelectedRegion(isSelected ? null : id);
+                        }
+                      }}
+                    >
                       {a.count}
                     </text>
                   );
@@ -745,7 +791,34 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
                 <span className="venn-legend-item"><span className="venn-swatch string" />STRING ({vennData.sizes.S})</span>
               )}
             </div>
-            <p className="venn-caption">Counts are interactor genes; overlaps are genes shared between interaction types.</p>
+            <p className="venn-caption">Counts are interactor genes; overlaps are genes shared between interaction types. Click a count to list its genes.</p>
+            {selectedRegion && vennData.regionGenes[selectedRegion] && (
+              <div className="venn-region-genes">
+                <div className="venn-region-genes-header">
+                  <strong>
+                    {vennData.regionGenes[selectedRegion].label}
+                    {' '}({vennData.regionGenes[selectedRegion].genes.length})
+                  </strong>
+                  <button
+                    type="button"
+                    className="venn-region-genes-close"
+                    aria-label="Close gene list"
+                    onClick={() => setSelectedRegion(null)}
+                  >
+                    ×
+                  </button>
+                </div>
+                <div className="venn-region-genes-list">
+                  {vennData.regionGenes[selectedRegion].genes.map((g, idx) => (
+                    g.feature ? (
+                      <Link key={`${g.feature}-${idx}`} to={`/locus/${g.feature}`}>{g.name}</Link>
+                    ) : (
+                      <span key={`${g.name}-${idx}`}>{g.name}</span>
+                    )
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         ) : (stringInteractions.length > 0 || inferredInteractions.length > 0) ? (
           /* No curated interactions (e.g. non-C. albicans species): a Venn would

@@ -2117,6 +2117,22 @@ a:hover {
   dominant-baseline: middle;
 }
 
+.interaction-venn .venn-count-link {
+  cursor: pointer;
+}
+
+.interaction-venn .venn-count-link:hover,
+.interaction-venn .venn-count-link:focus {
+  fill: #1565c0;
+  text-decoration: underline;
+  outline: none;
+}
+
+.interaction-venn .venn-count-link.selected {
+  fill: #1565c0;
+  font-weight: 700;
+}
+
 .interaction-venn-legend {
   display: flex;
   justify-content: center;
@@ -2148,6 +2164,45 @@ a:hover {
   font-size: 0.82em;
   color: #777;
   margin: 6px 0 0;
+}
+
+.venn-region-genes {
+  margin: 10px auto 0;
+  max-width: 480px;
+  padding: 10px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background-color: #fafafa;
+}
+
+.venn-region-genes-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 0.9em;
+  color: #333;
+}
+
+.venn-region-genes-close {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1.2em;
+  line-height: 1;
+  color: #888;
+  padding: 0 4px;
+}
+
+.venn-region-genes-close:hover {
+  color: #333;
+}
+
+.venn-region-genes-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  font-size: 0.88em;
 }
 
 .interaction-circle {
