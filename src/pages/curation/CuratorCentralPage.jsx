@@ -70,6 +70,11 @@ function CuratorCentralPage() {
                 {' | '}
                 <a href="https://wiki.candidagenome.org/index.php/Help:Phenotype_Curation_Help" target="_blank" rel="noopener noreferrer">Help</a>
               </li>
+              <li>
+                <Link to="/curation/interactions">Curate Interactions</Link>
+                {' | '}
+                <a href="https://wiki.candidagenome.org/index.php/Help:Interaction_Curation_Help" target="_blank" rel="noopener noreferrer">Help</a>
+              </li>
               <li style={styles.disabledItem}>
                 <Link to="/curation/feature/new" style={styles.disabledLink}>Add a New Feature</Link>
                 {' | '}

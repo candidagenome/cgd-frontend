@@ -511,13 +511,25 @@ function OrthologConverterPage() {
                 </thead>
                 <tbody>
                   {paginatedResults.map((r, idx) => {
-                    // Strip allele designation for links and display
-                    const inputFeatureForLink = stripAlleleDesignation(r.input_feature_name);
-                    // Use gene name for synteny search (works better), fallback to systematic
-                    const inputForSynteny = r.input_gene_name || stripAlleleDesignation(r.input_feature_name || r.input_id);
-                    // Display gene name if available, otherwise systematic name (stripped)
-                    const inputDisplayName = r.input_gene_name || stripAlleleDesignation(r.input_feature_name) || r.input_id;
+                    // Input identifiers: gene name (top line) and systematic/ORF
+                    // name (second line). For S. cerevisiae source the backend also
+                    // returns the SGDID, which we link out to SGD.
                     const inputSystematic = stripAlleleDesignation(r.input_feature_name);
+                    const inputDisplayName = r.input_gene_name || inputSystematic || r.input_id;
+                    // Second line: the systematic/ORF name, when it differs from the
+                    // gene name shown above (avoid showing an unnamed gene twice).
+                    const inputSecondary =
+                      inputSystematic && inputSystematic.toUpperCase() !== (inputDisplayName || '').toUpperCase()
+                        ? inputSystematic
+                        : null;
+                    // Link the input gene out: yeast genes (SGD source) link to SGD;
+                    // CGD genes link to their CGD locus page.
+                    const inputSgdUrl = r.input_sgdid
+                      ? `https://www.yeastgenome.org/locus/${r.input_sgdid}`
+                      : null;
+                    const inputCgdFeature = r.input_sgdid ? null : stripAlleleDesignation(r.input_feature_name);
+                    // Use gene name for synteny search (works better), fallback to systematic
+                    const inputForSynteny = r.input_gene_name || inputSystematic || r.input_id;
                     // For ortholog, strip allele designation from systematic names
                     const orthologSystematic = stripAlleleDesignation(r.ortholog_id);
                     const orthologDisplayName = r.ortholog_gene_name || orthologSystematic;
@@ -525,15 +537,27 @@ function OrthologConverterPage() {
                     return (
                       <tr key={idx} className={r.found ? '' : 'not-found-row'}>
                         <td className="gene-cell">
-                          {r.found && inputFeatureForLink ? (
-                            <Link to={`/locus/${inputFeatureForLink}`} target="_blank" rel="noopener noreferrer">
+                          {inputSgdUrl ? (
+                            <a href={inputSgdUrl} target="_blank" rel="noopener noreferrer">
                               <span className="gene-name">{inputDisplayName}</span>
-                              {r.input_gene_name && inputSystematic && (
-                                <span className="systematic-name">{inputSystematic}</span>
+                              {inputSecondary && (
+                                <span className="systematic-name">{inputSecondary}</span>
+                              )}
+                            </a>
+                          ) : r.found && inputCgdFeature ? (
+                            <Link to={`/locus/${inputCgdFeature}`} target="_blank" rel="noopener noreferrer">
+                              <span className="gene-name">{inputDisplayName}</span>
+                              {inputSecondary && (
+                                <span className="systematic-name">{inputSecondary}</span>
                               )}
                             </Link>
                           ) : (
-                            <span className="gene-name">{r.input_id}</span>
+                            <>
+                              <span className="gene-name">{inputDisplayName}</span>
+                              {inputSecondary && (
+                                <span className="systematic-name">{inputSecondary}</span>
+                              )}
+                            </>
                           )}
                         </td>
                         <td className="gene-cell">

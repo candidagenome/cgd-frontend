@@ -87,6 +87,7 @@ import LitGuideTodoListPage from './pages/curation/LitGuideTodoListPage';
 import GoCurationPage from './pages/curation/GoCurationPage';
 import ReferenceCurationPage from './pages/curation/ReferenceCurationPage';
 import PhenotypeCurationPage from './pages/curation/PhenotypeCurationPage';
+import InteractionsCurationPage from './pages/curation/InteractionsCurationPage';
 import ColleagueCurationPage from './pages/curation/ColleagueCurationPage';
 import LocusCurationPage from './pages/curation/LocusCurationPage';
 import LitGuideCurationPage from './pages/curation/LitGuideCurationPage';
@@ -383,6 +384,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <PhenotypeCurationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/interactions"
+            element={
+              <ProtectedRoute>
+                <InteractionsCurationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/interactions/:featureName"
+            element={
+              <ProtectedRoute>
+                <InteractionsCurationPage />
               </ProtectedRoute>
             }
           />

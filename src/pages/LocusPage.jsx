@@ -7,6 +7,7 @@ import PhenotypeDetails from '../components/locus/PhenotypeDetails';
 import ProteinDetails from '../components/locus/ProteinDetails';
 import HomologyDetails from '../components/locus/HomologyDetails';
 import SequenceDetails from '../components/locus/SequenceDetails';
+import InteractionDetails from '../components/locus/InteractionDetails';
 import References from '../components/locus/References';
 import History from '../components/locus/History';
 import ExpressionDetails from '../components/locus/ExpressionDetails';
@@ -28,6 +29,7 @@ const TABS = [
   { id: 'protein', label: 'Protein', component: 'protein', loader: 'loadProteinDetails' },
   { id: 'homology', label: 'Homologs', component: 'homology', loader: 'loadHomologyDetails' },
   { id: 'sequence', label: 'Sequence', component: 'sequence', loader: 'loadSequenceDetails' },
+  { id: 'interactions', label: 'Interactions', component: 'interactions', loader: 'loadInteractionDetails' },
   { id: 'literature', label: 'Literature', component: 'literature', loader: 'loadReferences' },
   { id: 'history', label: 'History', component: 'history', loader: 'loadHistory' },
 ];
@@ -309,6 +311,21 @@ function LocusPage() {
             selectedOrganism={selectedOrganism}
             onOrganismChange={setSelectedOrganism}
             orthologOrganisms={orthologOrganisms}
+          />
+        );
+
+      case 'interactions':
+        return (
+          <InteractionDetails
+            data={data.interactionDetails}
+            networkData={data.interactionNetwork}
+            loading={loading.interactionDetails}
+            networkLoading={loading.interactionNetwork}
+            error={errors.interactionDetails}
+            selectedOrganism={selectedOrganism}
+            onOrganismChange={setSelectedOrganism}
+            orthologOrganisms={orthologOrganisms}
+            locusName={name}
           />
         );
 

@@ -111,6 +111,31 @@ export const locusApi = {
     const response = await api.get(`/api/locus/${encodeURIComponent(name)}/expression_details`);
     return response.data;
   },
+
+  // Get interaction network graph for visualization
+  getInteractionNetwork: async (name, depth = 2, includeString = true, stringScore = 400) => {
+    const params = new URLSearchParams({
+      depth: depth.toString(),
+      include_string: includeString.toString(),
+      string_score: stringScore.toString(),
+    });
+    const response = await api.get(`/api/locus/${encodeURIComponent(name)}/interaction_network?${params}`);
+    return response.data;
+  },
+
+  // Get STRING functional enrichment of the gene's interaction network
+  getStringEnrichment: async (name, stringScore = 400) => {
+    const params = new URLSearchParams({ string_score: stringScore.toString() });
+    const response = await api.get(`/api/locus/${encodeURIComponent(name)}/string_enrichment?${params}`);
+    return response.data;
+  },
+
+  // Get CGD-native GO + phenotype enrichment of the gene's interaction network
+  getNetworkEnrichment: async (name, includeString = false) => {
+    const params = new URLSearchParams({ include_string: includeString.toString() });
+    const response = await api.get(`/api/locus/${encodeURIComponent(name)}/network_enrichment?${params}`);
+    return response.data;
+  },
 };
 
 export default locusApi;

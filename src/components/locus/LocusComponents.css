@@ -2061,6 +2061,409 @@ a:hover {
   font-size: 0.9em;
 }
 
+/* SGD-style Interaction Layout */
+.interaction-overview-section {
+  margin-bottom: 30px;
+}
+
+.interaction-overview-section h2 {
+  font-size: 1.4em;
+  color: #333;
+  margin: 15px 0 10px 0;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.interaction-source-note {
+  color: #666;
+  font-size: 0.95em;
+  margin-bottom: 20px;
+}
+
+.interaction-summary-viz {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.interaction-circles {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 25px;
+}
+
+/* Physical / Genetic / STRING overlap Venn diagram */
+.interaction-venn {
+  display: block;
+  margin: 0 auto 10px;
+  max-width: 320px;
+  height: auto;
+}
+
+.interaction-venn .venn-set-label {
+  font-size: 15px;
+  font-weight: 700;
+  fill: #333;
+}
+
+.interaction-venn .venn-count {
+  font-size: 14px;
+  font-weight: 600;
+  fill: #1a1a1a;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.interaction-venn .venn-count-link {
+  cursor: pointer;
+}
+
+.interaction-venn .venn-count-link:hover,
+.interaction-venn .venn-count-link:focus {
+  fill: #1565c0;
+  text-decoration: underline;
+  outline: none;
+}
+
+.interaction-venn .venn-count-link.selected {
+  fill: #1565c0;
+  font-weight: 700;
+}
+
+.interaction-venn-legend {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  font-size: 0.9em;
+  color: #333;
+}
+
+.venn-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.venn-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+}
+
+.venn-swatch.physical { background-color: #9575cd; }
+.venn-swatch.genetic { background-color: #81c784; }
+.venn-swatch.string { background-color: #2196f3; }
+
+.venn-caption {
+  text-align: center;
+  font-size: 0.82em;
+  color: #777;
+  margin: 6px 0 0;
+}
+
+.venn-region-genes {
+  margin: 0 auto 14px;
+  max-width: 480px;
+  padding: 10px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background-color: #fafafa;
+}
+
+.venn-region-genes-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 0.9em;
+  color: #333;
+}
+
+.venn-region-genes-close {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1.2em;
+  line-height: 1;
+  color: #888;
+  padding: 0 4px;
+}
+
+.venn-region-genes-close:hover {
+  color: #333;
+}
+
+.venn-region-genes-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  font-size: 0.88em;
+}
+
+.interaction-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.interaction-circle:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.interaction-circle.physical {
+  background-color: #9575cd;
+  color: white;
+}
+
+.interaction-circle.genetic {
+  background-color: #81c784;
+  color: white;
+}
+
+.interaction-circle.string {
+  background-color: #2196f3;
+  color: white;
+}
+
+.string-source-note {
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+.string-source-note a {
+  color: #1976d2;
+}
+
+.string-toggle-btn {
+  background: none;
+  border: none;
+  color: #1976d2;
+  cursor: pointer;
+  font-size: 0.95em;
+  padding: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.string-toggle-btn:hover {
+  text-decoration: underline;
+}
+
+.enrichment-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88em;
+}
+
+.enrichment-table th,
+.enrichment-table td {
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 1px solid #eee;
+  vertical-align: top;
+}
+
+.enrichment-table th {
+  border-bottom: 2px solid #e0e0e0;
+  color: #444;
+  font-weight: 600;
+}
+
+.enrichment-table .enrichment-cat {
+  white-space: nowrap;
+  color: #555;
+}
+
+.enrichment-table .enrichment-termid {
+  color: #999;
+  font-size: 0.9em;
+}
+
+.enrichment-table .enrichment-num {
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.enrichment-subhead {
+  margin: 14px 0 4px 0;
+  font-size: 0.95em;
+  color: #444;
+}
+
+.cgd-enrich-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88em;
+  color: #555;
+  margin-bottom: 4px;
+  cursor: pointer;
+}
+
+.enrichment-aggrid {
+  margin-bottom: 12px;
+}
+
+.enrichment-aggrid .enrich-genes-cell {
+  line-height: 1.5;
+  white-space: normal;
+  padding: 4px 0;
+}
+
+.enrichment-aggrid .enrich-term-id {
+  color: #999;
+  font-size: 0.9em;
+}
+
+.enrich-more-btn {
+  background: none;
+  border: none;
+  color: #1976d2;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.9em;
+  padding: 0 0 0 2px;
+}
+
+.enrich-more-btn:hover {
+  text-decoration: underline;
+}
+
+.interaction-circle .circle-label {
+  font-size: 0.85em;
+  font-weight: 500;
+}
+
+.interaction-circle .circle-count {
+  font-size: 1.8em;
+  font-weight: bold;
+}
+
+.interaction-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.interaction-stats .stat-row {
+  display: flex;
+  gap: 10px;
+}
+
+.interaction-stats .stat-label {
+  font-weight: 500;
+  color: #555;
+  min-width: 180px;
+}
+
+.interaction-stats .stat-value {
+  color: #333;
+}
+
+.interaction-section .section-header-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.interaction-section .section-header-row h3 {
+  font-size: 1.3em;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.interaction-section .section-entry-count {
+  background-color: #e8e8e8;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  color: #555;
+}
+
+.interaction-section h3 {
+  font-size: 1.3em;
+  color: #333;
+  margin: 0 0 5px 0;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.interaction-section .section-subtitle {
+  background-color: #e8e8e8;
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.interaction-table {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+.interaction-resources {
+  padding: 15px 20px;
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 0.95em;
+}
+
+.interaction-resources a {
+  color: #1976d2;
+}
+
+.interaction-resources a:hover {
+  text-decoration: underline;
+}
+
+/* Reference list in table cells */
+.reference-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.reference-list a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.reference-list a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive adjustments for interaction layout */
+@media (max-width: 768px) {
+  .interaction-circles {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
 /* =====================================================
    PROTEIN TAB IMPROVEMENTS
    ===================================================== */
@@ -4411,4 +4814,111 @@ a:hover {
 
 .view-heatmap-btn .btn-icon {
   font-size: 1.1em;
+}
+
+/* Export & Analyze toolbar (reused from coexpression tab) */
+.similar-genes-export-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 15px;
+  background-color: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+.similar-genes-export-toolbar .export-label {
+  font-size: 0.9em;
+  color: #555;
+  font-weight: 500;
+}
+
+.similar-genes-export-toolbar .export-btn {
+  padding: 6px 10px;
+  white-space: nowrap;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.85em;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.similar-genes-export-toolbar .export-btn:hover {
+  background-color: #1976d2;
+  border-color: #1976d2;
+  color: #fff;
+}
+
+.similar-genes-export-toolbar .export-btn:active {
+  background-color: #1565c0;
+  border-color: #1565c0;
+}
+
+.similar-genes-export-toolbar .export-separator {
+  color: #ccc;
+  margin: 0 2px;
+}
+
+.similar-genes-export-toolbar .analyze-link {
+  text-decoration: none;
+  display: inline-block;
+}
+
+.similar-genes-export-toolbar .analyze-link:hover {
+  background-color: #666;
+  border-color: #666;
+  color: #fff;
+}
+
+/* Analyze buttons - green accent */
+.similar-genes-export-toolbar .analyze-btn {
+  background-color: #e8f5e9;
+  border-color: #81c784;
+  color: #2e7d32;
+}
+
+.similar-genes-export-toolbar .analyze-btn:hover:not(:disabled) {
+  background-color: #2e7d32;
+  border-color: #2e7d32;
+  color: #fff;
+}
+
+.similar-genes-export-toolbar .analyze-btn:disabled {
+  background-color: #f5f5f5;
+  border-color: #ccc;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* Manual only toggle */
+.similar-genes-export-toolbar .manual-only-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 2px;
+  padding: 4px 6px;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  color: #555;
+  background: #f5f5f5;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.similar-genes-export-toolbar .manual-only-toggle:hover {
+  background: #e8e8e8;
+}
+
+.similar-genes-export-toolbar .manual-only-toggle input[type="checkbox"] {
+  margin: 0;
+  cursor: pointer;
+}
+
+.similar-genes-export-toolbar .manual-only-toggle span {
+  white-space: nowrap;
 }

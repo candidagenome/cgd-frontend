@@ -7,6 +7,7 @@ export function useLocusData(locusName) {
     goDetails: null,
     phenotypeDetails: null,
     interactionDetails: null,
+    interactionNetwork: null,
     proteinDetails: null,
     homologyDetails: null,
     sequenceDetails: null,
@@ -20,6 +21,7 @@ export function useLocusData(locusName) {
     goDetails: false,
     phenotypeDetails: false,
     interactionDetails: false,
+    interactionNetwork: false,
     proteinDetails: false,
     homologyDetails: false,
     sequenceDetails: false,
@@ -43,6 +45,7 @@ export function useLocusData(locusName) {
       goDetails: null,
       phenotypeDetails: null,
       interactionDetails: null,
+      interactionNetwork: null,
       proteinDetails: null,
       homologyDetails: null,
       sequenceDetails: null,
@@ -105,6 +108,7 @@ export function useLocusData(locusName) {
 
   const loadInteractionDetails = useCallback(() => {
     fetchData('interactionDetails', locusApi.getInteractionDetails);
+    fetchData('interactionNetwork', locusApi.getInteractionNetwork);
   }, [fetchData]);
 
   const loadProteinDetails = useCallback(() => {

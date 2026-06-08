@@ -9,6 +9,38 @@
   overflow: hidden;
 }
 
+/* Controls bar (filter toggle) */
+.go-diagram-controls {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  border-bottom: 1px solid #eee;
+  background: #f9f9f9;
+}
+
+.go-diagram-filter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: #333;
+  cursor: pointer;
+}
+
+.go-diagram-filter input:disabled {
+  cursor: not-allowed;
+}
+
+.go-diagram-filter input:disabled + * ,
+.go-diagram-filter:has(input:disabled) {
+  color: #999;
+  cursor: not-allowed;
+}
+
+.go-diagram-filter-count {
+  color: #666;
+}
+
 /* Canvas area */
 .go-diagram-canvas {
   width: 100%;

@@ -1,160 +1,1139 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { AgGridReact } from 'ag-grid-react';
+import OrganismSelector, { getDefaultOrganism } from './OrganismSelector';
+import InteractionNetwork from './InteractionNetwork';
+import NetworkEnrichmentTable from './NetworkEnrichmentTable';
+import { renderCitationItem } from '../../utils/formatCitation.jsx';
+import locusApi from '../../api/locusApi';
+import { goTermFinderApi } from '../../api/goTermFinderApi';
+import { phenotypeEnrichmentApi } from '../../api/phenotypeEnrichmentApi';
+import { venn as vennCompute, normalizeSolution, scaleSolution, computeTextCentres } from '@upsetjs/venn.js';
 import './LocusComponents.css';
 
-function InteractionDetails({ data, loading, error }) {
-  const [collapsedSections, setCollapsedSections] = useState({});
+// Genetic interaction types (from BioGRID)
+const GENETIC_TYPES = new Set([
+  'Dosage Lethality',
+  'Dosage Rescue',
+  'Dosage Growth Defect',
+  'Negative Genetic',
+  'Positive Genetic',
+  'Phenotypic Enhancement',
+  'Phenotypic Suppression',
+  'Synthetic Growth Defect',
+  'Synthetic Haploinsufficiency',
+  'Synthetic Lethality',
+  'Synthetic Rescue',
+]);
+
+function InteractionDetails({ data, networkData, loading, networkLoading, error, selectedOrganism, onOrganismChange, orthologOrganisms = [], locusName }) {
+  const [physicalFilter, setPhysicalFilter] = useState('');
+  const [geneticFilter, setGeneticFilter] = useState('');
+  const [stringFilter, setStringFilter] = useState('');
+  const [inferredFilter, setInferredFilter] = useState('');
+  const [showStringTable, setShowStringTable] = useState(false);
+  // Which Venn region's gene list is expanded (keyed like area `sets`, e.g. "Physical,STRING")
+  const [selectedRegion, setSelectedRegion] = useState(null);
+  const [showEnrichment, setShowEnrichment] = useState(false);
+  const [enrichment, setEnrichment] = useState(null);
+  const [enrichmentLoading, setEnrichmentLoading] = useState(false);
+  const [enrichmentError, setEnrichmentError] = useState(null);
+  // Export / Analyze toolbar (CGD GO Term Finder + Phenotype Enrichment over interactors)
+  const [copyFeedback, setCopyFeedback] = useState(null);
+  const [goEnrichment, setGoEnrichment] = useState({ loading: false, data: null, error: null, show: false });
+  const [phenoEnrichment, setPhenoEnrichment] = useState({ loading: false, data: null, error: null, show: false });
+  const [goManualOnly, setGoManualOnly] = useState(false);
+
+  // Get available organisms from the data
+  const organisms = useMemo(() => {
+    return data?.results ? Object.keys(data.results) : [];
+  }, [data?.results]);
+
+  // Get the current organism's data
+  const currentOrganism = selectedOrganism || getDefaultOrganism(organisms);
+  const orgData = data?.results?.[currentOrganism];
+
+  // Separate physical and genetic interactions
+  const { physicalInteractions, geneticInteractions } = useMemo(() => {
+    if (!orgData?.interactions) return { physicalInteractions: [], geneticInteractions: [] };
+
+    const physical = [];
+    const genetic = [];
+
+    orgData.interactions.forEach(interaction => {
+      if (GENETIC_TYPES.has(interaction.experiment_type)) {
+        genetic.push(interaction);
+      } else {
+        physical.push(interaction);
+      }
+    });
+
+    return { physicalInteractions: physical, geneticInteractions: genetic };
+  }, [orgData]);
+
+  // Get STRING interactions
+  const stringInteractions = useMemo(() => {
+    return orgData?.string_interactions || [];
+  }, [orgData]);
+
+  // Count unique interactors
+  const { physicalGeneCount, geneticGeneCount } = useMemo(() => {
+    const physicalGenes = new Set();
+    const geneticGenes = new Set();
+
+    physicalInteractions.forEach(i => {
+      i.interactors?.forEach(int => physicalGenes.add(int.gene_name || int.feature_name));
+    });
+    geneticInteractions.forEach(i => {
+      i.interactors?.forEach(int => geneticGenes.add(int.gene_name || int.feature_name));
+    });
+
+    return {
+      physicalGeneCount: physicalGenes.size,
+      geneticGeneCount: geneticGenes.size
+    };
+  }, [physicalInteractions, geneticInteractions]);
+
+  // Build a 3-set Venn (Physical / Genetic / STRING) over shared interactor
+  // genes. `size` is the inclusive overlap size (for the area-proportional
+  // layout); `count` is the exclusive region count (shown as the label).
+  const vennData = useMemo(() => {
+    const keyOf = (gn, fn) => (gn || fn || '').toUpperCase();
+    const P = new Set();
+    const G = new Set();
+    const S = new Set();
+    // key -> { name, feature } for rendering linked gene lists per region.
+    const info = {};
+    const remember = (key, name, feature) => {
+      if (!key) return;
+      const e = info[key] || (info[key] = { name: null, feature: null });
+      if (name && !e.name) e.name = name;
+      if (feature && !e.feature) e.feature = feature;
+    };
+    physicalInteractions.forEach(i => i.interactors?.forEach(int => {
+      const k = keyOf(int.gene_name, int.feature_name);
+      if (k) { P.add(k); remember(k, int.gene_name, int.feature_name); }
+    }));
+    geneticInteractions.forEach(i => i.interactors?.forEach(int => {
+      const k = keyOf(int.gene_name, int.feature_name);
+      if (k) { G.add(k); remember(k, int.gene_name, int.feature_name); }
+    }));
+    stringInteractions.forEach(s => {
+      const k = keyOf(s.interactor, s.interactor_feature_name);
+      if (k) { S.add(k); remember(k, s.interactor, s.interactor_feature_name); }
+    });
+
+    // Bucket each gene into its exclusive region (keyed like the area `sets`).
+    const buckets = {};
+    const bucket = (sets, k) => { (buckets[sets.toString()] ||= []).push(k); };
+    new Set([...P, ...G, ...S]).forEach(k => {
+      const inP = P.has(k), inG = G.has(k), inS = S.has(k);
+      if (inP && inG && inS) bucket(['Physical', 'Genetic', 'STRING'], k);
+      else if (inP && inG) bucket(['Physical', 'Genetic'], k);
+      else if (inP && inS) bucket(['Physical', 'STRING'], k);
+      else if (inG && inS) bucket(['Genetic', 'STRING'], k);
+      else if (inP) bucket(['Physical'], k);
+      else if (inG) bucket(['Genetic'], k);
+      else if (inS) bucket(['STRING'], k);
+    });
+
+    const countOf = (sets) => (buckets[sets.toString()] || []).length;
+    const sizes = { P: P.size, G: G.size, S: S.size };
+    const areas = [];
+    if (sizes.P) areas.push({ sets: ['Physical'], size: sizes.P, count: countOf(['Physical']) });
+    if (sizes.G) areas.push({ sets: ['Genetic'], size: sizes.G, count: countOf(['Genetic']) });
+    if (sizes.S) areas.push({ sets: ['STRING'], size: sizes.S, count: countOf(['STRING']) });
+    if (countOf(['Physical', 'Genetic']) + countOf(['Physical', 'Genetic', 'STRING']))
+      areas.push({ sets: ['Physical', 'Genetic'], size: countOf(['Physical', 'Genetic']) + countOf(['Physical', 'Genetic', 'STRING']), count: countOf(['Physical', 'Genetic']) });
+    if (countOf(['Physical', 'STRING']) + countOf(['Physical', 'Genetic', 'STRING']))
+      areas.push({ sets: ['Physical', 'STRING'], size: countOf(['Physical', 'STRING']) + countOf(['Physical', 'Genetic', 'STRING']), count: countOf(['Physical', 'STRING']) });
+    if (countOf(['Genetic', 'STRING']) + countOf(['Physical', 'Genetic', 'STRING']))
+      areas.push({ sets: ['Genetic', 'STRING'], size: countOf(['Genetic', 'STRING']) + countOf(['Physical', 'Genetic', 'STRING']), count: countOf(['Genetic', 'STRING']) });
+    if (countOf(['Physical', 'Genetic', 'STRING']))
+      areas.push({ sets: ['Physical', 'Genetic', 'STRING'], size: countOf(['Physical', 'Genetic', 'STRING']), count: countOf(['Physical', 'Genetic', 'STRING']) });
+
+    // Resolve each region's gene keys to sorted, link-ready display objects.
+    const regionGenes = {};
+    Object.entries(buckets).forEach(([id, keys]) => {
+      const sets = id.split(',');
+      const label = sets.length === 1 ? `${sets[0]} only` : sets.join(' & ');
+      const genes = keys
+        .map(k => ({ name: info[k].name || info[k].feature || k, feature: info[k].feature }))
+        .sort((a, b) => a.name.localeCompare(b.name));
+      regionGenes[id] = { label, genes };
+    });
+
+    return {
+      sizes,
+      areas,
+      regionGenes,
+      present: { P: sizes.P > 0, G: sizes.G > 0, S: sizes.S > 0 },
+    };
+  }, [physicalInteractions, geneticInteractions, stringInteractions]);
+
+  // Area-proportional Venn layout (circle positions + region/label centres).
+  const VENN_FILL = { Physical: '#9575cd', Genetic: '#81c784', STRING: '#2196f3' };
+  const VENN_STROKE = { Physical: '#6f54a8', Genetic: '#5aa05e', STRING: '#1976d2' };
+  const vennLayout = useMemo(() => {
+    const areas = vennData.areas;
+    if (!areas.length) return null;
+    try {
+      const layoutAreas = areas.map(a => ({ sets: a.sets, size: a.size }));
+      let solution = vennCompute(layoutAreas);
+      solution = normalizeSolution(solution, Math.PI / 2);
+      const circles = scaleSolution(solution, 300, 270, 38);
+      const centres = computeTextCentres(circles, layoutAreas);
+
+      // Set names sit centered just above their own circle. Resolve horizontal
+      // collisions (e.g. a small circle sandwiched between two others) by
+      // nudging overlapping labels apart on x, then clamp to the viewBox.
+      const CHAR_W = 7.2;
+      const GAP = 6;
+      const labels = Object.entries(circles).map(([name, c]) => ({
+        name,
+        x: c.x,
+        y: c.y - c.radius - 8,
+        w: name.length * CHAR_W,
+        anchor: 'middle',
+      }));
+      labels.sort((a, b) => a.x - b.x);
+      for (let i = 1; i < labels.length; i++) {
+        const prev = labels[i - 1];
+        const cur = labels[i];
+        const minDx = prev.w / 2 + cur.w / 2 + GAP;
+        if (cur.x - prev.x < minDx) cur.x = prev.x + minDx;
+      }
+      const last = labels[labels.length - 1];
+      const overRight = (last.x + last.w / 2) - 296;
+      if (overRight > 0) labels.forEach((l) => { l.x -= overRight; });
+      const overLeft = 4 - (labels[0].x - labels[0].w / 2);
+      if (overLeft > 0) labels.forEach((l) => { l.x += overLeft; });
+
+      return { circles, centres, labels };
+    } catch {
+      return null;
+    }
+  }, [vennData]);
+
+  // Flatten interactions for table display
+  const flattenInteractions = useCallback((interactions) => {
+    const rows = [];
+    interactions.forEach(interaction => {
+      if (interaction.interactors && interaction.interactors.length > 0) {
+        interaction.interactors.forEach(interactor => {
+          rows.push({
+            ...interaction,
+            interactor_gene_name: interactor.gene_name,
+            interactor_feature_name: interactor.feature_name,
+            interactor_action: interactor.action,
+          });
+        });
+      } else {
+        // Self-interaction
+        rows.push({
+          ...interaction,
+          interactor_gene_name: orgData?.locus_display_name,
+          interactor_feature_name: null,
+          interactor_action: 'Self',
+        });
+      }
+    });
+    return rows;
+  }, [orgData]);
+
+  const physicalRows = useMemo(() => flattenInteractions(physicalInteractions), [physicalInteractions, flattenInteractions]);
+  const geneticRows = useMemo(() => flattenInteractions(geneticInteractions), [geneticInteractions, flattenInteractions]);
+
+  // Reference cell renderer - displays as citation with links
+  const referenceCellRenderer = (params) => {
+    const refs = params.data.references || [];
+    if (refs.length === 0) return '-';
+    return (
+      <div className="reference-list">
+        {refs.map((ref, idx) => (
+          <div key={idx} className="interaction-reference-item">
+            {renderCitationItem(ref, { showPmid: false, itemClassName: 'interaction-citation' })}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  // Column definitions for Physical Interactions table
+  const physicalColumnDefs = useMemo(() => [
+    {
+      headerName: 'Interactor',
+      field: 'interactor_gene_name',
+      flex: 0.6,
+      minWidth: 80,
+      cellRenderer: (params) => {
+        const featureName = params.data.interactor_feature_name;
+        const geneName = params.data.interactor_gene_name;
+        if (!featureName) return geneName || '-';
+        return (
+          <Link to={`/locus/${featureName}`}>
+            {geneName || featureName}
+          </Link>
+        );
+      },
+    },
+    {
+      headerName: 'Assay',
+      field: 'experiment_type',
+      flex: 1,
+      minWidth: 160,
+      wrapText: true,
+      autoHeight: true,
+      cellStyle: { 'white-space': 'normal' },
+    },
+    {
+      headerName: 'Action',
+      field: 'interactor_action',
+      flex: 0.5,
+      minWidth: 80,
+    },
+    {
+      headerName: 'Source',
+      field: 'source',
+      flex: 0.5,
+      minWidth: 90,
+      valueGetter: (params) => params.data.source || '-',
+    },
+    {
+      headerName: 'Description',
+      field: 'description',
+      flex: 0.8,
+      minWidth: 100,
+      wrapText: true,
+      autoHeight: true,
+      cellStyle: { 'white-space': 'normal' },
+      valueGetter: (params) => params.data.description || '-',
+    },
+    {
+      headerName: 'Reference',
+      field: 'references',
+      flex: 2,
+      minWidth: 350,
+      autoHeight: true,
+      wrapText: true,
+      cellStyle: { 'white-space': 'normal', 'line-height': '1.4' },
+      cellRenderer: referenceCellRenderer,
+    },
+  ], []);
+
+  // Column definitions for Genetic Interactions table
+  const geneticColumnDefs = useMemo(() => [
+    {
+      headerName: 'Interactor',
+      field: 'interactor_gene_name',
+      flex: 0.6,
+      minWidth: 80,
+      cellRenderer: (params) => {
+        const featureName = params.data.interactor_feature_name;
+        const geneName = params.data.interactor_gene_name;
+        if (!featureName) return geneName || '-';
+        return (
+          <Link to={`/locus/${featureName}`}>
+            {geneName || featureName}
+          </Link>
+        );
+      },
+    },
+    {
+      headerName: 'Assay',
+      field: 'experiment_type',
+      flex: 1,
+      minWidth: 160,
+      wrapText: true,
+      autoHeight: true,
+      cellStyle: { 'white-space': 'normal' },
+    },
+    {
+      headerName: 'Action',
+      field: 'interactor_action',
+      flex: 0.5,
+      minWidth: 80,
+    },
+    {
+      headerName: 'Source',
+      field: 'source',
+      flex: 0.5,
+      minWidth: 90,
+      valueGetter: (params) => params.data.source || '-',
+    },
+    {
+      headerName: 'Phenotype',
+      field: 'description',
+      flex: 0.8,
+      minWidth: 100,
+      wrapText: true,
+      autoHeight: true,
+      cellStyle: { 'white-space': 'normal' },
+      valueGetter: (params) => params.data.description || '-',
+    },
+    {
+      headerName: 'Reference',
+      field: 'references',
+      flex: 2,
+      minWidth: 350,
+      autoHeight: true,
+      wrapText: true,
+      cellStyle: { 'white-space': 'normal', 'line-height': '1.4' },
+      cellRenderer: referenceCellRenderer,
+    },
+  ], []);
+
+  // Column definitions for STRING Interactions table
+  const stringColumnDefs = useMemo(() => [
+    {
+      headerName: 'Interactor',
+      field: 'interactor',
+      flex: 0.8,
+      minWidth: 100,
+      cellRenderer: (params) => {
+        const featureName = params.data.interactor_feature_name;
+        const geneName = params.data.interactor;
+        if (!featureName) return geneName || '-';
+        return (
+          <Link to={`/locus/${featureName}`}>
+            {geneName}
+          </Link>
+        );
+      },
+    },
+    {
+      headerName: 'Combined Score',
+      field: 'combined_score',
+      flex: 0.6,
+      minWidth: 110,
+      cellRenderer: (params) => {
+        const score = params.value;
+        const percentage = (score / 10).toFixed(1);
+        return `${score} (${percentage}%)`;
+      },
+    },
+    {
+      headerName: 'Experimental',
+      field: 'experimental_score',
+      flex: 0.5,
+      minWidth: 90,
+      valueFormatter: (params) => params.value || 0,
+    },
+    {
+      headerName: 'Database',
+      field: 'database_score',
+      flex: 0.5,
+      minWidth: 80,
+      valueFormatter: (params) => params.value || 0,
+    },
+    {
+      headerName: 'Text Mining',
+      field: 'textmining_score',
+      flex: 0.5,
+      minWidth: 90,
+      valueFormatter: (params) => params.value || 0,
+    },
+    {
+      headerName: 'Co-expression',
+      field: 'coexpression_score',
+      flex: 0.5,
+      minWidth: 100,
+      valueFormatter: (params) => params.value || 0,
+    },
+  ], []);
+
+  // Orthology-inferred interactions (transferred from the C. albicans ortholog)
+  const inferredInteractions = useMemo(() => orgData?.inferred_interactions || [], [orgData]);
+
+  const inferredColumnDefs = useMemo(() => [
+    {
+      headerName: 'Interactor',
+      field: 'interactor_gene_name',
+      flex: 0.7,
+      minWidth: 90,
+      cellRenderer: (params) => {
+        const fn = params.data.interactor_feature_name;
+        const gn = params.data.interactor_gene_name;
+        if (!fn) return gn || '-';
+        return <Link to={`/locus/${fn}`}>{gn || fn}</Link>;
+      },
+    },
+    {
+      headerName: 'Type',
+      field: 'interaction_type',
+      flex: 0.4,
+      minWidth: 80,
+    },
+    {
+      headerName: 'C. albicans evidence',
+      field: 'source_partner_name',
+      flex: 1,
+      minWidth: 180,
+      wrapText: true,
+      autoHeight: true,
+      cellStyle: { 'white-space': 'normal' },
+      cellRenderer: (params) => {
+        const d = params.data;
+        const g = d.source_gene_feature_name
+          ? <Link to={`/locus/${d.source_gene_feature_name}`}>{d.source_gene_name}</Link>
+          : (d.source_gene_name || '?');
+        const p = d.source_partner_feature_name
+          ? <Link to={`/locus/${d.source_partner_feature_name}`}>{d.source_partner_name}</Link>
+          : (d.source_partner_name || '?');
+        return <span>{g}{' – '}{p}</span>;
+      },
+    },
+    {
+      headerName: 'Assay',
+      field: 'experiment_type',
+      flex: 0.9,
+      minWidth: 140,
+      wrapText: true,
+      autoHeight: true,
+      cellStyle: { 'white-space': 'normal' },
+    },
+    {
+      headerName: 'Ortholog',
+      field: 'ortholog_method',
+      flex: 0.4,
+      minWidth: 90,
+      valueGetter: (params) => params.data.ortholog_method || '-',
+    },
+    {
+      headerName: 'Reference',
+      field: 'references',
+      flex: 1.6,
+      minWidth: 300,
+      autoHeight: true,
+      wrapText: true,
+      cellStyle: { 'white-space': 'normal', 'line-height': '1.4' },
+      cellRenderer: referenceCellRenderer,
+    },
+  ], []);
+
+  const defaultColDef = useMemo(() => ({
+    sortable: true,
+    resizable: true,
+    filter: true,
+  }), []);
+
+  // Calculate table height based on row count
+  const getTableHeight = useCallback((rowCount, maxHeight = 850, rowHeight = 90) => {
+    const headerHeight = 48;
+    const paginationHeight = 52;
+    const pageSize = 10;
+    const visibleRows = Math.min(rowCount, pageSize);
+    const calculatedHeight = headerHeight + (visibleRows * rowHeight) + paginationHeight;
+    return Math.max(200, Math.min(calculatedHeight, maxHeight));
+  }, []);
+
+  // Lazily fetch STRING functional enrichment when the section is expanded
+  const handleToggleEnrichment = useCallback(async () => {
+    const next = !showEnrichment;
+    setShowEnrichment(next);
+    if (next && !enrichment && !enrichmentLoading && locusName) {
+      setEnrichmentLoading(true);
+      setEnrichmentError(null);
+      try {
+        const resp = await locusApi.getStringEnrichment(locusName);
+        setEnrichment(resp);
+      } catch {
+        setEnrichmentError('Could not load functional enrichment.');
+      } finally {
+        setEnrichmentLoading(false);
+      }
+    }
+  }, [showEnrichment, enrichment, enrichmentLoading, locusName]);
+
+  const orgEnrichment = enrichment?.results?.[currentOrganism] || null;
+
+  // Curated BioGRID interaction partners (matches the Physical + Genetic
+  // tables), deduped, query excluded. STRING-predicted partners are NOT
+  // included so the gene count matches the visible interactors.
+  const interactorGenes = useMemo(() => {
+    if (!orgData) return [];
+    const queryUpper = (orgData.locus_display_name || '').toUpperCase();
+    const byKey = new Map();
+    const add = (featureName, geneName) => {
+      const key = (geneName || featureName || '').toUpperCase();
+      if (!key || key === queryUpper) return;
+      if (!byKey.has(key)) byKey.set(key, { feature_name: featureName || null, gene_name: geneName || null });
+    };
+    (orgData.interactions || []).forEach(i =>
+      (i.interactors || []).forEach(int => add(int.feature_name, int.gene_name))
+    );
+    return [...byKey.values()];
+  }, [orgData]);
+
+  const geneNamesForApi = useMemo(
+    () => interactorGenes.map(g => g.feature_name || g.gene_name).filter(Boolean),
+    [interactorGenes]
+  );
+  const organismNo = orgData?.organism_no;
+
+  // Store gene list + organism for the GO Term Finder / GO Slim Mapper pages
+  const handleAnalyzeGeneList = useCallback(() => {
+    localStorage.setItem('phenotypeSearchGeneList', JSON.stringify(geneNamesForApi));
+    if (currentOrganism) localStorage.setItem('phenotypeSearchOrganism', currentOrganism);
+  }, [geneNamesForApi, currentOrganism]);
+
+  const handleCopyGeneList = useCallback(async () => {
+    const text = interactorGenes.map(g => g.gene_name || g.feature_name).join('\n');
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopyFeedback('copied');
+    } catch {
+      setCopyFeedback('error');
+    }
+    setTimeout(() => setCopyFeedback(null), 2000);
+  }, [interactorGenes]);
+
+  const handleDownloadGeneCsv = useCallback(() => {
+    const header = ['gene_name', 'systematic_name'];
+    const rows = interactorGenes.map(g => [g.gene_name || '', g.feature_name || '']);
+    const csv = [
+      `# Interaction partners of ${orgData?.locus_display_name || locusName}`,
+      header.join(','),
+      ...rows.map(r => r.map(c => `"${c}"`).join(',')),
+    ].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${orgData?.locus_display_name || locusName}_interactors.csv`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }, [interactorGenes, orgData, locusName]);
+
+  const handleGoEnrichment = useCallback(async () => {
+    if (!organismNo || geneNamesForApi.length === 0) {
+      setGoEnrichment({ loading: false, data: null, show: true,
+        error: 'No interaction partners available for enrichment.' });
+      return;
+    }
+    setGoEnrichment({ loading: true, data: null, error: null, show: true });
+    try {
+      const params = {
+        genes: geneNamesForApi, organism_no: organismNo, ontology: 'all',
+        p_value_cutoff: 0.05, correction_method: 'bh', min_genes_in_term: 2,
+      };
+      if (goManualOnly) params.annotation_types = ['manually_curated'];
+      const result = await goTermFinderApi.runAnalysis(params);
+      setGoEnrichment({ loading: false, data: result, error: null, show: true });
+    } catch (err) {
+      setGoEnrichment({ loading: false, data: null, show: true,
+        error: err.response?.data?.detail || err.message || 'GO enrichment failed' });
+    }
+  }, [organismNo, geneNamesForApi, goManualOnly]);
+
+  const handlePhenotypeEnrichment = useCallback(async () => {
+    if (!organismNo || geneNamesForApi.length === 0) {
+      setPhenoEnrichment({ loading: false, data: null, show: true,
+        error: 'No interaction partners available for enrichment.' });
+      return;
+    }
+    setPhenoEnrichment({ loading: true, data: null, error: null, show: true });
+    try {
+      const result = await phenotypeEnrichmentApi.runAnalysis({
+        genes: geneNamesForApi, organism_no: organismNo,
+        p_value_cutoff: 0.05, correction_method: 'bh', min_genes_in_term: 2,
+      });
+      setPhenoEnrichment({ loading: false, data: result, error: null, show: true });
+    } catch (err) {
+      setPhenoEnrichment({ loading: false, data: null, show: true,
+        error: err.response?.data?.detail || err.message || 'Phenotype enrichment failed' });
+    }
+  }, [organismNo, geneNamesForApi]);
+
+  // Normalize GO Term Finder / Phenotype API results into NetworkEnrichmentTable rows
+  const goRows = useMemo(() => {
+    const r = goEnrichment.data?.result;
+    if (!r) return [];
+    const all = [...(r.process_terms || []), ...(r.function_terms || []), ...(r.component_terms || [])];
+    all.sort((a, b) => (a.fdr ?? a.p_value) - (b.fdr ?? b.p_value));
+    return all.map((t, i) => ({
+      key: `go-${t.goid}-${i}`,
+      category: t.aspect_name,
+      description: t.go_term,
+      termId: t.goid,
+      termUrl: `/go/${t.goid}`,
+      count: t.query_count,
+      fold: t.fold_enrichment,
+      fdr: t.fdr ?? t.p_value,
+      genes: (t.genes || []).map(g => ({ label: g.gene_name || g.systematic_name, feature_name: g.systematic_name })),
+    }));
+  }, [goEnrichment.data]);
+
+  const phenoRows = useMemo(() => {
+    const r = phenoEnrichment.data?.result;
+    if (!r) return [];
+    const all = [...(r.enriched_phenotypes || [])];
+    all.sort((a, b) => (a.fdr ?? a.p_value) - (b.fdr ?? b.p_value));
+    return all.map((p, i) => {
+      const extra = [p.qualifier, p.mutant_type].filter(Boolean).join(', ');
+      return {
+        key: `ph-${p.phenotype_no}-${i}`,
+        description: extra ? `${p.observable} (${extra})` : p.observable,
+        termId: null,
+        termUrl: `/phenotype/search?observable=${encodeURIComponent(p.observable)}`,
+        count: p.query_count,
+        fold: p.fold_enrichment,
+        fdr: p.fdr ?? p.p_value,
+        genes: (p.genes || []).map(g => ({ label: g.gene_name || g.systematic_name, feature_name: g.systematic_name })),
+      };
+    });
+  }, [phenoEnrichment.data]);
 
   if (loading) return <div className="loading">Loading interaction data...</div>;
   if (error) return <div className="error">Error: {error}</div>;
   if (!data || !data.results) return <div className="no-data">No interaction data available</div>;
 
-  const organisms = Object.entries(data.results);
-
-  if (organisms.length === 0) {
-    return <div className="no-data">No interactions found</div>;
+  if (!orgData) {
+    return (
+      <div className="interaction-details">
+        <OrganismSelector
+          organisms={organisms}
+          selectedOrganism={currentOrganism}
+          onOrganismChange={onOrganismChange}
+          orthologOrganisms={orthologOrganisms}
+        />
+        <div className="no-data">No interaction data available for {currentOrganism}.</div>
+      </div>
+    );
   }
 
-  // Group interactions by experiment type
-  const groupByExperimentType = (interactions) => {
-    const groups = {};
-    interactions.forEach(interaction => {
-      const expType = interaction.experiment_type || 'Other';
-      if (!groups[expType]) {
-        groups[expType] = [];
-      }
-      groups[expType].push(interaction);
-    });
-    return groups;
-  };
-
-  const toggleSection = (key) => {
-    setCollapsedSections(prev => ({
-      ...prev,
-      [key]: !prev[key]
-    }));
-  };
-
-  // Experiment type colors
-  const expTypeColors = {
-    'Affinity Capture-MS': '#1976d2',
-    'Affinity Capture-Western': '#1565c0',
-    'Two-hybrid': '#7b1fa2',
-    'Co-purification': '#388e3c',
-    'Reconstituted Complex': '#f57c00',
-    'Other': '#616161'
-  };
-
-  const getExpTypeColor = (expType) => {
-    return expTypeColors[expType] || expTypeColors['Other'];
-  };
+  const totalInteractions = (orgData.interactions?.length || 0);
 
   return (
     <div className="interaction-details">
-      {organisms.map(([orgName, orgData]) => {
-        const grouped = groupByExperimentType(orgData.interactions || []);
-        const totalInteractions = orgData.interactions?.length || 0;
+      <OrganismSelector
+        organisms={organisms}
+        selectedOrganism={currentOrganism}
+        onOrganismChange={onOrganismChange}
+        orthologOrganisms={orthologOrganisms}
+      />
 
-        return (
-          <div key={orgName} className="organism-section">
-            <h3 className="organism-name">{orgName}</h3>
-            <p className="locus-display">
-              Locus: {orgData.locus_display_name}
-              {totalInteractions > 0 && (
-                <span className="total-count"> ({totalInteractions} physical interactions)</span>
-              )}
-            </p>
+      {/* Overview Section */}
+      <div className="interaction-overview-section">
+        <h2>{orgData.locus_display_name} Interactions</h2>
 
-            {Object.keys(grouped).length > 0 ? (
-              <div className="interaction-groups">
-                {Object.entries(grouped).map(([expType, interactions]) => {
-                  const sectionKey = `${orgName}-${expType}`;
-                  const isCollapsed = collapsedSections[sectionKey];
+        <p className="interaction-source-note">
+          Source: All physical and genetic interaction annotations listed in CGD are curated by CGD and{' '}
+          <a href="https://thebiogrid.org/" target="_blank" rel="noopener noreferrer">BioGRID</a>.
+          {' '}STRING associations are computational predictions from{' '}
+          <a href="https://string-db.org/" target="_blank" rel="noopener noreferrer">STRING</a>, not manually curated.
+        </p>
 
+        {totalInteractions > 0 ? (
+          /* Curated interactions exist: the multi-set Physical/Genetic/STRING
+             overlap Venn is meaningful. */
+          <div className="interaction-summary-viz">
+            {selectedRegion && vennData.regionGenes[selectedRegion] && (
+              <div className="venn-region-genes">
+                <div className="venn-region-genes-header">
+                  <strong>
+                    {vennData.regionGenes[selectedRegion].label}
+                    {' '}({vennData.regionGenes[selectedRegion].genes.length})
+                  </strong>
+                  <button
+                    type="button"
+                    className="venn-region-genes-close"
+                    aria-label="Close gene list"
+                    onClick={() => setSelectedRegion(null)}
+                  >
+                    ×
+                  </button>
+                </div>
+                <div className="venn-region-genes-list">
+                  {vennData.regionGenes[selectedRegion].genes.map((g, idx) => (
+                    g.feature ? (
+                      <Link key={`${g.feature}-${idx}`} to={`/locus/${g.feature}`}>{g.name}</Link>
+                    ) : (
+                      <span key={`${g.name}-${idx}`}>{g.name}</span>
+                    )
+                  ))}
+                </div>
+              </div>
+            )}
+            {vennLayout && (
+              <svg
+                className="interaction-venn"
+                viewBox="0 0 300 270"
+                width="320"
+                role="img"
+                aria-label="Area-proportional Venn diagram of physical, genetic, and STRING interaction partners"
+              >
+                {Object.entries(vennLayout.circles).map(([name, c]) => (
+                  <circle
+                    key={`c-${name}`}
+                    cx={c.x}
+                    cy={c.y}
+                    r={c.radius}
+                    fill={VENN_FILL[name]}
+                    fillOpacity={name === 'STRING' ? 0.4 : 0.5}
+                    stroke={VENN_STROKE[name]}
+                  />
+                ))}
+                {vennLayout.labels.map((l) => (
+                  <text key={`l-${l.name}`} x={l.x} y={l.y} className="venn-set-label" textAnchor={l.anchor}>
+                    {l.name}
+                  </text>
+                ))}
+                {vennData.areas.map((a) => {
+                  const id = a.sets.toString();
+                  const centre = vennLayout.centres[id];
+                  if (!centre || !a.count) return null;
+                  const isSelected = selectedRegion === id;
                   return (
-                    <div key={expType} className="interaction-type-section">
-                      <div
-                        className="interaction-type-header"
-                        onClick={() => toggleSection(sectionKey)}
-                        style={{ borderLeftColor: getExpTypeColor(expType) }}
-                      >
-                        <span className="collapse-icon">{isCollapsed ? '▶' : '▼'}</span>
-                        <span className="interaction-type-name">{expType}</span>
-                        <span className="count-badge">{interactions.length}</span>
-                      </div>
-
-                      {!isCollapsed && (
-                        <div className="interaction-cards">
-                          {interactions.map((interaction, idx) => (
-                            <div key={idx} className="interaction-card">
-                              <div className="interaction-interactors">
-                                <span className="interactor-label">Interacts with:</span>
-                                <div className="interactor-list">
-                                  {interaction.interactors?.map((interactor, iIdx) => (
-                                    <span key={iIdx} className="interactor-item">
-                                      <Link
-                                        to={`/locus/${interactor.feature_name}`}
-                                        className="interactor-link"
-                                      >
-                                        {interactor.gene_name || interactor.feature_name}
-                                      </Link>
-                                      {interactor.action && (
-                                        <span className="interactor-action">({interactor.action})</span>
-                                      )}
-                                      {iIdx < interaction.interactors.length - 1 ? ', ' : ''}
-                                    </span>
-                                  ))}
-                                </div>
-                              </div>
-
-                              {interaction.description && (
-                                <div className="interaction-description">
-                                  {interaction.description}
-                                </div>
-                              )}
-
-                              <div className="interaction-meta">
-                                {interaction.source && (
-                                  <span className="interaction-source">
-                                    Source: {interaction.source}
-                                  </span>
-                                )}
-                                {interaction.references && interaction.references.length > 0 && (
-                                  <span className="interaction-refs">
-                                    {interaction.references.map((ref, refIdx) => (
-                                      <span key={refIdx}>
-                                        {ref.startsWith('PMID:') ? (
-                                          <a
-                                            href={`https://pubmed.ncbi.nlm.nih.gov/${ref.replace('PMID:', '')}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="pmid-link"
-                                          >
-                                            {ref}
-                                          </a>
-                                        ) : (
-                                          ref
-                                        )}
-                                        {refIdx < interaction.references.length - 1 ? ', ' : ''}
-                                      </span>
-                                    ))}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
+                    <text
+                      key={`n-${a.sets.join('_')}`}
+                      x={centre.x}
+                      y={centre.y}
+                      className={`venn-count venn-count-link${isSelected ? ' selected' : ''}`}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Show ${a.count} ${vennData.regionGenes[id]?.label} gene${a.count === 1 ? '' : 's'}`}
+                      onClick={() => setSelectedRegion(isSelected ? null : id)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          setSelectedRegion(isSelected ? null : id);
+                        }
+                      }}
+                    >
+                      {a.count}
+                    </text>
                   );
                 })}
-              </div>
-            ) : (
-              <p className="no-data">No interactions for this organism</p>
+              </svg>
             )}
+
+            <div className="interaction-venn-legend">
+              {vennData.present.P && (
+                <span className="venn-legend-item"><span className="venn-swatch physical" />Physical ({vennData.sizes.P})</span>
+              )}
+              {vennData.present.G && (
+                <span className="venn-legend-item"><span className="venn-swatch genetic" />Genetic ({vennData.sizes.G})</span>
+              )}
+              {vennData.present.S && (
+                <span className="venn-legend-item"><span className="venn-swatch string" />STRING ({vennData.sizes.S})</span>
+              )}
+            </div>
+            <p className="venn-caption">Counts are interactor genes; overlaps are genes shared between interaction types. Click a count to list its genes.</p>
           </div>
-        );
-      })}
+        ) : (stringInteractions.length > 0 || inferredInteractions.length > 0) ? (
+          /* No curated interactions (e.g. non-C. albicans species): a Venn would
+             be a single circle, so show plain count badges instead. */
+          <div className="interaction-summary-viz">
+            <div className="interaction-venn-legend">
+              {stringInteractions.length > 0 && (
+                <span className="venn-legend-item">STRING ({stringInteractions.length})</span>
+              )}
+              {inferredInteractions.length > 0 && (
+                <span className="venn-legend-item">Inferred from C. albicans ortholog ({inferredInteractions.length})</span>
+              )}
+            </div>
+            <p className="venn-caption">No curated interactions in this species; counts are computational predictions.</p>
+          </div>
+        ) : (
+          <p className="no-data">No interactions found for this gene.</p>
+        )}
+      </div>
+
+      {/* Physical Interactions Section */}
+      {physicalRows.length > 0 && (
+        <div className="interaction-section">
+          <div className="section-header-row">
+            <h3>Physical Interactions</h3>
+            <span className="section-entry-count">{physicalRows.length} entries for {physicalGeneCount} genes</span>
+          </div>
+          <div className="table-controls">
+            <input
+              type="text"
+              placeholder="Filter table..."
+              value={physicalFilter}
+              onChange={(e) => setPhysicalFilter(e.target.value)}
+              className="quick-filter-input"
+            />
+          </div>
+
+          <div className="ag-theme-alpine interaction-table" style={{ height: getTableHeight(physicalRows.length), width: '100%' }}>
+            <AgGridReact
+              rowData={physicalRows}
+              columnDefs={physicalColumnDefs}
+              defaultColDef={defaultColDef}
+              quickFilterText={physicalFilter}
+              pagination={true}
+              paginationPageSize={10}
+              paginationPageSizeSelector={[10, 25, 50]}
+              domLayout="normal"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Genetic Interactions Section */}
+      {geneticRows.length > 0 && (
+        <div className="interaction-section" style={{ marginTop: '2rem' }}>
+          <div className="section-header-row">
+            <h3>Genetic Interactions</h3>
+            <span className="section-entry-count">{geneticRows.length} entries for {geneticGeneCount} genes</span>
+          </div>
+          <div className="table-controls">
+            <input
+              type="text"
+              placeholder="Filter table..."
+              value={geneticFilter}
+              onChange={(e) => setGeneticFilter(e.target.value)}
+              className="quick-filter-input"
+            />
+          </div>
+
+          <div className="ag-theme-alpine interaction-table" style={{ height: getTableHeight(geneticRows.length, 1000), width: '100%' }}>
+            <AgGridReact
+              rowData={geneticRows}
+              columnDefs={geneticColumnDefs}
+              defaultColDef={defaultColDef}
+              quickFilterText={geneticFilter}
+              pagination={true}
+              paginationPageSize={10}
+              paginationPageSizeSelector={[10, 25, 50]}
+              domLayout="normal"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Orthology-inferred interactions (from the C. albicans ortholog) */}
+      {inferredInteractions.length > 0 && (
+        <div className="interaction-section" style={{ marginTop: '2rem' }}>
+          <div className="section-header-row">
+            <h3>Interactions inferred from the C. albicans ortholog</h3>
+            <span className="section-entry-count">{inferredInteractions.length} inferred</span>
+          </div>
+          <p className="string-source-note">
+            <strong>Predicted, not curated.</strong> Each row is a curated{' '}
+            <em>C. albicans</em> interaction transferred across CGD orthologs: the
+            C. albicans ortholog of this gene interacts with the C. albicans gene shown
+            under &quot;C. albicans evidence&quot;, whose ortholog in this species is the
+            listed interactor. Confidence depends on the ortholog method and on interaction
+            conservation between species.
+          </p>
+          <div className="table-controls">
+            <input
+              type="text"
+              placeholder="Filter table..."
+              value={inferredFilter}
+              onChange={(e) => setInferredFilter(e.target.value)}
+              className="quick-filter-input"
+            />
+          </div>
+          <div className="ag-theme-alpine interaction-table" style={{ height: getTableHeight(inferredInteractions.length), width: '100%' }}>
+            <AgGridReact
+              rowData={inferredInteractions}
+              columnDefs={inferredColumnDefs}
+              defaultColDef={defaultColDef}
+              quickFilterText={inferredFilter}
+              pagination={true}
+              paginationPageSize={10}
+              paginationPageSizeSelector={[10, 25, 50]}
+              domLayout="normal"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Interaction Network - shows all interaction types */}
+      {(totalInteractions > 0 || stringInteractions.length > 0) && (
+        <InteractionNetwork
+          networkData={networkData?.results?.[currentOrganism]}
+          loading={networkLoading}
+          locusName={orgData?.locus_display_name}
+        />
+      )}
+
+      {/* Export & Analyze the interaction partners (CGD GO + Phenotype enrichment) */}
+      {interactorGenes.length > 0 && (
+        <div className="interaction-section" style={{ marginTop: '2rem' }}>
+          <div className="similar-genes-export-toolbar">
+            <span className="export-label">Export ({interactorGenes.length} genes):</span>
+            <button className="export-btn" onClick={handleCopyGeneList} title="Copy interactor gene names to clipboard">
+              {copyFeedback === 'copied' ? 'Copied!' : copyFeedback === 'error' ? 'Error' : 'Copy'}
+            </button>
+            <button className="export-btn" onClick={handleDownloadGeneCsv} title="Download interactor gene list as CSV">
+              CSV
+            </button>
+            <span className="export-separator">|</span>
+            <span className="export-label">Analyze:</span>
+            <button
+              className="export-btn analyze-btn"
+              onClick={handleGoEnrichment}
+              disabled={goEnrichment.loading || !organismNo}
+              title="Find enriched GO terms among the interaction partners"
+            >
+              {goEnrichment.loading ? 'Analyzing…' : 'GO Enrich'}
+            </button>
+            <label className="manual-only-toggle" title="Exclude computational annotations (IEA, ISO, etc.) from GO enrichment">
+              <input type="checkbox" checked={goManualOnly} onChange={(e) => setGoManualOnly(e.target.checked)} />
+              <span>Manual only</span>
+            </label>
+            <button
+              className="export-btn analyze-btn"
+              onClick={handlePhenotypeEnrichment}
+              disabled={phenoEnrichment.loading || !organismNo}
+              title="Find enriched phenotypes among the interaction partners"
+            >
+              {phenoEnrichment.loading ? 'Analyzing…' : 'Phenotype'}
+            </button>
+            <span className="export-separator">|</span>
+            <span className="export-label">GO Tools:</span>
+            <a href="/go-term-finder" target="_blank" rel="noopener noreferrer"
+               className="export-btn analyze-link" onClick={handleAnalyzeGeneList}
+               title="Open GO Term Finder in a new tab">Term Finder ↗</a>
+            <a href="/go-slim-mapper" target="_blank" rel="noopener noreferrer"
+               className="export-btn analyze-link" onClick={handleAnalyzeGeneList}
+               title="Open GO Slim Mapper in a new tab">Slim Mapper ↗</a>
+          </div>
+
+          {/* GO Enrichment results */}
+          {goEnrichment.show && (
+            <div style={{ marginTop: '14px' }}>
+              <h4 className="enrichment-subhead">GO Enrichment</h4>
+              {goEnrichment.loading && <div className="loading">Running GO enrichment…</div>}
+              {goEnrichment.error && <div className="error">{goEnrichment.error}</div>}
+              {!goEnrichment.loading && !goEnrichment.error && (
+                goRows.length === 0
+                  ? <p className="no-data">No significantly enriched GO terms found.</p>
+                  : <NetworkEnrichmentTable rows={goRows} showCategory showFold pageSize={10} />
+              )}
+            </div>
+          )}
+
+          {/* Phenotype Enrichment results */}
+          {phenoEnrichment.show && (
+            <div style={{ marginTop: '14px' }}>
+              <h4 className="enrichment-subhead">Phenotype Enrichment</h4>
+              {phenoEnrichment.loading && <div className="loading">Running phenotype enrichment…</div>}
+              {phenoEnrichment.error && <div className="error">{phenoEnrichment.error}</div>}
+              {!phenoEnrichment.loading && !phenoEnrichment.error && (
+                phenoRows.length === 0
+                  ? <p className="no-data">No significantly enriched phenotypes found.</p>
+                  : <NetworkEnrichmentTable rows={phenoRows} showCategory={false} showFold pageSize={10} />
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Predicted Functional Associations from STRING */}
+      {stringInteractions.length > 0 && (
+        <div className="interaction-section" style={{ marginTop: '2rem' }}>
+          <div className="section-header-row">
+            <h3>Predicted Functional Associations from STRING</h3>
+            <span className="section-entry-count">{stringInteractions.length} associations</span>
+          </div>
+          <p className="string-source-note">
+            These are predicted protein-protein functional associations from{' '}
+            <a href="https://string-db.org/" target="_blank" rel="noopener noreferrer">STRING</a>.
+            They may include physical interactions, pathway relationships, co-expression, text-mining associations,
+            and other evidence types. Higher-confidence associations are shown in the network above.
+          </p>
+
+          <button
+            className="string-toggle-btn"
+            onClick={() => setShowStringTable(!showStringTable)}
+          >
+            {showStringTable ? '▼ Hide STRING evidence scores' : '▶ Show STRING evidence scores'}
+          </button>
+
+          {showStringTable && (
+            <>
+              <div className="table-controls" style={{ marginTop: '10px' }}>
+                <input
+                  type="text"
+                  placeholder="Filter table..."
+                  value={stringFilter}
+                  onChange={(e) => setStringFilter(e.target.value)}
+                  className="quick-filter-input"
+                />
+              </div>
+
+              <div className="ag-theme-alpine interaction-table" style={{ height: getTableHeight(stringInteractions.length, 550, 42), width: '100%' }}>
+                <AgGridReact
+                  rowData={stringInteractions}
+                  columnDefs={stringColumnDefs}
+                  defaultColDef={defaultColDef}
+                  quickFilterText={stringFilter}
+                  pagination={true}
+                  paginationPageSize={10}
+                  paginationPageSizeSelector={[10, 25, 50]}
+                  domLayout="normal"
+                />
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+
+      {/* Functional Enrichment of the STRING network */}
+      {stringInteractions.length > 0 && (
+        <div className="interaction-section" style={{ marginTop: '2rem' }}>
+          <div className="section-header-row">
+            <h3>Functional Enrichment of Network (STRING)</h3>
+          </div>
+          <p className="string-source-note">
+            GO terms and pathways over-represented among {orgData.locus_display_name}&apos;s{' '}
+            <a href="https://string-db.org/" target="_blank" rel="noopener noreferrer">STRING</a>{' '}
+            network partners &mdash; i.e. the functions this gene&apos;s neighborhood is enriched for.
+          </p>
+
+          <button className="string-toggle-btn" onClick={handleToggleEnrichment}>
+            {showEnrichment ? '▼ Hide functional enrichment' : '▶ Show functional enrichment'}
+          </button>
+
+          {showEnrichment && (
+            <div style={{ marginTop: '10px' }}>
+              {enrichmentLoading && <div className="loading">Computing enrichment…</div>}
+              {enrichmentError && <div className="error">{enrichmentError}</div>}
+              {!enrichmentLoading && !enrichmentError && (
+                !orgEnrichment || orgEnrichment.terms.length === 0 ? (
+                  <p className="no-data">No significant functional enrichment found.</p>
+                ) : (
+                  <>
+                    <p className="section-entry-count" style={{ marginBottom: '8px' }}>
+                      {orgEnrichment.terms.length} enriched terms across {orgEnrichment.network_size} network genes
+                    </p>
+                    <NetworkEnrichmentTable
+                      rows={orgEnrichment.terms.map((t, i) => ({
+                        key: `st-${i}`,
+                        category: t.category_label,
+                        description: t.description,
+                        termId: t.term,
+                        count: t.genes,
+                        fold: null,
+                        fdr: t.fdr,
+                        genes: t.gene_list || [],
+                      }))}
+                      showCategory
+                      showFold={false}
+                    />
+                  </>
+                )
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Resources Section */}
+      <div className="interaction-section" style={{ marginTop: '2.5rem' }}>
+        <h3 style={{ marginBottom: 0, paddingBottom: '6px' }}>Resources</h3>
+        <div className="interaction-resources" style={{ marginTop: '4px' }}>
+          <a href="https://thebiogrid.org/" target="_blank" rel="noopener noreferrer">BioGRID</a>
+          {' | '}
+          <a href="https://string-db.org/" target="_blank" rel="noopener noreferrer">STRING</a>
+        </div>
+      </div>
     </div>
   );
 }
