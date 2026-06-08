@@ -40,8 +40,8 @@ const NEWS_ITEMS = [
         associations together in one view, with an area-proportional Venn diagram showing how
         interaction partners overlap across these sources. Click any region of the diagram to
         list the genes it contains, each linking to its locus page. For species without curated
-        interactions, the tab also surfaces interactions inferred from <em>C. albicans</em>{' '}
-        orthologs.
+        interactions, the tool displays computational predictions for interactions based on
+        orthologs in <em>C. albicans</em>.
         <p></p>
         <strong>Note:</strong> STRING and orthology-inferred interactions are computational
         predictions, not manually curated.
