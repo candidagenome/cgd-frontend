@@ -33,6 +33,26 @@ const MEETINGS = [
 // News items
 const NEWS_ITEMS = [
   {
+    title: 'New: Enhanced Interactions Tab (Preview)',
+    content: (
+      <>
+        The Interactions tab on gene pages now brings physical, genetic, and STRING
+        associations together in one view, with an area-proportional Venn diagram showing how
+        interaction partners overlap across these sources. Click any region of the diagram to
+        list the genes it contains, each linking to its locus page. For species without curated
+        interactions, the tab also surfaces interactions inferred from <em>C. albicans</em>{' '}
+        orthologs.
+        <p></p>
+        <strong>Note:</strong> STRING and orthology-inferred interactions are computational
+        predictions, not manually curated.
+        <br /><br />
+        <Link to="/locus/HOG1?tab=interactions">Try it on HOG1 and share your thoughts</Link>
+      </>
+    ),
+    date: 'June 2026',
+    highlight: true,
+  },
+  {
     title: 'New: CRISPR Guide RNA Designer (Preview)',
     content: (
       <>
