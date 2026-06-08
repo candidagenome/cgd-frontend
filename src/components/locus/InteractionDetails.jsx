@@ -727,6 +727,33 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
           /* Curated interactions exist: the multi-set Physical/Genetic/STRING
              overlap Venn is meaningful. */
           <div className="interaction-summary-viz">
+            {selectedRegion && vennData.regionGenes[selectedRegion] && (
+              <div className="venn-region-genes">
+                <div className="venn-region-genes-header">
+                  <strong>
+                    {vennData.regionGenes[selectedRegion].label}
+                    {' '}({vennData.regionGenes[selectedRegion].genes.length})
+                  </strong>
+                  <button
+                    type="button"
+                    className="venn-region-genes-close"
+                    aria-label="Close gene list"
+                    onClick={() => setSelectedRegion(null)}
+                  >
+                    ×
+                  </button>
+                </div>
+                <div className="venn-region-genes-list">
+                  {vennData.regionGenes[selectedRegion].genes.map((g, idx) => (
+                    g.feature ? (
+                      <Link key={`${g.feature}-${idx}`} to={`/locus/${g.feature}`}>{g.name}</Link>
+                    ) : (
+                      <span key={`${g.name}-${idx}`}>{g.name}</span>
+                    )
+                  ))}
+                </div>
+              </div>
+            )}
             {vennLayout && (
               <svg
                 className="interaction-venn"
@@ -792,33 +819,6 @@ function InteractionDetails({ data, networkData, loading, networkLoading, error,
               )}
             </div>
             <p className="venn-caption">Counts are interactor genes; overlaps are genes shared between interaction types. Click a count to list its genes.</p>
-            {selectedRegion && vennData.regionGenes[selectedRegion] && (
-              <div className="venn-region-genes">
-                <div className="venn-region-genes-header">
-                  <strong>
-                    {vennData.regionGenes[selectedRegion].label}
-                    {' '}({vennData.regionGenes[selectedRegion].genes.length})
-                  </strong>
-                  <button
-                    type="button"
-                    className="venn-region-genes-close"
-                    aria-label="Close gene list"
-                    onClick={() => setSelectedRegion(null)}
-                  >
-                    ×
-                  </button>
-                </div>
-                <div className="venn-region-genes-list">
-                  {vennData.regionGenes[selectedRegion].genes.map((g, idx) => (
-                    g.feature ? (
-                      <Link key={`${g.feature}-${idx}`} to={`/locus/${g.feature}`}>{g.name}</Link>
-                    ) : (
-                      <span key={`${g.name}-${idx}`}>{g.name}</span>
-                    )
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
         ) : (stringInteractions.length > 0 || inferredInteractions.length > 0) ? (
           /* No curated interactions (e.g. non-C. albicans species): a Venn would
