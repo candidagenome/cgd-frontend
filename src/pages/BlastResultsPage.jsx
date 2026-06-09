@@ -480,6 +480,19 @@ function BlastResultsPage() {
                                   <strong>Frame:</strong> {hsp.query_frame}
                                 </span>
                               )}
+                              {(hsp.hit_end < hsp.hit_start ||
+                                hsp.query_end < hsp.query_start) && (
+                                <span>
+                                  <strong>Strand:</strong>{' '}
+                                  {hsp.query_end >= hsp.query_start
+                                    ? 'Plus'
+                                    : 'Minus'}
+                                  /
+                                  {hsp.hit_end >= hsp.hit_start
+                                    ? 'Plus'
+                                    : 'Minus'}
+                                </span>
+                              )}
                             </div>
 
                             <pre className="alignment-block">
@@ -508,15 +521,27 @@ function formatAlignment(hsp, chunkSize = 60) {
   const hitSeq = hsp.hit_seq;
   const midline = hsp.midline;
 
+  // Coordinates run in the direction of each strand: BLAST reports from > to
+  // for a minus-strand (Crick) match, so that coordinate must count DOWN, not
+  // up. Gap characters ('-') do not consume a residue position.
+  const qDir = hsp.query_end >= hsp.query_start ? 1 : -1;
+  const sDir = hsp.hit_end >= hsp.hit_start ? 1 : -1;
+  let qPos = hsp.query_start;
+  let sPos = hsp.hit_start;
+
   for (let i = 0; i < querySeq.length; i += chunkSize) {
     const qChunk = querySeq.substring(i, i + chunkSize);
     const mChunk = midline.substring(i, i + chunkSize);
     const sChunk = hitSeq.substring(i, i + chunkSize);
 
-    const qStart = hsp.query_start + i;
-    const qEnd = qStart + qChunk.replace(/-/g, '').length - 1;
-    const sStart = hsp.hit_start + i;
-    const sEnd = sStart + sChunk.replace(/-/g, '').length - 1;
+    const qResidues = qChunk.replace(/-/g, '').length;
+    const sResidues = sChunk.replace(/-/g, '').length;
+    const qStart = qPos;
+    const qEnd = qResidues ? qPos + qDir * (qResidues - 1) : qPos;
+    const sStart = sPos;
+    const sEnd = sResidues ? sPos + sDir * (sResidues - 1) : sPos;
+    qPos += qDir * qResidues;
+    sPos += sDir * sResidues;
 
     lines.push(`Query  ${String(qStart).padStart(7)}  ${qChunk}  ${qEnd}`);
     lines.push(`       ${' '.repeat(7)}  ${mChunk}`);
