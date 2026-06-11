@@ -65,14 +65,14 @@ export const locusCurationApi = {
    * @param {number} featureNo - Feature number
    * @param {string} aliasName - Alias name
    * @param {string} [aliasType='Uniform'] - Alias type
-   * @param {number} [referenceNo] - Optional reference number
+   * @param {number} [pmid] - Optional PubMed ID to cite
    * @returns {Promise<{id: number, message: string}>}
    */
-  addAlias: async (featureNo, aliasName, aliasType = 'Uniform', referenceNo = null) => {
+  addAlias: async (featureNo, aliasName, aliasType = 'Uniform', pmid = null) => {
     const response = await api.post(`/api/curation/locus/${featureNo}/alias`, {
       alias_name: aliasName,
       alias_type: aliasType,
-      reference_no: referenceNo,
+      pmid,
     });
     return response.data;
   },

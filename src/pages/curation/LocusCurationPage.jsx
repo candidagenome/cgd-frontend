@@ -73,7 +73,7 @@ function LocusCurationPage() {
   const [showAddAlias, setShowAddAlias] = useState(false);
   const [showAddNote, setShowAddNote] = useState(false);
 
-  const [newAlias, setNewAlias] = useState({ alias_name: '', alias_type: 'Uniform', reference_no: '' });
+  const [newAlias, setNewAlias] = useState({ alias_name: '', alias_type: 'Uniform', pmid: '' });
   const [newNote, setNewNote] = useState({ note_type: '', note_text: '' });
 
   // Load feature details
@@ -194,11 +194,11 @@ function LocusCurationPage() {
         featureData.feature_no,
         newAlias.alias_name,
         newAlias.alias_type,
-        newAlias.reference_no ? parseInt(newAlias.reference_no, 10) : null
+        newAlias.pmid ? parseInt(newAlias.pmid, 10) : null
       );
       setSuccessMessage('Alias added');
       setShowAddAlias(false);
-      setNewAlias({ alias_name: '', alias_type: 'Uniform', reference_no: '' });
+      setNewAlias({ alias_name: '', alias_type: 'Uniform', pmid: '' });
       loadFeature(featureData.feature_no);
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
@@ -664,13 +664,13 @@ function LocusCurationPage() {
                   </select>
                 </div>
                 <div style={styles.formRow}>
-                  <label style={styles.formLabelSmall}>Reference #:</label>
+                  <label style={styles.formLabelSmall}>PMID:</label>
                   <input
                     type="number"
-                    value={newAlias.reference_no}
-                    onChange={(e) => setNewAlias({ ...newAlias, reference_no: e.target.value })}
+                    value={newAlias.pmid}
+                    onChange={(e) => setNewAlias({ ...newAlias, pmid: e.target.value })}
                     style={styles.formInput}
-                    placeholder="Optional"
+                    placeholder="Optional PubMed ID"
                   />
                 </div>
                 <button type="submit" style={styles.submitButton}>Add Alias</button>
