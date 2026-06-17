@@ -66,9 +66,52 @@ function BlastResultsPage() {
     return '#000000';                         // Black - very weak
   };
 
-  // Go back to search
+  // Go back to search (empty form)
   const goToSearch = () => {
     navigate('/blast');
+  };
+
+  // Go back to search with the same parameters pre-filled. The search page
+  // restores every field from URL query params (see updateUrlParams in
+  // BlastSearchPage), so we rebuild that query string from the stored params.
+  const searchAgainSameParams = () => {
+    if (!params) {
+      goToSearch();
+      return;
+    }
+
+    const sp = new URLSearchParams();
+
+    if (params.sequence) {
+      sp.set('qtype', 'sequence');
+      sp.set('seq', params.sequence);
+    } else if (params.locus) {
+      sp.set('qtype', 'locus');
+      sp.set('locus', params.locus);
+      if (params.locus_organism) sp.set('locus_organism', params.locus_organism);
+    }
+
+    if (params.program) sp.set('program', params.program);
+    if (Array.isArray(params.genomes) && params.genomes.length > 0) {
+      sp.set('genomes', params.genomes.join(','));
+    }
+    if (params.dataset_type) sp.set('dataset', params.dataset_type);
+    if (params.evalue != null) sp.set('evalue', String(params.evalue));
+    if (params.max_hits != null) sp.set('hits', String(params.max_hits));
+    if (params.low_complexity_filter === false) sp.set('filter', 'false');
+    if (params.word_size != null) sp.set('word', String(params.word_size));
+    if (params.matrix) sp.set('matrix', params.matrix);
+    if (params.strand && params.strand !== 'both') sp.set('strand', params.strand);
+    if (params.task) sp.set('task', params.task);
+    if (params.query_gencode != null) sp.set('query_gencode', String(params.query_gencode));
+    if (params.db_gencode != null) sp.set('db_gencode', String(params.db_gencode));
+    if (params.reward != null && params.penalty != null) {
+      sp.set('scoring', `${params.reward},${params.penalty}`);
+    }
+    if (params.ungapped) sp.set('ungapped', 'true');
+    if (params.query_comment) sp.set('comment', params.query_comment);
+
+    navigate(`/blast?${sp.toString()}`);
   };
 
   // Download results in specified format
@@ -165,6 +208,9 @@ function BlastResultsPage() {
               </div>
             </div>
             <div className="summary-actions">
+              <button onClick={searchAgainSameParams} className="same-params-button">
+                Search Again (Same Parameters)
+              </button>
               <button onClick={goToSearch} className="new-search-button">
                 New Search
               </button>
