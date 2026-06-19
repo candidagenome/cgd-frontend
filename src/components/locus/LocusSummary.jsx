@@ -419,25 +419,40 @@ function LocusSummary({
           vfbCategories.map((c) => `categories=${encodeURIComponent(c)}`).join('&') +
           `&search=${encodeURIComponent(displayGene)}`;
 
+        // Gene name appears once in the label; the links themselves stay short.
+        const tools = [];
+        if (feature.crispr_available) {
+          tools.push(
+            <Link key="crispr" className="related-tool-link" to={crisprHref}>
+              Design CRISPR guides
+            </Link>
+          );
+        }
+        if (feature.ortholog_count > 0) {
+          tools.push(
+            <Link key="ortholog" className="related-tool-link" to={orthologHref}>
+              Find orthologs in other species
+            </Link>
+          );
+        }
+        tools.push(
+          <Link key="vfb" className="related-tool-link" to={vfbHref}>
+            Search virulence factor evidence
+          </Link>
+        );
+
         return (
           <div className="related-tools-bar">
             <span className="related-tools-label">
               Related tools for <em>{displayGene}</em>:
             </span>
             <span className="related-tools-links">
-              {feature.crispr_available && (
-                <Link className="related-tool-link" to={crisprHref}>
-                  Design CRISPR guides for <em>{displayGene}</em>
-                </Link>
-              )}
-              {feature.ortholog_count > 0 && (
-                <Link className="related-tool-link" to={orthologHref}>
-                  Find <em>{displayGene}</em> orthologs in other species
-                </Link>
-              )}
-              <Link className="related-tool-link" to={vfbHref}>
-                Search <em>{displayGene}</em> in the Virulence Factor Browser
-              </Link>
+              {tools.map((link, idx) => (
+                <React.Fragment key={link.key}>
+                  {idx > 0 && <span className="related-tools-sep"> | </span>}
+                  {link}
+                </React.Fragment>
+              ))}
             </span>
           </div>
         );

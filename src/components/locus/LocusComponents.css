@@ -2900,49 +2900,36 @@ a:hover {
 }
 
 /* ===== ADDITIONAL INFORMATION Section ===== */
-/* ===== Related Tools action bar ===== */
+/* ===== Related Tools toolbar ===== */
 .related-tools-bar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 12px;
-  margin-bottom: 18px;
-  padding: 10px 14px;
-  background-color: #f5f5f5;
-  border-radius: 6px;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  font-size: 0.9em;
+  line-height: 1.6;
 }
 
 .related-tools-label {
-  font-weight: bold;
-  color: #333;
-  font-size: 0.9em;
+  font-weight: 600;
+  color: #555;
+  margin-right: 6px;
 }
 
-.related-tools-label em,
-.related-tool-link em {
+.related-tools-label em {
   font-style: italic;
 }
 
-.related-tools-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
 .related-tool-link {
-  display: inline-block;
-  padding: 6px 14px;
-  background-color: #e3f2fd;
-  color: #1565c0;
+  color: #1976d2;
   text-decoration: none;
-  border-radius: 4px;
-  font-size: 0.9em;
-  transition: background-color 0.2s;
 }
 
 .related-tool-link:hover {
-  background-color: #bbdefb;
-  text-decoration: none;
+  text-decoration: underline;
+}
+
+.related-tools-sep {
+  color: #bbb;
 }
 
 .additional-info-section {
