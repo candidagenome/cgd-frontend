@@ -257,18 +257,24 @@ function ReferencePage() {
     );
   };
 
-  // Render the note explaining the colored balls
-  const renderNote = () => (
+  // Render the note explaining the colored balls. The gene-specific items
+  // (blue marker and "click on the gene name") are hidden when the paper has
+  // no genes, since there are no blue markers or gene names to explain.
+  const renderNote = (showGeneItems = true) => (
     <div className="topics-note">
       <ul>
-        <li>
-          <span className="topic-marker gene-marker">●</span> displays other papers with information about that topic for that gene.
-        </li>
+        {showGeneItems && (
+          <li>
+            <span className="topic-marker gene-marker">●</span> displays other papers with information about that topic for that gene.
+          </li>
+        )}
         <li>
           <span className="topic-marker non-gene-marker">●</span> displays other papers in CGD that are associated with that topic.
           The topic is addressed in these papers but does not describe a specific gene or chromosomal feature.
         </li>
-        <li>To go to the Locus page for a gene, click on the gene name.</li>
+        {showGeneItems && (
+          <li>To go to the Locus page for a gene, click on the gene name.</li>
+        )}
       </ul>
     </div>
   );
@@ -359,7 +365,7 @@ function ReferencePage() {
           )}
 
           {/* Render note */}
-          {(geneLinkedTopics.length > 0 || nonGeneTopics.length > 0) && renderNote()}
+          {(geneLinkedTopics.length > 0 || nonGeneTopics.length > 0) && renderNote(numGenes > 0)}
 
           {/* Render tables based on number of genes */}
           {numGenes > GENES_PER_TABLE ? (
