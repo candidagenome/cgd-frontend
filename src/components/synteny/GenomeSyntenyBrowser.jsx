@@ -2,9 +2,13 @@ import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as d3 from 'd3';
 import { locusApi } from '../../api/locusApi';
-import { SPECIES_ORDER, SPECIES_ABBREV } from '../../constants/organisms';
+import { SPECIES_ORDER, SPECIES_ABBREV, EXTERNAL_REFERENCE_SPECIES } from '../../constants/organisms';
 import GeneSearch from './GeneSearch';
 import './GenomeSyntenyBrowser.css';
+
+// Track display order: external reference species (e.g. S. cerevisiae) render
+// above the Candida group, which follows phylogenetic order.
+const DISPLAY_ORDER = [...EXTERNAL_REFERENCE_SPECIES, ...SPECIES_ORDER];
 
 // Color scheme for synteny visualization - Sybil-inspired style
 const COLORS = {
@@ -206,7 +210,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
     // Filter to visible species
     const visibleRegions = Object.entries(regions)
       .filter(([sp]) => visibleSpecies[sp])
-      .sort(([a], [b]) => SPECIES_ORDER.indexOf(a) - SPECIES_ORDER.indexOf(b))
+      .sort(([a], [b]) => DISPLAY_ORDER.indexOf(a) - DISPLAY_ORDER.indexOf(b))
       .map(([sp, region]) => ({ species: sp, ...region }));
 
     if (visibleRegions.length === 0) return;
@@ -1217,17 +1221,34 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
       {/* Species filter */}
       {allSpecies.length > 0 && (
         <div className="species-filter">
-          <span className="filter-label">Show species:</span>
-          {SPECIES_ORDER.filter(org => allSpecies.includes(org)).map(org => (
-            <label key={org} className="species-checkbox">
-              <input
-                type="checkbox"
-                checked={visibleSpecies[org] || false}
-                onChange={() => toggleSpecies(org)}
-              />
-              <span style={{ fontStyle: 'italic' }}>{SPECIES_ABBREV[org] || org}</span>
-            </label>
-          ))}
+          {EXTERNAL_REFERENCE_SPECIES.some(org => allSpecies.includes(org)) && (
+            <span className="species-filter-group reference-group">
+              <span className="filter-label">External reference:</span>
+              {EXTERNAL_REFERENCE_SPECIES.filter(org => allSpecies.includes(org)).map(org => (
+                <label key={org} className="species-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={visibleSpecies[org] || false}
+                    onChange={() => toggleSpecies(org)}
+                  />
+                  <span style={{ fontStyle: 'italic' }}>{SPECIES_ABBREV[org] || org}</span>
+                </label>
+              ))}
+            </span>
+          )}
+          <span className="species-filter-group">
+            <span className="filter-label">Show species:</span>
+            {SPECIES_ORDER.filter(org => allSpecies.includes(org)).map(org => (
+              <label key={org} className="species-checkbox">
+                <input
+                  type="checkbox"
+                  checked={visibleSpecies[org] || false}
+                  onChange={() => toggleSpecies(org)}
+                />
+                <span style={{ fontStyle: 'italic' }}>{SPECIES_ABBREV[org] || org}</span>
+              </label>
+            ))}
+          </span>
         </div>
       )}
 
@@ -1245,6 +1266,14 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
           <div className="query-hint">
             Genes are aligned by orthologous relationships, not exact genomic position. Gene sizes are drawn to a consistent scale across species.
           </div>
+          {EXTERNAL_REFERENCE_SPECIES.some(org => syntenyData.synteny_regions?.[org]) && (
+            <div className="query-hint reference-hint">
+              <em>S. cerevisiae</em> is shown as an external reference (data from SGD).
+              Because the Candida (CTG) clade diverged from <em>S. cerevisiae</em> before
+              the whole-genome duplication, conserved gene order is limited — expect only
+              a few orthology links rather than a colinear block.
+            </div>
+          )}
         </div>
       )}
 
@@ -1444,27 +1473,31 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
 
               <div className="gene-popup-links">
                 <a
-                  href={`/locus/${encodeURIComponent(selectedGene.feature_name)}`}
+                  href={selectedGene.external_url || `/locus/${encodeURIComponent(selectedGene.feature_name)}`}
                   className="gene-popup-link primary"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  View Locus Page
+                  {selectedGene.external_url ? 'View SGD Page' : 'View Locus Page'}
                 </a>
               </div>
 
-              <div className="gene-popup-actions">
-                <button
-                  type="button"
-                  className="gene-popup-action secondary"
-                  onClick={() => {
-                    loadSyntenyData(selectedGene.gene_name || selectedGene.feature_name);
-                    closeGenePopup();
-                  }}
-                >
-                  Set as Query Gene
-                </button>
-              </div>
+              {/* External reference genes (e.g. S. cerevisiae) live in SGD, not
+                  CGD, so they cannot be set as the CGD query gene. */}
+              {!selectedGene.external_url && (
+                <div className="gene-popup-actions">
+                  <button
+                    type="button"
+                    className="gene-popup-action secondary"
+                    onClick={() => {
+                      loadSyntenyData(selectedGene.gene_name || selectedGene.feature_name);
+                      closeGenePopup();
+                    }}
+                  >
+                    Set as Query Gene
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -377,6 +377,24 @@
   flex-wrap: wrap;
 }
 
+.species-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* External reference (S. cerevisiae) group, set apart from the Candida group */
+.species-filter-group.reference-group {
+  padding-right: 12px;
+  margin-right: 4px;
+  border-right: 1px solid #ddd;
+}
+
+.species-filter-group.reference-group .filter-label {
+  color: #8a6d3b;
+}
+
 .filter-label {
   font-weight: 500;
   color: #666;
