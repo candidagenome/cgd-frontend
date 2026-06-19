@@ -947,15 +947,17 @@ function LocusSummary({
             <tr className="expression-section-header section-with-divider section-grey-bg">
               <th>Expression</th>
               <td>
-                <div className="summary-stat-line">
-                  <strong>{fmtInt(expressionData.total_conditions)}</strong>{' '}
-                  {expressionData.total_conditions === 1 ? 'condition' : 'conditions'} across{' '}
-                  <strong>{fmtInt(expressionData.studies?.length || 0)}</strong>{' '}
-                  {(expressionData.studies?.length || 0) === 1 ? 'study' : 'studies'}
+                <div className="summary-inline-row">
+                  <span className="summary-stat-line">
+                    <strong>{fmtInt(expressionData.total_conditions)}</strong>{' '}
+                    {expressionData.total_conditions === 1 ? 'condition' : 'conditions'} across{' '}
+                    <strong>{fmtInt(expressionData.studies?.length || 0)}</strong>{' '}
+                    {(expressionData.studies?.length || 0) === 1 ? 'study' : 'studies'}
+                  </span>
+                  <a className="summary-tab-link" href={`?tab=expression`}>
+                    View all <em>{feature.gene_name || feature.feature_name}</em> expression data
+                  </a>
                 </div>
-                <a href={`?tab=expression`}>
-                  View all <em>{feature.gene_name || feature.feature_name}</em> expression data
-                </a>
               </td>
             </tr>
           ) : null}
@@ -984,14 +986,16 @@ function LocusSummary({
               <tr className="interaction-section-header section-with-divider section-grey-bg">
                 <th>Interactions</th>
                 <td>
-                  <div className="summary-stat-line">
-                    <strong>{fmtInt(physical)}</strong> physical and{' '}
-                    <strong>{fmtInt(genetic)}</strong> genetic{' '}
-                    {interactions.length === 1 ? 'interaction' : 'interactions'}
+                  <div className="summary-inline-row">
+                    <span className="summary-stat-line">
+                      <strong>{fmtInt(physical)}</strong> physical and{' '}
+                      <strong>{fmtInt(genetic)}</strong> genetic{' '}
+                      {interactions.length === 1 ? 'interaction' : 'interactions'}
+                    </span>
+                    <a className="summary-tab-link" href={`?tab=interactions`}>
+                      View all <em>{feature.gene_name || feature.feature_name}</em> interactions
+                    </a>
                   </div>
-                  <a href={`?tab=interactions`}>
-                    View all <em>{feature.gene_name || feature.feature_name}</em> interactions
-                  </a>
                 </td>
               </tr>
             );
