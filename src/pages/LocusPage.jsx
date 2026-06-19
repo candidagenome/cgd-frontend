@@ -207,6 +207,10 @@ function LocusPage() {
                 phenotypeLoading={loading.phenotypeDetails}
                 sequenceData={data.sequenceDetails?.results?.[selectedOrganism]}
                 sequenceLoading={loading.sequenceDetails}
+                expressionData={data.expressionDetails?.results?.[selectedOrganism]}
+                expressionLoading={loading.expressionDetails}
+                interactionData={data.interactionDetails?.results?.[selectedOrganism]}
+                interactionLoading={loading.interactionDetails}
               />
             )}
           </div>

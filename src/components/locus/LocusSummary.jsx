@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import './LocusComponents.css';
 import { renderCitationItem } from '../../utils/formatCitation.jsx';
 import SyntenySummary from '../synteny/SyntenySummary';
+import { GENETIC_TYPES } from './InteractionDetails';
 
 function LocusSummary({
   data,
@@ -13,6 +14,10 @@ function LocusSummary({
   phenotypeLoading,
   sequenceData,
   sequenceLoading,
+  expressionData,
+  expressionLoading,
+  interactionData,
+  interactionLoading,
 }) {
   const [showJBrowseViewer, setShowJBrowseViewer] = useState(true); // Show JBrowse viewer by default
 
@@ -929,6 +934,68 @@ function LocusSummary({
               })}
             </>
           ) : null}
+
+          {/* Expression */}
+          {expressionLoading ? (
+            <tr className="section-with-divider section-grey-bg">
+              <th>Expression</th>
+              <td>
+                <em>Loading expression data...</em>
+              </td>
+            </tr>
+          ) : expressionData && expressionData.total_conditions > 0 ? (
+            <tr className="expression-section-header section-with-divider section-grey-bg">
+              <th>Expression</th>
+              <td>
+                <div className="summary-stat-line">
+                  <strong>{fmtInt(expressionData.total_conditions)}</strong>{' '}
+                  {expressionData.total_conditions === 1 ? 'condition' : 'conditions'} across{' '}
+                  <strong>{fmtInt(expressionData.studies?.length || 0)}</strong>{' '}
+                  {(expressionData.studies?.length || 0) === 1 ? 'study' : 'studies'}
+                </div>
+                <a href={`?tab=expression`}>
+                  View all <em>{feature.gene_name || feature.feature_name}</em> expression data
+                </a>
+              </td>
+            </tr>
+          ) : null}
+
+          {/* Interactions */}
+          {interactionLoading ? (
+            <tr className="section-with-divider section-grey-bg">
+              <th>Interactions</th>
+              <td>
+                <em>Loading interaction data...</em>
+              </td>
+            </tr>
+          ) : (() => {
+            const interactions = interactionData?.interactions || [];
+            if (interactions.length === 0) return null;
+            let physical = 0;
+            let genetic = 0;
+            interactions.forEach((i) => {
+              if (GENETIC_TYPES.has(i.experiment_type)) {
+                genetic += 1;
+              } else {
+                physical += 1;
+              }
+            });
+            return (
+              <tr className="interaction-section-header section-with-divider section-grey-bg">
+                <th>Interactions</th>
+                <td>
+                  <div className="summary-stat-line">
+                    <strong>{fmtInt(physical)}</strong> physical and{' '}
+                    <strong>{fmtInt(genetic)}</strong> genetic{' '}
+                    {interactions.length === 1 ? 'interaction' : 'interactions'}
+                  </div>
+                  <a href={`?tab=interactions`}>
+                    View all <em>{feature.gene_name || feature.feature_name}</em> interactions
+                  </a>
+                </td>
+              </tr>
+            );
+          })()}
 
           {/* Sequence Information */}
           {sequenceLoading ? (

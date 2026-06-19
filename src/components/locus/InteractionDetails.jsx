@@ -12,7 +12,7 @@ import { venn as vennCompute, normalizeSolution, scaleSolution, computeTextCentr
 import './LocusComponents.css';
 
 // Genetic interaction types (from BioGRID)
-const GENETIC_TYPES = new Set([
+export const GENETIC_TYPES = new Set([
   'Dosage Lethality',
   'Dosage Rescue',
   'Dosage Growth Defect',

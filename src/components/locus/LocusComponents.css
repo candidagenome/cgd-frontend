@@ -2900,6 +2900,12 @@ a:hover {
 }
 
 /* ===== ADDITIONAL INFORMATION Section ===== */
+/* Brief stat line under the Expression / Interactions summary links */
+.summary-stat-line {
+  margin-bottom: 4px;
+  color: #333;
+}
+
 /* ===== Related Tools toolbar ===== */
 .related-tools-bar {
   margin-bottom: 16px;
