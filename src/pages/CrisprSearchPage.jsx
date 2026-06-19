@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import crisprApi from '../api/crisprApi';
 import searchApi from '../api/searchApi';
 import './CrisprSearchPage.css';
@@ -32,6 +32,7 @@ const DEFAULT_ORGANISMS = [
 
 function CrisprSearchPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   // Form state
   const [inputType, setInputType] = useState('gene'); // 'gene' or 'sequence'
@@ -79,6 +80,21 @@ function CrisprSearchPage() {
       }
     };
     loadConfig();
+  }, []);
+
+  // Prefill from URL params (e.g. the locus Summary "Related tools" link).
+  // The gene-preview effect picks up the gene name automatically.
+  useEffect(() => {
+    const gene = searchParams.get('gene');
+    const org = searchParams.get('organism');
+    if (gene) {
+      setInputType('gene');
+      setGeneName(gene);
+    }
+    if (org) {
+      setOrganism(org);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Fetch autocomplete suggestions

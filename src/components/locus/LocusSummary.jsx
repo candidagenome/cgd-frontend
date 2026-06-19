@@ -381,9 +381,56 @@ function LocusSummary({
   const currentMainLocation =
     sequenceData?.locations?.filter((l) => l.is_current)?.[0] || null;
 
+  // Map the JBrowse assembly key to the tag expected by the CRISPR guide designer.
+  const crisprOrganismTags = {
+    C_albicans_SC5314: 'C_albicans_SC5314_A22',
+    C_auris_B8441: 'C_auris_B8441',
+    C_dubliniensis_CD36: 'C_dubliniensis_CD36',
+    C_glabrata_CBS138: 'C_glabrata_CBS138',
+    C_parapsilosis_CDC317: 'C_parapsilosis_CDC317',
+    C_tropicalis_MYA3404: 'C_tropicalis_MYA-3404',
+  };
+
   // ---------- Render ----------
   return (
     <>
+      {/* Related tools: deep links into the CRISPR designer, ortholog converter,
+          and Virulence Factor Browser, prefilled with this gene. CRISPR and
+          ortholog links are gated by flags from the locus endpoint; the
+          Virulence Factor Browser search is always offered. */}
+      {(() => {
+        const displayGene = feature.gene_name || feature.feature_name;
+        const crisprTag = crisprOrganismTags[getAssemblyKey(organismName)] || '';
+        const crisprHref =
+          `/crispr?gene=${encodeURIComponent(displayGene)}` +
+          (crisprTag ? `&organism=${encodeURIComponent(crisprTag)}` : '');
+        const orthologHref = `/ortholog-converter?gene=${encodeURIComponent(displayGene)}`;
+        const vfbHref = `/virulence-factor-browser?search=${encodeURIComponent(displayGene)}`;
+
+        return (
+          <div className="related-tools-bar">
+            <span className="related-tools-label">
+              Related tools for <em>{displayGene}</em>:
+            </span>
+            <span className="related-tools-links">
+              {feature.crispr_available && (
+                <Link className="related-tool-link" to={crisprHref}>
+                  Design CRISPR guides for <em>{displayGene}</em>
+                </Link>
+              )}
+              {feature.ortholog_count > 0 && (
+                <Link className="related-tool-link" to={orthologHref}>
+                  Find <em>{displayGene}</em> orthologs in other species
+                </Link>
+              )}
+              <Link className="related-tool-link" to={vfbHref}>
+                Search <em>{displayGene}</em> in the Virulence Factor Browser
+              </Link>
+            </span>
+          </div>
+        );
+      })()}
+
       <table className="info-table">
         <tbody>
           {/* Standard Name */}

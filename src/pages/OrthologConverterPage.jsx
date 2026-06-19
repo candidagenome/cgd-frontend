@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { orthologApi } from '../api/orthologApi';
 import './OrthologConverterPage.css';
 
@@ -27,6 +27,8 @@ const ORGANISM_DISPLAY_NAMES = {
 const ITEMS_PER_PAGE = 10;
 
 function OrthologConverterPage() {
+  const [searchParams] = useSearchParams();
+
   // State
   const [geneInput, setGeneInput] = useState('');
   const [sourceOrganism, setSourceOrganism] = useState('CGD');
@@ -43,6 +45,16 @@ function OrthologConverterPage() {
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState('asc');
   const [filterText, setFilterText] = useState('');
+
+  // Prefill the gene input from URL params (e.g. the locus Summary
+  // "Related tools" link). Source defaults to CGD species.
+  useEffect(() => {
+    const gene = searchParams.get('gene');
+    if (gene) {
+      setGeneInput(gene);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Reset pagination when results change
   useEffect(() => {
