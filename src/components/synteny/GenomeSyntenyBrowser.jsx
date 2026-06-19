@@ -1297,9 +1297,8 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
           {EXTERNAL_REFERENCE_SPECIES.some(org => syntenyData.synteny_regions?.[org]) && (
             <div className="query-hint reference-hint">
               <em>S. cerevisiae</em> is included as an external reference from SGD.
-              Because it diverged from the Candida CTG clade before whole-genome
-              duplication, conserved gene order may be limited; expect orthology
-              links rather than a fully colinear region.
+              Conserved gene order may be limited, so expect orthology links
+              rather than a fully colinear region.
             </div>
           )}
         </div>
