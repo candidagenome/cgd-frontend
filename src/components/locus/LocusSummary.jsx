@@ -988,8 +988,17 @@ function LocusSummary({
                 <td>
                   <div className="summary-inline-row">
                     <span className="summary-stat-line">
-                      <strong>{fmtInt(physical)}</strong> physical and{' '}
-                      <strong>{fmtInt(genetic)}</strong> genetic{' '}
+                      {physical > 0 && (
+                        <>
+                          <strong>{fmtInt(physical)}</strong> physical
+                        </>
+                      )}
+                      {physical > 0 && genetic > 0 ? ' and ' : ''}
+                      {genetic > 0 && (
+                        <>
+                          <strong>{fmtInt(genetic)}</strong> genetic
+                        </>
+                      )}{' '}
                       {interactions.length === 1 ? 'interaction' : 'interactions'}
                     </span>
                     <a className="summary-tab-link" href={`?tab=interactions`}>
