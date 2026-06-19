@@ -446,6 +446,22 @@
   stroke-width: 2;
 }
 
+/* External-reference row (e.g. S. cerevisiae from SGD) - tinted so it reads
+   as a reference, visually separated from the Candida comparison block. */
+.reference-row-bg {
+  fill: #f4f1fa;  /* subtle lavender tint */
+}
+
+.reference-row-separator {
+  stroke: #d9ceeb;
+  stroke-width: 1;
+  stroke-dasharray: 4 3;
+}
+
+.species-label.reference {
+  fill: #6c4fa1;  /* match the reference tint family */
+}
+
 .gene-group {
   /* No opacity transition - handled by D3 to prevent flicker */
 }

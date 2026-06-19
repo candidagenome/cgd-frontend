@@ -276,6 +276,10 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
       .attr('class', 'main-group')
       .attr('transform', `translate(${margin.left},${margin.top})`);
 
+    // Background layer for row highlights - drawn before (behind) the tracks and
+    // not clipped/panned, so the external-reference tint spans the full row width.
+    const bgGroup = g.append('g').attr('class', 'row-bg-group');
+
     // Create content group with clipping
     const contentGroup = g.append('g')
       .attr('class', 'content-group')
@@ -381,13 +385,37 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
 
     // Draw each species track
     speciesData.forEach(sd => {
+      const isExternalRef = EXTERNAL_REFERENCE_SPECIES.includes(sd.species);
+
+      // Highlight external-reference rows (e.g. S. cerevisiae from SGD) with a
+      // subtle full-width tint so they read as a reference, not a Candida row.
+      if (isExternalRef) {
+        bgGroup.append('rect')
+          .attr('class', 'reference-row-bg')
+          .attr('x', -margin.left)
+          .attr('y', sd.yPosition - 8)
+          .attr('width', containerWidth)
+          .attr('height', trackHeight + 16);
+
+        // Separator line below the last reference row, before the Candida block.
+        const nextSd = speciesData[sd.index + 1];
+        if (nextSd && !EXTERNAL_REFERENCE_SPECIES.includes(nextSd.species)) {
+          bgGroup.append('line')
+            .attr('class', 'reference-row-separator')
+            .attr('x1', -margin.left)
+            .attr('x2', containerWidth - margin.left)
+            .attr('y1', sd.yPosition + trackHeight + trackSpacing / 2)
+            .attr('y2', sd.yPosition + trackHeight + trackSpacing / 2);
+        }
+      }
+
       // Species label (outside clipped area, doesn't move with pan)
       g.append('text')
         .attr('x', -10)
         .attr('y', sd.yPosition + trackHeight / 2)
         .attr('text-anchor', 'end')
         .attr('dominant-baseline', 'middle')
-        .attr('class', 'species-label')
+        .attr('class', isExternalRef ? 'species-label reference' : 'species-label')
         .style('font-style', 'italic')
         .style('font-size', '12px')
         .text(SPECIES_ABBREV[sd.species] || sd.species);
@@ -1268,10 +1296,10 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
           </div>
           {EXTERNAL_REFERENCE_SPECIES.some(org => syntenyData.synteny_regions?.[org]) && (
             <div className="query-hint reference-hint">
-              <em>S. cerevisiae</em> is shown as an external reference (data from SGD).
-              Because the Candida (CTG) clade diverged from <em>S. cerevisiae</em> before
-              the whole-genome duplication, conserved gene order is limited — expect only
-              a few orthology links rather than a colinear block.
+              <em>S. cerevisiae</em> is included as an external reference from SGD.
+              Because it diverged from the Candida CTG clade before whole-genome
+              duplication, conserved gene order may be limited; expect orthology
+              links rather than a fully colinear region.
             </div>
           )}
         </div>
