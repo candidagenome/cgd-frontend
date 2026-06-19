@@ -405,7 +405,19 @@ function LocusSummary({
           `/crispr?gene=${encodeURIComponent(displayGene)}` +
           (crisprTag ? `&organism=${encodeURIComponent(crisprTag)}` : '');
         const orthologHref = `/ortholog-converter?gene=${encodeURIComponent(displayGene)}`;
-        const vfbHref = `/virulence-factor-browser?search=${encodeURIComponent(displayGene)}`;
+        const vfbCategories = [
+          'adhesins',
+          'secreted_enzymes',
+          'morphogenesis',
+          'host_interaction',
+          'biofilm',
+          'immune_evasion',
+          'drug_resistance',
+        ];
+        const vfbHref =
+          '/virulence-factor-browser?' +
+          vfbCategories.map((c) => `categories=${encodeURIComponent(c)}`).join('&') +
+          `&search=${encodeURIComponent(displayGene)}`;
 
         return (
           <div className="related-tools-bar">
