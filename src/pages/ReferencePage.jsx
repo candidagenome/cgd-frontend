@@ -395,12 +395,12 @@ function ReferencePage() {
             // Single table for few genes
             renderGeneTable(all_features, topics, topicFeatureMap, nonGeneTopics, '', true)
           ) : (
-            // No genes, just list topics
-            topics.length > 0 && (
-              <div className="topics-list">
-                <p>Topics: {topics.map(t => t.topic).join(', ')}</p>
-              </div>
-            )
+            // No genes: render the same matrix (Topic + "Topics not linked
+            // to Genes" green dots) used when genes are present, instead of a
+            // plain comma-separated line, so these topics are less likely to
+            // be missed.
+            topics.length > 0 &&
+              renderGeneTable(all_features, topics, topicFeatureMap, nonGeneTopics, '', true)
           )}
 
           {/* Gene count summary at bottom for small tables */}
