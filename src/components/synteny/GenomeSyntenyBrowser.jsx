@@ -58,6 +58,12 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
   const [hoveredOrtholog, setHoveredOrtholog] = useState(null);
   const [selectedGene, setSelectedGene] = useState(null); // For gene detail popup
 
+  // External cross-link state (e.g. arriving from SGD via ?source=SGD). CGD
+  // resolves the SGD gene to its Candida ortholog(s); see resolveAndLoadExternal.
+  const [externalRef, setExternalRef] = useState(null); // {source, geneName, systematicName, sgdid}
+  const [resolveCandidates, setResolveCandidates] = useState(null); // array when multiple Candida loci
+  const [resolveMessage, setResolveMessage] = useState(null); // friendly text when no ortholog found
+
   // Refs
   const containerRef = useRef(null);
   const hoverTimeoutRef = useRef(null); // Debounce hover changes
@@ -127,18 +133,70 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
     }
   }, [baseFlankingCount]);
 
+  // Resolve an external (e.g. SGD) gene to its Candida ortholog(s), then load.
+  // CGD is the source of truth for the ortholog relationship, so the SGD link
+  // only passes an identifier; we resolve it here.
+  const resolveAndLoadExternal = useCallback(async ({ gene, sgdid, source }) => {
+    setLoading(true);
+    setError(null);
+    setSyntenyData(null);
+    setExternalRef(null);
+    setResolveCandidates(null);
+    setResolveMessage(null);
+
+    try {
+      const res = await locusApi.resolveSyntenyTarget({ gene, sgdid, source });
+      if (!isMountedRef.current) return;
+
+      setExternalRef({
+        source: res.source,
+        geneName: res.input_gene_name || gene || sgdid,
+        systematicName: res.input_systematic_name,
+        sgdid: res.input_sgdid,
+      });
+
+      if (res.status === 'one' && res.target) {
+        // loadSyntenyData manages its own loading state from here.
+        loadSyntenyData(res.target.feature_name);
+      } else if (res.status === 'many') {
+        setResolveCandidates(res.candidates || []);
+        setLoading(false);
+      } else {
+        setResolveMessage(res.message || 'No Candida ortholog found in CGD.');
+        setLoading(false);
+      }
+    } catch (err) {
+      if (!isMountedRef.current) return;
+      setError(err.response?.data?.detail || err.message || 'Failed to resolve ortholog');
+      setLoading(false);
+    }
+  }, [loadSyntenyData]);
+
   // Check for gene parameter in URL or prop on mount
   useEffect(() => {
     // Prop takes precedence over URL param
     if (propGeneName) {
       loadSyntenyData(propGeneName);
-    } else {
-      const geneParam = searchParams.get('gene');
-      if (geneParam) {
-        loadSyntenyData(geneParam);
-      }
+      return;
     }
-  }, [searchParams, propGeneName, loadSyntenyData]);
+    const geneParam = searchParams.get('gene');
+    const sgdidParam = searchParams.get('sgdid');
+    const sourceParam = searchParams.get('source');
+
+    // External cross-link (e.g. ?gene=HOG1&source=SGD or ?sgdid=...): resolve
+    // the ortholog on the CGD side rather than treating it as a CGD gene name.
+    if (sourceParam || sgdidParam) {
+      if (geneParam || sgdidParam) {
+        resolveAndLoadExternal({
+          gene: geneParam,
+          sgdid: sgdidParam,
+          source: sourceParam || 'SGD',
+        });
+      }
+    } else if (geneParam) {
+      loadSyntenyData(geneParam);
+    }
+  }, [searchParams, propGeneName, loadSyntenyData, resolveAndLoadExternal]);
 
   // Handle gene search selection
   // Prefer feature_name (systematic name) since it's unique and unambiguous.
@@ -147,8 +205,19 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
   const handleGeneSelect = useCallback((gene) => {
     const geneName = gene.feature_name || gene.gene_name || gene.name;
     if (geneName) {
+      // A direct CGD search clears any external (SGD) cross-link context.
+      setExternalRef(null);
+      setResolveCandidates(null);
+      setResolveMessage(null);
       loadSyntenyData(geneName);
     }
+  }, [loadSyntenyData]);
+
+  // Pick one Candida locus from the multi-ortholog selection list.
+  const handleCandidateSelect = useCallback((featureName) => {
+    setResolveCandidates(null);
+    setResolveMessage(null);
+    loadSyntenyData(featureName);
   }, [loadSyntenyData]);
 
   // Handle gene click - show detail popup instead of navigating directly
@@ -1280,6 +1349,28 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
         </div>
       )}
 
+      {/* External cross-link context (e.g. arrived from SGD) */}
+      {externalRef && (syntenyData?.query_gene || resolveCandidates || resolveMessage) && (
+        <div className="external-ref-banner">
+          Showing <em>Candida</em> orthologs of{' '}
+          {externalRef.source === 'SGD' ? <em>S. cerevisiae</em> : externalRef.source}{' '}
+          <strong>{externalRef.geneName}</strong>
+          {externalRef.systematicName ? ` (${externalRef.systematicName})` : ''}
+          {externalRef.sgdid && (
+            <>
+              {' · '}
+              <a
+                href={`https://www.yeastgenome.org/locus/${externalRef.sgdid}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View in SGD
+              </a>
+            </>
+          )}
+        </div>
+      )}
+
       {/* Query gene info */}
       {syntenyData?.query_gene && (
         <div className="query-info">
@@ -1319,7 +1410,39 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
           </div>
         )}
 
-        {!loading && !error && !syntenyData && (
+        {!loading && !error && resolveCandidates && resolveCandidates.length > 0 && (
+          <div className="browser-resolve-select">
+            <p>
+              This {externalRef?.source === 'SGD' ? 'S. cerevisiae' : externalRef?.source} gene maps to
+              multiple <em>Candida</em> loci. Choose one to view its syntenic region:
+            </p>
+            <ul className="resolve-candidate-list">
+              {resolveCandidates.map((c) => (
+                <li key={c.feature_name}>
+                  <button
+                    type="button"
+                    className="resolve-candidate-btn"
+                    onClick={() => handleCandidateSelect(c.feature_name)}
+                  >
+                    <span className="cand-gene">{c.gene_name || c.feature_name}</span>
+                    <span className="cand-feature">{c.feature_name}</span>
+                    <em className="cand-org">{SPECIES_ABBREV[c.organism] || c.organism}</em>
+                    {c.headline && <span className="cand-headline">{c.headline}</span>}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {!loading && !error && resolveMessage && (
+          <div className="browser-empty">
+            <p>{resolveMessage}</p>
+            <p className="hint">Try searching for a <em>Candida</em> gene directly using the search box above.</p>
+          </div>
+        )}
+
+        {!loading && !error && !syntenyData && !resolveCandidates && !resolveMessage && (
           <div className="browser-empty">
             <p>Search for a gene to view its syntenic region across species.</p>
             <p className="hint">Enter a gene name (e.g., ACT1, CDC19, ERG11) in the search box above.</p>
