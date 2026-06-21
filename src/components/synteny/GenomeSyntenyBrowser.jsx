@@ -87,7 +87,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
   const dateStamp = new Date().toISOString().split('T')[0];
 
   // Load synteny data for a gene
-  const loadSyntenyData = useCallback(async (geneName, flankingOverride = null, preserveZoom = false) => {
+  const loadSyntenyData = useCallback(async (geneName, flankingOverride = null, preserveZoom = false, showExternalRef = false) => {
     if (!geneName || !isMountedRef.current) return;
 
     setLoading(true);
@@ -113,12 +113,21 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
       }
       setNeedsInitialCenter(true); // Flag to center after first render
 
-      // Initialize all species as visible
-      const visible = {};
-      Object.keys(data.synteny_regions || {}).forEach(sp => {
-        visible[sp] = true;
+      // Initialize species visibility. Candida species default to visible;
+      // external reference species (e.g. S. cerevisiae) stay unchecked unless
+      // we arrived via an external cross-link (showExternalRef, e.g. ?source=SGD).
+      // When expanding the region (preserveZoom), keep the user's current toggle.
+      setVisibleSpecies(prev => {
+        const visible = {};
+        Object.keys(data.synteny_regions || {}).forEach(sp => {
+          if (EXTERNAL_REFERENCE_SPECIES.includes(sp)) {
+            visible[sp] = preserveZoom ? (prev[sp] || false) : showExternalRef;
+          } else {
+            visible[sp] = true;
+          }
+        });
+        return visible;
       });
-      setVisibleSpecies(visible);
     } catch (err) {
       // Check if still mounted before updating state
       if (!isMountedRef.current) return;
@@ -156,8 +165,10 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
       });
 
       if (res.status === 'one' && res.target) {
-        // loadSyntenyData manages its own loading state from here.
-        loadSyntenyData(res.target.feature_name);
+        // loadSyntenyData manages its own loading state from here. Show the
+        // external reference species (e.g. S. cerevisiae) since we arrived via
+        // the SGD cross-link.
+        loadSyntenyData(res.target.feature_name, null, false, true);
       } else if (res.status === 'many') {
         setResolveCandidates(res.candidates || []);
         setLoading(false);
@@ -213,11 +224,13 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
     }
   }, [loadSyntenyData]);
 
-  // Pick one Candida locus from the multi-ortholog selection list.
+  // Pick one Candida locus from the multi-ortholog selection list. This list
+  // only appears in the external (e.g. SGD) cross-link flow, so keep the
+  // external reference species visible.
   const handleCandidateSelect = useCallback((featureName) => {
     setResolveCandidates(null);
     setResolveMessage(null);
-    loadSyntenyData(featureName);
+    loadSyntenyData(featureName, null, false, true);
   }, [loadSyntenyData]);
 
   // Handle gene click - show detail popup instead of navigating directly
