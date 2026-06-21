@@ -496,7 +496,7 @@ function SyntenySummary({ geneName, maxSpecies = 3, flankingCount = 2 }) {
           rel="noopener noreferrer"
         >
           {orthologCount > maxSpecies
-            ? `View all ${orthologCount} species →`
+            ? 'View all species →'
             : 'View full synteny →'}
         </Link>
       </div>
