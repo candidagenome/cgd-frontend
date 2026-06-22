@@ -386,9 +386,9 @@
 
 /* External reference (S. cerevisiae) group, set apart from the Candida group */
 .species-filter-group.reference-group {
-  padding-right: 12px;
-  margin-right: 4px;
-  border-right: 1px solid #ddd;
+  padding-left: 12px;
+  margin-left: 4px;
+  border-left: 1px solid #ddd;
 }
 
 .species-filter-group.reference-group .filter-label {

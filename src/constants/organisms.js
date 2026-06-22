@@ -36,10 +36,11 @@ export const SPECIES_ORDER = [
 ];
 
 /**
- * External reference species shown in the synteny viewer above the Candida
- * group. S. cerevisiae is not part of CGD's Candida group; it is included as an
- * outgroup reference (data sourced live from SGD). Kept separate from
- * SPECIES_ORDER so the UI can render it as its own "External reference" group.
+ * External reference species shown in the synteny viewer below the Candida
+ * group, next to C. glabrata (its closest relative, WGD clade). S. cerevisiae
+ * is not part of CGD's Candida group; it is included as an outgroup reference
+ * (data sourced live from SGD). Kept separate from SPECIES_ORDER so the UI can
+ * render it as its own "External reference" group.
  */
 export const EXTERNAL_REFERENCE_SPECIES = [
   'Saccharomyces cerevisiae',

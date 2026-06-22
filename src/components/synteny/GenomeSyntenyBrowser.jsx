@@ -6,9 +6,10 @@ import { SPECIES_ORDER, SPECIES_ABBREV, EXTERNAL_REFERENCE_SPECIES } from '../..
 import GeneSearch from './GeneSearch';
 import './GenomeSyntenyBrowser.css';
 
-// Track display order: external reference species (e.g. S. cerevisiae) render
-// above the Candida group, which follows phylogenetic order.
-const DISPLAY_ORDER = [...EXTERNAL_REFERENCE_SPECIES, ...SPECIES_ORDER];
+// Track display order: the Candida group follows phylogenetic order, then
+// external reference species (e.g. S. cerevisiae) render below it. This places
+// S. cerevisiae next to C. glabrata, its closest relative in the group (WGD clade).
+const DISPLAY_ORDER = [...SPECIES_ORDER, ...EXTERNAL_REFERENCE_SPECIES];
 
 // Color scheme for synteny visualization - Sybil-inspired style
 const COLORS = {
@@ -479,15 +480,15 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
           .attr('width', containerWidth)
           .attr('height', trackHeight + 16);
 
-        // Separator line below the last reference row, before the Candida block.
-        const nextSd = speciesData[sd.index + 1];
-        if (nextSd && !EXTERNAL_REFERENCE_SPECIES.includes(nextSd.species)) {
+        // Separator line above the first reference row, after the Candida block.
+        const prevSd = speciesData[sd.index - 1];
+        if (prevSd && !EXTERNAL_REFERENCE_SPECIES.includes(prevSd.species)) {
           bgGroup.append('line')
             .attr('class', 'reference-row-separator')
             .attr('x1', -margin.left)
             .attr('x2', containerWidth - margin.left)
-            .attr('y1', sd.yPosition + trackHeight + trackSpacing / 2)
-            .attr('y2', sd.yPosition + trackHeight + trackSpacing / 2);
+            .attr('y1', sd.yPosition - trackSpacing / 2)
+            .attr('y2', sd.yPosition - trackSpacing / 2);
         }
       }
 
@@ -1331,6 +1332,19 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
       {/* Species filter */}
       {allSpecies.length > 0 && (
         <div className="species-filter">
+          <span className="species-filter-group">
+            <span className="filter-label">Show species:</span>
+            {SPECIES_ORDER.filter(org => allSpecies.includes(org)).map(org => (
+              <label key={org} className="species-checkbox">
+                <input
+                  type="checkbox"
+                  checked={visibleSpecies[org] || false}
+                  onChange={() => toggleSpecies(org)}
+                />
+                <span style={{ fontStyle: 'italic' }}>{SPECIES_ABBREV[org] || org}</span>
+              </label>
+            ))}
+          </span>
           {EXTERNAL_REFERENCE_SPECIES.some(org => allSpecies.includes(org)) && (
             <span className="species-filter-group reference-group">
               <span className="filter-label">External reference:</span>
@@ -1346,19 +1360,6 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
               ))}
             </span>
           )}
-          <span className="species-filter-group">
-            <span className="filter-label">Show species:</span>
-            {SPECIES_ORDER.filter(org => allSpecies.includes(org)).map(org => (
-              <label key={org} className="species-checkbox">
-                <input
-                  type="checkbox"
-                  checked={visibleSpecies[org] || false}
-                  onChange={() => toggleSpecies(org)}
-                />
-                <span style={{ fontStyle: 'italic' }}>{SPECIES_ABBREV[org] || org}</span>
-              </label>
-            ))}
-          </span>
         </div>
       )}
 
