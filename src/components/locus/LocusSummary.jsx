@@ -124,84 +124,6 @@ function LocusSummary({
     return html.replace(/<feature:([^>]+)>([^<]+)<\/feature>/g, '<a href="/locus/$1">$2</a>');
   };
 
-  // ---------- GO grouping ----------
-  const groupGoByAspect = (annotations) => {
-    if (!annotations || annotations.length === 0) return {};
-
-    const aspectCodeMap = {
-      f: 'molecular_function',
-      p: 'biological_process',
-      c: 'cellular_component',
-    };
-
-    const groups = {
-      molecular_function: {},
-      biological_process: {},
-      cellular_component: {},
-    };
-
-    annotations.forEach((ann) => {
-      const rawAspect = ann.term?.aspect?.toLowerCase().replace(' ', '_') || 'unknown';
-      const aspect = aspectCodeMap[rawAspect] || rawAspect;
-      if (!groups[aspect]) return;
-
-      const termName = ann.term?.display_name;
-      if (!termName) return;
-
-      const qualifier = ann.qualifier || '';
-      const evidenceCode = ann.evidence?.code;
-      const withFrom = ann.evidence?.with_from;
-      const annotationType = ann.annotation_type || 'other';
-
-      if (!groups[aspect][annotationType]) {
-        groups[aspect][annotationType] = {};
-      }
-
-      const key = `${termName}|${qualifier}`;
-
-      if (!groups[aspect][annotationType][key]) {
-        groups[aspect][annotationType][key] = {
-          name: termName,
-          goid: ann.term?.goid,
-          qualifier,
-          evidenceEntries: [],
-        };
-      }
-
-      if (evidenceCode) {
-        const existing = groups[aspect][annotationType][key].evidenceEntries.find(
-          (e) => e.code === evidenceCode && e.withFrom === withFrom
-        );
-        if (!existing) {
-          groups[aspect][annotationType][key].evidenceEntries.push({ code: evidenceCode, withFrom });
-        }
-      }
-    });
-
-    const result = {};
-    for (const [aspect, typeGroups] of Object.entries(groups)) {
-      result[aspect] = {};
-      for (const [annType, terms] of Object.entries(typeGroups)) {
-        result[aspect][annType] = Object.values(terms);
-      }
-    }
-    return result;
-  };
-
-  const goGroups = goData ? groupGoByAspect(goData.annotations) : {};
-
-  const annotationTypeOrder = ['manually curated', 'high-throughput', 'computational'];
-  const annotationTypeLabels = {
-    'manually curated': 'Manually curated',
-    'high-throughput': 'High-throughput',
-    computational: 'Computational',
-  };
-
-  const aspectLabels = {
-    molecular_function: 'Molecular Function',
-    biological_process: 'Biological Process',
-    cellular_component: 'Cellular Component',
-  };
 
   // ---------- Phenotype grouping ----------
   const groupPhenotypesByType = (annotations) => {
@@ -800,86 +722,14 @@ function LocusSummary({
               </td>
             </tr>
           ) : goData && goData.annotations && goData.annotations.length > 0 ? (
-            <>
-              <tr className="go-section-header section-with-divider section-grey-bg">
-                <th>GO Annotations</th>
-                <td>
-                  <a href={`?tab=go`}>
-                    View all <em>{feature.gene_name || feature.feature_name}</em> GO evidence and references
-                  </a>
-                </td>
-              </tr>
-
-              {Object.entries(goGroups).map(([aspect, typeGroups]) => {
-                const hasTerms = Object.values(typeGroups).some((terms) => terms.length > 0);
-                if (!hasTerms) return null;
-
-                return (
-                  <React.Fragment key={aspect}>
-                    <tr className="go-aspect-header-row">
-                      <th style={{ paddingLeft: '10px' }}>{aspectLabels[aspect]}</th>
-                      <td></td>
-                    </tr>
-
-                    {annotationTypeOrder.map((annType) => {
-                      const terms = typeGroups[annType];
-                      if (!terms || terms.length === 0) return null;
-
-                      return (
-                        <tr key={`${aspect}-${annType}`} className="go-annotation-type-row">
-                          <th style={{ paddingLeft: '30px', fontWeight: 'normal', fontStyle: 'italic' }}>
-                            {annotationTypeLabels[annType] || annType}
-                          </th>
-                          <td>
-                            <div className="go-terms-list">
-                              {terms.map((term, idx) => (
-                                <div key={idx} className="go-term-item">
-                                  <span className="go-bullet">•</span>
-                                  {term.qualifier && (
-                                    <em
-                                      className={`go-qualifier ${
-                                        term.qualifier.toLowerCase() === 'not' ? 'qualifier-not' : ''
-                                      }`}
-                                    >
-                                      {term.qualifier}
-                                    </em>
-                                  )}
-                                  {term.qualifier ? ' ' : ''}
-                                  <Link to={`/go/${term.goid}`}>
-                                    {term.name}
-                                  </Link>
-
-                                  {term.evidenceEntries && term.evidenceEntries.length > 0 && (
-                                    <span className="go-evidence-codes">
-                                      {' ('}
-                                      {term.evidenceEntries.map((entry, entryIdx) => (
-                                        <span key={entryIdx}>
-                                          <a
-                                            href="http://geneontology.org/docs/guide-go-evidence-codes/"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            title={entry.code}
-                                          >
-                                            {entry.code}
-                                          </a>
-                                          {entry.withFrom && <span className="go-with-from"> with {entry.withFrom}</span>}
-                                          {entryIdx < term.evidenceEntries.length - 1 ? ', ' : ''}
-                                        </span>
-                                      ))}
-                                      {')'}
-                                    </span>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </React.Fragment>
-                );
-              })}
-            </>
+            <tr className="go-section-header section-with-divider section-grey-bg">
+              <th>GO Annotations</th>
+              <td>
+                <a href={`?tab=go`}>
+                  View all <em>{feature.gene_name || feature.feature_name}</em> GO evidence and references
+                </a>
+              </td>
+            </tr>
           ) : null}
 
           {/* Phenotype */}
