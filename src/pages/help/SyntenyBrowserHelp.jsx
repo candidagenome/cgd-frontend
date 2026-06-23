@@ -31,9 +31,12 @@ function SyntenyBrowserHelp() {
             identical functions after the species diverged, although that is often the case.
           </p>
           <p>
-            The ortholog relationships shown in the Synteny Browser are based on CGOB
-            (Candida Gene Order Browser) clusters, which use a combination of sequence similarity
-            and conserved gene order, or synteny, to identify orthologs across fungal species.
+            The ortholog relationships shown in the Synteny Browser are based on{' '}
+            <a href="http://cgob3.ucd.ie/" target="_blank" rel="noopener noreferrer">
+              CGOB (Candida Gene Order Browser)
+            </a>{' '}
+            clusters, which use a combination of sequence similarity and conserved gene order,
+            or synteny, to identify orthologs across fungal species.
           </p>
           <p>
             Ribbons in the display connect genes that belong to the same ortholog cluster. These
