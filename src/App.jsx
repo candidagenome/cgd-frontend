@@ -139,6 +139,7 @@ import GlabrataChanges2022Help from './pages/help/GlabrataChanges2022Help';
 import VirulenceFactorBrowserHelp from './pages/help/VirulenceFactorBrowserHelp';
 import CrisprGuideFinderHelp from './pages/help/CrisprGuideFinderHelp';
 import ExpressionHelp from './pages/help/ExpressionHelp';
+import SyntenyBrowserHelp from './pages/help/SyntenyBrowserHelp';
 
 import ScrollToTop from './components/ScrollToTop';
 import Analytics from './components/Analytics';
@@ -589,6 +590,7 @@ function App() {
           <Route path="/help/virulence-factor-browser" element={<VirulenceFactorBrowserHelp />} />
           <Route path="/help/crispr" element={<CrisprGuideFinderHelp />} />
           <Route path="/help/expression" element={<ExpressionHelp />} />
+          <Route path="/help/synteny-browser" element={<SyntenyBrowserHelp />} />
         </Routes>
 
         {/* =========================

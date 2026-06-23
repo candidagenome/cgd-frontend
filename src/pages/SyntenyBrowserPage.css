@@ -11,10 +11,53 @@
   margin-bottom: 12px;
 }
 
+.synteny-browser-page .page-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
 .synteny-browser-page .page-header h1 {
-  margin: 0 0 6px 0;
+  margin: 0;
   color: #2c3e50;
   font-size: 1.6rem;
+}
+
+.synteny-browser-page .synteny-info-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 5px 10px;
+  border: 1px solid #b8d0e8;
+  border-radius: 4px;
+  background: #eef6fc;
+  color: #1f5f8f;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.synteny-browser-page .synteny-info-link:hover {
+  background: #e0eff9;
+  color: #174a70;
+  text-decoration: none;
+}
+
+.synteny-browser-page .synteny-info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #2f6f9f;
+  color: #fff;
+  font-size: 0.78rem;
+  line-height: 1;
 }
 
 .synteny-browser-page .page-description {
@@ -72,6 +115,15 @@
 
   .synteny-browser-page .page-header h1 {
     font-size: 1.5rem;
+  }
+
+  .synteny-browser-page .page-title-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .synteny-browser-page .synteny-info-link {
+    white-space: normal;
   }
 
   .synteny-browser-page .page-help {
