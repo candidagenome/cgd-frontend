@@ -377,6 +377,24 @@
   flex-wrap: wrap;
 }
 
+.species-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* External reference (S. cerevisiae) group, set apart from the Candida group */
+.species-filter-group.reference-group {
+  padding-left: 12px;
+  margin-left: 4px;
+  border-left: 1px solid #ddd;
+}
+
+.species-filter-group.reference-group .filter-label {
+  color: #8a6d3b;
+}
+
 .filter-label {
   font-weight: 500;
   color: #666;
@@ -426,6 +444,22 @@
 .chromosome-line {
   stroke: #ddd;
   stroke-width: 2;
+}
+
+/* External-reference row (e.g. S. cerevisiae from SGD) - tinted so it reads
+   as a reference, visually separated from the Candida comparison block. */
+.reference-row-bg {
+  fill: #f4f1fa;  /* subtle lavender tint */
+}
+
+.reference-row-separator {
+  stroke: #d9ceeb;
+  stroke-width: 1;
+  stroke-dasharray: 4 3;
+}
+
+.species-label.reference {
+  fill: #6c4fa1;  /* match the reference tint family */
 }
 
 .gene-group {
@@ -969,3 +1003,83 @@
   border-color: #ffb74d;
 }
 
+
+/* External cross-link (e.g. arriving from SGD) ------------------------------ */
+.external-ref-banner {
+  margin: 8px 0;
+  padding: 8px 14px;
+  background: #fcf8f2;
+  border: 1px solid #e7d9c3;
+  border-left: 3px solid #c69c6d;
+  border-radius: 4px;
+  color: #6b4f2a;
+  font-size: 0.92rem;
+}
+
+.external-ref-banner a {
+  color: #8a5a2b;
+  font-weight: 500;
+}
+
+/* Selection page shown when an SGD gene maps to multiple Candida loci. */
+.browser-resolve-select {
+  padding: 24px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.browser-resolve-select > p {
+  color: #444;
+  margin-bottom: 14px;
+}
+
+.resolve-candidate-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.resolve-candidate-btn {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.resolve-candidate-btn:hover {
+  background: #f5f8fb;
+  border-color: #b8d4ea;
+}
+
+.resolve-candidate-btn .cand-gene {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.resolve-candidate-btn .cand-feature {
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.resolve-candidate-btn .cand-org {
+  color: #3498db;
+  font-size: 0.85rem;
+}
+
+.resolve-candidate-btn .cand-headline {
+  flex-basis: 100%;
+  color: #777;
+  font-size: 0.82rem;
+}

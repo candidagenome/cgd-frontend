@@ -36,6 +36,17 @@ export const SPECIES_ORDER = [
 ];
 
 /**
+ * External reference species shown in the synteny viewer below the Candida
+ * group, next to C. glabrata (its closest relative, WGD clade). S. cerevisiae
+ * is not part of CGD's Candida group; it is included as an outgroup reference
+ * (data sourced live from SGD). Kept separate from SPECIES_ORDER so the UI can
+ * render it as its own "External reference" group.
+ */
+export const EXTERNAL_REFERENCE_SPECIES = [
+  'Saccharomyces cerevisiae',
+];
+
+/**
  * Species abbreviations for compact display.
  */
 export const SPECIES_ABBREV = {
@@ -45,6 +56,7 @@ export const SPECIES_ABBREV = {
   'Candida parapsilosis CDC317': 'C. parapsilosis',
   'Candida auris B8441': 'C. auris',
   'Candida glabrata CBS138': 'C. glabrata',
+  'Saccharomyces cerevisiae': 'S. cerevisiae',
 };
 
 /**

@@ -98,6 +98,17 @@ export const locusApi = {
     return response.data;
   },
 
+  // Resolve an external (e.g. SGD) gene identifier to the Candida ortholog(s)
+  // whose synteny neighborhood to open. Backs the SGD -> CGD cross-link.
+  resolveSyntenyTarget: async ({ gene, sgdid, source = 'SGD' }) => {
+    const params = new URLSearchParams();
+    if (sgdid) params.set('sgdid', sgdid);
+    if (gene) params.set('gene', gene);
+    if (source) params.set('source', source);
+    const response = await api.get(`/api/synteny/resolve?${params.toString()}`);
+    return response.data;
+  },
+
   // Search genes for synteny browser autocomplete
   searchGenesForSynteny: async (query) => {
     const response = await api.get(

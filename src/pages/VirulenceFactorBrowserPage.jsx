@@ -179,10 +179,12 @@ function VirulenceFactorBrowserPage() {
   const [loading, setLoading] = useState(true);
   const [configError, setConfigError] = useState(null);
 
-  // Filter state
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [selectedOrganism, setSelectedOrganism] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
+  // Filter state — initialized synchronously from the URL so deep links
+  // (e.g. the locus Summary "Related tools" link) survive the debounced
+  // updateUrlParams write that would otherwise clear them on first mount.
+  const [selectedCategories, setSelectedCategories] = useState(() => searchParams.getAll('categories'));
+  const [selectedOrganism, setSelectedOrganism] = useState(() => searchParams.get('organism') || '');
+  const [searchTerm, setSearchTerm] = useState(() => searchParams.get('search') || '');
   const [selectedEvidenceTypes, setSelectedEvidenceTypes] = useState([]);
 
   // Evidence type options
@@ -228,22 +230,8 @@ function VirulenceFactorBrowserPage() {
         ]);
         setCategories(categoriesData.categories || categoriesData || []);
         setOrganisms(organismsData || []);
-
-        // Parse URL params for initial state (only on mount)
-        const params = new URLSearchParams(window.location.search);
-        const urlCategories = params.getAll('categories');
-        const urlOrganism = params.get('organism') || '';
-        const urlSearch = params.get('search') || '';
-
-        if (urlCategories.length > 0) {
-          setSelectedCategories(urlCategories);
-        }
-        if (urlOrganism) {
-          setSelectedOrganism(urlOrganism);
-        }
-        if (urlSearch) {
-          setSearchTerm(urlSearch);
-        }
+        // Initial filter state is read from the URL via useState initializers
+        // above, so there is nothing to parse here.
       } catch (err) {
         console.error('Failed to fetch config:', err);
         setConfigError('Failed to load virulence categories');
@@ -252,7 +240,6 @@ function VirulenceFactorBrowserPage() {
       }
     };
     fetchConfig();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Only run once on mount
 
   // Update URL params when filters change

@@ -2900,6 +2900,55 @@ a:hover {
 }
 
 /* ===== ADDITIONAL INFORMATION Section ===== */
+/* Expression / Interactions summary: stat on the left, tab link right-aligned */
+.summary-inline-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px 16px;
+}
+
+.summary-stat-line {
+  color: #333;
+}
+
+.summary-tab-link {
+  white-space: nowrap;
+}
+
+/* ===== Related Tools toolbar ===== */
+.related-tools-bar {
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  font-size: 0.9em;
+  line-height: 1.6;
+}
+
+.related-tools-label {
+  font-weight: 600;
+  color: #555;
+  margin-right: 6px;
+}
+
+.related-tools-label em {
+  font-style: italic;
+}
+
+.related-tool-link {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.related-tool-link:hover {
+  text-decoration: underline;
+}
+
+.related-tools-sep {
+  color: #bbb;
+}
+
 .additional-info-section {
   margin-top: 25px;
   padding: 15px;

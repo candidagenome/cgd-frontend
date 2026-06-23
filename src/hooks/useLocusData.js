@@ -104,6 +104,11 @@ export function useLocusData(locusName) {
     fetchData('goDetails', locusApi.getGoDetails);
     fetchData('phenotypeDetails', locusApi.getPhenotypeDetails);
     fetchData('sequenceDetails', locusApi.getSequenceDetails);
+    // Lightweight summaries for the Expression and Interactions sections.
+    // The interaction network (STRING etc.) is intentionally left to the
+    // Interactions tab loader so the Summary stays cheap.
+    fetchData('expressionDetails', locusApi.getExpressionDetails);
+    fetchData('interactionDetails', locusApi.getInteractionDetails);
   }, [fetchData]);
 
   const loadInteractionDetails = useCallback(() => {

@@ -1,4 +1,5 @@
 import React, { Suspense, lazy } from 'react';
+import { Link } from 'react-router-dom';
 import './SyntenyBrowserPage.css';
 
 // Lazy load to match HomologyDetails and avoid dual import issues
@@ -8,7 +9,17 @@ function SyntenyBrowserPage() {
   return (
     <main className="synteny-browser-page">
       <div className="page-header">
-        <h1>Synteny Browser</h1>
+        <div className="page-title-row">
+          <h1>Synteny Browser</h1>
+          <Link
+            to="/help/synteny-browser"
+            className="synteny-info-link"
+            title="Learn how orthology and orientation are interpreted"
+          >
+            <span className="synteny-info-icon" aria-hidden="true">?</span>
+            How orthology is calculated
+          </Link>
+        </div>
         <p className="page-description">
           Compare syntenic regions across <em>Candida</em> species.
           Search for a gene to view its genomic neighborhood and ortholog relationships across all CGD species.
@@ -40,7 +51,7 @@ function SyntenyBrowserPage() {
           <li><strong>Blue genes:</strong> Genes with orthologs in other CGD species (not the query ortholog group).</li>
           <li><strong>Gray genes:</strong> Species-specific genes without orthologs in other CGD species.</li>
           <li><strong>Connecting ribbons:</strong> Ribbons between tracks connect orthologous genes across species.</li>
-          <li><strong>Gene direction:</strong> Arrow shapes indicate gene strand (Watson/+ or Crick/-).</li>
+          <li><strong>Gene direction:</strong> Arrow shapes indicate gene strand (Watson/+ or Crick/-). Chromosome orientation is assembly-dependent, so track direction is not absolute across species.</li>
           <li><strong>Consistent scale:</strong> Gene sizes are drawn to the same scale across all species, allowing direct size comparisons.</li>
         </ul>
       </div>

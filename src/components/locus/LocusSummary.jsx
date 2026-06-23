@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import './LocusComponents.css';
 import { renderCitationItem } from '../../utils/formatCitation.jsx';
 import SyntenySummary from '../synteny/SyntenySummary';
+import { GENETIC_TYPES } from './InteractionDetails';
 
 function LocusSummary({
   data,
@@ -13,6 +14,10 @@ function LocusSummary({
   phenotypeLoading,
   sequenceData,
   sequenceLoading,
+  expressionData,
+  expressionLoading,
+  interactionData,
+  interactionLoading,
 }) {
   const [showJBrowseViewer, setShowJBrowseViewer] = useState(true); // Show JBrowse viewer by default
 
@@ -119,84 +124,6 @@ function LocusSummary({
     return html.replace(/<feature:([^>]+)>([^<]+)<\/feature>/g, '<a href="/locus/$1">$2</a>');
   };
 
-  // ---------- GO grouping ----------
-  const groupGoByAspect = (annotations) => {
-    if (!annotations || annotations.length === 0) return {};
-
-    const aspectCodeMap = {
-      f: 'molecular_function',
-      p: 'biological_process',
-      c: 'cellular_component',
-    };
-
-    const groups = {
-      molecular_function: {},
-      biological_process: {},
-      cellular_component: {},
-    };
-
-    annotations.forEach((ann) => {
-      const rawAspect = ann.term?.aspect?.toLowerCase().replace(' ', '_') || 'unknown';
-      const aspect = aspectCodeMap[rawAspect] || rawAspect;
-      if (!groups[aspect]) return;
-
-      const termName = ann.term?.display_name;
-      if (!termName) return;
-
-      const qualifier = ann.qualifier || '';
-      const evidenceCode = ann.evidence?.code;
-      const withFrom = ann.evidence?.with_from;
-      const annotationType = ann.annotation_type || 'other';
-
-      if (!groups[aspect][annotationType]) {
-        groups[aspect][annotationType] = {};
-      }
-
-      const key = `${termName}|${qualifier}`;
-
-      if (!groups[aspect][annotationType][key]) {
-        groups[aspect][annotationType][key] = {
-          name: termName,
-          goid: ann.term?.goid,
-          qualifier,
-          evidenceEntries: [],
-        };
-      }
-
-      if (evidenceCode) {
-        const existing = groups[aspect][annotationType][key].evidenceEntries.find(
-          (e) => e.code === evidenceCode && e.withFrom === withFrom
-        );
-        if (!existing) {
-          groups[aspect][annotationType][key].evidenceEntries.push({ code: evidenceCode, withFrom });
-        }
-      }
-    });
-
-    const result = {};
-    for (const [aspect, typeGroups] of Object.entries(groups)) {
-      result[aspect] = {};
-      for (const [annType, terms] of Object.entries(typeGroups)) {
-        result[aspect][annType] = Object.values(terms);
-      }
-    }
-    return result;
-  };
-
-  const goGroups = goData ? groupGoByAspect(goData.annotations) : {};
-
-  const annotationTypeOrder = ['manually curated', 'high-throughput', 'computational'];
-  const annotationTypeLabels = {
-    'manually curated': 'Manually curated',
-    'high-throughput': 'High-throughput',
-    computational: 'Computational',
-  };
-
-  const aspectLabels = {
-    molecular_function: 'Molecular Function',
-    biological_process: 'Biological Process',
-    cellular_component: 'Cellular Component',
-  };
 
   // ---------- Phenotype grouping ----------
   const groupPhenotypesByType = (annotations) => {
@@ -381,9 +308,83 @@ function LocusSummary({
   const currentMainLocation =
     sequenceData?.locations?.filter((l) => l.is_current)?.[0] || null;
 
+  // Map the JBrowse assembly key to the tag expected by the CRISPR guide designer.
+  const crisprOrganismTags = {
+    C_albicans_SC5314: 'C_albicans_SC5314_A22',
+    C_auris_B8441: 'C_auris_B8441',
+    C_dubliniensis_CD36: 'C_dubliniensis_CD36',
+    C_glabrata_CBS138: 'C_glabrata_CBS138',
+    C_parapsilosis_CDC317: 'C_parapsilosis_CDC317',
+    C_tropicalis_MYA3404: 'C_tropicalis_MYA-3404',
+  };
+
   // ---------- Render ----------
   return (
     <>
+      {/* Related tools: deep links into the CRISPR designer, ortholog converter,
+          and Virulence Factor Browser, prefilled with this gene. CRISPR and
+          ortholog links are gated by flags from the locus endpoint; the
+          Virulence Factor Browser search is always offered. */}
+      {(() => {
+        const displayGene = feature.gene_name || feature.feature_name;
+        const crisprTag = crisprOrganismTags[getAssemblyKey(organismName)] || '';
+        const crisprHref =
+          `/crispr?gene=${encodeURIComponent(displayGene)}` +
+          (crisprTag ? `&organism=${encodeURIComponent(crisprTag)}` : '');
+        const orthologHref = `/ortholog-converter?gene=${encodeURIComponent(displayGene)}`;
+        const vfbCategories = [
+          'adhesins',
+          'secreted_enzymes',
+          'morphogenesis',
+          'host_interaction',
+          'biofilm',
+          'immune_evasion',
+          'drug_resistance',
+        ];
+        const vfbHref =
+          '/virulence-factor-browser?' +
+          vfbCategories.map((c) => `categories=${encodeURIComponent(c)}`).join('&') +
+          `&search=${encodeURIComponent(displayGene)}`;
+
+        // Gene name appears once in the label; the links themselves stay short.
+        const tools = [];
+        if (feature.crispr_available) {
+          tools.push(
+            <Link key="crispr" className="related-tool-link" to={crisprHref}>
+              Design CRISPR guides
+            </Link>
+          );
+        }
+        if (feature.ortholog_count > 0) {
+          tools.push(
+            <Link key="ortholog" className="related-tool-link" to={orthologHref}>
+              Find orthologs in other species
+            </Link>
+          );
+        }
+        tools.push(
+          <Link key="vfb" className="related-tool-link" to={vfbHref}>
+            Search virulence factor evidence
+          </Link>
+        );
+
+        return (
+          <div className="related-tools-bar">
+            <span className="related-tools-label">
+              Related tools for <em>{displayGene}</em>:
+            </span>
+            <span className="related-tools-links">
+              {tools.map((link, idx) => (
+                <React.Fragment key={link.key}>
+                  {idx > 0 && <span className="related-tools-sep"> | </span>}
+                  {link}
+                </React.Fragment>
+              ))}
+            </span>
+          </div>
+        );
+      })()}
+
       <table className="info-table">
         <tbody>
           {/* Standard Name */}
@@ -721,86 +722,14 @@ function LocusSummary({
               </td>
             </tr>
           ) : goData && goData.annotations && goData.annotations.length > 0 ? (
-            <>
-              <tr className="go-section-header section-with-divider section-grey-bg">
-                <th>GO Annotations</th>
-                <td>
-                  <a href={`?tab=go`}>
-                    View all <em>{feature.gene_name || feature.feature_name}</em> GO evidence and references
-                  </a>
-                </td>
-              </tr>
-
-              {Object.entries(goGroups).map(([aspect, typeGroups]) => {
-                const hasTerms = Object.values(typeGroups).some((terms) => terms.length > 0);
-                if (!hasTerms) return null;
-
-                return (
-                  <React.Fragment key={aspect}>
-                    <tr className="go-aspect-header-row">
-                      <th style={{ paddingLeft: '10px' }}>{aspectLabels[aspect]}</th>
-                      <td></td>
-                    </tr>
-
-                    {annotationTypeOrder.map((annType) => {
-                      const terms = typeGroups[annType];
-                      if (!terms || terms.length === 0) return null;
-
-                      return (
-                        <tr key={`${aspect}-${annType}`} className="go-annotation-type-row">
-                          <th style={{ paddingLeft: '30px', fontWeight: 'normal', fontStyle: 'italic' }}>
-                            {annotationTypeLabels[annType] || annType}
-                          </th>
-                          <td>
-                            <div className="go-terms-list">
-                              {terms.map((term, idx) => (
-                                <div key={idx} className="go-term-item">
-                                  <span className="go-bullet">•</span>
-                                  {term.qualifier && (
-                                    <em
-                                      className={`go-qualifier ${
-                                        term.qualifier.toLowerCase() === 'not' ? 'qualifier-not' : ''
-                                      }`}
-                                    >
-                                      {term.qualifier}
-                                    </em>
-                                  )}
-                                  {term.qualifier ? ' ' : ''}
-                                  <Link to={`/go/${term.goid}`}>
-                                    {term.name}
-                                  </Link>
-
-                                  {term.evidenceEntries && term.evidenceEntries.length > 0 && (
-                                    <span className="go-evidence-codes">
-                                      {' ('}
-                                      {term.evidenceEntries.map((entry, entryIdx) => (
-                                        <span key={entryIdx}>
-                                          <a
-                                            href="http://geneontology.org/docs/guide-go-evidence-codes/"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            title={entry.code}
-                                          >
-                                            {entry.code}
-                                          </a>
-                                          {entry.withFrom && <span className="go-with-from"> with {entry.withFrom}</span>}
-                                          {entryIdx < term.evidenceEntries.length - 1 ? ', ' : ''}
-                                        </span>
-                                      ))}
-                                      {')'}
-                                    </span>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </React.Fragment>
-                );
-              })}
-            </>
+            <tr className="go-section-header section-with-divider section-grey-bg">
+              <th>GO Annotations</th>
+              <td>
+                <a href={`?tab=go`}>
+                  View all <em>{feature.gene_name || feature.feature_name}</em> GO evidence and references
+                </a>
+              </td>
+            </tr>
           ) : null}
 
           {/* Phenotype */}
@@ -855,6 +784,81 @@ function LocusSummary({
               })}
             </>
           ) : null}
+
+          {/* Expression */}
+          {expressionLoading ? (
+            <tr className="section-with-divider section-grey-bg">
+              <th>Expression</th>
+              <td>
+                <em>Loading expression data...</em>
+              </td>
+            </tr>
+          ) : expressionData && expressionData.total_conditions > 0 ? (
+            <tr className="expression-section-header section-with-divider section-grey-bg">
+              <th>Expression</th>
+              <td>
+                <div className="summary-inline-row">
+                  <span className="summary-stat-line">
+                    <strong>{fmtInt(expressionData.total_conditions)}</strong>{' '}
+                    {expressionData.total_conditions === 1 ? 'condition' : 'conditions'} across{' '}
+                    <strong>{fmtInt(expressionData.studies?.length || 0)}</strong>{' '}
+                    {(expressionData.studies?.length || 0) === 1 ? 'study' : 'studies'}
+                  </span>
+                  <a className="summary-tab-link" href={`?tab=expression`}>
+                    View all <em>{feature.gene_name || feature.feature_name}</em> expression data
+                  </a>
+                </div>
+              </td>
+            </tr>
+          ) : null}
+
+          {/* Interactions */}
+          {interactionLoading ? (
+            <tr className="section-with-divider section-grey-bg">
+              <th>Interactions</th>
+              <td>
+                <em>Loading interaction data...</em>
+              </td>
+            </tr>
+          ) : (() => {
+            const interactions = interactionData?.interactions || [];
+            if (interactions.length === 0) return null;
+            let physical = 0;
+            let genetic = 0;
+            interactions.forEach((i) => {
+              if (GENETIC_TYPES.has(i.experiment_type)) {
+                genetic += 1;
+              } else {
+                physical += 1;
+              }
+            });
+            return (
+              <tr className="interaction-section-header section-with-divider section-grey-bg">
+                <th>Interactions</th>
+                <td>
+                  <div className="summary-inline-row">
+                    <span className="summary-stat-line">
+                      {physical > 0 && (
+                        <>
+                          <strong>{fmtInt(physical)}</strong> physical
+                        </>
+                      )}
+                      {physical > 0 && genetic > 0 ? ' and ' : ''}
+                      {genetic > 0 && (
+                        <>
+                          <strong>{fmtInt(genetic)}</strong> genetic
+                        </>
+                      )}{' '}
+                      {interactions.length === 1 ? 'interaction' : 'interactions'}
+                    </span>
+                    <a className="summary-tab-link" href={`?tab=interactions`}>
+                      View all <em>{feature.gene_name || feature.feature_name}</em> interactions
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            );
+          })()}
 
           {/* Sequence Information */}
           {sequenceLoading ? (

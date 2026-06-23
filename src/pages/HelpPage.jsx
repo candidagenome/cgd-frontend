@@ -93,6 +93,15 @@ function HelpPage() {
 
         <div className="help-item">
           <h3>
+            <Link to="/help/synteny-browser">Synteny Browser</Link>
+          </h3>
+          <p>
+            How ortholog relationships and gene orientation are interpreted in the Synteny Browser.
+          </p>
+        </div>
+
+        <div className="help-item">
+          <h3>
             <Link to="/help/code-tables">
               Non-standard Genetic Code Usage in <em>Candida</em>
             </Link>

@@ -2,9 +2,14 @@ import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as d3 from 'd3';
 import { locusApi } from '../../api/locusApi';
-import { SPECIES_ORDER, SPECIES_ABBREV } from '../../constants/organisms';
+import { SPECIES_ORDER, SPECIES_ABBREV, EXTERNAL_REFERENCE_SPECIES } from '../../constants/organisms';
 import GeneSearch from './GeneSearch';
 import './GenomeSyntenyBrowser.css';
+
+// Track display order: the Candida group follows phylogenetic order, then
+// external reference species (e.g. S. cerevisiae) render below it. This places
+// S. cerevisiae next to C. glabrata, its closest relative in the group (WGD clade).
+const DISPLAY_ORDER = [...SPECIES_ORDER, ...EXTERNAL_REFERENCE_SPECIES];
 
 // Color scheme for synteny visualization - Sybil-inspired style
 const COLORS = {
@@ -54,6 +59,12 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
   const [hoveredOrtholog, setHoveredOrtholog] = useState(null);
   const [selectedGene, setSelectedGene] = useState(null); // For gene detail popup
 
+  // External cross-link state (e.g. arriving from SGD via ?source=SGD). CGD
+  // resolves the SGD gene to its Candida ortholog(s); see resolveAndLoadExternal.
+  const [externalRef, setExternalRef] = useState(null); // {source, geneName, systematicName, sgdid}
+  const [resolveCandidates, setResolveCandidates] = useState(null); // array when multiple Candida loci
+  const [resolveMessage, setResolveMessage] = useState(null); // friendly text when no ortholog found
+
   // Refs
   const containerRef = useRef(null);
   const hoverTimeoutRef = useRef(null); // Debounce hover changes
@@ -77,7 +88,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
   const dateStamp = new Date().toISOString().split('T')[0];
 
   // Load synteny data for a gene
-  const loadSyntenyData = useCallback(async (geneName, flankingOverride = null, preserveZoom = false) => {
+  const loadSyntenyData = useCallback(async (geneName, flankingOverride = null, preserveZoom = false, showExternalRef = false) => {
     if (!geneName || !isMountedRef.current) return;
 
     setLoading(true);
@@ -103,12 +114,21 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
       }
       setNeedsInitialCenter(true); // Flag to center after first render
 
-      // Initialize all species as visible
-      const visible = {};
-      Object.keys(data.synteny_regions || {}).forEach(sp => {
-        visible[sp] = true;
+      // Initialize species visibility. Candida species default to visible;
+      // external reference species (e.g. S. cerevisiae) stay unchecked unless
+      // we arrived via an external cross-link (showExternalRef, e.g. ?source=SGD).
+      // When expanding the region (preserveZoom), keep the user's current toggle.
+      setVisibleSpecies(prev => {
+        const visible = {};
+        Object.keys(data.synteny_regions || {}).forEach(sp => {
+          if (EXTERNAL_REFERENCE_SPECIES.includes(sp)) {
+            visible[sp] = preserveZoom ? (prev[sp] || false) : showExternalRef;
+          } else {
+            visible[sp] = true;
+          }
+        });
+        return visible;
       });
-      setVisibleSpecies(visible);
     } catch (err) {
       // Check if still mounted before updating state
       if (!isMountedRef.current) return;
@@ -123,18 +143,72 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
     }
   }, [baseFlankingCount]);
 
+  // Resolve an external (e.g. SGD) gene to its Candida ortholog(s), then load.
+  // CGD is the source of truth for the ortholog relationship, so the SGD link
+  // only passes an identifier; we resolve it here.
+  const resolveAndLoadExternal = useCallback(async ({ gene, sgdid, source }) => {
+    setLoading(true);
+    setError(null);
+    setSyntenyData(null);
+    setExternalRef(null);
+    setResolveCandidates(null);
+    setResolveMessage(null);
+
+    try {
+      const res = await locusApi.resolveSyntenyTarget({ gene, sgdid, source });
+      if (!isMountedRef.current) return;
+
+      setExternalRef({
+        source: res.source,
+        geneName: res.input_gene_name || gene || sgdid,
+        systematicName: res.input_systematic_name,
+        sgdid: res.input_sgdid,
+      });
+
+      if (res.status === 'one' && res.target) {
+        // loadSyntenyData manages its own loading state from here. Show the
+        // external reference species (e.g. S. cerevisiae) since we arrived via
+        // the SGD cross-link.
+        loadSyntenyData(res.target.feature_name, null, false, true);
+      } else if (res.status === 'many') {
+        setResolveCandidates(res.candidates || []);
+        setLoading(false);
+      } else {
+        setResolveMessage(res.message || 'No Candida ortholog found in CGD.');
+        setLoading(false);
+      }
+    } catch (err) {
+      if (!isMountedRef.current) return;
+      setError(err.response?.data?.detail || err.message || 'Failed to resolve ortholog');
+      setLoading(false);
+    }
+  }, [loadSyntenyData]);
+
   // Check for gene parameter in URL or prop on mount
   useEffect(() => {
     // Prop takes precedence over URL param
     if (propGeneName) {
       loadSyntenyData(propGeneName);
-    } else {
-      const geneParam = searchParams.get('gene');
-      if (geneParam) {
-        loadSyntenyData(geneParam);
-      }
+      return;
     }
-  }, [searchParams, propGeneName, loadSyntenyData]);
+    const geneParam = searchParams.get('gene');
+    const sgdidParam = searchParams.get('sgdid');
+    const sourceParam = searchParams.get('source');
+
+    // External cross-link (e.g. ?gene=HOG1&source=SGD or ?sgdid=...): resolve
+    // the ortholog on the CGD side rather than treating it as a CGD gene name.
+    if (sourceParam || sgdidParam) {
+      if (geneParam || sgdidParam) {
+        resolveAndLoadExternal({
+          gene: geneParam,
+          sgdid: sgdidParam,
+          source: sourceParam || 'SGD',
+        });
+      }
+    } else if (geneParam) {
+      loadSyntenyData(geneParam);
+    }
+  }, [searchParams, propGeneName, loadSyntenyData, resolveAndLoadExternal]);
 
   // Handle gene search selection
   // Prefer feature_name (systematic name) since it's unique and unambiguous.
@@ -143,8 +217,21 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
   const handleGeneSelect = useCallback((gene) => {
     const geneName = gene.feature_name || gene.gene_name || gene.name;
     if (geneName) {
+      // A direct CGD search clears any external (SGD) cross-link context.
+      setExternalRef(null);
+      setResolveCandidates(null);
+      setResolveMessage(null);
       loadSyntenyData(geneName);
     }
+  }, [loadSyntenyData]);
+
+  // Pick one Candida locus from the multi-ortholog selection list. This list
+  // only appears in the external (e.g. SGD) cross-link flow, so keep the
+  // external reference species visible.
+  const handleCandidateSelect = useCallback((featureName) => {
+    setResolveCandidates(null);
+    setResolveMessage(null);
+    loadSyntenyData(featureName, null, false, true);
   }, [loadSyntenyData]);
 
   // Handle gene click - show detail popup instead of navigating directly
@@ -206,7 +293,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
     // Filter to visible species
     const visibleRegions = Object.entries(regions)
       .filter(([sp]) => visibleSpecies[sp])
-      .sort(([a], [b]) => SPECIES_ORDER.indexOf(a) - SPECIES_ORDER.indexOf(b))
+      .sort(([a], [b]) => DISPLAY_ORDER.indexOf(a) - DISPLAY_ORDER.indexOf(b))
       .map(([sp, region]) => ({ species: sp, ...region }));
 
     if (visibleRegions.length === 0) return;
@@ -271,6 +358,10 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
     const g = svg.append('g')
       .attr('class', 'main-group')
       .attr('transform', `translate(${margin.left},${margin.top})`);
+
+    // Background layer for row highlights - drawn before (behind) the tracks and
+    // not clipped/panned, so the external-reference tint spans the full row width.
+    const bgGroup = g.append('g').attr('class', 'row-bg-group');
 
     // Create content group with clipping
     const contentGroup = g.append('g')
@@ -377,13 +468,37 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
 
     // Draw each species track
     speciesData.forEach(sd => {
+      const isExternalRef = EXTERNAL_REFERENCE_SPECIES.includes(sd.species);
+
+      // Highlight external-reference rows (e.g. S. cerevisiae from SGD) with a
+      // subtle full-width tint so they read as a reference, not a Candida row.
+      if (isExternalRef) {
+        bgGroup.append('rect')
+          .attr('class', 'reference-row-bg')
+          .attr('x', -margin.left)
+          .attr('y', sd.yPosition - 8)
+          .attr('width', containerWidth)
+          .attr('height', trackHeight + 16);
+
+        // Separator line above the first reference row, after the Candida block.
+        const prevSd = speciesData[sd.index - 1];
+        if (prevSd && !EXTERNAL_REFERENCE_SPECIES.includes(prevSd.species)) {
+          bgGroup.append('line')
+            .attr('class', 'reference-row-separator')
+            .attr('x1', -margin.left)
+            .attr('x2', containerWidth - margin.left)
+            .attr('y1', sd.yPosition - trackSpacing / 2)
+            .attr('y2', sd.yPosition - trackSpacing / 2);
+        }
+      }
+
       // Species label (outside clipped area, doesn't move with pan)
       g.append('text')
         .attr('x', -10)
         .attr('y', sd.yPosition + trackHeight / 2)
         .attr('text-anchor', 'end')
         .attr('dominant-baseline', 'middle')
-        .attr('class', 'species-label')
+        .attr('class', isExternalRef ? 'species-label reference' : 'species-label')
         .style('font-style', 'italic')
         .style('font-size', '12px')
         .text(SPECIES_ABBREV[sd.species] || sd.species);
@@ -1217,17 +1332,56 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
       {/* Species filter */}
       {allSpecies.length > 0 && (
         <div className="species-filter">
-          <span className="filter-label">Show species:</span>
-          {SPECIES_ORDER.filter(org => allSpecies.includes(org)).map(org => (
-            <label key={org} className="species-checkbox">
-              <input
-                type="checkbox"
-                checked={visibleSpecies[org] || false}
-                onChange={() => toggleSpecies(org)}
-              />
-              <span style={{ fontStyle: 'italic' }}>{SPECIES_ABBREV[org] || org}</span>
-            </label>
-          ))}
+          <span className="species-filter-group">
+            <span className="filter-label">Show species:</span>
+            {SPECIES_ORDER.filter(org => allSpecies.includes(org)).map(org => (
+              <label key={org} className="species-checkbox">
+                <input
+                  type="checkbox"
+                  checked={visibleSpecies[org] || false}
+                  onChange={() => toggleSpecies(org)}
+                />
+                <span style={{ fontStyle: 'italic' }}>{SPECIES_ABBREV[org] || org}</span>
+              </label>
+            ))}
+          </span>
+          {EXTERNAL_REFERENCE_SPECIES.some(org => allSpecies.includes(org)) && (
+            <span className="species-filter-group reference-group">
+              <span className="filter-label">External reference:</span>
+              {EXTERNAL_REFERENCE_SPECIES.filter(org => allSpecies.includes(org)).map(org => (
+                <label key={org} className="species-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={visibleSpecies[org] || false}
+                    onChange={() => toggleSpecies(org)}
+                  />
+                  <span style={{ fontStyle: 'italic' }}>{SPECIES_ABBREV[org] || org}</span>
+                </label>
+              ))}
+            </span>
+          )}
+        </div>
+      )}
+
+      {/* External cross-link context (e.g. arrived from SGD) */}
+      {externalRef && (syntenyData?.query_gene || resolveCandidates || resolveMessage) && (
+        <div className="external-ref-banner">
+          Showing <em>Candida</em> orthologs of{' '}
+          {externalRef.source === 'SGD' ? <em>S. cerevisiae</em> : externalRef.source}{' '}
+          <strong>{externalRef.geneName}</strong>
+          {externalRef.systematicName ? ` (${externalRef.systematicName})` : ''}
+          {externalRef.sgdid && (
+            <>
+              {' · '}
+              <a
+                href={`https://www.yeastgenome.org/locus/${externalRef.sgdid}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View in SGD
+              </a>
+            </>
+          )}
         </div>
       )}
 
@@ -1245,6 +1399,13 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
           <div className="query-hint">
             Genes are aligned by orthologous relationships, not exact genomic position. Gene sizes are drawn to a consistent scale across species.
           </div>
+          {EXTERNAL_REFERENCE_SPECIES.some(org => syntenyData.synteny_regions?.[org]) && (
+            <div className="query-hint reference-hint">
+              <em>S. cerevisiae</em> is included as an external reference from SGD.
+              Conserved gene order may be limited, so expect orthology links
+              rather than a fully colinear region.
+            </div>
+          )}
         </div>
       )}
 
@@ -1263,7 +1424,39 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
           </div>
         )}
 
-        {!loading && !error && !syntenyData && (
+        {!loading && !error && resolveCandidates && resolveCandidates.length > 0 && (
+          <div className="browser-resolve-select">
+            <p>
+              This {externalRef?.source === 'SGD' ? 'S. cerevisiae' : externalRef?.source} gene maps to
+              multiple <em>Candida</em> loci. Choose one to view its syntenic region:
+            </p>
+            <ul className="resolve-candidate-list">
+              {resolveCandidates.map((c) => (
+                <li key={c.feature_name}>
+                  <button
+                    type="button"
+                    className="resolve-candidate-btn"
+                    onClick={() => handleCandidateSelect(c.feature_name)}
+                  >
+                    <span className="cand-gene">{c.gene_name || c.feature_name}</span>
+                    <span className="cand-feature">{c.feature_name}</span>
+                    <em className="cand-org">{SPECIES_ABBREV[c.organism] || c.organism}</em>
+                    {c.headline && <span className="cand-headline">{c.headline}</span>}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {!loading && !error && resolveMessage && (
+          <div className="browser-empty">
+            <p>{resolveMessage}</p>
+            <p className="hint">Try searching for a <em>Candida</em> gene directly using the search box above.</p>
+          </div>
+        )}
+
+        {!loading && !error && !syntenyData && !resolveCandidates && !resolveMessage && (
           <div className="browser-empty">
             <p>Search for a gene to view its syntenic region across species.</p>
             <p className="hint">Enter a gene name (e.g., ACT1, CDC19, ERG11) in the search box above.</p>
@@ -1444,27 +1637,31 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
 
               <div className="gene-popup-links">
                 <a
-                  href={`/locus/${encodeURIComponent(selectedGene.feature_name)}`}
+                  href={selectedGene.external_url || `/locus/${encodeURIComponent(selectedGene.feature_name)}`}
                   className="gene-popup-link primary"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  View Locus Page
+                  {selectedGene.external_url ? 'View SGD Page' : 'View Locus Page'}
                 </a>
               </div>
 
-              <div className="gene-popup-actions">
-                <button
-                  type="button"
-                  className="gene-popup-action secondary"
-                  onClick={() => {
-                    loadSyntenyData(selectedGene.gene_name || selectedGene.feature_name);
-                    closeGenePopup();
-                  }}
-                >
-                  Set as Query Gene
-                </button>
-              </div>
+              {/* External reference genes (e.g. S. cerevisiae) live in SGD, not
+                  CGD, so they cannot be set as the CGD query gene. */}
+              {!selectedGene.external_url && (
+                <div className="gene-popup-actions">
+                  <button
+                    type="button"
+                    className="gene-popup-action secondary"
+                    onClick={() => {
+                      loadSyntenyData(selectedGene.gene_name || selectedGene.feature_name);
+                      closeGenePopup();
+                    }}
+                  >
+                    Set as Query Gene
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
