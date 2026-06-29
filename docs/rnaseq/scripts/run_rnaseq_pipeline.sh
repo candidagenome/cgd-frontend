@@ -306,6 +306,10 @@ for SRR in $SAMPLES; do
     fi
 
     SAMPLE_LOG=$LOG_DIR/${SRR}.log
+    # Start each sample log fresh: extract_alignment_stats.py reads the FIRST
+    # "overall alignment rate" match, so stale stats from a prior (e.g.
+    # pre-trimming) run must not remain above the new ones on a re-run.
+    : > "$SAMPLE_LOG"
     echo "  Log: $SAMPLE_LOG" | tee -a "$MAIN_LOG"
 
     # Mark as in progress
@@ -351,19 +355,42 @@ for SRR in $SAMPLES; do
             echo "[$(date)] Strandedness: unstranded" >> "$SAMPLE_LOG"
         fi
 
+        # Trim adapters and low-quality bases with fastp before alignment.
+        # fastp auto-detects adapters (overlap analysis for paired-end; known
+        # adapter / overrepresentation for single-end), so this is dataset- and
+        # species-agnostic and only trims reads that actually carry adapter.
+        echo "[$(date)] Trimming adapters with fastp..." >> "$SAMPLE_LOG"
+        if [ "$PAIRED" = true ]; then
+            fastp \
+                -i "$FASTQ_DIR/${SRR}_1.fastq.gz" \
+                -I "$FASTQ_DIR/${SRR}_2.fastq.gz" \
+                -o "$FASTQ_DIR/${SRR}_1.trimmed.fastq.gz" \
+                -O "$FASTQ_DIR/${SRR}_2.trimmed.fastq.gz" \
+                --thread $THREADS \
+                -j "$LOG_DIR/${SRR}.fastp.json" \
+                -h "$LOG_DIR/${SRR}.fastp.html" >> "$SAMPLE_LOG" 2>&1
+        else
+            fastp \
+                -i "$FASTQ_DIR/${SRR}_1.fastq.gz" \
+                -o "$FASTQ_DIR/${SRR}_1.trimmed.fastq.gz" \
+                --thread $THREADS \
+                -j "$LOG_DIR/${SRR}.fastp.json" \
+                -h "$LOG_DIR/${SRR}.fastp.html" >> "$SAMPLE_LOG" 2>&1
+        fi
+
         # Align with HISAT2
         echo "[$(date)] Aligning with HISAT2..." >> "$SAMPLE_LOG"
         mkdir -p "$OUTPUT_DIR/${SRR}"
 
         if [ "$PAIRED" = true ]; then
             hisat2 -p $THREADS --dta -x "$HISAT2_INDEX" $STRAND_OPT \
-                -1 "$FASTQ_DIR/${SRR}_1.fastq.gz" \
-                -2 "$FASTQ_DIR/${SRR}_2.fastq.gz" 2>> "$SAMPLE_LOG" | \
+                -1 "$FASTQ_DIR/${SRR}_1.trimmed.fastq.gz" \
+                -2 "$FASTQ_DIR/${SRR}_2.trimmed.fastq.gz" 2>> "$SAMPLE_LOG" | \
                 samtools view -@ 4 -bS - | \
                 samtools sort -@ 4 -m 1G -o "$OUTPUT_DIR/${SRR}/${SRR}_sorted_hits.bam" -
         else
             hisat2 -p $THREADS --dta -x "$HISAT2_INDEX" $STRAND_OPT \
-                -U "$FASTQ_DIR/${SRR}_1.fastq.gz" 2>> "$SAMPLE_LOG" | \
+                -U "$FASTQ_DIR/${SRR}_1.trimmed.fastq.gz" 2>> "$SAMPLE_LOG" | \
                 samtools view -@ 4 -bS - | \
                 samtools sort -@ 4 -m 1G -o "$OUTPUT_DIR/${SRR}/${SRR}_sorted_hits.bam" -
         fi
@@ -381,6 +408,7 @@ for SRR in $SAMPLES; do
         # Clean up FASTQ and BAM (keep only BigWig)
         echo "[$(date)] Cleaning up..." >> "$SAMPLE_LOG"
         rm -f "$FASTQ_DIR/${SRR}_1.fastq.gz" "$FASTQ_DIR/${SRR}_2.fastq.gz"
+        rm -f "$FASTQ_DIR/${SRR}_1.trimmed.fastq.gz" "$FASTQ_DIR/${SRR}_2.trimmed.fastq.gz"
         rm -f "$OUTPUT_DIR/${SRR}/${SRR}_sorted_hits.bam"
         rm -f "$OUTPUT_DIR/${SRR}/${SRR}_sorted_hits.bam.bai"
 
