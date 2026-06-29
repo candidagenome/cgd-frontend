@@ -241,6 +241,50 @@ get_ena_url() {
     echo "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/${prefix}${subdir}/${srr}"
 }
 
+# Robustly download an ENA FASTQ with retry + resume + integrity check.
+#   download_fastq <url> <final_dest>
+# Succeeds (returns 0) only when <final_dest> ends up as a non-empty, valid
+# gzip. Downloads to the URL's natural name in $FASTQ_DIR so `wget --continue`
+# can resume a partial across attempts, verifies with `gzip -t`, then renames
+# to <final_dest>. An existing <final_dest> is reused only if it is itself a
+# valid gzip; 0-byte / truncated / corrupt leftovers (e.g. from a dropped ENA
+# connection) are discarded and re-fetched instead of being silently skipped.
+download_fastq() {
+    local url=$1
+    local final_dest=$2
+    local tmp="$FASTQ_DIR/$(basename "$url")"
+    local attempt
+
+    # Reuse an existing final file only if it is a valid, non-empty gzip.
+    if [ -s "$final_dest" ] && gzip -t "$final_dest" 2>/dev/null; then
+        echo "[$(date)] Already present and valid: $(basename "$final_dest")" >> "$SAMPLE_LOG"
+        return 0
+    fi
+
+    for attempt in 1 2 3; do
+        echo "[$(date)] Downloading $(basename "$url") (attempt $attempt/3)..." >> "$SAMPLE_LOG"
+        # --continue resumes a partial transfer from a dropped connection;
+        # --tries/--waitretry/--timeout ride out transient ENA FTP flakiness.
+        wget -q --continue --tries=5 --waitretry=10 --timeout=60 \
+             -P "$FASTQ_DIR" "$url" 2>> "$SAMPLE_LOG" || true
+
+        if [ -s "$tmp" ] && gzip -t "$tmp" 2>/dev/null; then
+            [ "$tmp" = "$final_dest" ] || mv -f "$tmp" "$final_dest"
+            echo "[$(date)] Download OK: $(basename "$final_dest")" >> "$SAMPLE_LOG"
+            return 0
+        fi
+
+        # Bad/partial result: discard so the next attempt is a clean download.
+        echo "[$(date)] Invalid/incomplete download (attempt $attempt); discarding + backing off..." >> "$SAMPLE_LOG"
+        rm -f "$tmp"
+        sleep $(( attempt * 20 ))
+    done
+
+    echo "[$(date)] ERROR: could not obtain a valid $(basename "$final_dest") after 3 attempts" >> "$SAMPLE_LOG"
+    rm -f "$tmp" "$final_dest"
+    return 1
+}
+
 # Process each sample
 COUNT=0
 FAILED=0
@@ -273,18 +317,22 @@ for SRR in $SAMPLES; do
         # Get ENA URL
         ENA_URL=$(get_ena_url "$SRR")
 
-        # Download FASTQ files
+        # Download FASTQ files (retry + resume + gzip integrity check)
         echo "[$(date)] Downloading from ENA..." >> "$SAMPLE_LOG"
-        if [ ! -f "$FASTQ_DIR/${SRR}_1.fastq.gz" ]; then
-            wget -q -O "$FASTQ_DIR/${SRR}_1.fastq.gz" "${ENA_URL}/${SRR}_1.fastq.gz" 2>> "$SAMPLE_LOG" || \
-            wget -q -O "$FASTQ_DIR/${SRR}_1.fastq.gz" "${ENA_URL}/${SRR}.fastq.gz" 2>> "$SAMPLE_LOG"
+        # R1 / single-end: prefer the _1 name, fall back to the unsuffixed name.
+        if ! download_fastq "${ENA_URL}/${SRR}_1.fastq.gz" "$FASTQ_DIR/${SRR}_1.fastq.gz"; then
+            download_fastq "${ENA_URL}/${SRR}.fastq.gz" "$FASTQ_DIR/${SRR}_1.fastq.gz" || {
+                echo "[$(date)] ERROR: no valid R1 FASTQ for ${SRR} - failing sample" >> "$SAMPLE_LOG"
+                exit 1
+            }
         fi
 
-        # Check if paired-end
-        if wget -q --spider "${ENA_URL}/${SRR}_2.fastq.gz" 2>/dev/null; then
-            if [ ! -f "$FASTQ_DIR/${SRR}_2.fastq.gz" ]; then
-                wget -q -O "$FASTQ_DIR/${SRR}_2.fastq.gz" "${ENA_URL}/${SRR}_2.fastq.gz" 2>> "$SAMPLE_LOG"
-            fi
+        # Check if paired-end (R2 present on ENA)
+        if wget -q --spider --tries=3 --timeout=30 "${ENA_URL}/${SRR}_2.fastq.gz" 2>/dev/null; then
+            download_fastq "${ENA_URL}/${SRR}_2.fastq.gz" "$FASTQ_DIR/${SRR}_2.fastq.gz" || {
+                echo "[$(date)] ERROR: R2 listed on ENA but download failed for ${SRR} - failing sample" >> "$SAMPLE_LOG"
+                exit 1
+            }
             PAIRED=true
         else
             PAIRED=false
