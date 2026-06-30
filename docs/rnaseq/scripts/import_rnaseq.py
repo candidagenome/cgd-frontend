@@ -210,7 +210,7 @@ def generate_jbrowse2_tracks(study_info: dict, samples: list[dict]) -> list[dict
                 }
             },
             "assemblyNames": [study_info.get('Organism', 'C_auris_B8441')],
-            "category": ["RNA-seq", study_id],
+            "category": ["RNA-Seq", study_id],
             "displays": [{
                 "type": "LinearWiggleDisplay",
                 "displayId": f"{prefix}_{srr_id}_coverage_display"
