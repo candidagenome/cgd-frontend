@@ -3980,6 +3980,32 @@ a:hover {
   gap: 2px;
 }
 
+/* Per-group blocks for grouped studies (e.g. strain comparisons) */
+.expression-study .expression-group {
+  margin-bottom: 14px;
+}
+
+.expression-study .group-header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 6px;
+  padding: 5px 10px;
+  background: #eef2f7;
+  border-left: 3px solid #7a8aa0;
+  border-radius: 3px;
+}
+
+.expression-study .group-header .group-name {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.expression-study .group-header .group-control-info {
+  font-size: 0.85em;
+  color: #666;
+}
+
 .expression-study .condition-item {
   display: flex;
   flex-direction: column;

@@ -235,6 +235,55 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
     }));
   };
 
+  // Render a single condition's fold-change bar (shared by grouped + flat layouts)
+  const renderConditionItem = (condition) => {
+    const isControl = condition.bucket === 'control';
+    const foldStyle = getFoldChangeStyle(condition.fold_change);
+    // 1.0 = center (50%), <1 goes left, >1 goes right; clamp to 0.25x–4x
+    const logFc = Math.log2(condition.fold_change);
+    const clampedLog = Math.max(-2, Math.min(2, logFc));
+    const barWidth = Math.abs(clampedLog) * 25; // 25% per log unit
+    const isUp = condition.fold_change >= 1;
+
+    return (
+      <div
+        key={condition.condition_id}
+        className={`condition-item ${isControl ? 'condition-control' : ''}`}
+        title={`${condition.label}: ${formatFoldChange(condition.fold_change)} (raw value: ${condition.value?.toFixed(2)})`}
+      >
+        <div className="condition-label">
+          <span className="condition-name">{condition.label}</span>
+          {/* Only show bucket badge for non-control conditions */}
+          {!isControl && (
+            <span
+              className="bucket-badge"
+              style={{
+                backgroundColor: BUCKET_INFO[condition.bucket]?.bg || 'transparent',
+                color: BUCKET_INFO[condition.bucket]?.color || '#6b7280',
+                border: `1px solid ${BUCKET_INFO[condition.bucket]?.border || '#d1d5db'}`
+              }}
+            >
+              {BUCKET_INFO[condition.bucket]?.label || condition.bucket}
+            </span>
+          )}
+        </div>
+        <div className="fold-change-bar-centered">
+          <div className="bar-baseline"></div>
+          <div
+            className={`bar-fill ${isUp ? 'bar-up' : 'bar-down'}`}
+            style={{
+              width: `${barWidth}%`,
+              ...foldStyle
+            }}
+          ></div>
+          <span className={`fold-change-value ${isUp ? 'value-up' : 'value-down'}`}>
+            {formatFoldChange(condition.fold_change)}
+          </span>
+        </div>
+      </div>
+    );
+  };
+
   // Handle loading state
   if (loading) {
     return <div className="loading">Loading expression data...</div>;
@@ -383,6 +432,20 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
                     : sortedConditions.slice(0, DEFAULT_VISIBLE_CONDITIONS);
                   const hiddenCount = sortedConditions.length - DEFAULT_VISIBLE_CONDITIONS;
 
+                  // Grouped studies (e.g. strain comparisons) render one block per
+                  // group: its own control baseline + treatment(s). The backend
+                  // already orders conditions by (group, controls-first, label).
+                  const isGrouped = study.conditions.some(c => c.group);
+                  const conditionsByGroup = {};
+                  const groupOrder = [];
+                  if (isGrouped) {
+                    study.conditions.forEach(c => {
+                      const g = c.group || 'Other';
+                      if (!conditionsByGroup[g]) { conditionsByGroup[g] = []; groupOrder.push(g); }
+                      conditionsByGroup[g].push(c);
+                    });
+                  }
+
                   return (
                     <div
                       key={study.study_id}
@@ -425,74 +488,49 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
 
                       {isExpanded && (
                         <div className="study-conditions">
-                          <div className="control-info">
-                            Fold change vs: <strong>{study.control_label || study.control_id}</strong>
-                          </div>
-                          <div className="conditions-grid">
-                            {visibleConditions.map(condition => {
-                              const isControl = condition.bucket === 'control';
-                              const foldStyle = getFoldChangeStyle(condition.fold_change);
-
-                              // Calculate bar position for centered baseline
-                              // 1.0 = center (50%), <1 goes left, >1 goes right
-                              const logFc = Math.log2(condition.fold_change);
-                              // Clamp to reasonable range (-2 to +2 in log scale = 0.25x to 4x)
-                              const clampedLog = Math.max(-2, Math.min(2, logFc));
-                              // Convert to percentage: -2 = 0%, 0 = 50%, +2 = 100%
-                              const barWidth = Math.abs(clampedLog) * 25; // 25% per log unit
-                              const isUp = condition.fold_change >= 1;
-
+                          {isGrouped ? (
+                            // Grouped study: one block per group (control baseline + treatment)
+                            groupOrder.map(groupName => {
+                              const groupConds = conditionsByGroup[groupName];
+                              const groupControlLabel = groupConds.find(c => c.control_label)?.control_label;
                               return (
-                                <div
-                                  key={condition.condition_id}
-                                  className={`condition-item ${isControl ? 'condition-control' : ''}`}
-                                  title={`${condition.label}: ${formatFoldChange(condition.fold_change)} (raw value: ${condition.value?.toFixed(2)})`}
-                                >
-                                  <div className="condition-label">
-                                    <span className="condition-name">{condition.label}</span>
-                                    {/* Only show bucket badge for non-control conditions */}
-                                    {!isControl && (
-                                      <span
-                                        className="bucket-badge"
-                                        style={{
-                                          backgroundColor: BUCKET_INFO[condition.bucket]?.bg || 'transparent',
-                                          color: BUCKET_INFO[condition.bucket]?.color || '#6b7280',
-                                          border: `1px solid ${BUCKET_INFO[condition.bucket]?.border || '#d1d5db'}`
-                                        }}
-                                      >
-                                        {BUCKET_INFO[condition.bucket]?.label || condition.bucket}
+                                <div key={groupName} className="expression-group">
+                                  <div className="group-header">
+                                    <span className="group-name">{groupName}</span>
+                                    {groupControlLabel && (
+                                      <span className="group-control-info">
+                                        vs <strong>{groupControlLabel}</strong>
                                       </span>
                                     )}
                                   </div>
-                                  <div className="fold-change-bar-centered">
-                                    <div className="bar-baseline"></div>
-                                    <div
-                                      className={`bar-fill ${isUp ? 'bar-up' : 'bar-down'}`}
-                                      style={{
-                                        width: `${barWidth}%`,
-                                        ...foldStyle
-                                      }}
-                                    ></div>
-                                    <span className={`fold-change-value ${isUp ? 'value-up' : 'value-down'}`}>
-                                      {formatFoldChange(condition.fold_change)}
-                                    </span>
+                                  <div className="conditions-grid">
+                                    {groupConds.map(renderConditionItem)}
                                   </div>
                                 </div>
                               );
-                            })}
-                          </div>
+                            })
+                          ) : (
+                            <>
+                              <div className="control-info">
+                                Fold change vs: <strong>{study.control_label || study.control_id}</strong>
+                              </div>
+                              <div className="conditions-grid">
+                                {visibleConditions.map(renderConditionItem)}
+                              </div>
 
-                          {/* Show all toggle */}
-                          {hiddenCount > 0 && (
-                            <button
-                              className="show-all-toggle"
-                              onClick={(e) => toggleShowAll(study.study_id, e)}
-                            >
-                              {showAll
-                                ? `Show top ${DEFAULT_VISIBLE_CONDITIONS} only`
-                                : `Show all conditions (${sortedConditions.length} total)`
-                              }
-                            </button>
+                              {/* Show all toggle */}
+                              {hiddenCount > 0 && (
+                                <button
+                                  className="show-all-toggle"
+                                  onClick={(e) => toggleShowAll(study.study_id, e)}
+                                >
+                                  {showAll
+                                    ? `Show top ${DEFAULT_VISIBLE_CONDITIONS} only`
+                                    : `Show all conditions (${sortedConditions.length} total)`
+                                  }
+                                </button>
+                              )}
+                            </>
                           )}
                         </div>
                       )}
