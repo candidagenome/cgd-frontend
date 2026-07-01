@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import Seo from '../components/Seo';
 import './HomePage.css';
 
 // Rotating images for the slideshow
@@ -298,6 +299,15 @@ function HomePage() {
 
   return (
     <div className="home-page">
+      <Seo
+        description={
+          'The Candida Genome Database (CGD) is a resource for genomic, genetic, ' +
+          'and molecular biological information about Candida albicans and related ' +
+          'Candida species — search genes, GO annotations, phenotypes, sequences, ' +
+          'and the associated literature.'
+        }
+        canonicalPath="/"
+      />
       <div className="home-content">
         {/* Left Column */}
         <div className="home-left">

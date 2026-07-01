@@ -4,6 +4,7 @@ import { AgGridReact } from 'ag-grid-react';
 import goApi from '../api/goApi';
 import { renderCitationItem } from '../utils/formatCitation.jsx';
 import { GODiagram } from '../components/go';
+import Seo from '../components/Seo';
 import './GoTermPage.css';
 
 // Map GO aspect codes to full names
@@ -575,10 +576,13 @@ function GoTermPage() {
     );
   };
 
+  const goCanonicalPath = `/go/${goid}`;
+
   // Loading state
   if (loading) {
     return (
       <div className="go-term-page">
+        <Seo title={formatGoid(goid)} canonicalPath={goCanonicalPath} />
         <div className="loading-page">
           <div className="loading-spinner"></div>
           <p>
@@ -593,6 +597,7 @@ function GoTermPage() {
   if (error) {
     return (
       <div className="go-term-page">
+        <Seo title={`${formatGoid(goid)} — not found`} canonicalPath={goCanonicalPath} noindex />
         <div className="error-page">
           <div className="error-icon">&#9888;</div>
           <h1>GO Term Not Found</h1>
@@ -631,6 +636,7 @@ function GoTermPage() {
   if (!data || !data.term) {
     return (
       <div className="go-term-page">
+        <Seo title={formatGoid(goid)} canonicalPath={goCanonicalPath} noindex />
         <div className="no-data-page">
           <p>No data available for this GO term.</p>
           <Link to="/">Return to Home</Link>
@@ -639,8 +645,18 @@ function GoTermPage() {
     );
   }
 
+  const goDescription = data.term.go_definition
+    ? `${data.term.go_term} (${data.term.goid}, ${data.term.aspect_name}): ${data.term.go_definition}`
+    : `${data.term.go_term} (${data.term.goid}) — ${data.term.aspect_name} Gene Ontology term ` +
+      'and the Candida genes annotated to it.';
+
   return (
     <div className="go-term-page">
+      <Seo
+        title={`${data.term.go_term} (${data.term.goid})`}
+        description={goDescription}
+        canonicalPath={goCanonicalPath}
+      />
       <header className="go-term-header">
         <h1>{data.term.go_term}</h1>
         <p className="subtitle">

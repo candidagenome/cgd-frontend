@@ -5,6 +5,9 @@ SERVICE="${FRONTEND_SERVICE:-cgd-frontend-vite}"
 REPO_DIR="${FRONTEND_DIR:-/home/ec2-user/work/cgd-frontend}"
 FRONTEND_URL="${FRONTEND_URL:-https://frontend.dev.candidagenome.org}"
 HEALTH_PATH="${FRONTEND_HEALTH_PATH:-/locus/act1}"
+# Sitemap generation targets (public canonical host + backend to query for genes).
+SITEMAP_SITE_URL="${SITEMAP_SITE_URL:-https://www.candidagenome.org}"
+SITEMAP_API_URL="${SITEMAP_API_URL:-https://backend.dev.candidagenome.org}"
 
 log() { printf "\n==> %s\n" "$*"; }
 warn() { printf "WARNING: %s\n" "$*" >&2; }
@@ -38,6 +41,15 @@ if [ "$need_install" = "yes" ]; then
   npm install
 else
   log "No dependency changes detected → skipping npm install"
+fi
+
+# Regenerate sitemap.xml from the live backend so crawlers get an up-to-date
+# list of locus pages. Non-fatal: a failure here should not block the deploy.
+log "Regenerate sitemap (SITE_URL=$SITEMAP_SITE_URL API_URL=$SITEMAP_API_URL)"
+if SITE_URL="$SITEMAP_SITE_URL" API_URL="$SITEMAP_API_URL" npm run sitemap; then
+  :
+else
+  warn "sitemap generation failed; continuing with existing sitemap (if any)"
 fi
 
 log "Restart Vite systemd service"

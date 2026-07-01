@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Generated sitemaps (rebuilt at deploy time via `npm run sitemap`)
+public/sitemap.xml
+public/sitemaps/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -1,0 +1,11 @@
+# Candida Genome Database — robots.txt
+# Allow crawling of all public content.
+User-agent: *
+Allow: /
+
+# Curator / authenticated tools carry no public content — keep them out of the index.
+Disallow: /curation/
+Disallow: /login
+Disallow: /api/
+
+Sitemap: https://www.candidagenome.org/sitemap.xml

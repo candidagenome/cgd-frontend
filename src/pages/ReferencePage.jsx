@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import useReferenceData from '../hooks/useReferenceData';
 import referenceApi from '../api/referenceApi';
 import { formatCitationString, CitationLinksBelow, renderCitationItem } from '../utils/formatCitation.jsx';
+import Seo from '../components/Seo';
 import './ReferencePage.css';
 
 const GENES_PER_TABLE = 10;
@@ -872,8 +873,49 @@ function ReferencePage() {
     return `Reference: ${id}`;
   };
 
+  // SEO: use the paper's own title so the reference page is discoverable by its
+  // citation; description falls back through abstract → citation.
+  const ref = data.info?.result;
+  const seoCanonicalPath = `/reference/${id}`;
+  const truncate = (s, n) => {
+    const t = (s || '').replace(/\s+/g, ' ').trim();
+    return t.length > n ? `${t.slice(0, n - 1)}…` : t;
+  };
+  let seoTitle = `Reference ${id}`;
+  let seoDescription = null;
+  let seoNoindex = false;
+  if (ref) {
+    const firstAuthor = ref.authors?.[0]?.author_name;
+    const authorLabel = firstAuthor
+      ? `${firstAuthor}${ref.authors.length > 1 ? ' et al.' : ''}`
+      : '';
+    seoTitle = truncate(ref.title || `Reference ${id}`, 110);
+    if (ref.abstract) {
+      seoDescription = truncate(ref.abstract, 300);
+    } else {
+      const parts = [];
+      if (authorLabel) parts.push(authorLabel);
+      if (ref.year) parts.push(`(${ref.year})`);
+      if (ref.title) parts.push(ref.title);
+      if (ref.journal_name) parts.push(ref.journal_name);
+      const built = parts.join(' ').trim();
+      seoDescription = built
+        ? `${truncate(built, 280)} — reference in the Candida Genome Database.`
+        : null;
+    }
+  } else if (!loading.info) {
+    // Loaded but no result -> unknown reference; keep it out of the index.
+    seoNoindex = true;
+  }
+
   return (
     <div className="reference-page">
+      <Seo
+        title={seoTitle}
+        description={seoDescription}
+        canonicalPath={seoCanonicalPath}
+        noindex={seoNoindex}
+      />
       <header className="reference-header">
         <h1>{getDisplayTitle()}</h1>
       </header>

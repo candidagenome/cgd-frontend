@@ -13,6 +13,8 @@ import History from '../components/locus/History';
 import ExpressionDetails from '../components/locus/ExpressionDetails';
 import SimilarGenesDetails from '../components/locus/SimilarGenesDetails';
 import OrganismSelector, { getDefaultOrganism } from '../components/locus/OrganismSelector';
+import Seo from '../components/Seo';
+import { SPECIES_ABBREV } from '../constants/organisms';
 import './LocusPage.css';
 
 // Sub-tabs for the Expression tab (extensible for future additions)
@@ -406,6 +408,37 @@ function LocusPage() {
     return name;
   };
 
+  // Build SEO title/description from the gene's primary organism so crawlers and
+  // social previews get a unique, informative title per locus. Canonical path is
+  // kept query-free so ?tab= / ?subtab= variants collapse to one indexed page.
+  const seo = React.useMemo(() => {
+    const canonicalPath = `/locus/${effectiveName}`;
+    const primaryOrg = data.info?.query_organism;
+    const feature = primaryOrg ? data.info?.results?.[primaryOrg] : null;
+
+    if (!feature) {
+      return { title: effectiveName, description: null, canonicalPath };
+    }
+
+    const orf = feature.feature_name || effectiveName;
+    const gene = feature.gene_name && feature.gene_name !== orf ? feature.gene_name : null;
+    const orgShort = SPECIES_ABBREV[primaryOrg] || primaryOrg || '';
+
+    // Strip any embedded HTML from the one-line description.
+    const headline = (feature.headline || feature.description || '')
+      .replace(/<[^>]+>/g, '')
+      .trim();
+
+    const label = gene ? `${gene} / ${orf}` : orf;
+    const title = orgShort ? `${label} — ${orgShort}` : label;
+    const description = headline
+      ? `${label}${orgShort ? ` (${orgShort})` : ''}: ${headline}`
+      : `${label}${orgShort ? `, a gene in ${orgShort}` : ''}. ` +
+        'Gene, protein, phenotype, GO, expression, and literature data at the Candida Genome Database.';
+
+    return { title, description, canonicalPath };
+  }, [data.info, effectiveName]);
+
   // Check if the identifier was not found
   const isNotFound = !loading.info && (
     errors.info ||
@@ -418,6 +451,7 @@ function LocusPage() {
   if (loading.info) {
     return (
       <div className="locus-page">
+        <Seo title={effectiveName} canonicalPath={seo.canonicalPath} />
         <div className="loading-page">
           <div className="loading-spinner"></div>
           <p>Loading locus information for <strong>{name}</strong>...</p>
@@ -430,6 +464,7 @@ function LocusPage() {
   if (isNotFound) {
     return (
       <div className="locus-page">
+        <Seo title={`${effectiveName} — not found`} canonicalPath={seo.canonicalPath} noindex />
         <div className="error-page">
           <div className="error-icon">&#9888;</div>
           <h1>Locus Not Found</h1>
@@ -456,6 +491,7 @@ function LocusPage() {
 
   return (
     <div className="locus-page">
+      <Seo title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath} />
       <header className="locus-header">
         <h1>{getDisplayName()}</h1>
         {currentGeneInfo && (
