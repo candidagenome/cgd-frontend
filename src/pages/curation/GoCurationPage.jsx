@@ -400,7 +400,10 @@ function GoCurationPage() {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/curation/go/${encodeURIComponent(searchQuery.trim())}`);
+      const query = selectedOrganism
+        ? `?organism=${encodeURIComponent(selectedOrganism)}`
+        : '';
+      navigate(`/curation/go/${encodeURIComponent(searchQuery.trim())}${query}`);
     }
   };
 
