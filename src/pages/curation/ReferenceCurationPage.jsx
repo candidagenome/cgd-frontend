@@ -601,6 +601,9 @@ function ReferenceCurationPage() {
         <h1>Reference Curation: {referenceNo}</h1>
         <div style={styles.headerRight}>
           <span>Curator: {user?.first_name} {user?.last_name}</span>
+          <Link to={`/curation/litguide/${referenceNo}`} style={styles.headerLink}>
+            Curate
+          </Link>
           <Link to="/curation/litguide/todo" style={styles.headerLink}>
             LitGuide Todo
           </Link>
