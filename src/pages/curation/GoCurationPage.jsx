@@ -10,10 +10,9 @@
  * Mirrors legacy goCuration CGI functionality (UpdateGO.pm).
  */
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import goCurationApi from '../../api/goCurationApi';
-import api from '../../api/config';
 import { getOrganisms } from '../../api/litReviewApi';
 import { filterAllowedOrganisms } from '../../constants/organisms';
 
@@ -82,6 +81,11 @@ function GoCurationPage() {
   const { featureName } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  // Organism the feature was searched under (organism_abbrev), used to
+  // disambiguate gene names shared across species (e.g., WOR1).
+  const organismAbbrev = searchParams.get('organism') || '';
 
   // Organism state
   const [organisms, setOrganisms] = useState([]);
@@ -99,7 +103,7 @@ function GoCurationPage() {
   // New annotation form state - multiple rows like Perl version
   const [showAddForm, setShowAddForm] = useState(false);
   const [evidenceCodes, setEvidenceCodes] = useState([]);
-  const [rowCount, setRowCount] = useState(INITIAL_ROWS);
+  const [, setRowCount] = useState(INITIAL_ROWS);
 
   // Create empty row template
   const createEmptyRow = () => ({
@@ -134,7 +138,7 @@ function GoCurationPage() {
     setError(null);
 
     try {
-      const data = await goCurationApi.getAnnotations(featureName);
+      const data = await goCurationApi.getAnnotations(featureName, organismAbbrev);
       setFeatureData(data);
     } catch (err) {
       if (err.response?.status === 404) {
@@ -145,7 +149,7 @@ function GoCurationPage() {
     } finally {
       setLoading(false);
     }
-  }, [featureName]);
+  }, [featureName, organismAbbrev]);
 
   // Load evidence codes and organisms
   useEffect(() => {
@@ -180,7 +184,7 @@ function GoCurationPage() {
     loadAnnotations();
   }, [loadAnnotations]);
 
-  // Group annotations by aspect (lowercase for consistent matching with aspectOrder)
+  // Group annotations by aspect (lowercase for consistent matching)
   const annotationsByAspect = featureData?.annotations?.reduce((acc, ann) => {
     const aspect = (ann.go_aspect || 'unknown').toLowerCase();
     if (!acc[aspect]) acc[aspect] = [];
@@ -235,16 +239,6 @@ function GoCurationPage() {
   };
 
   // Helper to look up reference by pubmed
-  const lookupReferenceByPubmed = async (pubmed) => {
-    try {
-      const response = await api.get(`/api/reference/${pubmed}`);
-      // API returns { result: { reference_no: ... } }
-      return response.data.result?.reference_no || response.data.reference_no;
-    } catch {
-      return null;
-    }
-  };
-
   // Handle submit - process all rows with data
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -341,7 +335,7 @@ function GoCurationPage() {
 
         for (const feat of featuresToAnnotate) {
           try {
-            await goCurationApi.createAnnotation(feat, data);
+            await goCurationApi.createAnnotation(feat, data, organismAbbrev);
             results.push(`Row ${i + 1}: Annotation created for ${feat}`);
           } catch (err) {
             errors.push(`Row ${i + 1} (${feat}): ${parseApiError(err)}`);
@@ -401,9 +395,6 @@ function GoCurationPage() {
     process: 1, biological_process: 1, p: 1,
     component: 2, cellular_component: 2, c: 2,
   };
-
-  // Define aspect display order (canonical keys)
-  const aspectOrder = ['function', 'process', 'component'];
 
   // Handle search form submission
   const handleSearch = (e) => {
@@ -602,7 +593,7 @@ function GoCurationPage() {
                         })()}
                       </td>
                       <td style={styles.td}>
-                        {ann.references?.map((ref, idx) => (
+                        {ann.references?.map((ref) => (
                           <div key={ref.go_ref_no}>
                             <Link to={`/reference/${ref.reference_no}`}>
                               {ref.pubmed ? `PMID:${ref.pubmed}` : `Ref:${ref.reference_no}`}

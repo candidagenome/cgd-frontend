@@ -11,10 +11,14 @@ export const goCurationApi = {
    * Get all GO annotations for a feature.
    *
    * @param {string} featureName - Feature name or gene name
+   * @param {string} [organism] - Organism abbreviation to disambiguate gene names
+   *   shared across species (e.g., WOR1 in C. albicans and C. tropicalis)
    * @returns {Promise<{feature_no: number, feature_name: string, gene_name: string, annotations: Array}>}
    */
-  getAnnotations: async (featureName) => {
-    const response = await api.get(`/api/curation/go/${encodeURIComponent(featureName)}`);
+  getAnnotations: async (featureName, organism) => {
+    const response = await api.get(`/api/curation/go/${encodeURIComponent(featureName)}`, {
+      params: organism ? { organism } : {},
+    });
     return response.data;
   },
 
@@ -48,10 +52,14 @@ export const goCurationApi = {
    * @param {number} [data.ic_from_goid] - GO ID for IC evidence
    * @param {string} [data.with_db] - Database for with/from evidence (e.g., "SGD", "UniProtKB")
    * @param {string} [data.with_id] - ID for with/from evidence (separate multiples by |)
+   * @param {string} [organism] - Organism abbreviation to disambiguate gene names
+   *   shared across species
    * @returns {Promise<{go_annotation_no: number, message: string}>}
    */
-  createAnnotation: async (featureName, data) => {
-    const response = await api.post(`/api/curation/go/${encodeURIComponent(featureName)}`, data);
+  createAnnotation: async (featureName, data, organism) => {
+    const response = await api.post(`/api/curation/go/${encodeURIComponent(featureName)}`, data, {
+      params: organism ? { organism } : {},
+    });
     return response.data;
   },
 
