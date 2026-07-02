@@ -114,7 +114,7 @@ const sortByMagnitude = (conditions) => {
 function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismChange, orthologOrganisms = [] }) {
   const [expandedStudies, setExpandedStudies] = useState({});
   const [showAllConditions, setShowAllConditions] = useState({});
-  const [filterBucket, setFilterBucket] = useState('all');
+  const [filterCategory, setFilterCategory] = useState('all');
   const [viewMode, setViewMode] = useState('both'); // 'bars', 'heatmap', 'both'
   const [hoveredCondition, setHoveredCondition] = useState(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
@@ -129,16 +129,13 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
     return selectedOrganism && data?.results ? data.results[selectedOrganism] : null;
   }, [selectedOrganism, data?.results]);
 
-  // Filter conditions by bucket for the selected organism's studies
+  // Filter studies by their category (matches the metadata-sheet / Curator Guide taxonomy)
   const filteredStudies = useMemo(() => {
     if (!orgData?.studies) return [];
-    if (filterBucket === 'all') return orgData.studies;
+    if (filterCategory === 'all') return orgData.studies;
 
-    return orgData.studies.map(study => ({
-      ...study,
-      conditions: study.conditions.filter(c => c.bucket === filterBucket)
-    })).filter(study => study.conditions.length > 0);
-  }, [orgData?.studies, filterBucket]);
+    return orgData.studies.filter(study => study.category === filterCategory);
+  }, [orgData?.studies, filterCategory]);
 
   // Flatten all conditions for heatmap strip (sorted by magnitude within each study)
   const allConditions = useMemo(() => {
@@ -193,21 +190,23 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
     }
   }, []);
 
-  // Get unique buckets with counts for filter from the selected organism's data
-  const bucketCounts = useMemo(() => {
+  // Get study categories with condition counts for the filter (Curator Guide taxonomy)
+  const categoryCounts = useMemo(() => {
     if (!orgData?.studies) return {};
     const counts = {};
     orgData.studies.forEach(study => {
-      study.conditions.forEach(c => {
-        counts[c.bucket] = (counts[c.bucket] || 0) + 1;
-      });
+      const cat = study.category || 'Uncategorized';
+      // Count non-control conditions, matching the total_conditions basis used
+      // for the "All categories" count.
+      const n = (study.conditions || []).filter(c => c.bucket !== 'control').length;
+      counts[cat] = (counts[cat] || 0) + n;
     });
     return counts;
   }, [orgData?.studies]);
 
-  const availableBuckets = useMemo(() => {
-    return Object.keys(bucketCounts);
-  }, [bucketCounts]);
+  const availableCategories = useMemo(() => {
+    return Object.keys(categoryCounts).sort();
+  }, [categoryCounts]);
 
   // Set default organism if not already set and data is available
   useEffect(() => {
@@ -343,14 +342,14 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
                 <div className="expression-filters">
                   <label>Filter by category: </label>
                   <select
-                    value={filterBucket}
-                    onChange={(e) => setFilterBucket(e.target.value)}
+                    value={filterCategory}
+                    onChange={(e) => setFilterCategory(e.target.value)}
                     className="bucket-filter"
                   >
                     <option value="all">All categories ({orgData?.total_conditions || 0})</option>
-                    {availableBuckets.map(bucket => (
-                      <option key={bucket} value={bucket}>
-                        {BUCKET_INFO[bucket]?.label || bucket} ({bucketCounts[bucket] || 0})
+                    {availableCategories.map(cat => (
+                      <option key={cat} value={cat}>
+                        {cat} ({categoryCounts[cat] || 0})
                       </option>
                     ))}
                   </select>
