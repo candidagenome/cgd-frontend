@@ -3,7 +3,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 const DEFAULT_SITE_TITLE = 'Candida Genome Database'
-const LOCUS_TITLE_SUFFIX = 'CGD'
+const LOCUS_TITLE_SUFFIX = 'Candida Genome Database (CGD)'
 const CANONICAL_ORIGIN = 'https://www.candidagenome.org'
 const DEFAULT_SEO_API_URL = 'https://backend.dev.candidagenome.org'
 const ENABLE_SEO_HTML = process.env.ENABLE_SEO_HTML === 'true'
