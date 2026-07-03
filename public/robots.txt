@@ -1,0 +1,10 @@
+# Candida Genome Database (CGD)
+# https://www.candidagenome.org
+
+User-agent: *
+Allow: /
+
+# JSON API responses have no standalone SEO value and waste crawl budget
+Disallow: /api/
+
+Sitemap: https://www.candidagenome.org/sitemap.xml

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>https://www.candidagenome.org/sitemaps/static.xml</loc>
+    <lastmod>2026-07-01</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.candidagenome.org/sitemaps/genes-C_albicans_SC5314.xml</loc>
+    <lastmod>2026-07-01</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.candidagenome.org/sitemaps/genes-C_glabrata_CBS138.xml</loc>
+    <lastmod>2026-07-01</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.candidagenome.org/sitemaps/genes-C_parapsilosis_CDC317.xml</loc>
+    <lastmod>2026-07-01</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.candidagenome.org/sitemaps/genes-C_auris_B8441.xml</loc>
+    <lastmod>2026-07-01</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.candidagenome.org/sitemaps/genes-C_dubliniensis_CD36.xml</loc>
+    <lastmod>2026-07-01</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.candidagenome.org/sitemaps/genes-C_tropicalis.xml</loc>
+    <lastmod>2026-07-01</lastmod>
+  </sitemap>
+</sitemapindex>
