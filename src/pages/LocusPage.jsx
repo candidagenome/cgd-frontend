@@ -13,6 +13,7 @@ import History from '../components/locus/History';
 import ExpressionDetails from '../components/locus/ExpressionDetails';
 import SimilarGenesDetails from '../components/locus/SimilarGenesDetails';
 import OrganismSelector, { getDefaultOrganism } from '../components/locus/OrganismSelector';
+import { applySeo, buildLocusSeo } from '../utils/seo';
 import './LocusPage.css';
 
 // Sub-tabs for the Expression tab (extensible for future additions)
@@ -397,6 +398,27 @@ function LocusPage() {
 
     return null;
   }, [selectedOrganism, data.info?.results]);
+
+  const currentFeature = selectedOrganism && data.info?.results
+    ? data.info.results[selectedOrganism]
+    : null;
+
+  useEffect(() => {
+    if (currentFeature) {
+      applySeo(buildLocusSeo({
+        name,
+        feature: currentFeature,
+        organismName: selectedOrganism,
+      }));
+    } else if (name) {
+      applySeo({
+        title: `${name} | Candida Genome Database`,
+        description: `${name} locus page in the Candida Genome Database.`,
+        canonicalPath: `/locus/${encodeURIComponent(name)}`,
+        type: 'profile',
+      });
+    }
+  }, [name, currentFeature, selectedOrganism]);
 
   // Get display name for the page title
   const getDisplayName = () => {
