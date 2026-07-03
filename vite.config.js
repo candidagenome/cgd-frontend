@@ -3,6 +3,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 const DEFAULT_SITE_TITLE = 'Candida Genome Database'
+const LOCUS_TITLE_SUFFIX = 'CGD'
 const CANONICAL_ORIGIN = 'https://www.candidagenome.org'
 const DEFAULT_SEO_API_URL = 'https://backend.dev.candidagenome.org'
 const ENABLE_SEO_HTML = process.env.ENABLE_SEO_HTML === 'true'
@@ -77,7 +78,7 @@ const buildLocusSeo = (locusName, payload) => {
   )
 
   return {
-    title: `${displayName} | ${DEFAULT_SITE_TITLE}`,
+    title: `${displayName} | ${LOCUS_TITLE_SUFFIX}`,
     description,
     canonicalUrl,
     displayName,

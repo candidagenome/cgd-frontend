@@ -1,4 +1,5 @@
 const DEFAULT_TITLE = 'Candida Genome Database';
+const LOCUS_TITLE_SUFFIX = 'CGD';
 const DEFAULT_DESCRIPTION =
   'The Candida Genome Database provides curated genomic, gene, protein, phenotype, literature, and sequence information for Candida species.';
 const DEFAULT_CANONICAL_ORIGIN = 'https://www.candidagenome.org';
@@ -82,7 +83,7 @@ export const buildLocusSeo = ({ name, feature, organismName }) => {
   ].filter(Boolean);
 
   return {
-    title: `${displayName} | Candida Genome Database`,
+    title: `${displayName} | ${LOCUS_TITLE_SUFFIX}`,
     description: truncate(
       summary
         ? `${identifiers.join(' - ')}. ${summary}`
