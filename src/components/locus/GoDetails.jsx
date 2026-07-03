@@ -77,57 +77,10 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange, o
     }
   }, [organisms, selectedOrganism, onOrganismChange]);
 
-  if (loading) return <div className="loading">Loading GO annotations...</div>;
-  if (error) return <div className="error">Error: {error}</div>;
-  if (!data || !data.results) return <div className="no-data">No GO annotation data available</div>;
-
-  if (organisms.length === 0) {
-    return <div className="no-data">No GO annotations found</div>;
-  }
-
-  // Get data for the selected organism
-  const orgData = selectedOrganism ? data.results[selectedOrganism] : null;
-
-  // Group annotations by annotation_type, then by aspect
-  const groupAnnotations = (annotations) => {
-    const groups = {};
-
-    // Initialize groups for each annotation type
-    Object.keys(ANNOTATION_TYPE_LABELS).forEach((type) => {
-      groups[type] = {
-        F: [],
-        P: [],
-        C: [],
-      };
-    });
-
-    (annotations || []).forEach((ann) => {
-      const type = ann.annotation_type?.toLowerCase() || 'manually curated';
-      const aspect = ann.term?.aspect?.toUpperCase() || 'P';
-
-      if (groups[type] && groups[type][aspect]) {
-        groups[type][aspect].push(ann);
-      }
-    });
-
-    return groups;
-  };
-
-  const toggleSection = (key) => {
-    setCollapsedSections((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
-  };
-
-  // Group annotations for the selected organism
-  const grouped = orgData ? groupAnnotations(orgData.annotations || []) : null;
-
-  // Count total annotations per type
-  const countAnnotationsForType = (typeData) => {
-    return Object.values(typeData).reduce((sum, arr) => sum + arr.length, 0);
-  };
-
+  // NOTE: All hooks must be declared before any early return below (Rules of
+  // Hooks). columnDefs / defaultColDef / filterAnnotations do not depend on the
+  // selected organism's data, so they live here at the top unconditionally.
+  //
   // AG Grid column definitions for GO annotations
   const columnDefs = useMemo(
     () => [
@@ -247,6 +200,57 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange, o
       return searchFields.some((field) => field && String(field).toLowerCase().includes(searchLower));
     });
   }, [quickFilter]);
+
+  if (loading) return <div className="loading">Loading GO annotations...</div>;
+  if (error) return <div className="error">Error: {error}</div>;
+  if (!data || !data.results) return <div className="no-data">No GO annotation data available</div>;
+
+  if (organisms.length === 0) {
+    return <div className="no-data">No GO annotations found</div>;
+  }
+
+  // Get data for the selected organism
+  const orgData = selectedOrganism ? data.results[selectedOrganism] : null;
+
+  // Group annotations by annotation_type, then by aspect
+  const groupAnnotations = (annotations) => {
+    const groups = {};
+
+    // Initialize groups for each annotation type
+    Object.keys(ANNOTATION_TYPE_LABELS).forEach((type) => {
+      groups[type] = {
+        F: [],
+        P: [],
+        C: [],
+      };
+    });
+
+    (annotations || []).forEach((ann) => {
+      const type = ann.annotation_type?.toLowerCase() || 'manually curated';
+      const aspect = ann.term?.aspect?.toUpperCase() || 'P';
+
+      if (groups[type] && groups[type][aspect]) {
+        groups[type][aspect].push(ann);
+      }
+    });
+
+    return groups;
+  };
+
+  const toggleSection = (key) => {
+    setCollapsedSections((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
+  // Group annotations for the selected organism
+  const grouped = orgData ? groupAnnotations(orgData.annotations || []) : null;
+
+  // Count total annotations per type
+  const countAnnotationsForType = (typeData) => {
+    return Object.values(typeData).reduce((sum, arr) => sum + arr.length, 0);
+  };
 
   // Render a single GO annotation table for an aspect
   const renderAspectTable = (annotations, aspectKey, typeKey) => {
