@@ -21,6 +21,7 @@ import HelpPage from './pages/HelpPage';
 import HowToCitePage from './pages/HowToCitePage';
 import SiteMapPage from './pages/SiteMapPage';
 import GenomeSnapshotPage from './pages/GenomeSnapshotPage';
+import GenomeSnapshot2Page from './pages/GenomeSnapshot2Page';
 import LabsPage from './pages/LabsPage';
 import GenomeWideAnalysisPage from './pages/GenomeWideAnalysisPage';
 import StaffPage from './pages/StaffPage';
@@ -227,6 +228,8 @@ function App() {
           <Route path="/how-to-cite" element={<HowToCitePage />} />
           <Route path="/sitemap" element={<SiteMapPage />} />
           <Route path="/genome-snapshot/:organism" element={<GenomeSnapshotPage />} />
+          <Route path="/genome-snapshot2" element={<GenomeSnapshot2Page />} />
+          <Route path="/genome-snapshot2/:organism" element={<GenomeSnapshot2Page />} />
           <Route path="/labs" element={<LabsPage />} />
           <Route path="/genome-wide-analysis" element={<GenomeWideAnalysisPage />} />
           <Route path="/staff" element={<StaffPage />} />

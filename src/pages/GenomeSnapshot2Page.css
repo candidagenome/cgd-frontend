@@ -1,0 +1,697 @@
+/* ===========================================================================
+   Genome Snapshot 2 — interactive "explore this genome" dashboard styles.
+   Scoped under .gs2-page to avoid affecting the classic snapshot page.
+   =========================================================================== */
+
+.gs2-page {
+  position: relative;
+}
+
+.gs2-h2 {
+  color: #1976d2;
+  border-bottom: 2px solid #FFCC33;
+  padding-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.gs2-timestamp {
+  color: #555;
+  font-size: 0.9em;
+  margin-bottom: 8px;
+}
+
+.gs2-muted {
+  color: #666;
+  font-style: italic;
+}
+
+.gs2-note {
+  background: #fff8e1;
+  border-left: 4px solid #FFCC33;
+  padding: 10px 14px;
+  margin: 12px 0;
+  font-size: 0.9em;
+}
+
+.gs2-hint {
+  margin-top: 6px;
+  font-size: 0.85em;
+}
+
+/* ---- Sticky section navigation ---- */
+.gs2-section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 8px 0;
+  margin: 10px 0 20px;
+}
+
+.gs2-nav-item {
+  background: none;
+  border: none;
+  padding: 6px 12px;
+  font-size: 0.9em;
+  color: #444;
+  cursor: pointer;
+  border-radius: 4px;
+  border-bottom: 3px solid transparent;
+}
+
+.gs2-nav-item:hover {
+  background: #f0f6ff;
+  color: #1976d2;
+}
+
+.gs2-nav-item.active {
+  color: #1976d2;
+  font-weight: bold;
+  border-bottom-color: #1976d2;
+}
+
+.gs2-section {
+  scroll-margin-top: 60px;
+  margin-bottom: 36px;
+}
+
+/* ---- Genome at a glance cards ---- */
+.gs2-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px;
+  margin: 18px 0;
+}
+
+.gs2-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-top: 4px solid #555;
+  border-radius: 8px;
+  padding: 14px 16px;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.gs2-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  text-decoration: none;
+}
+
+.gs2-card-value {
+  font-size: 1.9em;
+  font-weight: bold;
+  color: #222;
+  line-height: 1.1;
+}
+
+.gs2-card-label {
+  font-size: 0.95em;
+  font-weight: 600;
+  color: #333;
+}
+
+.gs2-card-sub {
+  font-size: 0.82em;
+  color: #777;
+}
+
+.gs2-card-cta {
+  font-size: 0.8em;
+  color: #1976d2;
+  margin-top: 6px;
+}
+
+/* ---- Explore panel ---- */
+.gs2-explore-panel {
+  background: #f7fafc;
+  border: 1px solid #e0e6ed;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin: 18px 0;
+}
+
+.gs2-explore-panel h3 {
+  margin: 0 0 10px;
+  color: #1976d2;
+  font-size: 1.05em;
+}
+
+.gs2-explore-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.gs2-explore-links a,
+.gs2-explore-links button {
+  background: #fff;
+  border: 1px solid #cfd8e3;
+  border-radius: 20px;
+  padding: 7px 14px;
+  font-size: 0.9em;
+  color: #1976d2;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.gs2-explore-links a:hover,
+.gs2-explore-links button:hover {
+  background: #1976d2;
+  color: #fff;
+  text-decoration: none;
+}
+
+/* ---- Chart toolbars & toggles ---- */
+.gs2-chart-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 10px 0;
+}
+
+.gs2-go-toolbar {
+  justify-content: flex-start;
+}
+
+.gs2-toggle {
+  display: inline-flex;
+  border: 1px solid #cfd8e3;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.gs2-toggle button {
+  background: #fff;
+  border: none;
+  padding: 6px 12px;
+  font-size: 0.85em;
+  cursor: pointer;
+  color: #444;
+  border-right: 1px solid #cfd8e3;
+}
+
+.gs2-toggle button:last-child {
+  border-right: none;
+}
+
+.gs2-toggle button.active {
+  background: #1976d2;
+  color: #fff;
+}
+
+/* ---- Pie chart ---- */
+.gs2-pie-block {
+  margin-top: 20px;
+}
+
+.gs2-pie-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 30px;
+}
+
+.gs2-pie-slice {
+  cursor: pointer;
+  transition: opacity 0.12s ease;
+}
+
+.gs2-pie-slice:hover {
+  opacity: 0.85;
+}
+
+.gs2-pie-slice:focus {
+  outline: 3px solid #ff9800;
+  outline-offset: -3px;
+}
+
+.gs2-pie-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 260px;
+}
+
+.gs2-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #333;
+  border: 1px solid transparent;
+}
+
+.gs2-legend-row:hover {
+  background: #f0f6ff;
+  border-color: #cfe0ff;
+  text-decoration: none;
+}
+
+.gs2-legend-cta {
+  margin-left: auto;
+  font-size: 0.8em;
+  color: #1976d2;
+}
+
+.gs2-swatch {
+  width: 22px;
+  height: 16px;
+  display: inline-block;
+  border: 1px solid #333;
+  flex: 0 0 auto;
+  background-repeat: repeat;
+}
+
+/* Texture swatches mirror the SVG slice patterns for colour-blind support */
+.gs2-swatch-diag {
+  background-image: repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(255, 255, 255, 0.7) 3px, rgba(255, 255, 255, 0.7) 5px);
+}
+
+.gs2-swatch-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.8) 1.2px, transparent 1.3px);
+  background-size: 6px 6px;
+}
+
+.gs2-swatch-cross {
+  background-image:
+    repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(255, 255, 255, 0.6) 3px, rgba(255, 255, 255, 0.6) 4px),
+    repeating-linear-gradient(-45deg, transparent, transparent 3px, rgba(255, 255, 255, 0.6) 3px, rgba(255, 255, 255, 0.6) 4px);
+}
+
+/* ---- Tooltip ---- */
+.gs2-tooltip {
+  position: fixed;
+  z-index: 1000;
+  background: rgba(33, 33, 33, 0.95);
+  color: #fff;
+  padding: 8px 11px;
+  border-radius: 6px;
+  font-size: 0.82em;
+  max-width: 280px;
+  pointer-events: none;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  line-height: 1.4;
+}
+
+.gs2-tooltip-title {
+  font-weight: bold;
+  margin-bottom: 3px;
+}
+
+.gs2-tooltip-action {
+  margin-top: 5px;
+  color: #90caf9;
+  font-style: italic;
+}
+
+/* ---- Table controls ---- */
+.gs2-table-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 14px 0;
+}
+
+.gs2-input {
+  padding: 7px 10px;
+  border: 1px solid #cfd8e3;
+  border-radius: 6px;
+  font-size: 0.9em;
+  min-width: 240px;
+}
+
+.gs2-filter-chips {
+  display: inline-flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.gs2-filter-chips button {
+  background: #fff;
+  border: 1px solid #cfd8e3;
+  border-radius: 16px;
+  padding: 5px 12px;
+  font-size: 0.83em;
+  cursor: pointer;
+  color: #444;
+}
+
+.gs2-filter-chips button.active {
+  background: #1976d2;
+  border-color: #1976d2;
+  color: #fff;
+}
+
+.gs2-download-btn {
+  background: #fff;
+  border: 1px solid #43a047;
+  color: #2e7d32;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.85em;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.gs2-download-btn:hover {
+  background: #43a047;
+  color: #fff;
+}
+
+.gs2-sort-btn {
+  background: none;
+  border: none;
+  font: inherit;
+  font-weight: bold;
+  cursor: pointer;
+  color: inherit;
+  padding: 0;
+}
+
+.gs2-cat-tag {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 0.72em;
+  color: #888;
+  background: #f0f0f0;
+  border-radius: 8px;
+  padding: 1px 7px;
+  vertical-align: middle;
+}
+
+.gs2-linkbtn {
+  background: none;
+  border: none;
+  color: #1976d2;
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+  text-decoration: none;
+}
+
+.gs2-linkbtn:hover {
+  text-decoration: underline;
+}
+
+/* ---- Chromosome ideogram ---- */
+.gs2-ideogram {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px;
+  margin: 16px 0 6px;
+}
+
+.gs2-chr-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  background: linear-gradient(180deg, #e3f2fd, #bbdefb);
+  border: 1px solid #90caf9;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 6px 4px;
+  color: #0d47a1;
+  transition: transform 0.1s ease;
+}
+
+.gs2-chr-chip:hover {
+  transform: translateY(-2px);
+}
+
+.gs2-chr-chip.selected {
+  background: linear-gradient(180deg, #1976d2, #1565c0);
+  border-color: #0d47a1;
+  color: #fff;
+}
+
+.gs2-chr-name {
+  font-weight: bold;
+  font-size: 0.9em;
+}
+
+.gs2-chr-len {
+  font-size: 0.72em;
+  opacity: 0.85;
+}
+
+/* ---- Chromosome detail cards ---- */
+.gs2-chr-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 14px 0;
+}
+
+.gs2-chr-card {
+  flex: 1 1 260px;
+  border: 1px solid #cfd8e3;
+  border-top: 4px solid #1976d2;
+  border-radius: 8px;
+  padding: 12px 16px;
+  background: #fff;
+}
+
+.gs2-chr-card h4 {
+  margin: 0 0 10px;
+  color: #1976d2;
+}
+
+.gs2-chr-card dl {
+  margin: 0;
+}
+
+.gs2-chr-card dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 3px 0;
+  border-bottom: 1px dashed #eee;
+  font-size: 0.9em;
+}
+
+.gs2-chr-card dt {
+  color: #666;
+}
+
+.gs2-chr-card dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.gs2-chr-card-links {
+  display: flex;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+/* ---- Selected chromosome column highlight ---- */
+.chromosome-inventory-table .gs2-col-selected {
+  background: #fff3cd !important;
+  box-shadow: inset 0 0 0 1px #FFCC33;
+}
+
+.chromosome-inventory-table th.gs2-col-selected {
+  background: #ffe082 !important;
+}
+
+/* ---- GO tabs ---- */
+.gs2-go-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 2px solid #e0e0e0;
+  margin: 14px 0;
+  flex-wrap: wrap;
+}
+
+.gs2-go-tab {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 8px 16px;
+  font-size: 0.95em;
+  cursor: pointer;
+  color: #555;
+  margin-bottom: -2px;
+}
+
+.gs2-go-tab:hover {
+  color: #1976d2;
+}
+
+.gs2-go-tab.active {
+  font-weight: bold;
+}
+
+.gs2-go-chart-wrap {
+  overflow-x: auto;
+  margin: 12px 0;
+}
+
+.gs2-bar-row {
+  cursor: pointer;
+}
+
+.gs2-bar-row:hover rect:not([fill="transparent"]) {
+  opacity: 0.85;
+}
+
+.gs2-bar-row:hover .gs2-bar-label {
+  text-decoration: underline;
+}
+
+.gs2-bar-row:focus {
+  outline: none;
+}
+
+.gs2-bar-row:focus rect:first-of-type {
+  fill: #fff3cd;
+}
+
+/* ---- Comparison ---- */
+.gs2-compare-chips,
+.gs2-related-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.gs2-compare-chip {
+  background: #fff;
+  border: 1px solid #cfd8e3;
+  border-radius: 18px;
+  padding: 7px 14px;
+  font-size: 0.9em;
+  cursor: pointer;
+  color: #1976d2;
+}
+
+.gs2-compare-chip.active {
+  background: #1976d2;
+  border-color: #1976d2;
+  color: #fff;
+}
+
+.gs2-compare-table th,
+.gs2-compare-table td {
+  min-width: 120px;
+}
+
+/* ---- Related tools grid ---- */
+.gs2-related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.gs2-related-grid h4 {
+  color: #1976d2;
+  margin: 0 0 8px;
+}
+
+/* ---- Help drawer ---- */
+.gs2-help {
+  font-weight: normal;
+  font-size: 0.7em;
+}
+
+.gs2-help-toggle {
+  background: #eef4ff;
+  border: 1px solid #cfe0ff;
+  border-radius: 12px;
+  color: #1976d2;
+  cursor: pointer;
+  padding: 3px 10px;
+  font-size: 1em;
+}
+
+.gs2-help-toggle:hover {
+  background: #1976d2;
+  color: #fff;
+}
+
+.gs2-help-body {
+  display: block;
+  width: 100%;
+  background: #f7fafc;
+  border: 1px solid #e0e6ed;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-top: 8px;
+  font-size: 1.25em;
+  font-weight: normal;
+  color: #444;
+  font-style: normal;
+}
+
+.gs2-help-body ul {
+  margin: 0 0 8px;
+  padding-left: 20px;
+}
+
+/* ---- Back to top ---- */
+.gs2-back-to-top {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 100;
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 16px;
+  font-size: 0.9em;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+}
+
+.gs2-back-to-top:hover {
+  background: #0d47a1;
+}
+
+/* ---- Focus visibility for keyboard users ---- */
+.gs2-page a:focus-visible,
+.gs2-page button:focus-visible {
+  outline: 3px solid #ff9800;
+  outline-offset: 2px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .gs2-pie-wrap {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .gs2-download-btn {
+    margin-left: 0;
+  }
+
+  .gs2-section-nav {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+}
