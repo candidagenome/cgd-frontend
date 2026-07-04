@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import genomeSnapshotApi from '../api/genomeSnapshotApi';
 import './InfoPages.css';
 import './GenomeSnapshot2Page.css';
@@ -28,6 +28,22 @@ const ASSEMBLY_REFERENCES = {
   C_dubliniensis_CD36: [{ pmid: '19745113', assembly: 'Current Assembly' }],
   C_tropicalis: [{ pmid: '32469306', assembly: 'Current Assembly' }],
   C_tropicalis_MYA3404: [{ pmid: '32469306', assembly: 'Current Assembly' }],
+};
+
+// Shared browsing-context name so every cross-page link opens in (and reuses)
+// a single secondary tab rather than navigating away from the dashboard.
+const LINK_TARGET = 'cgdExplore';
+
+// JBrowse deep-links copied verbatim from the JBrowse navigation menu so the
+// "View in JBrowse" links land on the same assembly / location / tracks.
+const JBROWSE_LINKS = {
+  C_albicans_SC5314: '/jbrowse2/?assembly=C_albicans_SC5314&loc=Ca22chr1A_C_albicans_SC5314:115518..129521&tracks=DNA,TranscribedFeatures',
+  C_auris_B8441: '/jbrowse2/?assembly=C_auris_B8441&loc=Chr4_C_auris_B8441:120307..131992&tracks=C_auris_B8441-ReferenceSequenceTrack,C_auris_B8441_features.sorted.gff',
+  C_dubliniensis_CD36: '/jbrowse2/?assembly=C_dubliniensis_CD36&loc=Chr1_C_dubliniensis_CD36:131096..145475&tracks=C_dubliniensis_CD36-ReferenceSequenceTrack,C_dubliniensis_CD36_features.sorted.gff',
+  C_glabrata_CBS138: '/jbrowse2/?assembly=C_glabrata_CBS138&loc=ChrA_C_glabrata_CBS138:1..100000&tracks=C_glabrata_CBS138-ReferenceSequenceTrack,C_glabrata_CBS138_features.sorted.gff',
+  C_parapsilosis_CDC317: '/jbrowse2/?assembly=C_parapsilosis_CDC317&loc=Contig005504_C_parapsilosis_CDC317:1..100000&tracks=C_parapsilosis_CDC317-ReferenceSequenceTrack,C_parapsilosis_CDC317_features.sorted.gff',
+  C_tropicalis: '/jbrowse2/?assembly=C_tropicalis_MYA3404&loc=CP047869.1:1..100000&tracks=C_tropicalis_MYA3404-ReferenceSequenceTrack,C_tropicalis_features.sorted.gff',
+  C_tropicalis_MYA3404: '/jbrowse2/?assembly=C_tropicalis_MYA3404&loc=CP047869.1:1..100000&tracks=C_tropicalis_MYA3404-ReferenceSequenceTrack,C_tropicalis_features.sorted.gff',
 };
 
 // Short explanations reused for tooltips and help drawers.
@@ -110,6 +126,15 @@ function fmt(n) {
 
 function featureSearchUrl(organism, query) {
   return `/feature-search/results?organism=${organism}&${query}`;
+}
+
+function jbrowseMenuUrl(organism) {
+  return JBROWSE_LINKS[organism] || '/jbrowse2/';
+}
+
+// JBrowse assembly name (differs from the CGD organism abbrev for C. tropicalis).
+function jbrowseAssembly(organism) {
+  return organism === 'C_tropicalis' ? 'C_tropicalis_MYA3404' : organism;
 }
 
 function downloadCsv(filename, rows) {
@@ -195,7 +220,6 @@ function Tooltip({ tip }) {
 // ---------------------------------------------------------------------------
 
 function OrfPieChart({ counts, organism, organismName, mode, onTip }) {
-  const navigate = useNavigate();
   const size = 300;
   const radius = 120;
   const cx = size / 2;
@@ -208,7 +232,7 @@ function OrfPieChart({ counts, organism, organismName, mode, onTip }) {
   if (total === 0) return null;
 
   const go = (qualifier) => {
-    navigate(featureSearchUrl(organism, `qualifier=${qualifier}&featuretype=ORF`));
+    window.open(featureSearchUrl(organism, `qualifier=${qualifier}&featuretype=ORF`), LINK_TARGET);
   };
 
   const arcs = [];
@@ -322,7 +346,6 @@ function OrfPieChart({ counts, organism, organismName, mode, onTip }) {
 // ---------------------------------------------------------------------------
 
 function GoBarChart({ aspect, color, mode, limit, filter, onTip }) {
-  const navigate = useNavigate();
   if (!aspect || !aspect.categories || aspect.categories.length === 0) {
     return <p className="gs2-muted">No data available.</p>;
   }
@@ -346,7 +369,7 @@ function GoBarChart({ aspect, color, mode, limit, filter, onTip }) {
   const barArea = chartWidth - labelWidth - 70;
   const chartHeight = cats.length * (barHeight + gap) + 10;
 
-  const go = (goid) => { navigate(`/go/${goid}`); };
+  const go = (goid) => { window.open(`/go/${goid}`, LINK_TARGET); };
 
   return (
     <svg
@@ -727,11 +750,11 @@ function GenomeSnapshot2Page() {
 
   // "Genome at a glance" cards.
   const cards = [
-    { label: 'Total ORFs', value: data.total_orfs, sub: 'all open reading frames', href: featureSearchUrl(organism, 'featuretype=ORF'), explain: EXPLAIN.total_orfs, color: '#555' },
-    { label: 'Verified ORFs', value: data.verified_orfs, sub: orfTotal ? `${((data.verified_orfs / orfTotal) * 100).toFixed(1)}%` : '', href: featureSearchUrl(organism, 'qualifier=Verified&featuretype=ORF'), explain: EXPLAIN.verified, color: '#4169E1' },
-    { label: 'Uncharacterized ORFs', value: data.uncharacterized_orfs, sub: orfTotal ? `${((data.uncharacterized_orfs / orfTotal) * 100).toFixed(1)}%` : '', href: featureSearchUrl(organism, 'qualifier=Uncharacterized&featuretype=ORF'), explain: EXPLAIN.uncharacterized, color: '#228B22' },
-    { label: 'Dubious ORFs', value: data.dubious_orfs, sub: orfTotal ? `${((data.dubious_orfs / orfTotal) * 100).toFixed(1)}%` : '', href: featureSearchUrl(organism, 'qualifier=Dubious&featuretype=ORF'), explain: EXPLAIN.dubious, color: '#DC143C' },
-    { label: 'GO annotations', value: goTotal, sub: 'across all 3 aspects', href: '/go-annotation-summary', explain: EXPLAIN.go, color: '#8e44ad' },
+    { label: 'Total ORFs', value: data.total_orfs, sub: 'all open reading frames', href: featureSearchUrl(organism, 'featuretype=ORF'), cta: 'View genes →', color: '#555' },
+    { label: 'Verified ORFs', value: data.verified_orfs, sub: orfTotal ? `${((data.verified_orfs / orfTotal) * 100).toFixed(1)}%` : '', href: featureSearchUrl(organism, 'qualifier=Verified&featuretype=ORF'), cta: 'View genes →', color: '#4169E1' },
+    { label: 'Uncharacterized ORFs', value: data.uncharacterized_orfs, sub: orfTotal ? `${((data.uncharacterized_orfs / orfTotal) * 100).toFixed(1)}%` : '', href: featureSearchUrl(organism, 'qualifier=Uncharacterized&featuretype=ORF'), cta: 'View genes →', color: '#228B22' },
+    { label: 'Dubious ORFs', value: data.dubious_orfs, sub: orfTotal ? `${((data.dubious_orfs / orfTotal) * 100).toFixed(1)}%` : '', href: featureSearchUrl(organism, 'qualifier=Dubious&featuretype=ORF'), cta: 'View genes →', color: '#DC143C' },
+    { label: 'GO annotations', value: goTotal, sub: 'across all 3 aspects', scroll: 'go-annotations', cta: 'Explore GO →', color: '#8e44ad' },
   ];
 
   const selectedChrObjs = selectedChrs
@@ -747,12 +770,12 @@ function GenomeSnapshot2Page() {
       <div className="info-page-content">
         <div className="snapshot-header">
           <h1><em>{fullName}</em> Genome Snapshot — Explore this Genome</h1>
-          <Link to="/help/genome-snapshot" className="help-button" title="Help">
+          <a href="/help/genome-snapshot" className="help-button" title="Help" target={LINK_TARGET} rel="noopener">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="12" cy="12" r="10" stroke="#0066cc" strokeWidth="2" fill="white" />
               <text x="12" y="17" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#0066cc">?</text>
             </svg>
-          </Link>
+          </a>
         </div>
         <hr />
 
@@ -780,24 +803,41 @@ function GenomeSnapshot2Page() {
         <section className="info-section gs2-section" id="overview">
           <h2 className="gs2-h2">Genome at a Glance</h2>
           <div className="gs2-cards">
-            {cards.map((c) => (
-              <a key={c.label} className="gs2-card" href={c.href} style={{ borderTopColor: c.color }}>
-                <span className="gs2-card-value">{fmt(c.value)}</span>
-                <span className="gs2-card-label">{c.label}</span>
-                {c.sub && <span className="gs2-card-sub">{c.sub}</span>}
-                <span className="gs2-card-cta">View genes →</span>
-              </a>
-            ))}
+            {cards.map((c) => {
+              const inner = (
+                <>
+                  <span className="gs2-card-value">{fmt(c.value)}</span>
+                  <span className="gs2-card-label">{c.label}</span>
+                  {c.sub && <span className="gs2-card-sub">{c.sub}</span>}
+                  <span className="gs2-card-cta">{c.cta}</span>
+                </>
+              );
+              return c.scroll ? (
+                <button
+                  key={c.label}
+                  type="button"
+                  className="gs2-card"
+                  style={{ borderTopColor: c.color }}
+                  onClick={() => document.getElementById(c.scroll)?.scrollIntoView({ behavior: 'smooth' })}
+                >
+                  {inner}
+                </button>
+              ) : (
+                <a key={c.label} className="gs2-card" href={c.href} target={LINK_TARGET} rel="noopener" style={{ borderTopColor: c.color }}>
+                  {inner}
+                </a>
+              );
+            })}
           </div>
 
           <div className="gs2-explore-panel">
             <h3>Explore this genome</h3>
             <div className="gs2-explore-links">
-              <a href="/feature-search">🔍 Find a gene or feature</a>
+              <a href="/feature-search" target={LINK_TARGET} rel="noopener">🔍 Find a gene or feature</a>
               <button type="button" onClick={() => document.getElementById('chromosomes')?.scrollIntoView({ behavior: 'smooth' })}>🧬 Browse a chromosome</button>
               <button type="button" onClick={() => document.getElementById('go-categories')?.scrollIntoView({ behavior: 'smooth' })}>🏷️ Search GO annotations</button>
-              <a href={`/jbrowse2/?assembly=${organism}`}>🗺️ View in JBrowse</a>
-              <Link to="/download">⬇️ Download genome data</Link>
+              <a href={jbrowseMenuUrl(organism)} target={LINK_TARGET} rel="noopener">🗺️ View in JBrowse</a>
+              <a href="/download" target={LINK_TARGET} rel="noopener">⬇️ Download genome data</a>
               <button type="button" onClick={() => document.getElementById('comparison')?.scrollIntoView({ behavior: 'smooth' })}>⚖️ Compare with another genome</button>
             </div>
           </div>
@@ -827,6 +867,8 @@ function GenomeSnapshot2Page() {
                       key={meta.key}
                       className="gs2-legend-row"
                       href={featureSearchUrl(organism, `qualifier=${meta.qualifier}&featuretype=ORF`)}
+                      target={LINK_TARGET}
+                      rel="noopener"
                     >
                       <span className={`gs2-swatch gs2-swatch-${meta.pattern}`} style={{ backgroundColor: meta.color }} aria-hidden="true"></span>
                       <span><strong>{fmt(value)}</strong> {meta.label} · {pct}%</span>
@@ -893,7 +935,7 @@ function GenomeSnapshot2Page() {
               {filteredInventory.map((r) => (
                 <tr key={r.key}>
                   <td style={{ textAlign: 'left' }}>
-                    <a href={featureSearchUrl(organism, r.search)} target="feature-search">{r.label}</a>
+                    <a href={featureSearchUrl(organism, r.search)} target={LINK_TARGET} rel="noopener">{r.label}</a>
                     <span className="gs2-cat-tag">{CATEGORY_LABELS[r.category]}</span>
                   </td>
                   <td>{fmt(r.total)}</td>
@@ -976,8 +1018,8 @@ function GenomeSnapshot2Page() {
                           <div><dt>snoRNA / rRNA / ncRNA</dt><dd>{fmt(chr.snorna)} / {fmt(chr.rrna)} / {fmt(chr.ncrna)}</dd></div>
                         </dl>
                         <div className="gs2-chr-card-links">
-                          <a href={`/chromosome/${chr.chromosome}`}>Feature list →</a>
-                          <a href={`/jbrowse2/?assembly=${organism}&loc=${encodeURIComponent(chr.chromosome)}`}>JBrowse →</a>
+                          <a href={`/chromosome/${chr.chromosome}`} target={LINK_TARGET} rel="noopener">Feature list →</a>
+                          <a href={`/jbrowse2/?assembly=${jbrowseAssembly(organism)}&loc=${encodeURIComponent(chr.chromosome)}`} target={LINK_TARGET} rel="noopener">JBrowse →</a>
                         </div>
                       </div>
                     );
@@ -1143,7 +1185,7 @@ function GenomeSnapshot2Page() {
             )}
           </div>
           <p className="gs2-muted">
-            Data source: <a href="/go-slim-mapper">GO Slim Mapper</a>. GO documentation at the{' '}
+            Data source: <a href="/go-slim-mapper" target={LINK_TARGET} rel="noopener">GO Slim Mapper</a>. GO documentation at the{' '}
             <a href="https://sites.google.com/view/yeastgenome-help/function-help/gene-ontology-go" target="_blank" rel="noopener noreferrer">GO help page</a>.
           </p>
         </section>
@@ -1220,12 +1262,11 @@ function GenomeSnapshot2Page() {
             <div>
               <h4>Explore</h4>
               <ul>
-                <li><a href="/feature-search">Advanced Search</a></li>
-                <li><a href={`/jbrowse2/?assembly=${organism}`}>JBrowse genome browser</a></li>
-                <li><Link to="/go-slim-mapper">GO Slim Mapper</Link></li>
-                <li><Link to="/go-annotation-summary">GO Annotation Summary</Link></li>
-                <li><Link to="/download">Download Data</Link></li>
-                <li><Link to="/help/genome-snapshot">Genome Snapshot Help</Link></li>
+                <li><a href="/feature-search" target={LINK_TARGET} rel="noopener">Advanced Search</a></li>
+                <li><a href={jbrowseMenuUrl(organism)} target={LINK_TARGET} rel="noopener">JBrowse genome browser</a></li>
+                <li><a href="/go-slim-mapper" target={LINK_TARGET} rel="noopener">GO Slim Mapper</a></li>
+                <li><a href="/download" target={LINK_TARGET} rel="noopener">Download Data</a></li>
+                <li><a href="/help/genome-snapshot" target={LINK_TARGET} rel="noopener">Genome Snapshot Help</a></li>
               </ul>
             </div>
             <div>
@@ -1271,7 +1312,7 @@ function ChrRow({ label, field, chrs, totals, selected, onSelect, link, totalRow
   return (
     <tr className={totalRow ? 'total-row' : undefined}>
       <td className={field === 'length_bp' || totalRow ? undefined : 'indent'} style={{ textAlign: 'left' }}>
-        {link ? <a href={link} target="feature-search">{totalRow ? <strong>{label}</strong> : label}</a> : (totalRow ? <strong>{label}</strong> : label)}
+        {link ? <a href={link} target={LINK_TARGET} rel="noopener">{totalRow ? <strong>{label}</strong> : label}</a> : (totalRow ? <strong>{label}</strong> : label)}
       </td>
       <td>{totalRow ? <strong>{fmt(totals?.[field])}</strong> : fmt(totals?.[field])}</td>
       {chrs.map((chr) => (
