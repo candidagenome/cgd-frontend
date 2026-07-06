@@ -346,10 +346,10 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
                     onChange={(e) => setFilterCategory(e.target.value)}
                     className="bucket-filter"
                   >
-                    <option value="all">All categories ({orgData?.total_conditions || 0})</option>
+                    <option value="all">All categories</option>
                     {availableCategories.map(cat => (
                       <option key={cat} value={cat}>
-                        {cat} ({categoryCounts[cat] || 0})
+                        {cat}
                       </option>
                     ))}
                   </select>
