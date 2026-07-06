@@ -174,6 +174,15 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange, o
     []
   );
 
+  // Computational annotations (IEA from orthologues / InterProScan) all share the
+  // same CGD orthology reference, which adds no per-row information and clutters the
+  // table. Omit the Reference column for this section; CGD is still shown as the
+  // source in the "Assigned By" column.
+  const computationalColumnDefs = useMemo(
+    () => columnDefs.filter((col) => col.headerName !== 'Reference'),
+    [columnDefs]
+  );
+
   // Default column properties
   const defaultColDef = useMemo(
     () => ({
@@ -279,7 +288,7 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange, o
           <div className="go-grid-wrapper ag-theme-alpine" style={{ width: '100%' }}>
             <AgGridReact
               rowData={filteredAnnotations}
-              columnDefs={columnDefs}
+              columnDefs={typeKey === 'computational' ? computationalColumnDefs : columnDefs}
               defaultColDef={defaultColDef}
               domLayout="autoHeight"
               pagination={true}
@@ -396,7 +405,19 @@ function GoDetails({ data, loading, error, selectedOrganism, onOrganismChange, o
 
                     {lastReviewedDate && <p className="last-reviewed">Last Reviewed on: {lastReviewedDate}</p>}
 
-                    <p className="section-note">{SECTION_NOTES[typeKey]}</p>
+                    <p className="section-note">
+                      {SECTION_NOTES[typeKey]}
+                      {typeKey === 'computational' && (
+                        <>
+                          {' '}
+                          See{' '}
+                          <a href="/help/synteny-browser" target="_blank" rel="noopener noreferrer">
+                            how orthology is calculated
+                          </a>{' '}
+                          for details on how orthologs are derived.
+                        </>
+                      )}
+                    </p>
 
                     {['F', 'P', 'C'].map((aspectKey) => renderAspectTable(typeData[aspectKey], aspectKey, typeKey))}
                   </div>
