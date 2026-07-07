@@ -57,9 +57,15 @@ function FeatureMergePage() {
     )) {
       return;
     }
-    dryRun ? setLoading(true) : setCommitting(true);
-    setPreview(null);
-    if (!dryRun) setCommitResult(null);
+    // On commit, keep the preview mounted so the success box (rendered inside
+    // the preview section) can show; only clear it when starting a new preview.
+    if (dryRun) {
+      setLoading(true);
+      setPreview(null);
+    } else {
+      setCommitting(true);
+      setCommitResult(null);
+    }
     try {
       const data = await featureMergeApi.merge({
         survivorName: survivorName.trim(),
