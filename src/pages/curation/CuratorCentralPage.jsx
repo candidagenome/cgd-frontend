@@ -91,8 +91,8 @@ function CuratorCentralPage() {
               <li style={styles.disabledItem}>
                 <Link to="/curation/location/new" style={styles.disabledLink}>Add New Location for existing Feature</Link>
               </li>
-              <li style={styles.disabledItem}>
-                <Link to="/curation/sequence" style={styles.disabledLink}>Update Chromosome Sequence</Link>
+              <li>
+                <Link to="/curation/sequence">Update Chromosome Sequence</Link>
               </li>
               <li style={styles.disabledItem}>
                 <Link to="/curation/coordinates" style={styles.disabledLink}>Update Feature Coordinates and Relationships</Link>

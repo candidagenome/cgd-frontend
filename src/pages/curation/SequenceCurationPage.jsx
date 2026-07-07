@@ -19,6 +19,10 @@ function SequenceCurationPage() {
   const [nearbyFeatures, setNearbyFeatures] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [note, setNote] = useState('');
+  const [referenceNosInput, setReferenceNosInput] = useState('');
+  const [committing, setCommitting] = useState(false);
+  const [commitResult, setCommitResult] = useState(null);
 
   // Load root sequences on mount
   useEffect(() => {
@@ -93,6 +97,7 @@ function SequenceCurationPage() {
     setLoading(true);
     setError('');
     setPreview(null);
+    setCommitResult(null);
 
     try {
       const data = await sequenceCurationApi.previewChanges(
@@ -106,6 +111,65 @@ function SequenceCurationPage() {
       setLoading(false);
     }
   }, [selectedChromosome, changes]);
+
+  // v1: only equal-length substitutions can be committed.
+  const allSubstitutions =
+    preview && preview.changes.length > 0 &&
+    preview.changes.every((c) => c.type === 'substitution' && c.length_change === 0);
+
+  const handleCommit = useCallback(async () => {
+    if (!preview) return;
+    if (!note.trim()) {
+      setError('A note describing the change is required to commit.');
+      return;
+    }
+
+    const subChanges = changes
+      .filter((c) => c.type === 'substitution' && c.start && c.end && c.sequence)
+      .map((c) => ({
+        type: 'substitution',
+        start: parseInt(c.start, 10),
+        end: parseInt(c.end, 10),
+        sequence: c.sequence,
+      }));
+
+    if (subChanges.length === 0) {
+      setError('No committable substitution changes found.');
+      return;
+    }
+
+    if (!window.confirm(
+      `Commit ${subChanges.length} substitution(s) to ${selectedChromosome}?\n\n` +
+      'This inserts a new current chromosome sequence version, re-points all ' +
+      'feature locations, and regenerates affected feature sequences. It is logged ' +
+      'and reversible only by another curated edit.'
+    )) {
+      return;
+    }
+
+    const referenceNos = referenceNosInput
+      .split(/[,\s]+/)
+      .filter(Boolean)
+      .map((n) => parseInt(n, 10))
+      .filter((n) => !Number.isNaN(n));
+
+    setCommitting(true);
+    setError('');
+    setCommitResult(null);
+    try {
+      const data = await sequenceCurationApi.applyChanges(
+        selectedChromosome,
+        subChanges,
+        note.trim(),
+        { referenceNos, dryRun: false }
+      );
+      setCommitResult(data);
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Commit failed');
+    } finally {
+      setCommitting(false);
+    }
+  }, [preview, note, referenceNosInput, changes, selectedChromosome]);
 
   const handleLookupNearby = useCallback(async (position) => {
     if (!selectedChromosome || !position) return;
@@ -440,12 +504,64 @@ function SequenceCurationPage() {
             <p>No features affected.</p>
           )}
 
-          <div style={styles.noticeBox}>
-            <strong>Note:</strong> The commit functionality will be implemented
-            in a future update. For now, please use this preview to verify your
-            planned changes and coordinate with database administrators for actual
-            sequence modifications.
-          </div>
+          {/* Commit */}
+          {commitResult ? (
+            <div style={styles.successBox}>
+              <strong>Committed.</strong> New current sequence version{' '}
+              <code>seq_no {commitResult.new_root_seq_no}</code> created for{' '}
+              {commitResult.feature_name}.
+              <ul style={{ margin: '0.5rem 0 0 1.25rem' }}>
+                <li>{commitResult.feat_locations_repointed.toLocaleString()} feature location(s) re-pointed to the new sequence</li>
+                <li>{commitResult.features_regenerated.length} feature sequence(s) regenerated
+                  {commitResult.features_regenerated.length > 0 && (
+                    <>: {commitResult.features_regenerated.map((f) => f.feature_name).join(', ')}</>
+                  )}
+                </li>
+                <li>Recorded under note_no {commitResult.note_no}
+                  {commitResult.reference_nos.length > 0 && ` (references: ${commitResult.reference_nos.join(', ')})`}
+                </li>
+              </ul>
+            </div>
+          ) : !allSubstitutions ? (
+            <div style={styles.noticeBox}>
+              <strong>Commit unavailable:</strong> only equal-length substitutions
+              can be committed at this time. Your preview includes an insertion,
+              deletion, or length-changing edit, which is not yet enabled.
+            </div>
+          ) : (
+            <div style={styles.commitBox}>
+              <h3 style={styles.subsectionHeader}>Commit Changes</h3>
+              <label style={styles.commitLabel}>
+                Note (required) — describe the change and cite evidence:
+              </label>
+              <textarea
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                rows={3}
+                style={styles.textarea}
+                placeholder="e.g. Corrected Assembly-22 sequencing error at the orf19.5224/orf19.5225 junction (PMID:37561787; PacBio GCA_032688725.1)."
+              />
+              <label style={styles.commitLabel}>
+                Reference no(s) to link (optional, comma-separated CGD reference_no):
+              </label>
+              <input
+                type="text"
+                value={referenceNosInput}
+                onChange={(e) => setReferenceNosInput(e.target.value)}
+                style={styles.input}
+                placeholder="e.g. 12345"
+              />
+              <div style={{ marginTop: '0.75rem' }}>
+                <button
+                  onClick={handleCommit}
+                  disabled={committing || !note.trim()}
+                  style={styles.commitButton}
+                >
+                  {committing ? 'Committing…' : 'Commit Changes'}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -653,6 +769,46 @@ const styles = {
     border: '1px solid #bee5eb',
     borderRadius: '4px',
     marginTop: '1.5rem',
+  },
+  commitBox: {
+    padding: '1rem',
+    backgroundColor: '#fff8e1',
+    border: '1px solid #ffc107',
+    borderRadius: '4px',
+    marginTop: '1.5rem',
+  },
+  successBox: {
+    padding: '1rem',
+    backgroundColor: '#e6f4ea',
+    border: '1px solid #34a853',
+    borderRadius: '4px',
+    marginTop: '1.5rem',
+  },
+  commitLabel: {
+    display: 'block',
+    fontWeight: 600,
+    margin: '0.5rem 0 0.25rem',
+  },
+  textarea: {
+    width: '100%',
+    padding: '0.5rem',
+    fontSize: '0.9rem',
+    boxSizing: 'border-box',
+  },
+  input: {
+    width: '100%',
+    padding: '0.4rem',
+    fontSize: '0.9rem',
+    boxSizing: 'border-box',
+  },
+  commitButton: {
+    padding: '0.6rem 1.2rem',
+    backgroundColor: '#c0392b',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '4px',
+    fontWeight: 600,
+    cursor: 'pointer',
   },
   backLink: {
     marginTop: '2rem',

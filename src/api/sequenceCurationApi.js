@@ -47,6 +47,28 @@ export const sequenceCurationApi = {
   },
 
   /**
+   * Commit sequence changes (v1: equal-length substitutions only).
+   *
+   * @param {string} featureName - Chromosome/contig name
+   * @param {Array<{type: string, start?: number, end?: number, sequence?: string}>} changes
+   * @param {string} note - Required note describing the change
+   * @param {Object} [opts]
+   * @param {number[]} [opts.referenceNos=[]] - CGD reference_no(s) to link to the note
+   * @param {boolean} [opts.dryRun=false] - If true, validate against the DB and roll back
+   * @returns {Promise<Object>} apply result (new_root_seq_no, feat_locations_repointed, ...)
+   */
+  applyChanges: async (featureName, changes, note, { referenceNos = [], dryRun = false } = {}) => {
+    const response = await api.post('/api/curation/sequence/apply', {
+      feature_name: featureName,
+      changes,
+      note,
+      reference_nos: referenceNos,
+      dry_run: dryRun,
+    });
+    return response.data;
+  },
+
+  /**
    * Get features near a given coordinate.
    *
    * @param {string} featureName - Chromosome/contig name
