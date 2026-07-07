@@ -44,8 +44,10 @@ function FeatureMergePage() {
       setError('Survivor, retiree, and new stop coordinate are all required.');
       return;
     }
-    if (!note.trim()) {
-      setError('A note describing the merge is required.');
+    // The note is required to commit, but not to preview (the note field is
+    // shown in the commit box after a successful preview).
+    if (!dryRun && !note.trim()) {
+      setError('A note describing the merge is required to commit.');
       return;
     }
     if (!dryRun && !window.confirm(
