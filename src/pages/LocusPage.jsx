@@ -76,6 +76,27 @@ function LocusPage() {
   // Always fetch data for the effective name (A allele) - don't wait for redirect
   const { data, loading, errors, loaders } = useLocusData(effectiveName);
 
+  // Redirect a soft-retired/merged feature name to its canonical survivor
+  // (e.g. C1_12400C_A -> C1_12410C_A after a merge). The backend sets
+  // canonical_feature_name only when the queried identifier's own feature is
+  // retired, so gene-name / alias lookups are never redirected. Redirecting the
+  // URL makes every tab query the survivor instead of the empty retired stub.
+  const canonicalName = data.info?.canonical_feature_name;
+  useEffect(() => {
+    if (canonicalName && canonicalName.toUpperCase() !== effectiveName?.toUpperCase()) {
+      const tab = searchParams.get('tab');
+      const subtab = searchParams.get('subtab');
+      const from = searchParams.get('from');
+      let newUrl = `/locus/${canonicalName}`;
+      const params = [];
+      if (tab) params.push(`tab=${tab}`);
+      if (subtab) params.push(`subtab=${subtab}`);
+      if (from) params.push(`from=${from}`);
+      if (params.length > 0) newUrl += '?' + params.join('&');
+      navigate(newUrl, { replace: true });
+    }
+  }, [canonicalName, effectiveName, searchParams, navigate]);
+
   // Build a map of organism -> feature_name from the primary organism's ortholog data
   // This stays stable regardless of which organism is selected
   // Keys are stored in multiple formats to handle potential mismatches
