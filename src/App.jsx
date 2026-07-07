@@ -104,6 +104,7 @@ import ReferenceSearchResultsPage from './pages/curation/ReferenceSearchResultsP
 import RefAnnotationCurationPage from './pages/curation/RefAnnotationCurationPage';
 import DbSearchPage from './pages/curation/DbSearchPage';
 import SequenceCurationPage from './pages/curation/SequenceCurationPage';
+import FeatureMergePage from './pages/curation/FeatureMergePage';
 import CoordinateCurationPage from './pages/curation/CoordinateCurationPage';
 import SeqAlignmentPage from './pages/curation/SeqAlignmentPage';
 
@@ -540,6 +541,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <SequenceCurationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/feature-merge"
+            element={
+              <ProtectedRoute>
+                <FeatureMergePage />
               </ProtectedRoute>
             }
           />
