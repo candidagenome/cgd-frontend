@@ -224,6 +224,12 @@ function PhenotypeCurationPage() {
       const organismParam = searchParams.get('organism') || selectedOrganism;
       const data = await phenotypeCurationApi.getAnnotations(featureName, organismParam || null);
       setFeatureData(data);
+      // When the page is entered without an organism (e.g. from a lit-guide
+      // link), adopt the resolved feature's organism so additional genes typed
+      // on the "add another gene" line can be disambiguated by species.
+      if (data.organism_abbrev && !searchParams.get('organism') && !selectedOrganism) {
+        setSelectedOrganism(data.organism_abbrev);
+      }
     } catch (err) {
       if (err.response?.status === 404) {
         setError(`Feature '${featureName}' not found`);
@@ -413,8 +419,11 @@ function PhenotypeCurationPage() {
               data.properties = properties;
             }
 
-            // Include organism to disambiguate features with same name across species
-            const organismParam = searchParams.get('organism') || selectedOrganism;
+            // Include organism to disambiguate features with same name across
+            // species. Fall back to the primary feature's resolved organism so
+            // added genes work even when no organism is present in the URL.
+            const organismParam =
+              searchParams.get('organism') || selectedOrganism || featureData?.organism_abbrev;
             if (organismParam) {
               data.organism = organismParam;
             }
