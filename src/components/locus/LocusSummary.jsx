@@ -85,9 +85,12 @@ function LocusSummary({
     const assemblyKey = getAssemblyKey(orgName);
     const config = assemblyKey ? assemblyConfig[assemblyKey] : null;
     if (!config) return null;
-    // Add padding to show more context around the gene (similar to JBrowse1 view)
+    // Add modest flanking context around the gene. Large padding (e.g. 2kb or a
+    // full gene length on each side) leaves the feature stranded in empty space,
+    // which reads as a "gap" in the embedded view. Keep flanks proportional and
+    // capped so the gene stays the visual focus.
     const geneLength = jbrowseInfo.stop_coord - jbrowseInfo.start_coord;
-    const padding = Math.max(2000, Math.round(geneLength * 1.0)); // At least 2kb or 100% of gene length
+    const padding = Math.min(2000, Math.max(500, Math.round(geneLength * 0.25)));
     const start = Math.max(1, jbrowseInfo.start_coord - padding);
     const stop = jbrowseInfo.stop_coord + padding;
     const loc = `${jbrowseInfo.chromosome}:${start}..${stop}`;
