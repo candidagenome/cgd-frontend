@@ -85,14 +85,17 @@ function LocusSummary({
     const assemblyKey = getAssemblyKey(orgName);
     const config = assemblyKey ? assemblyConfig[assemblyKey] : null;
     if (!config) return null;
-    // Add modest flanking context around the gene. Large padding (e.g. 2kb or a
-    // full gene length on each side) leaves the feature stranded in empty space,
-    // which reads as a "gap" in the embedded view. Keep flanks proportional and
-    // capped so the gene stays the visual focus.
-    const geneLength = jbrowseInfo.stop_coord - jbrowseInfo.start_coord;
+    // Normalize to low/high: Crick-strand features are stored with
+    // start_coord > stop_coord, and JBrowse rejects a descending region
+    // ("found start greater than end"). Then add modest flanking context --
+    // large padding (a full gene length each side) strands the feature in empty
+    // space (reads as a "gap"), so keep flanks proportional and capped.
+    const lo = Math.min(jbrowseInfo.start_coord, jbrowseInfo.stop_coord);
+    const hi = Math.max(jbrowseInfo.start_coord, jbrowseInfo.stop_coord);
+    const geneLength = hi - lo;
     const padding = Math.min(2000, Math.max(500, Math.round(geneLength * 0.25)));
-    const start = Math.max(1, jbrowseInfo.start_coord - padding);
-    const stop = jbrowseInfo.stop_coord + padding;
+    const start = Math.max(1, lo - padding);
+    const stop = hi + padding;
     const loc = `${jbrowseInfo.chromosome}:${start}..${stop}`;
     // For embedded view, use minimal tracks; for full view, use all default tracks
     if (options.fullView) {
