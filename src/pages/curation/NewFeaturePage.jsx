@@ -84,24 +84,37 @@ export default function NewFeaturePage() {
     loadData();
   }, []);
 
-  // Load chromosomes when organism changes
+  // Load chromosomes when organism changes.
+  // Clear any previously selected chromosome and stale list first, and guard
+  // against out-of-order responses: a slower fetch for a previously selected
+  // organism must not overwrite the current organism's chromosomes.
   useEffect(() => {
+    setChromosomes([]);
+    setChromosomeName('');
+
     if (!organismAbbrev) {
-      setChromosomes([]);
       return;
     }
 
+    let cancelled = false;
     const loadChromosomes = async () => {
       try {
         const data = await getChromosomes(organismAbbrev);
-        setChromosomes(data.chromosomes);
+        if (!cancelled) {
+          setChromosomes(data.chromosomes);
+        }
       } catch (err) {
-        console.error('Failed to load chromosomes:', err);
-        setChromosomes([]);
+        if (!cancelled) {
+          console.error('Failed to load chromosomes:', err);
+          setChromosomes([]);
+        }
       }
     };
 
     loadChromosomes();
+    return () => {
+      cancelled = true;
+    };
   }, [organismAbbrev]);
 
   // Check if feature exists when name changes
@@ -384,19 +397,25 @@ export default function NewFeaturePage() {
 
           <div style={styles.coordGrid}>
             <div>
-              <label style={styles.fieldLabel}>Chromosome</label>
+              <label style={styles.fieldLabel}>Chromosome / Contig</label>
               <select
                 value={chromosomeName}
                 onChange={(e) => setChromosomeName(e.target.value)}
                 style={styles.select}
               >
-                <option value="">-- Select Chromosome --</option>
+                <option value="">-- Select Chromosome / Contig --</option>
                 {chromosomes.map((chr) => (
                   <option key={chr.feature_no} value={chr.feature_name}>
                     {chr.feature_name}
                   </option>
                 ))}
               </select>
+              {organismAbbrev && chromosomes.length === 0 && (
+                <p style={styles.hint}>
+                  No chromosomes or contigs are available for this organism. Leave the
+                  positional fields blank to create an unmapped feature.
+                </p>
+              )}
             </div>
 
             <div>
