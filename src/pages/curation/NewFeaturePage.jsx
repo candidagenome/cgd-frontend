@@ -51,6 +51,7 @@ export default function NewFeaturePage() {
   const [refSearchQuery, setRefSearchQuery] = useState('');
   const [refSearchResults, setRefSearchResults] = useState([]);
   const [searchingRefs, setSearchingRefs] = useState(false);
+  const [refSearchMessage, setRefSearchMessage] = useState(null);
 
   // Load initial data
   useEffect(() => {
@@ -132,11 +133,22 @@ export default function NewFeaturePage() {
     if (!refSearchQuery.trim()) return;
 
     setSearchingRefs(true);
+    setRefSearchMessage(null);
     try {
       const data = await litguideCurationApi.searchReferences(refSearchQuery, 1, 10);
-      setRefSearchResults(data.references);
+      const results = data.references || [];
+      setRefSearchResults(results);
+      if (results.length === 0) {
+        setRefSearchMessage(`No references found for "${refSearchQuery.trim()}".`);
+      }
     } catch (err) {
       console.error('Reference search failed:', err);
+      setRefSearchResults([]);
+      setRefSearchMessage(
+        'Reference search failed: ' +
+          (err.response?.data?.detail || err.message || 'Unknown error') +
+          '. If this persists, try reloading the page or logging in again.'
+      );
     } finally {
       setSearchingRefs(false);
     }
@@ -460,6 +472,10 @@ export default function NewFeaturePage() {
             </button>
           </div>
 
+          {refSearchMessage && (
+            <div style={styles.refSearchMessage}>{refSearchMessage}</div>
+          )}
+
           {refSearchResults.length > 0 && (
             <div style={styles.refResults}>
               {refSearchResults.map((ref) => (
@@ -468,6 +484,7 @@ export default function NewFeaturePage() {
                   onClick={() => {
                     setReferenceNo(ref.reference_no.toString());
                     setRefSearchResults([]);
+                    setRefSearchMessage(null);
                   }}
                   style={styles.refResultItem}
                 >
@@ -599,6 +616,10 @@ const styles = {
     border: '1px solid #ffc107', borderRadius: '4px', color: '#856404',
   },
   refSearchRow: { display: 'flex', gap: '0.5rem', marginBottom: '0.75rem', flexWrap: 'wrap' },
+  refSearchMessage: {
+    marginBottom: '0.75rem', padding: '0.5rem 0.75rem', backgroundColor: '#f8f9fa',
+    border: '1px solid #ddd', borderRadius: '4px', color: '#555', fontSize: '0.9rem',
+  },
   refResults: {
     border: '1px solid #ddd', borderRadius: '4px', maxHeight: '10rem',
     overflowY: 'auto', marginBottom: '0.75rem',
