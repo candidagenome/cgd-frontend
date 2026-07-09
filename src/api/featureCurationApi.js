@@ -70,6 +70,7 @@ export const checkFeatureExists = async (featureName) => {
  * @param {string} data.feature_name - Systematic name for the feature
  * @param {string} data.feature_type - Feature type (ORF, pseudogene, etc.)
  * @param {string} data.organism_abbrev - Organism abbreviation
+ * @param {string} [data.gene_name] - Standard gene name
  * @param {string} [data.chromosome_name] - Chromosome name (for mapped features)
  * @param {number} [data.start_coord] - Start coordinate
  * @param {number} [data.stop_coord] - Stop coordinate

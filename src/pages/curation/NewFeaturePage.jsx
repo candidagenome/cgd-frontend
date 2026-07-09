@@ -28,6 +28,7 @@ export default function NewFeaturePage() {
 
   // Form state
   const [featureName, setFeatureName] = useState('');
+  const [geneName, setGeneName] = useState('');
   const [featureType, setFeatureType] = useState('');
   const [organismAbbrev, setOrganismAbbrev] = useState('');
   const [chromosomeName, setChromosomeName] = useState('');
@@ -190,6 +191,10 @@ export default function NewFeaturePage() {
         organism_abbrev: organismAbbrev,
       };
 
+      if (geneName.trim()) {
+        data.gene_name = geneName.trim();
+      }
+
       if (chromosomeName) {
         data.chromosome_name = chromosomeName;
         data.start_coord = parseInt(startCoord, 10);
@@ -211,6 +216,7 @@ export default function NewFeaturePage() {
 
       // Clear form
       setFeatureName('');
+      setGeneName('');
       setFeatureType('');
       setChromosomeName('');
       setStartCoord('');
@@ -228,41 +234,37 @@ export default function NewFeaturePage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto p-6">
-        <p>Loading...</p>
+      <div style={styles.container}>
+        <p style={styles.loading}>Loading...</p>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-4xl">
-      <div className="mb-6">
-        <Link to="/curation" className="text-blue-600 hover:underline">
+    <div style={styles.container}>
+      <div style={styles.backTop}>
+        <Link to="/curation" style={styles.link}>
           &larr; Back to Curator Central
         </Link>
       </div>
 
-      <h1 className="text-2xl font-bold mb-6">Add a New Feature</h1>
+      <h1 style={styles.title}>Add a New Feature</h1>
 
-      <p className="mb-4 text-gray-600">
+      <p style={styles.subtitle}>
         Use this form to add a new feature (ORF, gene, etc.) to the database.
         For mapped features, provide chromosome, coordinates, and strand.
       </p>
 
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          {error}
-        </div>
-      )}
+      {error && <div style={styles.error}>{error}</div>}
 
       {success && (
-        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+        <div style={styles.success}>
           {success}
           {createdFeature && (
-            <div className="mt-2">
+            <div style={styles.successLinkRow}>
               <Link
                 to={`/curation/locus/${createdFeature.feature_name}`}
-                className="text-green-800 underline"
+                style={styles.successLink}
               >
                 Go to Locus Curation Page for {createdFeature.feature_name}
               </Link>
@@ -271,38 +273,50 @@ export default function NewFeaturePage() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit}>
         {/* Feature Name */}
-        <div className="bg-white border rounded p-4">
-          <h2 className="font-semibold mb-3">Feature Name</h2>
-          <div className="flex items-center gap-4">
+        <div style={styles.section}>
+          <h2 style={styles.sectionHeader}>Feature Name</h2>
+          <div style={styles.inlineRow}>
             <input
               type="text"
               value={featureName}
               onChange={(e) => setFeatureName(e.target.value)}
               placeholder="Enter systematic name (e.g., orf19.1234)"
-              className="flex-1 border rounded px-3 py-2"
+              style={styles.textInput}
               required
             />
-            {checking && <span className="text-gray-500">Checking...</span>}
+            {checking && <span style={styles.muted}>Checking...</span>}
           </div>
           {featureExists && (
-            <div className="mt-2 p-2 bg-yellow-100 border border-yellow-400 rounded text-yellow-800">
+            <div style={styles.warningBox}>
               <strong>Warning:</strong> This name already exists as{' '}
               <strong>{featureExists.feature_name}</strong>
               {featureExists.gene_name && ` (${featureExists.gene_name})`} -{' '}
               {featureExists.feature_type}
             </div>
           )}
+
+          <label style={styles.subFieldLabel}>Standard Gene Name (Optional)</label>
+          <input
+            type="text"
+            value={geneName}
+            onChange={(e) => setGeneName(e.target.value)}
+            placeholder="Standard gene name, e.g. CDR1"
+            style={styles.textInput}
+          />
+          <p style={styles.hint}>
+            Leave blank if the feature has no standard gene name yet.
+          </p>
         </div>
 
         {/* Organism Selection */}
-        <div className="bg-white border rounded p-4">
-          <h2 className="font-semibold mb-3">Organism</h2>
+        <div style={styles.section}>
+          <h2 style={styles.sectionHeader}>Organism</h2>
           <select
             value={organismAbbrev}
             onChange={(e) => setOrganismAbbrev(e.target.value)}
-            className="w-full border rounded px-3 py-2"
+            style={styles.select}
             required
           >
             <option value="">-- Select Organism --</option>
@@ -315,12 +329,12 @@ export default function NewFeaturePage() {
         </div>
 
         {/* Feature Type */}
-        <div className="bg-white border rounded p-4">
-          <h2 className="font-semibold mb-3">Feature Type</h2>
+        <div style={styles.section}>
+          <h2 style={styles.sectionHeader}>Feature Type</h2>
           <select
             value={featureType}
             onChange={(e) => setFeatureType(e.target.value)}
-            className="w-full border rounded px-3 py-2"
+            style={styles.select}
             required
           >
             <option value="">-- Select Feature Type --</option>
@@ -333,11 +347,11 @@ export default function NewFeaturePage() {
         </div>
 
         {/* Feature Qualifiers */}
-        <div className="bg-white border rounded p-4">
-          <h2 className="font-semibold mb-3">Feature Qualifiers (Optional)</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+        <div style={styles.section}>
+          <h2 style={styles.sectionHeader}>Feature Qualifiers (Optional)</h2>
+          <div style={styles.qualifierGrid}>
             {qualifiers.map((qual) => (
-              <label key={qual} className="flex items-center gap-2">
+              <label key={qual} style={styles.checkboxLabel}>
                 <input
                   type="checkbox"
                   checked={selectedQualifiers.includes(qual)}
@@ -350,19 +364,19 @@ export default function NewFeaturePage() {
         </div>
 
         {/* Positional Info */}
-        <div className="bg-white border rounded p-4">
-          <h2 className="font-semibold mb-3">Positional Information (For Mapped Features)</h2>
-          <p className="text-sm text-gray-600 mb-3">
+        <div style={styles.section}>
+          <h2 style={styles.sectionHeader}>Positional Information (For Mapped Features)</h2>
+          <p style={styles.hint}>
             Leave blank for unmapped features (not physically mapped, not in systematic sequence).
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div style={styles.coordGrid}>
             <div>
-              <label className="block font-medium mb-1">Chromosome</label>
+              <label style={styles.fieldLabel}>Chromosome</label>
               <select
                 value={chromosomeName}
                 onChange={(e) => setChromosomeName(e.target.value)}
-                className="w-full border rounded px-3 py-2"
+                style={styles.select}
               >
                 <option value="">-- Select Chromosome --</option>
                 {chromosomes.map((chr) => (
@@ -374,11 +388,11 @@ export default function NewFeaturePage() {
             </div>
 
             <div>
-              <label className="block font-medium mb-1">Strand</label>
+              <label style={styles.fieldLabel}>Strand</label>
               <select
                 value={strand}
                 onChange={(e) => setStrand(e.target.value)}
-                className="w-full border rounded px-3 py-2"
+                style={styles.select}
                 disabled={!chromosomeName}
               >
                 <option value="">-- Select Strand --</option>
@@ -391,24 +405,24 @@ export default function NewFeaturePage() {
             </div>
 
             <div>
-              <label className="block font-medium mb-1">Start Coordinate</label>
+              <label style={styles.fieldLabel}>Start Coordinate</label>
               <input
                 type="number"
                 value={startCoord}
                 onChange={(e) => setStartCoord(e.target.value)}
-                className="w-full border rounded px-3 py-2"
+                style={styles.select}
                 disabled={!chromosomeName}
                 placeholder="e.g., 12345"
               />
             </div>
 
             <div>
-              <label className="block font-medium mb-1">Stop Coordinate</label>
+              <label style={styles.fieldLabel}>Stop Coordinate</label>
               <input
                 type="number"
                 value={stopCoord}
                 onChange={(e) => setStopCoord(e.target.value)}
-                className="w-full border rounded px-3 py-2"
+                style={styles.select}
                 disabled={!chromosomeName}
                 placeholder="e.g., 13456"
               />
@@ -416,7 +430,7 @@ export default function NewFeaturePage() {
           </div>
 
           {strand && (
-            <p className="mt-2 text-sm text-gray-600">
+            <p style={styles.hint}>
               {strand === 'W'
                 ? 'Watson strand: start_coord should be < stop_coord'
                 : 'Crick strand: start_coord should be > stop_coord'}
@@ -425,29 +439,29 @@ export default function NewFeaturePage() {
         </div>
 
         {/* Reference */}
-        <div className="bg-white border rounded p-4">
-          <h2 className="font-semibold mb-3">Reference (Optional)</h2>
+        <div style={styles.section}>
+          <h2 style={styles.sectionHeader}>Reference (Optional)</h2>
 
-          <div className="flex gap-2 mb-3">
+          <div style={styles.refSearchRow}>
             <input
               type="text"
               value={refSearchQuery}
               onChange={(e) => setRefSearchQuery(e.target.value)}
               placeholder="Search by PubMed ID, title, or citation"
-              className="flex-1 border rounded px-3 py-2"
+              style={styles.textInputFlex}
             />
             <button
               type="button"
               onClick={handleRefSearch}
               disabled={searchingRefs}
-              className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+              style={styles.secondaryButton}
             >
               {searchingRefs ? 'Searching...' : 'Search'}
             </button>
           </div>
 
           {refSearchResults.length > 0 && (
-            <div className="border rounded max-h-40 overflow-y-auto mb-3">
+            <div style={styles.refResults}>
               {refSearchResults.map((ref) => (
                 <div
                   key={ref.reference_no}
@@ -455,13 +469,13 @@ export default function NewFeaturePage() {
                     setReferenceNo(ref.reference_no.toString());
                     setRefSearchResults([]);
                   }}
-                  className="p-2 hover:bg-blue-50 cursor-pointer border-b last:border-b-0"
+                  style={styles.refResultItem}
                 >
-                  <span className="font-medium">
+                  <span style={styles.bold}>
                     {ref.pubmed ? `PMID:${ref.pubmed}` : `Ref:${ref.reference_no}`}
                   </span>
                   {' - '}
-                  <span className="text-sm text-gray-600">
+                  <span style={styles.muted}>
                     {ref.citation || ref.title || 'No title'}
                   </span>
                 </div>
@@ -469,20 +483,20 @@ export default function NewFeaturePage() {
             </div>
           )}
 
-          <div className="flex items-center gap-2">
-            <label className="font-medium">Reference No:</label>
+          <div style={styles.inlineRow}>
+            <label style={styles.bold}>Reference No:</label>
             <input
               type="number"
               value={referenceNo}
               onChange={(e) => setReferenceNo(e.target.value)}
-              className="border rounded px-3 py-2 w-32"
+              style={styles.coordInput}
               placeholder="e.g., 12345"
             />
             {referenceNo && (
               <button
                 type="button"
                 onClick={() => setReferenceNo('')}
-                className="text-red-600 hover:underline"
+                style={styles.clearButton}
               >
                 Clear
               </button>
@@ -491,11 +505,14 @@ export default function NewFeaturePage() {
         </div>
 
         {/* Submit */}
-        <div className="flex gap-4">
+        <div style={styles.buttonRow}>
           <button
             type="submit"
             disabled={submitting || !!featureExists}
-            className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+            style={{
+              ...styles.primaryButton,
+              ...(submitting || featureExists ? styles.disabledButton : {}),
+            }}
           >
             {submitting ? 'Creating...' : 'Create Feature'}
           </button>
@@ -503,6 +520,7 @@ export default function NewFeaturePage() {
             type="button"
             onClick={() => {
               setFeatureName('');
+              setGeneName('');
               setFeatureType('');
               setChromosomeName('');
               setStartCoord('');
@@ -514,7 +532,7 @@ export default function NewFeaturePage() {
               setError(null);
               setSuccess(null);
             }}
-            className="px-6 py-2 bg-gray-200 rounded hover:bg-gray-300"
+            style={styles.secondaryButton}
           >
             Reset
           </button>
@@ -523,3 +541,85 @@ export default function NewFeaturePage() {
     </div>
   );
 }
+
+const styles = {
+  container: { maxWidth: '900px', margin: '1rem auto', padding: '1rem' },
+  loading: { padding: '2rem', textAlign: 'center', color: '#666' },
+  backTop: { marginBottom: '1rem' },
+  link: { color: '#0066cc', textDecoration: 'none' },
+  title: { marginBottom: '0.5rem' },
+  subtitle: { marginBottom: '1.5rem', color: '#666' },
+  error: {
+    padding: '0.75rem', backgroundColor: '#fee', border: '1px solid #c00',
+    borderRadius: '4px', color: '#c00', marginBottom: '1rem',
+  },
+  success: {
+    padding: '0.75rem', backgroundColor: '#e6f4ea', border: '1px solid #34a853',
+    borderRadius: '4px', color: '#0a6e2e', marginBottom: '1rem',
+  },
+  successLinkRow: { marginTop: '0.5rem' },
+  successLink: { color: '#0a6e2e', textDecoration: 'underline', fontWeight: 600 },
+  section: {
+    backgroundColor: '#fff', border: '1px solid #ddd', borderRadius: '6px',
+    padding: '1rem', marginBottom: '1.25rem',
+  },
+  sectionHeader: {
+    backgroundColor: '#CCCCFF', padding: '0.4rem 0.6rem', margin: '-1rem -1rem 1rem -1rem',
+    borderRadius: '6px 6px 0 0', fontSize: '1rem',
+  },
+  inlineRow: { display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' },
+  textInput: {
+    flex: 1, minWidth: '260px', padding: '0.45rem', fontSize: '1rem',
+    border: '1px solid #ccc', borderRadius: '4px', fontFamily: 'monospace',
+  },
+  textInputFlex: {
+    flex: 1, minWidth: '260px', padding: '0.45rem', fontSize: '1rem',
+    border: '1px solid #ccc', borderRadius: '4px',
+  },
+  select: {
+    width: '100%', padding: '0.45rem', fontSize: '1rem',
+    border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box',
+  },
+  coordInput: {
+    width: '140px', padding: '0.45rem', fontSize: '1rem',
+    border: '1px solid #ccc', borderRadius: '4px',
+  },
+  fieldLabel: { display: 'block', fontWeight: 600, marginBottom: '0.3rem' },
+  subFieldLabel: { display: 'block', fontWeight: 600, margin: '1rem 0 0.3rem' },
+  hint: { fontSize: '0.85rem', color: '#666', marginBottom: '0.75rem' },
+  qualifierGrid: {
+    display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '0.5rem',
+  },
+  checkboxLabel: { display: 'flex', alignItems: 'center', gap: '0.4rem' },
+  coordGrid: {
+    display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem',
+  },
+  warningBox: {
+    marginTop: '0.75rem', padding: '0.5rem 0.75rem', backgroundColor: '#fff3cd',
+    border: '1px solid #ffc107', borderRadius: '4px', color: '#856404',
+  },
+  refSearchRow: { display: 'flex', gap: '0.5rem', marginBottom: '0.75rem', flexWrap: 'wrap' },
+  refResults: {
+    border: '1px solid #ddd', borderRadius: '4px', maxHeight: '10rem',
+    overflowY: 'auto', marginBottom: '0.75rem',
+  },
+  refResultItem: {
+    padding: '0.5rem', cursor: 'pointer', borderBottom: '1px solid #eee',
+  },
+  bold: { fontWeight: 600 },
+  muted: { color: '#888', fontSize: '0.9rem' },
+  buttonRow: { display: 'flex', gap: '1rem', marginTop: '0.5rem' },
+  primaryButton: {
+    padding: '0.5rem 1.5rem', fontSize: '1rem', backgroundColor: '#0066cc',
+    color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer',
+  },
+  secondaryButton: {
+    padding: '0.5rem 1rem', fontSize: '0.95rem', backgroundColor: '#6c757d',
+    color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer',
+  },
+  clearButton: {
+    background: 'none', border: 'none', color: '#c0392b',
+    cursor: 'pointer', textDecoration: 'underline', padding: 0,
+  },
+  disabledButton: { opacity: 0.5, cursor: 'not-allowed' },
+};
