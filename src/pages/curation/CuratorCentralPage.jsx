@@ -75,10 +75,10 @@ function CuratorCentralPage() {
                 {' | '}
                 <a href="https://wiki.candidagenome.org/index.php/Help:Interaction_Curation_Help" target="_blank" rel="noopener noreferrer">Help</a>
               </li>
-              <li style={styles.disabledItem}>
-                <Link to="/curation/feature/new" style={styles.disabledLink}>Add a New Feature</Link>
+              <li>
+                <Link to="/curation/feature/new">Add a New Feature</Link>
                 {' | '}
-                <a href="https://wiki.candidagenome.org/index.php/Help:CurateLocusFeat" target="_blank" rel="noopener noreferrer" style={styles.disabledLink}>Help</a>
+                <a href="https://wiki.candidagenome.org/index.php/Help:CurateLocusFeat" target="_blank" rel="noopener noreferrer">Help</a>
               </li>
               <li style={styles.disabledItem}>
                 <Link to="/curation/links" style={styles.disabledLink}>Add Links and Pull-downs to Locus Page</Link>
