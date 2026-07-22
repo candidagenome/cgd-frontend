@@ -70,12 +70,22 @@ function LocusSummary({
       .replace(/^Candida_/, 'C_') // Shorten Candida to C
       .replace(/^_*Candida_/, 'C_'); // Handle [Candida] case
 
+    // Compare with hyphens removed so a strain like "MYA-3404" matches an
+    // assembly named "MYA3404". Only C. tropicalis differs this way; for the
+    // other species this is a no-op. The real (hyphen-free) key is returned so
+    // downstream lookups keyed by that name keep working.
+    const canon = (s) => s.replace(/-/g, '');
+    const normCanon = canon(normalized);
+
     // Try exact match first
-    if (assemblyConfig[normalized]) return normalized;
+    for (const key of Object.keys(assemblyConfig)) {
+      if (canon(key) === normCanon) return key;
+    }
 
     // Try partial match
     for (const key of Object.keys(assemblyConfig)) {
-      if (normalized.includes(key) || key.includes(normalized)) return key;
+      const keyCanon = canon(key);
+      if (normCanon.includes(keyCanon) || keyCanon.includes(normCanon)) return key;
     }
     return null;
   };
