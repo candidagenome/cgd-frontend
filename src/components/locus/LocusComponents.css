@@ -973,14 +973,6 @@ a:hover {
   color: #333;
 }
 
-.retired-names {
-  color: #757575;
-}
-
-.retired-name em {
-  text-decoration: line-through;
-}
-
 /* External link inline format (Perl style: label | label (1, 2, 3)) */
 .external-links-inline {
   line-height: 1.6;

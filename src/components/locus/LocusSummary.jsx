@@ -201,9 +201,7 @@ function LocusSummary({
   };
 
   const aliasGroups = groupAliasesByType(feature.aliases);
-  const hasRetiredNames = aliasGroups['Retired name'] && aliasGroups['Retired name'].length > 0;
-  const hasNonRetiredAliases =
-    Object.keys(aliasGroups).filter((t) => t !== 'Retired name').length > 0;
+  const hasAliases = Object.keys(aliasGroups).length > 0;
 
   // ---------- External links grouping ----------
   const groupLinksByLabel = (links) => {
@@ -436,7 +434,7 @@ function LocusSummary({
           )}
 
           {/* Aliases */}
-          {hasNonRetiredAliases && (
+          {hasAliases && (
             <tr>
               <th>Alias</th>
               <td>
@@ -449,25 +447,23 @@ function LocusSummary({
                       });
                     }
 
-                    return Object.entries(aliasGroups)
-                      .filter(([type]) => type !== 'Retired name')
-                      .map(([type, names]) => (
-                        <div key={type} className="alias-group">
-                          <span className="alias-type-label">{type}:</span>
-                          <span className="alias-names">
-                            {names.map((name, idx) => (
-                              <span key={idx}>
-                                {aliasRefsMap[name] ? (
-                                  <span dangerouslySetInnerHTML={{ __html: aliasRefsMap[name] }} />
-                                ) : (
-                                  <span>{name}</span>
-                                )}
-                                {idx < names.length - 1 ? ', ' : ''}
-                              </span>
-                            ))}
-                          </span>
-                        </div>
-                      ));
+                    return Object.entries(aliasGroups).map(([type, names]) => (
+                      <div key={type} className="alias-group">
+                        <span className="alias-type-label">{type}:</span>
+                        <span className="alias-names">
+                          {names.map((name, idx) => (
+                            <span key={idx}>
+                              {aliasRefsMap[name] ? (
+                                <span dangerouslySetInnerHTML={{ __html: aliasRefsMap[name] }} />
+                              ) : (
+                                <span>{name}</span>
+                              )}
+                              {idx < names.length - 1 ? ', ' : ''}
+                            </span>
+                          ))}
+                        </span>
+                      </div>
+                    ));
                   })()}
                 </div>
               </td>
@@ -917,23 +913,6 @@ function LocusSummary({
                 ))}
             </>
           ) : null}
-
-          {/* Retired Names */}
-          {hasRetiredNames && (
-            <tr>
-              <th>Retired Names</th>
-              <td>
-                <span className="retired-names">
-                  {aliasGroups['Retired name'].map((name, idx) => (
-                    <span key={idx} className="retired-name">
-                      <em>{name}</em>
-                      {idx < aliasGroups['Retired name'].length - 1 ? ', ' : ''}
-                    </span>
-                  ))}
-                </span>
-              </td>
-            </tr>
-          )}
 
           {/* External Links */}
           {Object.keys(linkGroups).length > 0 && (
