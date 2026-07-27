@@ -973,6 +973,12 @@ a:hover {
   color: #333;
 }
 
+.retired-tag {
+  color: #888;
+  font-style: italic;
+  font-size: 0.9em;
+}
+
 /* External link inline format (Perl style: label | label (1, 2, 3)) */
 .external-links-inline {
   line-height: 1.6;

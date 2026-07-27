@@ -447,23 +447,49 @@ function LocusSummary({
                       });
                     }
 
-                    return Object.entries(aliasGroups).map(([type, names]) => (
-                      <div key={type} className="alias-group">
-                        <span className="alias-type-label">{type}:</span>
-                        <span className="alias-names">
-                          {names.map((name, idx) => (
-                            <span key={idx}>
-                              {aliasRefsMap[name] ? (
-                                <span dangerouslySetInnerHTML={{ __html: aliasRefsMap[name] }} />
-                              ) : (
-                                <span>{name}</span>
-                              )}
-                              {idx < names.length - 1 ? ', ' : ''}
+                    // Non-retired aliases keep their type-grouped rows (e.g. Non-uniform,
+                    // Uniform). Retired names are shown in a single unlabeled row with a
+                    // per-name "(retired)" tag, so the marker travels with each name and a
+                    // later-added alias can never look retired.
+                    const retiredNames = aliasGroups['Retired name'] || [];
+                    const typedGroups = Object.entries(aliasGroups).filter(
+                      ([type]) => type !== 'Retired name'
+                    );
+
+                    return (
+                      <>
+                        {typedGroups.map(([type, names]) => (
+                          <div key={type} className="alias-group">
+                            <span className="alias-type-label">{type}:</span>
+                            <span className="alias-names">
+                              {names.map((name, idx) => (
+                                <span key={idx}>
+                                  {aliasRefsMap[name] ? (
+                                    <span dangerouslySetInnerHTML={{ __html: aliasRefsMap[name] }} />
+                                  ) : (
+                                    <span>{name}</span>
+                                  )}
+                                  {idx < names.length - 1 ? ', ' : ''}
+                                </span>
+                              ))}
                             </span>
-                          ))}
-                        </span>
-                      </div>
-                    ));
+                          </div>
+                        ))}
+                        {retiredNames.length > 0 && (
+                          <div className="alias-group">
+                            <span className="alias-names">
+                              {retiredNames.map((name, idx) => (
+                                <span key={idx}>
+                                  <span>{name}</span>
+                                  <span className="retired-tag"> (retired)</span>
+                                  {idx < retiredNames.length - 1 ? ', ' : ''}
+                                </span>
+                              ))}
+                            </span>
+                          </div>
+                        )}
+                      </>
+                    );
                   })()}
                 </div>
               </td>
