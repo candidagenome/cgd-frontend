@@ -1069,7 +1069,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.ebi.ac.uk/interpro/entry/pfam/' + feature.id + '/\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -1111,7 +1114,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.pantherdb.org/panther/family.do?clsAccession=' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -1153,7 +1159,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://supfam.org/SUPERFAMILY/cgi-bin/scop.cgi?ipid=' + replace(feature.id,'SSF','') + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -1195,7 +1204,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.cathdb.info/version/latest/superfamily/' + replace(feature.id,'G3DSA:','') + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -1237,7 +1249,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://smart.embl.de/smart/do_annotation.pl?DOMAIN=' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -1279,7 +1294,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.ncbi.nlm.nih.gov/Structure/cdd/cddsrv.cgi?uid=' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -1321,7 +1339,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.ebi.ac.uk/interpro/entry/prints/' + feature.id + '/\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -1363,7 +1384,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://prosite.expasy.org/' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -1404,7 +1428,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://prosite.expasy.org/' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -1445,7 +1472,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.ebi.ac.uk/interpro/entry/ncbifam/' + feature.id + '/\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -1486,7 +1516,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://proteininformationresource.org/cgi-bin/ipcSF?id=' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -1527,7 +1560,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://hamap.expasy.org/rule/' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -1569,7 +1605,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.ebi.ac.uk/interpro/entry/pfam/' + feature.id + '/\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -1611,7 +1650,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.pantherdb.org/panther/family.do?clsAccession=' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -1653,7 +1695,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://supfam.org/SUPERFAMILY/cgi-bin/scop.cgi?ipid=' + replace(feature.id,'SSF','') + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -1695,7 +1740,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.cathdb.info/version/latest/superfamily/' + replace(feature.id,'G3DSA:','') + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -1737,7 +1785,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://smart.embl.de/smart/do_annotation.pl?DOMAIN=' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -1779,7 +1830,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.ncbi.nlm.nih.gov/Structure/cdd/cddsrv.cgi?uid=' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -1821,7 +1875,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.ebi.ac.uk/interpro/entry/prints/' + feature.id + '/\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -1863,7 +1920,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://prosite.expasy.org/' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -1904,7 +1964,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://prosite.expasy.org/' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -1945,7 +2008,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.ebi.ac.uk/interpro/entry/ncbifam/' + feature.id + '/\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -1986,7 +2052,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://proteininformationresource.org/cgi-bin/ipcSF?id=' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -2027,7 +2096,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://hamap.expasy.org/rule/' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -2069,7 +2141,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.ebi.ac.uk/interpro/entry/pfam/' + feature.id + '/\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -2111,7 +2186,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.pantherdb.org/panther/family.do?clsAccession=' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -2153,7 +2231,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://supfam.org/SUPERFAMILY/cgi-bin/scop.cgi?ipid=' + replace(feature.id,'SSF','') + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -2195,7 +2276,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.cathdb.info/version/latest/superfamily/' + replace(feature.id,'G3DSA:','') + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -2237,7 +2321,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://smart.embl.de/smart/do_annotation.pl?DOMAIN=' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -2279,7 +2366,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.ncbi.nlm.nih.gov/Structure/cdd/cddsrv.cgi?uid=' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -2321,7 +2411,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.ebi.ac.uk/interpro/entry/prints/' + feature.id + '/\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -2363,7 +2456,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://prosite.expasy.org/' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -2404,7 +2500,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://prosite.expasy.org/' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -2445,7 +2544,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.ebi.ac.uk/interpro/entry/ncbifam/' + feature.id + '/\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -2486,7 +2588,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://proteininformationresource.org/cgi-bin/ipcSF?id=' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -2527,7 +2632,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://hamap.expasy.org/rule/' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -2569,7 +2677,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.ebi.ac.uk/interpro/entry/pfam/' + feature.id + '/\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -2611,7 +2722,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.pantherdb.org/panther/family.do?clsAccession=' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -2653,7 +2767,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://supfam.org/SUPERFAMILY/cgi-bin/scop.cgi?ipid=' + replace(feature.id,'SSF','') + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -2695,7 +2812,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.cathdb.info/version/latest/superfamily/' + replace(feature.id,'G3DSA:','') + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -2737,7 +2857,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://smart.embl.de/smart/do_annotation.pl?DOMAIN=' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -2779,7 +2902,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.ncbi.nlm.nih.gov/Structure/cdd/cddsrv.cgi?uid=' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -2821,7 +2947,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.ebi.ac.uk/interpro/entry/prints/' + feature.id + '/\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -2863,7 +2992,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://prosite.expasy.org/' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -2904,7 +3036,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://prosite.expasy.org/' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -2945,7 +3080,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.ebi.ac.uk/interpro/entry/ncbifam/' + feature.id + '/\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -2986,7 +3124,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://proteininformationresource.org/cgi-bin/ipcSF?id=' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -3027,7 +3168,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://hamap.expasy.org/rule/' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -3069,7 +3213,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.ebi.ac.uk/interpro/entry/pfam/' + feature.id + '/\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -3111,7 +3258,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.pantherdb.org/panther/family.do?clsAccession=' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -3153,7 +3303,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://supfam.org/SUPERFAMILY/cgi-bin/scop.cgi?ipid=' + replace(feature.id,'SSF','') + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -3195,7 +3348,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.cathdb.info/version/latest/superfamily/' + replace(feature.id,'G3DSA:','') + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -3237,7 +3393,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://smart.embl.de/smart/do_annotation.pl?DOMAIN=' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -3279,7 +3438,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.ncbi.nlm.nih.gov/Structure/cdd/cddsrv.cgi?uid=' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -3321,7 +3483,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.ebi.ac.uk/interpro/entry/prints/' + feature.id + '/\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -3363,7 +3528,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://prosite.expasy.org/' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -3404,7 +3572,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://prosite.expasy.org/' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -3445,7 +3616,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.ebi.ac.uk/interpro/entry/ncbifam/' + feature.id + '/\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -3486,7 +3660,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://proteininformationresource.org/cgi-bin/ipcSF?id=' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -3527,7 +3704,10 @@
           "height": 25,
           "minHeight": 20
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://hamap.expasy.org/rule/' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "QuantitativeTrack",
@@ -20524,7 +20704,10 @@
             "color1": "orange"
           }
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.ebi.ac.uk/interpro/entry/pfam/' + feature.id + '/\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -20559,7 +20742,10 @@
             "color1": "blue"
           }
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.pantherdb.org/panther/family.do?clsAccession=' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -20594,7 +20780,10 @@
             "color1": "green"
           }
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://supfam.org/SUPERFAMILY/cgi-bin/scop.cgi?ipid=' + replace(feature.id,'SSF','') + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -20629,7 +20818,10 @@
             "color1": "purple"
           }
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.cathdb.info/version/latest/superfamily/' + replace(feature.id,'G3DSA:','') + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -20664,7 +20856,10 @@
             "color1": "red"
           }
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://smart.embl.de/smart/do_annotation.pl?DOMAIN=' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -20699,7 +20894,10 @@
             "color1": "teal"
           }
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://prosite.expasy.org/' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -20734,7 +20932,10 @@
             "color1": "brown"
           }
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.ncbi.nlm.nih.gov/Structure/cdd/cddsrv.cgi?uid=' + feature.id + '\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -20769,7 +20970,10 @@
             "color1": "pink"
           }
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"https://www.ebi.ac.uk/interpro/entry/prints/' + feature.id + '/\" target=\"_blank\" rel=\"noopener\">' + feature.id + '</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
