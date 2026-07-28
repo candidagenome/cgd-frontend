@@ -215,10 +215,33 @@
           }
         }
       }
+    },
+    {
+      "name": "C_tropicalis_prot",
+      "sequence": {
+        "type": "ReferenceSequenceTrack",
+        "trackId": "C_tropicalis_prot-ReferenceSequenceTrack",
+        "adapter": {
+          "type": "IndexedFastaAdapter",
+          "fastaLocation": {
+            "uri": "protein_data/C_tropicalis_proteins.fasta",
+            "locationType": "UriLocation"
+          },
+          "faiLocation": {
+            "uri": "protein_data/C_tropicalis_proteins.fasta.fai",
+            "locationType": "UriLocation"
+          }
+        }
+      }
     }
   ],
   "configuration": {
-    "updateUrl": false
+    "updateUrl": false,
+    "hierarchical": {
+      "defaultCollapsed": {
+        "subCategories": true
+      }
+    }
   },
   "connections": [],
   "defaultSession": {
@@ -1013,12 +1036,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_albicans_SC5314_domains.gff.gz",
+          "uri": "protein_data/C_albicans_SC5314_Pfam.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_albicans_SC5314_domains.gff.gz.tbi",
+            "uri": "protein_data/C_albicans_SC5314_Pfam.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -1055,12 +1078,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_albicans_SC5314_domains.gff.gz",
+          "uri": "protein_data/C_albicans_SC5314_PANTHER.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_albicans_SC5314_domains.gff.gz.tbi",
+            "uri": "protein_data/C_albicans_SC5314_PANTHER.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -1097,12 +1120,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_albicans_SC5314_domains.gff.gz",
+          "uri": "protein_data/C_albicans_SC5314_SUPERFAMILY.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_albicans_SC5314_domains.gff.gz.tbi",
+            "uri": "protein_data/C_albicans_SC5314_SUPERFAMILY.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -1139,12 +1162,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_albicans_SC5314_domains.gff.gz",
+          "uri": "protein_data/C_albicans_SC5314_CATH.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_albicans_SC5314_domains.gff.gz.tbi",
+            "uri": "protein_data/C_albicans_SC5314_CATH.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -1181,12 +1204,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_albicans_SC5314_domains.gff.gz",
+          "uri": "protein_data/C_albicans_SC5314_SMART.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_albicans_SC5314_domains.gff.gz.tbi",
+            "uri": "protein_data/C_albicans_SC5314_SMART.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -1223,12 +1246,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_albicans_SC5314_domains.gff.gz",
+          "uri": "protein_data/C_albicans_SC5314_CDD.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_albicans_SC5314_domains.gff.gz.tbi",
+            "uri": "protein_data/C_albicans_SC5314_CDD.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -1265,12 +1288,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_albicans_SC5314_domains.gff.gz",
+          "uri": "protein_data/C_albicans_SC5314_PRINTS.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_albicans_SC5314_domains.gff.gz.tbi",
+            "uri": "protein_data/C_albicans_SC5314_PRINTS.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -1307,12 +1330,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_albicans_SC5314_domains.gff.gz",
+          "uri": "protein_data/C_albicans_SC5314_ProSitePatterns.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_albicans_SC5314_domains.gff.gz.tbi",
+            "uri": "protein_data/C_albicans_SC5314_ProSitePatterns.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -1513,12 +1536,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_auris_B8441_domains.gff.gz",
+          "uri": "protein_data/C_auris_B8441_Pfam.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_auris_B8441_domains.gff.gz.tbi",
+            "uri": "protein_data/C_auris_B8441_Pfam.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -1555,12 +1578,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_auris_B8441_domains.gff.gz",
+          "uri": "protein_data/C_auris_B8441_PANTHER.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_auris_B8441_domains.gff.gz.tbi",
+            "uri": "protein_data/C_auris_B8441_PANTHER.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -1597,12 +1620,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_auris_B8441_domains.gff.gz",
+          "uri": "protein_data/C_auris_B8441_SUPERFAMILY.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_auris_B8441_domains.gff.gz.tbi",
+            "uri": "protein_data/C_auris_B8441_SUPERFAMILY.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -1639,12 +1662,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_auris_B8441_domains.gff.gz",
+          "uri": "protein_data/C_auris_B8441_CATH.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_auris_B8441_domains.gff.gz.tbi",
+            "uri": "protein_data/C_auris_B8441_CATH.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -1681,12 +1704,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_auris_B8441_domains.gff.gz",
+          "uri": "protein_data/C_auris_B8441_SMART.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_auris_B8441_domains.gff.gz.tbi",
+            "uri": "protein_data/C_auris_B8441_SMART.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -1723,12 +1746,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_auris_B8441_domains.gff.gz",
+          "uri": "protein_data/C_auris_B8441_CDD.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_auris_B8441_domains.gff.gz.tbi",
+            "uri": "protein_data/C_auris_B8441_CDD.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -1765,12 +1788,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_auris_B8441_domains.gff.gz",
+          "uri": "protein_data/C_auris_B8441_PRINTS.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_auris_B8441_domains.gff.gz.tbi",
+            "uri": "protein_data/C_auris_B8441_PRINTS.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -1807,12 +1830,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_auris_B8441_domains.gff.gz",
+          "uri": "protein_data/C_auris_B8441_ProSitePatterns.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_auris_B8441_domains.gff.gz.tbi",
+            "uri": "protein_data/C_auris_B8441_ProSitePatterns.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -2013,12 +2036,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz",
+          "uri": "protein_data/C_dubliniensis_CD36_Pfam.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz.tbi",
+            "uri": "protein_data/C_dubliniensis_CD36_Pfam.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -2055,12 +2078,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz",
+          "uri": "protein_data/C_dubliniensis_CD36_PANTHER.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz.tbi",
+            "uri": "protein_data/C_dubliniensis_CD36_PANTHER.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -2097,12 +2120,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz",
+          "uri": "protein_data/C_dubliniensis_CD36_SUPERFAMILY.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz.tbi",
+            "uri": "protein_data/C_dubliniensis_CD36_SUPERFAMILY.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -2139,12 +2162,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz",
+          "uri": "protein_data/C_dubliniensis_CD36_CATH.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz.tbi",
+            "uri": "protein_data/C_dubliniensis_CD36_CATH.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -2181,12 +2204,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz",
+          "uri": "protein_data/C_dubliniensis_CD36_SMART.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz.tbi",
+            "uri": "protein_data/C_dubliniensis_CD36_SMART.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -2223,12 +2246,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz",
+          "uri": "protein_data/C_dubliniensis_CD36_CDD.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz.tbi",
+            "uri": "protein_data/C_dubliniensis_CD36_CDD.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -2265,12 +2288,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz",
+          "uri": "protein_data/C_dubliniensis_CD36_PRINTS.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz.tbi",
+            "uri": "protein_data/C_dubliniensis_CD36_PRINTS.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -2307,12 +2330,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz",
+          "uri": "protein_data/C_dubliniensis_CD36_ProSitePatterns.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_dubliniensis_CD36_domains.gff.gz.tbi",
+            "uri": "protein_data/C_dubliniensis_CD36_ProSitePatterns.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -2513,12 +2536,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz",
+          "uri": "protein_data/C_glabrata_CBS138_Pfam.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz.tbi",
+            "uri": "protein_data/C_glabrata_CBS138_Pfam.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -2555,12 +2578,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz",
+          "uri": "protein_data/C_glabrata_CBS138_PANTHER.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz.tbi",
+            "uri": "protein_data/C_glabrata_CBS138_PANTHER.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -2597,12 +2620,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz",
+          "uri": "protein_data/C_glabrata_CBS138_SUPERFAMILY.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz.tbi",
+            "uri": "protein_data/C_glabrata_CBS138_SUPERFAMILY.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -2639,12 +2662,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz",
+          "uri": "protein_data/C_glabrata_CBS138_CATH.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz.tbi",
+            "uri": "protein_data/C_glabrata_CBS138_CATH.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -2681,12 +2704,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz",
+          "uri": "protein_data/C_glabrata_CBS138_SMART.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz.tbi",
+            "uri": "protein_data/C_glabrata_CBS138_SMART.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -2723,12 +2746,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz",
+          "uri": "protein_data/C_glabrata_CBS138_CDD.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz.tbi",
+            "uri": "protein_data/C_glabrata_CBS138_CDD.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -2765,12 +2788,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz",
+          "uri": "protein_data/C_glabrata_CBS138_PRINTS.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz.tbi",
+            "uri": "protein_data/C_glabrata_CBS138_PRINTS.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -2807,12 +2830,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz",
+          "uri": "protein_data/C_glabrata_CBS138_ProSitePatterns.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_glabrata_CBS138_domains.gff.gz.tbi",
+            "uri": "protein_data/C_glabrata_CBS138_ProSitePatterns.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -3013,12 +3036,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz",
+          "uri": "protein_data/C_parapsilosis_CDC317_Pfam.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz.tbi",
+            "uri": "protein_data/C_parapsilosis_CDC317_Pfam.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -3055,12 +3078,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz",
+          "uri": "protein_data/C_parapsilosis_CDC317_PANTHER.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz.tbi",
+            "uri": "protein_data/C_parapsilosis_CDC317_PANTHER.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -3097,12 +3120,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz",
+          "uri": "protein_data/C_parapsilosis_CDC317_SUPERFAMILY.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz.tbi",
+            "uri": "protein_data/C_parapsilosis_CDC317_SUPERFAMILY.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -3139,12 +3162,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz",
+          "uri": "protein_data/C_parapsilosis_CDC317_CATH.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz.tbi",
+            "uri": "protein_data/C_parapsilosis_CDC317_CATH.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -3181,12 +3204,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz",
+          "uri": "protein_data/C_parapsilosis_CDC317_SMART.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz.tbi",
+            "uri": "protein_data/C_parapsilosis_CDC317_SMART.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -3223,12 +3246,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz",
+          "uri": "protein_data/C_parapsilosis_CDC317_CDD.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz.tbi",
+            "uri": "protein_data/C_parapsilosis_CDC317_CDD.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -3265,12 +3288,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz",
+          "uri": "protein_data/C_parapsilosis_CDC317_PRINTS.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz.tbi",
+            "uri": "protein_data/C_parapsilosis_CDC317_PRINTS.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -3307,12 +3330,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz",
+          "uri": "protein_data/C_parapsilosis_CDC317_ProSitePatterns.gff.gz",
           "locationType": "UriLocation"
         },
         "index": {
           "location": {
-            "uri": "protein_data/C_parapsilosis_CDC317_domains.gff.gz.tbi",
+            "uri": "protein_data/C_parapsilosis_CDC317_ProSitePatterns.gff.gz.tbi",
             "locationType": "UriLocation"
           },
           "indexType": "TBI"
@@ -16162,6 +16185,4659 @@
         {
           "type": "LinearWiggleDisplay",
           "displayId": "Lok2026_SRR26084647_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Du2015_SRR2062586_coverage",
+      "name": "Du et al sorbitol 5h",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Du2015_SRR2062586_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Du_2015"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Du2015_SRR2062586_coverage_display"
+        }
+      ],
+      "metadata": {
+        "Publication": "https://www.candidagenome.org/reference/26350972"
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Du2015_SRR2062587_coverage",
+      "name": "Du et al glucose 5h",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Du2015_SRR2062587_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Du_2015"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Du2015_SRR2062587_coverage_display"
+        }
+      ],
+      "metadata": {
+        "Publication": "https://www.candidagenome.org/reference/26350972"
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Du2015_SRR2062588_coverage",
+      "name": "Du et al GlcNAc 5h",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Du2015_SRR2062588_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Du_2015"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Du2015_SRR2062588_coverage_display"
+        }
+      ],
+      "metadata": {
+        "Publication": "https://www.candidagenome.org/reference/26350972"
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Du2015_SRR1740386_coverage",
+      "name": "Du et al sorbitol 24h",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Du2015_SRR1740386_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Du_2015"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Du2015_SRR1740386_coverage_display"
+        }
+      ],
+      "metadata": {
+        "Publication": "https://www.candidagenome.org/reference/26350972"
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Du2015_SRR1740387_coverage",
+      "name": "Du et al glucose 24h",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Du2015_SRR1740387_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Du_2015"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Du2015_SRR1740387_coverage_display"
+        }
+      ],
+      "metadata": {
+        "Publication": "https://www.candidagenome.org/reference/26350972"
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Du2015_SRR1740388_coverage",
+      "name": "Du et al GlcNAc 24h",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Du2015_SRR1740388_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Du_2015"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Du2015_SRR1740388_coverage_display"
+        }
+      ],
+      "metadata": {
+        "Publication": "https://www.candidagenome.org/reference/26350972"
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Menon2026_SRR33095670_coverage",
+      "name": "Menon et al WT SLD (rep 1)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Menon2026_SRR33095670_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Menon_2026"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Menon2026_SRR33095670_coverage_display"
+        }
+      ],
+      "metadata": {
+        "Publication": "https://www.candidagenome.org/reference/42003610"
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Menon2026_SRR33095671_coverage",
+      "name": "Menon et al WT SLD (rep 2)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Menon2026_SRR33095671_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Menon_2026"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Menon2026_SRR33095671_coverage_display"
+        }
+      ],
+      "metadata": {
+        "Publication": "https://www.candidagenome.org/reference/42003610"
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Menon2026_SRR33095672_coverage",
+      "name": "Menon et al WT SLD+Met/Cys (rep 1)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Menon2026_SRR33095672_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Menon_2026"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Menon2026_SRR33095672_coverage_display"
+        }
+      ],
+      "metadata": {
+        "Publication": "https://www.candidagenome.org/reference/42003610"
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Menon2026_SRR33095673_coverage",
+      "name": "Menon et al WT SLD+Met/Cys (rep 2)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Menon2026_SRR33095673_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Menon_2026"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Menon2026_SRR33095673_coverage_display"
+        }
+      ],
+      "metadata": {
+        "Publication": "https://www.candidagenome.org/reference/42003610"
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Menon2026_SRR33095674_coverage",
+      "name": "Menon et al WT SLD+taurine (rep 1)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Menon2026_SRR33095674_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Menon_2026"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Menon2026_SRR33095674_coverage_display"
+        }
+      ],
+      "metadata": {
+        "Publication": "https://www.candidagenome.org/reference/42003610"
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Menon2026_SRR33095675_coverage",
+      "name": "Menon et al WT SLD+taurine (rep 2)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Menon2026_SRR33095675_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Menon_2026"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Menon2026_SRR33095675_coverage_display"
+        }
+      ],
+      "metadata": {
+        "Publication": "https://www.candidagenome.org/reference/42003610"
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Menon2026_SRR33095664_coverage",
+      "name": "Menon et al WT SLD+ammonium sulfate (rep 1)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Menon2026_SRR33095664_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Menon_2026"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Menon2026_SRR33095664_coverage_display"
+        }
+      ],
+      "metadata": {
+        "Publication": "https://www.candidagenome.org/reference/42003610"
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Menon2026_SRR33095665_coverage",
+      "name": "Menon et al WT SLD+ammonium sulfate (rep 2)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Menon2026_SRR33095665_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Menon_2026"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Menon2026_SRR33095665_coverage_display"
+        }
+      ],
+      "metadata": {
+        "Publication": "https://www.candidagenome.org/reference/42003610"
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Menon2026_SRR33095663_coverage",
+      "name": "Menon et al SN250 SLD (rep 1)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Menon2026_SRR33095663_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Menon_2026"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Menon2026_SRR33095663_coverage_display"
+        }
+      ],
+      "metadata": {
+        "Publication": "https://www.candidagenome.org/reference/42003610"
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Menon2026_SRR33095662_coverage",
+      "name": "Menon et al SN250 SLD (rep 2)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Menon2026_SRR33095662_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Menon_2026"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Menon2026_SRR33095662_coverage_display"
+        }
+      ],
+      "metadata": {
+        "Publication": "https://www.candidagenome.org/reference/42003610"
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Menon2026_SRR33095661_coverage",
+      "name": "Menon et al SN250 SLD+glutathione (rep 1)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Menon2026_SRR33095661_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Menon_2026"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Menon2026_SRR33095661_coverage_display"
+        }
+      ],
+      "metadata": {
+        "Publication": "https://www.candidagenome.org/reference/42003610"
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Menon2026_SRR33095660_coverage",
+      "name": "Menon et al SN250 SLD+glutathione (rep 2)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Menon2026_SRR33095660_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Menon_2026"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Menon2026_SRR33095660_coverage_display"
+        }
+      ],
+      "metadata": {
+        "Publication": "https://www.candidagenome.org/reference/42003610"
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Menon2026_SRR33095653_coverage",
+      "name": "Menon et al met32\u0394 SLD (rep 1)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Menon2026_SRR33095653_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Menon_2026"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Menon2026_SRR33095653_coverage_display"
+        }
+      ],
+      "metadata": {
+        "Publication": "https://www.candidagenome.org/reference/42003610"
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Menon2026_SRR33095652_coverage",
+      "name": "Menon et al met32\u0394 SLD (rep 2)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Menon2026_SRR33095652_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Menon_2026"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Menon2026_SRR33095652_coverage_display"
+        }
+      ],
+      "metadata": {
+        "Publication": "https://www.candidagenome.org/reference/42003610"
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Menon2026_SRR33095659_coverage",
+      "name": "Menon et al met32\u0394 SLD+glutathione (rep 1)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Menon2026_SRR33095659_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Menon_2026"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Menon2026_SRR33095659_coverage_display"
+        }
+      ],
+      "metadata": {
+        "Publication": "https://www.candidagenome.org/reference/42003610"
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Menon2026_SRR33095658_coverage",
+      "name": "Menon et al met32\u0394 SLD+glutathione (rep 2)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Menon2026_SRR33095658_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Menon_2026"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Menon2026_SRR33095658_coverage_display"
+        }
+      ],
+      "metadata": {
+        "Publication": "https://www.candidagenome.org/reference/42003610"
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Menon2026_SRR33095666_coverage",
+      "name": "Menon et al SN250 SLD+taurine (rep 1)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Menon2026_SRR33095666_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Menon_2026"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Menon2026_SRR33095666_coverage_display"
+        }
+      ],
+      "metadata": {
+        "Publication": "https://www.candidagenome.org/reference/42003610"
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Menon2026_SRR33095667_coverage",
+      "name": "Menon et al SN250 SLD+taurine (rep 2)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Menon2026_SRR33095667_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Menon_2026"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Menon2026_SRR33095667_coverage_display"
+        }
+      ],
+      "metadata": {
+        "Publication": "https://www.candidagenome.org/reference/42003610"
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Menon2026_SRR33095668_coverage",
+      "name": "Menon et al met32\u0394 SLD+taurine (rep 1)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Menon2026_SRR33095668_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Menon_2026"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Menon2026_SRR33095668_coverage_display"
+        }
+      ],
+      "metadata": {
+        "Publication": "https://www.candidagenome.org/reference/42003610"
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Menon2026_SRR33095669_coverage",
+      "name": "Menon et al met32\u0394 SLD+taurine (rep 2)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Menon2026_SRR33095669_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Menon_2026"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Menon2026_SRR33095669_coverage_display"
+        }
+      ],
+      "metadata": {
+        "Publication": "https://www.candidagenome.org/reference/42003610"
+      }
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077262_coverage",
+      "name": "Cravener et al control strain 12C (Rep 1, HapA) (SRR20077262)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077262_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077262_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077261_coverage",
+      "name": "Cravener et al control strain 12C (Rep 2, HapA) (SRR20077261)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077261_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077261_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077260_coverage",
+      "name": "Cravener et al control strain 12C (Rep 3, HapA) (SRR20077260)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077260_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077260_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077294_coverage",
+      "name": "Cravener et al efg1 strain 12C (Rep 1, HapA) (SRR20077294)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077294_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077294_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077293_coverage",
+      "name": "Cravener et al efg1 strain 12C (Rep 2, HapA) (SRR20077293)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077293_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077293_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077292_coverage",
+      "name": "Cravener et al efg1 strain 12C (Rep 3, HapA) (SRR20077292)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077292_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077292_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077285_coverage",
+      "name": "Cravener et al control strain 19F (Rep 1, HapA) (SRR20077285)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077285_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077285_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077259_coverage",
+      "name": "Cravener et al control strain 19F (Rep 2, HapA) (SRR20077259)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077259_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077259_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077258_coverage",
+      "name": "Cravener et al control strain 19F (Rep 3, HapA) (SRR20077258)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077258_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077258_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077254_coverage",
+      "name": "Cravener et al efg1 strain 19F (Rep 1, HapA) (SRR20077254)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077254_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077254_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077253_coverage",
+      "name": "Cravener et al efg1 strain 19F (Rep 2, HapA) (SRR20077253)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077253_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077253_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077252_coverage",
+      "name": "Cravener et al efg1 strain 19F (Rep 3, HapA) (SRR20077252)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077252_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077252_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077210_coverage",
+      "name": "Cravener et al control strain GC75 (Rep 1, HapA) (SRR20077210)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077210_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077210_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077209_coverage",
+      "name": "Cravener et al control strain GC75 (Rep 2, HapA) (SRR20077209)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077209_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077209_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077208_coverage",
+      "name": "Cravener et al control strain GC75 (Rep 3, HapA) (SRR20077208)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077208_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077208_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077207_coverage",
+      "name": "Cravener et al efg1 strain GC75 (Rep 1, HapA) (SRR20077207)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077207_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077207_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077305_coverage",
+      "name": "Cravener et al efg1 strain GC75 (Rep 2, HapA) (SRR20077305)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077305_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077305_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077304_coverage",
+      "name": "Cravener et al efg1 strain GC75 (Rep 3, HapA) (SRR20077304)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077304_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077304_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077288_coverage",
+      "name": "Cravener et al control strain L26 (Rep 1, HapA) (SRR20077288)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077288_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077288_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077287_coverage",
+      "name": "Cravener et al control strain L26 (Rep 2, HapA) (SRR20077287)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077287_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077287_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077286_coverage",
+      "name": "Cravener et al control strain L26 (Rep 3, HapA) (SRR20077286)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077286_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077286_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077257_coverage",
+      "name": "Cravener et al efg1 strain L26 (Rep 1, HapA) (SRR20077257)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077257_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077257_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077256_coverage",
+      "name": "Cravener et al efg1 strain L26 (Rep 2, HapA) (SRR20077256)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077256_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077256_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077255_coverage",
+      "name": "Cravener et al efg1 strain L26 (Rep 3, HapA) (SRR20077255)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077255_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077255_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077302_coverage",
+      "name": "Cravener et al control strain P37005 (Rep 1, HapA) (SRR20077302)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077302_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077302_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077301_coverage",
+      "name": "Cravener et al control strain P37005 (Rep 2, HapA) (SRR20077301)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077301_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077301_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077300_coverage",
+      "name": "Cravener et al control strain P37005 (Rep 3, HapA) (SRR20077300)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077300_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077300_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077296_coverage",
+      "name": "Cravener et al efg1 strain P37005 (Rep 1, HapA) (SRR20077296)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077296_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077296_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077271_coverage",
+      "name": "Cravener et al efg1 strain P37005 (Rep 2, HapA) (SRR20077271)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077271_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077271_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077269_coverage",
+      "name": "Cravener et al efg1 strain P37005 (Rep 3, HapA) (SRR20077269)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077269_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077269_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077299_coverage",
+      "name": "Cravener et al control strain P37037 (Rep 1, HapA) (SRR20077299)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077299_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077299_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077298_coverage",
+      "name": "Cravener et al control strain P37037 (Rep 2, HapA) (SRR20077298)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077298_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077298_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077297_coverage",
+      "name": "Cravener et al control strain P37037 (Rep 3, HapA) (SRR20077297)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077297_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077297_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077268_coverage",
+      "name": "Cravener et al efg1 strain P37037 (Rep 1, HapA) (SRR20077268)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077268_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077268_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077267_coverage",
+      "name": "Cravener et al efg1 strain P37037 (Rep 2, HapA) (SRR20077267)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077267_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077267_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077266_coverage",
+      "name": "Cravener et al efg1 strain P37037 (Rep 3, HapA) (SRR20077266)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077266_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077266_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077265_coverage",
+      "name": "Cravener et al control strain P37039 (Rep 1, HapA) (SRR20077265)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077265_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077265_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077264_coverage",
+      "name": "Cravener et al control strain P37039 (Rep 2, HapA) (SRR20077264)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077264_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077264_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077263_coverage",
+      "name": "Cravener et al control strain P37039 (Rep 3, HapA) (SRR20077263)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077263_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077263_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077291_coverage",
+      "name": "Cravener et al efg1 strain P37039 (Rep 1, HapA) (SRR20077291)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077291_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077291_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077290_coverage",
+      "name": "Cravener et al efg1 strain P37039 (Rep 2, HapA) (SRR20077290)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077290_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077290_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077289_coverage",
+      "name": "Cravener et al efg1 strain P37039 (Rep 3, HapA) (SRR20077289)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077289_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077289_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077282_coverage",
+      "name": "Cravener et al control strain P57055 (Rep 1, HapA) (SRR20077282)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077282_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077282_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077281_coverage",
+      "name": "Cravener et al control strain P57055 (Rep 2, HapA) (SRR20077281)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077281_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077281_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077280_coverage",
+      "name": "Cravener et al control strain P57055 (Rep 3, HapA) (SRR20077280)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077280_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077280_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077276_coverage",
+      "name": "Cravener et al efg1 strain P57055 (Rep 1, HapA) (SRR20077276)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077276_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077276_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077274_coverage",
+      "name": "Cravener et al efg1 strain P57055 (Rep 2, HapA) (SRR20077274)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077274_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077274_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077273_coverage",
+      "name": "Cravener et al efg1 strain P57055 (Rep 3, HapA) (SRR20077273)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077273_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077273_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077237_coverage",
+      "name": "Cravener et al control strain P57072 (Rep 1, HapA) (SRR20077237)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077237_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077237_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077236_coverage",
+      "name": "Cravener et al control strain P57072 (Rep 2, HapA) (SRR20077236)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077236_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077236_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077283_coverage",
+      "name": "Cravener et al control strain P57072 (Rep 3, HapA) (SRR20077283)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077283_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077283_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077279_coverage",
+      "name": "Cravener et al efg1 strain P57072 (Rep 1, HapA) (SRR20077279)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077279_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077279_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077278_coverage",
+      "name": "Cravener et al efg1 strain P57072 (Rep 2, HapA) (SRR20077278)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077278_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077278_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077277_coverage",
+      "name": "Cravener et al efg1 strain P57072 (Rep 3, HapA) (SRR20077277)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077277_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077277_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077251_coverage",
+      "name": "Cravener et al control strain P75010 (Rep 1, HapA) (SRR20077251)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077251_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077251_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077250_coverage",
+      "name": "Cravener et al control strain P75010 (Rep 2, HapA) (SRR20077250)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077250_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077250_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077248_coverage",
+      "name": "Cravener et al control strain P75010 (Rep 3, HapA) (SRR20077248)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077248_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077248_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077244_coverage",
+      "name": "Cravener et al efg1 strain P75010 (Rep 1, HapA) (SRR20077244)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077244_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077244_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077243_coverage",
+      "name": "Cravener et al efg1 strain P75010 (Rep 2, HapA) (SRR20077243)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077243_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077243_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077242_coverage",
+      "name": "Cravener et al efg1 strain P75010 (Rep 3, HapA) (SRR20077242)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077242_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077242_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077223_coverage",
+      "name": "Cravener et al control strain P75016 (Rep 1, HapA) (SRR20077223)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077223_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077223_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077222_coverage",
+      "name": "Cravener et al control strain P75016 (Rep 2, HapA) (SRR20077222)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077222_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077222_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077221_coverage",
+      "name": "Cravener et al control strain P75016 (Rep 3, HapA) (SRR20077221)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077221_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077221_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077216_coverage",
+      "name": "Cravener et al efg1 strain P75016 (Rep 1, HapA) (SRR20077216)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077216_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077216_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077215_coverage",
+      "name": "Cravener et al efg1 strain P75016 (Rep 2, HapA) (SRR20077215)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077215_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077215_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077214_coverage",
+      "name": "Cravener et al efg1 strain P75016 (Rep 3, HapA) (SRR20077214)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077214_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077214_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077220_coverage",
+      "name": "Cravener et al control strain P75063 (Rep 1, HapA) (SRR20077220)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077220_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077220_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077219_coverage",
+      "name": "Cravener et al control strain P75063 (Rep 2, HapA) (SRR20077219)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077219_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077219_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077218_coverage",
+      "name": "Cravener et al control strain P75063 (Rep 3, HapA) (SRR20077218)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077218_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077218_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077213_coverage",
+      "name": "Cravener et al efg1 strain P75063 (Rep 1, HapA) (SRR20077213)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077213_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077213_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077212_coverage",
+      "name": "Cravener et al efg1 strain P75063 (Rep 2, HapA) (SRR20077212)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077212_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077212_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077211_coverage",
+      "name": "Cravener et al efg1 strain P75063 (Rep 3, HapA) (SRR20077211)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077211_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077211_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077247_coverage",
+      "name": "Cravener et al control strain P76067 (Rep 1, HapA) (SRR20077247)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077247_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077247_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077246_coverage",
+      "name": "Cravener et al control strain P76067 (Rep 2, HapA) (SRR20077246)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077246_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077246_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077245_coverage",
+      "name": "Cravener et al control strain P76067 (Rep 3, HapA) (SRR20077245)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077245_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077245_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077241_coverage",
+      "name": "Cravener et al efg1 strain P76067 (Rep 1, HapA) (SRR20077241)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077241_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077241_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077240_coverage",
+      "name": "Cravener et al efg1 strain P76067 (Rep 2, HapA) (SRR20077240)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077240_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077240_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077239_coverage",
+      "name": "Cravener et al efg1 strain P76067 (Rep 3, HapA) (SRR20077239)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077239_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077239_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077233_coverage",
+      "name": "Cravener et al control strain P78042 (Rep 1, HapA) (SRR20077233)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077233_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077233_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077232_coverage",
+      "name": "Cravener et al control strain P78042 (Rep 2, HapA) (SRR20077232)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077232_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077232_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077231_coverage",
+      "name": "Cravener et al control strain P78042 (Rep 3, HapA) (SRR20077231)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077231_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077231_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077226_coverage",
+      "name": "Cravener et al efg1 strain P78042 (Rep 1, HapA) (SRR20077226)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077226_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077226_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077225_coverage",
+      "name": "Cravener et al efg1 strain P78042 (Rep 2, HapA) (SRR20077225)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077225_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077225_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077224_coverage",
+      "name": "Cravener et al efg1 strain P78042 (Rep 3, HapA) (SRR20077224)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077224_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077224_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077217_coverage",
+      "name": "Cravener et al control strain P78048 (Rep 1, HapA) (SRR20077217)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077217_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077217_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077306_coverage",
+      "name": "Cravener et al control strain P78048 (Rep 2, HapA) (SRR20077306)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077306_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077306_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077303_coverage",
+      "name": "Cravener et al control strain P78048 (Rep 3, HapA) (SRR20077303)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077303_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077303_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077238_coverage",
+      "name": "Cravener et al efg1 strain P78048 (Rep 1, HapA) (SRR20077238)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077238_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077238_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077275_coverage",
+      "name": "Cravener et al efg1 strain P78048 (Rep 2, HapA) (SRR20077275)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077275_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077275_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077228_coverage",
+      "name": "Cravener et al efg1 strain P78048 (Rep 3, HapA) (SRR20077228)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077228_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077228_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077272_coverage",
+      "name": "Cravener et al control strain P87 (Rep 1, HapA) (SRR20077272)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077272_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077272_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077235_coverage",
+      "name": "Cravener et al control strain P87 (Rep 2, HapA) (SRR20077235)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077235_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077235_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077234_coverage",
+      "name": "Cravener et al control strain P87 (Rep 3, HapA) (SRR20077234)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077234_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077234_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077230_coverage",
+      "name": "Cravener et al efg1 strain P87 (Rep 1, HapA) (SRR20077230)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077230_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077230_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077229_coverage",
+      "name": "Cravener et al efg1 strain P87 (Rep 2, HapA) (SRR20077229)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077229_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077229_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077227_coverage",
+      "name": "Cravener et al efg1 strain P87 (Rep 3, HapA) (SRR20077227)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077227_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077227_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077307_coverage",
+      "name": "Cravener et al control strain SC5314 (Rep 2, HapA) (SRR20077307)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077307_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077307_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077270_coverage",
+      "name": "Cravener et al control strain SC5314 (Rep 3, HapA) (SRR20077270)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077270_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077270_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077295_coverage",
+      "name": "Cravener et al efg1 strain SC5314 (Rep 1, HapA) (SRR20077295)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077295_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077295_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077284_coverage",
+      "name": "Cravener et al efg1 strain SC5314 (Rep 2, HapA) (SRR20077284)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077284_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077284_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Cravener2023_SRR20077249_coverage",
+      "name": "Cravener et al efg1 strain SC5314 (Rep 3, HapA) (SRR20077249)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Cravener2023_SRR20077249_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Cravener_2023"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Cravener2023_SRR20077249_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671452_coverage",
+      "name": "Wang et al bloodstream strain P34048  (Rep 1, HapA) (SRR11671452)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671452_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671452_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671470_coverage",
+      "name": "Wang et al bloodstream strain P34048  (Rep 2, HapA) (SRR11671470)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671470_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671470_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671460_coverage",
+      "name": "Wang et al bloodstream strain P37039  (Rep 1, HapA) (SRR11671460)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671460_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671460_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671483_coverage",
+      "name": "Wang et al bloodstream strain P37039 (Rep 2, HapA) (SRR11671483)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671483_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671483_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671450_coverage",
+      "name": "Wang et al bloodstream strain P57055  (Rep 1, HapA) (SRR11671450)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671450_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671450_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671468_coverage",
+      "name": "Wang et al bloodstream strain P57055  (Rep 2, HapA) (SRR11671468)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671468_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671468_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671449_coverage",
+      "name": "Wang et al bloodstream strain P57072  (Rep 1, HapA) (SRR11671449)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671449_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671449_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671466_coverage",
+      "name": "Wang et al bloodstream strain P57072  (Rep 2, HapA) (SRR11671466)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671466_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671466_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671456_coverage",
+      "name": "Wang et al bloodstream strain P60002  (Rep 1, HapA) (SRR11671456)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671456_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671456_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671472_coverage",
+      "name": "Wang et al bloodstream strain P60002 (Rep 2, HapA) (SRR11671472)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671472_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671472_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671463_coverage",
+      "name": "Wang et al bloodstream strain P75010  (Rep 1, HapA) (SRR11671463)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671463_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671463_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671486_coverage",
+      "name": "Wang et al bloodstream strain P75010 (Rep 2, HapA) (SRR11671486)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671486_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671486_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671447_coverage",
+      "name": "Wang et al bloodstream strain P75016  (Rep 1, HapA) (SRR11671447)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671447_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671447_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671475_coverage",
+      "name": "Wang et al bloodstream strain P75016 (Rep 2, HapA) (SRR11671475)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671475_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671475_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671474_coverage",
+      "name": "Wang et al bloodstream strain P75063  (Rep 1, HapA) (SRR11671474)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671474_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671474_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671478_coverage",
+      "name": "Wang et al bloodstream strain P75063 (Rep 2, HapA) (SRR11671478)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671478_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671478_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671446_coverage",
+      "name": "Wang et al bloodstream strain P76055  (Rep 1, HapA) (SRR11671446)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671446_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671446_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671465_coverage",
+      "name": "Wang et al bloodstream strain P76055 (Rep 2, HapA) (SRR11671465)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671465_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671465_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671445_coverage",
+      "name": "Wang et al bloodstream strain P76067 (Rep 1, HapA) (SRR11671445)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671445_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671445_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671464_coverage",
+      "name": "Wang et al bloodstream strain P76067 (Rep 2, HapA) (SRR11671464)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671464_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671464_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671451_coverage",
+      "name": "Wang et al bloodstream strain P78042 (Rep 1, HapA) (SRR11671451)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671451_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671451_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671469_coverage",
+      "name": "Wang et al bloodstream strain P78042 (Rep 2, HapA) (SRR11671469)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671469_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671469_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671455_coverage",
+      "name": "Wang et al bloodstream strain P78048 (Rep 1, HapA) (SRR11671455)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671455_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671455_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671479_coverage",
+      "name": "Wang et al bloodstream strain P78048 (Rep 2, HapA) (SRR11671479)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671479_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671479_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671453_coverage",
+      "name": "Wang et al bloodstream strain P94015 (Rep 1, HapA) (SRR11671453)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671453_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671453_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671471_coverage",
+      "name": "Wang et al bloodstream strain P94015 (Rep 2, HapA) (SRR11671471)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671471_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671471_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671454_coverage",
+      "name": "Wang et al wild-type strain SC5314 (Rep 1, HapA) (SRR11671454)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671454_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671454_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671477_coverage",
+      "name": "Wang et al wild-type strain SC5314  (Rep 2, HapA) (SRR11671477)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671477_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671477_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671459_coverage",
+      "name": "Wang et al oral strain 12C (Rep 1, HapA) (SRR11671459)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671459_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671459_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671482_coverage",
+      "name": "Wang et al oral strain 12C (Rep 2, HapA) (SRR11671482)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671482_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671482_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671448_coverage",
+      "name": "Wang et al oral strain GC75 (Rep 1, HapA) (SRR11671448)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671448_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671448_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671476_coverage",
+      "name": "Wang et al oral strain GC75 (Rep 2, HapA) (SRR11671476)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671476_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671476_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671458_coverage",
+      "name": "Wang et al oral strain P37005 (Rep 1, HapA) (SRR11671458)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671458_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671458_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671481_coverage",
+      "name": "Wang et al oral strain P37005 (Rep 2, HapA) (SRR11671481)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671481_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671481_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671457_coverage",
+      "name": "Wang et al oral strain P37037 (Rep 1, HapA) (SRR11671457)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671457_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671457_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671480_coverage",
+      "name": "Wang et al oral strain P37037 (Rep 2, HapA) (SRR11671480)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671480_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671480_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671467_coverage",
+      "name": "Wang et al oral strain P87 (Rep 1, HapA) (SRR11671467)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671467_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671467_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671473_coverage",
+      "name": "Wang et al oral strain P87 (Rep 2, HapA) (SRR11671473)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671473_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671473_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671462_coverage",
+      "name": "Wang et al oral strain 19F (Rep 1, HapA) (SRR11671462)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671462_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671462_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671485_coverage",
+      "name": "Wang et al oral strain 19F (Rep 2, HapA) (SRR11671485)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671485_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671485_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671461_coverage",
+      "name": "Wang et al oral strain L26 (Rep 1, HapA) (SRR11671461)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671461_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671461_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "QuantitativeTrack",
+      "trackId": "Wang2021_SRR11671484_coverage",
+      "name": "Wang et al oral strain L26 (Rep 2, HapA) (SRR11671484)",
+      "adapter": {
+        "type": "BigWigAdapter",
+        "bigWigLocation": {
+          "uri": "Wang2021_SRR11671484_coverage.bigwig",
+          "locationType": "UriLocation"
+        }
+      },
+      "assemblyNames": [
+        "C_albicans_SC5314"
+      ],
+      "category": [
+        "RNA-Seq",
+        "Wang_2021"
+      ],
+      "displays": [
+        {
+          "type": "LinearWiggleDisplay",
+          "displayId": "Wang2021_SRR11671484_coverage_display"
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_tropicalis_Pfam",
+      "name": "Pfam",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_tropicalis_Pfam.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_tropicalis_Pfam.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_tropicalis_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_tropicalis_Pfam-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "orange"
+          }
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_tropicalis_PANTHER",
+      "name": "PANTHER",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_tropicalis_PANTHER.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_tropicalis_PANTHER.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_tropicalis_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_tropicalis_PANTHER-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "blue"
+          }
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_tropicalis_SUPERFAMILY",
+      "name": "SUPERFAMILY",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_tropicalis_SUPERFAMILY.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_tropicalis_SUPERFAMILY.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_tropicalis_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_tropicalis_SUPERFAMILY-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "green"
+          }
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_tropicalis_CATH",
+      "name": "CATH",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_tropicalis_CATH.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_tropicalis_CATH.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_tropicalis_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_tropicalis_CATH-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "purple"
+          }
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_tropicalis_SMART",
+      "name": "SMART",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_tropicalis_SMART.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_tropicalis_SMART.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_tropicalis_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_tropicalis_SMART-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "red"
+          }
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_tropicalis_ProSiteProfiles",
+      "name": "ProSiteProfiles",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_tropicalis_ProSiteProfiles.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_tropicalis_ProSiteProfiles.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_tropicalis_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_tropicalis_ProSiteProfiles-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "teal"
+          }
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_tropicalis_CDD",
+      "name": "CDD",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_tropicalis_CDD.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_tropicalis_CDD.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_tropicalis_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_tropicalis_CDD-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "brown"
+          }
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_tropicalis_PRINTS",
+      "name": "PRINTS",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_tropicalis_PRINTS.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_tropicalis_PRINTS.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_tropicalis_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_tropicalis_PRINTS-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "pink"
+          }
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_tropicalis_Coils",
+      "name": "Coils",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_tropicalis_Coils.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_tropicalis_Coils.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_tropicalis_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_tropicalis_Coils-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "gray"
+          }
+        }
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "C_tropicalis_MobiDBLite",
+      "name": "MobiDBLite",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "protein_data/C_tropicalis_MobiDBLite.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "protein_data/C_tropicalis_MobiDBLite.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "C_tropicalis_prot"
+      ],
+      "category": [
+        "Protein Domains"
+      ],
+      "displays": [
+        {
+          "type": "LinearBasicDisplay",
+          "displayId": "C_tropicalis_MobiDBLite-LinearBasicDisplay",
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "cyan"
+          }
         }
       ]
     }

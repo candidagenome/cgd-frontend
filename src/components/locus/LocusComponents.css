@@ -973,12 +973,10 @@ a:hover {
   color: #333;
 }
 
-.retired-names {
-  color: #757575;
-}
-
-.retired-name em {
-  text-decoration: line-through;
+.retired-tag {
+  color: #888;
+  font-style: italic;
+  font-size: 0.9em;
 }
 
 /* External link inline format (Perl style: label | label (1, 2, 3)) */
