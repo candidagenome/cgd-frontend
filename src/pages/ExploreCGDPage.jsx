@@ -122,7 +122,8 @@ const ExploreCGDPage = () => {
   const [query, setQuery] = useState('');
   const [organisms, setOrganisms] = useState([]);
   const [geneCounts, setGeneCounts] = useState({}); // organism_abbrev -> haploid_orfs
-  const [selectedOrg, setSelectedOrg] = useState('C_albicans_SC5314');
+  // The reference strain gets a highlighted pill; the others are plain links.
+  const selectedOrg = 'C_albicans_SC5314';
   const [recentRefs, setRecentRefs] = useState([]);
   const [indexDate, setIndexDate] = useState('July 24, 2026');
   const [exampleIdx, setExampleIdx] = useState(0);
@@ -330,40 +331,40 @@ const ExploreCGDPage = () => {
             <section className="explore-section">
               <div className="explore-section-head">
                 <h2 className="explore-section-title">Browse by Organism</h2>
-                <span className="explore-section-meta">1 selected ·</span>
+                <span className="explore-section-meta">{speciesCount} strains ·</span>
               </div>
               <div className="explore-org-grid">
                 {organisms.map((org) => {
-                  const selected = org.organism_abbrev === selectedOrg;
+                  const isReference = org.organism_abbrev === selectedOrg;
                   const abbrev = SPECIES_ABBREV[org.organism_name] || org.organism_name;
                   const strain = strainOf(org.organism_name);
                   const count = geneCounts[org.organism_abbrev];
                   return (
-                    <button
+                    <Link
                       key={org.organism_abbrev}
-                      type="button"
-                      className={`explore-org-pill${selected ? ' is-selected' : ''}`}
-                      onClick={() => setSelectedOrg(org.organism_abbrev)}
-                      aria-pressed={selected}
+                      to={`/genome-snapshot/${org.organism_abbrev}`}
+                      className={`explore-org-pill${isReference ? ' is-selected' : ''}`}
+                      title={`View the ${org.organism_name} genome overview`}
                     >
-                      <span className={`explore-org-check${selected ? ' is-on' : ''}`} aria-hidden="true">
-                        {selected ? '✓' : ''}
+                      <span className={`explore-org-check${isReference ? ' is-on' : ''}`} aria-hidden="true">
+                        {isReference ? '✓' : ''}
                       </span>
                       <em className="explore-org-name">{abbrev}</em>
                       {strain && <span className="explore-org-strain">{strain}</span>}
                       {count != null && (
                         <span className="explore-org-count">{fmt(count)} genes</span>
                       )}
-                    </button>
+                      <span className="explore-org-go" aria-hidden="true">↗</span>
+                    </Link>
                   );
                 })}
               </div>
               <p className="explore-org-note">
-                Toggle to filter all categories by organism.{' '}
+                Click an organism to open its genome overview.{' '}
                 {strainOf(
                   organisms.find((o) => o.organism_abbrev === selectedOrg)?.organism_name || ''
                 ) || 'SC5314'}{' '}
-                reference active.
+                is the reference strain.
               </p>
             </section>
 

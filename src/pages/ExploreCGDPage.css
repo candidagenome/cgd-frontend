@@ -225,12 +225,29 @@
   padding: 14px 18px;
   cursor: pointer;
   text-align: left;
-  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s, transform 0.15s;
   font-size: 0.98rem;
 }
 
 .explore-org-pill:hover {
-  border-color: var(--ex-border-strong);
+  border-color: var(--ex-purple);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  transform: translateY(-1px);
+}
+
+.explore-org-go {
+  margin-left: 8px;
+  color: var(--ex-faint);
+  font-size: 0.95rem;
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s;
+}
+
+.explore-org-pill:hover .explore-org-go {
+  opacity: 1;
+  color: var(--ex-purple);
 }
 
 .explore-org-pill.is-selected {
