@@ -83,6 +83,23 @@ const OTHER_CATEGORIES = [
   { label: 'Biofilm Genes', count: 1234, to: '/feature-search' },
 ];
 
+// Rotating search-box placeholders (genes, ORFs, and Candida-relevant terms),
+// cycled while the box is empty — mirrors the SGD Explore page.
+const SEARCH_EXAMPLES = [
+  'ACT1',
+  'ERG11',
+  'nuclear pore',
+  'HWP1',
+  'fluconazole resistance',
+  'orf19.2003',
+  'EFG1',
+  'biofilm formation',
+  'CDR1',
+  'hyphal growth',
+  'BCR1',
+  'azole resistance',
+];
+
 // "What's New in CGD" highlights. Curator-maintained editorial content.
 const WHATS_NEW = [
   { icon: '📖', count: '210 new references', detail: 'curated this week' },
@@ -100,6 +117,7 @@ const ExploreCGDPage = () => {
   const [selectedOrg, setSelectedOrg] = useState('C_albicans_SC5314');
   const [recentRefs, setRecentRefs] = useState([]);
   const [indexDate, setIndexDate] = useState('July 24, 2026');
+  const [exampleIdx, setExampleIdx] = useState(0);
 
   // Load the organism list, then the per-species gene counts (haploid ORFs).
   useEffect(() => {
@@ -177,6 +195,15 @@ const ExploreCGDPage = () => {
     [totalGenes]
   );
 
+  // Cycle the placeholder through example terms while the box is empty.
+  useEffect(() => {
+    if (query) return undefined;
+    const id = setInterval(() => {
+      setExampleIdx((i) => (i + 1) % SEARCH_EXAMPLES.length);
+    }, 2500);
+    return () => clearInterval(id);
+  }, [query]);
+
   // Cmd/Ctrl-K focuses the search box, matching the ⌘K affordance.
   useEffect(() => {
     const onKey = (e) => {
@@ -222,7 +249,7 @@ const ExploreCGDPage = () => {
               ref={inputRef}
               type="text"
               className="explore-search-input"
-              placeholder="Try ACT1"
+              placeholder={`Try ${SEARCH_EXAMPLES[exampleIdx]}`}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               aria-label="Search the Candida Genome Database"
