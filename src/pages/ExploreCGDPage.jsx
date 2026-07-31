@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import searchApi from '../api/searchApi';
 import genomeSnapshotApi from '../api/genomeSnapshotApi';
 import referenceApi from '../api/referenceApi';
+import statsApi from '../api/statsApi';
 import { SPECIES_ORDER, SPECIES_ABBREV } from '../constants/organisms';
 import './ExploreCGDPage.css';
 
@@ -12,15 +13,17 @@ const strainOf = (organismName) => {
   return parts.length > 2 ? parts.slice(2).join(' ') : '';
 };
 
-// Category cards shown in "Browse by Category". Counts that CGD does not expose
-// via a cheap totals endpoint are kept here as editable curator-maintained
-// figures (NOT live). Genes is overridden with the live per-species sum below.
+// Category cards shown in "Browse by Category". `statKey` maps a card to a live
+// total from /api/stats/summary; when present it overrides the fallback `count`.
+// Cards without a statKey (Chemicals) have no cheap totals source, so the count
+// stays an editable curator-maintained placeholder.
 const CATEGORY_CARDS = [
   {
     key: 'genes',
     label: 'Genes',
     dot: '#2563eb',
-    count: null, // filled from live snapshot data
+    statKey: 'genes',
+    count: null,
     description: 'Protein-coding and verified ORFs across 6 species',
     examples: ['ACT1', 'ERG11'],
     to: '/feature-search',
@@ -30,6 +33,7 @@ const CATEGORY_CARDS = [
     label: 'Ortholog Clusters',
     dot: '#7c3aed',
     tag: 'NEW FOR CGD',
+    statKey: 'ortholog_clusters',
     count: 6124,
     description: 'Conserved genes across Candida species',
     examples: ['ACT1 cluster', 'ERG11 cluster'],
@@ -39,6 +43,7 @@ const CATEGORY_CARDS = [
     key: 'references',
     label: 'References',
     dot: '#f97316',
+    statKey: 'references',
     count: 85230,
     description: 'Literature and curated sources',
     examples: ['Candida auris outbreak', 'Biofilm review'],
@@ -48,6 +53,7 @@ const CATEGORY_CARDS = [
     key: 'phenotypes',
     label: 'Phenotypes',
     dot: '#ec4899',
+    statKey: 'phenotype_annotations',
     count: 12840,
     description: 'Morphology, drug resistance, biofilm',
     examples: ['filamentous growth', 'azole resistance'],
@@ -55,8 +61,9 @@ const CATEGORY_CARDS = [
   },
   {
     key: 'biological_processes',
-    label: 'Biological Processes',
+    label: 'GO Annotations',
     dot: '#22c55e',
+    statKey: 'go_annotations',
     count: 18210,
     description: 'GO terms, virulence, biofilm formation',
     examples: ['biofilm formation', 'adhesion'],
@@ -73,13 +80,14 @@ const CATEGORY_CARDS = [
   },
 ];
 
-// Secondary categories shown as compact chips. Same caveat on counts as above.
+// Secondary categories shown as compact chips. `statKey` overrides the count
+// with a live total where one exists; the rest are placeholders.
 const OTHER_CATEGORIES = [
   { label: 'Molecular Functions', count: 11203, to: '/go-slim-mapper' },
   { label: 'Cellular Components', count: 3890, to: '/go-slim-mapper' },
-  { label: 'Colleagues', count: 4120, to: '/colleague' },
-  { label: 'Alleles', count: 22100, to: '/phenotype/search' },
-  { label: 'Strains', count: 6, to: '/strains' },
+  { label: 'Colleagues', statKey: 'colleagues', count: 4120, to: '/colleague' },
+  { label: 'Interactions', statKey: 'interactions', count: 22100, to: '/feature-search' },
+  { label: 'Strains', statKey: 'organisms', count: 6, to: '/strains' },
   { label: 'Biofilm Genes', count: 1234, to: '/feature-search' },
 ];
 
@@ -118,6 +126,8 @@ const ExploreCGDPage = () => {
   const [recentRefs, setRecentRefs] = useState([]);
   const [indexDate, setIndexDate] = useState('July 24, 2026');
   const [exampleIdx, setExampleIdx] = useState(0);
+  const [stats, setStats] = useState(null);
+  const [geneOfDay, setGeneOfDay] = useState(null);
 
   // Load the organism list, then the per-species gene counts (haploid ORFs).
   useEffect(() => {
@@ -182,17 +192,50 @@ const ExploreCGDPage = () => {
     };
   }, []);
 
-  const totalGenes = useMemo(
+  // Load database-wide totals and the gene of the day (best-effort).
+  useEffect(() => {
+    let cancelled = false;
+    statsApi
+      .getSummary()
+      .then((data) => {
+        if (!cancelled && data?.success !== false) setStats(data);
+      })
+      .catch(() => {});
+    statsApi
+      .getGeneOfTheDay()
+      .then((data) => {
+        if (!cancelled && data?.success !== false) setGeneOfDay(data);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Prefer the backend's total; fall back to summing the live per-species counts.
+  const summedGenes = useMemo(
     () => Object.values(geneCounts).reduce((sum, n) => sum + (n || 0), 0),
     [geneCounts]
   );
+  const totalGenes = stats?.genes || summedGenes;
 
+  // Override each card's placeholder count with a live total when statKey resolves.
   const cards = useMemo(
     () =>
-      CATEGORY_CARDS.map((c) =>
-        c.key === 'genes' && totalGenes ? { ...c, count: totalGenes } : c
-      ),
-    [totalGenes]
+      CATEGORY_CARDS.map((c) => {
+        const live = c.statKey && stats?.[c.statKey];
+        return live ? { ...c, count: live } : c;
+      }),
+    [stats]
+  );
+
+  const otherCategories = useMemo(
+    () =>
+      OTHER_CATEGORIES.map((o) => {
+        const live = o.statKey && stats?.[o.statKey];
+        return live ? { ...o, count: live } : o;
+      }),
+    [stats]
   );
 
   // Cycle the placeholder through example terms while the box is empty.
@@ -234,8 +277,9 @@ const ExploreCGDPage = () => {
             Search <em>Candida</em> Genome Database
           </h1>
           <p className="explore-subtitle">
-            Explore {totalGenes ? `~${(Math.round(totalGenes / 1000) * 1000).toLocaleString()}` : '~38,000'} genes
-            across {speciesCount} species, 85,000+ references, and more
+            Explore {totalGenes ? `~${(Math.round(totalGenes / 1000) * 1000).toLocaleString()}` : '~35,000'} genes
+            across {speciesCount} species,{' '}
+            {stats?.references ? `${stats.references.toLocaleString()}` : '85,000+'} references, and more
           </p>
 
           <form className="explore-search" onSubmit={handleSearch} role="search">
@@ -260,8 +304,15 @@ const ExploreCGDPage = () => {
 
           <p className="explore-gotd">
             <span className="explore-gotd-dot" aria-hidden="true" /> Gene of the day:{' '}
-            <Link to="/locus/ACT1" className="explore-gotd-gene">ACT1 &mdash; Actin</Link>{' '}
-            <span className="explore-gotd-desc">· structural constituent of cytoskeleton</span>
+            <Link
+              to={geneOfDay?.link || `/locus/${geneOfDay?.display_name || 'ACT1'}`}
+              className="explore-gotd-gene"
+            >
+              {geneOfDay?.display_name || 'ACT1'}
+            </Link>{' '}
+            <span className="explore-gotd-desc">
+              &mdash; {geneOfDay?.headline || 'Actin; structural constituent of cytoskeleton'}
+            </span>
           </p>
 
           <div className="explore-liveindex">
@@ -347,7 +398,7 @@ const ExploreCGDPage = () => {
             <section className="explore-section">
               <h3 className="explore-other-title">Other Categories</h3>
               <div className="explore-other-chips">
-                {OTHER_CATEGORIES.map((o) => (
+                {otherCategories.map((o) => (
                   <Link key={o.label} to={o.to} className="explore-other-chip">
                     {o.label} <span className="explore-other-count">{fmt(o.count)}</span>
                   </Link>
