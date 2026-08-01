@@ -342,7 +342,7 @@ const ExploreCGDPage = () => {
                   return (
                     <Link
                       key={org.organism_abbrev}
-                      to={`/genome-snapshot/${org.organism_abbrev}`}
+                      to={`/genome-snapshot2/${org.organism_abbrev}`}
                       className={`explore-org-pill${isReference ? ' is-selected' : ''}`}
                       title={`View the ${org.organism_name} genome overview`}
                     >
