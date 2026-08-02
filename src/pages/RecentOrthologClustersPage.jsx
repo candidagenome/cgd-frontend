@@ -3,6 +3,8 @@ import { Link, useSearchParams } from 'react-router-dom';
 import statsApi from '../api/statsApi';
 import './RecentOrthologClustersPage.css';
 
+const shortOrganism = (name = '') => name.replace(/^Candida\s+/i, 'C. ');
+
 function RecentOrthologClustersPage() {
   const [searchParams] = useSearchParams();
   const requestedDays = Number.parseInt(searchParams.get('days') || '90', 10);
@@ -39,13 +41,24 @@ function RecentOrthologClustersPage() {
     <main className="recent-orthologs-page">
       <header>
         <p className="recent-orthologs-eyebrow">CGD ORTHOLOGS</p>
-        <h1>Ortholog Clusters Recently Added to CGD</h1>
+        <h1>Recent Ortholog Cluster Imports</h1>
         <p>{startDate.toLocaleDateString()} to {new Date().toLocaleDateString()}</p>
       </header>
 
       <section className="recent-orthologs-summary">
         <strong>{data ? data.total_count.toLocaleString() : '—'}</strong>
-        <span>clusters added in the last {days} days</span>
+        <span>computational ortholog clusters imported in the last {days} days</span>
+      </section>
+
+      <section className="recent-orthologs-about">
+        <div>
+          <strong>What is a cluster?</strong>
+          <p>A group of genes inferred to be orthologs across <em>Candida</em> species. Select a member gene to open its CGD locus page.</p>
+        </div>
+        <div>
+          <strong>Import methods</strong>
+          <p>{data ? Object.entries(data.method_counts).map(([method, count]) => `${method}: ${count.toLocaleString()}`).join(' · ') : 'Loading…'}</p>
+        </div>
       </section>
 
       <section className="recent-orthologs-table-wrap">
@@ -59,14 +72,13 @@ function RecentOrthologClustersPage() {
           <>
             <div className="recent-orthologs-scroll">
               <table>
-                <thead><tr><th>Cluster ID</th><th>Group Type</th><th>Method</th><th>Members</th><th>Date Added</th></tr></thead>
+                <thead><tr><th>Cluster</th><th>Member Genes</th><th>Method</th><th>Date Imported</th></tr></thead>
                 <tbody>
                   {data.clusters.map((cluster) => (
                     <tr key={cluster.homology_group_no}>
-                      <td>{cluster.cluster_id || `Group ${cluster.homology_group_no}`}</td>
-                      <td>{cluster.group_type}</td>
+                      <td><strong>{cluster.cluster_id || `Group ${cluster.homology_group_no}`}</strong><span className="recent-orthologs-type">{cluster.group_type} · {cluster.member_count} members</span></td>
+                      <td><div className="recent-ortholog-members">{cluster.members.map((member) => <Link key={member.feature_name} to={`/locus/${encodeURIComponent(member.feature_name)}`}><strong>{member.gene_name || member.feature_name}</strong><span>{shortOrganism(member.organism)}</span></Link>)}</div></td>
                       <td>{cluster.method}</td>
-                      <td>{cluster.member_count.toLocaleString()}</td>
                       <td>{new Date(cluster.date_created).toLocaleDateString()}</td>
                     </tr>
                   ))}

@@ -5,15 +5,23 @@
 .recent-orthologs-page header > p:last-child { color: #666; font-size: 1.3rem; font-weight: 600; }
 .recent-orthologs-summary { display: flex; align-items: baseline; gap: 12px; margin: 24px 0 18px; padding: 18px 22px; border: 1px solid #dbe4f0; border-left: 4px solid #4f83e8; border-radius: 8px; background: #f7faff; }
 .recent-orthologs-summary strong { font-size: 1.8rem; }
+.recent-orthologs-about { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 0 0 18px; }
+.recent-orthologs-about > div { padding: 16px 18px; border: 1px solid #e1e5eb; border-radius: 8px; background: #fff; }
+.recent-orthologs-about p { margin: 6px 0 0; color: #666; line-height: 1.45; }
 .recent-orthologs-table-wrap { overflow: hidden; border: 1px solid #d9dde4; border-radius: 8px; }
 .recent-orthologs-toolbar { display: flex; justify-content: flex-end; gap: 8px; padding: 12px; background: #f1f2f4; }
 .recent-orthologs-toolbar input { width: min(360px, 100%); padding: 9px 11px; border: 1px solid #cbd0d8; border-radius: 5px; font: inherit; }
 .recent-orthologs-toolbar button, .recent-orthologs-table-wrap footer button { padding: 8px 14px; border: 1px solid #4f83e8; border-radius: 5px; background: #fff; color: #376fcf; cursor: pointer; }
 .recent-orthologs-scroll { overflow-x: auto; }
-.recent-orthologs-page table { width: 100%; min-width: 700px; border-collapse: collapse; }
+.recent-orthologs-page table { width: 100%; min-width: 800px; border-collapse: collapse; }
 .recent-orthologs-page th { padding: 12px; background: #eceeef; text-align: left; }
 .recent-orthologs-page td { padding: 12px; border-top: 1px solid #e5e7eb; }
 .recent-orthologs-page tbody tr:nth-child(even) { background: #fafafa; }
+.recent-orthologs-type { display: block; margin-top: 4px; color: #777; font-size: .82rem; font-weight: 400; }
+.recent-ortholog-members { display: flex; flex-wrap: wrap; gap: 7px; }
+.recent-ortholog-members a { display: inline-flex; flex-direction: column; min-width: 120px; padding: 7px 10px; border: 1px solid #dbe4f0; border-radius: 7px; background: #f7faff; color: #285fae; text-decoration: none; }
+.recent-ortholog-members a:hover { border-color: #4f83e8; background: #eef5ff; }
+.recent-ortholog-members span { margin-top: 2px; color: #6b7280; font-size: .76rem; }
 .recent-orthologs-table-wrap footer { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #f1f2f4; }
 .recent-orthologs-table-wrap footer div { display: flex; gap: 8px; }
 .recent-orthologs-table-wrap footer button:disabled { opacity: .4; cursor: default; }
@@ -21,4 +29,4 @@
 .recent-orthologs-error { padding: 20px; color: #b42318; }
 .recent-orthologs-tool { display: inline-block; margin-top: 26px; color: #3377cc; font-weight: 700; text-decoration: none; }
 .recent-orthologs-tool:hover { text-decoration: underline; }
-@media (max-width: 640px) { .recent-orthologs-page { width: calc(100% - 24px); margin-top: 24px; } .recent-orthologs-toolbar { justify-content: stretch; } .recent-orthologs-toolbar input { flex: 1; } }
+@media (max-width: 640px) { .recent-orthologs-page { width: calc(100% - 24px); margin-top: 24px; } .recent-orthologs-about { grid-template-columns: 1fr; } .recent-orthologs-toolbar { justify-content: stretch; } .recent-orthologs-toolbar input { flex: 1; } }
