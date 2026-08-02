@@ -297,7 +297,7 @@ const ExploreCGDPage = () => {
         {/* Hero */}
         <header className="explore-hero">
           <h1 className="explore-title">
-            Search <em>Candida</em> Genome Database
+            Explore <em>Candida</em> Genome Database
           </h1>
           <p className="explore-tagline">
             Curated genomic, functional, and literature data for six medically
