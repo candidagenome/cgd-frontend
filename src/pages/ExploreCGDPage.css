@@ -8,8 +8,8 @@
   --ex-text: #1a1a1a;
   --ex-muted: #6b6b6b;
   --ex-faint: #9a9a9a;
-  --ex-purple: #7c3aed;
-  --ex-purple-soft: #f3efff;
+  --ex-purple: #3b82f6;
+  --ex-purple-soft: #eff6ff;
   --ex-green: #16a34a;
 
   background: var(--ex-bg);
@@ -75,7 +75,7 @@
 
 .explore-search:focus-within {
   border-color: var(--ex-purple);
-  box-shadow: 0 4px 18px rgba(124, 58, 237, 0.12);
+  box-shadow: 0 4px 18px rgba(59, 130, 246, 0.14);
 }
 
 .explore-search-icon {

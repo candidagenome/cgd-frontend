@@ -11,7 +11,7 @@
 }
 
 .browse-category-back {
-  color: #6d28d9;
+  color: #2563eb;
   text-decoration: none;
   font-weight: 600;
 }
@@ -46,8 +46,8 @@
   margin-top: 8px;
   padding: 7px 12px;
   border-radius: 999px;
-  background: #ede9fe;
-  color: #6d28d9;
+  background: #eff6ff;
+  color: #2563eb;
   font-size: 0.84rem;
   font-weight: 600;
 }
@@ -106,8 +106,8 @@
 
 .browse-category-topics a:hover,
 .browse-category-tools a:hover {
-  border-color: #7c3aed;
-  color: #6d28d9;
+  border-color: #3b82f6;
+  color: #2563eb;
 }
 
 @media (max-width: 700px) {
