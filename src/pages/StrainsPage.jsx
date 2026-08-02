@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './InfoPages.css';
 
+const LEGACY_CGD_URL = 'https://www.candidagenome.org';
+
 // Citation component for consistent display
 const Citation = ({ text, pmid }) => (
   <div className="citation-item">
@@ -11,9 +13,10 @@ const Citation = ({ text, pmid }) => (
         <a
           href={`/reference/${pmid}`}
           target="infowin"
+          rel="noopener noreferrer"
           title="CGD Reference"
         >
-          <img src="/images/refsml.gif" alt="CGD" />
+          CGD Reference
         </a>
         <a
           href={`https://pubmed.ncbi.nlm.nih.gov/${pmid}`}
@@ -21,7 +24,7 @@ const Citation = ({ text, pmid }) => (
           rel="noopener noreferrer"
           title="PubMed"
         >
-          <img src="/images/pubmedrefsml.gif" alt="PubMed" />
+          PubMed
         </a>
       </div>
     )}
@@ -111,9 +114,9 @@ function StrainsPage() {
           {/* Lineage Diagram */}
           <div className="lineage-diagram">
             <img
-              src="/images/Calb_lineage.gif"
+              src={`${LEGACY_CGD_URL}/images/Calb_lineage.gif`}
               alt="C. albicans lineage diagram"
-              style={{ maxWidth: '100%', border: '2px solid #ccc' }}
+              loading="lazy"
             />
           </div>
 
@@ -372,15 +375,19 @@ function StrainsPage() {
           {/* Lineage Diagram */}
           <div className="lineage-diagram">
             <img
-              src="/images/Cgla_lineage.gif"
+              src={`${LEGACY_CGD_URL}/images/Cgla_lineage.gif`}
               alt="C. glabrata lineage diagram"
-              style={{ maxWidth: '100%', border: '2px solid #ccc' }}
+              loading="lazy"
             />
           </div>
 
           <p>
             See the{' '}
-            <a href="/Strains.shtml#glabrata">
+            <a
+              href={`${LEGACY_CGD_URL}/Strains.shtml#glabrata`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               full <em>C. glabrata</em> strain list
             </a>{' '}
             at the legacy page for complete strain information.
@@ -398,15 +405,19 @@ function StrainsPage() {
           {/* Lineage Diagram */}
           <div className="lineage-diagram">
             <img
-              src="/images/Cpar_lineage.gif"
+              src={`${LEGACY_CGD_URL}/images/Cpar_lineage.gif`}
               alt="C. parapsilosis lineage diagram"
-              style={{ maxWidth: '100%', border: '2px solid #ccc' }}
+              loading="lazy"
             />
           </div>
 
           <p>
             See the{' '}
-            <a href="/Strains.shtml#parapsilosis">
+            <a
+              href={`${LEGACY_CGD_URL}/Strains.shtml#parapsilosis`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               full <em>C. parapsilosis</em> strain list
             </a>{' '}
             at the legacy page for complete strain information.
@@ -424,15 +435,19 @@ function StrainsPage() {
           {/* Lineage Diagram */}
           <div className="lineage-diagram">
             <img
-              src="/images/Ctro_lineage.gif"
+              src={`${LEGACY_CGD_URL}/images/Ctro_lineage.gif`}
               alt="C. tropicalis lineage diagram"
-              style={{ maxWidth: '100%', border: '2px solid #ccc' }}
+              loading="lazy"
             />
           </div>
 
           <p>
             See the{' '}
-            <a href="/Strains.shtml#tropicalis">
+            <a
+              href={`${LEGACY_CGD_URL}/Strains.shtml#tropicalis`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               full <em>C. tropicalis</em> strain list
             </a>{' '}
             at the legacy page for complete strain information.

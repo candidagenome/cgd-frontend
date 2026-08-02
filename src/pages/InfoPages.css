@@ -481,13 +481,23 @@
 
 .citation-links {
   display: flex;
-  gap: 8px;
+  gap: 14px;
   margin-top: 5px;
 }
 
 .citation-links img {
   height: 16px;
   vertical-align: middle;
+}
+
+.strain-entry .citation-links a {
+  color: #3377cc;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.strain-entry .citation-links a:hover {
+  text-decoration: underline;
 }
 
 .list-updated {
@@ -540,6 +550,7 @@
 .lineage-diagram img {
   max-width: 100%;
   height: auto;
+  border: 1px solid #d8dee8;
 }
 
 .strain-section h2 {
