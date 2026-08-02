@@ -2,8 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './InfoPages.css';
 
-const LEGACY_CGD_URL = 'https://www.candidagenome.org';
-
 // Citation component for consistent display
 const Citation = ({ text, pmid }) => (
   <div className="citation-item">
@@ -110,15 +108,6 @@ function StrainsPage() {
           <h2>
             <em>C. albicans</em> Laboratory Strains
           </h2>
-
-          {/* Lineage Diagram */}
-          <div className="lineage-diagram">
-            <img
-              src={`${LEGACY_CGD_URL}/images/Calb_lineage.gif`}
-              alt="C. albicans lineage diagram"
-              loading="lazy"
-            />
-          </div>
 
           <h3>
             <em>C. albicans</em> laboratory strain descriptions and references
@@ -372,25 +361,9 @@ function StrainsPage() {
             <em>C. glabrata</em> Laboratory Strains
           </h2>
 
-          {/* Lineage Diagram */}
-          <div className="lineage-diagram">
-            <img
-              src={`${LEGACY_CGD_URL}/images/Cgla_lineage.gif`}
-              alt="C. glabrata lineage diagram"
-              loading="lazy"
-            />
-          </div>
-
-          <p>
-            See the{' '}
-            <a
-              href={`${LEGACY_CGD_URL}/Strains.shtml#glabrata`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              full <em>C. glabrata</em> strain list
-            </a>{' '}
-            at the legacy page for complete strain information.
+          <p className="strain-unavailable">
+            Detailed curated strain information for <em>C. glabrata</em> is not currently available
+            on this page.
           </p>
         </section>
 
@@ -402,25 +375,9 @@ function StrainsPage() {
             <em>C. parapsilosis</em> Laboratory Strains
           </h2>
 
-          {/* Lineage Diagram */}
-          <div className="lineage-diagram">
-            <img
-              src={`${LEGACY_CGD_URL}/images/Cpar_lineage.gif`}
-              alt="C. parapsilosis lineage diagram"
-              loading="lazy"
-            />
-          </div>
-
-          <p>
-            See the{' '}
-            <a
-              href={`${LEGACY_CGD_URL}/Strains.shtml#parapsilosis`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              full <em>C. parapsilosis</em> strain list
-            </a>{' '}
-            at the legacy page for complete strain information.
+          <p className="strain-unavailable">
+            Detailed curated strain information for <em>C. parapsilosis</em> is not currently
+            available on this page.
           </p>
         </section>
 
@@ -432,25 +389,9 @@ function StrainsPage() {
             <em>C. tropicalis</em> Laboratory Strains
           </h2>
 
-          {/* Lineage Diagram */}
-          <div className="lineage-diagram">
-            <img
-              src={`${LEGACY_CGD_URL}/images/Ctro_lineage.gif`}
-              alt="C. tropicalis lineage diagram"
-              loading="lazy"
-            />
-          </div>
-
-          <p>
-            See the{' '}
-            <a
-              href={`${LEGACY_CGD_URL}/Strains.shtml#tropicalis`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              full <em>C. tropicalis</em> strain list
-            </a>{' '}
-            at the legacy page for complete strain information.
+          <p className="strain-unavailable">
+            Detailed curated strain information for <em>C. tropicalis</em> is not currently
+            available on this page.
           </p>
         </section>
       </div>

@@ -542,15 +542,9 @@
   margin-bottom: 5px;
 }
 
-.lineage-diagram {
-  text-align: center;
-  margin: 20px 0;
-}
-
-.lineage-diagram img {
-  max-width: 100%;
-  height: auto;
-  border: 1px solid #d8dee8;
+.strain-unavailable {
+  color: #666;
+  margin: 8px 0 4px;
 }
 
 .strain-section h2 {
