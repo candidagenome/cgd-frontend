@@ -61,7 +61,7 @@ const CATEGORY_CARDS = [
     count: 12840,
     description: 'Morphology, drug resistance, biofilm',
     examples: ['filamentous growth', 'azole resistance'],
-    to: '/phenotype/recent?days=90',
+    to: '/phenotype/search',
   },
   {
     key: 'biological_processes',
@@ -132,7 +132,7 @@ const WHATS_NEW = [
     icon: '🧪',
     singular: 'new phenotype annotation',
     plural: 'new phenotype annotations',
-    to: '/phenotype/search',
+    to: '/phenotype/recent?days=90',
   },
   {
     key: 'ortholog_clusters',
