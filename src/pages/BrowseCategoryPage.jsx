@@ -57,7 +57,10 @@ function BrowseCategoryPage() {
       return `/locus/${encodeURIComponent(term)}?tab=interactions`;
     }
     if (config.references) {
-      if (term === 'Recent papers') return '/reference/NewPapersThisWeek';
+      if (term === 'Recent papers') return '/reference/NewPapersThisWeek?days=90';
+      if (term === 'Reviews') {
+        return '/search/text/results?query=review&search_field=paper_titles&match_mode=any';
+      }
       return `/search/text/results?query=${encodeURIComponent(term)}&search_field=paper_titles&match_mode=all`;
     }
     return `/search/text/results?query=${encodeURIComponent(term)}&search_field=go_terms&match_mode=all`;
@@ -113,7 +116,7 @@ function BrowseCategoryPage() {
               <>
                 <Link to="/literature">Literature Resources</Link>
                 <Link to="/topic-biblios">Highlighted Topics</Link>
-                <Link to="/genome-wide-analysis">Genome-Wide Analysis Papers</Link>
+                <Link to="/genome-wide-analysis-papers">Genome-Wide Analysis Papers</Link>
               </>
             ) : (
               <>

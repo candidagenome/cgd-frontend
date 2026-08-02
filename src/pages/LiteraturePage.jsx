@@ -32,7 +32,7 @@ function LiteraturePage() {
 
           <div className="help-item">
             <h3>
-              <Link to="/genome-wide-analysis">Genome-Wide Analysis Papers</Link>
+              <Link to="/genome-wide-analysis-papers">Genome-Wide Analysis Papers</Link>
             </h3>
             <p>
               List of genome-wide analysis papers (e.g., microarray analysis publications)
