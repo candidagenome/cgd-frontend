@@ -24,6 +24,14 @@ const EXPLORERS = {
     placeholder: 'Search components, for example cell wall',
     topics: ['nucleus', 'cytoplasm', 'cell wall', 'plasma membrane', 'mitochondrion'],
   },
+  references: {
+    eyebrow: 'CGD Literature',
+    title: 'References',
+    description: 'Search curated publications or browse recent papers and major Candida research topics.',
+    placeholder: 'Search publications, for example biofilm review',
+    topics: ['Recent papers', 'Reviews', 'Drug resistance', 'Biofilm', 'Virulence', 'Pathogenesis'],
+    references: true,
+  },
   interactions: {
     eyebrow: 'Genes and Networks',
     title: 'Interactions',
@@ -48,6 +56,10 @@ function BrowseCategoryPage() {
     if (config.interactions) {
       return `/locus/${encodeURIComponent(term)}?tab=interactions`;
     }
+    if (config.references) {
+      if (term === 'Recent papers') return '/reference/NewPapersThisWeek';
+      return `/search/text/results?query=${encodeURIComponent(term)}&search_field=paper_titles&match_mode=all`;
+    }
     return `/search/text/results?query=${encodeURIComponent(term)}&search_field=go_terms&match_mode=all`;
   };
 
@@ -67,7 +79,7 @@ function BrowseCategoryPage() {
           <span className="browse-category-eyebrow">{config.eyebrow}</span>
           <h1>{config.title}</h1>
           <p>{config.description}</p>
-          {organism && <div className="browse-category-scope">Selected organism: {organism.replaceAll('_', ' ')}</div>}
+          {organism && !config.references && <div className="browse-category-scope">Selected organism: {organism.replaceAll('_', ' ')}</div>}
         </header>
 
         <form className="browse-category-search" onSubmit={handleSubmit} role="search">
@@ -96,6 +108,12 @@ function BrowseCategoryPage() {
               <>
                 <Link to={organism ? `/feature-search?organism=${encodeURIComponent(organism)}` : '/feature-search'}>Feature Search</Link>
                 <Link to="/virulence-factor-browser">Virulence Factor Browser</Link>
+              </>
+            ) : config.references ? (
+              <>
+                <Link to="/literature">Literature Resources</Link>
+                <Link to="/topic-biblios">Highlighted Topics</Link>
+                <Link to="/genome-wide-analysis">Genome-Wide Analysis Papers</Link>
               </>
             ) : (
               <>

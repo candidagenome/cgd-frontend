@@ -50,7 +50,7 @@ const CATEGORY_CARDS = [
     count: 85230,
     description: 'Literature and curated sources',
     examples: ['Candida auris outbreak', 'Biofilm review'],
-    to: '/literature',
+    to: '/browse/references',
   },
   {
     key: 'phenotypes',
