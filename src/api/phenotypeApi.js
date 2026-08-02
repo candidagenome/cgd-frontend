@@ -28,6 +28,7 @@ export const phenotypeApi = {
     if (params.property_type) queryParams.append('property_type', params.property_type);
     if (params.pubmed) queryParams.append('pubmed', params.pubmed);
     if (params.organism) queryParams.append('organism', params.organism);
+    if (params.recent_days) queryParams.append('recent_days', params.recent_days);
     if (params.type) queryParams.append('type', params.type);
     if (params.page) queryParams.append('page', params.page);
     if (params.limit) queryParams.append('limit', params.limit);
