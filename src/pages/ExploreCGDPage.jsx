@@ -121,21 +121,24 @@ const SEARCH_EXAMPLES = [
 // "What's New in CGD" highlights. Curator-maintained editorial content.
 const WHATS_NEW = [
   {
+    key: 'references',
     icon: '📖',
-    count: '210 new references',
-    detail: 'curated this week',
-    to: '/browse/references',
+    singular: 'new reference',
+    plural: 'new references',
+    to: '/reference/NewPapersThisWeek?days=90',
   },
   {
+    key: 'phenotype_annotations',
     icon: '🧪',
-    count: '89 new phenotype annotations',
-    detail: 'drug & biofilm',
+    singular: 'new phenotype annotation',
+    plural: 'new phenotype annotations',
     to: '/phenotype/search',
   },
   {
+    key: 'ortholog_clusters',
     icon: '🗂️',
-    count: '45 new ortholog updates',
-    detail: 'C. auris pan-genome',
+    singular: 'new ortholog cluster',
+    plural: 'new ortholog clusters',
     to: '/ortholog-converter',
   },
 ];
@@ -155,6 +158,7 @@ const ExploreCGDPage = () => {
   const [indexDate, setIndexDate] = useState('July 24, 2026');
   const [exampleIdx, setExampleIdx] = useState(0);
   const [stats, setStats] = useState(null);
+  const [recentActivity, setRecentActivity] = useState(null);
   const [geneOfDay, setGeneOfDay] = useState(null);
 
   // Load the organism list, then the per-species gene counts (haploid ORFs).
@@ -227,6 +231,12 @@ const ExploreCGDPage = () => {
       .getSummary()
       .then((data) => {
         if (!cancelled && data?.success !== false) setStats(data);
+      })
+      .catch(() => {});
+    statsApi
+      .getRecentActivity(90)
+      .then((data) => {
+        if (!cancelled && data?.success !== false) setRecentActivity(data);
       })
       .catch(() => {});
     statsApi
@@ -564,12 +574,16 @@ const ExploreCGDPage = () => {
               </h3>
               <ul className="explore-news">
                 {WHATS_NEW.map((n) => (
-                  <li key={n.count}>
+                  <li key={n.key}>
                     <Link to={n.to} className="explore-news-item">
                       <span className="explore-news-icon" aria-hidden="true">{n.icon}</span>
                       <span className="explore-news-text">
-                        <strong>{n.count}</strong>
-                        <span className="explore-news-detail">{n.detail}</span>
+                        <strong>
+                          {recentActivity
+                            ? `${fmt(recentActivity[n.key])} ${recentActivity[n.key] === 1 ? n.singular : n.plural}`
+                            : `Recent ${n.plural.replace(/^new /, '')}`}
+                        </strong>
+                        <span className="explore-news-detail">added in the last 90 days</span>
                       </span>
                       <span className="explore-news-arrow" aria-hidden="true">→</span>
                     </Link>

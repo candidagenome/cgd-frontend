@@ -11,6 +11,12 @@ export const statsApi = {
     return response.data;
   },
 
+  /** Get recent creation counts for the Explore activity panel. */
+  getRecentActivity: async (days = 90) => {
+    const response = await api.get(`/api/stats/recent-activity?days=${days}`);
+    return response.data;
+  },
+
   /**
    * Get the deterministic gene of the day (rotates once per calendar day).
    * @returns {Promise<Object>} Gene-of-the-day details
