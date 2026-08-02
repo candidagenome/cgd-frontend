@@ -120,9 +120,24 @@ const SEARCH_EXAMPLES = [
 
 // "What's New in CGD" highlights. Curator-maintained editorial content.
 const WHATS_NEW = [
-  { icon: '📖', count: '210 new references', detail: 'curated this week' },
-  { icon: '🧪', count: '89 new phenotype annotations', detail: 'drug & biofilm' },
-  { icon: '🗂️', count: '45 new ortholog updates', detail: 'C. auris pan-genome' },
+  {
+    icon: '📖',
+    count: '210 new references',
+    detail: 'curated this week',
+    to: '/browse/references',
+  },
+  {
+    icon: '🧪',
+    count: '89 new phenotype annotations',
+    detail: 'drug & biofilm',
+    to: '/phenotype/search',
+  },
+  {
+    icon: '🗂️',
+    count: '45 new ortholog updates',
+    detail: 'C. auris pan-genome',
+    to: '/ortholog-converter',
+  },
 ];
 
 const ExploreCGDPage = () => {
@@ -549,13 +564,15 @@ const ExploreCGDPage = () => {
               </h3>
               <ul className="explore-news">
                 {WHATS_NEW.map((n) => (
-                  <li key={n.count} className="explore-news-item">
-                    <span className="explore-news-icon" aria-hidden="true">{n.icon}</span>
-                    <span className="explore-news-text">
-                      <strong>{n.count}</strong>
-                      <span className="explore-news-detail">{n.detail}</span>
-                    </span>
-                    <span className="explore-news-dot" aria-hidden="true" />
+                  <li key={n.count}>
+                    <Link to={n.to} className="explore-news-item">
+                      <span className="explore-news-icon" aria-hidden="true">{n.icon}</span>
+                      <span className="explore-news-text">
+                        <strong>{n.count}</strong>
+                        <span className="explore-news-detail">{n.detail}</span>
+                      </span>
+                      <span className="explore-news-arrow" aria-hidden="true">→</span>
+                    </Link>
                   </li>
                 ))}
               </ul>
