@@ -7,7 +7,9 @@
   --ex-border-strong: #d6d6d6;
   --ex-text: #1a1a1a;
   --ex-muted: #6b6b6b;
-  --ex-faint: #9a9a9a;
+  --ex-faint: #858585;
+  --ex-link: #617da6;
+  --ex-link-hover: #3b82f6;
   --ex-purple: #3b82f6;
   --ex-purple-soft: #eff6ff;
   --ex-green: #16a34a;
@@ -267,13 +269,13 @@
 
 .explore-org-go {
   margin-left: 4px;
-  color: var(--ex-faint);
+  color: var(--ex-link);
   font-size: 0.72rem;
   font-weight: 600;
   line-height: 1;
   padding: 7px 8px;
   border-radius: 7px;
-  opacity: 0.55;
+  opacity: 0.9;
   text-decoration: none;
   transition: opacity 0.15s, color 0.15s, background 0.15s;
 }
@@ -283,7 +285,7 @@
 }
 
 .explore-org-go:hover {
-  color: var(--ex-purple);
+  color: var(--ex-link-hover);
   background: var(--ex-purple-soft);
 }
 
@@ -312,7 +314,7 @@
 }
 
 .explore-org-actions a {
-  color: var(--ex-purple);
+  color: var(--ex-link);
   text-decoration: none;
   font-weight: 600;
 }
@@ -351,7 +353,7 @@
 }
 
 .explore-org-strain {
-  color: var(--ex-faint);
+  color: #777;
   font-size: 0.9rem;
 }
 
@@ -470,7 +472,7 @@
 .explore-chip {
   text-decoration: none;
   font-size: 0.82rem;
-  color: var(--ex-muted);
+  color: var(--ex-link);
   background: #f4f2ee;
   border: 1px solid var(--ex-border);
   border-radius: 18px;
@@ -478,7 +480,7 @@
 }
 
 .explore-chip:hover {
-  color: var(--ex-purple);
+  color: var(--ex-link-hover);
   border-color: var(--ex-purple);
 }
 
@@ -495,11 +497,11 @@
   text-decoration: none;
   font-size: 0.88rem;
   font-weight: 600;
-  color: var(--ex-text);
+  color: var(--ex-link);
 }
 
 .explore-card:hover .explore-card-browse {
-  color: var(--ex-purple);
+  color: var(--ex-link-hover);
 }
 
 /* ---------- Other categories ---------- */
@@ -524,7 +526,7 @@
 
 .explore-other-chip {
   font-size: 0.9rem;
-  color: var(--ex-text);
+  color: var(--ex-link);
   text-decoration: none;
   background: #f4f2ee;
   border: 1px solid var(--ex-border);
@@ -641,7 +643,7 @@
 }
 
 .explore-recent-viewall {
-  color: var(--ex-purple);
+  color: var(--ex-link);
   text-decoration: none;
   font-weight: 600;
   letter-spacing: 0;
@@ -678,7 +680,7 @@
 }
 
 .explore-recent-cite:hover {
-  color: var(--ex-purple);
+  color: var(--ex-link-hover);
 }
 
 .explore-recent-empty {
