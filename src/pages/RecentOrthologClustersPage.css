@@ -1,0 +1,24 @@
+.recent-orthologs-page { width: min(1100px, calc(100% - 40px)); margin: 42px auto 80px; color: #222; }
+.recent-orthologs-page header { padding-bottom: 28px; border-bottom: 2px solid #333; }
+.recent-orthologs-eyebrow { margin: 0 0 12px; color: #64748b; font-size: .78rem; font-weight: 700; letter-spacing: .14em; }
+.recent-orthologs-page h1 { margin: 0; font-size: clamp(2.2rem, 5vw, 3.6rem); line-height: 1.08; }
+.recent-orthologs-page header > p:last-child { color: #666; font-size: 1.3rem; font-weight: 600; }
+.recent-orthologs-summary { display: flex; align-items: baseline; gap: 12px; margin: 24px 0 18px; padding: 18px 22px; border: 1px solid #dbe4f0; border-left: 4px solid #4f83e8; border-radius: 8px; background: #f7faff; }
+.recent-orthologs-summary strong { font-size: 1.8rem; }
+.recent-orthologs-table-wrap { overflow: hidden; border: 1px solid #d9dde4; border-radius: 8px; }
+.recent-orthologs-toolbar { display: flex; justify-content: flex-end; gap: 8px; padding: 12px; background: #f1f2f4; }
+.recent-orthologs-toolbar input { width: min(360px, 100%); padding: 9px 11px; border: 1px solid #cbd0d8; border-radius: 5px; font: inherit; }
+.recent-orthologs-toolbar button, .recent-orthologs-table-wrap footer button { padding: 8px 14px; border: 1px solid #4f83e8; border-radius: 5px; background: #fff; color: #376fcf; cursor: pointer; }
+.recent-orthologs-scroll { overflow-x: auto; }
+.recent-orthologs-page table { width: 100%; min-width: 700px; border-collapse: collapse; }
+.recent-orthologs-page th { padding: 12px; background: #eceeef; text-align: left; }
+.recent-orthologs-page td { padding: 12px; border-top: 1px solid #e5e7eb; }
+.recent-orthologs-page tbody tr:nth-child(even) { background: #fafafa; }
+.recent-orthologs-table-wrap footer { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #f1f2f4; }
+.recent-orthologs-table-wrap footer div { display: flex; gap: 8px; }
+.recent-orthologs-table-wrap footer button:disabled { opacity: .4; cursor: default; }
+.recent-orthologs-status { padding: 20px; color: #777; }
+.recent-orthologs-error { padding: 20px; color: #b42318; }
+.recent-orthologs-tool { display: inline-block; margin-top: 26px; color: #3377cc; font-weight: 700; text-decoration: none; }
+.recent-orthologs-tool:hover { text-decoration: underline; }
+@media (max-width: 640px) { .recent-orthologs-page { width: calc(100% - 24px); margin-top: 24px; } .recent-orthologs-toolbar { justify-content: stretch; } .recent-orthologs-toolbar input { flex: 1; } }

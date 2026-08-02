@@ -17,6 +17,14 @@ export const statsApi = {
     return response.data;
   },
 
+  /** Get a paginated list of ortholog clusters created in a recent window. */
+  getRecentOrthologClusters: async ({ days = 90, page = 1, limit = 25, query = '' } = {}) => {
+    const params = new URLSearchParams({ days, page, limit });
+    if (query) params.set('query', query);
+    const response = await api.get(`/api/stats/recent-ortholog-clusters?${params}`);
+    return response.data;
+  },
+
   /**
    * Get the deterministic gene of the day (rotates once per calendar day).
    * @returns {Promise<Object>} Gene-of-the-day details

@@ -83,6 +83,7 @@ import ApiDocPage from './pages/ApiDocPage';
 import SyntenyBrowserPage from './pages/SyntenyBrowserPage';
 import VirulenceFactorBrowserPage from './pages/VirulenceFactorBrowserPage';
 import OrthologConverterPage from './pages/OrthologConverterPage';
+import RecentOrthologClustersPage from './pages/RecentOrthologClustersPage';
 
 // Curation pages (protected)
 import CuratorCentralPage from './pages/curation/CuratorCentralPage';
@@ -268,6 +269,7 @@ function App() {
           <Route path="/synteny-browser" element={<SyntenyBrowserPage />} />
           <Route path="/virulence-factor-browser" element={<VirulenceFactorBrowserPage />} />
           <Route path="/ortholog-converter" element={<OrthologConverterPage />} />
+          <Route path="/ortholog/recent" element={<RecentOrthologClustersPage />} />
           <Route path="/blast" element={<BlastSearchPage />} />
           <Route path="/blast/results" element={<BlastResultsPage />} />
           <Route path="/crispr" element={<CrisprSearchPage />} />

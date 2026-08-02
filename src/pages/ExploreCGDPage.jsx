@@ -139,7 +139,7 @@ const WHATS_NEW = [
     icon: '🗂️',
     singular: 'new ortholog cluster',
     plural: 'new ortholog clusters',
-    to: '/ortholog-converter',
+    to: '/ortholog/recent?days=90',
   },
 ];
 
