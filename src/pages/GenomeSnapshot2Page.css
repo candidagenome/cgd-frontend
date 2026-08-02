@@ -7,6 +7,27 @@
   position: relative;
 }
 
+.gs2-page .snapshot-header {
+  align-items: center;
+}
+
+.gs2-page .gs2-title-block {
+  flex: 1;
+  text-align: center;
+}
+
+.gs2-page .gs2-title-block h1 {
+  margin-bottom: 6px;
+}
+
+.gs2-page .gs2-title-block p {
+  max-width: 760px;
+  margin: 0 auto 8px;
+  color: #666;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
 .gs2-h2 {
   color: #1976d2;
   border-bottom: 2px solid #FFCC33;
