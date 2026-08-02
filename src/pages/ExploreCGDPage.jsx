@@ -72,29 +72,31 @@ const CATEGORY_CARDS = [
     count: 18210,
     description: 'GO terms, virulence, biofilm formation',
     examples: ['biofilm formation', 'adhesion'],
-    to: '/go-slim-mapper',
+    to: '/browse/biological-processes',
   },
-  {
-    key: 'chemicals',
-    label: 'Chemicals',
-    dot: '#ef4444',
-    icon: '💊',
-    count: 1450,
-    description: 'Antifungals and metabolites',
-    examples: ['fluconazole', 'caspofungin'],
-    to: '/search/results?query=fluconazole',
-  },
+  // Chemicals are hidden until CGD has a dedicated chemical explorer and a
+  // reliable backend total. A generic search link made this card misleading.
+  // {
+  //   key: 'chemicals',
+  //   label: 'Chemicals',
+  //   dot: '#ef4444',
+  //   icon: '💊',
+  //   count: null,
+  //   description: 'Antifungals and metabolites',
+  //   examples: ['fluconazole', 'caspofungin'],
+  //   to: '/browse/chemicals',
+  // },
 ];
 
 // Secondary categories shown as compact chips. `statKey` overrides the count
 // with a live total where one exists; the rest are placeholders.
 const OTHER_CATEGORIES = [
-  { label: 'Molecular Functions', count: 11203, to: '/go-slim-mapper' },
-  { label: 'Cellular Components', count: 3890, to: '/go-slim-mapper' },
+  { label: 'Molecular Functions', to: '/browse/molecular-functions', organismAware: true },
+  { label: 'Cellular Components', to: '/browse/cellular-components', organismAware: true },
   { label: 'Colleagues', statKey: 'colleagues', count: 4120, to: '/colleague' },
-  { label: 'Interactions', statKey: 'interactions', count: 22100, to: '/feature-search' },
+  { label: 'Interactions', statKey: 'interactions', count: 22100, to: '/browse/interactions', organismAware: true },
   { label: 'Strains', statKey: 'organisms', count: 6, to: '/strains' },
-  { label: 'Biofilm Genes', count: 1234, to: '/feature-search' },
+  { label: 'Biofilm Genes', to: '/virulence-factor-browser?categories=biofilm', organismAware: true },
 ];
 
 // Rotating search-box placeholders (genes, ORFs, and Candida-relevant terms),
@@ -266,7 +268,37 @@ const ExploreCGDPage = () => {
       const separator = card.to.includes('?') ? '&' : '?';
       return `${card.to}${separator}organism=${encodeURIComponent(selectedOrg)}`;
     }
+    if (card.to.startsWith('/browse/')) {
+      return `${card.to}?organism=${encodeURIComponent(selectedOrg)}`;
+    }
     return card.to;
+  };
+
+  const withOrganism = (destination, value = selectedOrg) => {
+    if (!value) return destination;
+    const separator = destination.includes('?') ? '&' : '?';
+    return `${destination}${separator}organism=${encodeURIComponent(value)}`;
+  };
+
+  const exampleDestination = (card, example) => {
+    if (card.key === 'genes') {
+      return withOrganism(`/search/results?query=${encodeURIComponent(example)}`, selectedOrgName);
+    }
+    if (card.key === 'orthologs') {
+      return `/ortholog-converter?gene=${encodeURIComponent(example.replace(/ cluster$/i, ''))}`;
+    }
+    if (card.key === 'references') {
+      return `/search/text/results?query=${encodeURIComponent(example)}&search_field=paper_titles&match_mode=all`;
+    }
+    if (card.key === 'phenotypes') {
+      return withOrganism(`/phenotype/search?query=${encodeURIComponent(example)}`);
+    }
+    return `/search/text/results?query=${encodeURIComponent(example)}&search_field=go_terms&match_mode=all`;
+  };
+
+  const otherDestination = (category) => {
+    if (!selectedOrg || !category.organismAware) return category.to;
+    return withOrganism(category.to);
   };
 
   // Resolve a category's count: prefer the active (filtered or global) scope,
@@ -454,7 +486,7 @@ const ExploreCGDPage = () => {
               <h2 className="explore-section-title">Browse by Category</h2>
               <div className="explore-card-grid">
                 {cards.map((c) => (
-                  <Link key={c.key} to={scopedDestination(c)} className="explore-card">
+                  <article key={c.key} className="explore-card">
                     <div className="explore-card-top">
                       <span
                         className="explore-card-icon"
@@ -463,23 +495,23 @@ const ExploreCGDPage = () => {
                       >
                         {c.icon}
                       </span>
-                      <span className="explore-card-label">{c.label}</span>
+                      <Link className="explore-card-label" to={scopedDestination(c)}>{c.label}</Link>
                       {c.tag && <span className="explore-card-tag">{c.tag}</span>}
                       <span className="explore-card-count">{fmt(c.count)}</span>
                     </div>
                     <p className="explore-card-desc">{c.description}</p>
                     <div className="explore-card-examples">
                       {c.examples.map((ex) => (
-                        <span key={ex} className="explore-chip">{ex}</span>
+                        <Link key={ex} className="explore-chip" to={exampleDestination(c, ex)}>{ex}</Link>
                       ))}
                     </div>
                     <div className="explore-card-foot">
                       <span className="explore-card-scope">
                         {selectedOrg ? selectedOrgName : 'All species'}
                       </span>
-                      <span className="explore-card-browse">Browse all ↗</span>
+                      <Link className="explore-card-browse" to={scopedDestination(c)}>Browse all ↗</Link>
                     </div>
-                  </Link>
+                  </article>
                 ))}
               </div>
             </section>
@@ -489,8 +521,9 @@ const ExploreCGDPage = () => {
               <h3 className="explore-other-title">Other Categories</h3>
               <div className="explore-other-chips">
                 {otherCategories.map((o) => (
-                  <Link key={o.label} to={o.to} className="explore-other-chip">
-                    {o.label} <span className="explore-other-count">{fmt(o.count)}</span>
+                  <Link key={o.label} to={otherDestination(o)} className="explore-other-chip">
+                    {o.label}
+                    {o.count != null && <span className="explore-other-count">{fmt(o.count)}</span>}
                   </Link>
                 ))}
               </div>

@@ -1,0 +1,118 @@
+.browse-category-page {
+  min-height: 70vh;
+  background: #f8f7f4;
+  padding: 44px 24px 72px;
+  color: #171717;
+}
+
+.browse-category-inner {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.browse-category-back {
+  color: #6d28d9;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.browse-category-hero {
+  margin: 38px 0 28px;
+}
+
+.browse-category-eyebrow,
+.browse-category-section h2 {
+  color: #6b7280;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.browse-category-hero h1 {
+  margin: 8px 0 10px;
+  font-size: clamp(2rem, 5vw, 3.4rem);
+}
+
+.browse-category-hero p {
+  max-width: 720px;
+  color: #606060;
+  font-size: 1.08rem;
+  line-height: 1.6;
+}
+
+.browse-category-scope {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #ede9fe;
+  color: #6d28d9;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.browse-category-search {
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  background: white;
+  border: 1px solid #dedbd5;
+  border-radius: 14px;
+}
+
+.browse-category-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  padding: 10px 12px;
+  font: inherit;
+  outline: none;
+}
+
+.browse-category-search button {
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 22px;
+  background: #171717;
+  color: white;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.browse-category-section {
+  margin-top: 38px;
+}
+
+.browse-category-topics,
+.browse-category-tools {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.browse-category-topics a,
+.browse-category-tools a {
+  padding: 18px;
+  border: 1px solid #dedbd5;
+  border-radius: 12px;
+  background: white;
+  color: #262626;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.browse-category-topics a:hover,
+.browse-category-tools a:hover {
+  border-color: #7c3aed;
+  color: #6d28d9;
+}
+
+@media (max-width: 700px) {
+  .browse-category-topics,
+  .browse-category-tools {
+    grid-template-columns: 1fr;
+  }
+}

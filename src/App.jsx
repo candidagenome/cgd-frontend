@@ -31,6 +31,7 @@ import CommunityPage from './pages/CommunityPage';
 import SubmitDataPage from './pages/SubmitDataPage';
 import SearchPage from './pages/SearchPage';
 import ExploreCGDPage from './pages/ExploreCGDPage';
+import BrowseCategoryPage from './pages/BrowseCategoryPage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import TextSearchResultsPage from './pages/TextSearchResultsPage';
 import TextSearchPage from './pages/TextSearchPage';
@@ -241,6 +242,7 @@ function App() {
           <Route path="/submit-data" element={<SubmitDataPage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/search2" element={<ExploreCGDPage />} />
+          <Route path="/browse/:category" element={<BrowseCategoryPage />} />
           <Route path="/search/results" element={<SearchResultsPage />} />
           <Route path="/search/text" element={<TextSearchPage />} />
           <Route path="/search/text/results" element={<TextSearchResultsPage />} />

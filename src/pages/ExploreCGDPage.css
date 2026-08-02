@@ -395,6 +395,12 @@
 .explore-card-label {
   font-size: 1.1rem;
   font-weight: 700;
+  color: var(--ex-text);
+  text-decoration: none;
+}
+
+.explore-card-label:hover {
+  color: var(--ex-purple);
 }
 
 .explore-card-tag {
@@ -428,12 +434,18 @@
 }
 
 .explore-chip {
+  text-decoration: none;
   font-size: 0.82rem;
   color: var(--ex-muted);
   background: #f4f2ee;
   border: 1px solid var(--ex-border);
   border-radius: 8px;
   padding: 5px 10px;
+}
+
+.explore-chip:hover {
+  color: var(--ex-purple);
+  border-color: var(--ex-purple);
 }
 
 .explore-card-foot {
@@ -450,6 +462,7 @@
 }
 
 .explore-card-browse {
+  text-decoration: none;
   font-size: 0.88rem;
   font-weight: 600;
   color: var(--ex-text);
