@@ -114,7 +114,7 @@ function BrowseCategoryPage() {
               </>
             ) : config.references ? (
               <>
-                <Link to="/literature">Literature Resources</Link>
+                <Link to="/literature-topic-search">Literature Topic Search</Link>
                 <Link to="/topic-biblios">Highlighted Topics</Link>
                 <Link to="/genome-wide-analysis-papers">Genome-Wide Analysis Papers</Link>
               </>
