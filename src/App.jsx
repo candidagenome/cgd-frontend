@@ -16,6 +16,7 @@ import GoTermPage from './pages/GoTermPage';
 import GoEvidencePage from './pages/GoEvidencePage';
 import PhenotypeSearchPage from './pages/PhenotypeSearchPage';
 import ObservableTermsPage from './pages/ObservableTermsPage';
+import RecentPhenotypeAnnotationsPage from './pages/RecentPhenotypeAnnotationsPage';
 import AboutPage from './pages/AboutPage';
 import HelpPage from './pages/HelpPage';
 import HowToCitePage from './pages/HowToCitePage';
@@ -225,6 +226,7 @@ function App() {
           <Route path="/go/:goid" element={<GoTermPage />} />
           <Route path="/phenotype/search" element={<PhenotypeSearchPage />} />
           <Route path="/phenotype/terms" element={<ObservableTermsPage />} />
+          <Route path="/phenotype/recent" element={<RecentPhenotypeAnnotationsPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/help" element={<HelpPage />} />
           <Route path="/developer/api" element={<ApiDocPage />} />
