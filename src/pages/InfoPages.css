@@ -519,17 +519,6 @@
 }
 
 /* Strains page styles */
-.strain-species-list {
-  list-style: none;
-  padding-left: 0;
-}
-
-.strain-species-list li {
-  display: inline-block;
-  margin-right: 30px;
-  margin-bottom: 10px;
-}
-
 .strain-list {
   column-count: 3;
   column-gap: 20px;
@@ -540,11 +529,6 @@
 .strain-list li {
   break-inside: avoid;
   margin-bottom: 5px;
-}
-
-.strain-unavailable {
-  color: #666;
-  margin: 8px 0 4px;
 }
 
 .strain-section h2 {
@@ -921,11 +905,6 @@
 
   .strain-list {
     column-count: 1;
-  }
-
-  .strain-species-list li {
-    display: block;
-    margin-right: 0;
   }
 
   .glabrata-changes-container {

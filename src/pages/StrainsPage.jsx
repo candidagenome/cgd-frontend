@@ -58,48 +58,18 @@ const StrainEntry = ({ name, genotype, notes, citations }) => (
 function StrainsPage() {
   return (
     <div className="info-page">
-      <div className="info-page-content">
+      <div className="info-page-content" id="top_of_list">
         <h1>
           <em>Candida</em> Strains
         </h1>
 
         <p>
-          These lists and lineage diagrams have been compiled by CGD curators to serve as a brief
-          reference to some of the more commonly used laboratory strains of various{' '}
-          <em>Candida</em> species, rather than a comprehensive resource. The strain names on each
-          species list below link to short summary descriptions, notes and citations. If you would
-          like to suggest additions, corrections, or updates to this list, please{' '}
+          This list has been compiled by CGD curators as a brief reference to commonly used{' '}
+          <em>Candida albicans</em> laboratory strains, rather than a comprehensive resource. The
+          strain names below link to short summary descriptions, notes, and citations. If you would
+          like to suggest additions, corrections, or updates, please{' '}
           <Link to="/contact">send a message to CGD curators</Link> with details.
         </p>
-
-        <hr />
-
-        {/* Table of Contents */}
-        <section className="info-section" id="top_of_list">
-          <h2>Strain information for:</h2>
-          <ul className="strain-species-list">
-            <li>
-              <a href="#albicans">
-                <em>C. albicans</em>
-              </a>
-            </li>
-            <li>
-              <a href="#glabrata">
-                <em>C. glabrata</em>
-              </a>
-            </li>
-            <li>
-              <a href="#parapsilosis">
-                <em>C. parapsilosis</em>
-              </a>
-            </li>
-            <li>
-              <a href="#tropicalis">
-                <em>C. tropicalis</em>
-              </a>
-            </li>
-          </ul>
-        </section>
 
         <hr />
 
@@ -351,48 +321,6 @@ function StrainsPage() {
             notes="Used in early molecular studies of Candida albicans."
             citations={[]}
           />
-        </section>
-
-        <hr />
-
-        {/* C. glabrata Section */}
-        <section className="info-section strain-section" id="glabrata">
-          <h2>
-            <em>C. glabrata</em> Laboratory Strains
-          </h2>
-
-          <p className="strain-unavailable">
-            Detailed curated strain information for <em>C. glabrata</em> is not currently available
-            on this page.
-          </p>
-        </section>
-
-        <hr />
-
-        {/* C. parapsilosis Section */}
-        <section className="info-section strain-section" id="parapsilosis">
-          <h2>
-            <em>C. parapsilosis</em> Laboratory Strains
-          </h2>
-
-          <p className="strain-unavailable">
-            Detailed curated strain information for <em>C. parapsilosis</em> is not currently
-            available on this page.
-          </p>
-        </section>
-
-        <hr />
-
-        {/* C. tropicalis Section */}
-        <section className="info-section strain-section" id="tropicalis">
-          <h2>
-            <em>C. tropicalis</em> Laboratory Strains
-          </h2>
-
-          <p className="strain-unavailable">
-            Detailed curated strain information for <em>C. tropicalis</em> is not currently
-            available on this page.
-          </p>
         </section>
       </div>
     </div>
