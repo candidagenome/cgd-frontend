@@ -19,6 +19,15 @@ export const statsApi = {
     const response = await api.get('/api/gene-of-the-day');
     return response.data;
   },
+
+  /**
+   * Get per-organism category totals for the Explore-page organism filter.
+   * @returns {Promise<Object>} { by_organism: { <abbrev>: {...counts} } }
+   */
+  getCountsByOrganism: async () => {
+    const response = await api.get('/api/stats/counts-by-organism');
+    return response.data;
+  },
 };
 
 export default statsApi;

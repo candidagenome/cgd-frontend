@@ -43,8 +43,18 @@
   font-style: italic;
 }
 
+.explore-tagline {
+  font-size: 1rem;
+  color: var(--ex-text);
+  margin: 0 0 6px;
+}
+
+.explore-tagline em {
+  font-style: italic;
+}
+
 .explore-subtitle {
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   color: var(--ex-muted);
   margin: 0 0 28px;
 }
@@ -227,6 +237,7 @@
   text-align: left;
   text-decoration: none;
   color: inherit;
+  font-family: inherit;
   transition: border-color 0.15s, background 0.15s, box-shadow 0.15s, transform 0.15s;
   font-size: 0.98rem;
 }
@@ -238,16 +249,44 @@
 }
 
 .explore-org-go {
-  margin-left: 8px;
+  margin-left: 6px;
   color: var(--ex-faint);
-  font-size: 0.95rem;
-  opacity: 0;
-  transition: opacity 0.15s, color 0.15s;
+  font-size: 0.9rem;
+  line-height: 1;
+  padding: 4px 6px;
+  border-radius: 7px;
+  opacity: 0.55;
+  transition: opacity 0.15s, color 0.15s, background 0.15s;
 }
 
 .explore-org-pill:hover .explore-org-go {
   opacity: 1;
+}
+
+.explore-org-go:hover {
   color: var(--ex-purple);
+  background: var(--ex-purple-soft);
+}
+
+.explore-clear-filter {
+  background: var(--ex-purple-soft);
+  border: 1px solid var(--ex-purple);
+  color: var(--ex-purple);
+  font-family: inherit;
+  font-size: 0.8rem;
+  border-radius: 999px;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.explore-clear-filter em {
+  font-style: italic;
+  font-weight: 600;
+}
+
+.explore-clear-filter:hover {
+  background: #e9e1ff;
 }
 
 .explore-org-pill.is-selected {
@@ -342,6 +381,17 @@
   flex-shrink: 0;
 }
 
+.explore-card-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  flex-shrink: 0;
+}
+
 .explore-card-label {
   font-size: 1.1rem;
   font-weight: 700;
@@ -394,7 +444,7 @@
   padding-top: 14px;
 }
 
-.explore-card-strains {
+.explore-card-scope {
   font-size: 0.82rem;
   color: var(--ex-faint);
 }
@@ -578,6 +628,10 @@
   line-height: 1.4;
   color: var(--ex-text);
   text-decoration: none;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .explore-recent-cite:hover {

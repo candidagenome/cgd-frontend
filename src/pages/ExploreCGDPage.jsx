@@ -22,6 +22,7 @@ const CATEGORY_CARDS = [
     key: 'genes',
     label: 'Genes',
     dot: '#2563eb',
+    icon: '🧬',
     statKey: 'genes',
     count: null,
     description: 'Protein-coding and verified ORFs across 6 species',
@@ -32,6 +33,7 @@ const CATEGORY_CARDS = [
     key: 'orthologs',
     label: 'Ortholog Clusters',
     dot: '#7c3aed',
+    icon: '🔗',
     tag: 'NEW FOR CGD',
     statKey: 'ortholog_clusters',
     count: 6124,
@@ -43,6 +45,7 @@ const CATEGORY_CARDS = [
     key: 'references',
     label: 'References',
     dot: '#f97316',
+    icon: '📚',
     statKey: 'references',
     count: 85230,
     description: 'Literature and curated sources',
@@ -53,6 +56,7 @@ const CATEGORY_CARDS = [
     key: 'phenotypes',
     label: 'Phenotypes',
     dot: '#ec4899',
+    icon: '🔬',
     statKey: 'phenotype_annotations',
     count: 12840,
     description: 'Morphology, drug resistance, biofilm',
@@ -63,6 +67,7 @@ const CATEGORY_CARDS = [
     key: 'biological_processes',
     label: 'GO Annotations',
     dot: '#22c55e',
+    icon: '🌿',
     statKey: 'go_annotations',
     count: 18210,
     description: 'GO terms, virulence, biofilm formation',
@@ -73,6 +78,7 @@ const CATEGORY_CARDS = [
     key: 'chemicals',
     label: 'Chemicals',
     dot: '#ef4444',
+    icon: '💊',
     count: 1450,
     description: 'Antifungals and metabolites',
     examples: ['fluconazole', 'caspofungin'],
@@ -122,8 +128,9 @@ const ExploreCGDPage = () => {
   const [query, setQuery] = useState('');
   const [organisms, setOrganisms] = useState([]);
   const [geneCounts, setGeneCounts] = useState({}); // organism_abbrev -> haploid_orfs
-  // The reference strain gets a highlighted pill; the others are plain links.
-  const selectedOrg = 'C_albicans_SC5314';
+  // null = "All species" (global totals); otherwise an organism_abbrev to filter by.
+  const [selectedOrg, setSelectedOrg] = useState(null);
+  const [countsByOrg, setCountsByOrg] = useState({});
   const [recentRefs, setRecentRefs] = useState([]);
   const [indexDate, setIndexDate] = useState('July 24, 2026');
   const [exampleIdx, setExampleIdx] = useState(0);
@@ -185,7 +192,7 @@ const ExploreCGDPage = () => {
     referenceApi
       .getNewPapersThisWeek(90)
       .then((data) => {
-        if (!cancelled) setRecentRefs((data?.references || []).slice(0, 4));
+        if (!cancelled) setRecentRefs((data?.references || []).slice(0, 3));
       })
       .catch(() => {});
     return () => {
@@ -208,6 +215,12 @@ const ExploreCGDPage = () => {
         if (!cancelled && data?.success !== false) setGeneOfDay(data);
       })
       .catch(() => {});
+    statsApi
+      .getCountsByOrganism()
+      .then((data) => {
+        if (!cancelled && data?.by_organism) setCountsByOrg(data.by_organism);
+      })
+      .catch(() => {});
     return () => {
       cancelled = true;
     };
@@ -220,24 +233,33 @@ const ExploreCGDPage = () => {
   );
   const totalGenes = stats?.genes || summedGenes;
 
-  // Override each card's placeholder count with a live total when statKey resolves.
-  const cards = useMemo(
-    () =>
-      CATEGORY_CARDS.map((c) => {
-        const live = c.statKey && stats?.[c.statKey];
-        return live ? { ...c, count: live } : c;
-      }),
-    [stats]
+  // Counts driving the category cards: the selected organism's totals when a
+  // filter is active, otherwise the global summary.
+  const activeCounts = useMemo(
+    () => (selectedOrg ? countsByOrg[selectedOrg] : stats) || {},
+    [selectedOrg, countsByOrg, stats]
   );
 
-  const otherCategories = useMemo(
-    () =>
-      OTHER_CATEGORIES.map((o) => {
-        const live = o.statKey && stats?.[o.statKey];
-        return live ? { ...o, count: live } : o;
-      }),
-    [stats]
+  const selectedOrgName = useMemo(
+    () => organisms.find((o) => o.organism_abbrev === selectedOrg)?.organism_name || '',
+    [organisms, selectedOrg]
   );
+
+  // Resolve a category's count: prefer the active (filtered or global) scope,
+  // fall back to the global summary for keys absent from per-organism data
+  // (e.g. colleagues), and finally to the curator placeholder.
+  const { cards, otherCategories } = useMemo(() => {
+    const resolve = (statKey, placeholder) => {
+      if (!statKey) return placeholder;
+      if (activeCounts[statKey] != null) return activeCounts[statKey];
+      if (stats?.[statKey] != null) return stats[statKey];
+      return placeholder;
+    };
+    return {
+      cards: CATEGORY_CARDS.map((c) => ({ ...c, count: resolve(c.statKey, c.count) })),
+      otherCategories: OTHER_CATEGORIES.map((o) => ({ ...o, count: resolve(o.statKey, o.count) })),
+    };
+  }, [activeCounts, stats]);
 
   // Cycle the placeholder through example terms while the box is empty.
   useEffect(() => {
@@ -277,6 +299,10 @@ const ExploreCGDPage = () => {
           <h1 className="explore-title">
             Search <em>Candida</em> Genome Database
           </h1>
+          <p className="explore-tagline">
+            Curated genomic, functional, and literature data for six medically
+            important <em>Candida</em> species.
+          </p>
           <p className="explore-subtitle">
             Explore {totalGenes ? `~${(Math.round(totalGenes / 1000) * 1000).toLocaleString()}` : '~35,000'} genes
             across {speciesCount} species,{' '}
@@ -320,7 +346,7 @@ const ExploreCGDPage = () => {
             <span className="explore-live-dot" aria-hidden="true" />
             <span className="explore-live-label">LIVE INDEX</span>
             <span className="explore-live-sep">|</span>
-            CGD is up to date as of {indexDate} &mdash; {speciesCount} reference strains &mdash; start typing to search or browse below
+            Updated {indexDate} · {speciesCount} reference strains indexed
           </div>
         </header>
 
@@ -331,40 +357,67 @@ const ExploreCGDPage = () => {
             <section className="explore-section">
               <div className="explore-section-head">
                 <h2 className="explore-section-title">Browse by Organism</h2>
-                <span className="explore-section-meta">{speciesCount} strains ·</span>
+                {selectedOrg ? (
+                  <button
+                    type="button"
+                    className="explore-clear-filter"
+                    onClick={() => setSelectedOrg(null)}
+                  >
+                    Filtering by <em>{selectedOrgName}</em> <span aria-hidden="true">✕</span> Clear
+                  </button>
+                ) : (
+                  <span className="explore-section-meta">{speciesCount} reference strains ·</span>
+                )}
               </div>
               <div className="explore-org-grid">
                 {organisms.map((org) => {
-                  const isReference = org.organism_abbrev === selectedOrg;
+                  const isSelected = org.organism_abbrev === selectedOrg;
                   const abbrev = SPECIES_ABBREV[org.organism_name] || org.organism_name;
                   const strain = strainOf(org.organism_name);
                   const count = geneCounts[org.organism_abbrev];
                   return (
-                    <Link
+                    <button
                       key={org.organism_abbrev}
-                      to={`/genome-snapshot2/${org.organism_abbrev}`}
-                      className={`explore-org-pill${isReference ? ' is-selected' : ''}`}
-                      title={`View the ${org.organism_name} genome overview`}
+                      type="button"
+                      className={`explore-org-pill${isSelected ? ' is-selected' : ''}`}
+                      onClick={() => setSelectedOrg(isSelected ? null : org.organism_abbrev)}
+                      aria-pressed={isSelected}
+                      title={`Filter all category counts by ${org.organism_name}`}
                     >
-                      <span className={`explore-org-check${isReference ? ' is-on' : ''}`} aria-hidden="true">
-                        {isReference ? '✓' : ''}
+                      <span className={`explore-org-check${isSelected ? ' is-on' : ''}`} aria-hidden="true">
+                        {isSelected ? '✓' : ''}
                       </span>
                       <em className="explore-org-name">{abbrev}</em>
                       {strain && <span className="explore-org-strain">{strain}</span>}
                       {count != null && (
                         <span className="explore-org-count">{fmt(count)} genes</span>
                       )}
-                      <span className="explore-org-go" aria-hidden="true">↗</span>
-                    </Link>
+                      <span
+                        className="explore-org-go"
+                        title={`Open the ${org.organism_name} genome overview`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/genome-snapshot2/${org.organism_abbrev}`);
+                        }}
+                      >
+                        ↗
+                      </span>
+                    </button>
                   );
                 })}
               </div>
               <p className="explore-org-note">
-                Click an organism to open its genome overview.{' '}
-                {strainOf(
-                  organisms.find((o) => o.organism_abbrev === selectedOrg)?.organism_name || ''
-                ) || 'SC5314'}{' '}
-                is the reference strain.
+                {selectedOrg ? (
+                  <>
+                    Showing counts for <em>{selectedOrgName}</em>.{' '}
+                    <Link to={`/genome-snapshot2/${selectedOrg}`}>View genome overview →</Link>
+                  </>
+                ) : (
+                  <>
+                    Click an organism to filter all category counts by it; click the ↗ to
+                    open its genome overview. SC5314 is the reference strain.
+                  </>
+                )}
               </p>
             </section>
 
@@ -375,7 +428,13 @@ const ExploreCGDPage = () => {
                 {cards.map((c) => (
                   <Link key={c.key} to={c.to} className="explore-card">
                     <div className="explore-card-top">
-                      <span className="explore-card-dot" style={{ background: c.dot }} aria-hidden="true" />
+                      <span
+                        className="explore-card-icon"
+                        style={{ background: `${c.dot}1a`, color: c.dot }}
+                        aria-hidden="true"
+                      >
+                        {c.icon}
+                      </span>
                       <span className="explore-card-label">{c.label}</span>
                       {c.tag && <span className="explore-card-tag">{c.tag}</span>}
                       <span className="explore-card-count">{fmt(c.count)}</span>
@@ -387,7 +446,9 @@ const ExploreCGDPage = () => {
                       ))}
                     </div>
                     <div className="explore-card-foot">
-                      <span className="explore-card-strains">1 strains</span>
+                      <span className="explore-card-scope">
+                        {selectedOrg ? selectedOrgName : 'All species'}
+                      </span>
                       <span className="explore-card-browse">Browse all ↗</span>
                     </div>
                   </Link>
