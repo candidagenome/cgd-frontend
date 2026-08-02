@@ -114,6 +114,8 @@ const SEARCH_EXAMPLES = [
   'hyphal growth',
   'BCR1',
   'azole resistance',
+  'Candida auris',
+  'PMID: 39177371',
 ];
 
 // "What's New in CGD" highlights. Curator-maintained editorial content.
@@ -247,6 +249,14 @@ const ExploreCGDPage = () => {
     () => organisms.find((o) => o.organism_abbrev === selectedOrg)?.organism_name || '',
     [organisms, selectedOrg]
   );
+
+  const selectedOrgLabel = useMemo(() => {
+    const org = organisms.find((o) => o.organism_abbrev === selectedOrg);
+    if (!org) return '';
+    const species = SPECIES_ABBREV[org.organism_name] || org.organism_name;
+    const strain = strainOf(org.organism_name);
+    return strain ? `${species} ${strain}` : species;
+  }, [organisms, selectedOrg]);
 
   // Drop stale/invalid organism parameters once the live organism list is known.
   useEffect(() => {
@@ -418,15 +428,18 @@ const ExploreCGDPage = () => {
               <div className="explore-section-head">
                 <h2 className="explore-section-title">Browse by Organism</h2>
                 {selectedOrg ? (
-                  <button
-                    type="button"
-                    className="explore-clear-filter"
-                    onClick={() => setSearchParams({})}
-                  >
-                    Filtering by <em>{selectedOrgName}</em> <span aria-hidden="true">✕</span> Clear
-                  </button>
+                  <div className="explore-org-actions">
+                    <Link to={`/genome-snapshot2/${selectedOrg}`}>View {selectedOrgLabel} overview →</Link>
+                    <button
+                      type="button"
+                      className="explore-clear-filter"
+                      onClick={() => setSearchParams({})}
+                    >
+                      Clear filter <span aria-hidden="true">×</span>
+                    </button>
+                  </div>
                 ) : (
-                  <span className="explore-section-meta">{speciesCount} reference strains ·</span>
+                  <span className="explore-section-meta">Select an organism to filter counts</span>
                 )}
               </div>
               <div className="explore-org-grid">
@@ -436,54 +449,51 @@ const ExploreCGDPage = () => {
                   const strain = strainOf(org.organism_name);
                   const count = geneCounts[org.organism_abbrev];
                   return (
-                    <button
+                    <div
                       key={org.organism_abbrev}
-                      type="button"
                       className={`explore-org-pill${isSelected ? ' is-selected' : ''}`}
-                      onClick={() => selectOrganism(org.organism_abbrev)}
-                      aria-pressed={isSelected}
-                      title={`Filter all category counts by ${org.organism_name}`}
                     >
-                      <span className={`explore-org-check${isSelected ? ' is-on' : ''}`} aria-hidden="true">
-                        {isSelected ? '✓' : ''}
-                      </span>
-                      <em className="explore-org-name">{abbrev}</em>
-                      {strain && <span className="explore-org-strain">{strain}</span>}
-                      {count != null && (
-                        <span className="explore-org-count">{fmt(count)} genes</span>
-                      )}
-                      <span
-                        className="explore-org-go"
-                        title={`Open the ${org.organism_name} genome overview`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate(`/genome-snapshot2/${org.organism_abbrev}`);
-                        }}
+                      <button
+                        type="button"
+                        className="explore-org-select"
+                        onClick={() => selectOrganism(org.organism_abbrev)}
+                        aria-pressed={isSelected}
+                        title={`Filter all category counts by ${org.organism_name}`}
                       >
-                        ↗
-                      </span>
-                    </button>
+                        <span className={`explore-org-check${isSelected ? ' is-on' : ''}`} aria-hidden="true">
+                          {isSelected ? '✓' : ''}
+                        </span>
+                        <em className="explore-org-name">{abbrev}</em>
+                        {strain && <span className="explore-org-strain">{strain}</span>}
+                        {count != null && (
+                          <span className="explore-org-count">{fmt(count)} genes</span>
+                        )}
+                      </button>
+                      <Link
+                        className="explore-org-go"
+                        to={`/genome-snapshot2/${org.organism_abbrev}`}
+                        title={`Open the ${org.organism_name} genome overview`}
+                        aria-label={`Open ${org.organism_name} genome overview`}
+                      >
+                        Overview <span aria-hidden="true">↗</span>
+                      </Link>
+                    </div>
                   );
                 })}
               </div>
-              <p className="explore-org-note">
-                {selectedOrg ? (
-                  <>
-                    Showing counts for <em>{selectedOrgName}</em>.{' '}
-                    <Link to={`/genome-snapshot2/${selectedOrg}`}>View genome overview →</Link>
-                  </>
-                ) : (
-                  <>
-                    Click an organism to filter all category counts by it; click the ↗ to
-                    open its genome overview. SC5314 is the reference strain.
-                  </>
-                )}
-              </p>
+              {!selectedOrg && (
+                <p className="explore-org-note">
+                  Select a row to update category counts; use ↗ to open its genome overview.
+                </p>
+              )}
             </section>
 
             {/* Browse by category */}
             <section className="explore-section">
-              <h2 className="explore-section-title">Browse by Category</h2>
+              <div className="explore-section-head">
+                <h2 className="explore-section-title">Browse by Category</h2>
+                {selectedOrg && <span className="explore-section-meta">Counts for <em>{selectedOrgLabel}</em></span>}
+              </div>
               <div className="explore-card-grid">
                 {cards.map((c) => (
                   <article key={c.key} className="explore-card">
@@ -499,16 +509,17 @@ const ExploreCGDPage = () => {
                       {c.tag && <span className="explore-card-tag">{c.tag}</span>}
                       <span className="explore-card-count">{fmt(c.count)}</span>
                     </div>
-                    <p className="explore-card-desc">{c.description}</p>
+                    <p className="explore-card-desc">
+                      {selectedOrg && c.key === 'genes'
+                        ? 'Protein-coding and verified ORFs in this reference genome'
+                        : c.description}
+                    </p>
                     <div className="explore-card-examples">
                       {c.examples.map((ex) => (
                         <Link key={ex} className="explore-chip" to={exampleDestination(c, ex)}>{ex}</Link>
                       ))}
                     </div>
                     <div className="explore-card-foot">
-                      <span className="explore-card-scope">
-                        {selectedOrg ? selectedOrgName : 'All species'}
-                      </span>
                       <Link className="explore-card-browse" to={scopedDestination(c)}>Browse all ↗</Link>
                     </div>
                   </article>
