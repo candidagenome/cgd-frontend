@@ -168,9 +168,15 @@ const SearchResultsPage = () => {
 
   // Organism filtering state
   const [availableOrganisms, setAvailableOrganisms] = useState([]);
-  const [selectedOrganism, setSelectedOrganism] = useState(null);
+  const [selectedOrganism, setSelectedOrganism] = useState(
+    searchParams.get('organism') || null
+  );
   const [organismCounts, setOrganismCounts] = useState({});
   const [hasApiOrganismCounts, setHasApiOrganismCounts] = useState(false);
+
+  useEffect(() => {
+    setSelectedOrganism(searchParams.get('organism') || null);
+  }, [searchParams]);
 
   // Quick filter state: pending (what user types) vs applied (what filters)
   const [pendingQuickFilter, setPendingQuickFilter] = useState('');

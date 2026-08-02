@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import searchApi from '../api/searchApi';
 import genomeSnapshotApi from '../api/genomeSnapshotApi';
 import referenceApi from '../api/referenceApi';
@@ -123,13 +123,14 @@ const WHATS_NEW = [
 
 const ExploreCGDPage = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const inputRef = useRef(null);
 
   const [query, setQuery] = useState('');
   const [organisms, setOrganisms] = useState([]);
   const [geneCounts, setGeneCounts] = useState({}); // organism_abbrev -> haploid_orfs
   // null = "All species" (global totals); otherwise an organism_abbrev to filter by.
-  const [selectedOrg, setSelectedOrg] = useState(null);
+  const selectedOrg = searchParams.get('organism') || null;
   const [countsByOrg, setCountsByOrg] = useState({});
   const [recentRefs, setRecentRefs] = useState([]);
   const [indexDate, setIndexDate] = useState('July 24, 2026');
@@ -245,6 +246,29 @@ const ExploreCGDPage = () => {
     [organisms, selectedOrg]
   );
 
+  // Drop stale/invalid organism parameters once the live organism list is known.
+  useEffect(() => {
+    if (!selectedOrg || organisms.length === 0) return;
+    if (!organisms.some((org) => org.organism_abbrev === selectedOrg)) {
+      setSearchParams({}, { replace: true });
+    }
+  }, [selectedOrg, organisms, setSearchParams]);
+
+  const selectOrganism = (organismAbbrev) => {
+    const next = organismAbbrev === selectedOrg ? null : organismAbbrev;
+    setSearchParams(next ? { organism: next } : {});
+  };
+
+  const scopedDestination = (card) => {
+    if (!selectedOrg) return card.to;
+    // These destinations currently understand organism abbreviations.
+    if (card.key === 'genes' || card.key === 'phenotypes') {
+      const separator = card.to.includes('?') ? '&' : '?';
+      return `${card.to}${separator}organism=${encodeURIComponent(selectedOrg)}`;
+    }
+    return card.to;
+  };
+
   // Resolve a category's count: prefer the active (filtered or global) scope,
   // fall back to the global summary for keys absent from per-organism data
   // (e.g. colleagues), and finally to the curator placeholder.
@@ -285,7 +309,11 @@ const ExploreCGDPage = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     const q = query.trim();
-    if (q) navigate(`/search/results?query=${encodeURIComponent(q)}`);
+    if (q) {
+      const params = new URLSearchParams({ query: q });
+      if (selectedOrgName) params.set('organism', selectedOrgName);
+      navigate(`/search/results?${params.toString()}`);
+    }
   };
 
   const fmt = (n) => (n == null ? '' : n.toLocaleString());
@@ -361,7 +389,7 @@ const ExploreCGDPage = () => {
                   <button
                     type="button"
                     className="explore-clear-filter"
-                    onClick={() => setSelectedOrg(null)}
+                    onClick={() => setSearchParams({})}
                   >
                     Filtering by <em>{selectedOrgName}</em> <span aria-hidden="true">✕</span> Clear
                   </button>
@@ -380,7 +408,7 @@ const ExploreCGDPage = () => {
                       key={org.organism_abbrev}
                       type="button"
                       className={`explore-org-pill${isSelected ? ' is-selected' : ''}`}
-                      onClick={() => setSelectedOrg(isSelected ? null : org.organism_abbrev)}
+                      onClick={() => selectOrganism(org.organism_abbrev)}
                       aria-pressed={isSelected}
                       title={`Filter all category counts by ${org.organism_name}`}
                     >
@@ -426,7 +454,7 @@ const ExploreCGDPage = () => {
               <h2 className="explore-section-title">Browse by Category</h2>
               <div className="explore-card-grid">
                 {cards.map((c) => (
-                  <Link key={c.key} to={c.to} className="explore-card">
+                  <Link key={c.key} to={scopedDestination(c)} className="explore-card">
                     <div className="explore-card-top">
                       <span
                         className="explore-card-icon"
