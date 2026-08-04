@@ -146,6 +146,7 @@ import VirulenceFactorBrowserHelp from './pages/help/VirulenceFactorBrowserHelp'
 import CrisprGuideFinderHelp from './pages/help/CrisprGuideFinderHelp';
 import ExpressionHelp from './pages/help/ExpressionHelp';
 import SyntenyBrowserHelp from './pages/help/SyntenyBrowserHelp';
+import NonCodingRNAHelp from './pages/help/NonCodingRNAHelp';
 
 import ScrollToTop from './components/ScrollToTop';
 import Analytics from './components/Analytics';
@@ -611,6 +612,7 @@ function App() {
           <Route path="/help/crispr" element={<CrisprGuideFinderHelp />} />
           <Route path="/help/expression" element={<ExpressionHelp />} />
           <Route path="/help/synteny-browser" element={<SyntenyBrowserHelp />} />
+          <Route path="/help/non-coding-rna" element={<NonCodingRNAHelp />} />
         </Routes>
 
         {/* =========================

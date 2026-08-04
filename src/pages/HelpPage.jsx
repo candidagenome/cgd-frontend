@@ -50,6 +50,16 @@ function HelpPage() {
 
         <div className="help-item">
           <h3>
+            <Link to="/help/non-coding-rna">Non-coding RNA Gene Annotations</Link>
+          </h3>
+          <p>
+            The non-coding RNA gene features (tRNA, rRNA, snoRNA, snRNA and others) added across
+            five Candida species, and the tools and methods used to identify them.
+          </p>
+        </div>
+
+        <div className="help-item">
+          <h3>
             <Link to="/help/search-form">Search Help</Link>
           </h3>
           <p>Documentation about search tools in CGD. Additional tool-specific documentation:</p>
