@@ -945,6 +945,11 @@ function GenomeSnapshot2Page() {
             </HelpDrawer>
           </h2>
 
+          <p className="gs2-note">
+            Non-coding RNA feature types (tRNA, rRNA, snoRNA, snRNA, and other ncRNAs) —{' '}
+            <Link to="/help/non-coding-rna">how these annotations were identified</Link>.
+          </p>
+
           <div className="gs2-table-controls">
             <input
               type="text"

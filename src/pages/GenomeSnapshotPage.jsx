@@ -523,6 +523,8 @@ function GenomeSnapshotPage() {
           <p>
             This table reports the number and types of features annotated in CGD. To get a list of all
             features of a certain type (e.g., Verified ORF, tRNA, etc.), select that feature type.
+            For the non-coding RNA feature types (tRNA, rRNA, snoRNA, snRNA, and other ncRNAs), see{' '}
+            <Link to="/help/non-coding-rna">how these annotations were identified</Link>.
           </p>
 
           <table className="snapshot-table">

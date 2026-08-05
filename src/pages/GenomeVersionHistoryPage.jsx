@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import genomeVersionApi from '../api/genomeVersionApi';
 import './GenomeVersionHistoryPage.css';
 
@@ -171,6 +171,11 @@ function GenomeVersionHistoryPage() {
           <p>
             This page is displaying Summary of Genome Versions for{' '}
             <span className="selected-strain">{getSelectedStrainDisplay()}</span>.
+          </p>
+          <p>
+            CGD recently expanded non-coding RNA gene annotation (tRNAs, rRNAs, snoRNAs, snRNAs,
+            and other non-coding RNAs) across five <em>Candida</em> species &mdash;{' '}
+            <Link to="/help/non-coding-rna">learn how they were identified</Link>.
           </p>
           <div className="selector-row">
             <label htmlFor="seq-source">
