@@ -36,11 +36,10 @@ const NEWS_ITEMS = [
     title: 'New: Non-coding RNA Gene Annotations',
     content: (
       <>
-        CGD has expanded non-coding RNA gene annotation across five species &mdash;{' '}
+        CGD has expanded non-coding RNA gene annotation across the five species of{' '}
         <em>C. tropicalis</em>, <em>C. dubliniensis</em>, <em>C. glabrata</em>,{' '}
-        <em>C. parapsilosis</em>, and <em>C. auris</em> &mdash; adding tRNAs, rRNAs, snoRNAs,
-        snRNAs, and other non-coding RNAs, and correcting the type of tRNAs that had been
-        mislabeled as ORFs.
+        <em>C. parapsilosis</em>, and <em>C. auris</em> by adding tRNAs, rRNAs, snoRNAs,
+        snRNAs, and other non-coding RNAs.
         <p></p>
         <strong>Note:</strong> These features are computational predictions.
         <br /><br />

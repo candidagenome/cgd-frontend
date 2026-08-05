@@ -12,10 +12,12 @@ function NonCodingRNAHelp() {
         <div className="info-section">
           <p>
             Historically, detailed non-coding RNA (ncRNA) gene annotation in CGD was largely
-            limited to <em>Candida albicans</em>. In 2026, CGD extended non-coding RNA annotation
-            to five additional species so that their genome browsers, gene pages, and search
-            results include transfer RNAs (tRNA), ribosomal RNAs (rRNA), small nucleolar RNAs
-            (snoRNA), small nuclear (spliceosomal) RNAs (snRNA), and other non-coding RNAs.
+            limited to <em>Candida albicans</em>. In 2026, CGD expanded non-coding RNA gene
+            annotation across the five species of <em>C. tropicalis</em>, <em>C. dubliniensis</em>,{' '}
+            <em>C. glabrata</em>, <em>C. parapsilosis</em>, and <em>C. auris</em> by adding transfer
+            RNAs (tRNA), ribosomal RNAs (rRNA), small nucleolar RNAs (snoRNA), small nuclear
+            (spliceosomal) RNAs (snRNA), and other non-coding RNAs. These features now appear in
+            their genome browsers, gene pages, and search results.
           </p>
         </div>
 
