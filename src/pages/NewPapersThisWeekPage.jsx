@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import referenceApi from '../api/referenceApi';
 import { renderCitationItem } from '../utils/formatCitation';
 import './NewPapersThisWeekPage.css';
 
 function NewPapersThisWeekPage() {
+  const [searchParams] = useSearchParams();
+  const requestedDays = Number.parseInt(searchParams.get('days') || '7', 10);
+  const days = Number.isFinite(requestedDays) ? Math.min(Math.max(requestedDays, 1), 365) : 7;
+  const isWeekly = days === 7;
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -13,7 +17,7 @@ function NewPapersThisWeekPage() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const result = await referenceApi.getNewPapersThisWeek(7);
+        const result = await referenceApi.getNewPapersThisWeek(days);
         setData(result);
       } catch (err) {
         setError(err.response?.data?.detail || err.message || 'Failed to load new papers');
@@ -23,7 +27,7 @@ function NewPapersThisWeekPage() {
     };
 
     fetchData();
-  }, []);
+  }, [days]);
 
   const formatDate = (isoDate) => {
     if (!isoDate) return '';
@@ -54,7 +58,7 @@ function NewPapersThisWeekPage() {
   return (
     <div className="new-papers-page">
       <header className="page-header">
-        <h1>New Papers This Week</h1>
+        <h1>{isWeekly ? 'New Papers This Week' : 'Recently Added Papers'}</h1>
         <p className="date-range">
           Papers added to CGD from {formatDate(data?.start_date)} to {formatDate(data?.end_date)}
         </p>
@@ -62,7 +66,7 @@ function NewPapersThisWeekPage() {
 
       <div className="results-summary">
         <strong>{data?.total_count || 0}</strong> paper{data?.total_count !== 1 ? 's' : ''} added
-        this week
+        {isWeekly ? ' this week' : ` in the last ${days} days`}
       </div>
 
       {data?.references?.length > 0 ? (
@@ -76,12 +80,12 @@ function NewPapersThisWeekPage() {
         </div>
       ) : (
         <div className="no-papers">
-          <p>No new papers were added to CGD this week.</p>
+          <p>No new papers were added to CGD during this period.</p>
         </div>
       )}
 
       <div className="back-link">
-        <Link to="/">Back to Home</Link>
+        <Link to="/browse/references">Back to References</Link>
       </div>
     </div>
   );

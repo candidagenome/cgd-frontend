@@ -11,9 +11,10 @@ const Citation = ({ text, pmid }) => (
         <a
           href={`/reference/${pmid}`}
           target="infowin"
+          rel="noopener noreferrer"
           title="CGD Reference"
         >
-          <img src="/images/refsml.gif" alt="CGD" />
+          CGD Reference
         </a>
         <a
           href={`https://pubmed.ncbi.nlm.nih.gov/${pmid}`}
@@ -21,7 +22,7 @@ const Citation = ({ text, pmid }) => (
           rel="noopener noreferrer"
           title="PubMed"
         >
-          <img src="/images/pubmedrefsml.gif" alt="PubMed" />
+          PubMed
         </a>
       </div>
     )}
@@ -57,48 +58,18 @@ const StrainEntry = ({ name, genotype, notes, citations }) => (
 function StrainsPage() {
   return (
     <div className="info-page">
-      <div className="info-page-content">
+      <div className="info-page-content" id="top_of_list">
         <h1>
           <em>Candida</em> Strains
         </h1>
 
         <p>
-          These lists and lineage diagrams have been compiled by CGD curators to serve as a brief
-          reference to some of the more commonly used laboratory strains of various{' '}
-          <em>Candida</em> species, rather than a comprehensive resource. The strain names on each
-          species list below link to short summary descriptions, notes and citations. If you would
-          like to suggest additions, corrections, or updates to this list, please{' '}
+          This list has been compiled by CGD curators as a brief reference to commonly used{' '}
+          <em>Candida albicans</em> laboratory strains, rather than a comprehensive resource. The
+          strain names below link to short summary descriptions, notes, and citations. If you would
+          like to suggest additions, corrections, or updates, please{' '}
           <Link to="/contact">send a message to CGD curators</Link> with details.
         </p>
-
-        <hr />
-
-        {/* Table of Contents */}
-        <section className="info-section" id="top_of_list">
-          <h2>Strain information for:</h2>
-          <ul className="strain-species-list">
-            <li>
-              <a href="#albicans">
-                <em>C. albicans</em>
-              </a>
-            </li>
-            <li>
-              <a href="#glabrata">
-                <em>C. glabrata</em>
-              </a>
-            </li>
-            <li>
-              <a href="#parapsilosis">
-                <em>C. parapsilosis</em>
-              </a>
-            </li>
-            <li>
-              <a href="#tropicalis">
-                <em>C. tropicalis</em>
-              </a>
-            </li>
-          </ul>
-        </section>
 
         <hr />
 
@@ -107,15 +78,6 @@ function StrainsPage() {
           <h2>
             <em>C. albicans</em> Laboratory Strains
           </h2>
-
-          {/* Lineage Diagram */}
-          <div className="lineage-diagram">
-            <img
-              src="/images/Calb_lineage.gif"
-              alt="C. albicans lineage diagram"
-              style={{ maxWidth: '100%', border: '2px solid #ccc' }}
-            />
-          </div>
 
           <h3>
             <em>C. albicans</em> laboratory strain descriptions and references
@@ -359,84 +321,6 @@ function StrainsPage() {
             notes="Used in early molecular studies of Candida albicans."
             citations={[]}
           />
-        </section>
-
-        <hr />
-
-        {/* C. glabrata Section */}
-        <section className="info-section strain-section" id="glabrata">
-          <h2>
-            <em>C. glabrata</em> Laboratory Strains
-          </h2>
-
-          {/* Lineage Diagram */}
-          <div className="lineage-diagram">
-            <img
-              src="/images/Cgla_lineage.gif"
-              alt="C. glabrata lineage diagram"
-              style={{ maxWidth: '100%', border: '2px solid #ccc' }}
-            />
-          </div>
-
-          <p>
-            See the{' '}
-            <a href="/Strains.shtml#glabrata">
-              full <em>C. glabrata</em> strain list
-            </a>{' '}
-            at the legacy page for complete strain information.
-          </p>
-        </section>
-
-        <hr />
-
-        {/* C. parapsilosis Section */}
-        <section className="info-section strain-section" id="parapsilosis">
-          <h2>
-            <em>C. parapsilosis</em> Laboratory Strains
-          </h2>
-
-          {/* Lineage Diagram */}
-          <div className="lineage-diagram">
-            <img
-              src="/images/Cpar_lineage.gif"
-              alt="C. parapsilosis lineage diagram"
-              style={{ maxWidth: '100%', border: '2px solid #ccc' }}
-            />
-          </div>
-
-          <p>
-            See the{' '}
-            <a href="/Strains.shtml#parapsilosis">
-              full <em>C. parapsilosis</em> strain list
-            </a>{' '}
-            at the legacy page for complete strain information.
-          </p>
-        </section>
-
-        <hr />
-
-        {/* C. tropicalis Section */}
-        <section className="info-section strain-section" id="tropicalis">
-          <h2>
-            <em>C. tropicalis</em> Laboratory Strains
-          </h2>
-
-          {/* Lineage Diagram */}
-          <div className="lineage-diagram">
-            <img
-              src="/images/Ctro_lineage.gif"
-              alt="C. tropicalis lineage diagram"
-              style={{ maxWidth: '100%', border: '2px solid #ccc' }}
-            />
-          </div>
-
-          <p>
-            See the{' '}
-            <a href="/Strains.shtml#tropicalis">
-              full <em>C. tropicalis</em> strain list
-            </a>{' '}
-            at the legacy page for complete strain information.
-          </p>
         </section>
       </div>
     </div>

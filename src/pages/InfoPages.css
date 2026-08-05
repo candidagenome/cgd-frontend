@@ -481,13 +481,23 @@
 
 .citation-links {
   display: flex;
-  gap: 8px;
+  gap: 14px;
   margin-top: 5px;
 }
 
 .citation-links img {
   height: 16px;
   vertical-align: middle;
+}
+
+.strain-entry .citation-links a {
+  color: #3377cc;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.strain-entry .citation-links a:hover {
+  text-decoration: underline;
 }
 
 .list-updated {
@@ -509,17 +519,6 @@
 }
 
 /* Strains page styles */
-.strain-species-list {
-  list-style: none;
-  padding-left: 0;
-}
-
-.strain-species-list li {
-  display: inline-block;
-  margin-right: 30px;
-  margin-bottom: 10px;
-}
-
 .strain-list {
   column-count: 3;
   column-gap: 20px;
@@ -530,16 +529,6 @@
 .strain-list li {
   break-inside: avoid;
   margin-bottom: 5px;
-}
-
-.lineage-diagram {
-  text-align: center;
-  margin: 20px 0;
-}
-
-.lineage-diagram img {
-  max-width: 100%;
-  height: auto;
 }
 
 .strain-section h2 {
@@ -916,11 +905,6 @@
 
   .strain-list {
     column-count: 1;
-  }
-
-  .strain-species-list li {
-    display: block;
-    margin-right: 0;
   }
 
   .glabrata-changes-container {

@@ -52,7 +52,7 @@ const EXPLAIN = {
   uncharacterized: 'A likely protein-coding ORF whose function has not yet been experimentally determined.',
   dubious: 'An ORF that is unlikely to encode a functional protein.',
   total_orfs: 'All open reading frames annotated in the genome (Verified + Uncharacterized + Dubious).',
-  go: 'Total Gene Ontology annotations across Molecular Function, Cellular Component and Biological Process.',
+  go: 'Distinct current gene products with a Gene Ontology annotation in any aspect.',
   trna: 'Transfer RNA genes.',
   molecular_function: 'What the gene product does at the molecular level (e.g. "transferase activity").',
   cellular_component: 'Where in the cell the gene product acts (e.g. "nucleus").',
@@ -594,8 +594,16 @@ function GenomeSnapshot2Page() {
       const fetchCompare = async () => {
         setCompareLoading((l) => ({ ...l, [abbrev]: true }));
         try {
-          const res = await genomeSnapshotApi.getSnapshot(abbrev);
-          if (res.success) setCompareData((d) => ({ ...d, [abbrev]: res }));
+          const [snapshot, inventory] = await Promise.all([
+            genomeSnapshotApi.getSnapshot(abbrev),
+            genomeSnapshotApi.getChromosomeInventory(abbrev),
+          ]);
+          if (snapshot.success) {
+            setCompareData((d) => ({
+              ...d,
+              [abbrev]: { ...snapshot, chromosomeInventory: inventory.success ? inventory : null },
+            }));
+          }
         } catch (err) {
           console.error('Compare fetch failed:', err);
         } finally {
@@ -608,14 +616,26 @@ function GenomeSnapshot2Page() {
 
   // -- derived values ------------------------------------------------------
   const isDiploid = organism ? organism.toLowerCase().includes('albicans') : false;
-  const divisor = isDiploid ? 2 : 1;
+  const referenceCounts = isDiploid && chrInventory?.grand_totals
+    ? {
+        ...data,
+        total_orfs: chrInventory.grand_totals.total_orfs,
+        verified_orfs: chrInventory.grand_totals.verified_orfs,
+        uncharacterized_orfs: chrInventory.grand_totals.uncharacterized_orfs,
+        dubious_orfs: chrInventory.grand_totals.dubious_orfs,
+        trna_count: chrInventory.grand_totals.trna,
+        snorna_count: chrInventory.grand_totals.snorna,
+      }
+    : data;
 
-  const orfCounts = data ? {
-    verified: data.verified_orfs,
-    uncharacterized: data.uncharacterized_orfs,
-    dubious: data.dubious_orfs,
+  const orfCounts = referenceCounts ? {
+    verified: referenceCounts.verified_orfs,
+    uncharacterized: referenceCounts.uncharacterized_orfs,
+    dubious: referenceCounts.dubious_orfs,
   } : null;
-  const orfTotal = data ? data.verified_orfs + data.uncharacterized_orfs + data.dubious_orfs : 0;
+  const orfTotal = referenceCounts
+    ? referenceCounts.verified_orfs + referenceCounts.uncharacterized_orfs + referenceCounts.dubious_orfs
+    : 0;
 
   const inventoryRows = useMemo(() => {
     if (!data) return [];
@@ -624,14 +644,11 @@ function GenomeSnapshot2Page() {
       .map((def) => {
         const total = data[def.field] || 0;
         if (!def.always && total <= 0) return null;
-        const haploid = def.haploidField
-          ? (data[def.haploidField] || 0)
-          : Math.round(total / divisor);
         const pct = totalFeatures > 0 ? (total / totalFeatures) * 100 : 0;
-        return { ...def, total, haploid, pct };
+        return { ...def, total, pct };
       })
       .filter(Boolean);
-  }, [data, divisor]);
+  }, [data]);
 
   const filteredInventory = useMemo(() => {
     let rows = inventoryRows;
@@ -643,7 +660,6 @@ function GenomeSnapshot2Page() {
     const dir = invSort.dir === 'asc' ? 1 : -1;
     const val = (r) => {
       if (invSort.key === 'label') return r.label.toLowerCase();
-      if (invSort.key === 'haploid') return r.haploid;
       if (invSort.key === 'pct') return r.pct;
       return r.total;
     };
@@ -665,6 +681,18 @@ function GenomeSnapshot2Page() {
     [displayChromosomes]
   );
 
+  const chromosomeTotals = useMemo(() => {
+    const fields = [
+      'length_bp', 'total_orfs', 'verified_orfs', 'uncharacterized_orfs',
+      'dubious_orfs', 'trna', 'snorna', 'rrna', 'ncrna', 'pseudogene',
+      'total_features',
+    ];
+    return Object.fromEntries(fields.map((field) => [
+      field,
+      displayChromosomes.reduce((sum, chr) => sum + (chr[field] || 0), 0),
+    ]));
+  }, [displayChromosomes]);
+
   const toggleChrSelection = (chrId) => {
     setSelectedChrs((prev) => {
       if (prev.includes(chrId)) return prev.filter((c) => c !== chrId);
@@ -680,8 +708,8 @@ function GenomeSnapshot2Page() {
   };
 
   const exportInventory = () => {
-    const rows = [['Feature Type', 'Total', 'Haploid Total', '% of total features']];
-    filteredInventory.forEach((r) => rows.push([r.label, r.total, r.haploid, r.pct.toFixed(2)]));
+    const rows = [['Feature Type', 'Database count', '% of total features']];
+    filteredInventory.forEach((r) => rows.push([r.label, r.total, r.pct.toFixed(2)]));
     downloadCsv(`${organism}_genome_inventory.csv`, rows);
   };
 
@@ -695,7 +723,7 @@ function GenomeSnapshot2Page() {
     ];
     const rows = [header];
     fields.forEach(([label, f]) => {
-      rows.push([label, chrInventory?.grand_totals?.[f] ?? '', ...displayChromosomes.map((c) => c[f] ?? '')]);
+      rows.push([label, chromosomeTotals[f] ?? '', ...displayChromosomes.map((c) => c[f] ?? '')]);
     });
     downloadCsv(`${organism}_chromosome_inventory.csv`, rows);
   };
@@ -746,15 +774,15 @@ function GenomeSnapshot2Page() {
   }
 
   const fullName = `${data.organism_name} ${data.strain}`;
-  const goTotal = data.go_annotations?.total || 0;
+  const uniqueGoProducts = data.go_annotations?.unique_gene_products || 0;
 
   // "Genome at a glance" cards.
   const cards = [
-    { label: 'Total ORFs', value: data.total_orfs, sub: 'all open reading frames', href: featureSearchUrl(organism, 'featuretype=ORF'), cta: 'View genes →', color: '#555' },
-    { label: 'Verified ORFs', value: data.verified_orfs, sub: orfTotal ? `${((data.verified_orfs / orfTotal) * 100).toFixed(1)}%` : '', href: featureSearchUrl(organism, 'qualifier=Verified&featuretype=ORF'), cta: 'View genes →', color: '#4169E1' },
-    { label: 'Uncharacterized ORFs', value: data.uncharacterized_orfs, sub: orfTotal ? `${((data.uncharacterized_orfs / orfTotal) * 100).toFixed(1)}%` : '', href: featureSearchUrl(organism, 'qualifier=Uncharacterized&featuretype=ORF'), cta: 'View genes →', color: '#228B22' },
-    { label: 'Dubious ORFs', value: data.dubious_orfs, sub: orfTotal ? `${((data.dubious_orfs / orfTotal) * 100).toFixed(1)}%` : '', href: featureSearchUrl(organism, 'qualifier=Dubious&featuretype=ORF'), cta: 'View genes →', color: '#DC143C' },
-    { label: 'GO annotations', value: goTotal, sub: 'across all 3 aspects', scroll: 'go-annotations', cta: 'Explore GO →', color: '#8e44ad' },
+    { label: 'Reference ORFs', value: referenceCounts.total_orfs, sub: isDiploid ? 'haploid representative set' : 'all open reading frames', href: featureSearchUrl(organism, 'featuretype=ORF'), cta: 'View genes →', color: '#555' },
+    { label: 'Verified ORFs', value: referenceCounts.verified_orfs, sub: orfTotal ? `${((referenceCounts.verified_orfs / orfTotal) * 100).toFixed(1)}%` : '', href: featureSearchUrl(organism, 'qualifier=Verified&featuretype=ORF'), cta: 'View genes →', color: '#4169E1' },
+    { label: 'Uncharacterized ORFs', value: referenceCounts.uncharacterized_orfs, sub: orfTotal ? `${((referenceCounts.uncharacterized_orfs / orfTotal) * 100).toFixed(1)}%` : '', href: featureSearchUrl(organism, 'qualifier=Uncharacterized&featuretype=ORF'), cta: 'View genes →', color: '#228B22' },
+    { label: 'Dubious ORFs', value: referenceCounts.dubious_orfs, sub: orfTotal ? `${((referenceCounts.dubious_orfs / orfTotal) * 100).toFixed(1)}%` : '', href: featureSearchUrl(organism, 'qualifier=Dubious&featuretype=ORF'), cta: 'View genes →', color: '#DC143C' },
+    { label: 'GO-annotated gene products', value: uniqueGoProducts, sub: 'unique across all 3 aspects', scroll: 'go-annotations', cta: 'Explore GO →', color: '#8e44ad' },
   ];
 
   const selectedChrObjs = selectedChrs
@@ -763,13 +791,32 @@ function GenomeSnapshot2Page() {
 
   const otherOrganisms = organisms.filter((o) => o.organism_abbrev !== organism);
 
+  const comparableSnapshot = (snapshot) => {
+    const totals = snapshot?.chromosomeInventory?.grand_totals;
+    if (!snapshot || !snapshot.organism_abbrev?.toLowerCase().includes('albicans') || !totals) {
+      return snapshot;
+    }
+    return {
+      ...snapshot,
+      total_orfs: totals.total_orfs,
+      verified_orfs: totals.verified_orfs,
+      uncharacterized_orfs: totals.uncharacterized_orfs,
+      dubious_orfs: totals.dubious_orfs,
+      trna_count: totals.trna,
+      snorna_count: totals.snorna,
+    };
+  };
+
   return (
     <div className="info-page genome-snapshot-page gs2-page">
       <Tooltip tip={tip} />
 
       <div className="info-page-content">
         <div className="snapshot-header">
-          <h1><em>{fullName}</em> Genome Snapshot — Explore this Genome</h1>
+          <div className="gs2-title-block">
+            <h1><em>{fullName}</em> Genome Snapshot</h1>
+            <p>Explore this genome’s reference gene set, annotated features, chromosomes, and functional coverage.</p>
+          </div>
           <a href="/help/genome-snapshot" className="help-button" title="Help" target={LINK_TARGET} rel="noopener">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="12" cy="12" r="10" stroke="#0066cc" strokeWidth="2" fill="white" />
@@ -833,7 +880,7 @@ function GenomeSnapshot2Page() {
           <div className="gs2-explore-panel">
             <h3>Explore this genome</h3>
             <div className="gs2-explore-links">
-              <a href="/feature-search" target={LINK_TARGET} rel="noopener">🔍 Find a gene or feature</a>
+              <a href={`/feature-search?organism=${encodeURIComponent(organism)}`} target={LINK_TARGET} rel="noopener">🔍 Find a gene or feature</a>
               <button type="button" onClick={() => document.getElementById('chromosomes')?.scrollIntoView({ behavior: 'smooth' })}>🧬 Browse a chromosome</button>
               <button type="button" onClick={() => document.getElementById('go-categories')?.scrollIntoView({ behavior: 'smooth' })}>🏷️ Search GO annotations</button>
               <a href={jbrowseMenuUrl(organism)} target={LINK_TARGET} rel="noopener">🗺️ View in JBrowse</a>
@@ -894,9 +941,14 @@ function GenomeSnapshot2Page() {
           <h2 className="gs2-h2">
             Genome Inventory
             <HelpDrawer>
-              <p>Counts of every annotated feature type across the full assembly. Use the search box, category filter and column headers to focus the table, then download the current view. Click a feature-type name to retrieve that exact set of features in Advanced Search.</p>
+              <p>Database counts of annotated feature types across the full assembly. For diploid <em>C. albicans</em>, these are allele-level records and should not be converted to haploid counts by dividing by two. Use the reference-set overview and chromosome table for comparable gene counts.</p>
             </HelpDrawer>
           </h2>
+
+          <p className="gs2-note">
+            Non-coding RNA feature types (tRNA, rRNA, snoRNA, snRNA, and other ncRNAs) —{' '}
+            <Link to="/help/non-coding-rna">how these annotations were identified</Link>.
+          </p>
 
           <div className="gs2-table-controls">
             <input
@@ -926,8 +978,7 @@ function GenomeSnapshot2Page() {
             <thead>
               <tr>
                 <SortHeader label="Feature Type" col="label" sort={invSort} onSort={handleInvSort} align="left" />
-                <SortHeader label="Total" col="total" sort={invSort} onSort={handleInvSort} />
-                <SortHeader label="Haploid Total" col="haploid" sort={invSort} onSort={handleInvSort} />
+                <SortHeader label={isDiploid ? 'Allele-level count' : 'Count'} col="total" sort={invSort} onSort={handleInvSort} />
                 <SortHeader label="% of total features" col="pct" sort={invSort} onSort={handleInvSort} />
               </tr>
             </thead>
@@ -939,7 +990,6 @@ function GenomeSnapshot2Page() {
                     <span className="gs2-cat-tag">{CATEGORY_LABELS[r.category]}</span>
                   </td>
                   <td>{fmt(r.total)}</td>
-                  <td>{fmt(r.haploid)}</td>
                   <td>{r.pct.toFixed(2)}%</td>
                 </tr>
               ))}
@@ -947,7 +997,6 @@ function GenomeSnapshot2Page() {
                 <tr className="total-row">
                   <td style={{ textAlign: 'left' }}><strong>Total features</strong></td>
                   <td><strong>{fmt(data.total_features)}</strong></td>
-                  <td><strong>{fmt(Math.round(data.total_features / divisor))}</strong></td>
                   <td><strong>100%</strong></td>
                 </tr>
               )}
@@ -966,9 +1015,8 @@ function GenomeSnapshot2Page() {
           </h2>
 
           <p className="gs2-note">
-            <strong>Note:</strong> Chromosome counts represent the haploid reference assembly. The Genome
-            Inventory above reports {fmt(data.total_orfs)} total ORFs; the per-chromosome table below sums to{' '}
-            {fmt(chrInventory?.grand_totals?.total_orfs)} because it counts the haploid set.
+            <strong>Note:</strong> Chromosome counts represent the reference set used for cross-species comparison.
+            {isDiploid && <> For <em>C. albicans</em>, A chromosomes plus the mitochondrial genome are shown; alternate B homologs are excluded.</>}
           </p>
 
           {chrInventoryLoading ? (
@@ -1054,33 +1102,33 @@ function GenomeSnapshot2Page() {
                     </tr>
                   </thead>
                   <tbody>
-                    <ChrRow label="Total ORFs" field="total_orfs" chrs={displayChromosomes} totals={chrInventory.grand_totals} selected={selectedChrs} onSelect={toggleChrSelection} />
+                    <ChrRow label="Total ORFs" field="total_orfs" chrs={displayChromosomes} totals={chromosomeTotals} selected={selectedChrs} onSelect={toggleChrSelection} />
                     {chrInventory.feature_types?.includes('Verified ORFs') && (
-                      <ChrRow label="Verified ORFs" field="verified_orfs" chrs={displayChromosomes} totals={chrInventory.grand_totals} selected={selectedChrs} onSelect={toggleChrSelection} link={featureSearchUrl(organism, 'qualifier=Verified&featuretype=ORF')} />
+                      <ChrRow label="Verified ORFs" field="verified_orfs" chrs={displayChromosomes} totals={chromosomeTotals} selected={selectedChrs} onSelect={toggleChrSelection} link={featureSearchUrl(organism, 'qualifier=Verified&featuretype=ORF')} />
                     )}
                     {chrInventory.feature_types?.includes('Uncharacterized ORFs') && (
-                      <ChrRow label="Uncharacterized ORFs" field="uncharacterized_orfs" chrs={displayChromosomes} totals={chrInventory.grand_totals} selected={selectedChrs} onSelect={toggleChrSelection} link={featureSearchUrl(organism, 'qualifier=Uncharacterized&featuretype=ORF')} />
+                      <ChrRow label="Uncharacterized ORFs" field="uncharacterized_orfs" chrs={displayChromosomes} totals={chromosomeTotals} selected={selectedChrs} onSelect={toggleChrSelection} link={featureSearchUrl(organism, 'qualifier=Uncharacterized&featuretype=ORF')} />
                     )}
                     {chrInventory.feature_types?.includes('Dubious ORFs') && (
-                      <ChrRow label="Dubious ORFs" field="dubious_orfs" chrs={displayChromosomes} totals={chrInventory.grand_totals} selected={selectedChrs} onSelect={toggleChrSelection} link={featureSearchUrl(organism, 'qualifier=Dubious&featuretype=ORF')} />
+                      <ChrRow label="Dubious ORFs" field="dubious_orfs" chrs={displayChromosomes} totals={chromosomeTotals} selected={selectedChrs} onSelect={toggleChrSelection} link={featureSearchUrl(organism, 'qualifier=Dubious&featuretype=ORF')} />
                     )}
                     {chrInventory.feature_types?.includes('tRNA') && (
-                      <ChrRow label="tRNA" field="trna" chrs={displayChromosomes} totals={chrInventory.grand_totals} selected={selectedChrs} onSelect={toggleChrSelection} link={featureSearchUrl(organism, 'featuretype=tRNA')} />
+                      <ChrRow label="tRNA" field="trna" chrs={displayChromosomes} totals={chromosomeTotals} selected={selectedChrs} onSelect={toggleChrSelection} link={featureSearchUrl(organism, 'featuretype=tRNA')} />
                     )}
                     {chrInventory.feature_types?.includes('snoRNA') && (
-                      <ChrRow label="snoRNA" field="snorna" chrs={displayChromosomes} totals={chrInventory.grand_totals} selected={selectedChrs} onSelect={toggleChrSelection} link={featureSearchUrl(organism, 'featuretype=snoRNA')} />
+                      <ChrRow label="snoRNA" field="snorna" chrs={displayChromosomes} totals={chromosomeTotals} selected={selectedChrs} onSelect={toggleChrSelection} link={featureSearchUrl(organism, 'featuretype=snoRNA')} />
                     )}
                     {chrInventory.feature_types?.includes('rRNA') && (
-                      <ChrRow label="rRNA" field="rrna" chrs={displayChromosomes} totals={chrInventory.grand_totals} selected={selectedChrs} onSelect={toggleChrSelection} link={featureSearchUrl(organism, 'featuretype=rRNA')} />
+                      <ChrRow label="rRNA" field="rrna" chrs={displayChromosomes} totals={chromosomeTotals} selected={selectedChrs} onSelect={toggleChrSelection} link={featureSearchUrl(organism, 'featuretype=rRNA')} />
                     )}
                     {chrInventory.feature_types?.includes('ncRNA') && (
-                      <ChrRow label="ncRNA" field="ncrna" chrs={displayChromosomes} totals={chrInventory.grand_totals} selected={selectedChrs} onSelect={toggleChrSelection} link={featureSearchUrl(organism, 'featuretype=ncRNA')} />
+                      <ChrRow label="ncRNA" field="ncrna" chrs={displayChromosomes} totals={chromosomeTotals} selected={selectedChrs} onSelect={toggleChrSelection} link={featureSearchUrl(organism, 'featuretype=ncRNA')} />
                     )}
                     {chrInventory.feature_types?.includes('Pseudogene') && (
-                      <ChrRow label="Pseudogene" field="pseudogene" chrs={displayChromosomes} totals={chrInventory.grand_totals} selected={selectedChrs} onSelect={toggleChrSelection} link={featureSearchUrl(organism, 'featuretype=pseudogene')} />
+                      <ChrRow label="Pseudogene" field="pseudogene" chrs={displayChromosomes} totals={chromosomeTotals} selected={selectedChrs} onSelect={toggleChrSelection} link={featureSearchUrl(organism, 'featuretype=pseudogene')} />
                     )}
-                    <ChrRow label="Total" field="total_features" chrs={displayChromosomes} totals={chrInventory.grand_totals} selected={selectedChrs} onSelect={toggleChrSelection} totalRow />
-                    <ChrRow label="Chromosome length (bp)" field="length_bp" chrs={displayChromosomes} totals={chrInventory.grand_totals} selected={selectedChrs} onSelect={toggleChrSelection} />
+                    <ChrRow label="Chromosome feature placements" field="total_features" chrs={displayChromosomes} totals={chromosomeTotals} selected={selectedChrs} onSelect={toggleChrSelection} totalRow />
+                    <ChrRow label="Chromosome length (bp)" field="length_bp" chrs={displayChromosomes} totals={chromosomeTotals} selected={selectedChrs} onSelect={toggleChrSelection} />
                   </tbody>
                 </table>
               </div>
@@ -1093,14 +1141,14 @@ function GenomeSnapshot2Page() {
         {/* ========================= GO ANNOTATIONS ========================= */}
         <section className="info-section gs2-section" id="go-annotations">
           <h2 className="gs2-h2">
-            Summary of GO Annotations
+            GO Annotation Coverage
             <HelpDrawer>
-              <p>Total number of gene products annotated to each Gene Ontology aspect. These include Verified and Uncharacterized ORFs, transposable-element genes and all RNA gene products. Click an aspect to jump to its interactive category chart.</p>
+              <p>Distinct current gene products with at least one annotation in each Gene Ontology aspect. A gene product can appear in more than one row, so the aspect counts must not be added to obtain a unique total. For diploid <em>C. albicans</em>, these are database gene-product records across both homologs rather than a divided haploid estimate.</p>
             </HelpDrawer>
           </h2>
           <table className="snapshot-table go-table">
             <thead>
-              <tr><th>Ontology</th><th>Total Annotations</th><th>Explore</th></tr>
+              <tr><th>Ontology</th><th>Annotated gene products</th><th>Explore</th></tr>
             </thead>
             <tbody>
               {GO_ASPECTS.map((a) => (
@@ -1115,8 +1163,8 @@ function GenomeSnapshot2Page() {
                 </tr>
               ))}
               <tr className="total-row">
-                <th>All Ontologies</th>
-                <td>{fmt(goTotal)}</td>
+                <th>Unique across all aspects</th>
+                <td>{fmt(uniqueGoProducts)}</td>
                 <td></td>
               </tr>
             </tbody>
@@ -1128,7 +1176,7 @@ function GenomeSnapshot2Page() {
           <h2 className="gs2-h2">
             GO Categories (GO Slim distribution)
             <HelpDrawer>
-              <p>Distribution of gene products across a <em>Candida</em>-tailored GO Slim (a high-level subset of GO terms). Switch aspects with the tabs, toggle count vs. percentage, choose how many categories to show, or search for a term such as "biofilm", "mitochondrion" or "transport". Click any bar to open that GO category.</p>
+              <p>Distribution of gene products across a <em>Candida</em>-tailored GO Slim (a high-level subset of GO terms). Percentages use the number of annotated gene products in the selected aspect as their denominator. Because one gene product can map to multiple Slim terms, category percentages are not expected to sum to 100%.</p>
             </HelpDrawer>
           </h2>
 
@@ -1195,7 +1243,7 @@ function GenomeSnapshot2Page() {
           <h2 className="gs2-h2">
             Compare with another Candida genome
             <HelpDrawer>
-              <p>Select one or more other genomes to see a side-by-side summary of ORF counts, RNA features, genome-wide totals and GO annotation coverage. Data is fetched live from each genome's snapshot.</p>
+              <p>Select one or more other genomes to compare reference-set ORF and RNA counts. For diploid <em>C. albicans</em>, the A-chromosome representative set is used so its values are comparable with the other genomes.</p>
             </HelpDrawer>
           </h2>
           <div className="gs2-compare-chips" role="group" aria-label="Genomes to compare">
@@ -1228,21 +1276,19 @@ function GenomeSnapshot2Page() {
                 </thead>
                 <tbody>
                   {[
-                    { label: 'Total ORFs', get: (d) => d.total_orfs },
+                    { label: 'Reference ORFs', get: (d) => d.total_orfs },
                     { label: 'Verified ORFs', get: (d) => d.verified_orfs },
                     { label: 'Uncharacterized ORFs', get: (d) => d.uncharacterized_orfs },
                     { label: 'Dubious ORFs', get: (d) => d.dubious_orfs },
                     { label: 'tRNA', get: (d) => d.trna_count },
                     { label: 'snoRNA', get: (d) => d.snorna_count },
-                    { label: 'Total features', get: (d) => d.total_features },
-                    { label: 'GO annotations (total)', get: (d) => d.go_annotations?.total },
                   ].map((row) => (
                     <tr key={row.label}>
                       <td style={{ textAlign: 'left' }}>{row.label}</td>
-                      <td>{fmt(row.get(data))}</td>
+                      <td>{fmt(row.get(referenceCounts))}</td>
                       {compareWith.map((abbrev) => (
                         <td key={abbrev}>
-                          {compareLoading[abbrev] ? '…' : (compareData[abbrev] ? fmt(row.get(compareData[abbrev])) : '—')}
+                          {compareLoading[abbrev] ? '…' : (compareData[abbrev] ? fmt(row.get(comparableSnapshot(compareData[abbrev]))) : '—')}
                         </td>
                       ))}
                     </tr>
@@ -1262,7 +1308,7 @@ function GenomeSnapshot2Page() {
             <div>
               <h4>Explore</h4>
               <ul>
-                <li><a href="/feature-search" target={LINK_TARGET} rel="noopener">Advanced Search</a></li>
+                <li><a href={`/feature-search?organism=${encodeURIComponent(organism)}`} target={LINK_TARGET} rel="noopener">Advanced Search</a></li>
                 <li><a href={jbrowseMenuUrl(organism)} target={LINK_TARGET} rel="noopener">JBrowse genome browser</a></li>
                 <li><a href="/go-slim-mapper" target={LINK_TARGET} rel="noopener">GO Slim Mapper</a></li>
                 <li><a href="/download" target={LINK_TARGET} rel="noopener">Download Data</a></li>

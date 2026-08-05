@@ -315,7 +315,10 @@
             }
           }
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"/locus/'+replace(feature.id,'-T','')+'\" target=\"_blank\" rel=\"noopener\">'+feature.id+'</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -359,7 +362,10 @@
             }
           }
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"/locus/'+replace(feature.id,'-T','')+'\" target=\"_blank\" rel=\"noopener\">'+feature.id+'</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -403,7 +409,10 @@
             }
           }
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"/locus/'+replace(feature.id,'-T','')+'\" target=\"_blank\" rel=\"noopener\">'+feature.id+'</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -447,7 +456,10 @@
             }
           }
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"/locus/'+replace(feature.id,'-T','')+'\" target=\"_blank\" rel=\"noopener\">'+feature.id+'</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -491,7 +503,10 @@
             }
           }
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"/locus/'+replace(feature.id,'-T','')+'\" target=\"_blank\" rel=\"noopener\">'+feature.id+'</a>'}"
+      }
     },
     {
       "type": "FeatureTrack",
@@ -535,7 +550,10 @@
             }
           }
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"/locus/'+replace(feature.id,'-T','')+'\" target=\"_blank\" rel=\"noopener\">'+feature.id+'</a>'}"
+      }
     },
     {
       "type": "QuantitativeTrack",
@@ -3725,6 +3743,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Bruno_2010"
       ],
       "metadata": {
@@ -3747,6 +3766,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Bruno_2010"
       ],
       "metadata": {
@@ -3769,6 +3789,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Bruno_2010"
       ],
       "metadata": {
@@ -3791,6 +3812,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Bruno_2010"
       ],
       "metadata": {
@@ -3813,6 +3835,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Bruno_2010"
       ],
       "metadata": {
@@ -3835,6 +3858,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Bruno_2010"
       ],
       "metadata": {
@@ -3857,6 +3881,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Bruno_2010"
       ],
       "metadata": {
@@ -3879,6 +3904,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Bruno_2010"
       ],
       "metadata": {
@@ -3901,6 +3927,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Bruno_2010"
       ],
       "metadata": {
@@ -3923,6 +3950,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Bruno_2010"
       ],
       "metadata": {
@@ -3945,6 +3973,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Bruno_2010"
       ],
       "metadata": {
@@ -3967,6 +3996,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Bruno_2010"
       ],
       "metadata": {
@@ -3989,6 +4019,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Bruno_2010"
       ],
       "metadata": {
@@ -4011,6 +4042,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Bruno_2010"
       ],
       "metadata": {
@@ -4033,6 +4065,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Bruno_2010"
       ],
       "metadata": {
@@ -4055,6 +4088,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Bruno_2010"
       ],
       "metadata": {
@@ -4077,6 +4111,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Bruno_2010"
       ],
       "metadata": {
@@ -4099,6 +4134,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Bruno_2010"
       ],
       "metadata": {
@@ -4121,6 +4157,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Bruno_2010"
       ],
       "metadata": {
@@ -4143,6 +4180,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Bruno_2010"
       ],
       "metadata": {
@@ -4165,6 +4203,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Bruno_2010"
       ],
       "metadata": {
@@ -4187,6 +4226,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Bruno_2010"
       ],
       "metadata": {
@@ -4209,6 +4249,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Desai_2013"
       ],
       "metadata": {
@@ -4231,6 +4272,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Desai_2013"
       ],
       "metadata": {
@@ -4253,6 +4295,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Desai_2013"
       ],
       "metadata": {
@@ -4275,6 +4318,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Desai_2013"
       ],
       "metadata": {
@@ -4297,6 +4341,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Desai_2013"
       ],
       "metadata": {
@@ -4319,6 +4364,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Desai_2013"
       ],
       "metadata": {
@@ -4341,6 +4387,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Desai_2013"
       ],
       "metadata": {
@@ -4363,6 +4410,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Desai_2013"
       ],
       "metadata": {
@@ -4385,6 +4433,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Desai_2013"
       ],
       "metadata": {
@@ -4407,6 +4456,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Desai_2013"
       ],
       "metadata": {
@@ -4429,6 +4479,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Desai_2013"
       ],
       "metadata": {
@@ -4451,6 +4502,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Desai_2013"
       ],
       "metadata": {
@@ -4473,6 +4525,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Desai_2013"
       ],
       "metadata": {
@@ -4495,6 +4548,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Desai_2013"
       ],
       "metadata": {
@@ -4517,6 +4571,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Desai_2013"
       ],
       "metadata": {
@@ -4539,6 +4594,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Desai_2013"
       ],
       "metadata": {
@@ -4561,6 +4617,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Desai_2013"
       ],
       "metadata": {
@@ -4583,6 +4640,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Desai_2013"
       ],
       "metadata": {
@@ -4605,6 +4663,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Desai_2013"
       ],
       "metadata": {
@@ -4627,6 +4686,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Desai_2013"
       ],
       "metadata": {
@@ -4649,6 +4709,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Glazier_2023"
       ],
       "metadata": {
@@ -4672,6 +4733,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Glazier_2023"
       ],
       "metadata": {
@@ -4695,6 +4757,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Glazier_2023"
       ],
       "metadata": {
@@ -4724,6 +4787,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Glazier_2023"
       ],
       "metadata": {
@@ -4753,6 +4817,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Glazier_2023"
       ],
       "metadata": {
@@ -4782,6 +4847,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Glazier_2023"
       ],
       "metadata": {
@@ -4811,6 +4877,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Glazier_2023"
       ],
       "metadata": {
@@ -4840,6 +4907,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Glazier_2023"
       ],
       "metadata": {
@@ -4869,6 +4937,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Glazier_2023"
       ],
       "metadata": {
@@ -4898,6 +4967,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Glazier_2023"
       ],
       "metadata": {
@@ -4927,6 +4997,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Glazier_2023"
       ],
       "metadata": {
@@ -4956,6 +5027,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Glazier_2023"
       ],
       "metadata": {
@@ -4985,6 +5057,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Glazier_2023"
       ],
       "metadata": {
@@ -5008,6 +5081,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Glazier_2023"
       ],
       "metadata": {
@@ -5031,6 +5105,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Glazier_2023"
       ],
       "metadata": {
@@ -5060,6 +5135,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Glazier_2023"
       ],
       "metadata": {
@@ -5089,6 +5165,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Glazier_2023"
       ],
       "metadata": {
@@ -5118,6 +5195,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Glazier_2023"
       ],
       "metadata": {
@@ -5147,6 +5225,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Glazier_2023"
       ],
       "metadata": {
@@ -5176,6 +5255,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Glazier_2023"
       ],
       "metadata": {
@@ -5205,6 +5285,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Glazier_2023"
       ],
       "metadata": {
@@ -5234,6 +5315,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Glazier_2023"
       ],
       "metadata": {
@@ -5263,6 +5345,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Glazier_2023"
       ],
       "metadata": {
@@ -5292,6 +5375,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Glazier_2023"
       ],
       "metadata": {
@@ -5321,6 +5405,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Mutation Comparison",
         "Iracane_2024"
       ],
       "metadata": {
@@ -5343,6 +5428,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Mutation Comparison",
         "Iracane_2024_sRNA"
       ],
       "displays": [
@@ -5371,6 +5457,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Mutation Comparison",
         "Iracane_2024_sRNA"
       ],
       "displays": [
@@ -5399,6 +5486,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Mutation Comparison",
         "Iracane_2024_sRNA"
       ],
       "displays": [
@@ -5427,6 +5515,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Mutation Comparison",
         "Iracane_2024_sRNA"
       ],
       "displays": [
@@ -5455,6 +5544,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Mutation Comparison",
         "Iracane_2024_sRNA"
       ],
       "displays": [
@@ -5483,6 +5573,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Mutation Comparison",
         "Iracane_2024_sRNA"
       ],
       "displays": [
@@ -5511,6 +5602,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Mutation Comparison",
         "Iracane_2024_sRNA"
       ],
       "displays": [
@@ -5539,6 +5631,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Mutation Comparison",
         "Iracane_2024_sRNA"
       ],
       "displays": [
@@ -5567,6 +5660,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Mutation Comparison",
         "Iracane_2024_sRNA"
       ],
       "displays": [
@@ -5595,6 +5689,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Mutation Comparison",
         "Iracane_2024_sRNA"
       ],
       "displays": [
@@ -6179,6 +6274,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Niemiec_2017"
       ],
       "metadata": {
@@ -6201,6 +6297,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Niemiec_2017"
       ],
       "metadata": {
@@ -6223,6 +6320,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Niemiec_2017"
       ],
       "metadata": {
@@ -6245,6 +6343,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Niemiec_2017"
       ],
       "metadata": {
@@ -6267,6 +6366,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Niemiec_2017"
       ],
       "metadata": {
@@ -6289,6 +6389,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Niemiec_2017"
       ],
       "metadata": {
@@ -6311,6 +6412,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Niemiec_2017"
       ],
       "metadata": {
@@ -6333,6 +6435,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Niemiec_2017"
       ],
       "metadata": {
@@ -6355,6 +6458,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Niemiec_2017"
       ],
       "metadata": {
@@ -6377,6 +6481,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Niemiec_2017"
       ],
       "metadata": {
@@ -6399,6 +6504,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Niemiec_2017"
       ],
       "metadata": {
@@ -6421,6 +6527,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Niemiec_2017"
       ],
       "metadata": {
@@ -6443,6 +6550,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Niemiec_2017"
       ],
       "metadata": {
@@ -6465,6 +6573,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Niemiec_2017"
       ],
       "metadata": {
@@ -6487,6 +6596,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Niemiec_2017"
       ],
       "metadata": {
@@ -6509,6 +6619,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Niemiec_2017"
       ],
       "metadata": {
@@ -6531,6 +6642,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Niemiec_2017"
       ],
       "metadata": {
@@ -6553,6 +6665,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Niemiec_2017"
       ],
       "metadata": {
@@ -6575,6 +6688,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Niemiec_2017"
       ],
       "metadata": {
@@ -6597,6 +6711,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Niemiec_2017"
       ],
       "metadata": {
@@ -6619,6 +6734,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Niemiec_2017"
       ],
       "metadata": {
@@ -6641,6 +6757,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Niemiec_2017"
       ],
       "metadata": {
@@ -6663,6 +6780,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Niemiec_2017"
       ],
       "metadata": {
@@ -6685,6 +6803,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Niemiec_2017"
       ],
       "metadata": {
@@ -6707,6 +6826,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -6729,6 +6849,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -6751,6 +6872,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -6773,6 +6895,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -6795,6 +6918,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -6817,6 +6941,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -6839,6 +6964,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -6861,6 +6987,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -6883,6 +7010,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -6905,6 +7033,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -6927,6 +7056,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -6949,6 +7079,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -6971,6 +7102,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -6993,6 +7125,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -7015,6 +7148,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -7037,6 +7171,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -7059,6 +7194,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -7081,6 +7217,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -7103,6 +7240,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -7125,6 +7263,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -7147,6 +7286,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -7169,6 +7309,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -7191,6 +7332,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -7213,6 +7355,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -7235,6 +7378,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -7257,6 +7401,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -7279,6 +7424,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -7301,6 +7447,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -7323,6 +7470,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -7345,6 +7493,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -7367,6 +7516,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -7389,6 +7539,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -7411,6 +7562,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -7433,6 +7585,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -7455,6 +7608,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -7477,6 +7631,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Rai_2024"
       ],
       "metadata": {
@@ -7499,6 +7654,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -7528,6 +7684,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -7557,6 +7714,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -7586,6 +7744,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -7615,6 +7774,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -7644,6 +7804,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -7673,6 +7834,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -7702,6 +7864,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -7731,6 +7894,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -7760,6 +7924,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -7789,6 +7954,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -7818,6 +7984,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -7847,6 +8014,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -7876,6 +8044,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -7905,6 +8074,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -7934,6 +8104,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -7963,6 +8134,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -7992,6 +8164,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -8021,6 +8194,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -8050,6 +8224,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -8079,6 +8254,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -8108,6 +8284,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -8137,6 +8314,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -8166,6 +8344,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -8195,6 +8374,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -8224,6 +8404,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -8253,6 +8434,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -8282,6 +8464,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -8311,6 +8494,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -8340,6 +8524,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -8369,6 +8554,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -8398,6 +8584,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "metadata": {
@@ -8427,6 +8614,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Cell Type Switching",
         "Xie_2013"
       ],
       "metadata": {
@@ -8449,6 +8637,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Cell Type Switching",
         "Xie_2013"
       ],
       "metadata": {
@@ -8471,6 +8660,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Cell Type Switching",
         "Xie_2013"
       ],
       "metadata": {
@@ -8493,6 +8683,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Cell Type Switching",
         "Xie_2013"
       ],
       "metadata": {
@@ -8515,6 +8706,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "DNA Damage Response",
         "Zhang_2015"
       ],
       "metadata": {
@@ -8544,6 +8736,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "DNA Damage Response",
         "Zhang_2015"
       ],
       "metadata": {
@@ -8573,6 +8766,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "DNA Damage Response",
         "Zhang_2015"
       ],
       "metadata": {
@@ -8602,6 +8796,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "DNA Damage Response",
         "Zhang_2015"
       ],
       "metadata": {
@@ -8631,6 +8826,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "DNA Damage Response",
         "Zhang_2015"
       ],
       "metadata": {
@@ -8660,6 +8856,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "DNA Damage Response",
         "Zhang_2015"
       ],
       "metadata": {
@@ -8689,6 +8886,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "DNA Damage Response",
         "Zhang_2015"
       ],
       "metadata": {
@@ -8718,6 +8916,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "DNA Damage Response",
         "Zhang_2015"
       ],
       "metadata": {
@@ -8747,6 +8946,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "DNA Damage Response",
         "Zhang_2015"
       ],
       "metadata": {
@@ -8776,6 +8976,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "DNA Damage Response",
         "Zhang_2015"
       ],
       "metadata": {
@@ -8805,6 +9006,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "DNA Damage Response",
         "Zhang_2015"
       ],
       "metadata": {
@@ -8834,6 +9036,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "DNA Damage Response",
         "Zhang_2015"
       ],
       "metadata": {
@@ -8863,6 +9066,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Bhakt_2022"
       ],
       "metadata": {
@@ -8891,6 +9095,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Bhakt_2022"
       ],
       "metadata": {
@@ -8919,6 +9124,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Bhakt_2022"
       ],
       "metadata": {
@@ -8947,6 +9153,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Bhakt_2022"
       ],
       "metadata": {
@@ -8975,6 +9182,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Bhakt_2022"
       ],
       "metadata": {
@@ -9003,6 +9211,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Bhakt_2022"
       ],
       "metadata": {
@@ -9031,6 +9240,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Bhakt_2022"
       ],
       "metadata": {
@@ -9059,6 +9269,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Kumar_2022"
       ],
       "metadata": {
@@ -9087,6 +9298,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Kumar_2022"
       ],
       "metadata": {
@@ -9115,6 +9327,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Kumar_2022"
       ],
       "metadata": {
@@ -9143,6 +9356,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Kumar_2022"
       ],
       "metadata": {
@@ -9171,6 +9385,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Kumar_2022"
       ],
       "metadata": {
@@ -9199,6 +9414,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Kumar_2022"
       ],
       "metadata": {
@@ -9227,6 +9443,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Kumar_2022"
       ],
       "metadata": {
@@ -9255,6 +9472,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Kumar_2022"
       ],
       "metadata": {
@@ -9283,6 +9501,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Kumar_2022"
       ],
       "metadata": {
@@ -9311,6 +9530,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Kumar_2022"
       ],
       "metadata": {
@@ -9339,6 +9559,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Kumar_2022"
       ],
       "metadata": {
@@ -9367,6 +9588,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Kumar_2022"
       ],
       "metadata": {
@@ -9395,6 +9617,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Immune Response",
         "Kumar_2022"
       ],
       "metadata": {
@@ -9423,6 +9646,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Linde_2015"
       ],
       "metadata": {
@@ -9451,6 +9675,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Linde_2015"
       ],
       "metadata": {
@@ -9479,6 +9704,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Linde_2015"
       ],
       "metadata": {
@@ -9507,6 +9733,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Linde_2015"
       ],
       "metadata": {
@@ -9535,6 +9762,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Linde_2015"
       ],
       "metadata": {
@@ -9563,6 +9791,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Linde_2015"
       ],
       "metadata": {
@@ -9591,6 +9820,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Linde_2015"
       ],
       "metadata": {
@@ -9619,6 +9849,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Linde_2015"
       ],
       "metadata": {
@@ -9647,6 +9878,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Linde_2015"
       ],
       "metadata": {
@@ -9675,6 +9907,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Linde_2015"
       ],
       "metadata": {
@@ -9703,6 +9936,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Linde_2015"
       ],
       "metadata": {
@@ -9731,6 +9965,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Linde_2015"
       ],
       "metadata": {
@@ -9759,6 +9994,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "DNA Damage Response",
         "Ni_2009"
       ],
       "metadata": {
@@ -9787,6 +10023,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "DNA Damage Response",
         "Ni_2009"
       ],
       "metadata": {
@@ -9815,6 +10052,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "DNA Damage Response",
         "Ni_2009"
       ],
       "metadata": {
@@ -9843,6 +10081,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "DNA Damage Response",
         "Ni_2009"
       ],
       "metadata": {
@@ -9871,6 +10110,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "DNA Damage Response",
         "Ni_2009"
       ],
       "metadata": {
@@ -9899,6 +10139,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "DNA Damage Response",
         "Ni_2009"
       ],
       "metadata": {
@@ -9927,6 +10168,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "DNA Damage Response",
         "Ni_2009"
       ],
       "metadata": {
@@ -9955,6 +10197,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "DNA Damage Response",
         "Ni_2009"
       ],
       "metadata": {
@@ -9983,6 +10226,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "DNA Damage Response",
         "Ni_2009"
       ],
       "metadata": {
@@ -10011,6 +10255,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "DNA Damage Response",
         "Ni_2009"
       ],
       "metadata": {
@@ -10039,6 +10284,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "DNA Damage Response",
         "Ni_2009"
       ],
       "metadata": {
@@ -10067,6 +10313,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "DNA Damage Response",
         "Ni_2009"
       ],
       "metadata": {
@@ -10095,6 +10342,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Vu_2023"
       ],
       "metadata": {
@@ -10123,6 +10371,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Vu_2023"
       ],
       "metadata": {
@@ -10151,6 +10400,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Vu_2023"
       ],
       "metadata": {
@@ -10179,6 +10429,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Vu_2023"
       ],
       "metadata": {
@@ -10207,6 +10458,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Vu_2023"
       ],
       "metadata": {
@@ -10235,6 +10487,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Vu_2023"
       ],
       "metadata": {
@@ -10263,6 +10516,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology",
         "Grumaz_2013"
       ],
       "metadata": {
@@ -10291,6 +10545,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology",
         "Grumaz_2013"
       ],
       "metadata": {
@@ -10319,6 +10574,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology",
         "Grumaz_2013"
       ],
       "metadata": {
@@ -10347,6 +10603,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology",
         "Grumaz_2013"
       ],
       "metadata": {
@@ -10375,6 +10632,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology",
         "Grumaz_2013"
       ],
       "metadata": {
@@ -10403,6 +10661,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Singh-Babakh_2021"
       ],
       "metadata": {
@@ -10425,6 +10684,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Singh-Babakh_2021"
       ],
       "metadata": {
@@ -10447,6 +10707,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Singh-Babakh_2021"
       ],
       "metadata": {
@@ -10469,6 +10730,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Singh-Babakh_2021"
       ],
       "metadata": {
@@ -10491,6 +10753,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Singh-Babakh_2021"
       ],
       "metadata": {
@@ -10513,6 +10776,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Singh-Babakh_2021"
       ],
       "metadata": {
@@ -10535,6 +10799,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Singh-Babakh_2021"
       ],
       "metadata": {
@@ -10557,6 +10822,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Singh-Babakh_2021"
       ],
       "metadata": {
@@ -10579,6 +10845,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology",
         "Connolly_2013"
       ],
       "metadata": {
@@ -10607,6 +10874,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology",
         "Connolly_2013"
       ],
       "metadata": {
@@ -10635,6 +10903,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology",
         "Connolly_2013"
       ],
       "metadata": {
@@ -10663,6 +10932,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology",
         "Connolly_2013"
       ],
       "metadata": {
@@ -10691,6 +10961,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology",
         "Connolly_2013"
       ],
       "metadata": {
@@ -10719,6 +10990,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology",
         "Connolly_2013"
       ],
       "metadata": {
@@ -10747,6 +11019,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology",
         "Connolly_2013"
       ],
       "metadata": {
@@ -10775,6 +11048,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology",
         "Connolly_2013"
       ],
       "metadata": {
@@ -10803,6 +11077,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Guida_2011"
       ],
       "metadata": {
@@ -10831,6 +11106,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Guida_2011"
       ],
       "metadata": {
@@ -10859,6 +11135,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Guida_2011"
       ],
       "metadata": {
@@ -10887,6 +11164,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Guida_2011"
       ],
       "metadata": {
@@ -10915,6 +11193,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Guida_2011"
       ],
       "metadata": {
@@ -10943,6 +11222,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Guida_2011"
       ],
       "metadata": {
@@ -10971,6 +11251,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Guida_2011"
       ],
       "metadata": {
@@ -10999,6 +11280,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Guida_2011"
       ],
       "metadata": {
@@ -11027,6 +11309,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Guida_2011"
       ],
       "metadata": {
@@ -11055,6 +11338,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Guida_2011"
       ],
       "metadata": {
@@ -11083,6 +11367,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Guida_2011"
       ],
       "metadata": {
@@ -11111,6 +11396,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Guida_2011"
       ],
       "metadata": {
@@ -11139,6 +11425,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Guida_2011"
       ],
       "metadata": {
@@ -11167,6 +11454,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Guida_2011"
       ],
       "metadata": {
@@ -11195,6 +11483,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Guida_2011"
       ],
       "metadata": {
@@ -11223,6 +11512,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Guida_2011"
       ],
       "metadata": {
@@ -11251,6 +11541,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Guida_2011"
       ],
       "metadata": {
@@ -11273,6 +11564,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Guida_2011"
       ],
       "metadata": {
@@ -11301,6 +11593,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Guida_2011"
       ],
       "metadata": {
@@ -11329,6 +11622,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Guida_2011"
       ],
       "metadata": {
@@ -11357,6 +11651,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Guida_2011"
       ],
       "metadata": {
@@ -11385,6 +11680,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Guida_2011"
       ],
       "metadata": {
@@ -11413,6 +11709,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Guida_2011"
       ],
       "metadata": {
@@ -11441,6 +11738,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Guida_2011"
       ],
       "metadata": {
@@ -11469,6 +11767,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Guida_2011"
       ],
       "metadata": {
@@ -11497,6 +11796,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Guida_2011"
       ],
       "metadata": {
@@ -11525,6 +11825,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Holland_2014"
       ],
       "metadata": {
@@ -11547,6 +11848,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Holland_2014"
       ],
       "metadata": {
@@ -11569,6 +11871,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Holland_2014"
       ],
       "metadata": {
@@ -11591,6 +11894,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Holland_2014"
       ],
       "metadata": {
@@ -11613,6 +11917,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Holland_2014"
       ],
       "metadata": {
@@ -11635,6 +11940,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Holland_2014"
       ],
       "metadata": {
@@ -11657,6 +11963,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Holland_2014"
       ],
       "metadata": {
@@ -11679,6 +11986,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Holland_2014"
       ],
       "metadata": {
@@ -11701,6 +12009,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Holland_2014"
       ],
       "metadata": {
@@ -11723,6 +12032,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Holland_2014"
       ],
       "metadata": {
@@ -11745,6 +12055,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Holland_2014"
       ],
       "metadata": {
@@ -11767,6 +12078,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Holland_2014"
       ],
       "metadata": {
@@ -11789,6 +12101,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Holland_2014"
       ],
       "metadata": {
@@ -11811,6 +12124,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Holland_2014"
       ],
       "metadata": {
@@ -11833,6 +12147,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Holland_2014"
       ],
       "metadata": {
@@ -11855,6 +12170,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Holland_2014"
       ],
       "metadata": {
@@ -11877,6 +12193,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Holland_2014"
       ],
       "metadata": {
@@ -11899,6 +12216,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Holland_2014"
       ],
       "metadata": {
@@ -11921,6 +12239,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Holland_2014"
       ],
       "metadata": {
@@ -11943,6 +12262,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Holland_2014"
       ],
       "metadata": {
@@ -11965,6 +12285,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Holland_2014"
       ],
       "metadata": {
@@ -11987,6 +12308,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Holland_2014"
       ],
       "metadata": {
@@ -12009,6 +12331,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Holland_2014"
       ],
       "metadata": {
@@ -12031,6 +12354,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Biofilm",
         "Holland_2014"
       ],
       "metadata": {
@@ -12073,7 +12397,10 @@
             "showDescriptions": true
           }
         }
-      ]
+      ],
+      "formatDetails": {
+        "feature": "jexl:{id:'<a href=\"/locus/'+replace(feature.id,'-T','')+'\" target=\"_blank\" rel=\"noopener\">'+feature.id+'</a>'}"
+      }
     },
     {
       "type": "QuantitativeTrack",
@@ -12084,6 +12411,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2024"
       ],
       "adapter": {
@@ -12103,6 +12431,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2024"
       ],
       "adapter": {
@@ -12122,6 +12451,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2024"
       ],
       "adapter": {
@@ -12141,6 +12471,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2024"
       ],
       "adapter": {
@@ -12160,6 +12491,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2024"
       ],
       "adapter": {
@@ -12179,6 +12511,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2024"
       ],
       "adapter": {
@@ -12198,6 +12531,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2024"
       ],
       "adapter": {
@@ -12217,6 +12551,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2024"
       ],
       "adapter": {
@@ -12236,6 +12571,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2024"
       ],
       "adapter": {
@@ -12255,6 +12591,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2024"
       ],
       "adapter": {
@@ -12274,6 +12611,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2024"
       ],
       "adapter": {
@@ -12293,6 +12631,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2024"
       ],
       "adapter": {
@@ -12312,6 +12651,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2024"
       ],
       "adapter": {
@@ -12331,6 +12671,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Jenull_2021"
       ],
       "adapter": {
@@ -12358,6 +12699,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Jenull_2021"
       ],
       "adapter": {
@@ -12385,6 +12727,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Jenull_2021"
       ],
       "adapter": {
@@ -12412,6 +12755,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Jenull_2021"
       ],
       "adapter": {
@@ -12439,6 +12783,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Jenull_2021"
       ],
       "adapter": {
@@ -12466,6 +12811,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Jenull_2021"
       ],
       "adapter": {
@@ -12493,6 +12839,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Jenull_2021"
       ],
       "adapter": {
@@ -12520,6 +12867,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Jenull_2021"
       ],
       "adapter": {
@@ -12547,6 +12895,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Jenull_2021"
       ],
       "adapter": {
@@ -12574,6 +12923,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Jenull_2021"
       ],
       "adapter": {
@@ -12601,6 +12951,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Jenull_2021"
       ],
       "adapter": {
@@ -12628,6 +12979,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Jenull_2021"
       ],
       "adapter": {
@@ -12655,6 +13007,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Balla_2020"
       ],
       "adapter": {
@@ -12683,6 +13036,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Balla_2020"
       ],
       "adapter": {
@@ -12711,6 +13065,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Balla_2020"
       ],
       "adapter": {
@@ -12739,6 +13094,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Balla_2020"
       ],
       "adapter": {
@@ -12767,6 +13123,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Balla_2020"
       ],
       "adapter": {
@@ -12795,6 +13152,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Balla_2020"
       ],
       "adapter": {
@@ -12823,6 +13181,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "adapter": {
@@ -12851,6 +13210,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "adapter": {
@@ -12879,6 +13239,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "adapter": {
@@ -12907,6 +13268,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "adapter": {
@@ -12935,6 +13297,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "adapter": {
@@ -12963,6 +13326,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "adapter": {
@@ -12991,6 +13355,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "adapter": {
@@ -13019,6 +13384,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "adapter": {
@@ -13047,6 +13413,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "adapter": {
@@ -13075,6 +13442,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "adapter": {
@@ -13103,6 +13471,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "adapter": {
@@ -13131,6 +13500,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Shivarathri_2019"
       ],
       "adapter": {
@@ -13159,6 +13529,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Chow_2023"
       ],
       "adapter": {
@@ -13186,6 +13557,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Chow_2023"
       ],
       "adapter": {
@@ -13213,6 +13585,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Chow_2023"
       ],
       "adapter": {
@@ -13240,6 +13613,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Chow_2023"
       ],
       "adapter": {
@@ -13267,6 +13641,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Chow_2023"
       ],
       "adapter": {
@@ -13294,6 +13669,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Chow_2023"
       ],
       "adapter": {
@@ -13321,6 +13697,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Chow_2023"
       ],
       "adapter": {
@@ -13347,6 +13724,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Chow_2023"
       ],
       "adapter": {
@@ -13374,6 +13752,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Chow_2023"
       ],
       "adapter": {
@@ -13401,6 +13780,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Biermann_2022"
       ],
       "adapter": {
@@ -13429,6 +13809,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Biermann_2022"
       ],
       "adapter": {
@@ -13457,6 +13838,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Biermann_2022"
       ],
       "adapter": {
@@ -13485,6 +13867,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Biermann_2022"
       ],
       "adapter": {
@@ -13513,6 +13896,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Biermann_2022"
       ],
       "adapter": {
@@ -13541,6 +13925,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Biermann_2022"
       ],
       "adapter": {
@@ -13569,6 +13954,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Biermann_2022"
       ],
       "adapter": {
@@ -13597,6 +13983,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Biermann_2022"
       ],
       "adapter": {
@@ -13625,6 +14012,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Biermann_2022"
       ],
       "adapter": {
@@ -13653,6 +14041,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Biermann_2022"
       ],
       "adapter": {
@@ -13681,6 +14070,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Biermann_2022"
       ],
       "adapter": {
@@ -13709,6 +14099,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Biermann_2022"
       ],
       "adapter": {
@@ -13736,6 +14127,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Biermann_2022"
       ],
       "adapter": {
@@ -13764,6 +14156,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Biermann_2022"
       ],
       "adapter": {
@@ -13792,6 +14185,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Biermann_2022"
       ],
       "adapter": {
@@ -13820,6 +14214,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Biermann_2022"
       ],
       "adapter": {
@@ -13848,6 +14243,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Biermann_2022"
       ],
       "adapter": {
@@ -13876,6 +14272,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Biermann_2022"
       ],
       "adapter": {
@@ -13904,6 +14301,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Biermann_2022"
       ],
       "adapter": {
@@ -13932,6 +14330,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Biermann_2022"
       ],
       "adapter": {
@@ -13960,6 +14359,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Biermann_2022"
       ],
       "adapter": {
@@ -13988,6 +14388,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Biermann_2022"
       ],
       "adapter": {
@@ -14016,6 +14417,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Biermann_2022"
       ],
       "adapter": {
@@ -14043,6 +14445,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Biermann_2022"
       ],
       "adapter": {
@@ -14070,6 +14473,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Simm_2019"
       ],
       "adapter": {
@@ -14098,6 +14502,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Simm_2019"
       ],
       "adapter": {
@@ -14126,6 +14531,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Simm_2019"
       ],
       "adapter": {
@@ -14154,6 +14560,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Simm_2019"
       ],
       "adapter": {
@@ -14182,6 +14589,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Simm_2019"
       ],
       "adapter": {
@@ -14210,6 +14618,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Simm_2019"
       ],
       "adapter": {
@@ -14238,6 +14647,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Simm_2019"
       ],
       "adapter": {
@@ -14266,6 +14676,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Simm_2019"
       ],
       "adapter": {
@@ -14294,6 +14705,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Simm_2019"
       ],
       "adapter": {
@@ -14322,6 +14734,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Simm_2019"
       ],
       "adapter": {
@@ -14350,6 +14763,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Simm_2019"
       ],
       "adapter": {
@@ -14378,6 +14792,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Antifungal Response",
         "Simm_2019"
       ],
       "adapter": {
@@ -14406,6 +14821,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Jakab_2021"
       ],
       "adapter": {
@@ -14434,6 +14850,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Jakab_2021"
       ],
       "adapter": {
@@ -14462,6 +14879,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Jakab_2021"
       ],
       "adapter": {
@@ -14490,6 +14908,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Jakab_2021"
       ],
       "adapter": {
@@ -14518,6 +14937,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Jakab_2021"
       ],
       "adapter": {
@@ -14546,6 +14966,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Jakab_2021"
       ],
       "adapter": {
@@ -14574,6 +14995,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -14602,6 +15024,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -14630,6 +15053,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -14658,6 +15082,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -14686,6 +15111,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -14714,6 +15140,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -14742,6 +15169,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -14770,6 +15198,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -14798,6 +15227,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -14826,6 +15256,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -14854,6 +15285,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -14882,6 +15314,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -14910,6 +15343,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -14937,6 +15371,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -14964,6 +15399,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -14991,6 +15427,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15018,6 +15455,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15045,6 +15483,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15072,6 +15511,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15099,6 +15539,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15126,6 +15567,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15153,6 +15595,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15180,6 +15623,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15207,6 +15651,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15234,6 +15679,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15262,6 +15708,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15290,6 +15737,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15318,6 +15766,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15346,6 +15795,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15374,6 +15824,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15402,6 +15853,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15430,6 +15882,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15458,6 +15911,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15486,6 +15940,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15514,6 +15969,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15542,6 +15998,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15570,6 +16027,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15597,6 +16055,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15624,6 +16083,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15651,6 +16111,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15678,6 +16139,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15705,6 +16167,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15732,6 +16195,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15759,6 +16223,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15786,6 +16251,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15813,6 +16279,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15840,6 +16307,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15867,6 +16335,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Pelletier_2024"
       ],
       "adapter": {
@@ -15894,6 +16363,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Mutation Comparison",
         "Iracane_2024"
       ],
       "adapter": {
@@ -15916,6 +16386,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Mutation Comparison",
         "Iracane_2024"
       ],
       "adapter": {
@@ -15938,6 +16409,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Mutation Comparison",
         "Iracane_2024"
       ],
       "adapter": {
@@ -15960,6 +16432,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Mutation Comparison",
         "Iracane_2024"
       ],
       "adapter": {
@@ -15982,6 +16455,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Mutation Comparison",
         "Iracane_2024"
       ],
       "adapter": {
@@ -16004,6 +16478,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Mutation Comparison",
         "Iracane_2024"
       ],
       "adapter": {
@@ -16026,6 +16501,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Mutation Comparison",
         "Iracane_2024"
       ],
       "adapter": {
@@ -16048,6 +16524,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Mutation Comparison",
         "Iracane_2024"
       ],
       "adapter": {
@@ -16070,6 +16547,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Mutation Comparison",
         "Iracane_2024"
       ],
       "adapter": {
@@ -16092,6 +16570,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Mutation Comparison",
         "Iracane_2024"
       ],
       "adapter": {
@@ -16114,6 +16593,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Mutation Comparison",
         "Iracane_2024"
       ],
       "adapter": {
@@ -16136,6 +16616,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Mutation Comparison",
         "Iracane_2024"
       ],
       "adapter": {
@@ -16158,6 +16639,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Mutation Comparison",
         "Iracane_2024"
       ],
       "adapter": {
@@ -16180,6 +16662,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Mutation Comparison",
         "Iracane_2024"
       ],
       "adapter": {
@@ -16209,6 +16692,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Lok_2026"
       ],
       "displays": [
@@ -16234,6 +16718,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Lok_2026"
       ],
       "displays": [
@@ -16259,6 +16744,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Lok_2026"
       ],
       "displays": [
@@ -16284,6 +16770,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Lok_2026"
       ],
       "displays": [
@@ -16309,6 +16796,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Lok_2026"
       ],
       "displays": [
@@ -16334,6 +16822,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Lok_2026"
       ],
       "displays": [
@@ -16359,6 +16848,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Morphology/Media",
         "Lok_2026"
       ],
       "displays": [
@@ -16384,6 +16874,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Du_2015"
       ],
       "displays": [
@@ -16412,6 +16903,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Du_2015"
       ],
       "displays": [
@@ -16440,6 +16932,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Du_2015"
       ],
       "displays": [
@@ -16468,6 +16961,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Du_2015"
       ],
       "displays": [
@@ -16496,6 +16990,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Du_2015"
       ],
       "displays": [
@@ -16524,6 +17019,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Stress Response",
         "Du_2015"
       ],
       "displays": [
@@ -16552,6 +17048,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Menon_2026"
       ],
       "displays": [
@@ -16580,6 +17077,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Menon_2026"
       ],
       "displays": [
@@ -16608,6 +17106,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Menon_2026"
       ],
       "displays": [
@@ -16636,6 +17135,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Menon_2026"
       ],
       "displays": [
@@ -16664,6 +17164,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Menon_2026"
       ],
       "displays": [
@@ -16692,6 +17193,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Menon_2026"
       ],
       "displays": [
@@ -16720,6 +17222,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Menon_2026"
       ],
       "displays": [
@@ -16748,6 +17251,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Menon_2026"
       ],
       "displays": [
@@ -16776,6 +17280,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Menon_2026"
       ],
       "displays": [
@@ -16804,6 +17309,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Menon_2026"
       ],
       "displays": [
@@ -16832,6 +17338,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Menon_2026"
       ],
       "displays": [
@@ -16860,6 +17367,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Menon_2026"
       ],
       "displays": [
@@ -16888,6 +17396,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Menon_2026"
       ],
       "displays": [
@@ -16916,6 +17425,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Menon_2026"
       ],
       "displays": [
@@ -16944,6 +17454,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Menon_2026"
       ],
       "displays": [
@@ -16972,6 +17483,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Menon_2026"
       ],
       "displays": [
@@ -17000,6 +17512,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Menon_2026"
       ],
       "displays": [
@@ -17028,6 +17541,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Menon_2026"
       ],
       "displays": [
@@ -17056,6 +17570,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Menon_2026"
       ],
       "displays": [
@@ -17084,6 +17599,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Gene Regulation",
         "Menon_2026"
       ],
       "displays": [
@@ -17112,6 +17628,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17137,6 +17654,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17162,6 +17680,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17187,6 +17706,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17212,6 +17732,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17237,6 +17758,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17262,6 +17784,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17287,6 +17810,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17312,6 +17836,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17337,6 +17862,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17362,6 +17888,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17387,6 +17914,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17412,6 +17940,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17437,6 +17966,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17462,6 +17992,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17487,6 +18018,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17512,6 +18044,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17537,6 +18070,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17562,6 +18096,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17587,6 +18122,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17612,6 +18148,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17637,6 +18174,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17662,6 +18200,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17687,6 +18226,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17712,6 +18252,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17737,6 +18278,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17762,6 +18304,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17787,6 +18330,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17812,6 +18356,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17837,6 +18382,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17862,6 +18408,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17887,6 +18434,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17912,6 +18460,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17937,6 +18486,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17962,6 +18512,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -17987,6 +18538,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18012,6 +18564,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18037,6 +18590,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18062,6 +18616,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18087,6 +18642,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18112,6 +18668,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18137,6 +18694,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18162,6 +18720,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18187,6 +18746,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18212,6 +18772,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18237,6 +18798,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18262,6 +18824,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18287,6 +18850,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18312,6 +18876,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18337,6 +18902,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18362,6 +18928,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18387,6 +18954,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18412,6 +18980,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18437,6 +19006,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18462,6 +19032,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18487,6 +19058,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18512,6 +19084,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18537,6 +19110,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18562,6 +19136,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18587,6 +19162,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18612,6 +19188,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18637,6 +19214,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18662,6 +19240,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18687,6 +19266,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18712,6 +19292,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18737,6 +19318,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18762,6 +19344,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18787,6 +19370,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18812,6 +19396,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18837,6 +19422,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18862,6 +19448,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18887,6 +19474,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18912,6 +19500,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18937,6 +19526,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18962,6 +19552,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -18987,6 +19578,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -19012,6 +19604,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -19037,6 +19630,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -19062,6 +19656,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -19087,6 +19682,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -19112,6 +19708,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -19137,6 +19734,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -19162,6 +19760,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -19187,6 +19786,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -19212,6 +19812,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -19237,6 +19838,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -19262,6 +19864,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -19287,6 +19890,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -19312,6 +19916,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -19337,6 +19942,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -19362,6 +19968,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -19387,6 +19994,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -19412,6 +20020,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -19437,6 +20046,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -19462,6 +20072,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -19487,6 +20098,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -19512,6 +20124,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -19537,6 +20150,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -19562,6 +20176,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -19587,6 +20202,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -19612,6 +20228,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Cravener_2023"
       ],
       "displays": [
@@ -19637,6 +20254,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -19662,6 +20280,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -19687,6 +20306,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -19712,6 +20332,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -19737,6 +20358,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -19762,6 +20384,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -19787,6 +20410,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -19812,6 +20436,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -19837,6 +20462,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -19862,6 +20488,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -19887,6 +20514,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -19912,6 +20540,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -19937,6 +20566,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -19962,6 +20592,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -19987,6 +20618,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20012,6 +20644,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20037,6 +20670,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20062,6 +20696,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20087,6 +20722,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20112,6 +20748,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20137,6 +20774,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20162,6 +20800,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20187,6 +20826,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20212,6 +20852,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20237,6 +20878,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20262,6 +20904,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20287,6 +20930,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20312,6 +20956,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20337,6 +20982,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20362,6 +21008,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20387,6 +21034,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20412,6 +21060,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20437,6 +21086,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20462,6 +21112,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20487,6 +21138,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20512,6 +21164,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20537,6 +21190,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20562,6 +21216,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20587,6 +21242,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20612,6 +21268,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20637,6 +21294,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [
@@ -20662,6 +21320,7 @@
       ],
       "category": [
         "RNA-Seq",
+        "Strain Comparison",
         "Wang_2021"
       ],
       "displays": [

@@ -16,6 +16,7 @@ import GoTermPage from './pages/GoTermPage';
 import GoEvidencePage from './pages/GoEvidencePage';
 import PhenotypeSearchPage from './pages/PhenotypeSearchPage';
 import ObservableTermsPage from './pages/ObservableTermsPage';
+import RecentPhenotypeAnnotationsPage from './pages/RecentPhenotypeAnnotationsPage';
 import AboutPage from './pages/AboutPage';
 import HelpPage from './pages/HelpPage';
 import HowToCitePage from './pages/HowToCitePage';
@@ -30,6 +31,8 @@ import GOResourcesPage from './pages/GOResourcesPage';
 import CommunityPage from './pages/CommunityPage';
 import SubmitDataPage from './pages/SubmitDataPage';
 import SearchPage from './pages/SearchPage';
+import ExploreCGDPage from './pages/ExploreCGDPage';
+import BrowseCategoryPage from './pages/BrowseCategoryPage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import TextSearchResultsPage from './pages/TextSearchResultsPage';
 import TextSearchPage from './pages/TextSearchPage';
@@ -80,6 +83,7 @@ import ApiDocPage from './pages/ApiDocPage';
 import SyntenyBrowserPage from './pages/SyntenyBrowserPage';
 import VirulenceFactorBrowserPage from './pages/VirulenceFactorBrowserPage';
 import OrthologConverterPage from './pages/OrthologConverterPage';
+import RecentOrthologClustersPage from './pages/RecentOrthologClustersPage';
 
 // Curation pages (protected)
 import CuratorCentralPage from './pages/curation/CuratorCentralPage';
@@ -142,6 +146,7 @@ import VirulenceFactorBrowserHelp from './pages/help/VirulenceFactorBrowserHelp'
 import CrisprGuideFinderHelp from './pages/help/CrisprGuideFinderHelp';
 import ExpressionHelp from './pages/help/ExpressionHelp';
 import SyntenyBrowserHelp from './pages/help/SyntenyBrowserHelp';
+import NonCodingRNAHelp from './pages/help/NonCodingRNAHelp';
 
 import ScrollToTop from './components/ScrollToTop';
 import Analytics from './components/Analytics';
@@ -223,6 +228,7 @@ function App() {
           <Route path="/go/:goid" element={<GoTermPage />} />
           <Route path="/phenotype/search" element={<PhenotypeSearchPage />} />
           <Route path="/phenotype/terms" element={<ObservableTermsPage />} />
+          <Route path="/phenotype/recent" element={<RecentPhenotypeAnnotationsPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/help" element={<HelpPage />} />
           <Route path="/developer/api" element={<ApiDocPage />} />
@@ -239,6 +245,8 @@ function App() {
           <Route path="/community" element={<CommunityPage />} />
           <Route path="/submit-data" element={<SubmitDataPage />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/search2" element={<ExploreCGDPage />} />
+          <Route path="/browse/:category" element={<BrowseCategoryPage />} />
           <Route path="/search/results" element={<SearchResultsPage />} />
           <Route path="/search/text" element={<TextSearchPage />} />
           <Route path="/search/text/results" element={<TextSearchResultsPage />} />
@@ -262,6 +270,7 @@ function App() {
           <Route path="/synteny-browser" element={<SyntenyBrowserPage />} />
           <Route path="/virulence-factor-browser" element={<VirulenceFactorBrowserPage />} />
           <Route path="/ortholog-converter" element={<OrthologConverterPage />} />
+          <Route path="/ortholog/recent" element={<RecentOrthologClustersPage />} />
           <Route path="/blast" element={<BlastSearchPage />} />
           <Route path="/blast/results" element={<BlastResultsPage />} />
           <Route path="/crispr" element={<CrisprSearchPage />} />
@@ -603,6 +612,7 @@ function App() {
           <Route path="/help/crispr" element={<CrisprGuideFinderHelp />} />
           <Route path="/help/expression" element={<ExpressionHelp />} />
           <Route path="/help/synteny-browser" element={<SyntenyBrowserHelp />} />
+          <Route path="/help/non-coding-rna" element={<NonCodingRNAHelp />} />
         </Routes>
 
         {/* =========================
