@@ -41,7 +41,7 @@ nohup bash run_rnaseq_pipeline.sh ../MyStudy_2024_metadata.xlsx C_auris_B8441 > 
 
 **IMPORTANT:** Run this command ONCE. It starts the pipeline in the background so you can log out safely.
 
-**Organisms:** `C_auris_B8441`, `C_albicans_SC5314`, `C_glabrata_CBS138`, `C_dubliniensis_CD36`, `C_parapsilosis_CDC317`
+**Organisms:** `C_auris_B8441`, `C_albicans_SC5314`, `C_glabrata_CBS138`, `C_dubliniensis_CD36`, `C_parapsilosis_CDC317`, `C_tropicalis_MYA3404`
 
 #### How to Know It's Running
 After running the command, you should see output like:

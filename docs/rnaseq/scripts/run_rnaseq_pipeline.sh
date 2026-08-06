@@ -12,7 +12,7 @@
 #   bash run_rnaseq_pipeline.sh Iracane_2021_metadata.xlsx C_auris_B8441
 #
 # Organisms: C_auris_B8441, C_albicans_SC5314, C_glabrata_CBS138,
-#            C_dubliniensis_CD36, C_parapsilosis_CDC317
+#            C_dubliniensis_CD36, C_parapsilosis_CDC317, C_tropicalis_MYA3404
 #
 # After completion, run:
 #   python extract_alignment_stats.py <metadata.xlsx> <work_dir>/logs/
@@ -53,7 +53,7 @@ if [ $# -lt 2 ]; then
     echo "Usage: bash run_rnaseq_pipeline.sh <metadata.xlsx> <organism>"
     echo ""
     echo "Organisms: C_auris_B8441, C_albicans_SC5314, C_glabrata_CBS138,"
-    echo "           C_dubliniensis_CD36, C_parapsilosis_CDC317"
+    echo "           C_dubliniensis_CD36, C_parapsilosis_CDC317, C_tropicalis_MYA3404"
     exit 1
 fi
 
