@@ -1469,7 +1469,11 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
           </div>
         )}
 
-        {/* Fixed Tooltip Bar - shows above the canvas */}
+        {/* Fixed Tooltip Bar - shows above the canvas. The slot reserves a
+            constant height; the bar is absolutely positioned inside it so
+            that when the details text wraps to more lines (narrow embedded
+            layouts) it overlays the canvas instead of pushing it down. */}
+        <div className="browser-tooltip-bar-slot">
         <div className="browser-tooltip-bar" style={{ color: '#fff' }}>
           {tooltip.show && tooltip.content ? (
             <>
@@ -1509,6 +1513,7 @@ function GenomeSyntenyBrowser({ geneName: propGeneName, embedded = false }) {
               </span>
             </>
           )}
+        </div>
         </div>
 
         <div className="browser-canvas" ref={containerRef} />

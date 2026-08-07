@@ -488,9 +488,24 @@
 
 /* Query connections use darker gray color, no filter needed */
 
-/* Fixed Tooltip Bar - shows above the canvas */
+/* Fixed Tooltip Bar - shows above the canvas.
+   The slot reserves constant vertical space; the bar inside is absolutely
+   positioned so that when the details text wraps to extra lines (narrow
+   embedded layouts, e.g. the locus Homologs tab) the bar grows downward
+   over the canvas instead of pushing it down and making the page jump. */
+.browser-tooltip-bar-slot {
+  position: relative;
+  height: 60px;
+  /* Above the canvas SVG, below the .browser-loading overlay (z-index 10) */
+  z-index: 5;
+}
+
 .browser-tooltip-bar {
   all: unset;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -499,9 +514,12 @@
   color: white !important;
   -webkit-text-fill-color: white !important;
   font-size: 0.85rem;
-  min-height: 40px;
+  min-height: 60px;
   flex-wrap: wrap;
   box-sizing: border-box;
+  /* Purely informational: let the mouse reach genes under the overflow
+     strip so an overlapping bar can't trigger a hover on/off loop */
+  pointer-events: none;
 }
 
 .browser-tooltip-bar .tooltip-gene-name {
