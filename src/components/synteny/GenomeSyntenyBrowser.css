@@ -499,7 +499,7 @@
   color: white !important;
   -webkit-text-fill-color: white !important;
   font-size: 0.85rem;
-  min-height: 40px;
+  min-height: 60px;
   flex-wrap: wrap;
   box-sizing: border-box;
 }
