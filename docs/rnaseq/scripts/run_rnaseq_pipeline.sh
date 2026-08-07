@@ -178,6 +178,14 @@ echo "=============================================="
 
 # Configuration
 THREADS=8
+# Wall-clock guard for fastp. fastp can deadlock at end-of-run under
+# multithreaded gzip output (all reads written, worker threads spin, process
+# never exits); because the pipeline is sequential, one such hang stalls every
+# remaining sample indefinitely. Wrapping fastp in `timeout` converts a hang
+# into a failed sample (non-zero exit -> set -e -> sample marked FAILED) so the
+# rest of the queue still runs. A clean fastp trim here takes minutes, so an
+# hour is a generous ceiling.
+FASTP_TIMEOUT=3600
 WORK_DIR=/data/tmp/rnaseq_import/${STUDY_ID}
 FASTQ_DIR=$WORK_DIR/fastq
 LOG_DIR=$WORK_DIR/logs
@@ -361,7 +369,7 @@ for SRR in $SAMPLES; do
         # species-agnostic and only trims reads that actually carry adapter.
         echo "[$(date)] Trimming adapters with fastp..." >> "$SAMPLE_LOG"
         if [ "$PAIRED" = true ]; then
-            fastp \
+            timeout -k 30 "$FASTP_TIMEOUT" fastp \
                 -i "$FASTQ_DIR/${SRR}_1.fastq.gz" \
                 -I "$FASTQ_DIR/${SRR}_2.fastq.gz" \
                 -o "$FASTQ_DIR/${SRR}_1.trimmed.fastq.gz" \
@@ -370,7 +378,7 @@ for SRR in $SAMPLES; do
                 -j "$LOG_DIR/${SRR}.fastp.json" \
                 -h "$LOG_DIR/${SRR}.fastp.html" >> "$SAMPLE_LOG" 2>&1
         else
-            fastp \
+            timeout -k 30 "$FASTP_TIMEOUT" fastp \
                 -i "$FASTQ_DIR/${SRR}_1.fastq.gz" \
                 -o "$FASTQ_DIR/${SRR}_1.trimmed.fastq.gz" \
                 --thread $THREADS \
