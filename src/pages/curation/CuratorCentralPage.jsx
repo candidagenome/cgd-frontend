@@ -150,6 +150,20 @@ function CuratorCentralPage() {
           </section>
 
           <section style={styles.section}>
+            <h3 style={styles.sectionHeader}>Database admin &amp; reports</h3>
+            <ul style={styles.linkList}>
+              <li>
+                <Link to="/curation/cv-admin">Manage CV Terms</Link>
+                {' '}(phenotype strains, lit topics, &hellip;)
+              </li>
+              <li>
+                <Link to="/curation/reports">Database Stats for Reports</Link>
+                {' '}(grants, publications, posters)
+              </li>
+            </ul>
+          </section>
+
+          <section style={styles.section}>
             <h3 style={styles.sectionHeader}>Misc. curator tools</h3>
             <ul style={styles.linkList}>
               <li style={styles.disabledItem}>

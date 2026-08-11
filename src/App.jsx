@@ -111,6 +111,8 @@ import SequenceCurationPage from './pages/curation/SequenceCurationPage';
 import FeatureMergePage from './pages/curation/FeatureMergePage';
 import CoordinateCurationPage from './pages/curation/CoordinateCurationPage';
 import SeqAlignmentPage from './pages/curation/SeqAlignmentPage';
+import CvAdminPage from './pages/curation/CvAdminPage';
+import CuratorReportsPage from './pages/curation/CuratorReportsPage';
 
 // Help documentation pages
 import WhatIsGOPage from './pages/help/WhatIsGOHelp';
@@ -574,6 +576,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <SeqAlignmentPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/cv-admin"
+            element={
+              <ProtectedRoute>
+                <CvAdminPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/reports"
+            element={
+              <ProtectedRoute>
+                <CuratorReportsPage />
               </ProtectedRoute>
             }
           />
