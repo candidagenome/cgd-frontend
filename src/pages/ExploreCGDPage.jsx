@@ -34,7 +34,7 @@ const CATEGORY_CARDS = [
     label: 'Ortholog Clusters',
     dot: '#7c3aed',
     icon: '🔗',
-    tag: 'NEW FOR CGD',
+    tag: 'NEW',
     statKey: 'ortholog_clusters',
     count: 6124,
     description: 'Conserved genes across Candida species',
@@ -48,7 +48,7 @@ const CATEGORY_CARDS = [
     icon: '📚',
     statKey: 'references',
     count: 85230,
-    description: 'Literature and curated sources',
+    description: 'Full literature corpus with curated gene-to-paper links',
     examples: ['Candida auris outbreak', 'Biofilm review'],
     to: '/browse/references',
   },
@@ -59,7 +59,7 @@ const CATEGORY_CARDS = [
     icon: '🔬',
     statKey: 'phenotype_annotations',
     count: 12840,
-    description: 'Morphology, drug resistance, biofilm',
+    description: 'Mutant phenotypes, drug resistance, and infection models',
     examples: ['filamentous growth', 'azole resistance'],
     to: '/phenotype/search',
   },
@@ -99,24 +99,11 @@ const OTHER_CATEGORIES = [
   { label: 'Biofilm Genes', to: '/virulence-factor-browser?categories=biofilm', organismAware: true },
 ];
 
-// Rotating search-box placeholders (genes, ORFs, and Candida-relevant terms),
-// cycled while the box is empty — mirrors the SGD Explore page.
-const SEARCH_EXAMPLES = [
-  'ACT1',
-  'ERG11',
-  'nuclear pore',
-  'HWP1',
-  'fluconazole resistance',
-  'orf19.2003',
-  'EFG1',
-  'biofilm formation',
-  'CDR1',
-  'hyphal growth',
-  'BCR1',
-  'azole resistance',
-  'Candida auris',
-  'PMID: 39177371',
-];
+// Clickable example searches shown under the search box.
+const TRY_EXAMPLES = ['ACT1', 'ERG11', 'biofilm formation', 'fluconazole resistance'];
+
+// Species accent-dot colors, indexed by SPECIES_ORDER position (phylogenetic order).
+const SPECIES_DOT_PALETTE = ['#6366f1', '#0ea5e9', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6'];
 
 // "What's New in CGD" highlights. Curator-maintained editorial content.
 const WHATS_NEW = [
@@ -156,7 +143,6 @@ const ExploreCGDPage = () => {
   const [countsByOrg, setCountsByOrg] = useState({});
   const [recentRefs, setRecentRefs] = useState([]);
   const [indexDate, setIndexDate] = useState('July 24, 2026');
-  const [exampleIdx, setExampleIdx] = useState(0);
   const [stats, setStats] = useState(null);
   const [recentActivity, setRecentActivity] = useState(null);
   const [geneOfDay, setGeneOfDay] = useState(null);
@@ -352,15 +338,6 @@ const ExploreCGDPage = () => {
     };
   }, [activeCounts, stats]);
 
-  // Cycle the placeholder through example terms while the box is empty.
-  useEffect(() => {
-    if (query) return undefined;
-    const id = setInterval(() => {
-      setExampleIdx((i) => (i + 1) % SEARCH_EXAMPLES.length);
-    }, 2500);
-    return () => clearInterval(id);
-  }, [query]);
-
   // Cmd/Ctrl-K focuses the search box, matching the ⌘K affordance.
   useEffect(() => {
     const onKey = (e) => {
@@ -381,6 +358,12 @@ const ExploreCGDPage = () => {
       if (selectedOrgName) params.set('organism', selectedOrgName);
       navigate(`/search/results?${params.toString()}`);
     }
+  };
+
+  const exampleSearchUrl = (term) => {
+    const params = new URLSearchParams({ query: term });
+    if (selectedOrgName) params.set('organism', selectedOrgName);
+    return `/search/results?${params.toString()}`;
   };
 
   const fmt = (n) => (n == null ? '' : n.toLocaleString());
@@ -415,7 +398,7 @@ const ExploreCGDPage = () => {
               ref={inputRef}
               type="text"
               className="explore-search-input"
-              placeholder={`Try ${SEARCH_EXAMPLES[exampleIdx]}`}
+              placeholder="Search genes, phenotypes, references, GO terms, and more…"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               aria-label="Search the Candida Genome Database"
@@ -423,6 +406,16 @@ const ExploreCGDPage = () => {
             <kbd className="explore-kbd">⌘K</kbd>
             <button type="submit" className="explore-search-btn">Search</button>
           </form>
+
+          <p className="explore-try">
+            Try:{' '}
+            {TRY_EXAMPLES.map((ex, i) => (
+              <React.Fragment key={ex}>
+                {i > 0 && <span className="explore-try-sep" aria-hidden="true">·</span>}
+                <Link className="explore-try-link" to={exampleSearchUrl(ex)}>{ex}</Link>
+              </React.Fragment>
+            ))}
+          </p>
 
           <p className="explore-gotd">
             <span className="explore-gotd-dot" aria-hidden="true" /> Gene of the day:{' '}
@@ -439,9 +432,7 @@ const ExploreCGDPage = () => {
 
           <div className="explore-liveindex">
             <span className="explore-live-dot" aria-hidden="true" />
-            <span className="explore-live-label">LIVE INDEX</span>
-            <span className="explore-live-sep">|</span>
-            Updated {indexDate} · {speciesCount} reference strains indexed
+            Index updated {indexDate} · {speciesCount} reference strains
           </div>
         </header>
 
@@ -464,7 +455,7 @@ const ExploreCGDPage = () => {
                     </button>
                   </div>
                 ) : (
-                  <span className="explore-section-meta">Select an organism to filter counts</span>
+                  <span className="explore-section-meta">Select an organism to explore its data</span>
                 )}
               </div>
               <div className="explore-org-grid">
@@ -473,6 +464,8 @@ const ExploreCGDPage = () => {
                   const abbrev = SPECIES_ABBREV[org.organism_name] || org.organism_name;
                   const strain = strainOf(org.organism_name);
                   const count = geneCounts[org.organism_abbrev];
+                  const orderIdx = SPECIES_ORDER.indexOf(org.organism_name);
+                  const dotColor = SPECIES_DOT_PALETTE[orderIdx === -1 ? 0 : orderIdx % SPECIES_DOT_PALETTE.length];
                   return (
                     <div
                       key={org.organism_abbrev}
@@ -483,11 +476,12 @@ const ExploreCGDPage = () => {
                         className="explore-org-select"
                         onClick={() => selectOrganism(org.organism_abbrev)}
                         aria-pressed={isSelected}
-                        title={`Filter all category counts by ${org.organism_name}`}
+                        title={`Explore ${org.organism_name} data`}
                       >
                         <span className={`explore-org-check${isSelected ? ' is-on' : ''}`} aria-hidden="true">
                           {isSelected ? '✓' : ''}
                         </span>
+                        <span className="explore-org-dot" style={{ background: dotColor }} aria-hidden="true" />
                         <em className="explore-org-name">{abbrev}</em>
                         {strain && <span className="explore-org-strain">{strain}</span>}
                         {count != null && (
@@ -500,7 +494,7 @@ const ExploreCGDPage = () => {
                         title={`Open the ${org.organism_name} genome overview`}
                         aria-label={`Open ${org.organism_name} genome overview`}
                       >
-                        Overview <span aria-hidden="true">↗</span>
+                        <span aria-hidden="true">↗</span>
                       </Link>
                     </div>
                   );
@@ -508,7 +502,7 @@ const ExploreCGDPage = () => {
               </div>
               {!selectedOrg && (
                 <p className="explore-org-note">
-                  Select a row to update category counts; use ↗ to open its genome overview.
+                  Select a row to explore that organism&rsquo;s data; use ↗ to open its genome overview.
                 </p>
               )}
             </section>
@@ -516,8 +510,14 @@ const ExploreCGDPage = () => {
             {/* Browse by category */}
             <section className="explore-section">
               <div className="explore-section-head">
-                <h2 className="explore-section-title">Browse by Category</h2>
-                {selectedOrg && <span className="explore-section-meta">Counts for <em>{selectedOrgLabel}</em></span>}
+                <h2 className="explore-section-title">
+                  Browse by Category
+                  {selectedOrg && (
+                    <span className="explore-section-title-org">
+                      {' '}· <em>{selectedOrgLabel}</em>
+                    </span>
+                  )}
+                </h2>
               </div>
               <div className="explore-card-grid">
                 {cards.map((c) => (
@@ -554,7 +554,7 @@ const ExploreCGDPage = () => {
 
             {/* Other categories */}
             <section className="explore-section">
-              <h3 className="explore-other-title">Other Categories</h3>
+              <h3 className="explore-other-title">More Data Types</h3>
               <div className="explore-other-chips">
                 {otherCategories.map((o) => (
                   <Link key={o.label} to={otherDestination(o)} className="explore-other-chip">
@@ -571,6 +571,7 @@ const ExploreCGDPage = () => {
             <div className="explore-panel">
               <h3 className="explore-panel-title">
                 <span className="explore-panel-bar" aria-hidden="true" /> WHAT'S NEW IN CGD
+                <span className="explore-panel-period">Last 90 days</span>
               </h3>
               <ul className="explore-news">
                 {WHATS_NEW.map((n) => (
@@ -583,7 +584,6 @@ const ExploreCGDPage = () => {
                             ? `${fmt(recentActivity[n.key])} ${recentActivity[n.key] === 1 ? n.singular : n.plural}`
                             : `Recent ${n.plural.replace(/^new /, '')}`}
                         </strong>
-                        <span className="explore-news-detail">added in the last 90 days</span>
                       </span>
                       <span className="explore-news-arrow" aria-hidden="true">→</span>
                     </Link>

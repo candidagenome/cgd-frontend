@@ -66,7 +66,7 @@
   align-items: center;
   gap: 10px;
   max-width: 720px;
-  margin: 0 auto 22px;
+  margin: 0 auto 12px;
   background: var(--ex-card);
   border: 1px solid var(--ex-border-strong);
   border-radius: 16px;
@@ -126,10 +126,36 @@
   background: #333;
 }
 
+.explore-try {
+  font-size: 0.88rem;
+  color: var(--ex-muted);
+  margin: 0 0 24px;
+}
+
+.explore-try-link {
+  color: var(--ex-link);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.explore-try-link:hover {
+  color: var(--ex-link-hover);
+  text-decoration: underline;
+}
+
+.explore-try-sep {
+  color: var(--ex-border-strong);
+  margin: 0 8px;
+}
+
 .explore-gotd {
   font-size: 0.95rem;
   color: var(--ex-muted);
-  margin: 0 0 26px;
+  margin: 0 auto 26px;
+  max-width: 880px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .explore-gotd-dot {
@@ -160,32 +186,17 @@
 .explore-liveindex {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
-  font-size: 0.85rem;
-  color: var(--ex-muted);
-  background: var(--ex-card);
-  border: 1px solid var(--ex-border);
-  border-radius: 999px;
-  padding: 8px 18px;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: var(--ex-faint);
 }
 
 .explore-live-dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: var(--ex-green);
-  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
-}
-
-.explore-live-label {
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--ex-text);
-  font-size: 0.78rem;
-}
-
-.explore-live-sep {
-  color: var(--ex-border-strong);
+  box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.15);
 }
 
 /* ---------- Body layout ---------- */
@@ -218,6 +229,17 @@
 .explore-section-meta {
   font-size: 0.8rem;
   color: var(--ex-faint);
+}
+
+/* Selected-organism suffix on the "Browse by Category" heading. */
+.explore-section-title-org {
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--ex-purple);
+}
+
+.explore-section-title-org em {
+  font-style: italic;
 }
 
 .explore-section-meta em {
@@ -270,10 +292,10 @@
 .explore-org-go {
   margin-left: 4px;
   color: var(--ex-link);
-  font-size: 0.72rem;
+  font-size: 1rem;
   font-weight: 600;
   line-height: 1;
-  padding: 7px 8px;
+  padding: 8px 10px;
   border-radius: 7px;
   opacity: 0.9;
   text-decoration: none;
@@ -347,6 +369,13 @@
   border-color: var(--ex-purple);
 }
 
+.explore-org-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
 .explore-org-name {
   font-style: italic;
   font-weight: 600;
@@ -385,6 +414,7 @@
 }
 
 .explore-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   background: var(--ex-card);
@@ -500,6 +530,23 @@
   color: var(--ex-link);
 }
 
+/* Stretched link: "Browse all" covers the whole card, making it fully
+   clickable; the title and example chips sit above it (z-index) so they
+   remain independently clickable. */
+.explore-card-browse::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+}
+
+.explore-card-label,
+.explore-card-tag,
+.explore-chip {
+  position: relative;
+  z-index: 1;
+}
+
 .explore-card:hover .explore-card-browse {
   color: var(--ex-link-hover);
 }
@@ -518,10 +565,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  background: var(--ex-card);
-  border: 1px solid var(--ex-border);
-  border-radius: 16px;
-  padding: 20px;
 }
 
 .explore-other-chip {
@@ -578,6 +621,14 @@
   background: var(--ex-purple);
 }
 
+.explore-panel-period {
+  margin-left: auto;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--ex-faint);
+}
+
 .explore-news {
   list-style: none;
   margin: 0 0 22px;
@@ -631,11 +682,6 @@
 .explore-news-text strong {
   font-size: 0.95rem;
   font-weight: 600;
-}
-
-.explore-news-detail {
-  font-size: 0.82rem;
-  color: var(--ex-faint);
 }
 
 .explore-news-arrow {
@@ -800,5 +846,8 @@
   }
   .explore-kbd {
     display: none;
+  }
+  .explore-gotd {
+    white-space: normal;
   }
 }
