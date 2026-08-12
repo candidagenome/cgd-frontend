@@ -10,9 +10,9 @@ const CommunityNewsPage = () => {
         <hr />
 
         <div className="info-section">
-          <h2>Public Distribution of the Merck-Frosst <em>Candida albicans</em> GRACE strain library (updated May 28, 2025)</h2>
+          <h2>Public Distribution of the Merck-Frosst <em>Candida albicans</em> GRACE strain library (updated August 12, 2026)</h2>
           <p>
-            The National Research Council of Canada has been mandated by Merck Sharp &amp; Dohme Corp. for the distribution of its <em>Candida albicans</em> GRACE (gene replacement and conditional expression) library.
+            The National Research Council of Canada has been mandated by Merck Sharp &amp; Dohme LLC for the distribution of its <em>Candida albicans</em> GRACE (gene replacement and conditional expression) library.
           </p>
           <p>
             First reported by Roemer et al. in 2003 (Molecular Microbiology 50(1), 167-181), the GRACE method allows for the transcriptional repression of tetracycline promoter-regulated genes. This collection has been replicated by members of the Malcolm Whiteway laboratory from individual tubes of the original library of 4,348 strains. Since this library was produced while the <em>C. albicans</em> annotation was still incomplete, several genes were inactivated in multiple independently derived mutants. We thus produced a non-redundant library containing a total of 2,357 different mutants (one mutant of each gene).
@@ -28,12 +28,15 @@ const CommunityNewsPage = () => {
           <p>
             <strong>Distribution of the library is now conducted by the Leah Cowen laboratory at the University of Toronto</strong>.
           </p>
-          <p>
-            The use of this library requires the execution of a fully executed MTA with Merck Sharp &amp; Dohme Corp. Consequently, interested laboratories should contact Lorraine Hernandez at lorraine_hernandez@merck.com and provide full contact information of the requesting PI, full contact information of the PI's institution that handles MTAs, and a brief statement of the proposed use of the strain collection(s) requested by the PI. Subsequently, a representative from Merck will contact Leah Cowen at leah.cowen@utoronto.ca to arrange distribution.
+       <p>The use of this library requires the execution of a fully executed MTA with Merck Sharp &amp; Dohme LLC. Consequently, interested laboratories should contact Lorraine Hernandez at lorraine_hernandez@merck.com and provide full contact information of the requesting PI, full contact information of the PI's institution that handles MTAs, and a brief statement of the proposed use of the strain collection(s) requested by the PI. Subsequently, a representative from Merck will contact Leah Cowen at leah.cowen@utoronto.ca to arrange distribution.
           </p>
           <p>
-            The cost of the library is $2350 CDN (+ tax and shipping if appropriate).
+            The cost of the library is $2350 USD (+ tax and shipping if appropriate).
           </p>
+          <p>Additional GRACE collections are now available. These are described in PMID: 34764269  (GRACEv2) and PMID: 41105619 (GRACEv3).</p>
+          <p>Additional details about these libraries are as follows:</p>
+          <p>1. GRACEv2 conditional expression strain collection (866 strains)                           US$850.00</p>
+          <p>2. GRACEv3 conditional expression strain collection (1,240 strains)                         US$1000.00</p>
         </div>
 
         <div className="info-section">
@@ -56,14 +59,7 @@ const CommunityNewsPage = () => {
             In order to validate the inactivated genes and barcode sequences, we isolated genomic DNA from pools of DBC strains produced by Merck in 2003 and 2007. We then used PCR to individually amplify the upstream and downstream barcodes along with genomic DNA from the insertion sites. These were subsequently sequenced in an Ion Torrent PGM. As of July 2013, we have validated 40.5% of the strains and this process will continue until the end of the year.
           </p>
           <p>
-            <strong>Distribution of the library is now conducted by the Leah Cowen laboratory at the University of Toronto</strong>.
-          </p>
-          <p>
-            The use of this library requires the execution of a fully executed MTA with Merck Sharp &amp; Dohme Corp. Consequently, interested laboratories should contact Scott Walker at scott.walker@merck.com and provide full contact information of the requesting PI, full contact information of the PI's institution that handles MTAs, and a brief statement of the proposed use of the strain collection(s) requested by the PI. Subsequently, a representative from Merck will contact Leah Cowen at leah.cowen@utoronto.ca to arrange distribution.
-          </p>
-          <p>
-            The cost of the library is $4500 CDN (+ tax and shipping if appropriate).
-          </p>
+    
         </div>
 
         <div className="info-section">
