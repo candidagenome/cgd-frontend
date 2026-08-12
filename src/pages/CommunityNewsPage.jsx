@@ -58,8 +58,6 @@ const CommunityNewsPage = () => {
           <p>
             In order to validate the inactivated genes and barcode sequences, we isolated genomic DNA from pools of DBC strains produced by Merck in 2003 and 2007. We then used PCR to individually amplify the upstream and downstream barcodes along with genomic DNA from the insertion sites. These were subsequently sequenced in an Ion Torrent PGM. As of July 2013, we have validated 40.5% of the strains and this process will continue until the end of the year.
           </p>
-          <p>
-    
         </div>
 
         <div className="info-section">
