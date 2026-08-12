@@ -1,0 +1,3 @@
+SRR_ID	Condition_Label	Assay_Type	Role	Target	Control_SRR	Replicate	Strain	Notes
+SRR27378296	Hfl1 ChIP (HTA_6)	ChIP-seq	IP	HFL1	SRR27378297	1	HTA_6	IP library IP_HTA_6_1
+SRR27378297	Input (HTA_6)	ChIP-seq	control		 	1	HTA_6	input library In_HTA_6_1

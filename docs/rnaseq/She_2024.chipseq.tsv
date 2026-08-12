@@ -1,0 +1,5 @@
+SRR_ID	Condition_Label	Assay_Type	Role	Target	Control_SRR	Replicate	Strain	Notes
+SRR27378296	Hfl1 ChIP (HTA_6)	ChIP-seq	IP	HFL1	SRR27378297	1	HTA_6	library IP_HTA_6_1; strain/label needs curator confirmation from paper
+SRR27378297	Input (HTA_6)	ChIP-seq	control		 	1	HTA_6	library In_HTA_6_1
+SRR27378294	Hfl1 ChIP (HTA_9)	ChIP-seq	IP	HFL1	SRR27378295	2	HTA_9	library IP_HTA_9_1; strain/label needs curator confirmation from paper
+SRR27378295	Input (HTA_9)	ChIP-seq	control		 	2	HTA_9	library In_HTA_9_1
