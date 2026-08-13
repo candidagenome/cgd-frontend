@@ -1,0 +1,5 @@
+SRR_ID	Condition_Label	Assay_Type	Role	Target	Control_SRR	Replicate	Strain	Notes
+SRR36507601	Isw2-MNase (rep 1)	ChEC-seq	IP	ISW2	SRR36507603	1	WT	GSM9394223; signal = Isw2-MNase cleavage
+SRR36507600	Isw2-MNase (rep 2)	ChEC-seq	IP	ISW2	SRR36507602	2	WT	GSM9394224
+SRR36507603	Free MNase control (rep 1)	ChEC-seq	control		 	1	WT	GSM9394221
+SRR36507602	Free MNase control (rep 2)	ChEC-seq	control		 	2	WT	GSM9394222
