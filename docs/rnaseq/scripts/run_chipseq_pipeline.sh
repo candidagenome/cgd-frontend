@@ -75,7 +75,13 @@ get_ena_url() {
 download_fastq() {
     local url=$1 dest=$2 tries=0
     while [ $tries -lt 5 ]; do
-        wget -q -c --tries=3 --timeout=60 -O "$dest" "$url" && gzip -t "$dest" 2>/dev/null && return 0
+        if wget -q -c --tries=3 --timeout=60 -O "$dest" "$url"; then
+            gzip -t "$dest" 2>/dev/null && return 0
+            # Download "completed" but the file is corrupt (e.g. a partial
+            # left by a crash that -c resumed onto) — discard and refetch,
+            # otherwise every retry inherits the same poisoned file.
+            rm -f "$dest"
+        fi
         tries=$((tries + 1))
         sleep 10
     done
@@ -112,14 +118,26 @@ for SRR in $ALL_SRRS; do
         mkdir -p "$OUTPUT_DIR/${SRR}"
         ENA_URL=$(get_ena_url "$SRR")
 
-        echo "[$(date)] Downloading $SRR from ENA" > "$SAMPLE_LOG"
-        if ! download_fastq "${ENA_URL}/${SRR}_1.fastq.gz" "$FASTQ_DIR/${SRR}_1.fastq.gz"; then
-            download_fastq "${ENA_URL}/${SRR}.fastq.gz" "$FASTQ_DIR/${SRR}_1.fastq.gz"
-        fi
-        PAIRED=false
-        if wget -q --spider --tries=3 --timeout=30 "${ENA_URL}/${SRR}_2.fastq.gz" 2>/dev/null; then
-            download_fastq "${ENA_URL}/${SRR}_2.fastq.gz" "$FASTQ_DIR/${SRR}_2.fastq.gz"
-            PAIRED=true
+        # Use pre-staged fastqs when present and intact (e.g. fetched from
+        # NCBI via prefetch/fasterq-dump during an ENA outage). The ENA path
+        # below must not run in that case: wget -O truncates the file and
+        # download_fastq deletes it outright on failure.
+        if gzip -t "$FASTQ_DIR/${SRR}_1.fastq.gz" 2>/dev/null; then
+            echo "[$(date)] Using pre-staged fastq(s) for $SRR" > "$SAMPLE_LOG"
+            PAIRED=false
+            if gzip -t "$FASTQ_DIR/${SRR}_2.fastq.gz" 2>/dev/null; then
+                PAIRED=true
+            fi
+        else
+            echo "[$(date)] Downloading $SRR from ENA" > "$SAMPLE_LOG"
+            if ! download_fastq "${ENA_URL}/${SRR}_1.fastq.gz" "$FASTQ_DIR/${SRR}_1.fastq.gz"; then
+                download_fastq "${ENA_URL}/${SRR}.fastq.gz" "$FASTQ_DIR/${SRR}_1.fastq.gz"
+            fi
+            PAIRED=false
+            if wget -q --spider --tries=3 --timeout=30 "${ENA_URL}/${SRR}_2.fastq.gz" 2>/dev/null; then
+                download_fastq "${ENA_URL}/${SRR}_2.fastq.gz" "$FASTQ_DIR/${SRR}_2.fastq.gz"
+                PAIRED=true
+            fi
         fi
 
         echo "[$(date)] Trimming with fastp (paired=$PAIRED)" >> "$SAMPLE_LOG"
@@ -151,9 +169,11 @@ for SRR in $ALL_SRRS; do
         fi
 
         echo "[$(date)] Removing PCR duplicates" >> "$SAMPLE_LOG"
-        samtools sort -n -@ $THREADS -m 1G "$OUTPUT_DIR/${SRR}/${SRR}_raw.bam" \
+        # Both sorts run concurrently in this pipe; keep -m small or the
+        # combined footprint OOMs the 8GB processing host (seen 2026-08-12).
+        samtools sort -n -@ $THREADS -m 384M "$OUTPUT_DIR/${SRR}/${SRR}_raw.bam" \
             | samtools fixmate -m - - \
-            | samtools sort -@ $THREADS -m 1G - \
+            | samtools sort -@ $THREADS -m 384M - \
             | samtools markdup -r - "$FINAL_BAM"
         samtools index "$FINAL_BAM"
         rm -f "$OUTPUT_DIR/${SRR}/${SRR}_raw.bam"
