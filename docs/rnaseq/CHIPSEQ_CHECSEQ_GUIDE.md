@@ -131,13 +131,68 @@ follows the study's organism convention, same as RNA-seq.
 Binding datasets do **not** go to the Expression tab (that is transcript
 abundance only).
 
+## Interpreting the ratio tracks
+
+Reference for answering user questions; the boxed text at the end is a
+ready-to-use draft for website help.
+
+**What the y-axis is.** Each point is log2(IP / control) for a 25 bp bin:
+the read depth of the tagged/immunoprecipitated sample divided by its
+matched control, after both are normalized to equal sequencing depth.
+The scale is logarithmic — +1 means 2-fold more signal than control,
++2 = 4-fold, +3 = 8-fold, +4 = 16-fold; negative values are the same
+fold-changes in the other direction.
+
+**Red vs blue is the sign of that ratio — not strand.** These tracks have
+no strand information (fragments from both strands are pooled during
+alignment, as in any coverage track). Red (positive) = more signal in the
+IP than the control; blue (negative) = more in the control than the IP.
+
+**Why blue exists at all (the zero-sum effect).** Both samples distribute
+a fixed number of normalized reads across the genome. The IP concentrates
+its reads at binding sites; the control spreads them by background. Every
+read the IP "spends" on a peak is one it doesn't spend elsewhere, so the
+unbound majority of the genome necessarily lands slightly below the
+control → shallow blue. Red peaks force blue elsewhere; broad shallow blue
+means "not a binding site," nothing more.
+
+**ChIP vs ChEC blue.** In ChIP-seq the control (input or untagged strain)
+is roughly uniform, so blue is mostly featureless dilution — ignore it.
+In ChEC-seq the control is **free MNase**, which preferentially cuts open
+chromatin wherever it is. Deep blue blocks in ChEC therefore do carry
+information: DNA that is accessible (free MNase cut it readily) but not
+occupied by the tagged protein. This is why ChEC tracks look much bluer
+than ChIP tracks — the difference between assays is real.
+
+**Reading guidance.**
+- Treat **replicated red peaks** as candidate binding; a peak present in
+  one replicate only, or a one-bin spike, is noise until proven otherwise.
+- The y-scale is fixed at ±4 across all ratio tracks, so heights are
+  directly comparable between replicates and studies.
+- The ratio is unstable where both samples have thin coverage (red/blue
+  speckle in low-coverage regions); trust shapes, not isolated bins.
+- ChEC peaks map **cleavage around** a binding site, not occupancy — they
+  are sharper than ChIP peaks and can flank the motif rather than sit on it.
+
+**Draft user-facing help text** (for the website, when we add it):
+
+> These tracks show where a DNA-binding protein sits on the genome,
+> measured by ChIP-seq or ChEC-seq. The value is log2(tagged sample /
+> control): **red peaks (above zero) mean the protein is enriched there
+> — these are the candidate binding sites.** Blue regions (below zero)
+> have relatively more signal in the control; for ChIP-seq this is
+> normalization background, and for ChEC-seq it largely reflects open
+> chromatin the protein does not occupy. Color does not indicate DNA
+> strand. Peaks supported by multiple replicates are the most reliable;
+> the y-axis is fixed at ±4 (16-fold) so tracks are directly comparable.
+
 ## Known datasets
 
 | Study | PMID | BioProject | Assay | Target | Status |
 |-------|------|------------|-------|--------|--------|
-| Lohse_2016 | 26772749 | SRP066491 / GSE75124 | ChIP-seq | Wor4 | reprocessing (old raw-coverage tracks to be retired) |
-| She_2024 | 39370643 | PRJNA1057507 | ChIP-seq | Hfl1 | pilot |
-| Mantilla_2026 | 42321418 | PRJNA1390763 | ChEC-seq | (TBD) | pending |
+| Lohse_2016 | 26772749 | SRP066491 / GSE75124 | ChIP-seq | Wor4 | 6 ratio tracks on dev (2026-08-12); old raw-coverage tracks retire after curator sign-off |
+| She_2024 | 39370643 | PRJNA1057507 | ChIP-seq | Hfl1 | 2 ratio tracks on dev (2026-08-12); condition labels (HTA_6/HTA_9) await curator confirmation |
+| Mantilla_2026 | 42321418 | PRJNA1390763 | ChEC-seq | Isw2 | 2 ratio tracks on dev (2026-08-13); reps r=0.94 |
 
 Lohse_2016 correction: the data is the **Wor4** ChIP from PMID 26772749
 (GSE75124), not Wor1; the old tracks' publication link (27280690) points to
