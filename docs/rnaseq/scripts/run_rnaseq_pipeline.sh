@@ -368,7 +368,14 @@ for SRR in $SAMPLES; do
         # adapter / overrepresentation for single-end), so this is dataset- and
         # species-agnostic and only trims reads that actually carry adapter.
         echo "[$(date)] Trimming adapters with fastp..." >> "$SAMPLE_LOG"
-        if [ "$PAIRED" = true ]; then
+        # Reuse an existing trimmed fastq (e.g. produced manually with fewer
+        # threads after a fastp deadlock — fastp can hang reproducibly on
+        # certain inputs when multi-threaded). Trimmed files are deleted
+        # after alignment, so anything found here was staged deliberately.
+        if gzip -t "$FASTQ_DIR/${SRR}_1.trimmed.fastq.gz" 2>/dev/null && \
+           { [ "$PAIRED" != true ] || gzip -t "$FASTQ_DIR/${SRR}_2.trimmed.fastq.gz" 2>/dev/null; }; then
+            echo "[$(date)] Using pre-staged trimmed fastq(s), skipping fastp" >> "$SAMPLE_LOG"
+        elif [ "$PAIRED" = true ]; then
             timeout -k 30 "$FASTP_TIMEOUT" fastp \
                 -i "$FASTQ_DIR/${SRR}_1.fastq.gz" \
                 -I "$FASTQ_DIR/${SRR}_2.fastq.gz" \
