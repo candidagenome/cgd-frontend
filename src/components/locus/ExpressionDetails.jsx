@@ -5,6 +5,10 @@ import './LocusComponents.css';
 // Default number of conditions to show per study
 const DEFAULT_VISIBLE_CONDITIONS = 4;
 
+// Default number of groups to show per grouped study (each group renders its
+// control + treatments, so 2 groups ≈ the 4-condition ungrouped default)
+const DEFAULT_VISIBLE_GROUPS = 2;
+
 // Get color for heatmap cell based on fold change
 const getHeatmapColor = (fc, colors) => {
   const logFc = Math.log2(fc);
@@ -109,6 +113,16 @@ const sortByMagnitude = (conditions) => {
     const magB = Math.abs(Math.log2(b.fold_change));
     return magB - magA;
   });
+};
+
+// Most extreme |log2 fold change| within a group's conditions. Used to rank
+// groups so grouped studies can be truncated per group (keeping each group's
+// control + treatments together) instead of per condition.
+const groupMagnitude = (conditions) => {
+  const mags = conditions
+    .filter(c => c.fold_change > 0)
+    .map(c => Math.abs(Math.log2(c.fold_change)));
+  return mags.length ? Math.max(...mags) : 0;
 };
 
 function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismChange, orthologOrganisms = [] }) {
@@ -320,7 +334,7 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
             )}
             <div className="expression-summary">
               <span className="summary-text">
-                <strong>{orgData.total_conditions}</strong> conditions across <strong>{orgData.studies?.length || 0}</strong> studies
+                <strong>{orgData.total_conditions}</strong> experimental condition{orgData.total_conditions === 1 ? '' : 's'} across <strong>{orgData.studies?.length || 0}</strong> {(orgData.studies?.length || 0) === 1 ? 'study' : 'studies'}
                 {orgData.max_upregulation && (
                   <span className="summary-stat upregulated">
                     Max upregulation: <strong>{formatFoldChange(orgData.max_upregulation)}</strong>
@@ -434,6 +448,8 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
                   // Grouped studies (e.g. strain comparisons) render one block per
                   // group: its own control baseline + treatment(s). The backend
                   // already orders conditions by (group, controls-first, label).
+                  // Truncation is per group (most extreme groups first) so a
+                  // treatment is never shown without its control baseline.
                   const isGrouped = study.conditions.some(c => c.group);
                   const conditionsByGroup = {};
                   const groupOrder = [];
@@ -444,6 +460,13 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
                       conditionsByGroup[g].push(c);
                     });
                   }
+                  const rankedGroups = [...groupOrder].sort((a, b) =>
+                    groupMagnitude(conditionsByGroup[b]) - groupMagnitude(conditionsByGroup[a])
+                  );
+                  const visibleGroups = showAll
+                    ? rankedGroups
+                    : rankedGroups.slice(0, DEFAULT_VISIBLE_GROUPS);
+                  const hiddenGroupCount = rankedGroups.length - DEFAULT_VISIBLE_GROUPS;
 
                   return (
                     <div
@@ -481,7 +504,16 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
                           </a>
                         )}
                         <span className="condition-count">
-                          ({study.conditions.length} conditions)
+                          {(() => {
+                            // Same basis as the page summary: experimental
+                            // conditions counted separately from controls.
+                            const nCtrl = study.conditions.filter(c => c.bucket === 'control').length;
+                            const nExp = study.conditions.length - nCtrl;
+                            const s = (n) => (n === 1 ? '' : 's');
+                            return nCtrl > 0
+                              ? `(${nExp} condition${s(nExp)} + ${nCtrl} control${s(nCtrl)})`
+                              : `(${nExp} condition${s(nExp)})`;
+                          })()}
                         </span>
                       </div>
 
@@ -489,25 +521,40 @@ function ExpressionDetails({ data, loading, error, selectedOrganism, onOrganismC
                         <div className="study-conditions">
                           {isGrouped ? (
                             // Grouped study: one block per group (control baseline + treatment)
-                            groupOrder.map(groupName => {
-                              const groupConds = conditionsByGroup[groupName];
-                              const groupControlLabel = groupConds.find(c => c.control_label)?.control_label;
-                              return (
-                                <div key={groupName} className="expression-group">
-                                  <div className="group-header">
-                                    <span className="group-name">{groupName}</span>
-                                    {groupControlLabel && (
-                                      <span className="group-control-info">
-                                        vs <strong>{groupControlLabel}</strong>
-                                      </span>
-                                    )}
+                            <>
+                              {visibleGroups.map(groupName => {
+                                const groupConds = conditionsByGroup[groupName];
+                                const groupControlLabel = groupConds.find(c => c.control_label)?.control_label;
+                                return (
+                                  <div key={groupName} className="expression-group">
+                                    <div className="group-header">
+                                      <span className="group-name">{groupName}</span>
+                                      {groupControlLabel && (
+                                        <span className="group-control-info">
+                                          vs <strong>{groupControlLabel}</strong>
+                                        </span>
+                                      )}
+                                    </div>
+                                    <div className="conditions-grid">
+                                      {groupConds.map(renderConditionItem)}
+                                    </div>
                                   </div>
-                                  <div className="conditions-grid">
-                                    {groupConds.map(renderConditionItem)}
-                                  </div>
-                                </div>
-                              );
-                            })
+                                );
+                              })}
+
+                              {/* Show all groups toggle */}
+                              {hiddenGroupCount > 0 && (
+                                <button
+                                  className="show-all-toggle"
+                                  onClick={(e) => toggleShowAll(study.study_id, e)}
+                                >
+                                  {showAll
+                                    ? `Show top ${DEFAULT_VISIBLE_GROUPS} groups only`
+                                    : `Show all ${rankedGroups.length} groups`
+                                  }
+                                </button>
+                              )}
+                            </>
                           ) : (
                             <>
                               <div className="control-info">

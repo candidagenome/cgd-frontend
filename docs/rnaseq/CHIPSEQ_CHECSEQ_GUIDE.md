@@ -190,7 +190,7 @@ than ChIP tracks — the difference between assays is real.
 
 | Study | PMID | BioProject | Assay | Target | Status |
 |-------|------|------------|-------|--------|--------|
-| Lohse_2016 | 26772749 | SRP066491 / GSE75124 | ChIP-seq | Wor4 | 6 ratio tracks on dev (2026-08-12); old raw-coverage tracks retire after curator sign-off |
+| Lohse_2016 | 26772749 | SRP066491 / GSE75124 | ChIP-seq | Wor4 | 6 ratio tracks on dev (2026-08-12); old raw-coverage tracks retired from dev 2026-08-13 (still on prod until promotion) |
 | She_2024 | 39370643 | PRJNA1057507 | ChIP-seq | Hfl1 | 2 ratio tracks on dev (2026-08-12); condition labels (HTA_6/HTA_9) await curator confirmation |
 | Mantilla_2026 | 42321418 | PRJNA1390763 | ChEC-seq | Isw2 | 2 ratio tracks on dev (2026-08-13); reps r=0.94 |
 
