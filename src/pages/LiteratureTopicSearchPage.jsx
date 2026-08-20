@@ -433,24 +433,33 @@ function LiteratureTopicSearchPage() {
   const handleDownload = () => {
     if (!data || !data.results || data.results.length === 0) return;
 
-    // CSV headers
-    const headers = ['Topic', 'Reference', 'PubMed ID', 'Year', 'Genes'];
+    // One row per gene per reference so genes and PMIDs are sortable columns
+    const headers = ['Topic', 'PubMed ID', 'Year', 'Reference', 'Gene Name', 'Systematic Name', 'Species'];
 
-    // Convert data to CSV rows
     const rows = [];
     for (const topicResult of data.results) {
-      for (const ref of topicResult.references) {
-        const geneList = (ref.genes || [])
-          .map(g => formatLocusName(g))
-          .join('; ');
-
-        rows.push([
+      // Use the same filtered rows as the on-screen tables
+      const topicRows = topicRowsMap.get(topicResult.cv_term_no) || [];
+      for (const ref of filterRefs(topicRows)) {
+        const refFields = [
           topicResult.topic,
-          ref.citation || '',
           ref.pubmed || '',
           ref.year || '',
-          geneList,
-        ]);
+          ref.citation || '',
+        ];
+        const genes = ref.genes || [];
+        if (genes.length === 0) {
+          rows.push([...refFields, '', '', '']);
+        } else {
+          for (const gene of genes) {
+            rows.push([
+              ...refFields,
+              gene.gene_name || '',
+              gene.feature_name || '',
+              gene.organism || '',
+            ]);
+          }
+        }
       }
     }
 
@@ -474,7 +483,9 @@ function LiteratureTopicSearchPage() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'literature_topic_search_results.csv';
+    link.download = hasActiveFilters
+      ? 'literature_topic_search_results_filtered.csv'
+      : 'literature_topic_search_results.csv';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
