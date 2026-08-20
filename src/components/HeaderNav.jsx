@@ -67,14 +67,14 @@ const HeaderNav = () => {
       label: 'Tools',
       to: '/tools',
       submenu: [
-        { label: 'CRISPR Guide Designer (Preview)', to: '/crispr' },
+        { label: 'CRISPR Guide Designer', to: '/crispr' },
         { label: 'Ortholog Converter', to: '/ortholog-converter' },
         { label: 'PatMatch', to: '/patmatch' },
         { label: 'Primers', to: '/webprimer' },
         { label: 'Phenotype Search', to: '/phenotype/search' },
         { label: 'Restriction Mapper', to: '/restriction-mapper' },
         { label: 'Synteny Browser', to: '/synteny-browser' },
-        { label: 'Virulence Factor Browser (Preview)', to: '/virulence-factor-browser' }
+        { label: 'Virulence Factor Browser', to: '/virulence-factor-browser' }
       ]
     },
     {
