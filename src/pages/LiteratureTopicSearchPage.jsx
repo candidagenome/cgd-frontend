@@ -536,7 +536,7 @@ function LiteratureTopicSearchPage() {
             <li><strong>Gene Filter:</strong> Enter gene names (comma-separated) to show only references associated with those specific genes.</li>
             <li><strong>Quick Filter:</strong> Search across all fields including citation text, PubMed IDs, and gene names.</li>
           </ul>
-          <p>All filters work together - results must match all active filters. Click <strong>Apply Filters</strong> to update results.</p>
+          <p>All filters work together - results must match all active filters. The species filter applies immediately; click <strong>Apply Filters</strong> after typing gene names or search text.</p>
         </div>
       )}
     </div>
@@ -551,7 +551,11 @@ function LiteratureTopicSearchPage() {
           <select
             id="species-filter"
             value={pendingSpeciesFilter}
-            onChange={(e) => setPendingSpeciesFilter(e.target.value)}
+            onChange={(e) => {
+              // Dropdown selections take effect immediately, no Apply needed
+              setPendingSpeciesFilter(e.target.value);
+              setAppliedSpeciesFilter(e.target.value);
+            }}
             className="species-select"
           >
             <option value="">All species</option>
