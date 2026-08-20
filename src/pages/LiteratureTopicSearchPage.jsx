@@ -433,24 +433,33 @@ function LiteratureTopicSearchPage() {
   const handleDownload = () => {
     if (!data || !data.results || data.results.length === 0) return;
 
-    // CSV headers
-    const headers = ['Topic', 'Reference', 'PubMed ID', 'Year', 'Genes'];
+    // One row per gene per reference so genes and PMIDs are sortable columns
+    const headers = ['Topic', 'PubMed ID', 'Year', 'Reference', 'Gene Name', 'Systematic Name', 'Species'];
 
-    // Convert data to CSV rows
     const rows = [];
     for (const topicResult of data.results) {
-      for (const ref of topicResult.references) {
-        const geneList = (ref.genes || [])
-          .map(g => formatLocusName(g))
-          .join('; ');
-
-        rows.push([
+      // Use the same filtered rows as the on-screen tables
+      const topicRows = topicRowsMap.get(topicResult.cv_term_no) || [];
+      for (const ref of filterRefs(topicRows)) {
+        const refFields = [
           topicResult.topic,
-          ref.citation || '',
           ref.pubmed || '',
           ref.year || '',
-          geneList,
-        ]);
+          ref.citation || '',
+        ];
+        const genes = ref.genes || [];
+        if (genes.length === 0) {
+          rows.push([...refFields, '', '', '']);
+        } else {
+          for (const gene of genes) {
+            rows.push([
+              ...refFields,
+              gene.gene_name || '',
+              gene.feature_name || '',
+              gene.organism || '',
+            ]);
+          }
+        }
       }
     }
 
@@ -474,27 +483,36 @@ function LiteratureTopicSearchPage() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'literature_topic_search_results.csv';
+    link.download = hasActiveFilters
+      ? 'literature_topic_search_results_filtered.csv'
+      : 'literature_topic_search_results.csv';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
   };
 
-  // Calculate total filtered count
+  // Calculate total filtered counts (references and unique genes)
   const filteredStats = useMemo(() => {
-    if (!data || !data.results) return { totalFiltered: 0, totalOriginal: 0 };
+    if (!data || !data.results) return { totalFiltered: 0, totalOriginal: 0, filteredGenes: 0 };
 
     let totalFiltered = 0;
     let totalOriginal = 0;
+    const geneSet = new Set();
 
     for (const topicResult of data.results) {
       const topicRows = topicRowsMap.get(topicResult.cv_term_no) || [];
       totalOriginal += topicRows.length;
-      totalFiltered += filterRefs(topicRows).length;
+      const filteredRows = filterRefs(topicRows);
+      totalFiltered += filteredRows.length;
+      for (const ref of filteredRows) {
+        for (const gene of ref.genes || []) {
+          geneSet.add(gene.feature_no);
+        }
+      }
     }
 
-    return { totalFiltered, totalOriginal };
+    return { totalFiltered, totalOriginal, filteredGenes: geneSet.size };
   }, [data, topicRowsMap, filterRefs]);
 
   const hasActiveFilters = appliedSpeciesFilter || appliedGeneFilterList.length > 0 || appliedQuickFilter.trim();
@@ -525,7 +543,7 @@ function LiteratureTopicSearchPage() {
             <li><strong>Gene Filter:</strong> Enter gene names (comma-separated) to show only references associated with those specific genes.</li>
             <li><strong>Quick Filter:</strong> Search across all fields including citation text, PubMed IDs, and gene names.</li>
           </ul>
-          <p>All filters work together - results must match all active filters. Click <strong>Apply Filters</strong> to update results.</p>
+          <p>All filters work together - results must match all active filters. The species filter applies immediately; click <strong>Apply Filters</strong> after typing gene names or search text.</p>
         </div>
       )}
     </div>
@@ -540,7 +558,11 @@ function LiteratureTopicSearchPage() {
           <select
             id="species-filter"
             value={pendingSpeciesFilter}
-            onChange={(e) => setPendingSpeciesFilter(e.target.value)}
+            onChange={(e) => {
+              // Dropdown selections take effect immediately, no Apply needed
+              setPendingSpeciesFilter(e.target.value);
+              setAppliedSpeciesFilter(e.target.value);
+            }}
             className="species-select"
           >
             <option value="">All species</option>
@@ -619,8 +641,19 @@ function LiteratureTopicSearchPage() {
         <div className="results-summary-row">
           <div className="results-summary-left">
             <div className="results-count">
-              Found <strong>{data.total_references}</strong> reference{data.total_references !== 1 ? 's' : ''}{' '}
-              and <strong>{data.total_genes}</strong> associated gene{data.total_genes !== 1 ? 's' : ''}
+              {hasActiveFilters ? (
+                <>
+                  Showing <strong>{filteredStats.totalFiltered}</strong> of {data.total_references}{' '}
+                  reference{data.total_references !== 1 ? 's' : ''} and{' '}
+                  <strong>{filteredStats.filteredGenes}</strong> of {data.total_genes}{' '}
+                  associated gene{data.total_genes !== 1 ? 's' : ''} (filtered)
+                </>
+              ) : (
+                <>
+                  Found <strong>{data.total_references}</strong> reference{data.total_references !== 1 ? 's' : ''}{' '}
+                  and <strong>{data.total_genes}</strong> associated gene{data.total_genes !== 1 ? 's' : ''}
+                </>
+              )}
             </div>
             <div className="query-summary">
               Selected topics: {data.query.topic_names.join(', ')}
@@ -628,7 +661,9 @@ function LiteratureTopicSearchPage() {
           </div>
           {topicRowsMap.size > 0 && (
             <button type="button" className="btn-download" onClick={handleDownload}>
-              Download CSV
+              {hasActiveFilters
+                ? `Download CSV (${filteredStats.totalFiltered} filtered)`
+                : 'Download CSV'}
             </button>
           )}
         </div>
