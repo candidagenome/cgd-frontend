@@ -492,20 +492,27 @@ function LiteratureTopicSearchPage() {
     URL.revokeObjectURL(url);
   };
 
-  // Calculate total filtered count
+  // Calculate total filtered counts (references and unique genes)
   const filteredStats = useMemo(() => {
-    if (!data || !data.results) return { totalFiltered: 0, totalOriginal: 0 };
+    if (!data || !data.results) return { totalFiltered: 0, totalOriginal: 0, filteredGenes: 0 };
 
     let totalFiltered = 0;
     let totalOriginal = 0;
+    const geneSet = new Set();
 
     for (const topicResult of data.results) {
       const topicRows = topicRowsMap.get(topicResult.cv_term_no) || [];
       totalOriginal += topicRows.length;
-      totalFiltered += filterRefs(topicRows).length;
+      const filteredRows = filterRefs(topicRows);
+      totalFiltered += filteredRows.length;
+      for (const ref of filteredRows) {
+        for (const gene of ref.genes || []) {
+          geneSet.add(gene.feature_no);
+        }
+      }
     }
 
-    return { totalFiltered, totalOriginal };
+    return { totalFiltered, totalOriginal, filteredGenes: geneSet.size };
   }, [data, topicRowsMap, filterRefs]);
 
   const hasActiveFilters = appliedSpeciesFilter || appliedGeneFilterList.length > 0 || appliedQuickFilter.trim();
@@ -634,8 +641,19 @@ function LiteratureTopicSearchPage() {
         <div className="results-summary-row">
           <div className="results-summary-left">
             <div className="results-count">
-              Found <strong>{data.total_references}</strong> reference{data.total_references !== 1 ? 's' : ''}{' '}
-              and <strong>{data.total_genes}</strong> associated gene{data.total_genes !== 1 ? 's' : ''}
+              {hasActiveFilters ? (
+                <>
+                  Showing <strong>{filteredStats.totalFiltered}</strong> of {data.total_references}{' '}
+                  reference{data.total_references !== 1 ? 's' : ''} and{' '}
+                  <strong>{filteredStats.filteredGenes}</strong> of {data.total_genes}{' '}
+                  associated gene{data.total_genes !== 1 ? 's' : ''} (filtered)
+                </>
+              ) : (
+                <>
+                  Found <strong>{data.total_references}</strong> reference{data.total_references !== 1 ? 's' : ''}{' '}
+                  and <strong>{data.total_genes}</strong> associated gene{data.total_genes !== 1 ? 's' : ''}
+                </>
+              )}
             </div>
             <div className="query-summary">
               Selected topics: {data.query.topic_names.join(', ')}
@@ -643,7 +661,9 @@ function LiteratureTopicSearchPage() {
           </div>
           {topicRowsMap.size > 0 && (
             <button type="button" className="btn-download" onClick={handleDownload}>
-              Download CSV
+              {hasActiveFilters
+                ? `Download CSV (${filteredStats.totalFiltered} filtered)`
+                : 'Download CSV'}
             </button>
           )}
         </div>
