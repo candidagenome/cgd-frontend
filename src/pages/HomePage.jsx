@@ -15,18 +15,11 @@ const SLIDESHOW_IMAGES = [
 
 // Meetings data
 const MEETINGS = [
-
   {
-    title: 'Antimicrobial Resistance - Genomes, Big Data and Emerging Technologies',
-    url: 'https://coursesandconferences.wellcomeconnectingscience.org/event/antimicrobial-resistance-genomes-big-data-and-emerging-technologies-20260323/',
-    location: 'Wellcome Genome Campus, UK and Virtual',
-    date: 'March 23 - 25, 2026',
-  },
-  {
-    title: 'Fungal Pathogen Genomics (Virtual Course)',
-    url: 'https://coursesandconferences.wellcomeconnectingscience.org/event/fungal-pathogen-genomics-virtual-20260601/',
-    location: null,
-    date: 'June 1 - 5, 2026',
+    title: 'Gordon Conference: Immunology of Fungal Infections',
+    url: 'https://www.grc.org/immunology-of-fungal-infections-conference/2027/',
+    location: 'Ventura, CA, USA',
+    date: 'January 17 - 22, 2027',
   },
 ];
 
@@ -50,7 +43,7 @@ const NEWS_ITEMS = [
     highlight: true,
   },
   {
-    title: 'New: Enhanced Interactions Tab (Preview)',
+    title: 'New: Enhanced Interactions Tab',
     content: (
       <>
         The Interactions tab on gene pages now brings physical, genetic, and STRING
@@ -70,7 +63,7 @@ const NEWS_ITEMS = [
     highlight: true,
   },
   {
-    title: 'New: CRISPR Guide RNA Designer (Preview)',
+    title: 'New: CRISPR Guide RNA Designer',
     content: (
       <>
         Design sgRNAs for <em>Candida</em> CRISPRi/CRISPRa/CRISPR cut experiments with our new CRISPR Guide RNA
@@ -125,7 +118,7 @@ const NEWS_ITEMS = [
     highlight: true,
   },
   {
-    title: 'New: Enhanced Expression Tab (Preview)',
+    title: 'New: Enhanced Expression Tab',
     content: (
       <>
         The Expression tab on gene pages now features two powerful subtabs:
@@ -144,7 +137,7 @@ const NEWS_ITEMS = [
     highlight: true,
   },
   {
-    title: 'New: Virulence Factor Browser (Preview)',
+    title: 'New: Virulence Factor Browser',
     content: (
       <>
         Explore our new tool for searching and filtering <em>Candida</em> virulence-related genes,
