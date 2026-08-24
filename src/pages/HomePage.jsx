@@ -16,15 +16,51 @@ const SLIDESHOW_IMAGES = [
 // Meetings data
 const MEETINGS = [
   {
+    title: '39th International Specialized Symposium on Yeasts (ISSY39)',
+    url: 'https://www.issy39.org/html/?pmode=welcome',
+    location: 'Seoul, South Korea',
+    date: 'November 8 - 12, 2026',
+  },
+  {
     title: 'Gordon Conference: Immunology of Fungal Infections',
     url: 'https://www.grc.org/immunology-of-fungal-infections-conference/2027/',
     location: 'Ventura, CA, USA',
     date: 'January 17 - 22, 2027',
   },
+  {
+    title: '40th International Specialized Symposium on Yeasts (ISSY40)',
+    url: 'https://www.issy40.com.br/',
+    location: 'Santos, Sao Paulo, Brazil',
+    date: 'August 22 - 26, 2027',
+  },
 ];
 
 // News items
 const NEWS_ITEMS = [
+  {
+    title: 'New: Repeat/Transposable Element and C. albicans snoRNA Annotations',
+    content: (
+      <>
+        CGD has annotated repeats and transposable elements across all six species - adding
+        them for <em>C. dubliniensis</em>, <em>C. tropicalis</em>, <em>C. glabrata</em>,{' '}
+        <em>C. parapsilosis</em>, and <em>C. auris</em> for the first time, and filling gaps in
+        the curated <em>C. albicans</em> set. Highlights include the first <em>C. tropicalis</em>{' '}
+        retrotransposons, <em>C. glabrata</em> megasatellites, and DNA transposons (a new feature
+        type) in <em>C. parapsilosis</em> and <em>C. dubliniensis</em>. In addition,{' '}
+        <em>C. albicans</em> gains 8 previously missing snoRNA genes (C/D box and H/ACA box,
+        including a second genomic copy of U3).
+        <p></p>
+        <strong>Note:</strong> These features are computational predictions reviewed by CGD
+        curators.
+        <br /><br />
+        <Link to="/help/repeat-te">How the repeats were identified</Link>
+        {' | '}
+        <Link to="/help/non-coding-rna">How the snoRNAs were identified</Link>
+      </>
+    ),
+    date: 'August 2026',
+    highlight: true,
+  },
   {
     title: 'New: Non-coding RNA Gene Annotations',
     content: (

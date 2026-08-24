@@ -60,6 +60,17 @@ function HelpPage() {
 
         <div className="help-item">
           <h3>
+            <Link to="/help/repeat-te">Repeat and Transposable Element Annotations</Link>
+          </h3>
+          <p>
+            The repeat and transposable element features (retrotransposons, LTRs, DNA
+            transposons, and repeat regions) annotated across all six Candida species, and the
+            tools and methods used to identify them.
+          </p>
+        </div>
+
+        <div className="help-item">
+          <h3>
             <Link to="/help/search-form">Search Help</Link>
           </h3>
           <p>Documentation about search tools in CGD. Additional tool-specific documentation:</p>
