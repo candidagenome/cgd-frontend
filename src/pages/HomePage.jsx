@@ -16,10 +16,22 @@ const SLIDESHOW_IMAGES = [
 // Meetings data
 const MEETINGS = [
   {
+    title: '39th International Specialized Symposium on Yeasts (ISSY39)',
+    url: 'https://www.issy39.org/html/?pmode=welcome',
+    location: 'Seoul, South Korea',
+    date: 'November 8 - 12, 2026',
+  },
+  {
     title: 'Gordon Conference: Immunology of Fungal Infections',
     url: 'https://www.grc.org/immunology-of-fungal-infections-conference/2027/',
     location: 'Ventura, CA, USA',
     date: 'January 17 - 22, 2027',
+  },
+  {
+    title: '40th International Specialized Symposium on Yeasts (ISSY40)',
+    url: 'https://www.issy40.com.br/',
+    location: 'Santos, Sao Paulo, Brazil',
+    date: 'August 22 - 26, 2027',
   },
 ];
 
