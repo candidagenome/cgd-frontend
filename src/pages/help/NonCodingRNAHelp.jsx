@@ -51,43 +51,43 @@ function NonCodingRNAHelp() {
               </tr>
               <tr>
                 <td><em>C. dubliniensis</em></td>
-                <td>&mdash;</td>
+                <td>-</td>
                 <td>5 new</td>
-                <td>&mdash;</td>
+                <td>-</td>
                 <td>33 new</td>
                 <td>5 new</td>
               </tr>
               <tr>
                 <td><em>C. glabrata</em></td>
-                <td>&mdash;</td>
-                <td>&mdash;</td>
-                <td>&mdash;</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
                 <td>8 new + 48 reclassified</td>
                 <td>5 reclassified</td>
               </tr>
               <tr>
                 <td><em>C. parapsilosis</em></td>
-                <td>&mdash;</td>
-                <td>&mdash;</td>
-                <td>&mdash;</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
                 <td>33 new</td>
                 <td>4 new</td>
               </tr>
               <tr>
                 <td><em>C. auris</em></td>
-                <td>&mdash;</td>
-                <td>&mdash;</td>
-                <td>&mdash;</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
                 <td>27 new</td>
                 <td>5 new</td>
               </tr>
               <tr>
                 <td><em>C. albicans</em></td>
-                <td>&mdash;</td>
-                <td>&mdash;</td>
-                <td>&mdash;</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
                 <td>8 new</td>
-                <td>&mdash;</td>
+                <td>-</td>
               </tr>
             </tbody>
           </table>
@@ -151,8 +151,8 @@ function NonCodingRNAHelp() {
           </p>
           <p>
             For <em>C. albicans</em>, the scan identified 8 snoRNAs absent from the manually
-            curated set &mdash; 3 C/D-box (including a second genomic copy of the U3 snoRNA) and
-            5 H/ACA-box &mdash; which were added as haplotype-paired A/B alleles following the
+            curated set - 3 C/D-box (including a second genomic copy of the U3 snoRNA) and
+            5 H/ACA-box - which were added as haplotype-paired A/B alleles following the
             Assembly 22 convention.
           </p>
         </div>
@@ -206,7 +206,7 @@ function NonCodingRNAHelp() {
             </li>
             <li>
               <strong>Standard / gene name</strong>: the biological family name where one exists
-              &mdash; the Rfam family for snoRNAs/snRNAs (e.g. <code>snR10</code>, <code>U2</code>),
+              - the Rfam family for snoRNAs/snRNAs (e.g. <code>snR10</code>, <code>U2</code>),
               the isotype&ndash;anticodon for tRNAs, and the standard name for characterized ncRNAs
               (<code>RPR1</code>, <code>SCR1</code>). Multi-copy families are distinguished with
               numeric suffixes (e.g. <code>snR43-1</code>, <code>snR43-2</code>).
@@ -239,7 +239,7 @@ function NonCodingRNAHelp() {
             All of these features are <strong>computational predictions</strong>, marked as
             <em> Uncharacterized</em>; their systematic and family names are provisional and may
             change during curation. Coverage is intentionally high-confidence rather than
-            exhaustive &mdash; for example, the snoRNA set reflects Rfam&rsquo;s curated core
+            exhaustive - for example, the snoRNA set reflects Rfam&rsquo;s curated core
             families and is smaller than the manually curated <em>C. albicans</em> set; low-
             confidence or highly divergent elements were deliberately not annotated. Protein-coding
             gene sequences and coordinates were not changed by this work.
