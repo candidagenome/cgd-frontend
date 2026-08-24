@@ -621,6 +621,17 @@ function GenomeSnapshotPage() {
                   <td>{Math.round(data.retrotransposon_count / divisor).toLocaleString()}</td>
                 </tr>
               )}
+              {data.dna_transposon_count > 0 && (
+                <tr>
+                  <td>
+                    <a href={`/feature-search/results?organism=${organism}&featuretype=DNA_transposon`} target="feature-search">
+                      DNA_transposon
+                    </a>
+                  </td>
+                  <td>{data.dna_transposon_count.toLocaleString()}</td>
+                  <td>{Math.round(data.dna_transposon_count / divisor).toLocaleString()}</td>
+                </tr>
+              )}
               {data.centromere_count > 0 && (
                 <tr>
                   <td>
