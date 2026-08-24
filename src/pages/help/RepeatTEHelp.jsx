@@ -64,7 +64,7 @@ function RepeatTEHelp() {
                 <td>1</td>
                 <td>3</td>
                 <td>-</td>
-                <td>117</td>
+                <td>107</td>
                 <td>
                   Repeats without transposons: dominated by megasatellite-scale tandem repeats
                   (copies to 27.7 kb) inside cell-wall/adhesin genes
