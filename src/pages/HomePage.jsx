@@ -38,7 +38,7 @@ const MEETINGS = [
 // News items
 const NEWS_ITEMS = [
   {
-    title: 'New: Repeat and Transposable Element Annotations',
+    title: 'New: Repeat/Transposable Element and C. albicans snoRNA Annotations',
     content: (
       <>
         CGD has annotated repeats and transposable elements across all six species &mdash; adding
@@ -46,12 +46,16 @@ const NEWS_ITEMS = [
         <em>C. parapsilosis</em>, and <em>C. auris</em> for the first time, and filling gaps in
         the curated <em>C. albicans</em> set. Highlights include the first <em>C. tropicalis</em>{' '}
         retrotransposons, <em>C. glabrata</em> megasatellites, and DNA transposons (a new feature
-        type) in <em>C. parapsilosis</em> and <em>C. dubliniensis</em>.
+        type) in <em>C. parapsilosis</em> and <em>C. dubliniensis</em>. In addition,{' '}
+        <em>C. albicans</em> gains 8 previously missing snoRNA genes (C/D box and H/ACA box,
+        including a second genomic copy of U3).
         <p></p>
         <strong>Note:</strong> These features are computational predictions reviewed by CGD
-        curators at the family level.
+        curators.
         <br /><br />
-        <Link to="/help/repeat-te">Learn how they were identified</Link>
+        <Link to="/help/repeat-te">How the repeats were identified</Link>
+        {' | '}
+        <Link to="/help/non-coding-rna">How the snoRNAs were identified</Link>
       </>
     ),
     date: 'August 2026',

@@ -16,8 +16,10 @@ function NonCodingRNAHelp() {
             annotation across the five species of <em>C. tropicalis</em>, <em>C. dubliniensis</em>,{' '}
             <em>C. glabrata</em>, <em>C. parapsilosis</em>, and <em>C. auris</em> by adding transfer
             RNAs (tRNA), ribosomal RNAs (rRNA), small nucleolar RNAs (snoRNA), small nuclear
-            (spliceosomal) RNAs (snRNA), and other non-coding RNAs. These features now appear in
-            their genome browsers, gene pages, and search results.
+            (spliceosomal) RNAs (snRNA), and other non-coding RNAs. The same scan also identified
+            8 snoRNAs missing from the curated <em>C. albicans</em> set, which were added as
+            haplotype-paired alleles. These features now appear in the genome browsers, gene
+            pages, and search results.
           </p>
         </div>
 
@@ -79,6 +81,14 @@ function NonCodingRNAHelp() {
                 <td>27 new</td>
                 <td>5 new</td>
               </tr>
+              <tr>
+                <td><em>C. albicans</em></td>
+                <td>&mdash;</td>
+                <td>&mdash;</td>
+                <td>&mdash;</td>
+                <td>8 new</td>
+                <td>&mdash;</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -138,6 +148,12 @@ function NonCodingRNAHelp() {
             typed as generic &ldquo;ncRNA&rdquo;; the scan was used to reclassify 53 of them to
             their correct type (snoRNA or snRNA) and Rfam family name, and to add 8 additional
             novel snoRNAs.
+          </p>
+          <p>
+            For <em>C. albicans</em>, the scan identified 8 snoRNAs absent from the manually
+            curated set &mdash; 3 C/D-box (including a second genomic copy of the U3 snoRNA) and
+            5 H/ACA-box &mdash; which were added as haplotype-paired A/B alleles following the
+            Assembly 22 convention.
           </p>
         </div>
 
