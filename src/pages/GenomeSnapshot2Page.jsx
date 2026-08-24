@@ -88,6 +88,7 @@ const INVENTORY_DEFS = [
   { key: 'ltr', label: 'Long terminal repeat', category: CATEGORY_REPEAT, field: 'ltr_count', search: 'featuretype=long_terminal_repeat' },
   { key: 'repeat_region', label: 'Repeat region', category: CATEGORY_REPEAT, field: 'repeat_region_count', search: 'featuretype=repeat_region' },
   { key: 'retrotransposon', label: 'Retrotransposon', category: CATEGORY_REPEAT, field: 'retrotransposon_count', search: 'featuretype=retrotransposon' },
+  { key: 'dna_transposon', label: 'DNA transposon', category: CATEGORY_REPEAT, field: 'dna_transposon_count', search: 'featuretype=DNA_transposon' },
   { key: 'centromere', label: 'Centromere', category: CATEGORY_OTHER, field: 'centromere_count', search: 'featuretype=centromere' },
   { key: 'pseudogene', label: 'Pseudogenes', category: CATEGORY_OTHER, field: 'pseudogene_count', search: 'featuretype=pseudogene' },
   { key: 'blocked', label: 'Blocked reading frame', category: CATEGORY_OTHER, field: 'blocked_reading_frame_count', search: 'featuretype=blocked_reading_frame' },
