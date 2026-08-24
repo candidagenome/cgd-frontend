@@ -41,7 +41,7 @@ const NEWS_ITEMS = [
     title: 'New: Repeat/Transposable Element and C. albicans snoRNA Annotations',
     content: (
       <>
-        CGD has annotated repeats and transposable elements across all six species &mdash; adding
+        CGD has annotated repeats and transposable elements across all six species - adding
         them for <em>C. dubliniensis</em>, <em>C. tropicalis</em>, <em>C. glabrata</em>,{' '}
         <em>C. parapsilosis</em>, and <em>C. auris</em> for the first time, and filling gaps in
         the curated <em>C. albicans</em> set. Highlights include the first <em>C. tropicalis</em>{' '}
