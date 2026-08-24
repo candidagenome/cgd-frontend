@@ -38,6 +38,26 @@ const MEETINGS = [
 // News items
 const NEWS_ITEMS = [
   {
+    title: 'New: Repeat and Transposable Element Annotations',
+    content: (
+      <>
+        CGD has annotated repeats and transposable elements across all six species &mdash; adding
+        them for <em>C. dubliniensis</em>, <em>C. tropicalis</em>, <em>C. glabrata</em>,{' '}
+        <em>C. parapsilosis</em>, and <em>C. auris</em> for the first time, and filling gaps in
+        the curated <em>C. albicans</em> set. Highlights include the first <em>C. tropicalis</em>{' '}
+        retrotransposons, <em>C. glabrata</em> megasatellites, and DNA transposons (a new feature
+        type) in <em>C. parapsilosis</em> and <em>C. dubliniensis</em>.
+        <p></p>
+        <strong>Note:</strong> These features are computational predictions reviewed by CGD
+        curators at the family level.
+        <br /><br />
+        <Link to="/help/repeat-te">Learn how they were identified</Link>
+      </>
+    ),
+    date: 'August 2026',
+    highlight: true,
+  },
+  {
     title: 'New: Non-coding RNA Gene Annotations',
     content: (
       <>
