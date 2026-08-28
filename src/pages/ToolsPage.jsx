@@ -5,6 +5,36 @@ import './InfoPages.css';
 const ToolsPage = () => {
   const tools = [
     {
+      title: 'Batch Download',
+      url: '/batch-download',
+      description: 'Download sequences and annotation data for a list of genes'
+    },
+    {
+      title: 'BLAST',
+      url: '/blast',
+      description: 'Search Candida sequences by similarity to a nucleotide or protein query'
+    },
+    {
+      title: 'CRISPR Guide Designer',
+      url: '/crispr',
+      description: 'Design sgRNAs for Candida CRISPRi/CRISPRa/CRISPR cut experiments, with off-target evaluation and cloning primers'
+    },
+    {
+      title: 'Gene/Sequence Resources',
+      url: '/seq-tools',
+      description: 'Retrieve sequences and annotation for a gene or chromosomal region'
+    },
+    {
+      title: 'GO Slim Mapper',
+      url: '/go-slim-mapper',
+      description: 'Map annotations of a gene list to broad GO Slim terms'
+    },
+    {
+      title: 'GO Term Finder',
+      url: '/go-term-finder',
+      description: 'Find significantly shared GO terms among a list of genes'
+    },
+    {
       title: 'Ortholog Converter',
       url: '/ortholog-converter',
       description: 'Convert gene lists between Candida species or to S. cerevisiae for functional analysis'
@@ -15,14 +45,14 @@ const ToolsPage = () => {
       description: 'Search for short nucleotide or peptide sequences, or sequence patterns, in Candida genomes'
     },
     {
-      title: 'Primers',
-      url: '/webprimer',
-      description: 'Design PCR primers for Candida sequences'
-    },
-    {
       title: 'Phenotype Search',
       url: '/phenotype/search',
       description: 'Search for genes by phenotype annotations'
+    },
+    {
+      title: 'Primers',
+      url: '/webprimer',
+      description: 'Design PCR primers for Candida sequences'
     },
     {
       title: 'Restriction Mapper',
@@ -33,6 +63,11 @@ const ToolsPage = () => {
       title: 'Synteny Browser',
       url: '/synteny-browser',
       description: 'Compare syntenic regions across Candida species'
+    },
+    {
+      title: 'Virulence Factor Browser',
+      url: '/virulence-factor-browser',
+      description: 'Search and filter Candida virulence-related genes with curated summaries and supporting literature'
     }
   ];
 
