@@ -380,6 +380,11 @@ function HomePage() {
               </a>
               .
             </p>
+            <div className="explore-cta-wrap">
+              <Link to="/search" className="explore-cta">
+                Explore CGD
+              </Link>
+            </div>
           </section>
 
           {/* Contact CGD */}
