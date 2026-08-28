@@ -36,7 +36,7 @@ const CATEGORY_CARDS = [
     icon: '🔗',
     tag: 'NEW',
     statKey: 'ortholog_clusters',
-    count: 6124,
+    count: null,
     description: 'Conserved genes across Candida species',
     examples: ['ACT1 cluster', 'ERG11 cluster'],
     to: '/ortholog-converter',
@@ -47,7 +47,7 @@ const CATEGORY_CARDS = [
     dot: '#f97316',
     icon: '📚',
     statKey: 'references',
-    count: 85230,
+    count: null,
     description: 'Full literature corpus with curated gene-to-paper links',
     examples: ['Candida auris outbreak', 'Biofilm review'],
     to: '/browse/references',
@@ -58,7 +58,7 @@ const CATEGORY_CARDS = [
     dot: '#ec4899',
     icon: '🔬',
     statKey: 'phenotype_annotations',
-    count: 12840,
+    count: null,
     description: 'Mutant phenotypes, drug resistance, and infection models',
     examples: ['filamentous growth', 'azole resistance'],
     to: '/phenotype/search',
@@ -69,7 +69,7 @@ const CATEGORY_CARDS = [
     dot: '#22c55e',
     icon: '🌿',
     statKey: 'go_annotations',
-    count: 18210,
+    count: null,
     description: 'GO terms, virulence, biofilm formation',
     examples: ['biofilm formation', 'adhesion'],
     to: '/browse/biological-processes',
@@ -93,14 +93,59 @@ const CATEGORY_CARDS = [
 const OTHER_CATEGORIES = [
   { label: 'Molecular Functions', to: '/browse/molecular-functions', organismAware: true },
   { label: 'Cellular Components', to: '/browse/cellular-components', organismAware: true },
-  { label: 'Colleagues', statKey: 'colleagues', count: 4120, to: '/colleague' },
-  { label: 'Interactions', statKey: 'interactions', count: 22100, to: '/browse/interactions', organismAware: true },
+  { label: 'Colleagues', statKey: 'colleagues', count: null, to: '/colleague' },
+  { label: 'Interactions', statKey: 'interactions', count: null, to: '/browse/interactions', organismAware: true },
   { label: 'Strains', statKey: 'organisms', count: 6, to: '/strains' },
   { label: 'Biofilm Genes', to: '/virulence-factor-browser?categories=biofilm', organismAware: true },
 ];
 
 // Clickable example searches shown under the search box.
 const TRY_EXAMPLES = ['ACT1', 'ERG11', 'biofilm formation', 'fluconazole resistance'];
+
+// Directory of every specialized search tool (parity with the retired /search
+// options page) so each tool keeps a linkable, discoverable home here.
+const SEARCH_TOOLS = [
+  {
+    label: 'Advanced Feature Search',
+    to: '/feature-search',
+    desc: 'Find chromosomal features by type, chromosome, GO-Slim terms, and more',
+  },
+  {
+    label: 'Literature Search',
+    to: '/literature-topic-search',
+    desc: 'Search Candida literature by curated topic',
+  },
+  {
+    label: 'Full-text Search',
+    to: '/search/text',
+    desc: 'Keyword search that also covers abstracts, notes, and name descriptions',
+  },
+  {
+    label: 'Phenotype Search',
+    to: '/phenotype/search',
+    desc: 'Search phenotype annotations and the genes associated with them',
+  },
+  {
+    label: 'Colleague Search',
+    to: '/colleague',
+    desc: 'Contact information submitted by Candida researchers',
+  },
+  {
+    label: 'PatMatch',
+    to: '/patmatch',
+    desc: 'Find short nucleotide or peptide sequence patterns',
+  },
+  {
+    label: 'BLAST',
+    to: '/blast',
+    desc: 'Sequence similarity search across all reference strains',
+  },
+  {
+    label: 'External Resources',
+    to: '/external-resources',
+    desc: 'Links to external databases for Candida research',
+  },
+];
 
 // Species accent-dot colors, indexed by SPECIES_ORDER position (phylogenetic order).
 const SPECIES_DOT_PALETTE = ['#6366f1', '#0ea5e9', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6'];
@@ -384,7 +429,7 @@ const ExploreCGDPage = () => {
           <p className="explore-subtitle">
             Explore {totalGenes ? `~${(Math.round(totalGenes / 1000) * 1000).toLocaleString()}` : '~35,000'} genes
             across {speciesCount} species,{' '}
-            {stats?.references ? `${stats.references.toLocaleString()}` : '85,000+'} references, and more
+            {stats?.references ? `${stats.references.toLocaleString()} references, ` : ''}and more
           </p>
 
           <form className="explore-search" onSubmit={handleSearch} role="search">
@@ -445,7 +490,7 @@ const ExploreCGDPage = () => {
                 <h2 className="explore-section-title">Browse by Organism</h2>
                 {selectedOrg ? (
                   <div className="explore-org-actions">
-                    <Link to={`/genome-snapshot2/${selectedOrg}`}>View {selectedOrgLabel} overview →</Link>
+                    <Link to={`/genome-snapshot/${selectedOrg}`}>View {selectedOrgLabel} overview →</Link>
                     <button
                       type="button"
                       className="explore-clear-filter"
@@ -490,7 +535,7 @@ const ExploreCGDPage = () => {
                       </button>
                       <Link
                         className="explore-org-go"
-                        to={`/genome-snapshot2/${org.organism_abbrev}`}
+                        to={`/genome-snapshot/${org.organism_abbrev}`}
                         title={`Open the ${org.organism_name} genome overview`}
                         aria-label={`Open ${org.organism_name} genome overview`}
                       >
@@ -560,6 +605,19 @@ const ExploreCGDPage = () => {
                   <Link key={o.label} to={otherDestination(o)} className="explore-other-chip">
                     {o.label}
                     {o.count != null && <span className="explore-other-count">{fmt(o.count)}</span>}
+                  </Link>
+                ))}
+              </div>
+            </section>
+
+            {/* All search tools directory */}
+            <section className="explore-section">
+              <h3 className="explore-other-title">All Search Tools</h3>
+              <div className="explore-tools-grid">
+                {SEARCH_TOOLS.map((t) => (
+                  <Link key={t.label} to={t.to} className="explore-tool">
+                    <span className="explore-tool-label">{t.label}</span>
+                    <span className="explore-tool-desc">{t.desc}</span>
                   </Link>
                 ))}
               </div>

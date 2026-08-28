@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import HeaderSearchForm from './components/HeaderSearchForm';
 import HeaderNav from './components/HeaderNav';
 import { AuthProvider } from './contexts/AuthContext';
@@ -30,7 +30,6 @@ import FAQPage from './pages/FAQPage';
 import GOResourcesPage from './pages/GOResourcesPage';
 import CommunityPage from './pages/CommunityPage';
 import SubmitDataPage from './pages/SubmitDataPage';
-import SearchPage from './pages/SearchPage';
 import ExploreCGDPage from './pages/ExploreCGDPage';
 import BrowseCategoryPage from './pages/BrowseCategoryPage';
 import SearchResultsPage from './pages/SearchResultsPage';
@@ -247,8 +246,8 @@ function App() {
           <Route path="/go-resources" element={<GOResourcesPage />} />
           <Route path="/community" element={<CommunityPage />} />
           <Route path="/submit-data" element={<SubmitDataPage />} />
-          <Route path="/search" element={<SearchPage />} />
-          <Route path="/search2" element={<ExploreCGDPage />} />
+          <Route path="/search" element={<ExploreCGDPage />} />
+          <Route path="/search2" element={<Navigate to="/search" replace />} />
           <Route path="/browse/:category" element={<BrowseCategoryPage />} />
           <Route path="/search/results" element={<SearchResultsPage />} />
           <Route path="/search/text" element={<TextSearchPage />} />
