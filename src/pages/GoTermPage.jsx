@@ -63,6 +63,12 @@ function GoTermPage() {
 
   const hasPendingChanges = pendingQuickFilter !== appliedQuickFilter;
 
+  // Toggle for computational (e.g., IEA) annotations
+  const [includeComputational, setIncludeComputational] = useState(true);
+  const visibleAnnotationTypes = ANNOTATION_TYPE_ORDER.filter(
+    (type) => includeComputational || type !== 'computational'
+  );
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -328,7 +334,7 @@ function GoTermPage() {
             <thead>
               <tr>
                 <th>GO Term</th>
-                {ANNOTATION_TYPE_ORDER.map((type) => {
+                {visibleAnnotationTypes.map((type) => {
                   const annotation = data.annotations.find((a) => a.annotation_type === type);
                   if (!annotation) return null;
                   return (
@@ -342,7 +348,7 @@ function GoTermPage() {
             <tbody>
               {(() => {
                 const allDisplayNames = new Set();
-                data.annotations.forEach((ann) => {
+                data.annotations.filter((ann) => visibleAnnotationTypes.includes(ann.annotation_type)).forEach((ann) => {
                   if (ann.qualifier_groups) {
                     ann.qualifier_groups.forEach((group) => {
                       allDisplayNames.add(group.display_name);
@@ -355,7 +361,7 @@ function GoTermPage() {
                     <td>
                       <a href={`#qualifier-${displayName.replace(/\s+/g, '-')}`}>{displayName}</a>
                     </td>
-                    {ANNOTATION_TYPE_ORDER.map((type) => {
+                    {visibleAnnotationTypes.map((type) => {
                       const annotation = data.annotations.find((a) => a.annotation_type === type);
                       if (!annotation) return null;
 
@@ -533,6 +539,19 @@ function GoTermPage() {
               </select>
             </div>
 
+            {/* Computational annotations toggle */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <input
+                type="checkbox"
+                id="include-computational"
+                checked={includeComputational}
+                onChange={(e) => setIncludeComputational(e.target.checked)}
+              />
+              <label htmlFor="include-computational" style={{ fontWeight: 500, color: '#333', whiteSpace: 'nowrap' }}>
+                Include computational predictions
+              </label>
+            </div>
+
             {/* Quick Filter */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <label htmlFor="quick-filter" style={{ fontWeight: 500, color: '#333', whiteSpace: 'nowrap' }}>Filter results: </label>
@@ -565,7 +584,7 @@ function GoTermPage() {
             </div>
           </div>
 
-          {ANNOTATION_TYPE_ORDER.map((type) => {
+          {visibleAnnotationTypes.map((type) => {
             const annotation = data.annotations.find((a) => a.annotation_type === type);
             if (!annotation) return null;
             return renderAnnotationTypeSection(annotation);
