@@ -71,7 +71,7 @@ const CATEGORY_CARDS = [
     statKey: 'go_annotations',
     count: null,
     description: 'Biological processes, molecular functions, and cellular components',
-    examples: ['biofilm formation', 'adhesion'],
+    examples: ['Biological Processes', 'Molecular Functions', 'Cellular Components'],
     to: '/browse/biological-processes',
   },
   // Chemicals are hidden until CGD has a dedicated chemical explorer and a
@@ -344,7 +344,18 @@ const ExploreCGDPage = () => {
     return `${destination}${separator}organism=${encodeURIComponent(value)}`;
   };
 
+  const GO_ASPECT_ROUTES = {
+    'Biological Processes': '/browse/biological-processes',
+    'Molecular Functions': '/browse/molecular-functions',
+    'Cellular Components': '/browse/cellular-components',
+  };
+
   const exampleDestination = (card, example) => {
+    if (card.key === 'biological_processes' && GO_ASPECT_ROUTES[example]) {
+      return selectedOrg
+        ? `${GO_ASPECT_ROUTES[example]}?organism=${encodeURIComponent(selectedOrg)}`
+        : GO_ASPECT_ROUTES[example];
+    }
     if (card.key === 'genes') {
       return withOrganism(`/search/results?query=${encodeURIComponent(example)}`, selectedOrgName);
     }
