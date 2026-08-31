@@ -124,24 +124,21 @@ function BrowseCategoryPage() {
         {isGoCategory && (
           <div className="browse-category-filter" style={{ display: 'flex', gap: '18px', alignItems: 'center', margin: '2px 0 6px' }}>
             <span style={{ fontWeight: 600 }}>Annotations:</span>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
-              <input
-                type="radio"
-                name="annotation-scope"
-                checked={annotationScope === 'experimental'}
-                onChange={() => setAnnotationScope('experimental')}
-              />
-              Experimental results
-            </label>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
-              <input
-                type="radio"
-                name="annotation-scope"
-                checked={annotationScope === 'computational'}
-                onChange={() => setAnnotationScope('computational')}
-              />
-              Computational predictions
-            </label>
+            {[
+              ['experimental', 'Experimental results'],
+              ['computational', 'Computational predictions'],
+              ['all', 'Both'],
+            ].map(([value, label]) => (
+              <label key={value} style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+                <input
+                  type="radio"
+                  name="annotation-scope"
+                  checked={annotationScope === value}
+                  onChange={() => setAnnotationScope(value)}
+                />
+                {label}
+              </label>
+            ))}
           </div>
         )}
 
