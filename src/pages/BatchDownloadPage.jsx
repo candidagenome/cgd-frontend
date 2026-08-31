@@ -211,14 +211,35 @@ function BatchDownloadPage() {
           filename = match[1].replace(/"/g, '');
         }
       } else {
-        // Determine filename from content type
+        // Determine filename from content type (Content-Disposition unavailable)
         const contentType = response.headers['content-type'];
+        const singleType = selectedTypes.length === 1 ? selectedTypes[0] : null;
+        const baseNames = {
+          genomic: 'genomic_sequences',
+          genomic_flanking: 'genomic_flanking_sequences',
+          coding: 'coding_sequences',
+          protein: 'protein_sequences',
+          coords: 'coordinates',
+          go: 'go_annotations',
+          phenotype: 'phenotypes',
+          ortholog: 'orthologs',
+        };
         if (contentType?.includes('zip')) {
           filename = 'batch_download.zip';
         } else if (contentType?.includes('gzip')) {
-          filename = selectedTypes.length === 1
-            ? `${selectedTypes[0]}.fasta.gz`
+          filename = singleType
+            ? `${baseNames[singleType]}.gz`
             : 'batch_download.gz';
+        } else if (singleType) {
+          let ext = '.tsv';
+          if (contentType?.includes('csv')) {
+            ext = '.csv';
+          } else if (contentType?.includes('plain')) {
+            ext = '.fasta';
+          } else if (singleType === 'go') {
+            ext = '.gaf';
+          }
+          filename = `${baseNames[singleType]}${ext}`;
         }
       }
 
