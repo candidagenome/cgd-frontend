@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useSearchParams, Link } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import goApi from '../api/goApi';
 import { renderCitationItem } from '../utils/formatCitation.jsx';
@@ -43,6 +43,7 @@ const formatLocusName = (gene) => {
 
 function GoTermPage() {
   const { goid } = useParams();
+  const [urlParams] = useSearchParams();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -63,8 +64,10 @@ function GoTermPage() {
 
   const hasPendingChanges = pendingQuickFilter !== appliedQuickFilter;
 
-  // Toggle for computational (e.g., IEA) annotations
-  const [includeComputational, setIncludeComputational] = useState(true);
+  // Toggle for computational (e.g., IEA) annotations; ?computational=0 starts unchecked
+  const [includeComputational, setIncludeComputational] = useState(
+    urlParams.get('computational') !== '0'
+  );
   const visibleAnnotationTypes = ANNOTATION_TYPE_ORDER.filter(
     (type) => includeComputational || type !== 'computational'
   );

@@ -8,21 +8,39 @@ const EXPLORERS = {
     title: 'Biological Processes',
     description: 'Explore the pathways and broader biological programs in which Candida genes participate.',
     placeholder: 'Search processes, for example biofilm formation',
-    topics: ['biofilm formation', 'drug transport', 'cell wall organization', 'hyphal growth', 'pathogenesis'],
+    topics: [
+      { label: 'biofilm formation', goid: 42710 },
+      { label: 'response to xenobiotic stimulus', goid: 9410 },
+      { label: 'cell wall organization', goid: 71555 },
+      { label: 'hyphal growth', goid: 30448 },
+      { label: 'filamentous growth', goid: 30447 },
+    ],
   },
   'molecular-functions': {
     eyebrow: 'Gene Ontology',
     title: 'Molecular Functions',
     description: 'Explore the biochemical activities performed by Candida gene products.',
     placeholder: 'Search functions, for example kinase activity',
-    topics: ['kinase activity', 'DNA binding', 'RNA binding', 'transporter activity', 'catalytic activity'],
+    topics: [
+      { label: 'kinase activity', goid: 16301 },
+      { label: 'DNA binding', goid: 3677 },
+      { label: 'RNA binding', goid: 3723 },
+      { label: 'transporter activity', goid: 5215 },
+      { label: 'catalytic activity', goid: 3824 },
+    ],
   },
   'cellular-components': {
     eyebrow: 'Gene Ontology',
     title: 'Cellular Components',
     description: 'Explore the cellular locations and complexes associated with Candida gene products.',
     placeholder: 'Search components, for example cell wall',
-    topics: ['nucleus', 'cytoplasm', 'cell wall', 'plasma membrane', 'mitochondrion'],
+    topics: [
+      { label: 'nucleus', goid: 5634 },
+      { label: 'cytoplasm', goid: 5737 },
+      { label: 'cell wall', goid: 5618 },
+      { label: 'plasma membrane', goid: 5886 },
+      { label: 'mitochondrion', goid: 5739 },
+    ],
   },
   references: {
     eyebrow: 'CGD Literature',
@@ -47,10 +65,18 @@ function BrowseCategoryPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
+  const [manualOnly, setManualOnly] = useState(false);
   const config = EXPLORERS[category];
   const organism = searchParams.get('organism');
 
   if (!config) return <Navigate to="/search2" replace />;
+
+  const isGoCategory = !config.references && !config.interactions;
+
+  const goTermLink = (goid) => {
+    const formatted = `GO:${String(goid).padStart(7, '0')}`;
+    return `/go/${formatted}${manualOnly ? '?computational=0' : ''}`;
+  };
 
   const destinationFor = (term) => {
     if (config.interactions) {
@@ -95,11 +121,37 @@ function BrowseCategoryPage() {
           <button type="submit">Search</button>
         </form>
 
+        {isGoCategory && (
+          <div className="browse-category-filter" style={{ display: 'flex', gap: '18px', alignItems: 'center', margin: '2px 0 6px' }}>
+            <span style={{ fontWeight: 600 }}>Annotations:</span>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+              <input
+                type="radio"
+                name="annotation-scope"
+                checked={!manualOnly}
+                onChange={() => setManualOnly(false)}
+              />
+              All results
+            </label>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+              <input
+                type="radio"
+                name="annotation-scope"
+                checked={manualOnly}
+                onChange={() => setManualOnly(true)}
+              />
+              Manual only (exclude computational predictions)
+            </label>
+          </div>
+        )}
+
         <section className="browse-category-section">
           <h2>{config.interactions ? 'Popular genes' : 'Popular topics'}</h2>
           <div className="browse-category-topics">
             {config.topics.map((topic) => (
-              <Link key={topic} to={destinationFor(topic)}>{topic}</Link>
+              typeof topic === 'object'
+                ? <Link key={topic.label} to={goTermLink(topic.goid)}>{topic.label}</Link>
+                : <Link key={topic} to={destinationFor(topic)}>{topic}</Link>
             ))}
           </div>
         </section>
