@@ -70,7 +70,7 @@ const CATEGORY_CARDS = [
     icon: '🌿',
     statKey: 'go_annotations',
     count: null,
-    description: 'GO terms, virulence, biofilm formation',
+    description: 'Biological processes, molecular functions, and cellular components',
     examples: ['biofilm formation', 'adhesion'],
     to: '/browse/biological-processes',
   },
@@ -91,8 +91,6 @@ const CATEGORY_CARDS = [
 // Secondary categories shown as compact chips. `statKey` overrides the count
 // with a live total where one exists; the rest are placeholders.
 const OTHER_CATEGORIES = [
-  { label: 'Molecular Functions', to: '/browse/molecular-functions', organismAware: true },
-  { label: 'Cellular Components', to: '/browse/cellular-components', organismAware: true },
   { label: 'Colleagues', statKey: 'colleagues', count: null, to: '/colleague' },
   { label: 'Interactions', statKey: 'interactions', count: null, to: '/browse/interactions', organismAware: true },
   { label: 'Strains', statKey: 'organisms', count: 6, to: '/strains' },

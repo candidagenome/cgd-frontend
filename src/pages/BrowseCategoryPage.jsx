@@ -111,6 +111,33 @@ function BrowseCategoryPage() {
           {organism && !config.references && <div className="browse-category-scope">Selected organism: {organism.replaceAll('_', ' ')}</div>}
         </header>
 
+        {isGoCategory && (
+          <nav aria-label="GO aspect" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', margin: '0 0 12px' }}>
+            {[
+              ['biological-processes', 'Biological Processes'],
+              ['molecular-functions', 'Molecular Functions'],
+              ['cellular-components', 'Cellular Components'],
+            ].map(([slug, label]) => (
+              <Link
+                key={slug}
+                to={`/browse/${slug}${organism ? `?organism=${encodeURIComponent(organism)}` : ''}`}
+                aria-current={category === slug ? 'page' : undefined}
+                style={{
+                  padding: '7px 16px',
+                  borderRadius: '999px',
+                  border: '1px solid #cbd5e1',
+                  background: category === slug ? '#1976d2' : '#fff',
+                  color: category === slug ? '#fff' : '#1e293b',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                }}
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
+        )}
+
         <form className="browse-category-search" onSubmit={handleSubmit} role="search">
           <input
             value={query}
