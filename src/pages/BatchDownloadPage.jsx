@@ -24,7 +24,7 @@ const DATA_TYPE_INFO = {
   },
   coords: {
     name: 'Chromosomal Coordinates',
-    description: 'Feature coordinates and basic information (TSV)',
+    description: 'Feature coordinates and basic information (TSV or CSV)',
   },
   go: {
     name: 'GO Annotations',
@@ -32,11 +32,11 @@ const DATA_TYPE_INFO = {
   },
   phenotype: {
     name: 'Phenotypes',
-    description: 'Phenotype annotations (TSV)',
+    description: 'Phenotype annotations (TSV or CSV)',
   },
   ortholog: {
     name: 'Orthologs',
-    description: 'Ortholog and best hit data (TSV)',
+    description: 'Ortholog and best hit data (TSV or CSV)',
   },
 };
 
@@ -64,6 +64,7 @@ function BatchDownloadPage() {
   const [flankRight, setFlankRight] = useState('');
   const [compress, setCompress] = useState(true);
   const [useSystematicNames, setUseSystematicNames] = useState(false);
+  const [csvFormat, setCsvFormat] = useState(false);
 
   // Chromosome region state
   const [chromosomeData, setChromosomeData] = useState(null);
@@ -149,6 +150,7 @@ function BatchDownloadPage() {
         flankRight: flankRight ? parseInt(flankRight, 10) : 0,
         compress,
         useSystematicNames,
+        tableFormat: csvFormat ? 'csv' : 'tsv',
       });
       setMetadata(result);
     } catch (err) {
@@ -197,6 +199,7 @@ function BatchDownloadPage() {
         flankRight: flankRight ? parseInt(flankRight, 10) : 0,
         compress,
         useSystematicNames,
+        tableFormat: csvFormat ? 'csv' : 'tsv',
       });
 
       // Create download link
@@ -594,6 +597,17 @@ function BatchDownloadPage() {
               />
               <label htmlFor="useSystematicNames">
                 Use systematic names in FASTA headers (e.g., C1_00010W_A instead of gene name)
+              </label>
+            </div>
+            <div className="checkbox-group">
+              <input
+                type="checkbox"
+                id="csvFormat"
+                checked={csvFormat}
+                onChange={(e) => setCsvFormat(e.target.checked)}
+              />
+              <label htmlFor="csvFormat">
+                Download tables as CSV instead of TSV (coordinates, phenotypes, orthologs; opens directly in Excel)
               </label>
             </div>
           </div>
