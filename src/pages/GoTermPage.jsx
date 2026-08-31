@@ -64,13 +64,20 @@ function GoTermPage() {
 
   const hasPendingChanges = pendingQuickFilter !== appliedQuickFilter;
 
-  // Toggle for computational (e.g., IEA) annotations; ?computational=0 starts unchecked
-  const [includeComputational, setIncludeComputational] = useState(
-    urlParams.get('computational') !== '0'
-  );
-  const visibleAnnotationTypes = ANNOTATION_TYPE_ORDER.filter(
-    (type) => includeComputational || type !== 'computational'
-  );
+  // Annotation scope: all | experimental (manual + high-throughput) | computational.
+  // Initialized from ?annotations= (?computational=0 kept as a legacy alias).
+  const initialScope = (() => {
+    const param = urlParams.get('annotations');
+    if (param === 'experimental' || param === 'computational') return param;
+    if (urlParams.get('computational') === '0') return 'experimental';
+    return 'all';
+  })();
+  const [annotationScope, setAnnotationScope] = useState(initialScope);
+  const visibleAnnotationTypes = ANNOTATION_TYPE_ORDER.filter((type) => {
+    if (annotationScope === 'experimental') return type !== 'computational';
+    if (annotationScope === 'computational') return type === 'computational';
+    return true;
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -542,17 +549,24 @@ function GoTermPage() {
               </select>
             </div>
 
-            {/* Computational annotations toggle */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <input
-                type="checkbox"
-                id="include-computational"
-                checked={includeComputational}
-                onChange={(e) => setIncludeComputational(e.target.checked)}
-              />
-              <label htmlFor="include-computational" style={{ fontWeight: 500, color: '#333', whiteSpace: 'nowrap' }}>
-                Include computational predictions
-              </label>
+            {/* Annotation scope */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ fontWeight: 500, color: '#333', whiteSpace: 'nowrap' }}>Show:</span>
+              {[
+                ['all', 'All'],
+                ['experimental', 'Experimental results'],
+                ['computational', 'Computational predictions'],
+              ].map(([value, label]) => (
+                <label key={value} style={{ display: 'flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap', cursor: 'pointer' }}>
+                  <input
+                    type="radio"
+                    name="annotation-scope"
+                    checked={annotationScope === value}
+                    onChange={() => setAnnotationScope(value)}
+                  />
+                  {label}
+                </label>
+              ))}
             </div>
 
             {/* Quick Filter */}

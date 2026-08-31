@@ -65,7 +65,7 @@ function BrowseCategoryPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
-  const [manualOnly, setManualOnly] = useState(false);
+  const [annotationScope, setAnnotationScope] = useState('experimental');
   const config = EXPLORERS[category];
   const organism = searchParams.get('organism');
 
@@ -75,7 +75,7 @@ function BrowseCategoryPage() {
 
   const goTermLink = (goid) => {
     const formatted = `GO:${String(goid).padStart(7, '0')}`;
-    return `/go/${formatted}${manualOnly ? '?computational=0' : ''}`;
+    return `/go/${formatted}?annotations=${annotationScope}`;
   };
 
   const destinationFor = (term) => {
@@ -128,19 +128,19 @@ function BrowseCategoryPage() {
               <input
                 type="radio"
                 name="annotation-scope"
-                checked={!manualOnly}
-                onChange={() => setManualOnly(false)}
+                checked={annotationScope === 'experimental'}
+                onChange={() => setAnnotationScope('experimental')}
               />
-              All results
+              Experimental results
             </label>
             <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
               <input
                 type="radio"
                 name="annotation-scope"
-                checked={manualOnly}
-                onChange={() => setManualOnly(true)}
+                checked={annotationScope === 'computational'}
+                onChange={() => setAnnotationScope('computational')}
               />
-              Manual only (exclude computational predictions)
+              Computational predictions
             </label>
           </div>
         )}
