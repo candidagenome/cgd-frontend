@@ -13,6 +13,7 @@ const HeaderNav = () => {
       label: 'Search',
       to: '/search',
       submenu: [
+        { label: 'Explore CGD', to: '/search' },
         { label: 'Advanced Feature Search', to: '/feature-search' },
         { label: 'Literature Search', to: '/literature-topic-search' },
         { label: 'Text Search', to: '/search/text' },

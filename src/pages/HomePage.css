@@ -235,3 +235,31 @@
     font-size: 1.1em;
   }
 }
+
+/* "Explore CGD" call-to-action (SGD-style prominent button) */
+.explore-cta-wrap {
+  text-align: center;
+  margin: 22px 0 6px;
+}
+
+/* Scoped under .about-section so this outranks the generic
+   `.about-section a` link color (which made the label blue-on-blue). */
+.about-section a.explore-cta {
+  display: inline-block;
+  background: #1565c0;
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 700;
+  padding: 14px 44px;
+  border-radius: 6px;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(21, 101, 192, 0.3);
+  transition: background 0.15s, box-shadow 0.15s;
+}
+
+.about-section a.explore-cta:hover {
+  background: #0d47a1;
+  box-shadow: 0 4px 14px rgba(21, 101, 192, 0.4);
+  color: #fff;
+  text-decoration: none;
+}

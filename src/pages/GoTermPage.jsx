@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useSearchParams, Link } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import goApi from '../api/goApi';
 import { renderCitationItem } from '../utils/formatCitation.jsx';
@@ -43,6 +43,7 @@ const formatLocusName = (gene) => {
 
 function GoTermPage() {
   const { goid } = useParams();
+  const [urlParams] = useSearchParams();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -62,6 +63,21 @@ function GoTermPage() {
   }, []);
 
   const hasPendingChanges = pendingQuickFilter !== appliedQuickFilter;
+
+  // Annotation scope: all | experimental (manual + high-throughput) | computational.
+  // Initialized from ?annotations= (?computational=0 kept as a legacy alias).
+  const initialScope = (() => {
+    const param = urlParams.get('annotations');
+    if (param === 'experimental' || param === 'computational') return param;
+    if (urlParams.get('computational') === '0') return 'experimental';
+    return 'all';
+  })();
+  const [annotationScope, setAnnotationScope] = useState(initialScope);
+  const visibleAnnotationTypes = ANNOTATION_TYPE_ORDER.filter((type) => {
+    if (annotationScope === 'experimental') return type !== 'computational';
+    if (annotationScope === 'computational') return type === 'computational';
+    return true;
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -328,7 +344,7 @@ function GoTermPage() {
             <thead>
               <tr>
                 <th>GO Term</th>
-                {ANNOTATION_TYPE_ORDER.map((type) => {
+                {visibleAnnotationTypes.map((type) => {
                   const annotation = data.annotations.find((a) => a.annotation_type === type);
                   if (!annotation) return null;
                   return (
@@ -342,7 +358,7 @@ function GoTermPage() {
             <tbody>
               {(() => {
                 const allDisplayNames = new Set();
-                data.annotations.forEach((ann) => {
+                data.annotations.filter((ann) => visibleAnnotationTypes.includes(ann.annotation_type)).forEach((ann) => {
                   if (ann.qualifier_groups) {
                     ann.qualifier_groups.forEach((group) => {
                       allDisplayNames.add(group.display_name);
@@ -355,7 +371,7 @@ function GoTermPage() {
                     <td>
                       <a href={`#qualifier-${displayName.replace(/\s+/g, '-')}`}>{displayName}</a>
                     </td>
-                    {ANNOTATION_TYPE_ORDER.map((type) => {
+                    {visibleAnnotationTypes.map((type) => {
                       const annotation = data.annotations.find((a) => a.annotation_type === type);
                       if (!annotation) return null;
 
@@ -533,6 +549,26 @@ function GoTermPage() {
               </select>
             </div>
 
+            {/* Annotation scope */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ fontWeight: 500, color: '#333', whiteSpace: 'nowrap' }}>Show:</span>
+              {[
+                ['all', 'All'],
+                ['experimental', 'Experimental results'],
+                ['computational', 'Computational predictions'],
+              ].map(([value, label]) => (
+                <label key={value} style={{ display: 'flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap', cursor: 'pointer' }}>
+                  <input
+                    type="radio"
+                    name="annotation-scope"
+                    checked={annotationScope === value}
+                    onChange={() => setAnnotationScope(value)}
+                  />
+                  {label}
+                </label>
+              ))}
+            </div>
+
             {/* Quick Filter */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <label htmlFor="quick-filter" style={{ fontWeight: 500, color: '#333', whiteSpace: 'nowrap' }}>Filter results: </label>
@@ -565,7 +601,7 @@ function GoTermPage() {
             </div>
           </div>
 
-          {ANNOTATION_TYPE_ORDER.map((type) => {
+          {visibleAnnotationTypes.map((type) => {
             const annotation = data.annotations.find((a) => a.annotation_type === type);
             if (!annotation) return null;
             return renderAnnotationTypeSection(annotation);

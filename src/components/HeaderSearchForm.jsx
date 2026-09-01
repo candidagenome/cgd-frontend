@@ -155,8 +155,8 @@ const HeaderSearchForm = () => {
         <input
           ref={inputRef}
           type="text"
-          placeholder="search our site"
-          aria-label="Search CGD"
+          placeholder="Quick Search"
+          aria-label="Quick Search CGD"
           aria-autocomplete="list"
           aria-expanded={showSuggestions}
           value={searchQuery}
