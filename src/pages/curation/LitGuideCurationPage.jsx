@@ -302,18 +302,21 @@ function LitGuideCurationPage() {
         groups[key] = {
           features: [],
           featureNos: [], // Store feature_no for precise identification
+          mergedA21: [], // Assembly 21 twins collapsed into these features
           litTopics,
           curationStatuses,
         };
       }
       groups[key].features.push(feat.gene_name || feat.feature_name);
       groups[key].featureNos.push(feat.feature_no);
+      (feat.merged_assembly21 || []).forEach((m) => groups[key].mergedA21.push(m.feature_name));
     });
 
     // Convert groups to edit rows
     const rows = Object.values(groups).map((group) => ({
       features: group.features.join(' '),
       featureNos: [...group.featureNos], // Include feature_no array
+      mergedA21: [...group.mergedA21],
       literatureTopics: [...group.litTopics],
       curationStatuses: [...group.curationStatuses],
       // Track original values for comparison
@@ -408,11 +411,16 @@ function LitGuideCurationPage() {
   };
 
   // Handle remove topic association
-  const handleRemoveTopic = async (refpropFeatNo) => {
+  // Accepts a topic object; removes every underlying refprop_feat row
+  // (a topic can be linked on both the A21 and A22 feature of the gene)
+  const handleRemoveTopic = async (topic) => {
     if (!window.confirm('Are you sure you want to remove this topic association?')) return;
 
     try {
-      await litguideCurationApi.removeTopicAssociation(refpropFeatNo);
+      const ids = topic.refprop_feat_nos || [topic.refprop_feat_no];
+      for (const id of ids) {
+        await litguideCurationApi.removeTopicAssociation(id);
+      }
       setSuccessMessage('Topic association removed');
       loadFeatureLiterature(featureData.feature_no);
       setTimeout(() => setSuccessMessage(null), 3000);
@@ -458,11 +466,15 @@ function LitGuideCurationPage() {
   };
 
   // Handle remove topic (works for both views)
-  const handleRemoveTopicForReference = async (refpropFeatNo) => {
+  // Accepts a topic object; removes every underlying refprop_feat row
+  const handleRemoveTopicForReference = async (topic) => {
     if (!window.confirm('Are you sure you want to remove this topic association?')) return;
 
     try {
-      await litguideCurationApi.removeTopicAssociation(refpropFeatNo);
+      const ids = topic.refprop_feat_nos || [topic.refprop_feat_no];
+      for (const id of ids) {
+        await litguideCurationApi.removeTopicAssociation(id);
+      }
       setSuccessMessage('Topic association removed');
       if (referenceData) {
         loadReferenceLiterature(referenceData.reference_no, currentOrganism);
@@ -554,14 +566,13 @@ function LitGuideCurationPage() {
   };
 
   // Handle toggle selection for bulk delete
-  const handleToggleDeleteSelection = (refpropFeatNo) => {
+  // Toggles all underlying refprop_feat rows of the topic together
+  const handleToggleDeleteSelection = (topic) => {
+    const ids = topic.refprop_feat_nos || [topic.refprop_feat_no];
     setSelectedForDelete((prev) => {
       const newSet = new Set(prev);
-      if (newSet.has(refpropFeatNo)) {
-        newSet.delete(refpropFeatNo);
-      } else {
-        newSet.add(refpropFeatNo);
-      }
+      const isSelected = newSet.has(topic.refprop_feat_no);
+      ids.forEach((id) => (isSelected ? newSet.delete(id) : newSet.add(id)));
       return newSet;
     });
   };
@@ -572,7 +583,7 @@ function LitGuideCurationPage() {
     const allIds = new Set();
     referenceData.features.forEach((feat) => {
       feat.topics.forEach((topic) => {
-        allIds.add(topic.refprop_feat_no);
+        (topic.refprop_feat_nos || [topic.refprop_feat_no]).forEach((id) => allIds.add(id));
       });
     });
     setSelectedForDelete(allIds);
@@ -984,7 +995,10 @@ function LitGuideCurationPage() {
               const topicAssoc = feat.topics.find((t) => t.topic === topic);
               if (topicAssoc) {
                 try {
-                  await litguideCurationApi.removeTopicAssociation(topicAssoc.refprop_feat_no);
+                  const ids = topicAssoc.refprop_feat_nos || [topicAssoc.refprop_feat_no];
+                  for (const id of ids) {
+                    await litguideCurationApi.removeTopicAssociation(id);
+                  }
                   totalRemoved++;
                 } catch (err) {
                   const featName = feat.gene_name || feat.feature_name;
@@ -1347,7 +1361,7 @@ function LitGuideCurationPage() {
                             <div key={topic.refprop_feat_no} style={styles.topicTag}>
                               {topic.topic}
                               <button
-                                onClick={() => handleRemoveTopic(topic.refprop_feat_no)}
+                                onClick={() => handleRemoveTopic(topic)}
                                 style={styles.removeTopicBtn}
                                 title="Remove topic"
                               >
@@ -1813,6 +1827,11 @@ function LitGuideCurationPage() {
                           style={styles.editTopicsFeaturesTextarea}
                           rows={2}
                         />
+                        {row.mergedA21?.length > 0 && (
+                          <div style={styles.mergedA21Note}>
+                            incl. Assembly 21: {row.mergedA21.join(', ')}
+                          </div>
+                        )}
                       </div>
 
                       {/* Literature Topics (editable) */}
@@ -2013,6 +2032,11 @@ function LitGuideCurationPage() {
                         <Link to={`/locus/${feat.feature_name}`} target="_blank" rel="noopener noreferrer">
                           {feat.feature_name}
                         </Link>
+                        {feat.merged_assembly21?.length > 0 && (
+                          <div style={styles.mergedA21Note}>
+                            incl. Assembly 21: {feat.merged_assembly21.map((m) => m.feature_name).join(', ')}
+                          </div>
+                        )}
                       </td>
                       <td style={styles.td}>{feat.gene_name || '-'}</td>
                       <td style={styles.td}>{feat.feature_type || '-'}</td>
@@ -2024,14 +2048,14 @@ function LitGuideCurationPage() {
                                 <input
                                   type="checkbox"
                                   checked={selectedForDelete.has(topic.refprop_feat_no)}
-                                  onChange={() => handleToggleDeleteSelection(topic.refprop_feat_no)}
+                                  onChange={() => handleToggleDeleteSelection(topic)}
                                   style={styles.bulkCheckbox}
                                 />
                               )}
                               {topic.topic}
                               {!bulkDeleteMode && (
                                 <button
-                                  onClick={() => handleRemoveTopicForReference(topic.refprop_feat_no)}
+                                  onClick={() => handleRemoveTopicForReference(topic)}
                                   style={styles.removeTopicBtn}
                                   title="Remove topic"
                                 >
@@ -2436,6 +2460,12 @@ const styles = {
   pmidText: {
     color: '#666',
     fontSize: '0.9em',
+  },
+  mergedA21Note: {
+    fontSize: '0.75rem',
+    color: '#6c757d',
+    fontStyle: 'italic',
+    marginTop: '0.15rem',
   },
   topicTag: {
     display: 'inline-flex',
