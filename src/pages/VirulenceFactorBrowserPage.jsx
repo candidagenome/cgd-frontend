@@ -1,8 +1,85 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useSearchParams, Link } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import virulenceFactorApi from '../api/virulenceFactorApi';
 import './VirulenceFactorBrowserPage.css';
+
+// Tooltip that works on hover AND click. Native title= tooltips disappear
+// permanently once the element is clicked, which reads as broken UI; this one
+// shows on hover, pins open on click, and dismisses on outside click/Escape.
+// Rendered through a portal so ag-grid cell overflow cannot clip it.
+function PinnableTooltip({ text, children, className }) {
+  const [visible, setVisible] = useState(false);
+  const [pinned, setPinned] = useState(false);
+  const [pos, setPos] = useState({ top: 0, left: 0 });
+  const hostRef = useRef(null);
+
+  const show = useCallback(() => {
+    const rect = hostRef.current?.getBoundingClientRect();
+    if (rect) {
+      setPos({ top: rect.bottom + 6, left: rect.left + rect.width / 2 });
+    }
+    setVisible(true);
+  }, []);
+
+  const hide = useCallback(() => {
+    setVisible(false);
+    setPinned(false);
+  }, []);
+
+  useEffect(() => {
+    if (!pinned) return undefined;
+    const onDocMouseDown = (e) => {
+      if (hostRef.current && !hostRef.current.contains(e.target)) hide();
+    };
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') hide();
+    };
+    // Pinned tooltips use fixed positioning; close on scroll so they don't drift
+    const onScroll = () => hide();
+    document.addEventListener('mousedown', onDocMouseDown);
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('scroll', onScroll, true);
+    return () => {
+      document.removeEventListener('mousedown', onDocMouseDown);
+      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('scroll', onScroll, true);
+    };
+  }, [pinned, hide]);
+
+  if (!text) return <span className={className}>{children}</span>;
+
+  return (
+    <span
+      ref={hostRef}
+      className={className}
+      onMouseEnter={show}
+      onMouseLeave={() => { if (!pinned) setVisible(false); }}
+      onClick={(e) => {
+        e.stopPropagation();
+        if (pinned) {
+          hide();
+        } else {
+          show();
+          setPinned(true);
+        }
+      }}
+    >
+      {children}
+      {visible && createPortal(
+        <div
+          className="vf-pinnable-tooltip"
+          role="tooltip"
+          style={{ top: pos.top, left: pos.left }}
+        >
+          {text}
+        </div>,
+        document.body
+      )}
+    </span>
+  );
+}
 
 // Category color mapping for visual distinction
 const CATEGORY_COLORS = {
@@ -612,12 +689,12 @@ function VirulenceFactorBrowserPage() {
             : `Score: ${score}/20`;
 
           return (
-            <span
+            <PinnableTooltip
+              text={tooltipText}
               className={`confidence-badge confidence-${tierClass}`}
-              title={tooltipText}
             >
               {tier}
-            </span>
+            </PinnableTooltip>
           );
         },
       },
@@ -650,7 +727,7 @@ function VirulenceFactorBrowserPage() {
                     const { type, label, tooltip } = categorizeMatchReason(reason);
                     return (
                       <div key={`d-${idx}`} className={`match-reason match-reason-${type}`}>
-                        <span className={`match-type-badge badge-${type}`} title={tooltip}>{label}</span>
+                        <PinnableTooltip text={tooltip} className={`match-type-badge badge-${type}`}>{label}</PinnableTooltip>
                         <span className="match-reason-text">{reason}</span>
                       </div>
                     );
@@ -664,7 +741,7 @@ function VirulenceFactorBrowserPage() {
                     const { type, label, tooltip } = categorizeMatchReason(reason);
                     return (
                       <div key={`i-${idx}`} className={`match-reason match-reason-${type}`}>
-                        <span className={`match-type-badge badge-${type}`} title={tooltip}>{label}</span>
+                        <PinnableTooltip text={tooltip} className={`match-type-badge badge-${type}`}>{label}</PinnableTooltip>
                         <span className="match-reason-text">{reason}</span>
                       </div>
                     );
