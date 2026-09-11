@@ -120,10 +120,11 @@ function VirulenceFactorBrowserHelp() {
           <p>
             <strong>Important:</strong> The confidence score reflects the strength of
             {' '}<em>virulence-specific evidence</em>, not overall clinical importance or
-            how well-studied a gene is. For example, drug resistance genes like ERG11
-            may have lower confidence scores because drug resistance is considered
-            indirect virulence evidence, even though these genes are clinically important
-            therapeutic targets.
+            how well-studied a gene is. Resistance phenotypes that name a specific
+            antifungal drug (e.g. fluconazole, caspofungin) count as direct evidence
+            for the Drug Resistance category, so clinically important genes like
+            CDR1 and ERG11 are scored on that evidence rather than being treated
+            as indirect matches.
           </p>
 
           <h3>Confidence Tiers</h3>
@@ -168,6 +169,10 @@ function VirulenceFactorBrowserHelp() {
             <li>Virulence phenotypes (non-normal qualifier) (+5 points)</li>
             <li>Direct virulence or pathogenesis phenotypes (+4 points)</li>
             <li>Host interaction phenotypes (+3 points)</li>
+            <li>
+              Antifungal resistance phenotypes naming a specific drug (+3 points,
+              plus +1 for each additional distinct antifungal, up to +6 total)
+            </li>
             <li>GO annotations for host interaction with manual evidence (IDA, IMP, etc.) (+4 points)</li>
             <li>GO annotations for host interaction with computational evidence (IEA) (+3 points)</li>
             <li>Other GO annotations with manual evidence (+2 points)</li>
@@ -176,13 +181,18 @@ function VirulenceFactorBrowserHelp() {
 
           <h3>Note on Drug Resistance Genes</h3>
           <p>
-            Genes in the Drug Resistance category (ERG11, CDR1, FKS1, etc.) may have
-            lower confidence scores because drug resistance/susceptibility phenotypes
-            are classified as indirect virulence evidence. This reflects the biological
-            distinction that drug resistance affects treatment outcomes rather than
-            directly causing disease. However, these genes are often clinically important
-            and well-studied. Users interested in antifungal targets should filter by
-            the "Drug Resistance" category rather than relying solely on confidence scores.
+            Resistance or susceptibility phenotypes that name a specific antifungal
+            drug (fluconazole, caspofungin, amphotericin B, etc.) count as direct
+            evidence toward the confidence score. In CGD, the drug is recorded on
+            the experiment rather than in the phenotype observable, so the browser
+            looks up these experiment-level drug annotations directly. Evidence
+            spanning several distinct antifungals scores higher than a single-drug
+            result, so multidrug-resistance genes like CDR1 and ERG11 now reach
+            the confidence tiers their evidence supports.
+          </p>
+          <p>
+            Generic drug-response phenotypes that do not name a specific antifungal
+            are still classified as indirect (Tier 4) evidence.
           </p>
 
           <h3>Housekeeping Gene Adjustment</h3>
@@ -193,12 +203,14 @@ function VirulenceFactorBrowserHelp() {
             cellular function and may not be virulence-specific targets.
           </p>
           <p>
-            Housekeeping genes are identified by:
+            Housekeeping genes are identified solely by GO annotations for core
+            cellular processes (translation, DNA replication, etc.). Conservation
+            across <em>Candida</em> species is deliberately <strong>not</strong> used
+            as a housekeeping signal: many core virulence and drug-resistance genes
+            (e.g. CDR1, ERG11, HSP90) are conserved across the pathogenic species,
+            and treating conservation as a housekeeping indicator would incorrectly
+            penalize them.
           </p>
-          <ul>
-            <li>GO annotations for core cellular processes (translation, DNA replication, etc.)</li>
-            <li>High conservation across all five <em>Candida</em> species in CGD</li>
-          </ul>
         </div>
 
         <div className="info-section">
@@ -239,7 +251,10 @@ function VirulenceFactorBrowserHelp() {
               <tr>
                 <td><strong>Tier 4: Indirect</strong></td>
                 <td style={{textAlign: 'left'}}>
-                  Drug resistance/susceptibility phenotypes, general stress sensitivity
+                  Drug resistance/susceptibility phenotypes without a named
+                  antifungal, general stress sensitivity. (Resistance phenotypes
+                  naming a specific antifungal are scored as direct evidence —
+                  see the note on drug resistance genes above.)
                 </td>
               </tr>
             </tbody>
