@@ -111,11 +111,15 @@ function LocusPage() {
         map.set(orgName, orgData.feature_name);
       }
 
-      // Also add orthologs from this organism's candida_orthologs
+      // Also add orthologs from this organism's candida_orthologs.
+      // Curated family clusters include same-species paralogs — never let
+      // an ortholog entry overwrite an organism's own feature (or an
+      // earlier family member), so first-set wins.
       if (orgData?.candida_orthologs) {
         orgData.candida_orthologs.forEach(orth => {
-          // Store with the original organism_name
-          map.set(orth.organism_name, orth.feature_name);
+          if (!map.has(orth.organism_name)) {
+            map.set(orth.organism_name, orth.feature_name);
+          }
         });
       }
     });
@@ -139,11 +143,22 @@ function LocusPage() {
 
     if (!primaryOrgData?.candida_orthologs) return [];
 
-    // Convert candida_orthologs to the format expected by OrganismSelector
-    return primaryOrgData.candida_orthologs.map(orth => ({
-      organism: orth.organism_name,
-      feature_name: orth.feature_name,
-    }));
+    // Convert candida_orthologs to the format expected by OrganismSelector.
+    // Curated family clusters can list same-species paralogs and several
+    // genes per species — the selector wants one entry per *other* organism.
+    const seen = new Set();
+    return primaryOrgData.candida_orthologs
+      .filter(orth => {
+        if (orth.organism_name === primaryOrganism || seen.has(orth.organism_name)) {
+          return false;
+        }
+        seen.add(orth.organism_name);
+        return true;
+      })
+      .map(orth => ({
+        organism: orth.organism_name,
+        feature_name: orth.feature_name,
+      }));
   }, [data.info?.results, data.info?.query_organism]);
 
   // Get the feature name for the currently selected organism
