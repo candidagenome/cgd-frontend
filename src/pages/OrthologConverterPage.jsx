@@ -32,7 +32,7 @@ function OrthologConverterPage() {
   // State
   const [geneInput, setGeneInput] = useState('');
   const [sourceOrganism, setSourceOrganism] = useState('CGD');
-  const [targetOrganism, setTargetOrganism] = useState('S_cerevisiae');
+  const [selectedTargets, setSelectedTargets] = useState(['S_cerevisiae']);
   const [targets, setTargets] = useState([]);
   const [sources, setSources] = useState([]);
   const [results, setResults] = useState(null);
@@ -61,6 +61,8 @@ function OrthologConverterPage() {
     setCurrentPage(1);
   }, [results]);
 
+  const multiTarget = (results?.target_organisms?.length || 0) > 1;
+
   // Filter and sort results
   const processedResults = useMemo(() => {
     if (!results?.results) return [];
@@ -77,6 +79,7 @@ function OrthologConverterPage() {
           r.ortholog_id?.toLowerCase().includes(searchTerm) ||
           r.ortholog_gene_name?.toLowerCase().includes(searchTerm) ||
           r.ortholog_description?.toLowerCase().includes(searchTerm) ||
+          r.target_organism?.toLowerCase().includes(searchTerm) ||
           r.relationship?.toLowerCase().includes(searchTerm)
       );
     }
@@ -151,15 +154,16 @@ function OrthologConverterPage() {
     loadTargets();
   }, []);
 
-  // When source changes, adjust target if needed
+  // When source changes, adjust targets if needed
   useEffect(() => {
     if (sourceOrganism === 'S_cerevisiae') {
       // S. cerevisiae can only convert to CGD species, not to itself
-      if (targetOrganism === 'S_cerevisiae') {
-        setTargetOrganism('C_albicans_SC5314');
-      }
+      setSelectedTargets((prev) => {
+        const next = prev.filter((t) => t !== 'S_cerevisiae');
+        return next.length > 0 ? next : ['C_albicans_SC5314'];
+      });
     }
-  }, [sourceOrganism, targetOrganism]);
+  }, [sourceOrganism]);
 
   // Parse gene input into array
   const parseGeneInput = useCallback((input) => {
@@ -169,11 +173,27 @@ function OrthologConverterPage() {
       .filter((g) => g.length > 0);
   }, []);
 
+  // Toggle one target species in the multi-select
+  const toggleTarget = (id) => {
+    setSelectedTargets((prev) =>
+      prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id]
+    );
+  };
+
+  // Filename tag matching the backend's download naming
+  const targetTag = selectedTargets.length === 1
+    ? selectedTargets[0]
+    : `${selectedTargets.length}_species`;
+
   // Handle conversion
   const handleConvert = async () => {
     const geneIds = parseGeneInput(geneInput);
     if (geneIds.length === 0) {
       setError('Please enter at least one gene ID');
+      return;
+    }
+    if (selectedTargets.length === 0) {
+      setError('Please select at least one target species');
       return;
     }
 
@@ -182,7 +202,7 @@ function OrthologConverterPage() {
     setResults(null);
 
     try {
-      const data = await orthologApi.convert(geneIds, targetOrganism, sourceOrganism);
+      const data = await orthologApi.convert(geneIds, selectedTargets, sourceOrganism);
       setResults(data);
     } catch (err) {
       console.error('Conversion error:', err);
@@ -211,11 +231,11 @@ function OrthologConverterPage() {
   const handleDownloadCSV = async () => {
     const geneIds = parseGeneInput(geneInput);
     try {
-      const blob = await orthologApi.downloadConversion(geneIds, targetOrganism, 'csv', sourceOrganism);
+      const blob = await orthologApi.downloadConversion(geneIds, selectedTargets, 'csv', sourceOrganism);
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `ortholog_conversion_${targetOrganism}.csv`;
+      a.download = `ortholog_conversion_${targetTag}.csv`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -229,11 +249,11 @@ function OrthologConverterPage() {
   const handleDownloadTSV = async () => {
     const geneIds = parseGeneInput(geneInput);
     try {
-      const blob = await orthologApi.downloadConversion(geneIds, targetOrganism, 'tsv', sourceOrganism);
+      const blob = await orthologApi.downloadConversion(geneIds, selectedTargets, 'tsv', sourceOrganism);
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `ortholog_conversion_${targetOrganism}.tsv`;
+      a.download = `ortholog_conversion_${targetTag}.tsv`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -363,7 +383,32 @@ function OrthologConverterPage() {
 
           <div className="target-panel">
             <h2>2. Select Target Species</h2>
-            <p className="input-help">Choose the organism to convert orthologs to</p>
+            <p className="input-help">
+              Choose one or more organisms to convert orthologs to —
+              &ldquo;no ortholog&rdquo; is reported per species where none exists
+            </p>
+            <div className="input-actions">
+              <button
+                type="button"
+                className="clear-btn"
+                onClick={() => setSelectedTargets(
+                  [...externalTargets, ...cgdTargets].map((t) => t.id)
+                )}
+              >
+                Select all
+              </button>
+              <button
+                type="button"
+                className="clear-btn"
+                onClick={() => setSelectedTargets([])}
+                disabled={selectedTargets.length === 0}
+              >
+                Clear
+              </button>
+              <span className="gene-count">
+                {selectedTargets.length} selected
+              </span>
+            </div>
 
             {loadingTargets ? (
               <div className="loading-targets">Loading organisms...</div>
@@ -375,11 +420,10 @@ function OrthologConverterPage() {
                     {externalTargets.map((t) => (
                       <label key={t.id} className="target-option">
                         <input
-                          type="radio"
-                          name="target"
+                          type="checkbox"
                           value={t.id}
-                          checked={targetOrganism === t.id}
-                          onChange={(e) => setTargetOrganism(e.target.value)}
+                          checked={selectedTargets.includes(t.id)}
+                          onChange={() => toggleTarget(t.id)}
                         />
                         <span className="target-name">
                           <em>{t.name.split(' ').slice(0, 2).join(' ')}</em>
@@ -401,11 +445,10 @@ function OrthologConverterPage() {
                     {cgdTargets.map((t) => (
                       <label key={t.id} className="target-option">
                         <input
-                          type="radio"
-                          name="target"
+                          type="checkbox"
                           value={t.id}
-                          checked={targetOrganism === t.id}
-                          onChange={(e) => setTargetOrganism(e.target.value)}
+                          checked={selectedTargets.includes(t.id)}
+                          onChange={() => toggleTarget(t.id)}
                         />
                         <span className="target-name">
                           <em>{t.name}</em>
@@ -425,7 +468,7 @@ function OrthologConverterPage() {
             type="button"
             className="convert-btn"
             onClick={handleConvert}
-            disabled={loading || geneCount === 0}
+            disabled={loading || geneCount === 0 || selectedTargets.length === 0}
           >
             {loading ? 'Converting...' : 'Convert to Orthologs'}
           </button>
@@ -452,7 +495,11 @@ function OrthologConverterPage() {
                 </span>
                 <span className="summary-item">
                   <strong>{results.converted_count}</strong> with orthologs in{' '}
-                  <em>{ORGANISM_DISPLAY_NAMES[targetOrganism] || results.target_organism}</em>
+                  <em>
+                    {results.target_organisms && results.target_organisms.length > 1
+                      ? `${results.target_organisms.length} species`
+                      : (ORGANISM_DISPLAY_NAMES[selectedTargets[0]] || results.target_organism)}
+                  </em>
                 </span>
               </div>
               <div className="results-actions">
@@ -506,6 +553,11 @@ function OrthologConverterPage() {
                     <th className="sortable" onClick={() => handleSort('input_gene_name')}>
                       Input Gene{getSortIndicator('input_gene_name')}
                     </th>
+                    {multiTarget && (
+                      <th className="sortable" onClick={() => handleSort('target_organism')}>
+                        Target Species{getSortIndicator('target_organism')}
+                      </th>
+                    )}
                     <th className="sortable" onClick={() => handleSort('ortholog_gene_name')}>
                       Ortholog{getSortIndicator('ortholog_gene_name')}
                     </th>
@@ -572,6 +624,15 @@ function OrthologConverterPage() {
                             </>
                           )}
                         </td>
+                        {multiTarget && (
+                          <td className="organism-cell">
+                            <em>
+                              {(r.target_organism || '-')
+                                .replace('Candida ', 'C. ')
+                                .replace('Saccharomyces ', 'S. ')}
+                            </em>
+                          </td>
+                        )}
                         <td className="gene-cell">
                           {r.ortholog_url && r.ortholog_id ? (
                             r.ortholog_url.startsWith('/') ? (
