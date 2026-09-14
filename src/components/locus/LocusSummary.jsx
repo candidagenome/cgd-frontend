@@ -608,11 +608,30 @@ function LocusSummary({
             </tr>
           )}
 
-          {/* Candida orthologs */}
+          {/* Candida orthologs (or curator-reviewed gene family members) */}
           {feature.candida_orthologs && feature.candida_orthologs.length > 0 && (
             <tr>
-              <th>Orthologous genes in Candida species</th>
+              <th>
+                {feature.curated_family
+                  ? 'Gene family members in Candida species'
+                  : 'Orthologous genes in Candida species'}
+              </th>
               <td>
+                {feature.curated_family && (
+                  <div style={{ marginBottom: '6px' }}>
+                    <strong>{feature.curated_family}</strong>
+                    <span style={{ color: '#666' }}>
+                      {' '}
+                      — curator-reviewed gene family; members below include
+                      same-species paralogs
+                    </span>
+                    {feature.curated_family_note && (
+                      <div style={{ marginTop: '4px', fontSize: '0.92em', color: '#555' }}>
+                        <em>{feature.curated_family_note}</em>
+                      </div>
+                    )}
+                  </div>
+                )}
                 <div className="ortholog-list">
                   {feature.candida_orthologs.map((orth, idx) => (
                     <div key={idx} className="ortholog-item">
