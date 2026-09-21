@@ -150,13 +150,13 @@ function SimilarGenesDetails({ locusName, selectedOrganism, onOrganismChange, cu
     return {
       gene_name: data.query_gene,
       feature_name: data.query_feature_name,
-      description: 'Query gene',
+      description: data.query_description || 'Query gene',
       correlation: 1.0,
       p_value: 0,
       shared_conditions: data.conditions_used || 0,
       isQueryGene: true,
     };
-  }, [data?.query_gene, data?.query_feature_name, data?.conditions_used]);
+  }, [data?.query_gene, data?.query_feature_name, data?.query_description, data?.conditions_used]);
 
   // Combined list: query gene first, then similar genes (sorted by correlation)
   const allGenesForDisplay = useMemo(() => {

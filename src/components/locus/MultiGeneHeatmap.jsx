@@ -158,7 +158,7 @@ function MultiGeneHeatmap({
         isQuery,
         correlation: matchingSimilarGene?.correlation ?? null,
         sharedConditions: matchingSimilarGene?.shared_conditions ?? null,
-        description: matchingSimilarGene?.description || data?.headline || null,
+        description: matchingSimilarGene?.description || data?.description || data?.headline || null,
         foldChanges,
       };
     });
@@ -479,7 +479,10 @@ function MultiGeneHeatmap({
                   className="heatmap-condition-header"
                   title={`${condition.label} (${condition.studyName})`}
                 >
-                  <span className="condition-label-rotated">
+                  <span
+                    className="condition-label-rotated"
+                    title={`${condition.label} (${condition.studyName})`}
+                  >
                     {condition.label.length > 20
                       ? condition.label.slice(0, 20) + '...'
                       : condition.label}
