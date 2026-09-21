@@ -82,6 +82,7 @@ function MultiGeneHeatmap({
 }) {
   const [hoveredCell, setHoveredCell] = useState(null);
   const [hoveredGene, setHoveredGene] = useState(null);
+  const [hoveredCondition, setHoveredCondition] = useState(null);
   const [selectedStudy, setSelectedStudy] = useState('all');
   const [sortBy, setSortBy] = useState('clustered');
 
@@ -254,10 +255,21 @@ function MultiGeneHeatmap({
   }, [filteredConditions]);
 
   // Handle cell hover - updates the info bar above heatmap
+  // Handle experiment/condition header hover - shows the untruncated name
+  // instantly in the info bar (the native title tooltip needs a long hover)
+  const handleConditionHover = useCallback((condition) => {
+    setHoveredCondition(condition);
+    if (condition) {
+      setHoveredCell(null);
+      setHoveredGene(null);
+    }
+  }, []);
+
   const handleCellHover = useCallback((gene, condition, fc) => {
     if (gene && condition) {
       setHoveredCell({ gene, condition, fc });
       setHoveredGene(null); // Clear gene hover when hovering cells
+      setHoveredCondition(null);
     } else {
       setHoveredCell(null);
     }
@@ -268,6 +280,7 @@ function MultiGeneHeatmap({
     if (gene) {
       setHoveredGene(gene);
       setHoveredCell(null); // Clear cell hover when hovering gene names
+      setHoveredCondition(null);
     } else {
       setHoveredGene(null);
     }
@@ -393,6 +406,16 @@ function MultiGeneHeatmap({
             <span className="hover-info-separator">|</span>
             <span className="hover-info-study">{hoveredCell.condition.studyName}</span>
           </>
+        ) : hoveredCondition ? (
+          <>
+            <span className="hover-info-condition">{hoveredCondition.label}</span>
+            <span className="hover-info-separator">|</span>
+            <span className="hover-info-category">
+              {CATEGORY_LABELS[hoveredCondition.bucket] || hoveredCondition.bucket}
+            </span>
+            <span className="hover-info-separator">|</span>
+            <span className="hover-info-study">{hoveredCondition.studyName}</span>
+          </>
         ) : hoveredGene ? (
           <>
             <span className="hover-info-gene">{hoveredGene.displayName}</span>
@@ -478,6 +501,8 @@ function MultiGeneHeatmap({
                   key={condition.id}
                   className="heatmap-condition-header"
                   title={`${condition.label} (${condition.studyName})`}
+                  onMouseEnter={() => handleConditionHover(condition)}
+                  onMouseLeave={() => handleConditionHover(null)}
                 >
                   <span
                     className="condition-label-rotated"
