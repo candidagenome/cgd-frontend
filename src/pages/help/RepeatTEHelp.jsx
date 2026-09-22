@@ -238,6 +238,53 @@ function RepeatTEHelp() {
           </ul>
         </div>
 
+        <div className="info-section">
+          <h2>Data availability</h2>
+          <p>
+            The repeat libraries and the annotation pipeline are freely available for reuse
+            (for example, to annotate repeats and TEs in other <em>Candida</em> strains):
+          </p>
+          <ul>
+            <li>
+              <strong>Repeat libraries</strong> (
+              <a href="/download/repeat_te/">download directory</a> — see its README):{' '}
+              <a href="/download/repeat_te/albicans_te_seeds.fasta">
+                albicans_te_seeds.fasta
+              </a>{' '}
+              (the 366 curated <em>C. albicans</em> repeat/TE sequences used as the
+              RepeatMasker homology library),{' '}
+              <a href="/download/repeat_te/CALB-families.fa">CALB-families.fa</a> (the{' '}
+              <em>C. albicans</em> de novo RepeatModeler2 consensus library), and{' '}
+              <a href="/download/repeat_te/CALB_tesorter.cls.lib">CALB_tesorter.cls.lib</a>{' '}
+              (the same consensi with TEsorter/REXdb classifications).
+            </li>
+            <li>
+              <strong>Pipeline scripts</strong>: the discovery, candidate-extraction, and
+              loading scripts are in the public CGD GitHub repository at{' '}
+              <a
+                href="https://github.com/candidagenome/cgd-backend/tree/main/scripts/repeat_te"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                candidagenome/cgd-backend &rarr; scripts/repeat_te
+              </a>
+              , alongside the full{' '}
+              <a
+                href="https://github.com/candidagenome/cgd-backend/blob/main/docs/REPEAT_TE_ANNOTATION_STRATEGY.md"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                annotation strategy document
+              </a>
+              .
+            </li>
+          </ul>
+          <p>
+            De novo consensus libraries for the other five species are available on request
+            (<a href="mailto:candida-curator@lists.stanford.edu">candida-curator@lists.stanford.edu</a>).
+          </p>
+        </div>
+
         <div className="info-note">
           <h3>Caveats</h3>
           <p>
