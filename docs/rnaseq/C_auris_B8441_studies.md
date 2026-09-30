@@ -19,8 +19,10 @@ This document tracks RNA-Seq dataset processing status for *Candida auris* B8441
 | Shivarathri_2022 | 12 | Complete | 35652307 | AmpB sens v res |
 | Simm_2022 | 12 | Complete | 35412372 | (+/-) pyrvinium pamoate |
 | Wang_2024 | 13 | Complete | PRJNA1086003 | Biofilm: In Vitro vs In Vivo Catheter |
+| Kean_2018 | 22 | Complete | 29997121 | Biofilm formation, pleural fluid |
+| Kovacs_2026 | 12 | Complete | 41817193 | Caspofungin/posaconazole synergy on biofilms |
 
-**Total completed: 9 studies, 142 samples**
+**Total completed: 11 studies, 176 samples**
 
 ### Wang_2024 Study Details (PRJNA1086003)
 
@@ -48,6 +50,31 @@ Study comparing in vitro biofilm vs in vivo catheter infection in two C. auris s
 **Expression tab:** Configured in `cgd-backend/cgd/api/services/expression_service.py`
 **JBrowse tracks:** `/data/HTS/C_auris_B8441/bam/Wang_2024/tracks.conf`
 
+### Kovacs_2026 Study Details (GSE302377 / PRJNA1290291)
+
+**Completed: 2026-09-29 (deployed to dev, both targets)**
+
+Antifungal synergy study: caspofungin (1.0 mg/l) and posaconazole (0.25 mg/l),
+alone and combined, on NCPF 8971 biofilms vs untreated control. PMID 41817193.
+Category: Antifungal Response. Study-level control = SRR34495245 (untreated Rep 1).
+
+| SRR ID | Condition | Replicate | Align % |
+|--------|-----------|-----------|---------|
+| SRR34495245 | Untreated control | 1 | 96.2 |
+| SRR34495244 | Untreated control | 2 | 95.6 |
+| SRR34495243 | Untreated control | 3 | 96.0 |
+| SRR34495242 | Caspofungin alone | 1 | 94.5 |
+| SRR34495241 | Caspofungin alone | 2 | 94.7 |
+| SRR34495240 | Caspofungin alone | 3 | 95.2 |
+| SRR34495239 | Posaconazole alone | 1 | 95.3 |
+| SRR34495238 | Posaconazole alone | 2 | 95.5 |
+| SRR34495237 | Posaconazole alone | 3 | 94.5 |
+| SRR34495236 | Caspofungin + posaconazole | 1 | 95.2 |
+| SRR34495235 | Caspofungin + posaconazole | 2 | 95.5 |
+| SRR34495234 | Caspofungin + posaconazole | 3 | 95.7 |
+
+**JBrowse tracks:** `Kovacs2026_<SRR>_coverage`, category ["RNA-Seq", "Antifungal Response", "Kovacs_2026"]
+
 ## In Progress
 
 *No studies currently in progress*
@@ -56,11 +83,9 @@ Study comparing in vitro biofilm vs in vivo catheter infection in two C. auris s
 
 | Study | BioProject | PMID | Description | Priority |
 |-------|------------|------|-------------|----------|
-| Kean_2018 | PRJNA477447 | 29997121 | Biofilm formation | NEXT |
 | Chauhan | PRJNA1232830 | 40066990 | (+/-) GCN5 | |
 | Zhang | GSE293594 | 40394068 | (+/-) GCN5; (+/-) FLC | |
 | Phan-Canh | PRJNA1169348 | 40638387 | White v brown phenotypes | |
-| Kovacs | GSE302377 | 41817193 | Caspo and posaconazole | |
 
 ### Lower Priority / Skipped
 
@@ -80,4 +105,4 @@ Study comparing in vitro biofilm vs in vivo catheter infection in two C. auris s
 
 ## Last Updated
 
-2025-05-17
+2026-09-29
