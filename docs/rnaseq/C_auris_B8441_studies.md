@@ -52,7 +52,7 @@ Study comparing in vitro biofilm vs in vivo catheter infection in two C. auris s
 
 ### Kovacs_2026 Study Details (GSE302377 / PRJNA1290291)
 
-**Completed: 2026-09-29 (deployed to dev, both targets)**
+**Completed: 2026-09-29 (dev); deployed to PROD 2026-09-30 (both targets + caches)**
 
 Antifungal synergy study: caspofungin (1.0 mg/l) and posaconazole (0.25 mg/l),
 alone and combined, on NCPF 8971 biofilms vs untreated control. PMID 41817193.
