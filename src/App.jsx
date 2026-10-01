@@ -149,6 +149,7 @@ import ExpressionHelp from './pages/help/ExpressionHelp';
 import SyntenyBrowserHelp from './pages/help/SyntenyBrowserHelp';
 import NonCodingRNAHelp from './pages/help/NonCodingRNAHelp';
 import RepeatTEHelp from './pages/help/RepeatTEHelp';
+import OrthologNameTransferHelp from './pages/help/OrthologNameTransferHelp';
 
 import ScrollToTop from './components/ScrollToTop';
 import Analytics from './components/Analytics';
@@ -632,6 +633,7 @@ function App() {
           <Route path="/help/synteny-browser" element={<SyntenyBrowserHelp />} />
           <Route path="/help/non-coding-rna" element={<NonCodingRNAHelp />} />
           <Route path="/help/repeat-te" element={<RepeatTEHelp />} />
+          <Route path="/help/ortholog-name-transfer" element={<OrthologNameTransferHelp />} />
         </Routes>
 
         {/* =========================

@@ -71,6 +71,17 @@ function HelpPage() {
 
         <div className="help-item">
           <h3>
+            <Link to="/help/ortholog-name-transfer">Ortholog-Based Gene Name Transfers</Link>
+          </h3>
+          <p>
+            How CGD assigned standard gene names to nearly 9,900 previously unnamed genes by
+            transferring conserved names from their orthologs, and where to download the full
+            gene list.
+          </p>
+        </div>
+
+        <div className="help-item">
+          <h3>
             <Link to="/help/search-form">Search Help</Link>
           </h3>
           <p>Documentation about search tools in CGD. Additional tool-specific documentation:</p>

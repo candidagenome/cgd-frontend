@@ -38,6 +38,28 @@ const MEETINGS = [
 // News items
 const NEWS_ITEMS = [
   {
+    title: 'New: Standard Gene Names from Ortholog Transfer',
+    content: (
+      <>
+        CGD has assigned standard gene names to nearly 9,900 previously unnamed genes across{' '}
+        <em>C. dubliniensis</em>, <em>C. tropicalis</em>, <em>C. parapsilosis</em>,{' '}
+        <em>C. auris</em>, <em>C. glabrata</em>, and <em>C. albicans</em> by transferring
+        conserved names from their orthologs, as determined by the Candida and Yeast Gene Order
+        Browsers (CGOB/YGOB). Each transferred name cites a methods reference on its locus page,
+        and the full gene list is available from the download site.
+        <p></p>
+        <strong>Note:</strong> Transfers were vetted computationally and reviewed by CGD
+        curators; names with direct experimental support are unaffected.
+        <br /><br />
+        <Link to="/help/ortholog-name-transfer">How names were transferred</Link>
+        {' | '}
+        <a href="/download/ortholog_name_transfers/">Download the gene list</a>
+      </>
+    ),
+    date: 'October 2026',
+    highlight: true,
+  },
+  {
     title: 'New: Repeat/Transposable Element and C. albicans snoRNA Annotations',
     content: (
       <>
