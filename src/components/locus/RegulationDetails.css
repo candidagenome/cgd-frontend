@@ -1,0 +1,382 @@
+/* Locus Regulation tab (PathoYeastract regulatory associations) */
+
+.regulation-details {
+  --reg-plus: #2e7d32;
+  --reg-minus: #e65100;
+  --reg-binding: #1565c0;
+  --reg-expression: #6a1b9a;
+}
+
+.reg-intro p {
+  margin: 0 0 8px;
+  line-height: 1.5;
+}
+
+.reg-source {
+  font-size: 0.9em;
+}
+
+.reg-subtabs {
+  margin: 12px 0;
+}
+
+.reg-section {
+  margin: 18px 0;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.reg-section > *:not(.category-header) {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.reg-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.reg-stat {
+  display: flex;
+  flex-direction: column;
+  min-width: 130px;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  color: #555;
+  font-size: 0.85em;
+}
+
+.reg-stat-value {
+  color: #222;
+  font-size: 1.5em;
+  font-weight: 600;
+}
+
+.reg-note,
+.reg-small {
+  font-size: 0.9em;
+  color: #444;
+}
+
+.reg-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.reg-segmented {
+  display: inline-flex;
+  flex-wrap: wrap;
+  border: 1px solid #c5cae9;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.reg-segmented button {
+  padding: 6px 12px;
+  border: none;
+  border-right: 1px solid #c5cae9;
+  background: #fff;
+  color: #333;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.reg-segmented button:last-child {
+  border-right: none;
+}
+
+.reg-segmented button.active {
+  background: #1976d2;
+  color: #fff;
+}
+
+.reg-filter-input {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 200px;
+}
+
+.reg-download {
+  padding: 6px 12px;
+  border: 1px solid #1976d2;
+  border-radius: 4px;
+  background: #fff;
+  color: #1976d2;
+  cursor: pointer;
+}
+
+.reg-download:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.reg-link-button {
+  padding: 2px 0;
+  border: none;
+  background: none;
+  color: #1976d2;
+  font-size: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.reg-link-button + .reg-link-button {
+  margin-left: 12px;
+}
+
+.reg-link-button:hover {
+  text-decoration: underline;
+}
+
+.reg-table td {
+  vertical-align: top;
+}
+
+.reg-row-open td {
+  background: #f3f8fe;
+}
+
+.reg-evidence-row > td {
+  padding: 0 10px 14px 28px;
+  background: #f3f8fe;
+}
+
+.reg-evidence-table {
+  margin: 0 0 6px;
+  background: #fff;
+  font-size: 0.9em;
+}
+
+.reg-reference .reg-pubmed {
+  margin-left: 8px;
+  font-size: 0.85em;
+}
+
+.reg-condition-text {
+  display: -webkit-box;
+  max-width: 360px;
+  overflow: hidden;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  color: #555;
+}
+
+.reg-nowrap {
+  white-space: nowrap;
+}
+
+.reg-external {
+  font-size: 0.9em;
+}
+
+.reg-unlinked {
+  color: #555;
+}
+
+.reg-badges {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.reg-badge {
+  padding: 1px 7px;
+  border-radius: 10px;
+  font-size: 0.8em;
+  white-space: nowrap;
+}
+
+.reg-badge-binding {
+  background: #e3f2fd;
+  color: var(--reg-binding);
+}
+
+.reg-badge-expression {
+  background: #f3e5f5;
+  color: var(--reg-expression);
+}
+
+.reg-direction {
+  display: inline-flex;
+  flex-direction: column;
+  font-size: 0.9em;
+}
+
+.reg-up {
+  color: #2e7d32;
+  white-space: nowrap;
+}
+
+.reg-down {
+  color: #c62828;
+  white-space: nowrap;
+}
+
+.reg-check {
+  color: var(--reg-plus);
+  font-weight: 600;
+}
+
+.reg-motif {
+  display: flex;
+  flex-direction: column;
+}
+
+.reg-consensus {
+  font-family: 'Courier New', monospace;
+  font-size: 0.85em;
+  color: #555;
+  word-break: break-all;
+}
+
+/* Promoter map */
+
+.reg-map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 10px 15px 4px;
+  font-size: 0.85em;
+}
+
+.reg-swatch {
+  display: inline-block;
+  width: 12px;
+  height: 8px;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.reg-swatch.reg-site-plus {
+  background: var(--reg-plus);
+}
+
+.reg-swatch.reg-site-minus {
+  background: var(--reg-minus);
+}
+
+.reg-promoter-map {
+  display: block;
+  width: 100%;
+  max-width: 920px;
+  height: auto;
+  margin-bottom: 6px;
+}
+
+.reg-map-grid {
+  stroke: #eee;
+}
+
+.reg-map-tick {
+  fill: #777;
+  font-size: 10px;
+}
+
+.reg-map-label {
+  fill: #333;
+  font-size: 11px;
+}
+
+.reg-map-axis {
+  stroke: #bbb;
+}
+
+.reg-map-hit {
+  fill: transparent;
+}
+
+.reg-map-row {
+  cursor: pointer;
+}
+
+.reg-map-row:hover .reg-map-hit {
+  fill: #f5f5f5;
+}
+
+.reg-map-row.selected .reg-map-hit {
+  fill: #fff8e1;
+}
+
+.reg-map-row.selected .reg-map-label {
+  font-weight: 700;
+}
+
+.reg-promoter-map .reg-site-plus {
+  fill: var(--reg-plus);
+}
+
+.reg-promoter-map .reg-site-minus {
+  fill: var(--reg-minus);
+}
+
+/* Promoter sequence */
+
+.reg-sequence {
+  margin: 8px 15px 14px;
+  padding: 10px;
+  overflow-x: auto;
+  background: #fafafa;
+  border: 1px solid #e0e0e0;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.reg-seq-coord {
+  display: inline-block;
+  width: 56px;
+  color: #999;
+  user-select: none;
+}
+
+.reg-seq-plus {
+  background: #c8e6c9;
+}
+
+.reg-seq-minus {
+  background: #ffe0b2;
+}
+
+.reg-seq-both {
+  background: linear-gradient(#c8e6c9 50%, #ffe0b2 50%);
+}
+
+.reg-warning {
+  padding: 8px 12px;
+  background: #fff8e1;
+  border-left: 3px solid #f9a825;
+}
+
+.reg-pager {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin: 10px 15px 14px;
+  font-size: 0.9em;
+  color: #555;
+}
+
+.reg-pager button {
+  padding: 4px 10px;
+  border: 1px solid #c5cae9;
+  border-radius: 4px;
+  background: #fff;
+  color: #1976d2;
+  cursor: pointer;
+}
+
+.reg-pager button:disabled {
+  color: #aaa;
+  cursor: default;
+}

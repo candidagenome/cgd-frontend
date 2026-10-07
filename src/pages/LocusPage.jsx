@@ -11,6 +11,7 @@ import InteractionDetails from '../components/locus/InteractionDetails';
 import References from '../components/locus/References';
 import History from '../components/locus/History';
 import ExpressionDetails from '../components/locus/ExpressionDetails';
+import RegulationDetails from '../components/locus/RegulationDetails';
 import SimilarGenesDetails from '../components/locus/SimilarGenesDetails';
 import OrganismSelector, { getDefaultOrganism } from '../components/locus/OrganismSelector';
 import { applySeo, buildLocusSeo } from '../utils/seo';
@@ -27,6 +28,7 @@ const TABS = [
   { id: 'go', label: 'Gene Ontology', component: 'go', loader: 'loadGoDetails' },
   { id: 'phenotype', label: 'Phenotype', component: 'phenotype', loader: 'loadPhenotypeDetails' },
   { id: 'expression', label: 'Expression', component: 'expression', loader: 'loadExpressionDetails' },
+  { id: 'regulation', label: 'Regulation', component: 'regulation', loader: 'loadRegulationDetails' },
   { id: 'protein', label: 'Protein', component: 'protein', loader: 'loadProteinDetails' },
   { id: 'homology', label: 'Homologs', component: 'homology', loader: 'loadHomologyDetails' },
   { id: 'sequence', label: 'Sequence', component: 'sequence', loader: 'loadSequenceDetails' },
@@ -317,6 +319,18 @@ function LocusPage() {
               />
             )}
           </div>
+        );
+
+      case 'regulation':
+        return (
+          <RegulationDetails
+            data={data.regulationDetails}
+            loading={loading.regulationDetails}
+            error={errors.regulationDetails}
+            selectedOrganism={selectedOrganism}
+            onOrganismChange={setSelectedOrganism}
+            orthologOrganisms={orthologOrganisms}
+          />
         );
 
       case 'protein':

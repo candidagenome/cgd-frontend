@@ -123,6 +123,12 @@ export const locusApi = {
     return response.data;
   },
 
+  // Get transcriptional regulators/targets (PathoYeastract) by organism
+  getRegulationDetails: async (name) => {
+    const response = await api.get(`/api/locus/${encodeURIComponent(name)}/regulation_details`);
+    return response.data;
+  },
+
   // Get interaction network graph for visualization
   getInteractionNetwork: async (name, depth = 2, includeString = true, stringScore = 400) => {
     const params = new URLSearchParams({
