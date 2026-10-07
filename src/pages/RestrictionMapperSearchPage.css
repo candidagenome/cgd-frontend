@@ -91,14 +91,14 @@
 }
 
 /* Input Type Tabs */
-.input-type-tabs {
+.restriction-mapper-page .input-type-tabs {
   display: flex;
   gap: 0;
   margin-bottom: 15px;
   border-bottom: 1px solid #ddd;
 }
 
-.tab-button {
+.restriction-mapper-page .tab-button {
   padding: 10px 20px;
   border: none;
   background: none;
@@ -110,11 +110,11 @@
   transition: color 0.2s, border-color 0.2s;
 }
 
-.tab-button:hover {
+.restriction-mapper-page .tab-button:hover {
   color: #1976d2;
 }
 
-.tab-button.active {
+.restriction-mapper-page .tab-button.active {
   color: #1976d2;
   border-bottom-color: #1976d2;
   font-weight: 500;
@@ -191,17 +191,17 @@
     padding: 20px;
   }
 
-  .input-type-tabs {
+  .restriction-mapper-page .input-type-tabs {
     flex-direction: column;
   }
 
-  .tab-button {
+  .restriction-mapper-page .tab-button {
     border-bottom: none;
     border-left: 2px solid transparent;
     text-align: left;
   }
 
-  .tab-button.active {
+  .restriction-mapper-page .tab-button.active {
     border-bottom: none;
     border-left-color: #1976d2;
   }

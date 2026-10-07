@@ -30,7 +30,9 @@
 /* Tab Navigation - sticky to prevent jumping during content loads */
 .tab-navigation {
   display: flex;
-  flex-wrap: nowrap;
+  /* Wrap rather than scroll: a horizontal scrollbar is hidden on macOS,
+     so overflowing tabs (e.g. History) silently disappear */
+  flex-wrap: wrap;
   gap: 3px;
   margin-bottom: 20px;
   padding: 10px 0;
