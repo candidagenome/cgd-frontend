@@ -43,6 +43,7 @@ import ExternalResourcesPage from './pages/ExternalResourcesPage';
 import NomenclaturePage from './pages/NomenclaturePage';
 import DownloadPage from './pages/DownloadPage';
 import DatasetsPage from './pages/DatasetsPage';
+import RepeatTEDownloadsPage from './pages/RepeatTEDownloadsPage';
 import LiteraturePage from './pages/LiteraturePage';
 import CGDPublicationsPage from './pages/CGDPublicationsPage';
 import TopicBibliosPage from './pages/TopicBibliosPage';
@@ -261,6 +262,7 @@ function App() {
           <Route path="/nomenclature" element={<NomenclaturePage />} />
           <Route path="/download" element={<DownloadPage />} />
           <Route path="/download-datasets" element={<DatasetsPage />} />
+          <Route path="/download-repeat-te" element={<RepeatTEDownloadsPage />} />
           <Route path="/literature" element={<LiteraturePage />} />
           <Route path="/cgd-publications" element={<CGDPublicationsPage />} />
           <Route path="/literature-topic-search" element={<LiteratureTopicSearchPage />} />

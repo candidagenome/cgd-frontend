@@ -280,8 +280,9 @@ function RepeatTEHelp() {
             </li>
           </ul>
           <p>
-            De novo consensus libraries for the other five species are available on request
-            (<a href="mailto:candida-curator@lists.stanford.edu">candida-curator@lists.stanford.edu</a>).
+            De novo consensus libraries for the other five species are in the same download
+            directory. All of these files are also listed on the{' '}
+            <Link to="/download-repeat-te">Repeat/TE Downloads</Link> page (Download menu).
           </p>
         </div>
 

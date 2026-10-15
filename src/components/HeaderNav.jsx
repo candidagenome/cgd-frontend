@@ -97,7 +97,8 @@ const HeaderNav = () => {
         { label: 'Sequence Downloads', href: '/download/sequence/', external: true },
         { label: 'Datasets', to: '/download-datasets' },
         { label: 'Chromosomal Features', href: '/download/chromosomal_feature_files/', external: true },
-        { label: 'GO Annotations', href: '/download/go/', external: true }
+        { label: 'GO Annotations', href: '/download/go/', external: true },
+        { label: 'Repeat/TE Downloads', to: '/download-repeat-te' }
       ]
     },
     {

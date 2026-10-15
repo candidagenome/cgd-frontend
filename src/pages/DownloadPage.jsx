@@ -243,6 +243,17 @@ const DownloadPage = () => {
           </div>
 
           <div className="help-item">
+            <h3><strong>Repeat/TE Libraries and Scripts</strong></h3>
+            <p>
+              Repeat libraries for all six species, the curated <em>C. albicans</em> repeat/TE sequences, and the pipeline scripts and strategy document from CGD's 2026 repeat and transposable element annotation.
+            </p>
+            <div className="help-links">
+              <Link to="/download-repeat-te">Go to the Repeat/TE Downloads page</Link>
+              <a href="/download/repeat_te/README">View the README</a>
+            </div>
+          </div>
+
+          <div className="help-item">
             <h3><strong>Batch Download Tool</strong></h3>
             <p>
               Simultaneously retrieve multiple types of data for a list of gene or feature names.
