@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
@@ -241,6 +241,7 @@ const TextSearchResultsPage = () => {
   const type = searchParams.get('type') || null; // 'homolog' for ortholog-only search
   const searchFieldParam = searchParams.get('search_field') || 'all';
   const matchMode = searchParams.get('match_mode') || 'all'; // Default to AND
+  const organismParam = searchParams.get('organism') || null; // organism_abbrev from the search form
 
   // Determine if searchField is a category filter or paper search option
   const isCategory = !PAPER_SEARCH_FIELDS.includes(searchFieldParam);
@@ -487,6 +488,26 @@ const TextSearchResultsPage = () => {
       setSelectedOrganism(null);
     }
   }, [categoryResults, hasApiOrganismCounts]);
+
+  // Pre-select the organism chosen on the search form, once per search,
+  // after the first category's results have loaded
+  const urlOrganismName = useMemo(
+    () => allOrganisms.find(o => o.organism_abbrev === organismParam)?.organism_name || null,
+    [allOrganisms, organismParam]
+  );
+  const urlOrganismAppliedRef = useRef(false);
+
+  useEffect(() => {
+    urlOrganismAppliedRef.current = false;
+  }, [query, organismParam]);
+
+  useEffect(() => {
+    if (!urlOrganismName || urlOrganismAppliedRef.current || categoryResults === null) {
+      return;
+    }
+    urlOrganismAppliedRef.current = true;
+    setSelectedOrganism(urlOrganismName);
+  }, [urlOrganismName, categoryResults]);
 
   // Calculate year counts for paper_titles category
   useEffect(() => {
