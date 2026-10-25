@@ -73,6 +73,7 @@ import ChromosomeListPage from './pages/ChromosomeListPage';
 import WebPrimerSearchPage from './pages/WebPrimerSearchPage';
 import WebPrimerResultsPage from './pages/WebPrimerResultsPage';
 import GoTermFinderSearchPage from './pages/GoTermFinderSearchPage';
+import GeneListWorkbenchPage from './pages/GeneListWorkbenchPage';
 import GoTermFinderResultsPage from './pages/GoTermFinderResultsPage';
 import GoSlimMapperSearchPage from './pages/GoSlimMapperSearchPage';
 import GoSlimMapperResultsPage from './pages/GoSlimMapperResultsPage';
@@ -287,6 +288,7 @@ function App() {
           <Route path="/webprimer" element={<WebPrimerSearchPage />} />
           <Route path="/webprimer/results" element={<WebPrimerResultsPage />} />
           <Route path="/go-term-finder" element={<GoTermFinderSearchPage />} />
+          <Route path="/gene-list-workbench" element={<GeneListWorkbenchPage />} />
           <Route path="/go-term-finder/results" element={<GoTermFinderResultsPage />} />
           <Route path="/go-slim-mapper" element={<GoSlimMapperSearchPage />} />
           <Route path="/go-slim-mapper/results" element={<GoSlimMapperResultsPage />} />

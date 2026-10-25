@@ -56,6 +56,11 @@ const ToolsPage = () => {
       blurb: 'Interpret gene lists and explore annotations.',
       tools: [
         {
+          title: 'Gene List Workbench',
+          url: '/gene-list-workbench',
+          description: 'Analyze a gene list in one place: GO and phenotype enrichment, expression heatmap, orthologs, and data download'
+        },
+        {
           title: 'GO Term Finder',
           url: '/go-term-finder',
           description: 'Find significantly shared GO terms among a list of genes'

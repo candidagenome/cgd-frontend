@@ -78,7 +78,8 @@ function MultiGeneHeatmap({
   expressionData,
   loading,
   onClose,
-  inline = false
+  inline = false,
+  geneListMode = false
 }) {
   const [hoveredCell, setHoveredCell] = useState(null);
   const [hoveredGene, setHoveredGene] = useState(null);
@@ -134,7 +135,8 @@ function MultiGeneHeatmap({
 
       // Query gene is either flagged or is the first entry
       const isFirstGene = index === 0;
-      const isQuery = isQueryGene || isFirstGene;
+      // In gene-list mode every row is an equal peer (no query gene)
+      const isQuery = !geneListMode && (isQueryGene || isFirstGene);
 
       // For query gene, use queryGene prop as fallback for display name
       const queryDisplayName = queryGene?.gene_name || queryGene?.systematic_name || geneName;
@@ -169,7 +171,7 @@ function MultiGeneHeatmap({
       studies: studiesArr,
       geneRows: rows
     };
-  }, [expressionData, similarGenes, queryGene]);
+  }, [expressionData, similarGenes, queryGene, geneListMode]);
 
   // Minimum data coverage threshold (percentage of conditions required)
   const MIN_DATA_COVERAGE = 0.5; // 50%
@@ -351,7 +353,7 @@ function MultiGeneHeatmap({
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
         >
-          {SORT_OPTIONS.map(opt => (
+          {SORT_OPTIONS.filter(opt => !geneListMode || opt.value !== 'foldchange').map(opt => (
             <option key={opt.value} value={opt.value}>
               {opt.label}
             </option>
@@ -441,7 +443,7 @@ function MultiGeneHeatmap({
           <div className="heatmap-gene-labels">
             <div className="heatmap-corner">
               <div className="corner-category-label">Category</div>
-              <div className="corner-correlation-label">
+              {!geneListMode && <div className="corner-correlation-label">
                 <span className="correlation-info-icon">
                   i
                   <span className="correlation-tooltip">
@@ -450,7 +452,7 @@ function MultiGeneHeatmap({
                     Number in parentheses = conditions used.
                   </span>
                 </span>
-              </div>
+              </div>}
             </div>
             {filteredGeneRows.map((gene) => {
               // Open gene links in new tab so user doesn't lose their current view

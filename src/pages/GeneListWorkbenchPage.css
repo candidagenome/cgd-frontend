@@ -1,0 +1,287 @@
+/* ===========================================
+   GENE LIST WORKBENCH PAGE STYLES
+   =========================================== */
+
+.gene-list-workbench-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.gene-list-workbench-page .page-header {
+  margin-bottom: 20px;
+}
+
+.gene-list-workbench-page .page-header h1 {
+  margin: 0 0 8px;
+  font-size: 1.75rem;
+  color: #1a252f;
+}
+
+.gene-list-workbench-page .page-description {
+  color: #4b5563;
+  font-size: 1rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Input */
+.workbench-input {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 24px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.workbench-input label {
+  display: block;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.workbench-hint {
+  font-weight: 400;
+  color: #6b7280;
+  font-size: 0.9em;
+}
+
+.workbench-input textarea {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: monospace;
+  font-size: 0.95em;
+  padding: 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+.workbench-input-meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 6px;
+  color: #6b7280;
+  font-size: 0.9em;
+}
+
+.workbench-input-side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.workbench-input-side select {
+  padding: 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.95em;
+}
+
+/* Buttons and links */
+.workbench-primary-btn {
+  padding: 10px 24px;
+  background: #006600;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.workbench-primary-btn:hover:not(:disabled) {
+  background: #005500;
+}
+
+.workbench-primary-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.workbench-secondary-btn {
+  padding: 6px 14px;
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.workbench-secondary-btn:hover {
+  background: #e5e7eb;
+}
+
+.workbench-text-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #003366;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+.workbench-link {
+  color: #003366;
+  font-size: 0.9em;
+}
+
+/* Messages */
+.workbench-error {
+  background: #fdecea;
+  border: 1px solid #f5c2c0;
+  color: #8a1c14;
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin: 12px 0;
+}
+
+.workbench-status {
+  color: #4b5563;
+  padding: 16px 0;
+}
+
+/* Results */
+.workbench-summary {
+  margin-bottom: 12px;
+  color: #374151;
+}
+
+.workbench-not-found {
+  margin-top: 6px;
+  font-size: 0.9em;
+  color: #6b7280;
+}
+
+.workbench-not-found summary {
+  cursor: pointer;
+  color: #8a1c14;
+}
+
+.workbench-not-found span {
+  display: block;
+  margin-top: 4px;
+  word-break: break-word;
+}
+
+.workbench-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.workbench-tab {
+  padding: 10px 18px;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  font-size: 0.95em;
+  color: #4b5563;
+  cursor: pointer;
+}
+
+.workbench-tab:hover {
+  color: #1a252f;
+}
+
+.workbench-tab.active {
+  color: #003366;
+  font-weight: 600;
+  border-bottom-color: #003366;
+}
+
+.workbench-tab-panel {
+  padding: 16px 0;
+}
+
+.workbench-tab-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  margin: 12px 0;
+  color: #4b5563;
+  font-size: 0.9em;
+}
+
+/* Ortholog table */
+.workbench-table-wrap {
+  overflow-x: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+}
+
+.workbench-ortholog-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+
+.workbench-ortholog-table th,
+.workbench-ortholog-table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.workbench-ortholog-table th {
+  background: #f3f4f6;
+  color: #374151;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+}
+
+.workbench-ortholog-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.workbench-none {
+  color: #9ca3af;
+}
+
+.workbench-rel {
+  color: #6b7280;
+  font-size: 0.85em;
+}
+
+/* Download */
+.workbench-download p {
+  margin: 0 0 12px;
+  color: #374151;
+}
+
+.workbench-download-types {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 8px;
+}
+
+.workbench-download-types label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: #374151;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .workbench-input {
+    grid-template-columns: 1fr;
+  }
+
+  .workbench-tab {
+    padding: 8px 10px;
+  }
+}
