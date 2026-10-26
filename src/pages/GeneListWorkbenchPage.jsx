@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { goTermFinderApi } from '../api/goTermFinderApi';
 import { phenotypeEnrichmentApi } from '../api/phenotypeEnrichmentApi';
 import { expressionApi } from '../api/expressionApi';
 import { orthologApi } from '../api/orthologApi';
 import batchDownloadApi from '../api/batchDownloadApi';
+import goApi from '../api/goApi';
+import { searchApi } from '../api/searchApi';
 import EnrichmentResultsPanel from '../components/locus/EnrichmentResultsPanel';
 import MultiGeneHeatmap from '../components/locus/MultiGeneHeatmap';
 import '../components/locus/LocusComponents.css';
@@ -25,6 +27,8 @@ const SCER_TARGET = { orthologId: 'S_cerevisiae', name: 'Saccharomyces cerevisia
 
 // The batch expression endpoint accepts at most 50 genes per request
 const MAX_HEATMAP_GENES = 50;
+// The matrix download endpoint accepts up to 200 (~17 s on the server)
+const MAX_MATRIX_GENES = 200;
 
 const ENRICHMENT_PARAMS = {
   p_value_cutoff: 0.05,
@@ -53,6 +57,8 @@ const DOWNLOAD_TYPES = [
 const EXAMPLE_GENES = 'ALS3\nHWP1\nECE1\nSAP5\nHYR1\nIHD1\nRBT1\nRBT4\nEFG1\nUME6\nBRG1\nTEC1\nNRG1\nHGC1';
 
 const EMPTY_RESULT = { loading: false, data: null, error: null };
+
+const GOID_PATTERN = /^GO:\d{7}$/i;
 
 // Split on whitespace, commas and semicolons; keep first-seen order, drop
 // case-insensitive duplicates
@@ -109,11 +115,23 @@ const GeneListWorkbenchPage = () => {
   const [goResult, setGoResult] = useState(EMPTY_RESULT);
   const [phenoResult, setPhenoResult] = useState(EMPTY_RESULT);
   const [exprResult, setExprResult] = useState(EMPTY_RESULT);
+  const [matrixDownloading, setMatrixDownloading] = useState(false);
   const [orthoResult, setOrthoResult] = useState(EMPTY_RESULT);
 
   const [downloadTypes, setDownloadTypes] = useState(['coords', 'protein']);
   const [downloading, setDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState(null);
+
+  // Build the list from a GO term (and its descendants) instead of pasting
+  const goParam = searchParams.get('go');
+  const [inputMode, setInputMode] = useState(goParam ? 'go' : 'paste');
+  const [goQuery, setGoQuery] = useState(goParam || '');
+  const [goSuggestions, setGoSuggestions] = useState([]);
+  const [goTerm, setGoTerm] = useState(goParam ? { id: goParam.toUpperCase(), name: '' } : null);
+  const [includeDescendants, setIncludeDescendants] = useState(searchParams.get('descendants') !== '0');
+  const [includeComputational, setIncludeComputational] = useState(true);
+  const [goLoading, setGoLoading] = useState(false);
+  const autoLoaded = useRef(false);
 
   const inputGenes = useMemo(() => parseGeneList(inputText), [inputText]);
 
@@ -129,15 +147,15 @@ const GeneListWorkbenchPage = () => {
     return [...ORGANISMS.filter(o => o.no !== organism.no), SCER_TARGET];
   }, [organism]);
 
-  const handleAnalyze = async () => {
-    if (inputGenes.length === 0) {
+  const analyzeGenes = async (genes, source = null) => {
+    if (genes.length === 0) {
       setValidationError('Please enter at least one gene.');
       return;
     }
     setValidating(true);
     setValidationError(null);
     try {
-      const result = await goTermFinderApi.validateGenes(inputGenes, organismNo);
+      const result = await goTermFinderApi.validateGenes(genes, organismNo);
       setGoResult(EMPTY_RESULT);
       setPhenoResult(EMPTY_RESULT);
       setExprResult(EMPTY_RESULT);
@@ -146,7 +164,7 @@ const GeneListWorkbenchPage = () => {
       if (result.found.length === 0) {
         setGeneSet(null);
         const orgName = ORGANISMS.find(o => o.no === organismNo)?.name;
-        setValidationError(`None of the ${inputGenes.length} genes were found in ${orgName}. `
+        setValidationError(`None of the ${genes.length} genes were found in ${orgName}. `
           + 'Check the organism selection.');
         return;
       }
@@ -157,13 +175,103 @@ const GeneListWorkbenchPage = () => {
         seenFeatures.add(g.feature_no);
         return true;
       });
-      setGeneSet({ organismNo, found, notFound: result.not_found, submitted: inputGenes.length });
+      setGeneSet({ organismNo, found, notFound: result.not_found, submitted: genes.length, source });
       setActiveTab('go');
     } catch (err) {
       setValidationError(errorMessage(err, 'Gene validation failed.'));
     } finally {
       setValidating(false);
     }
+  };
+
+  const handleAnalyze = () => analyzeGenes(inputGenes);
+
+  // Fetch the term's genes in the selected organism, show them in the paste
+  // box (so the list can be edited and re-run), and analyze them
+  const loadGoTermGenes = async (term) => {
+    setGoLoading(true);
+    setValidationError(null);
+    try {
+      const data = await goApi.getGoTermGenes(term.id, organismNo, { includeDescendants, includeComputational });
+      const label = `${data.go_term} (${data.goid})`;
+      setGoTerm({ id: data.goid, name: data.go_term });
+      setGoQuery(label);
+      if (data.genes.length === 0) {
+        const orgName = ORGANISMS.find(o => o.no === organismNo)?.name;
+        setValidationError(`No ${orgName} genes are annotated to ${label}`
+          + `${includeDescendants ? ' or its descendants' : ''}.`);
+        return;
+      }
+      const names = data.genes.map(g => g.feature_name);
+      setInputText(names.join('\n'));
+      await analyzeGenes(names, {
+        label,
+        goid: data.goid,
+        includeDescendants: data.include_descendants,
+        termCount: data.term_count,
+      });
+    } catch (err) {
+      setValidationError(errorMessage(err, 'Loading genes for the GO term failed.'));
+    } finally {
+      setGoLoading(false);
+    }
+  };
+
+  // Linked from a GO term page: /gene-list-workbench?go=GO:...&organism=...
+  useEffect(() => {
+    if (goTerm && inputMode === 'go' && !autoLoaded.current) {
+      autoLoaded.current = true;
+      loadGoTermGenes(goTerm);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Term-name suggestions while typing (a GO ID is used as typed)
+  useEffect(() => {
+    const query = goQuery.trim();
+    if (inputMode !== 'go' || query.length < 3 || GOID_PATTERN.test(query)
+        || (goTerm && query === `${goTerm.name} (${goTerm.id})`)) {
+      setGoSuggestions([]);
+      return undefined;
+    }
+    let cancelled = false;
+    const timer = setTimeout(async () => {
+      try {
+        const data = await searchApi.searchCategory(query, 'go_terms');
+        // The search ranks longer terms that contain the query above the term
+        // itself; put an exact match first, then prefix matches, then the
+        // shorter (broader) names
+        const q = query.toLowerCase();
+        const rank = (r) => {
+          const name = (r.name || '').toLowerCase();
+          return [name === q ? 0 : name.startsWith(q) ? 1 : 2, name.length];
+        };
+        const ranked = [...(data.results || [])].sort((x, y) => {
+          const [ax, lx] = rank(x);
+          const [ay, ly] = rank(y);
+          return ax - ay || lx - ly;
+        });
+        if (!cancelled) setGoSuggestions(ranked.slice(0, 10));
+      } catch {
+        if (!cancelled) setGoSuggestions([]);
+      }
+    }, 300);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [goQuery, inputMode, goTerm]);
+
+  const handleGoQueryChange = (value) => {
+    setGoQuery(value);
+    const id = value.trim().toUpperCase();
+    setGoTerm(GOID_PATTERN.test(id) ? { id, name: '' } : null);
+  };
+
+  const selectGoSuggestion = (suggestion) => {
+    setGoTerm({ id: suggestion.id, name: suggestion.name });
+    setGoQuery(`${suggestion.name} (${suggestion.id})`);
+    setGoSuggestions([]);
   };
 
   const runGo = useCallback(async () => {
@@ -262,10 +370,13 @@ const GeneListWorkbenchPage = () => {
   };
 
   const handleExpressionDownload = async () => {
+    setMatrixDownloading(true);
     try {
-      await expressionApi.downloadExpressionMatrix(geneNames.slice(0, MAX_HEATMAP_GENES), organism.name);
+      await expressionApi.downloadExpressionMatrix(geneNames.slice(0, MAX_MATRIX_GENES), organism.name);
     } catch (err) {
       setExprResult(prev => ({ ...prev, error: errorMessage(err, 'Expression download failed.') }));
+    } finally {
+      setMatrixDownloading(false);
     }
   };
 
@@ -396,11 +507,22 @@ const GeneListWorkbenchPage = () => {
             {geneNames.length > MAX_HEATMAP_GENES && ` (first ${MAX_HEATMAP_GENES} genes of your list)`}.
           </span>
           {withData > 0 && (
-            <button type="button" className="workbench-secondary-btn" onClick={handleExpressionDownload}>
-              Download matrix (TSV)
+            <button
+              type="button"
+              className="workbench-secondary-btn"
+              onClick={handleExpressionDownload}
+              disabled={matrixDownloading}
+            >
+              {matrixDownloading ? 'Preparing matrix...' : 'Download matrix (TSV)'}
             </button>
           )}
         </div>
+        {geneNames.length > MAX_HEATMAP_GENES && (
+          <p className="workbench-hint">
+            The matrix download covers the first {Math.min(geneNames.length, MAX_MATRIX_GENES)} genes
+            {geneNames.length > MAX_MATRIX_GENES && ` of ${geneNames.length}`}.
+          </p>
+        )}
         {withData === 0
           ? <div className="workbench-status">No expression data is available for these genes.</div>
           : (
@@ -501,36 +623,102 @@ const GeneListWorkbenchPage = () => {
       <div className="page-header">
         <h1>Gene List Workbench</h1>
         <p className="page-description">
-          Paste a list of genes, for example hits from an RNA-seq or screening experiment, to see
-          enriched GO terms and phenotypes, expression across RNA-seq studies, orthologs in other
-          species, and to download data for the whole list.
+          Paste a list of genes, for example hits from an RNA-seq or screening experiment, or build one
+          from a GO term and its descendants, to see enriched GO terms and phenotypes, expression across
+          RNA-seq studies, orthologs in other species, and to download data for the whole list.
         </p>
       </div>
 
+      <div className="workbench-mode" role="tablist" aria-label="Gene list source">
+        {[['paste', 'Paste genes'], ['go', 'From a GO term']].map(([mode, label]) => (
+          <button
+            key={mode}
+            type="button"
+            role="tab"
+            aria-selected={inputMode === mode}
+            className={`workbench-mode-btn ${inputMode === mode ? 'active' : ''}`}
+            onClick={() => setInputMode(mode)}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
       <div className="workbench-input">
-        <div className="workbench-input-main">
-          <label htmlFor="workbench-genes">
-            Genes <span className="workbench-hint">(gene names or systematic names, one per line)</span>
-          </label>
-          <textarea
-            id="workbench-genes"
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            rows={8}
-            placeholder={'ALS3\nHWP1\nC1_13700W_A\n...'}
-          />
-          <div className="workbench-input-meta">
-            <span>{inputGenes.length} unique entries</span>
-            <button type="button" className="workbench-text-btn" onClick={() => setInputText(EXAMPLE_GENES)}>
-              Example list
-            </button>
-            {inputText && (
-              <button type="button" className="workbench-text-btn" onClick={() => setInputText('')}>
-                Clear
-              </button>
-            )}
+        {inputMode === 'go' ? (
+          <div className="workbench-input-main">
+            <label htmlFor="workbench-go">
+              GO term <span className="workbench-hint">(term name or GO ID)</span>
+            </label>
+            <div className="workbench-go-search">
+              <input
+                id="workbench-go"
+                type="text"
+                value={goQuery}
+                onChange={(e) => handleGoQueryChange(e.target.value)}
+                placeholder="e.g. trehalose metabolic process or GO:0005991"
+                autoComplete="off"
+              />
+              {goSuggestions.length > 0 && (
+                <ul className="workbench-go-suggestions" role="listbox">
+                  {goSuggestions.map(sug => (
+                    <li key={sug.id}>
+                      <button type="button" onClick={() => selectGoSuggestion(sug)}>
+                        <span>{sug.name}</span>
+                        <span className="workbench-go-id">{sug.id}</span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            <div className="workbench-go-options">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={includeDescendants}
+                  onChange={(e) => setIncludeDescendants(e.target.checked)}
+                />
+                Include genes annotated to descendant (more specific) terms
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={includeComputational}
+                  onChange={(e) => setIncludeComputational(e.target.checked)}
+                />
+                Include computational annotations
+              </label>
+            </div>
+            <p className="workbench-hint">
+              The genes are loaded into the paste box, so you can edit the list and re-run it.
+            </p>
           </div>
-        </div>
+        ) : (
+          <div className="workbench-input-main">
+            <label htmlFor="workbench-genes">
+              Genes <span className="workbench-hint">(gene names or systematic names, one per line)</span>
+            </label>
+            <textarea
+              id="workbench-genes"
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              rows={8}
+              placeholder={'ALS3\nHWP1\nC1_13700W_A\n...'}
+            />
+            <div className="workbench-input-meta">
+              <span>{inputGenes.length} unique entries</span>
+              <button type="button" className="workbench-text-btn" onClick={() => setInputText(EXAMPLE_GENES)}>
+                Example list
+              </button>
+              {inputText && (
+                <button type="button" className="workbench-text-btn" onClick={() => setInputText('')}>
+                  Clear
+                </button>
+              )}
+            </div>
+          </div>
+        )}
         <div className="workbench-input-side">
           <label htmlFor="workbench-organism">Organism</label>
           <select
@@ -540,14 +728,25 @@ const GeneListWorkbenchPage = () => {
           >
             {ORGANISMS.map(o => <option key={o.no} value={o.no}>{o.name}</option>)}
           </select>
-          <button
-            type="button"
-            className="workbench-primary-btn"
-            onClick={handleAnalyze}
-            disabled={validating || inputGenes.length === 0}
-          >
-            {validating ? 'Checking genes...' : 'Analyze'}
-          </button>
+          {inputMode === 'go' ? (
+            <button
+              type="button"
+              className="workbench-primary-btn"
+              onClick={() => loadGoTermGenes(goTerm)}
+              disabled={goLoading || validating || !goTerm}
+            >
+              {goLoading ? 'Loading genes...' : validating ? 'Checking genes...' : 'Get genes'}
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="workbench-primary-btn"
+              onClick={handleAnalyze}
+              disabled={validating || inputGenes.length === 0}
+            >
+              {validating ? 'Checking genes...' : 'Analyze'}
+            </button>
+          )}
         </div>
       </div>
 
@@ -557,7 +756,15 @@ const GeneListWorkbenchPage = () => {
         <div className="workbench-results">
           <div className="workbench-summary">
             <strong>{geneSet.found.length}</strong> genes recognized in <em>{organism.name}</em>
-            {' '}from {geneSet.submitted} entries.
+            {geneSet.source ? (
+              <>
+                {' '}annotated to <Link to={`/go/${geneSet.source.goid}`}>{geneSet.source.label}</Link>
+                {geneSet.source.includeDescendants && geneSet.source.termCount > 1
+                  && ` or its ${geneSet.source.termCount - 1} descendant terms`}.
+              </>
+            ) : (
+              <>{' '}from {geneSet.submitted} entries.</>
+            )}
             {geneSet.notFound.length > 0 && (
               <details className="workbench-not-found">
                 <summary>{geneSet.notFound.length} not found</summary>

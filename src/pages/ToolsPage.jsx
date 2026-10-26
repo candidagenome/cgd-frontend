@@ -59,7 +59,7 @@ const ToolsPage = () => {
         // {
         //   title: 'Gene List Workbench',
         //   url: '/gene-list-workbench',
-        //   description: 'Analyze a gene list in one place: GO and phenotype enrichment, expression heatmap, orthologs, and data download'
+        //   description: 'Enrichment, expression, orthologs and downloads for a set of genes, pasted or built from a GO term'
         // },
         {
           title: 'GO Term Finder',

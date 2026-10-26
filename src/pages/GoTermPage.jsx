@@ -23,6 +23,16 @@ const ANNOTATION_TYPE_NAMES = {
 // Order for annotation types display
 const ANNOTATION_TYPE_ORDER = ['manually_curated', 'high_throughput', 'computational'];
 
+// Organism numbers the Gene List Workbench accepts, by annotation species
+const WORKBENCH_ORGANISM_NOS = {
+  'Candida albicans SC5314': 3,
+  'Candida auris B8441': 11,
+  'Candida dubliniensis CD36': 9,
+  'Candida glabrata CBS138': 5,
+  'Candida parapsilosis CDC317': 7,
+  'Candida tropicalis MYA-3404': 12,
+};
+
 // Abbreviate organism name (e.g., "Candida albicans SC5314" -> "C. albicans")
 const getOrganismAbbrev = (organismName) => {
   if (!organismName) return '';
@@ -407,6 +417,8 @@ function GoTermPage() {
   // Render "Links to Additional Annotations" section
   const renderAdditionalLinksSection = () => {
     const term = data.term;
+    const workbenchOrganismNo = WORKBENCH_ORGANISM_NOS[selectedOrganism] || 3;
+    const workbenchUrl = `/gene-list-workbench?go=${encodeURIComponent(term.goid)}&organism=${workbenchOrganismNo}`;
     return (
       <div className="section" id="additional-links">
         <h2 className="section-header">Links to Additional Annotations</h2>
@@ -418,8 +430,11 @@ function GoTermPage() {
               </a>
             </li>
             <li>
-              Search for Candida genes manually annotated to this term or to any manually annotated terms that are
-              descended from this term, i.e., child terms representing more specific biology than this term.
+              <Link to={workbenchUrl}>
+                Open the genes annotated to this term or its descendants in the Gene List Workbench
+              </Link>
+              {' '}(descendants are child terms representing more specific biology than this term), to see their
+              expression across RNA-seq studies, enrichment, and orthologs.
             </li>
           </ul>
         </div>

@@ -3,6 +3,10 @@
    =========================================== */
 
 .gene-list-workbench-page {
+  /* A flex child of .app with auto margins sizes to its content, so a wide
+     heatmap would widen the page; pin it to the container width instead */
+  width: 100%;
+  box-sizing: border-box;
   max-width: 1400px;
   margin: 0 auto;
   padding: 20px;
@@ -23,6 +27,97 @@
   font-size: 1rem;
   margin: 0;
   line-height: 1.5;
+}
+
+/* List source: paste or GO term */
+.workbench-mode {
+  display: flex;
+  gap: 4px;
+  margin-bottom: -1px;
+}
+
+.workbench-mode-btn {
+  padding: 8px 16px;
+  background: #eef0f3;
+  border: 1px solid #e5e7eb;
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  font-size: 0.95em;
+  color: #4b5563;
+  cursor: pointer;
+}
+
+.workbench-mode-btn.active {
+  background: #f9fafb;
+  color: #003366;
+  font-weight: 600;
+}
+
+.workbench-go-search {
+  position: relative;
+}
+
+.workbench-go-search input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.95em;
+}
+
+.workbench-go-suggestions {
+  position: absolute;
+  z-index: 10;
+  left: 0;
+  right: 0;
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.workbench-go-suggestions button {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 10px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.workbench-go-suggestions button:hover,
+.workbench-go-suggestions button:focus {
+  background: #eef4fb;
+}
+
+.workbench-go-id {
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.workbench-go-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.workbench-input .workbench-go-options label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 400;
+  margin: 0;
 }
 
 /* Input */
@@ -201,6 +296,8 @@
 
 .workbench-tab-panel {
   padding: 16px 0;
+  /* Wide heatmaps (100+ conditions) scroll here instead of widening the page */
+  overflow-x: auto;
 }
 
 .workbench-tab-actions {
