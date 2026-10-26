@@ -69,12 +69,11 @@ const HeaderNav = () => {
       to: '/tools',
       submenu: [
         { label: 'CRISPR Guide Designer', to: '/crispr' },
-        // Hidden until curator review; page stays reachable at /gene-list-workbench
-        // {
-        //   label: 'Gene List Workbench',
-        //   to: '/gene-list-workbench',
-        //   title: 'Enrichment, expression, orthologs and downloads for a set of genes',
-        // },
+        {
+          label: 'Gene List Workbench',
+          to: '/gene-list-workbench',
+          title: 'Enrichment, expression, orthologs and downloads for a set of genes',
+        },
         { label: 'Ortholog Converter', to: '/ortholog-converter' },
         { label: 'PatMatch', to: '/patmatch' },
         { label: 'Primers', to: '/webprimer' },

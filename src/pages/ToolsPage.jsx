@@ -55,12 +55,11 @@ const ToolsPage = () => {
       heading: 'Function & Phenotype',
       blurb: 'Interpret gene lists and explore annotations.',
       tools: [
-        // Hidden until curator review; page stays reachable at /gene-list-workbench
-        // {
-        //   title: 'Gene List Workbench',
-        //   url: '/gene-list-workbench',
-        //   description: 'Enrichment, expression, orthologs and downloads for a set of genes, pasted or built from a GO term'
-        // },
+        {
+          title: 'Gene List Workbench',
+          url: '/gene-list-workbench',
+          description: 'Enrichment, expression, orthologs and downloads for a set of genes, pasted or built from a GO term or phenotype'
+        },
         {
           title: 'GO Term Finder',
           url: '/go-term-finder',
