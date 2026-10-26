@@ -1,18 +1,34 @@
 import Spring2026 from './Spring2026';
+import Fall2026 from './Fall2026';
 
 /*
  * CGD Newsletter issues, newest first.
  *
- * To publish a new issue:
- *   1. Copy issues/Spring2026.jsx to a new file (e.g. Fall2026.jsx) and replace the
- *      content. Put each article in <section className="newsletter-article" id="...">;
- *      add "newsletter-spotlight" to the Research Spotlight section. Put the issue's
- *      images in public/images/newsletter/<issue-id>/.
- *   2. Import it here and add an entry at the TOP of NEWSLETTER_ISSUES. The articles
- *      list drives the "In this issue" box and the archive summary; each id must match
- *      a section id in the issue file.
+ * To publish a new issue from the curators' Word file:
+ *   python3 scripts/newsletter_docx_to_issue.py "path/to/Winter 2027.docx"
+ * This writes issues/<Name>.jsx, extracts the images to
+ * public/images/newsletter/<issue-id>/ and adds the issue to the top of this list.
+ * Review the generated page before committing.
+ *
+ * To write an issue by hand instead: copy an existing issue file, put each article
+ * in <section className="newsletter-article" id="..."> (add "newsletter-spotlight"
+ * for the Research Spotlight), then import it here and add an entry at the TOP of
+ * NEWSLETTER_ISSUES. The articles list drives the "In this issue" box and the archive
+ * summary; each id must match a section id in the issue file.
  */
 export const NEWSLETTER_ISSUES = [
+  {
+    id: 'fall-2026',
+    title: 'Fall 2026',
+    articles: [
+      { id: 'naming-of-uncharacterized-orthologs', title: 'Naming of Uncharacterized Orthologs' },
+      { id: 'expanded-set-of-drug-related-literature-topic-tags', title: 'Expanded Set of Drug-Related Literature Topic Tags' },
+      { id: 'new-chip-seq-and-chec-seq-datasets', title: 'New ChIP-Seq and ChEC-Seq datasets' },
+      { id: 'annotation-of-repetitive-elements', title: 'Annotation of Repetitive Elements' },
+      { id: 'research-spotlight', title: 'Research Spotlight: Hac1-independent functions of Ire1 drive morphogenesis in Candida albicans through distinct transcriptional programs' },
+    ],
+    Component: Fall2026,
+  },
   {
     id: 'spring-2026',
     title: 'Spring 2026',
