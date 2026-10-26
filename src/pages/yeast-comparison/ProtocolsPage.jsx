@@ -14,6 +14,11 @@ function ProtocolsPage() {
         <h1>Protocols and Methods</h1>
         <hr />
 
+        <p>
+          For genome-scale mutant and clone collections, see{' '}
+          <Link to="/library-collections">Library Collections</Link>.
+        </p>
+
         <ul className="pyc-toc">
           <li><a href="#candida-identification"><em>Candida</em> Identification</a></li>
           <li><a href="#candida-albicans-protocols-and-methods"><em>Candida albicans</em> Protocols and Methods</a></li>

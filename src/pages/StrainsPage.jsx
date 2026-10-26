@@ -73,7 +73,8 @@ function StrainsPage() {
           laboratory and clinical strains of the <em>Candida</em> species in CGD, rather than a
           comprehensive resource. The strain names below link to short summary descriptions, notes,
           and citations. If you would like to suggest additions, corrections, or updates, please{' '}
-          <Link to="/contact">send a message to CGD curators</Link> with details.
+          <Link to="/contact">send a message to CGD curators</Link> with details. For genome-scale
+          mutant collections, see <Link to="/library-collections">Library Collections</Link>.
         </p>
 
         <ul className="pyc-toc">

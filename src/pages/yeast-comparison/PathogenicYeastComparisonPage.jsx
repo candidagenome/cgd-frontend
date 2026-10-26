@@ -16,6 +16,11 @@ const SECTIONS = [
     description: 'Commonly used laboratory and clinical strains of each species, with genotypes and references',
   },
   {
+    to: '/library-collections',
+    title: 'Library Collections',
+    description: 'Genome-scale mutant and clone collections for each species and how to obtain them',
+  },
+  {
     to: '/pathogenic-yeast-comparison/protocols',
     title: 'Protocols and Methods',
     description: 'Species identification and protocols for working with each species',
@@ -25,16 +30,6 @@ const SECTIONS = [
     title: 'Species Comparisons by Topic',
     description: 'Ploidy, CUG codon usage, mitochondrial genomes, filamentous growth, biofilms, '
       + 'pathogenicity, mating, drug resistance, respiratory metabolism and virulence factors',
-  },
-  {
-    to: '/pathogenic-yeast-comparison/datasets',
-    title: 'Datasets Available in CGD',
-    description: 'Published genome-wide datasets for each species that can be viewed in JBrowse',
-  },
-  {
-    to: '/pathogenic-yeast-comparison/newsletters',
-    title: 'CGD Newsletter Archive',
-    description: 'Past issues of the CGD newsletter',
   },
 ];
 
@@ -52,8 +47,8 @@ function PathogenicYeastComparisonPage() {
         <div className="info-section">
           <p>
             A curated collection of resources comparing the pathogenic yeasts in CGD: seminal papers,
-            laboratory strains, protocols, comparisons of biology across species, and published
-            datasets.
+            laboratory strains, library collections, protocols, and comparisons of biology across
+            species.
           </p>
           <ul className="pyc-section-list">
             {SECTIONS.map(s => (

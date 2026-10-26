@@ -114,6 +114,8 @@ const HeaderNav = () => {
         { label: 'Nomenclature Guide', to: '/nomenclature' },
         { label: 'Gene Registry', to: '/gene-registry' },
         { label: 'Pathogenic Yeast Comparison', to: '/pathogenic-yeast-comparison' },
+        { label: 'Library Collections', to: '/library-collections' },
+        { label: 'CGD Newsletter', to: '/newsletter' },
         { label: 'Developer API', to: '/developer/api' }
       ]
     }
