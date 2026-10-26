@@ -28,8 +28,9 @@ const SCER_TARGET = { orthologId: 'S_cerevisiae', name: 'Saccharomyces cerevisia
 
 // The batch expression endpoint accepts at most 50 genes per request
 const MAX_HEATMAP_GENES = 50;
-// The matrix download endpoint accepts up to 200 (~17 s on the server)
-const MAX_MATRIX_GENES = 200;
+// The matrix download is served from a precomputed matrix (endpoint max
+// 10000); if that is out of date the server reads live and allows 200
+const MAX_MATRIX_GENES = 10000;
 
 const ENRICHMENT_PARAMS = {
   p_value_cutoff: 0.05,
@@ -96,6 +97,19 @@ const parseGeneList = (text) => {
 
 const errorMessage = (err, fallback) =>
   err.response?.data?.detail || err.message || fallback;
+
+// Blob downloads return their JSON error body as a Blob
+const blobErrorMessage = async (err, fallback) => {
+  const data = err.response?.data;
+  if (data instanceof Blob) {
+    try {
+      return JSON.parse(await data.text()).detail || fallback;
+    } catch {
+      return fallback;
+    }
+  }
+  return errorMessage(err, fallback);
+};
 
 const saveBlob = (blob, filename) => {
   const url = window.URL.createObjectURL(blob);
@@ -443,7 +457,8 @@ const GeneListWorkbenchPage = () => {
     try {
       await expressionApi.downloadExpressionMatrix(geneNames.slice(0, MAX_MATRIX_GENES), organism.name);
     } catch (err) {
-      setExprResult(prev => ({ ...prev, error: errorMessage(err, 'Expression download failed.') }));
+      const message = await blobErrorMessage(err, 'Expression download failed.');
+      setExprResult(prev => ({ ...prev, error: message }));
     } finally {
       setMatrixDownloading(false);
     }
@@ -588,8 +603,10 @@ const GeneListWorkbenchPage = () => {
         </div>
         {geneNames.length > MAX_HEATMAP_GENES && (
           <p className="workbench-hint">
-            The matrix download covers the first {Math.min(geneNames.length, MAX_MATRIX_GENES)} genes
-            {geneNames.length > MAX_MATRIX_GENES && ` of ${geneNames.length}`}.
+            The heatmap shows the first {MAX_HEATMAP_GENES} genes; the matrix download includes
+            {geneNames.length > MAX_MATRIX_GENES
+              ? ` the first ${MAX_MATRIX_GENES} of ${geneNames.length}.`
+              : ` all ${geneNames.length}.`}
           </p>
         )}
         {withData === 0
