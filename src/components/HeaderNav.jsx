@@ -112,7 +112,7 @@ const HeaderNav = () => {
         { label: 'Community News', to: '/community-news' },
         { label: 'Nomenclature Guide', to: '/nomenclature' },
         { label: 'Gene Registry', to: '/gene-registry' },
-        { label: 'CGD Public Wiki', href: 'http://publicwiki.candidagenome.org', external: true },
+        { label: 'Pathogenic Yeast Comparison', to: '/pathogenic-yeast-comparison' },
         { label: 'Developer API', to: '/developer/api' }
       ]
     }

@@ -48,6 +48,12 @@ import LiteraturePage from './pages/LiteraturePage';
 import CGDPublicationsPage from './pages/CGDPublicationsPage';
 import TopicBibliosPage from './pages/TopicBibliosPage';
 import StrainsPage from './pages/StrainsPage';
+import PathogenicYeastComparisonPage from './pages/yeast-comparison/PathogenicYeastComparisonPage';
+import SeminalPapersPage from './pages/yeast-comparison/SeminalPapersPage';
+import ProtocolsPage from './pages/yeast-comparison/ProtocolsPage';
+import SpeciesComparisonsPage from './pages/yeast-comparison/SpeciesComparisonsPage';
+import JBrowseDatasetsPage from './pages/yeast-comparison/JBrowseDatasetsPage';
+import NewsletterArchivePage from './pages/yeast-comparison/NewsletterArchivePage';
 import ContactPage from './pages/ContactPage';
 import SeqToolsPage from './pages/SeqToolsPage';
 import SeqToolsResultsPage from './pages/SeqToolsResultsPage';
@@ -269,6 +275,12 @@ function App() {
           <Route path="/literature-topic-search" element={<LiteratureTopicSearchPage />} />
           <Route path="/topic-biblios" element={<TopicBibliosPage />} />
           <Route path="/strains" element={<StrainsPage />} />
+          <Route path="/pathogenic-yeast-comparison" element={<PathogenicYeastComparisonPage />} />
+          <Route path="/pathogenic-yeast-comparison/seminal-papers" element={<SeminalPapersPage />} />
+          <Route path="/pathogenic-yeast-comparison/protocols" element={<ProtocolsPage />} />
+          <Route path="/pathogenic-yeast-comparison/species-comparisons" element={<SpeciesComparisonsPage />} />
+          <Route path="/pathogenic-yeast-comparison/datasets" element={<JBrowseDatasetsPage />} />
+          <Route path="/pathogenic-yeast-comparison/newsletters" element={<NewsletterArchivePage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/seq-tools" element={<SeqToolsPage />} />
           <Route path="/seq-tools/results" element={<SeqToolsResultsPage />} />
