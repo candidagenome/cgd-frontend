@@ -69,7 +69,8 @@ const HeaderNav = () => {
       to: '/tools',
       submenu: [
         { label: 'CRISPR Guide Designer', to: '/crispr' },
-        { label: 'Gene List Workbench', to: '/gene-list-workbench' },
+        // Hidden until curator review; page stays reachable at /gene-list-workbench
+        // { label: 'Gene List Workbench', to: '/gene-list-workbench' },
         { label: 'Ortholog Converter', to: '/ortholog-converter' },
         { label: 'PatMatch', to: '/patmatch' },
         { label: 'Primers', to: '/webprimer' },
