@@ -187,6 +187,20 @@
   font-size: 0.85rem;
 }
 
+.workbench-term-link {
+  margin-left: 10px;
+  padding: 0 6px;
+  border: 1px solid #c9d7e8;
+  border-radius: 3px;
+  color: #003366;
+  font-size: 0.75rem;
+  text-decoration: none;
+}
+
+.workbench-term-link:hover {
+  background: #eef4fb;
+}
+
 .children {
   margin-left: 8px;
   border-left: 1px dashed #ccc;

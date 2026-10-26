@@ -6,6 +6,7 @@ import { expressionApi } from '../api/expressionApi';
 import { orthologApi } from '../api/orthologApi';
 import batchDownloadApi from '../api/batchDownloadApi';
 import goApi from '../api/goApi';
+import { phenotypeApi } from '../api/phenotypeApi';
 import { searchApi } from '../api/searchApi';
 import EnrichmentResultsPanel from '../components/locus/EnrichmentResultsPanel';
 import MultiGeneHeatmap from '../components/locus/MultiGeneHeatmap';
@@ -59,6 +60,23 @@ const EXAMPLE_GENES = 'ALS3\nHWP1\nECE1\nSAP5\nHYR1\nIHD1\nRBT1\nRBT4\nEFG1\nUME
 const EMPTY_RESULT = { loading: false, data: null, error: null };
 
 const GOID_PATTERN = /^GO:\d{7}$/i;
+
+// Phenotype qualifiers (CV 'qualifier'); '' = any except "normal" results,
+// ANY_QUALIFIER = every annotation including "normal"
+const ANY_QUALIFIER = '__any__';
+const PHENOTYPE_QUALIFIERS = [
+  'decreased', 'increased', 'abnormal', 'absent', 'decreased rate', 'increased rate',
+  'delayed', 'arrested', 'premature', 'decreased duration', 'increased duration', 'normal',
+];
+
+// Observable tree -> select options, indented by depth, without the root
+const flattenObservables = (nodes, depth = 0, out = []) => {
+  nodes.forEach(node => {
+    if (node.term !== 'observable') out.push({ term: node.term, depth, count: node.count });
+    flattenObservables(node.children || [], node.term === 'observable' ? depth : depth + 1, out);
+  });
+  return out;
+};
 
 // Split on whitespace, commas and semicolons; keep first-seen order, drop
 // case-insensitive duplicates
@@ -124,7 +142,8 @@ const GeneListWorkbenchPage = () => {
 
   // Build the list from a GO term (and its descendants) instead of pasting
   const goParam = searchParams.get('go');
-  const [inputMode, setInputMode] = useState(goParam ? 'go' : 'paste');
+  const phenotypeParam = searchParams.get('phenotype');
+  const [inputMode, setInputMode] = useState(goParam ? 'go' : phenotypeParam ? 'phenotype' : 'paste');
   const [goQuery, setGoQuery] = useState(goParam || '');
   const [goSuggestions, setGoSuggestions] = useState([]);
   const [goTerm, setGoTerm] = useState(goParam ? { id: goParam.toUpperCase(), name: '' } : null);
@@ -132,6 +151,12 @@ const GeneListWorkbenchPage = () => {
   const [includeComputational, setIncludeComputational] = useState(true);
   const [goLoading, setGoLoading] = useState(false);
   const autoLoaded = useRef(false);
+
+  // ... or from a phenotype (observable) term and its descendants
+  const [observableOptions, setObservableOptions] = useState(null);
+  const [phenoTerm, setPhenoTerm] = useState(phenotypeParam || '');
+  const [phenoDescendants, setPhenoDescendants] = useState(searchParams.get('descendants') !== '0');
+  const [phenoQualifier, setPhenoQualifier] = useState(searchParams.get('qualifier') || '');
 
   const inputGenes = useMemo(() => parseGeneList(inputText), [inputText]);
 
@@ -206,7 +231,8 @@ const GeneListWorkbenchPage = () => {
       setInputText(names.join('\n'));
       await analyzeGenes(names, {
         label,
-        goid: data.goid,
+        relation: 'annotated to',
+        url: `/go/${data.goid}`,
         includeDescendants: data.include_descendants,
         termCount: data.term_count,
       });
@@ -217,12 +243,55 @@ const GeneListWorkbenchPage = () => {
     }
   };
 
-  // Linked from a GO term page: /gene-list-workbench?go=GO:...&organism=...
-  useEffect(() => {
-    if (goTerm && inputMode === 'go' && !autoLoaded.current) {
-      autoLoaded.current = true;
-      loadGoTermGenes(goTerm);
+  const loadPhenotypeGenes = async (term) => {
+    setGoLoading(true);
+    setValidationError(null);
+    try {
+      const data = await phenotypeApi.getObservableGenes(term, organismNo, {
+        includeDescendants: phenoDescendants,
+        qualifier: phenoQualifier && phenoQualifier !== ANY_QUALIFIER ? phenoQualifier : null,
+        includeNormal: phenoQualifier === ANY_QUALIFIER,
+      });
+      const label = data.apo_id ? `${data.term} (${data.apo_id})` : data.term;
+      if (data.genes.length === 0) {
+        const orgName = ORGANISMS.find(o => o.no === organismNo)?.name;
+        setValidationError(`No ${orgName} genes have the phenotype ${label}`
+          + `${phenoDescendants ? ' or its descendants' : ''}`
+          + `${data.qualifier ? ` with qualifier "${data.qualifier}"` : ''}.`);
+        return;
+      }
+      const names = data.genes.map(g => g.feature_name);
+      setInputText(names.join('\n'));
+      await analyzeGenes(names, {
+        label,
+        relation: 'with the phenotype',
+        url: `/phenotype/search?observable=${encodeURIComponent(data.term)}`,
+        includeDescendants: data.include_descendants,
+        termCount: data.term_count,
+        qualifier: data.qualifier || (data.include_normal ? null : 'excluding "normal"'),
+      });
+    } catch (err) {
+      setValidationError(errorMessage(err, 'Loading genes for the phenotype failed.'));
+    } finally {
+      setGoLoading(false);
     }
+  };
+
+  // The phenotype term list, loaded the first time that mode is opened
+  useEffect(() => {
+    if (inputMode !== 'phenotype' || observableOptions) return;
+    phenotypeApi.getObservableTree()
+      .then(data => setObservableOptions(flattenObservables(data.tree || [])))
+      .catch(err => setValidationError(errorMessage(err, 'Loading phenotype terms failed.')));
+  }, [inputMode, observableOptions]);
+
+  // Linked from a GO term page (?go=GO:...&organism=...) or the phenotype
+  // term browser (?phenotype=<term>&organism=...)
+  useEffect(() => {
+    if (autoLoaded.current) return;
+    autoLoaded.current = true;
+    if (goTerm && inputMode === 'go') loadGoTermGenes(goTerm);
+    if (phenoTerm && inputMode === 'phenotype') loadPhenotypeGenes(phenoTerm);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -624,13 +693,13 @@ const GeneListWorkbenchPage = () => {
         <h1>Gene List Workbench</h1>
         <p className="page-description">
           Paste a list of genes, for example hits from an RNA-seq or screening experiment, or build one
-          from a GO term and its descendants, to see enriched GO terms and phenotypes, expression across
+          from a GO term or a phenotype and their descendants, to see enriched GO terms and phenotypes, expression across
           RNA-seq studies, orthologs in other species, and to download data for the whole list.
         </p>
       </div>
 
       <div className="workbench-mode" role="tablist" aria-label="Gene list source">
-        {[['paste', 'Paste genes'], ['go', 'From a GO term']].map(([mode, label]) => (
+        {[['paste', 'Paste genes'], ['go', 'From a GO term'], ['phenotype', 'From a phenotype']].map(([mode, label]) => (
           <button
             key={mode}
             type="button"
@@ -645,7 +714,54 @@ const GeneListWorkbenchPage = () => {
       </div>
 
       <div className="workbench-input">
-        {inputMode === 'go' ? (
+        {inputMode === 'phenotype' ? (
+          <div className="workbench-input-main">
+            <label htmlFor="workbench-phenotype">
+              Phenotype <span className="workbench-hint">(observable term; annotation counts in parentheses)</span>
+            </label>
+            <select
+              id="workbench-phenotype"
+              className="workbench-phenotype-select"
+              value={phenoTerm}
+              onChange={(e) => setPhenoTerm(e.target.value)}
+              disabled={!observableOptions}
+            >
+              <option value="">{observableOptions ? 'Choose a phenotype...' : 'Loading phenotype terms...'}</option>
+              {/* keep the linked term selectable while the list loads */}
+              {!observableOptions && phenoTerm && <option value={phenoTerm}>{phenoTerm}</option>}
+              {(observableOptions || []).map(o => (
+                <option key={o.term} value={o.term}>
+                  {'\u00a0\u00a0\u00a0'.repeat(o.depth)}{o.term}{o.count > 0 ? ` (${o.count})` : ''}
+                </option>
+              ))}
+            </select>
+            <div className="workbench-go-options">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={phenoDescendants}
+                  onChange={(e) => setPhenoDescendants(e.target.checked)}
+                />
+                Include genes annotated to descendant (more specific) terms
+              </label>
+              <label htmlFor="workbench-qualifier" className="workbench-qualifier">
+                Qualifier
+                <select
+                  id="workbench-qualifier"
+                  value={phenoQualifier}
+                  onChange={(e) => setPhenoQualifier(e.target.value)}
+                >
+                  <option value="">Any except normal (no phenotype)</option>
+                  <option value={ANY_QUALIFIER}>Any, including normal</option>
+                  {PHENOTYPE_QUALIFIERS.map(q => <option key={q} value={q}>{q}</option>)}
+                </select>
+              </label>
+            </div>
+            <p className="workbench-hint">
+              The genes are loaded into the paste box, so you can edit the list and re-run it.
+            </p>
+          </div>
+        ) : inputMode === 'go' ? (
           <div className="workbench-input-main">
             <label htmlFor="workbench-go">
               GO term <span className="workbench-hint">(term name or GO ID)</span>
@@ -728,12 +844,12 @@ const GeneListWorkbenchPage = () => {
           >
             {ORGANISMS.map(o => <option key={o.no} value={o.no}>{o.name}</option>)}
           </select>
-          {inputMode === 'go' ? (
+          {inputMode === 'go' || inputMode === 'phenotype' ? (
             <button
               type="button"
               className="workbench-primary-btn"
-              onClick={() => loadGoTermGenes(goTerm)}
-              disabled={goLoading || validating || !goTerm}
+              onClick={() => (inputMode === 'go' ? loadGoTermGenes(goTerm) : loadPhenotypeGenes(phenoTerm))}
+              disabled={goLoading || validating || (inputMode === 'go' ? !goTerm : !phenoTerm)}
             >
               {goLoading ? 'Loading genes...' : validating ? 'Checking genes...' : 'Get genes'}
             </button>
@@ -758,9 +874,10 @@ const GeneListWorkbenchPage = () => {
             <strong>{geneSet.found.length}</strong> genes recognized in <em>{organism.name}</em>
             {geneSet.source ? (
               <>
-                {' '}annotated to <Link to={`/go/${geneSet.source.goid}`}>{geneSet.source.label}</Link>
+                {' '}{geneSet.source.relation} <Link to={geneSet.source.url}>{geneSet.source.label}</Link>
                 {geneSet.source.includeDescendants && geneSet.source.termCount > 1
-                  && ` or its ${geneSet.source.termCount - 1} descendant terms`}.
+                  && ` or its ${geneSet.source.termCount - 1} descendant terms`}
+                {geneSet.source.qualifier && ` (${geneSet.source.qualifier})`}.
               </>
             ) : (
               <>{' '}from {geneSet.submitted} entries.</>
