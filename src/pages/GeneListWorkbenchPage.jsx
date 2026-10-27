@@ -671,7 +671,7 @@ const GeneListWorkbenchPage = () => {
             />
             <div className="workbench-tab-actions">
               <span>Benjamini-Hochberg corrected p &lt; 0.05, at least 2 genes per term.</span>
-              <Link to="/help/gene-list-workbench#go-enrichment" className="workbench-link">
+              <Link to="/help/enrichment-methodology#go-enrichment" className="workbench-link">
                 How is this calculated?
               </Link>
               <Link to="/go-term-finder" className="workbench-link" onClick={handOffGeneList}>
@@ -693,7 +693,7 @@ const GeneListWorkbenchPage = () => {
             />
             <div className="workbench-tab-actions">
               <span>Benjamini-Hochberg corrected p &lt; 0.05, at least 2 genes per phenotype.</span>
-              <Link to="/help/gene-list-workbench#phenotype-enrichment" className="workbench-link">
+              <Link to="/help/enrichment-methodology#phenotype-enrichment" className="workbench-link">
                 How is this calculated?
               </Link>
             </div>

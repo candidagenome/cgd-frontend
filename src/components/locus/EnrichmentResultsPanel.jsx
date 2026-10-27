@@ -248,6 +248,14 @@ function EnrichmentResultsPanel({
                 <span>Background: {data.result.background_size} genes</span>
                 <span className="summary-sep">|</span>
                 <span>P-value cutoff: {data.result.p_value_cutoff}</span>
+                <span className="summary-sep">|</span>
+                <Link
+                  to={`/help/enrichment-methodology#${type === 'go' ? 'go' : 'phenotype'}-enrichment`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  How enrichment works
+                </Link>
               </div>
 
               {/* Aspect Filter for GO */}

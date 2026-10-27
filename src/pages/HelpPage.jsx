@@ -197,6 +197,7 @@ function HelpPage() {
             <Link to="/help/go-slim">GO Slim Mapper Help</Link>
             <Link to="/help/go-term-finder">GO Term Finder Help</Link>
             <Link to="/help/gene-list-workbench">Gene List Workbench Help</Link>
+            <Link to="/help/enrichment-methodology">Enrichment Methodology</Link>
           </div>
         </div>
 
