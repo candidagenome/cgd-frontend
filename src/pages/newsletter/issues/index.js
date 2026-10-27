@@ -4,7 +4,6 @@ import Winter2024 from './Winter2024';
 import Spring2024 from './Spring2024';
 import Summer2024 from './Summer2024';
 import Fall2024 from './Fall2024';
-import Winter2025 from './Winter2025';
 import Spring2025 from './Spring2025';
 import Summer2025 from './Summer2025';
 import Fall2025 from './Fall2025';
@@ -111,17 +110,6 @@ export const NEWSLETTER_ISSUES = [
       { id: 'upcoming-meetings', title: 'Upcoming Meetings' },
     ],
     Component: Spring2025,
-  },
-  {
-    id: 'winter-2025',
-    title: 'Winter 2025',
-    articles: [
-      { id: 'new-assemblies-of-candida-auris', title: 'New assemblies of Candida auris' },
-      { id: 'cgd-manuscript-in-genetics', title: 'CGD Manuscript in Genetics' },
-      { id: 'research-spotlight', title: 'Research Spotlight: The putative error prone polymerase REV1 mediates DNA damage and drug resistance in Candida albicans' },
-      { id: 'upcoming-meetings', title: 'Upcoming Meetings' },
-    ],
-    Component: Winter2025,
   },
   {
     id: 'fall-2024',

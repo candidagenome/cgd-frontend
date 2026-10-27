@@ -121,12 +121,12 @@ function LibraryCollectionsPage() {
             }
             obtain={
               <>
-                The most recent public notice (April 2018) states that the National Research
-                Council of Canada was mandated by Merck Sharp &amp; Dohme to distribute this library;
-                see the <Link to="/community-news">Community News</Link> page. We have not found a
-                more recent announcement, so current availability is unconfirmed. Please{' '}
-                <Link to="/contact">contact CGD curators</Link> if you know how the library is
-                distributed today.
+                As with the GRACE library, use requires an MTA with Merck Sharp &amp; Dohme LLC:
+                contact Lorraine Hernandez (<Email address="lorraine_hernandez@merck.com" />) with
+                full contact information for the requesting PI and the institutional office that
+                handles MTAs, and a brief statement of the proposed use. Merck then arranges
+                distribution. Earlier distribution through the National Research Council of Canada
+                is described on the <Link to="/community-news">Community News</Link> page.
               </>
             }
           />
