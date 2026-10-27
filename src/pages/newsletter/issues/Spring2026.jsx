@@ -1,8 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 // CGD Newsletter, Spring 2026 (originally published on the CGD Public Wiki).
 // Each article is a <section> whose id matches an entry in issues/index.js.
 const IMG = '/images/newsletter/spring-2026';
+const EXT = { target: '_blank', rel: 'noopener noreferrer' };
 
 function Spring2026() {
   return (
@@ -69,9 +71,9 @@ function Spring2026() {
         <p>
           To what do we owe this embarrassment of riches? Our new programmer/developer stepped in
           just a couple months ago and quickly began building improved tools. That said, we fully
-          expect there will still be bugs and small fixes to make on the new site. Please get in
-          touch whenever you find something that doesn't seem to work correctly. Also, we are open
-          to suggestion for further improvements, so feel free to share your ideas.
+          expect there will still be bugs and small fixes to make on the new site. Please{' '}
+          <Link to="/contact">get in touch</Link> whenever you find something that doesn't seem
+          to work correctly. Also, we are open to suggestion for further improvements, so feel free to share your ideas.
         </p>
       </section>
 
@@ -80,8 +82,11 @@ function Spring2026() {
         <h2>Fungal extracellular vesicles mediate conserved cross-species communication and immunomodulation</h2>
         <p>
           Continuing with the theme of crosstalk within the mammalian host, a recent study examines
-          how fungi employ extracellular vesicles (EVs) for this specific purpose. Piraine et al.
-          describe in a recent <em>mBio</em> paper that fungi use EVs to not only communicate within
+          how fungi employ extracellular vesicles (EVs) for this specific purpose.{' '}
+          <a href="https://pubmed.ncbi.nlm.nih.gov/41615160/" {...EXT}>
+            Piraine et al. describe in a recent <em>mBio</em> paper
+          </a>{' '}
+          that fungi use EVs to not only communicate within
           their own species, but also with other fungal species and with the host.
         </p>
         <p>
@@ -118,7 +123,9 @@ function Spring2026() {
         <p>
           With respect to crosstalk between pathobiont fungi and the host, it has been established
           that fungal EVs carry factors that act as pathogen-associated molecular patterns (PAMPs),
-          which activate the innate immune response (see Brown et al., 2024 for review). These
+          which activate the innate immune response (see{' '}
+          <a href="https://pubmed.ncbi.nlm.nih.gov/38918447/" {...EXT}>Brown et al., 2024</a> for
+          review). These
           factors are typically fungal cell wall proteins that mammals do not produce, thus are
           recognized as foreign by immune pattern recognition receptors (PRRs).
         </p>

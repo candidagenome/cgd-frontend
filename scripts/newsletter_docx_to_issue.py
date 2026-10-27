@@ -45,12 +45,22 @@ REPO = Path(__file__).resolve().parent.parent
 ISSUES_DIR = REPO / 'src' / 'pages' / 'newsletter' / 'issues'
 IMAGES_DIR = REPO / 'public' / 'images' / 'newsletter'
 EMU_PER_PX = 9525
+# Greek letters in the Symbol font (w:sym), by character code
+SYMBOL_FONT = {0x61: 'α', 0x62: 'β', 0x63: 'χ', 0x64: 'δ', 0x65: 'ε', 0x66: 'φ', 0x67: 'γ', 0x68: 'η',
+               0x69: 'ι', 0x6B: 'κ', 0x6C: 'λ', 0x6D: 'μ', 0x6E: 'ν', 0x70: 'π', 0x71: 'θ', 0x72: 'ρ',
+               0x73: 'σ', 0x74: 'τ', 0x77: 'ω', 0x78: 'ξ', 0x79: 'ψ', 0x7A: 'ζ', 0x44: 'Δ', 0xB0: '°',
+               0xB1: '±', 0xAE: '→'}
+# w:sz is in half-points; 28 = 14pt
+HEADING_HALF_POINTS = 28
 
 CGD_HOST = re.compile(r'^https?://(www\.)?candidagenome\.org', re.I)
 # Old-site paths that moved in the new site
 CGD_PATH_MAP = {
     '/cgi-bin/suggestion': '/contact',
+    '/Strains.shtml': '/strains',
 }
+# Library proxy hosts pasted from a campus browser, e.g. pmc-ncbi-nlm-nih-gov.laneproxy.stanford.edu
+PROXY_HOST = re.compile(r'^(https?://)([a-z0-9-]+)\.laneproxy\.stanford\.edu', re.I)
 # Site paths served outside the single-page app (plain links, not <Link>)
 NON_SPA_PREFIXES = ('/download/', '/jbrowse2/', '/jbrowse/')
 # Months used to order issues titled by season
@@ -119,9 +129,10 @@ class Docx:
 
 
 class Paragraph:
-    def __init__(self, style, list_info, parts):
+    def __init__(self, style, list_info, parts, indent=0):
         self.style = style            # paragraph style name
         self.list_info = list_info    # (ordered: bool, level: int) or None
+        self.indent = indent          # left indent in twips
         # [('text', str, fmt) | ('link', url, [text parts]) | ('img', target, width) | ('br',)]
         self.parts = parts
 
@@ -139,10 +150,19 @@ class Paragraph:
     def images(self):
         return [p for p in self.parts if p[0] == 'img']
 
-    def all_bold(self):
+    def _text_runs(self):
         runs = [p for p in self.parts if p[0] == 'text' and p[1].strip()]
         runs += [t for p in self.parts if p[0] == 'link' for t in p[2] if t[1].strip()]
+        return runs
+
+    def all_bold(self):
+        runs = self._text_runs()
         return bool(runs) and all('b' in fmt for _, _, fmt in runs)
+
+    def all_heading_type(self):
+        """Every run is bold or in large type (older issues mix the two)."""
+        runs = self._text_runs()
+        return bool(runs) and all('b' in fmt or 'L' in fmt for _, _, fmt in runs)
 
 
 def read_runs(doc, container):
@@ -162,12 +182,20 @@ def read_runs(doc, container):
                 fmt += 'b'
             va = rpr.find(W + 'vertAlign') if rpr is not None else None
             if va is not None and va.get(W + 'val') in ('superscript', 'subscript'):
-                fmt += 'sup' if va.get(W + 'val') == 'superscript' else 'sub'
+                fmt += '^' if va.get(W + 'val') == 'superscript' else '_'
+            # Large type (14pt or more): older issues mark headings by size, not bold
+            sz = rpr.find(W + 'sz') if rpr is not None else None
+            if sz is not None and int(sz.get(W + 'val', '0')) >= HEADING_HALF_POINTS:
+                fmt += 'L'
             for el in child:
                 if el.tag == W + 't':
                     parts.append(('text', el.text or '', fmt))
                 elif el.tag == W + 'tab':
                     parts.append(('text', ' ', fmt))
+                elif el.tag == W + 'sym':
+                    # Symbol-font character, e.g. F061 = alpha
+                    code = int(el.get(W + 'char', '0'), 16) & 0xFF
+                    parts.append(('text', SYMBOL_FONT.get(code, ''), fmt))
                 elif el.tag in (W + 'br', W + 'cr'):
                     parts.append(('br',))
                 elif el.tag == W + 'drawing':
@@ -185,8 +213,12 @@ def read_paragraphs(doc):
     paragraphs = []
     for el in doc.body.iter(W + 'p'):
         ppr = el.find(W + 'pPr')
-        style, list_info = '', None
+        style, list_info, indent = '', None, 0
         if ppr is not None:
+            ind = ppr.find(W + 'ind')
+            if ind is not None:
+                left = ind.get(W + 'left') or ind.get(W + 'start') or '0'
+                indent = int(left) if left.lstrip('-').isdigit() else 0
             ps = ppr.find(W + 'pStyle')
             if ps is not None:
                 style = doc.styles.get(ps.get(W + 'val'), ps.get(W + 'val'))
@@ -197,7 +229,7 @@ def read_paragraphs(doc):
                 fmt = doc.list_formats.get(num_id, {}).get(ilvl, 'bullet')
                 if num_id != '0':
                     list_info = (fmt not in ('bullet', 'none'), int(ilvl))
-        paragraphs.append(Paragraph(style, list_info, read_runs(doc, el)))
+        paragraphs.append(Paragraph(style, list_info, read_runs(doc, el), indent))
     return paragraphs
 
 
@@ -205,10 +237,26 @@ def read_paragraphs(doc):
 
 def render_link(url, inner_jsx):
     url = url.strip()
+    url = PROXY_HOST.sub(lambda m: m.group(1) + m.group(2).replace('-', '.'), url)
+    # Drop mailing-list tracking parameters (utm_*, dm_i)
+    if '?' in url:
+        base, _, query = url.partition('?')
+        kept = [q for q in query.split('&') if q and not re.match(r'(utm_\w+|dm_i)=', q)]
+        url = base + ('?' + '&'.join(kept) if kept else '')
     m = CGD_HOST.match(url)
     if m:
         path = url[m.end():] or '/'
         path = CGD_PATH_MAP.get(path.rstrip('/'), path)
+        # Old locus.pl?locus=<name>&organism=... or ?dbid=<id> -> /locus/<name>
+        if path.startswith('/cgi-bin/locus.pl'):
+            query = dict(re.findall(r'(\w+)=([^&]+)', path.partition('?')[2]))
+            name = query.get('locus') or query.get('dbid')
+            if name:
+                path = f'/locus/{name}'
+        # Old static genome snapshots: /cache/<organism>_genomeSnapshot.html
+        snapshot = re.match(r'^/cache/(\w+?)_genomeSnapshot\.html$', path)
+        if snapshot:
+            path = f'/genome-snapshot/{snapshot.group(1)}'
         if path.startswith(NON_SPA_PREFIXES):
             return f'<a href="{path}">{inner_jsx}</a>'
         return f'<Link to="{path}">{inner_jsx}</Link>'
@@ -234,9 +282,9 @@ def render_runs(runs, drop_bold=False):
         trail = text[len(text.rstrip()):]
         core = jsx_text(text.strip())
         if core:
-            if 'sup' in fmt:
+            if '^' in fmt:
                 core = f'<sup>{core}</sup>'
-            if 'sub' in fmt:
+            if '_' in fmt:
                 core = f'<sub>{core}</sub>'
             if 'i' in fmt:
                 core = f'<em>{core}</em>'
@@ -274,9 +322,14 @@ def is_title(par):
     text = par.text.strip()
     if not text or par.images or par.list_info:
         return False
-    if par.style.lower().startswith('heading'):
+    if len(text) >= 250:
+        return False
+    # Older issues sometimes put body text in a Heading style, so only short ones count
+    if par.style.lower().startswith('heading') and len(text) < 120:
         return True
-    return par.all_bold() and len(text) < 250
+    if re.match(r'^research spotlight\s*:', text, re.I):
+        return True
+    return par.all_heading_type()
 
 
 # ---------------------------------------------------------------- main
@@ -359,6 +412,10 @@ def convert(docx_path, force=False):
                     lines.append('        ' + '  ' * len(open_lists) + f'<{tag}>')
                     open_lists.append(tag)
                 lines.append('        ' + '  ' * len(open_lists) + f'<li>{text_jsx}</li>')
+            elif open_lists and par.indent > 0 and text_jsx and lines[-1].endswith('</li>'):
+                # Indented, unnumbered line under a list item (e.g. a meeting's venue
+                # and dates): continue that item rather than closing the list
+                lines[-1] = lines[-1][:-len('</li>')] + f'<br />{text_jsx}</li>'
             else:
                 while open_lists:
                     lines.append('        ' + '  ' * (len(open_lists) - 1) + f'</{open_lists.pop()}>')
