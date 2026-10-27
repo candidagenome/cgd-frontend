@@ -7,14 +7,16 @@ import Fall2026 from './Fall2026';
  * To publish a new issue from the curators' Word file:
  *   python3 scripts/newsletter_docx_to_issue.py "path/to/Winter 2027.docx"
  * This writes issues/<Name>.jsx, extracts the images to
- * public/images/newsletter/<issue-id>/ and adds the issue to the top of this list.
+ * public/images/newsletter/<issue-id>/ and adds the issue to this list in date order,
+ * so old issues can be added in any order.
  * Review the generated page before committing.
  *
  * To write an issue by hand instead: copy an existing issue file, put each article
  * in <section className="newsletter-article" id="..."> (add "newsletter-spotlight"
- * for the Research Spotlight), then import it here and add an entry at the TOP of
- * NEWSLETTER_ISSUES. The articles list drives the "In this issue" box and the archive
- * summary; each id must match a section id in the issue file.
+ * for the Research Spotlight), then import it here and add an entry to
+ * NEWSLETTER_ISSUES in date order (newest first). The articles list drives the
+ * "In this issue" box and the archive summary; each id must match a section id
+ * in the issue file.
  */
 export const NEWSLETTER_ISSUES = [
   {

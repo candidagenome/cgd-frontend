@@ -9,10 +9,13 @@ Usage:
 What it does:
   * writes src/pages/newsletter/issues/<Name>.jsx (e.g. Fall2026.jsx)
   * extracts images to public/images/newsletter/<issue-id>/figure-N.<ext>
-  * registers the issue at the top of src/pages/newsletter/issues/index.js
+  * registers the issue in src/pages/newsletter/issues/index.js, in date order
+    (newest first), so old issues can be added in any order
 
 How the Word document is read:
-  * "CGD Newsletter, <Season Year>" (first line) gives the issue title.
+  * "CGD Newsletter, <Season Year>" (first line) gives the issue title. The
+    season (Winter, Spring, Summer, Fall/Autumn) or a month name and the year
+    place the issue in the archive.
   * A short paragraph that is entirely bold (or uses a Heading style) starts a
     new article. "Research Spotlight: ..." articles get the spotlight styling.
   * The "About this newsletter" article is skipped (that text is on the
@@ -24,6 +27,7 @@ How the Word document is read:
 Review the generated page before committing it.
 """
 import argparse
+import calendar
 import html
 import re
 import sys
@@ -49,10 +53,25 @@ CGD_PATH_MAP = {
 }
 # Site paths served outside the single-page app (plain links, not <Link>)
 NON_SPA_PREFIXES = ('/download/', '/jbrowse2/', '/jbrowse/')
+# Months used to order issues titled by season
+SEASON_MONTH = {'winter': 1, 'spring': 4, 'summer': 7, 'fall': 10, 'autumn': 10}
+# An issue entry in index.js, as register() writes it
+ISSUE_ENTRY = re.compile(r"^  \{\n    id: '[^']+',\n    title: '((?:[^'\\]|\\.)*)'", re.M)
 
 
 def slug(text):
     return re.sub(r'[^a-z0-9]+', '-', text.lower()).strip('-')
+
+
+def issue_date(title):
+    """(year, month) of an issue title like "Fall 2026" or "March 2011", or None."""
+    months = {name.lower(): i for i, name in enumerate(calendar.month_name) if name}
+    months.update({name.lower(): i for i, name in enumerate(calendar.month_abbr) if name})
+    for word, year in re.findall(r'([A-Za-z]+)\.?\s+(\d{4})\b', title):
+        month = SEASON_MONTH.get(word.lower()) or months.get(word.lower())
+        if month:
+            return int(year), month
+    return None
 
 
 def jsx_text(text):
@@ -272,6 +291,9 @@ def convert(docx_path, force=False):
     if not m:
         sys.exit('First line must be "CGD Newsletter, <Season Year>"')
     title = m.group(1)
+    if issue_date(title) is None:
+        sys.exit(f'Cannot date the issue "{title}": the first line must name a season '
+                 '(Winter, Spring, Summer, Fall) or a month, and a year, e.g. "CGD Newsletter, Fall 2026"')
     issue_id = slug(title)
     component = re.sub(r'[^A-Za-z0-9]', '', title.title())
     if not component or component[0].isdigit():
@@ -384,14 +406,23 @@ def register(issue_id, title, component, articles):
     if f"id: '{issue_id}'" in src:
         print(f'index.js already has {issue_id}; left unchanged')
         return
-    imports_end = src.index('\n\n', src.rindex("import "))
+    imports_end = list(re.finditer(r'^import .*$', src, re.M))[-1].end()
     src = src[:imports_end] + f"\nimport {component} from './{component}';" + src[imports_end:]
     art_lines = '\n'.join(
         f"      {{ id: '{aid}', title: {js_string(atitle)} }}," for aid, atitle in articles)
     entry = (f"  {{\n    id: '{issue_id}',\n    title: '{title}',\n    articles: [\n{art_lines}\n    ],\n"
              f"    Component: {component},\n  }},\n")
-    marker = 'export const NEWSLETTER_ISSUES = [\n'
-    src = src.replace(marker, marker + entry, 1)
+    # Before the first issue older than this one (the list is newest first)
+    start = src.index('export const NEWSLETTER_ISSUES = [\n')
+    end = src.index('\n];', start) + 1
+    date = issue_date(title)
+    pos = end
+    for m in ISSUE_ENTRY.finditer(src, start, end):
+        other = issue_date(m.group(1))
+        if other is not None and other < date:
+            pos = m.start()
+            break
+    src = src[:pos] + entry + src[pos:]
     index.write_text(src)
     print(f'Registered {issue_id} in {index.relative_to(REPO)}')
 
