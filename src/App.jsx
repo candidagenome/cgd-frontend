@@ -141,6 +141,7 @@ import WebprimerHelp from './pages/help/WebprimerHelp';
 import RestrictionMapHelp from './pages/help/RestrictionMapHelp';
 import GOSlimHelp from './pages/help/GOSlimHelp';
 import GOTermFinderHelp from './pages/help/GOTermFinderHelp';
+import GeneListWorkbenchHelp from './pages/help/GeneListWorkbenchHelp';
 import ColleagueUpdateHelp from './pages/help/ColleagueUpdateHelp';
 import GenomeSnapshotHelp from './pages/help/GenomeSnapshotHelp';
 import CodeTablesHelp from './pages/help/CodeTablesHelp';
@@ -634,6 +635,7 @@ function App() {
           <Route path="/help/restriction-map" element={<RestrictionMapHelp />} />
           <Route path="/help/go-slim" element={<GOSlimHelp />} />
           <Route path="/help/go-term-finder" element={<GOTermFinderHelp />} />
+          <Route path="/help/gene-list-workbench" element={<GeneListWorkbenchHelp />} />
           <Route path="/help/colleague-update" element={<ColleagueUpdateHelp />} />
           <Route path="/help/genome-snapshot" element={<GenomeSnapshotHelp />} />
           <Route path="/help/code-tables" element={<CodeTablesHelp />} />
