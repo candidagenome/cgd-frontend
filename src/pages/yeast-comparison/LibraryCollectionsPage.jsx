@@ -93,8 +93,11 @@ function LibraryCollectionsPage() {
                 requires a fully executed MTA with Merck Sharp &amp; Dohme LLC: contact Lorraine
                 Hernandez (<Email address="lorraine_hernandez@merck.com" />) with full contact
                 information for the requesting PI and the institutional office that handles MTAs,
-                and a brief statement of the proposed use. Full ordering details and prices are on
-                the <Link to="/community-news">Community News</Link> page.
+                and a brief statement of the proposed use; a Merck representative then contacts
+                the Cowen laboratory to arrange distribution. Prices (plus tax and shipping where
+                applicable): original library US$2,350; GRACEv2 (866 strains) US$850; GRACEv3
+                (1,240 strains) US$1,000. See the{' '}
+                <Link to="/community-news">Community News</Link> page for the full announcement.
               </>
             }
           />
@@ -118,9 +121,12 @@ function LibraryCollectionsPage() {
             }
             obtain={
               <>
-                Distributed by the Leah Cowen laboratory, University of Toronto, under an MTA with
-                Merck Sharp &amp; Dohme. See the <Link to="/community-news">Community News</Link>{' '}
-                page for the library description.
+                The most recent public notice (April 2018) states that the National Research
+                Council of Canada was mandated by Merck Sharp &amp; Dohme to distribute this library;
+                see the <Link to="/community-news">Community News</Link> page. We have not found a
+                more recent announcement, so current availability is unconfirmed. Please{' '}
+                <Link to="/contact">contact CGD curators</Link> if you know how the library is
+                distributed today.
               </>
             }
           />
@@ -164,21 +170,6 @@ function LibraryCollectionsPage() {
             references={<PubMed pmid="22073120">Vandeputte et al., 2011</PubMed>}
             obtain={FGSC}
           />
-
-          <hr />
-          <Collection
-            id="orfeome"
-            name={<><em>C. albicans</em> ORFeome and Gateway expression vectors</>}
-            contents="Gateway entry clones for about 5,100 open reading frames (about 83% of annotated ORFs), plus a set of 49 destination vectors for expression from different promoters with HA, GFP or TAP tags."
-            uses="Building overexpression, tagged-protein and two-hybrid strain collections."
-            references={<PubMed pmid="29982705">Legrand et al., 2018</PubMed>}
-            obtain={
-              <>
-                ORFeome clones: CIRM-Levures (INRAE), <Email address="cirmlevures@inrae.fr" />.
-                According to Legrand et al., the destination vectors were deposited at Addgene.
-              </>
-            }
-          />
         </section>
 
         <section className="info-section" id="from-labs">
@@ -188,6 +179,25 @@ function LibraryCollectionsPage() {
             to the laboratory that built them.
           </p>
 
+          <Collection
+            id="orfeome"
+            name={<><em>C. albicans</em> ORFeome and Gateway expression vectors</>}
+            contents="Gateway entry clones for more than 5,200 open reading frames, plus a set of 49 destination vectors for expression from different promoters with HA, GFP or TAP tags. Collections of barcoded overexpression plasmids and strains are being built from the ORFeome."
+            uses="Building overexpression, tagged-protein and two-hybrid strain collections."
+            references={<PubMed pmid="29982705">Legrand et al., 2018</PubMed>}
+            obtain={
+              <>
+                Contact the{' '}
+                <a href="https://research.pasteur.fr/en/team/fungal-biology-and-pathogenicity/" {...EXT}>
+                  Fungal Biology and Pathogenicity Unit
+                </a>{' '}
+                (Christophe d'Enfert), Institut Pasteur, which developed the ORFeome with the
+                Munro group at the University of Aberdeen.
+              </>
+            }
+          />
+
+          <hr />
           <Collection
             id="overexpression"
             name={<>Overexpression collections (<em>C. albicans</em>)</>}
