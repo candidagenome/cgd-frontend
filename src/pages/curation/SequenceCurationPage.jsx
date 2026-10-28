@@ -8,6 +8,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import sequenceCurationApi from '../../api/sequenceCurationApi';
+import { parseReferenceInput, REFERENCE_INPUT_LABEL } from '../../utils/referenceInput';
 
 function SequenceCurationPage() {
   useAuth();
@@ -133,6 +134,11 @@ function SequenceCurationPage() {
       setError('A note describing the change is required to commit.');
       return;
     }
+    const { ids: referenceNos, invalid: invalidRefs } = parseReferenceInput(referenceNosInput);
+    if (invalidRefs.length > 0) {
+      setError(`Not a reference_no or PMID: ${invalidRefs.join(', ')}`);
+      return;
+    }
 
     // Commit exactly what was previewed, with the residues the preview showed
     // so the server can refuse if the sequence changed in the meantime.
@@ -165,12 +171,6 @@ function SequenceCurationPage() {
     )) {
       return;
     }
-
-    const referenceNos = referenceNosInput
-      .split(/[,\s]+/)
-      .filter(Boolean)
-      .map((n) => parseInt(n, 10))
-      .filter((n) => !Number.isNaN(n));
 
     setCommitting(true);
     setError('');
@@ -579,15 +579,13 @@ function SequenceCurationPage() {
                 style={styles.textarea}
                 placeholder="e.g. Corrected Assembly-22 sequencing error at the orf19.5224/orf19.5225 junction (PMID:37561787; PacBio GCA_032688725.1)."
               />
-              <label style={styles.commitLabel}>
-                Reference no(s) to link (optional, comma-separated CGD reference_no):
-              </label>
+              <label style={styles.commitLabel}>{REFERENCE_INPUT_LABEL}</label>
               <input
                 type="text"
                 value={referenceNosInput}
                 onChange={(e) => setReferenceNosInput(e.target.value)}
                 style={styles.input}
-                placeholder="e.g. 12345"
+                placeholder="e.g. 68332 or PMID:37561787"
               />
               <div style={{ marginTop: '0.75rem' }}>
                 <button

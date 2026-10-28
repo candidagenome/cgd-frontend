@@ -9,6 +9,7 @@ import { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import featureMergeApi from '../../api/featureMergeApi';
+import { parseReferenceInput, REFERENCE_INPUT_LABEL } from '../../utils/referenceInput';
 
 function FeatureMergePage() {
   useAuth();
@@ -50,6 +51,11 @@ function FeatureMergePage() {
       setError('A note describing the merge is required to commit.');
       return;
     }
+    const { ids: referenceNos, invalid: invalidRefs } = parseReferenceInput(referenceNosInput);
+    if (invalidRefs.length > 0) {
+      setError(`Not a reference_no or PMID: ${invalidRefs.join(', ')}`);
+      return;
+    }
     if (!dryRun && !window.confirm(
       `Commit merge: retire ${retireName} into ${survivorName} and extend it to ${newStopCoord}?\n\n` +
       'This regenerates the survivor sequences, transfers annotations, and soft-retires ' +
@@ -72,11 +78,7 @@ function FeatureMergePage() {
         retireName: retireName.trim(),
         newStopCoord: parseInt(newStopCoord, 10),
         note: note.trim(),
-        referenceNos: referenceNosInput
-          .split(/[,\s]+/)
-          .filter(Boolean)
-          .map((n) => parseInt(n, 10))
-          .filter((n) => !Number.isNaN(n)),
+        referenceNos,
         dryRun,
       });
       if (dryRun) setPreview(data);
@@ -275,13 +277,13 @@ function FeatureMergePage() {
                 style={styles.textarea}
                 placeholder="e.g. Merged orf19.5225 (C1_12400C_A) into PKH2 (C1_12410C_A) after the Assembly-22 junction correction (PMID:37561787; PacBio GCA_032688725.1)."
               />
-              <label style={styles.commitLabel}>Reference no(s) to link (optional, comma-separated CGD reference_no):</label>
+              <label style={styles.commitLabel}>{REFERENCE_INPUT_LABEL}</label>
               <input
                 type="text"
                 value={referenceNosInput}
                 onChange={(e) => setReferenceNosInput(e.target.value)}
                 style={styles.input}
-                placeholder="e.g. 68332"
+                placeholder="e.g. 68332 or PMID:37561787"
               />
               <div style={{ marginTop: '0.75rem' }}>
                 <button onClick={() => runMerge(false)} disabled={committing || !note.trim()} style={styles.commitButton}>
