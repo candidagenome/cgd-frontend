@@ -67,6 +67,15 @@ function ObservableTermsPage() {
     return `/phenotype/search?observable=${encodeURIComponent(term)}`;
   };
 
+  // Whether a term or any of its descendants has annotations
+  const hasAnnotations = (node) =>
+    node.count > 0 || (node.children || []).some(hasAnnotations);
+
+  // Gene List Workbench list: genes with this phenotype or a more specific one
+  const getWorkbenchUrl = (term) => {
+    return `/gene-list-workbench?phenotype=${encodeURIComponent(term)}&organism=3`;
+  };
+
   // Render a tree node and its children recursively
   const renderTreeNode = (node, nodeKey, depth = 0) => {
     const hasChildren = node.children && node.children.length > 0;
@@ -93,6 +102,16 @@ function ObservableTermsPage() {
 
           {node.count > 0 && (
             <span className="annotation-count">({node.count})</span>
+          )}
+
+          {node.term !== 'observable' && hasAnnotations(node) && (
+            <Link
+              to={getWorkbenchUrl(node.term)}
+              className="workbench-term-link"
+              title="Open the genes with this phenotype or a more specific one in the Gene List Workbench"
+            >
+              Workbench
+            </Link>
           )}
         </div>
 
@@ -173,6 +192,9 @@ function ObservableTermsPage() {
               Browse the hierarchical tree of observable terms used to describe phenotypes.
               Click on a term to search for all phenotype annotations with that observable.
               The number in parentheses indicates the count of annotations for each term.
+              Use <em>Workbench</em> next to a term to see the genes with that phenotype, or a more
+              specific one, in the Gene List Workbench: their expression across RNA-seq studies,
+              enrichment, and orthologs.
             </p>
           </div>
 

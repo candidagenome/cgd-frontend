@@ -48,6 +48,13 @@ import LiteraturePage from './pages/LiteraturePage';
 import CGDPublicationsPage from './pages/CGDPublicationsPage';
 import TopicBibliosPage from './pages/TopicBibliosPage';
 import StrainsPage from './pages/StrainsPage';
+import PathogenicYeastComparisonPage from './pages/yeast-comparison/PathogenicYeastComparisonPage';
+import SeminalPapersPage from './pages/yeast-comparison/SeminalPapersPage';
+import ProtocolsPage from './pages/yeast-comparison/ProtocolsPage';
+import LibraryCollectionsPage from './pages/yeast-comparison/LibraryCollectionsPage';
+import SpeciesComparisonsPage from './pages/yeast-comparison/SpeciesComparisonsPage';
+import NewsletterArchivePage from './pages/newsletter/NewsletterArchivePage';
+import NewsletterIssuePage from './pages/newsletter/NewsletterIssuePage';
 import ContactPage from './pages/ContactPage';
 import SeqToolsPage from './pages/SeqToolsPage';
 import SeqToolsResultsPage from './pages/SeqToolsResultsPage';
@@ -73,6 +80,7 @@ import ChromosomeListPage from './pages/ChromosomeListPage';
 import WebPrimerSearchPage from './pages/WebPrimerSearchPage';
 import WebPrimerResultsPage from './pages/WebPrimerResultsPage';
 import GoTermFinderSearchPage from './pages/GoTermFinderSearchPage';
+import GeneListWorkbenchPage from './pages/GeneListWorkbenchPage';
 import GoTermFinderResultsPage from './pages/GoTermFinderResultsPage';
 import GoSlimMapperSearchPage from './pages/GoSlimMapperSearchPage';
 import GoSlimMapperResultsPage from './pages/GoSlimMapperResultsPage';
@@ -133,6 +141,8 @@ import WebprimerHelp from './pages/help/WebprimerHelp';
 import RestrictionMapHelp from './pages/help/RestrictionMapHelp';
 import GOSlimHelp from './pages/help/GOSlimHelp';
 import GOTermFinderHelp from './pages/help/GOTermFinderHelp';
+import GeneListWorkbenchHelp from './pages/help/GeneListWorkbenchHelp';
+import EnrichmentMethodologyHelp from './pages/help/EnrichmentMethodologyHelp';
 import ColleagueUpdateHelp from './pages/help/ColleagueUpdateHelp';
 import GenomeSnapshotHelp from './pages/help/GenomeSnapshotHelp';
 import CodeTablesHelp from './pages/help/CodeTablesHelp';
@@ -268,6 +278,13 @@ function App() {
           <Route path="/literature-topic-search" element={<LiteratureTopicSearchPage />} />
           <Route path="/topic-biblios" element={<TopicBibliosPage />} />
           <Route path="/strains" element={<StrainsPage />} />
+          <Route path="/pathogenic-yeast-comparison" element={<PathogenicYeastComparisonPage />} />
+          <Route path="/pathogenic-yeast-comparison/seminal-papers" element={<SeminalPapersPage />} />
+          <Route path="/pathogenic-yeast-comparison/protocols" element={<ProtocolsPage />} />
+          <Route path="/library-collections" element={<LibraryCollectionsPage />} />
+          <Route path="/pathogenic-yeast-comparison/species-comparisons" element={<SpeciesComparisonsPage />} />
+          <Route path="/newsletter" element={<NewsletterArchivePage />} />
+          <Route path="/newsletter/:issueId" element={<NewsletterIssuePage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/seq-tools" element={<SeqToolsPage />} />
           <Route path="/seq-tools/results" element={<SeqToolsResultsPage />} />
@@ -287,6 +304,7 @@ function App() {
           <Route path="/webprimer" element={<WebPrimerSearchPage />} />
           <Route path="/webprimer/results" element={<WebPrimerResultsPage />} />
           <Route path="/go-term-finder" element={<GoTermFinderSearchPage />} />
+          <Route path="/gene-list-workbench" element={<GeneListWorkbenchPage />} />
           <Route path="/go-term-finder/results" element={<GoTermFinderResultsPage />} />
           <Route path="/go-slim-mapper" element={<GoSlimMapperSearchPage />} />
           <Route path="/go-slim-mapper/results" element={<GoSlimMapperResultsPage />} />
@@ -618,6 +636,8 @@ function App() {
           <Route path="/help/restriction-map" element={<RestrictionMapHelp />} />
           <Route path="/help/go-slim" element={<GOSlimHelp />} />
           <Route path="/help/go-term-finder" element={<GOTermFinderHelp />} />
+          <Route path="/help/gene-list-workbench" element={<GeneListWorkbenchHelp />} />
+          <Route path="/help/enrichment-methodology" element={<EnrichmentMethodologyHelp />} />
           <Route path="/help/colleague-update" element={<ColleagueUpdateHelp />} />
           <Route path="/help/genome-snapshot" element={<GenomeSnapshotHelp />} />
           <Route path="/help/code-tables" element={<CodeTablesHelp />} />

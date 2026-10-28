@@ -69,6 +69,11 @@ const HeaderNav = () => {
       to: '/tools',
       submenu: [
         { label: 'CRISPR Guide Designer', to: '/crispr' },
+        {
+          label: 'Gene List Workbench',
+          to: '/gene-list-workbench',
+          title: 'Enrichment, expression, orthologs and downloads for a set of genes',
+        },
         { label: 'Ortholog Converter', to: '/ortholog-converter' },
         { label: 'PatMatch', to: '/patmatch' },
         { label: 'Primers', to: '/webprimer' },
@@ -111,7 +116,9 @@ const HeaderNav = () => {
         { label: 'Community News', to: '/community-news' },
         { label: 'Nomenclature Guide', to: '/nomenclature' },
         { label: 'Gene Registry', to: '/gene-registry' },
-        { label: 'CGD Public Wiki', href: 'http://publicwiki.candidagenome.org', external: true },
+        { label: 'Pathogenic Yeast Comparison', to: '/pathogenic-yeast-comparison' },
+        { label: 'Library Collections', to: '/library-collections' },
+        { label: 'CGD Newsletter', to: '/newsletter' },
         { label: 'Developer API', to: '/developer/api' }
       ]
     }
@@ -129,7 +136,7 @@ const HeaderNav = () => {
         </a>
       );
     }
-    return <Link to={item.to}>{item.label}</Link>;
+    return <Link to={item.to} title={item.title}>{item.label}</Link>;
   };
 
   return (

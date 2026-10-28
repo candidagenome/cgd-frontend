@@ -57,6 +57,28 @@ export const phenotypeApi = {
   },
 
   /**
+   * Get the genes of one organism annotated to an observable term
+   * @param {string} term - Observable term name (e.g., "virulence")
+   * @param {number} organismNo - Organism to list genes for
+   * @param {Object} options - Optional parameters
+   * @param {boolean} options.includeDescendants - Include descendant terms (default: true)
+   * @param {string} options.qualifier - Only this qualifier (e.g., "decreased")
+   * @param {boolean} options.includeNormal - Include "normal" results (default: false)
+   */
+  getObservableGenes: async (term, organismNo, options = {}) => {
+    const response = await api.get('/api/phenotype/observables/genes', {
+      params: {
+        term,
+        organism_no: organismNo,
+        include_descendants: options.includeDescendants !== false,
+        include_normal: options.includeNormal === true,
+        ...(options.qualifier ? { qualifier: options.qualifier } : {}),
+      },
+    });
+    return response.data;
+  },
+
+  /**
    * Get list of experiment types for dropdown
    */
   getExperimentTypes: async () => {

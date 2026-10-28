@@ -47,15 +47,17 @@ export const sequenceCurationApi = {
   },
 
   /**
-   * Commit sequence changes (v1: equal-length substitutions only).
+   * Commit sequence changes (insertions, deletions, substitutions).
    *
    * @param {string} featureName - Chromosome/contig name
-   * @param {Array<{type: string, start?: number, end?: number, sequence?: string}>} changes
+   * @param {Array<{type: string, position?: number, start?: number, end?: number,
+   *   sequence?: string, old_sequence?: string}>} changes - old_sequence is what the
+   *   preview showed in start..end; the commit refuses if it no longer matches
    * @param {string} note - Required note describing the change
    * @param {Object} [opts]
    * @param {number[]} [opts.referenceNos=[]] - CGD reference_no(s) to link to the note
    * @param {boolean} [opts.dryRun=false] - If true, validate against the DB and roll back
-   * @returns {Promise<Object>} apply result (new_root_seq_no, feat_locations_repointed, ...)
+   * @returns {Promise<Object>} apply result (new_root_seq_no, net_change, feat_locations_moved, ...)
    */
   applyChanges: async (featureName, changes, note, { referenceNos = [], dryRun = false } = {}) => {
     const response = await api.post('/api/curation/sequence/apply', {

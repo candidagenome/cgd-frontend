@@ -8,6 +8,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import sequenceCurationApi from '../../api/sequenceCurationApi';
+import { parseReferenceInput, REFERENCE_INPUT_LABEL } from '../../utils/referenceInput';
 
 function SequenceCurationPage() {
   useAuth();
@@ -47,13 +48,22 @@ function SequenceCurationPage() {
     };
   }
 
+  // A preview (and the commit built from it) describes one exact set of
+  // edits, so any change to the form discards it.
+  const clearPreview = () => {
+    setPreview(null);
+    setCommitResult(null);
+  };
+
   const handleAddChange = () => {
     setChanges([...changes, createEmptyChange()]);
+    clearPreview();
   };
 
   const handleRemoveChange = (index) => {
     if (changes.length > 1) {
       setChanges(changes.filter((_, i) => i !== index));
+      clearPreview();
     }
   };
 
@@ -61,6 +71,7 @@ function SequenceCurationPage() {
     const updated = [...changes];
     updated[index] = { ...updated[index], [field]: value };
     setChanges(updated);
+    clearPreview();
   };
 
   const handlePreview = useCallback(async () => {
@@ -112,10 +123,10 @@ function SequenceCurationPage() {
     }
   }, [selectedChromosome, changes]);
 
-  // v1: only equal-length substitutions can be committed.
-  const allSubstitutions =
-    preview && preview.changes.length > 0 &&
-    preview.changes.every((c) => c.type === 'substitution' && c.length_change === 0);
+  // The commit refuses a feature with an end inside a length-changing edit.
+  const boundaryConflicts = preview
+    ? preview.affected_features.filter((f) => f.boundary_in_edit)
+    : [];
 
   const handleCommit = useCallback(async () => {
     if (!preview) return;
@@ -123,35 +134,43 @@ function SequenceCurationPage() {
       setError('A note describing the change is required to commit.');
       return;
     }
-
-    const subChanges = changes
-      .filter((c) => c.type === 'substitution' && c.start && c.end && c.sequence)
-      .map((c) => ({
-        type: 'substitution',
-        start: parseInt(c.start, 10),
-        end: parseInt(c.end, 10),
-        sequence: c.sequence,
-      }));
-
-    if (subChanges.length === 0) {
-      setError('No committable substitution changes found.');
+    const { ids: referenceNos, invalid: invalidRefs } = parseReferenceInput(referenceNosInput);
+    if (invalidRefs.length > 0) {
+      setError(`Not a reference_no or PMID: ${invalidRefs.join(', ')}`);
       return;
     }
 
+    // Commit exactly what was previewed, with the residues the preview showed
+    // so the server can refuse if the sequence changed in the meantime.
+    const previewedChanges = preview.changes.map((c) => {
+      if (c.type === 'insertion') {
+        return { type: 'insertion', position: c.position, sequence: c.sequence };
+      }
+      if (c.type === 'deletion') {
+        return { type: 'deletion', start: c.start, end: c.end, old_sequence: c.deleted_sequence };
+      }
+      return {
+        type: 'substitution',
+        start: c.start,
+        end: c.end,
+        sequence: c.new_sequence,
+        old_sequence: c.old_sequence,
+      };
+    });
+
+    const shift = preview.net_change === 0
+      ? 'The sequence length does not change.'
+      : `The sequence becomes ${Math.abs(preview.net_change)} bp ` +
+        `${preview.net_change > 0 ? 'longer' : 'shorter'}, and every feature ` +
+        'downstream of the edits moves accordingly.';
     if (!window.confirm(
-      `Commit ${subChanges.length} substitution(s) to ${selectedChromosome}?\n\n` +
-      'This inserts a new current chromosome sequence version, re-points all ' +
-      'feature locations, and regenerates affected feature sequences. It is logged ' +
-      'and reversible only by another curated edit.'
+      `Commit ${previewedChanges.length} change(s) to ${selectedChromosome}?\n\n` +
+      `${shift} This inserts a new current chromosome sequence version, updates ` +
+      'all feature locations, and regenerates affected feature sequences. It is ' +
+      'logged and reversible only by another curated edit.'
     )) {
       return;
     }
-
-    const referenceNos = referenceNosInput
-      .split(/[,\s]+/)
-      .filter(Boolean)
-      .map((n) => parseInt(n, 10))
-      .filter((n) => !Number.isNaN(n));
 
     setCommitting(true);
     setError('');
@@ -159,7 +178,7 @@ function SequenceCurationPage() {
     try {
       const data = await sequenceCurationApi.applyChanges(
         selectedChromosome,
-        subChanges,
+        previewedChanges,
         note.trim(),
         { referenceNos, dryRun: false }
       );
@@ -169,7 +188,7 @@ function SequenceCurationPage() {
     } finally {
       setCommitting(false);
     }
-  }, [preview, note, referenceNosInput, changes, selectedChromosome]);
+  }, [preview, note, referenceNosInput, selectedChromosome]);
 
   const handleLookupNearby = useCallback(async (position) => {
     if (!selectedChromosome || !position) return;
@@ -202,7 +221,10 @@ function SequenceCurationPage() {
         <h2 style={styles.sectionHeader}>Select Chromosome/Contig</h2>
         <select
           value={selectedChromosome}
-          onChange={(e) => setSelectedChromosome(e.target.value)}
+          onChange={(e) => {
+            setSelectedChromosome(e.target.value);
+            clearPreview();
+          }}
           style={styles.select}
         >
           <option value="">-- Choose chromosome/contig --</option>
@@ -459,7 +481,8 @@ function SequenceCurationPage() {
           ))}
 
           <h3 style={styles.subsectionHeader}>
-            Affected Features ({preview.affected_features.length})
+            Affected Features ({preview.affected_features.length}
+            {preview.affected_features.length === 100 ? ', first 100 shown' : ''})
           </h3>
           {preview.affected_features.length > 0 ? (
             <table style={styles.table}>
@@ -490,10 +513,14 @@ function SequenceCurationPage() {
                       {f.new_start.toLocaleString()}-{f.new_stop.toLocaleString()}
                     </td>
                     <td style={styles.td}>
-                      {f.is_overlapping ? (
-                        <span style={styles.warningText}>Overlapping - Review needed</span>
-                      ) : (
+                      {f.boundary_in_edit ? (
+                        <span style={styles.negative}>End inside an edit - not allowed</span>
+                      ) : f.is_overlapping ? (
+                        <span style={styles.warningText}>Overlaps an edit - sequence regenerated</span>
+                      ) : f.new_start !== f.start_coord || f.new_stop !== f.stop_coord ? (
                         <span>Coordinate shift</span>
+                      ) : (
+                        <span>No change</span>
                       )}
                     </td>
                   </tr>
@@ -511,10 +538,19 @@ function SequenceCurationPage() {
               <code>seq_no {commitResult.new_root_seq_no}</code> created for{' '}
               {commitResult.feature_name}.
               <ul style={{ margin: '0.5rem 0 0 1.25rem' }}>
-                <li>{commitResult.feat_locations_repointed.toLocaleString()} feature location(s) re-pointed to the new sequence</li>
+                <li>Length {commitResult.old_length.toLocaleString()} to{' '}
+                  {commitResult.seq_length.toLocaleString()} bp
+                  ({commitResult.net_change >= 0 ? '+' : ''}{commitResult.net_change})</li>
+                <li>{commitResult.feat_locations_moved.toLocaleString()} feature location(s) moved
+                  to new coordinates; {commitResult.feat_locations_repointed.toLocaleString()} re-pointed
+                  unchanged</li>
                 <li>{commitResult.features_regenerated.length} feature sequence(s) regenerated
                   {commitResult.features_regenerated.length > 0 && (
-                    <>: {commitResult.features_regenerated.map((f) => f.feature_name).join(', ')}</>
+                    <>: {commitResult.features_regenerated.map((f) => (
+                      f.internal_stops > 0
+                        ? `${f.feature_name} (${f.internal_stops} internal stop${f.internal_stops > 1 ? 's' : ''})`
+                        : f.feature_name
+                    )).join(', ')}</>
                   )}
                 </li>
                 <li>Recorded under note_no {commitResult.note_no}
@@ -522,11 +558,13 @@ function SequenceCurationPage() {
                 </li>
               </ul>
             </div>
-          ) : !allSubstitutions ? (
+          ) : boundaryConflicts.length > 0 ? (
             <div style={styles.noticeBox}>
-              <strong>Commit unavailable:</strong> only equal-length substitutions
-              can be committed at this time. Your preview includes an insertion,
-              deletion, or length-changing edit, which is not yet enabled.
+              <strong>Commit unavailable:</strong>{' '}
+              {boundaryConflicts.map((f) => f.feature_name).join(', ')}{' '}
+              {boundaryConflicts.length > 1 ? 'have ends' : 'has an end'} inside an edit
+              that changes the sequence length, so the new boundary is ambiguous. Adjust
+              the edit so it does not cross a feature boundary, or curate the feature first.
             </div>
           ) : (
             <div style={styles.commitBox}>
@@ -541,15 +579,13 @@ function SequenceCurationPage() {
                 style={styles.textarea}
                 placeholder="e.g. Corrected Assembly-22 sequencing error at the orf19.5224/orf19.5225 junction (PMID:37561787; PacBio GCA_032688725.1)."
               />
-              <label style={styles.commitLabel}>
-                Reference no(s) to link (optional, comma-separated CGD reference_no):
-              </label>
+              <label style={styles.commitLabel}>{REFERENCE_INPUT_LABEL}</label>
               <input
                 type="text"
                 value={referenceNosInput}
                 onChange={(e) => setReferenceNosInput(e.target.value)}
                 style={styles.input}
-                placeholder="e.g. 12345"
+                placeholder="e.g. 68332 or PMID:37561787"
               />
               <div style={{ marginTop: '0.75rem' }}>
                 <button

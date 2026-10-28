@@ -13,7 +13,7 @@ const ROWS_PER_PAGE = 10;
  * @param {Object} props.data - Enrichment result data from API
  * @param {boolean} props.loading - Whether analysis is in progress
  * @param {string} props.error - Error message if analysis failed
- * @param {Function} props.onClose - Callback when panel is closed
+ * @param {Function} [props.onClose] - Callback when panel is closed (omit to hide the close button)
  * @param {Function} props.onRetry - Callback to retry analysis
  */
 function EnrichmentResultsPanel({
@@ -197,16 +197,18 @@ function EnrichmentResultsPanel({
         </div>
         <div className="header-right">
           {loading && <span className="loading-indicator">Analyzing...</span>}
-          <button
-            className="close-btn"
-            onClick={(e) => {
-              e.stopPropagation();
-              onClose();
-            }}
-            title="Close panel"
-          >
-            ×
-          </button>
+          {onClose && (
+            <button
+              className="close-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                onClose();
+              }}
+              title="Close panel"
+            >
+              ×
+            </button>
+          )}
         </div>
       </div>
 
@@ -246,6 +248,14 @@ function EnrichmentResultsPanel({
                 <span>Background: {data.result.background_size} genes</span>
                 <span className="summary-sep">|</span>
                 <span>P-value cutoff: {data.result.p_value_cutoff}</span>
+                <span className="summary-sep">|</span>
+                <Link
+                  to={`/help/enrichment-methodology#${type === 'go' ? 'go' : 'phenotype'}-enrichment`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  How enrichment works
+                </Link>
               </div>
 
               {/* Aspect Filter for GO */}

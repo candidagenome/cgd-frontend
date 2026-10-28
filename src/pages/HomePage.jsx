@@ -38,6 +38,27 @@ const MEETINGS = [
 // News items
 const NEWS_ITEMS = [
   {
+    title: 'New: Gene List Workbench and Improved Enrichment Analysis',
+    content: (
+      <>
+        The new Gene List Workbench analyzes a list of genes in one place: paste gene names or
+        build a list from a GO term or phenotype, then explore enriched GO terms and phenotypes,
+        an expression heatmap across RNA-seq studies, orthologs in the other <em>Candida</em>{' '}
+        species and <em>S. cerevisiae</em>, and downloads for the whole list.
+        <p></p>
+        We have also refined how GO and phenotype enrichment are calculated: p-values are now
+        corrected for every term tested, and phenotypes recorded by different experiment types are
+        combined. Results from the GO Term Finder may therefore differ slightly from earlier runs.
+        <br /><br />
+        <Link to="/gene-list-workbench">Gene List Workbench</Link>
+        {' | '}
+        <Link to="/help/enrichment-methodology">How enrichment is calculated</Link>
+      </>
+    ),
+    date: 'October 2026',
+    highlight: true,
+  },
+  {
     title: 'New: Standard Gene Names from Ortholog Transfer',
     content: (
       <>

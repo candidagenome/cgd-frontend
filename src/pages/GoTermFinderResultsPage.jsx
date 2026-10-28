@@ -602,6 +602,9 @@ function GoTermFinderResultsPage() {
         {/* Summary Panel */}
         <div className="summary-panel">
           <h2>Analysis Summary</h2>
+          <p className="summary-help-link">
+            <Link to="/help/enrichment-methodology">How enrichment is calculated</Link>
+          </p>
           <div className="summary-grid">
             <div className="summary-item">
               <span className="label">Genes submitted:</span>

@@ -31,6 +31,25 @@ export const goApi = {
     const response = await api.get(url);
     return response.data;
   },
+
+  /**
+   * Get the genes of one organism annotated to a GO term
+   * @param {string} goid - GO identifier (e.g., "GO:0005634")
+   * @param {number} organismNo - Organism to list genes for
+   * @param {Object} options - Optional parameters
+   * @param {boolean} options.includeDescendants - Include descendant terms (default: true)
+   * @param {boolean} options.includeComputational - Include computational annotations (default: true)
+   */
+  getGoTermGenes: async (goid, organismNo, options = {}) => {
+    const response = await api.get(`/api/go/${encodeURIComponent(goid)}/genes`, {
+      params: {
+        organism_no: organismNo,
+        include_descendants: options.includeDescendants !== false,
+        include_computational: options.includeComputational !== false,
+      },
+    });
+    return response.data;
+  },
 };
 
 export default goApi;
