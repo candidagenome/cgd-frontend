@@ -121,12 +121,13 @@ function LibraryCollectionsPage() {
             }
             obtain={
               <>
-                As with the GRACE library, use requires an MTA with Merck Sharp &amp; Dohme LLC:
-                contact Lorraine Hernandez (<Email address="lorraine_hernandez@merck.com" />) with
-                full contact information for the requesting PI and the institutional office that
-                handles MTAs, and a brief statement of the proposed use. Merck then arranges
-                distribution. Earlier distribution through the National Research Council of Canada
-                is described on the <Link to="/community-news">Community News</Link> page.
+                Distributed by the Leah Cowen laboratory, University of Toronto. As with the GRACE
+                library, use requires an MTA with Merck Sharp &amp; Dohme LLC: contact Lorraine
+                Hernandez (<Email address="lorraine_hernandez@merck.com" />) with full contact
+                information for the requesting PI and the institutional office that handles MTAs,
+                and a brief statement of the proposed use; a Merck representative then contacts
+                the Cowen laboratory to arrange distribution. See the{' '}
+                <Link to="/community-news">Community News</Link> page for the library description.
               </>
             }
           />

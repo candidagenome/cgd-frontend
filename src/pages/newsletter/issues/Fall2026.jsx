@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-// CGD Newsletter, Fall 2026. Generated from "Fall 2026.docx" by
+// CGD Newsletter, Fall 2026. Generated from "Fall 2026 (2).docx" by
 // scripts/newsletter_docx_to_issue.py; edit freely after review.
 // Each article is a <section> whose id matches an entry in issues/index.js.
 const IMG = '/images/newsletter/fall-2026';
@@ -29,7 +29,7 @@ function Fall2026() {
         <h2>Expanded Set of Drug-Related Literature Topic Tags</h2>
         <p>Given the ongoing preponderance of papers addressing drugs and drug resistance, we felt it was time to assign more fine-grained Literature Topic tags to this set of papers, with the goal of making these papers more findable within CGD. The following set of topics are now being assigned where relevant either to genes in a study or to a study as a whole.</p>
         <figure className="newsletter-figure">
-          <img src={`${IMG}/figure-3.png`} alt="Figure 3" style={{ maxWidth: '206px' }} />
+          <img src={`${IMG}/figure-3.png`} alt="Figure 3" style={{ maxWidth: '369px' }} />
           <figcaption>Figure 3</figcaption>
         </figure>
         <p>Papers addressing these topics can be located most easily by means of the <Link to="/literature-topic-search">Literature Topic Search</Link> tool.</p>
@@ -53,9 +53,9 @@ function Fall2026() {
 
       <section className="newsletter-article newsletter-spotlight" id="research-spotlight">
         <p className="newsletter-kicker">Research Spotlight</p>
-        <h2>Hac1-independent functions of Ire1 drive morphogenesis in <em>Candida albicans</em> through distinct transcriptional programs</h2>
-        <p>The canonical example of ER stress-induced alternative splicing of <em>HAC1</em> mRNA via Ire1p has been well characterized in <em>Saccharomyces cerevisiae</em> (Cox and Walter, 1996; Mori et al., 1996). For this species, the presence of unfolded proteins in the cytoplasm triggers splicing of an intron from the <em>HAC1</em> mRNA that results in a functional transcription factor that enters the nucleus to activate the stress response.</p>
-        <p>In contrast, it appears that most of the pathogenic yeasts, as well as <em>S. pombe</em>, have evolved different means to respond to ER stress, with varying reliance on Ire1 and Hac1. The near-relative to <em>S. cerevisiae, C. glabrata</em> (<em>Nakaseomyces glabratus</em>), does possess an <em>HAC1</em> ortholog, however alternative splicing does not appear to factor in the stress response. Where evidence had suggested that <em>C. albicans</em> might employ a more canonical version that does employ alternative splicing, a recent study by <a href="https://pubmed.ncbi.nlm.nih.gov/42305016/" target="_blank" rel="noopener noreferrer">Stack-Couture et al.</a> in the Journal of Cell Science, looked more closely into this species.</p>
+        <h2><a href="https://pubmed.ncbi.nlm.nih.gov/42305016/" target="_blank" rel="noopener noreferrer">Hac1-independent functions of Ire1 drive morphogenesis in <em>Candida albicans</em> through distinct transcriptional programs</a></h2>
+        <p>The canonical example of ER stress-induced alternative splicing of <a href="https://www.yeastgenome.org/locus/S000001863" target="_blank" rel="noopener noreferrer"><em>HAC1</em></a> mRNA via <a href="https://www.yeastgenome.org/locus/S000001121" target="_blank" rel="noopener noreferrer">Ire1p</a> has been well characterized in <em>Saccharomyces cerevisiae</em> (Cox and Walter, 1996; Mori et al., 1996). For this species, the presence of unfolded proteins in the cytoplasm triggers splicing of an intron from the <em>HAC1</em> mRNA that results in a functional transcription factor that enters the nucleus to activate the stress response.</p>
+        <p>In contrast, it appears that most of the pathogenic yeasts, as well as <em>S. pombe</em>, have evolved different means to respond to ER stress, with varying reliance on Ire1 and Hac1. The near-relative to <em>S. cerevisiae, C. glabrata</em> (<em>Nakaseomyces glabratus</em>), does possess an <Link to="/locus/CAGL0K12540g"><em>HAC1</em></Link> ortholog, however alternative splicing does not appear to factor in the stress response. Where evidence had suggested that <em>C. albicans</em> might employ a more canonical version that does employ alternative splicing, a recent study by <a href="https://pubmed.ncbi.nlm.nih.gov/42305016/" target="_blank" rel="noopener noreferrer">Stack-Couture et al.</a> in the Journal of Cell Science, looked more closely into this species.</p>
         <p>In <em>C. albicans</em>, <Link to="/locus/IRE1">Ire1</Link> and <Link to="/locus/HAC1">Hac1</Link> have partially overlapping roles in several processes beyond the unfolded protein response (UPR, due to ER stress), including filamentation, which is required for virulence. The goal of the study was to tease out these roles, especially with respect to activation of transcription for genes involved in the stress response separate from genes involved in morphogenesis.</p>
         <p>As the <em>C. albicans</em> protein can functionally complement loss of <em>S. cerevisiae IRE1</em>, it is evident that splicing by Ire1 is retained in <em>C. albicans</em>. Further, however, <em>C. albicans</em> Ire1 is required for morphogenesis, as an <em>ire1</em> mutant grown on serum will not filament. Both the kinase and nuclease activities of the protein are necessary for filamentation, as either a kinase-dead or nuclease-dead mutant will likewise fail to filament.</p>
         <p>As a first step to understanding how Ire1 mediates both stress response and filamentation, the research group looked in detail at transcriptomics for the mutant versus wild type under ER stress (tunicamycin treatment) compared to filament induction (serum at 37 deg).</p>
@@ -63,7 +63,7 @@ function Fall2026() {
           <img src={`${IMG}/figure-5.png`} alt="Figure 5" style={{ maxWidth: '274px' }} />
           <figcaption>Figure 5</figcaption>
         </figure>
-        <p>As shown in the figure, the genes showing different regulation under the two conditions fall into highly distinct clusters. To separate those genes affected by Ire1 from those affected by a blanket response to conditions, the researchers employed the GRACE mutant library to identify those genes showing a growth defect specific to the ER stress response (i.e., tunicamycin) but not by mutation alone. Next, they looked at what is known of regulation of the genes identified as being dependent on Ire1 under filamentation-inducing conditions. <a href="https://yeastract-plus.org/pathoyeastract/" target="_blank" rel="noopener noreferrer">PathoYeastract</a> was instrumental in assembling a set of 49 transcription factors with significant roles in regulation of morphogenesis. Interestingly, Hac1 was not within this set, which the researchers speculate might be due to lack of characterization rather than lack of significance.</p>
+        <p>As shown in the figure, the genes showing different regulation under the two conditions fall into highly distinct clusters. To separate those genes affected by Ire1 from those affected by a blanket response to conditions, the researchers employed the <Link to="/community-news">GRACE mutant library</Link> to identify those genes showing a growth defect specific to the ER stress response (i.e., tunicamycin) but not by mutation alone. Next, they looked at what is known of regulation of the genes identified as being dependent on Ire1 under filamentation-inducing conditions. <a href="https://yeastract-plus.org/pathoyeastract/" target="_blank" rel="noopener noreferrer">PathoYeastract</a> was instrumental in assembling a set of 49 transcription factors with significant roles in regulation of morphogenesis. Interestingly, Hac1 was not within this set, which the researchers speculate might be due to lack of characterization rather than lack of significance.</p>
         <p>To address the question of whether <em>HAC1</em> acts in morphogenesis, they looked at (1) whether it was required for filamentation and (2) whether it was spliced upon induction of filamentation. Observation of filamentation in a <em>hac1</em> mutant shows decreased and abnormal filamentation, but not the total absence seen in an <em>ire1</em> mutant, indicating that whereas Ire1 is required, Hac1 plays a comparatively minor role.</p>
         <figure className="newsletter-figure">
           <img src={`${IMG}/figure-6.png`} alt="Figure 6" style={{ maxWidth: '453px' }} />
@@ -74,7 +74,7 @@ function Fall2026() {
           <img src={`${IMG}/figure-7.png`} alt="Figure 7" style={{ maxWidth: '240px' }} />
           <figcaption>Figure 7</figcaption>
         </figure>
-        <p>To identify these factors specific to Ire1-mediated responses independent of <em>HAC1</em> splicing, the group looked at transcriptomic data to see that <em>ERG5</em> and <em>YWP1</em> appear to be regulated by Ire1 in response to tunicamycin, while <em>PGA31</em> is a major player in response to serum.</p>
+        <p>To identify these factors specific to Ire1-mediated responses independent of <em>HAC1</em> splicing, the group looked at transcriptomic data to see that <Link to="/locus/C7_02840C_A"><em>ERG5</em></Link> and <Link to="/locus/C2_08590W_A"><em>YWP1</em></Link> appear to be regulated by Ire1 in response to tunicamycin, while <Link to="/locus/C4_04080C_A"><em>PGA31</em></Link> is a major player in response to serum.</p>
         <figure className="newsletter-figure">
           <img src={`${IMG}/figure-8.png`} alt="Figure 8" style={{ maxWidth: '491px' }} />
           <figcaption>Figure 8</figcaption>
