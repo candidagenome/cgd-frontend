@@ -26,6 +26,10 @@ function GOTermFinderHelp() {
               </ul>
             </li>
             <li><a href="#method">Method/Algorithm Description</a></li>
+            <li>
+              <Link to="/help/enrichment-methodology">Enrichment Methodology</Link> (separate page: how enrichment is
+              calculated and how to read the results)
+            </li>
             <li><a href="#gloss">Associated Glossary Terms</a></li>
             <li><a href="#links">Useful Links</a></li>
           </ul>
@@ -131,7 +135,8 @@ function GOTermFinderHelp() {
               <p><strong>Step 4: Specify your background set.</strong></p>
               <p>
                 This is an optional step that allows you to specify a background set of genes. The default background
-                set includes all the features/gene names in the database that have at least one GO annotation. You can
+                set includes all genes in the organism's current genome assembly, whether or not they have GO
+                annotations. You can
                 also customize the background set of genes (default or your specific set) by specifying feature type.
               </p>
             </li>
@@ -220,8 +225,8 @@ function GOTermFinderHelp() {
           <p>
             The table below the graph lists each significant GO term, the number of times the GO term is used to
             annotate genes in the list (or cluster) and the number of times that the term is used to annotate genes in
-            the background set. The default for the background set is all the genes/features that have at least one GO
-            annotation in the database. The choice of background set is configurable. Because the frequency of any given
+            the background set. The default for the background set is all the genes in the organism's current genome
+            assembly, whether or not they have GO annotations. The choice of background set is configurable. Because the frequency of any given
             annotation within the background set is compared against the frequency of the annotation within the query
             set (input), the choice of background set affects the significance of the results that are returned by the
             tool. Please note that the specific background set of genes that was used in the absence of any user-defined
@@ -253,13 +258,17 @@ function GOTermFinderHelp() {
             observed annotation of the particular GO term to a group of genes occurs by chance).
           </p>
           <p>
-            Results with a p-value less than 0.05 are color-coded on the graphical display, and all results with a
-            p-value of less than or equal to 0.1 are included in the results table. Please note that the same cutoff has
-            not always been used in generation of the results displays; between December 2007 and March 2008 the cutoff
-            for both displays was increased in stringency from a p-value of less than or equal to 0.1 to a p-value of
-            less than or equal to 0.01, and subsequently relaxed. The change in cutoff means that more results may be
-            returned from any given search, and (as always) the important task of judging which results are truly
-            significant under the circumstances is left to the investigator.
+            Because many terms are tested at once, p-values are corrected for multiple testing (Benjamini-Hochberg by
+            default). A term is listed in the results table, and marked as enriched in the graph, when its corrected
+            value is at or below the P-value cutoff chosen on the query page (default 0.01). In the graph, enriched terms
+            are colored by their uncorrected p-value, as shown in the legend. As always, judging which results are
+            biologically meaningful is left to the investigator. See{' '}
+            <Link to="/help/enrichment-methodology">Enrichment Methodology</Link> for details.
+          </p>
+          <p>
+            <u>Note on earlier results:</u> before October 28, 2026, the correction was applied only to terms that had
+            already passed the cutoff, so it removed nothing, and results could include many more terms than they do
+            now. To compare with results from before that date, set Correction to "None".
           </p>
           <p>
             A{' '}
@@ -302,49 +311,37 @@ function GOTermFinderHelp() {
             be significant if all the genes in a group were associated with this very high level term.
           </p>
           <p>
-            <u>Notes:</u> This version of GO Term Finder uses a hypergeometric distribution with Multiple Hypothesis
-            Correction (i.e., Bonferroni Correction) to calculate p-values. A stand-alone, generic version of GO Term
-            Finder that uses a hypergeometric distribution, with Bonferroni Correction and False Discovery Rate, can be
-            downloaded{' '}
-            <a href="http://search.cpan.org/dist/GO-TermFinder/" target="_blank" rel="noopener noreferrer">
-              here
-            </a>
-            .
+            <u>Notes:</u> GO Term Finder scores each term with the hypergeometric test, then corrects the p-values for
+            the number of terms tested. The default correction is Benjamini-Hochberg, reported as the FDR (false
+            discovery rate); Bonferroni or no correction can be chosen on the query page. For a fuller explanation,
+            including how to read the results and tips for interpreting them, see{' '}
+            <Link to="/help/enrichment-methodology">Enrichment Methodology</Link>.
           </p>
 
           <h4>Algorithm Details:</h4>
+          <p>For each GO term, the tool counts:</p>
+          <ul>
+            <li><em>k</em>: genes in your list annotated to the term, directly or indirectly</li>
+            <li><em>n</em>: genes in your list that were recognized</li>
+            <li><em>K</em>: genes in the background set annotated to the term</li>
+            <li><em>N</em>: genes in the background set</li>
+          </ul>
           <p>
-            If <em>G</em> is the number of genes annotated to a term (either directly or indirectly) and <em>N</em> is
-            the total number of genes in the genome with GO annotations (please see Results Table section above for
-            details on this number), then <em>p</em>, the probability of a randomly selected gene being annotated to a
-            particular GO term can be calculated as:
+            The p-value is the probability of finding <em>k</em> <strong>or more</strong> annotated genes in a list
+            of <em>n</em> genes drawn at random from the background set:
           </p>
-          <pre>G / N</pre>
-          <p>
-            Given a list of <em>n</em> genes, in which <em>x</em> of them have been annotated to a given GO term
-            (directly or indirectly), the probability of having <em>x</em> out of <em>n</em> annotations assigned to the
-            same GO term by chance is defined as the product of the number of permutations by which the annotations can
-            occur and the following equation:
-          </p>
-          <pre>
-            p<sup>x</sup> x (1-p)<sup>(n-x)</sup>
+          <pre className="info-code-block">
+{`              min(n, K)   C(K, i) × C(N − K, n − i)
+  p-value  =     Σ        -------------------------
+                i = k             C(N, n)
+
+  where C(a, b) = a! / (b! (a − b)!) is the number of ways to choose b items from a.`}
           </pre>
           <p>
-            Within a list of <em>n</em> genes, there are multiple permutations by which x of them may have this
-            annotation. The number of permutations can be calculated as:
-          </p>
-          <pre>n! / (x!(n-x)!)</pre>
-          <p>
-            However, annotations to a particular term are low probability events (<em>p</em> is small). Because of this,
-            any list of genes having a particular set of annotations is likely to have a low probability, but not
-            necessarily a significant one. Thus, instead of calculating the probability of having <em>x</em> of{' '}
-            <em>n</em> genes annotated to a term, a more conservative approach, often used by statisticians, is taken to
-            calculate the probability of <em>x</em> <strong>or more</strong> of <em>n</em> genes being annotated to a
-            particular term. Since GO annotations are still incomplete (i.e. there may be more than <em>x</em> genes
-            annotated to a particular term), this is appropriate.
-          </p>
-          <p>
-            <img src="/images/goFinderEquation.gif" alt="GO Term Finder Equation" />
+            Counting <em>k</em> or more, rather than exactly <em>k</em>, is the conservative choice, and it suits GO
+            annotations, which are still incomplete. The p-values for all terms tested are then corrected for multiple
+            testing as described in{' '}
+            <Link to="/help/enrichment-methodology#multiple-testing">Correcting for multiple testing</Link>.
           </p>
         </div>
 
@@ -413,6 +410,10 @@ function GOTermFinderHelp() {
           <ul>
             <li>
               <a href="/go-term-finder">GO Term Finder:</a> the tool described on this page.
+            </li>
+            <li>
+              <Link to="/help/enrichment-methodology">Enrichment Methodology:</Link> how CGD calculates GO and
+              phenotype enrichment, and how to read the results.
             </li>
             <li>
               <a href="http://search.cpan.org/dist/GO-TermFinder/" target="_blank" rel="noopener noreferrer">
