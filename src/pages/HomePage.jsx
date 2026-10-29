@@ -38,6 +38,31 @@ const MEETINGS = [
 // News items
 const NEWS_ITEMS = [
   {
+    title: 'New: Library Collections and CGD Newsletter Pages',
+    content: (
+      <>
+        A new Library Collections page brings together the genome-scale mutant and clone
+        collections for the pathogenic yeasts in CGD, with what each one is used for, the papers
+        that describe it, and how to obtain it. For <em>C. albicans</em> it covers the GRACE
+        library (including GRACEv3), the Merck DBC heterozygous deletion library, the Noble and
+        Johnson, Homann, Mitchell and Sanglard deletion collections, a transposon mutant
+        collection, and ORFeome and overexpression libraries. It also lists mutant collections for{' '}
+        <em>C. glabrata</em>, <em>C. parapsilosis</em>, <em>C. dubliniensis</em> and{' '}
+        <em>C. tropicalis</em>, and tools for genome-wide mutagenesis. Know of a collection we
+        have missed? Please <Link to="/contact">let us know</Link>.
+        <p></p>
+        The CGD Newsletter also has its own page, with every issue since Winter 2024 and links
+        to each article and research spotlight.
+        <br /><br />
+        <Link to="/library-collections">Library Collections</Link>
+        {' | '}
+        <Link to="/newsletter">CGD Newsletter</Link>
+      </>
+    ),
+    date: 'October 2026',
+    highlight: true,
+  },
+  {
     title: 'New: Gene List Workbench and Improved Enrichment Analysis',
     content: (
       <>
