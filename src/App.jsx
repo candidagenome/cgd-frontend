@@ -101,6 +101,7 @@ import GoCurationPage from './pages/curation/GoCurationPage';
 import ReferenceCurationPage from './pages/curation/ReferenceCurationPage';
 import PhenotypeCurationPage from './pages/curation/PhenotypeCurationPage';
 import InteractionsCurationPage from './pages/curation/InteractionsCurationPage';
+import RegulationCurationPage from './pages/curation/RegulationCurationPage';
 import ColleagueCurationPage from './pages/curation/ColleagueCurationPage';
 import LocusCurationPage from './pages/curation/LocusCurationPage';
 import LitGuideCurationPage from './pages/curation/LitGuideCurationPage';
@@ -437,6 +438,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <InteractionsCurationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/curation/regulation"
+            element={
+              <ProtectedRoute>
+                <RegulationCurationPage />
               </ProtectedRoute>
             }
           />

@@ -35,11 +35,12 @@ function GeneLink({ gene }) {
   );
 }
 
-function EvidenceBadges({ binding, expression }) {
+function EvidenceBadges({ binding, expression, cgd }) {
   return (
     <span className="reg-badges">
       {binding && <span className="reg-badge reg-badge-binding" title="Direct evidence: TF binds the promoter (e.g. ChIP)">DNA binding</span>}
       {expression && <span className="reg-badge reg-badge-expression" title="Indirect evidence: target expression changes when the TF is perturbed">Expression</span>}
+      {cgd && <span className="reg-badge reg-badge-cgd" title="Includes evidence curated by CGD">CGD</span>}
     </span>
   );
 }
@@ -83,6 +84,7 @@ function EvidenceTable({ regulator }) {
             <th>Effect</th>
             <th>Strain</th>
             <th>Condition</th>
+            <th>Source</th>
           </tr>
         </thead>
         <tbody>
@@ -107,6 +109,12 @@ function EvidenceTable({ regulator }) {
                 {ev.environmental_condition && (
                   <div className="reg-condition-text" title={ev.environmental_condition}>{ev.environmental_condition}</div>
                 )}
+                {ev.curation_note && <div className="muted">{ev.curation_note}</div>}
+              </td>
+              <td>
+                {ev.source === 'CGD'
+                  ? <span className="reg-badge reg-badge-cgd" title="Curated by CGD">CGD</span>
+                  : <span className="muted">PathoYeastract</span>}
               </td>
             </tr>
           ))}
@@ -116,6 +124,57 @@ function EvidenceTable({ regulator }) {
         <a href={regulator.pathoyeastract_url} target="_blank" rel="noopener noreferrer" className="reg-external">
           View this association at PathoYeastract &#8599;
         </a>
+      )}
+    </div>
+  );
+}
+
+/** Key to the strand colours used in the promoter map and sequence. */
+function SiteKey({ sequence = false }) {
+  return (
+    <div className="reg-map-legend">
+      <span>
+        <span className={`reg-swatch ${sequence ? 'reg-seq-plus' : 'reg-site-plus'}`} /> Green: motif on the
+        + strand (as the sequence is written)
+      </span>
+      <span>
+        <span className={`reg-swatch ${sequence ? 'reg-seq-minus' : 'reg-site-minus'}`} /> Orange: motif on the
+        - strand (reverse complement)
+      </span>
+      {sequence && (
+        <span><span className="reg-swatch reg-seq-both" /> Both: matches on both strands (palindromic motif)</span>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Predicted-site summary for one TF: distinct site locations, the motifs that
+ * occur in the promoter (with their site counts), and the TF's other known
+ * motifs, which do not occur.
+ */
+function MotifCell({ regulator, onSelect }) {
+  const count = regulator.site_count || regulator.sites.length;
+  const matched = regulator.matched_consensus || [];
+  const matchedMotifs = new Set(matched.map(m => m.motif));
+  const others = regulator.consensus.filter(c => !matchedMotifs.has(c));
+  return (
+    <div className="reg-motif">
+      <button type="button" className="reg-link-button" title="Highlight in the promoter" onClick={onSelect}>
+        {count} site{count === 1 ? '' : 's'}
+      </button>
+      {regulator.both_strand_count > 0 && (
+        <span className="muted reg-small">({regulator.both_strand_count} on both strands)</span>
+      )}
+      {matched.length > 0 && (
+        <span className="reg-consensus" title="Motifs found in the promoter, with the number of sites each matches (one site can match several motifs)">
+          {matched.map(m => `${m.motif} \u00d7${m.sites}`).join(' \u00b7 ')}
+        </span>
+      )}
+      {others.length > 0 && (
+        <span className="reg-consensus reg-consensus-other" title="Other known motifs of this TF, not found in the promoter">
+          {matched.length > 0 ? 'not found: ' : ''}{others.join(' \u00b7 ')}
+        </span>
       )}
     </div>
   );
@@ -301,11 +360,11 @@ function RegulatorsView({ orgData }) {
             Predicted binding sites in the {orgData.locus_display_name} promoter
             <span className="annotation-count">(upstream -1000 to -1; * = also documented)</span>
           </h4>
-          <div className="reg-map-legend">
-            <span><span className="reg-swatch reg-site-plus" /> + strand</span>
-            <span><span className="reg-swatch reg-site-minus" /> - strand</span>
-            <span className="muted">Click a transcription factor to highlight its sites in the sequence.</span>
-          </div>
+          <SiteKey />
+          <p className="reg-map-hint muted">
+            * the transcription factor is also a documented regulator. Click a transcription factor to
+            highlight its sites in the sequence.
+          </p>
           <PromoterMap
             promoter={orgData.promoter}
             regulators={regulators}
@@ -320,7 +379,10 @@ function RegulatorsView({ orgData }) {
             <button type="button" className="reg-link-button" onClick={() => setSelectedTf(null)}>show all sites</button>
           )}
           {showSequence && (
-            <PromoterSequence promoter={orgData.promoter} regulators={regulators} selectedTf={selectedTf} />
+            <>
+              <SiteKey sequence />
+              <PromoterSequence promoter={orgData.promoter} regulators={regulators} selectedTf={selectedTf} />
+            </>
           )}
         </section>
       )}
@@ -369,7 +431,15 @@ function RegulatorsView({ orgData }) {
                     <GeneLink gene={reg.tf} />
                     {reg.tf.name !== reg.tf.display_name && <div className="muted reg-small">{reg.tf.name}</div>}
                   </td>
-                  <td>{reg.documented ? <EvidenceBadges binding={reg.binding_evidence} expression={reg.expression_evidence} /> : <span className="muted">-</span>}</td>
+                  <td>
+                    {reg.documented ? (
+                      <EvidenceBadges
+                        binding={reg.binding_evidence}
+                        expression={reg.expression_evidence}
+                        cgd={reg.evidence.some(ev => ev.source === 'CGD')}
+                      />
+                    ) : <span className="muted">-</span>}
+                  </td>
                   <td><Direction activated={reg.activator} repressed={reg.repressor} /></td>
                   <td>
                     {reg.documented ? (
@@ -379,17 +449,7 @@ function RegulatorsView({ orgData }) {
                     ) : <span className="muted">-</span>}
                   </td>
                   {hasPredictions && <td>
-                    {reg.potential ? (
-                      <button
-                        type="button"
-                        className="reg-link-button reg-motif"
-                        title="Highlight in the promoter"
-                        onClick={() => selectTf(reg.tf.name)}
-                      >
-                        {reg.sites.length} site{reg.sites.length === 1 ? '' : 's'}
-                        <span className="reg-consensus">{reg.consensus.join(' | ')}</span>
-                      </button>
-                    ) : <span className="muted">-</span>}
+                    {reg.potential ? <MotifCell regulator={reg} onSelect={() => selectTf(reg.tf.name)} /> : <span className="muted">-</span>}
                   </td>}
                 </tr>
                 {expanded[reg.tf.name] && (
@@ -451,8 +511,9 @@ function TargetsView({ orgData }) {
       headerName: 'Documented evidence',
       flex: 1.3,
       minWidth: 170,
-      valueGetter: p => [p.data.binding && 'DNA binding', p.data.expression && 'Expression'].filter(Boolean).join(', '),
-      cellRenderer: p => <EvidenceBadges binding={p.data.binding} expression={p.data.expression} />,
+      valueGetter: p => [p.data.binding && 'DNA binding', p.data.expression && 'Expression', p.data.cgd_curated && 'CGD']
+        .filter(Boolean).join(', '),
+      cellRenderer: p => <EvidenceBadges binding={p.data.binding} expression={p.data.expression} cgd={p.data.cgd_curated} />,
     },
     {
       headerName: `${orgData.locus_display_name} acts as`,
@@ -471,10 +532,12 @@ function TargetsView({ orgData }) {
   ].filter(Boolean), [orgData.locus_display_name, hasPredictions]);
 
   const downloadTsv = () => {
-    const header = ['gene', 'systematic_name', 'dna_binding', 'expression', 'activated', 'repressed', 'predicted_site'];
+    const header = ['gene', 'systematic_name', 'dna_binding', 'expression', 'activated', 'repressed', 'predicted_site',
+      'cgd_curated'];
     const lines = [header.join('\t')].concat(rows.map(t => [
       t.gene.display_name, t.gene.feature_name || t.gene.name,
       t.binding ? 'Y' : '', t.expression ? 'Y' : '', t.activated ? 'Y' : '', t.repressed ? 'Y' : '', t.potential ? 'Y' : '',
+      t.cgd_curated ? 'Y' : '',
     ].join('\t')));
     const blob = new Blob([lines.join('\n') + '\n'], { type: 'text/tab-separated-values' });
     const url = URL.createObjectURL(blob);
@@ -590,7 +653,10 @@ function RegulationDetails({ data, loading, error, selectedOrganism, onOrganismC
         <div className="reg-intro">
           <p>
             Transcriptional regulation of <strong>{orgData.locus_display_name}</strong> from{' '}
-            <a href="https://yeastract-plus.org/pathoyeastract/" target="_blank" rel="noopener noreferrer">PathoYeastract</a>.
+            <a href="https://yeastract-plus.org/pathoyeastract/" target="_blank" rel="noopener noreferrer">PathoYeastract</a>
+            {orgData.cgd_curated_count > 0 && (
+              <> and CGD curation ({orgData.cgd_curated_count} curated evidence row{orgData.cgd_curated_count === 1 ? '' : 's'}, marked <span className="reg-badge reg-badge-cgd">CGD</span>)</>
+            )}.
             {' '}<em>Documented</em> associations are curated from the literature, with direct (DNA binding) or
             indirect (expression) evidence. <em>Predicted</em> associations mean the TF&apos;s binding consensus
             occurs in the 1 kb upstream region; they are not experimentally shown.
@@ -613,7 +679,7 @@ function RegulationDetails({ data, loading, error, selectedOrganism, onOrganismC
         </div>
       )}
 
-      {orgData && !orgData.covered && (
+      {orgData && !orgData.covered && !orgData.has_data && (
         <p className="no-data">
           PathoYeastract does not cover {selectedOrganism}, so no regulatory associations are available for this
           organism. Use the organism selector to view an ortholog in another species.

@@ -206,6 +206,11 @@
   color: var(--reg-expression);
 }
 
+.reg-badge-cgd {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
 .reg-direction {
   display: inline-flex;
   flex-direction: column;
@@ -237,6 +242,27 @@
   font-size: 0.85em;
   color: #555;
   word-break: break-all;
+}
+
+.reg-consensus-other {
+  color: #999;
+}
+
+.reg-motif .reg-consensus {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.reg-map-hint {
+  margin: 0 15px 4px;
+  font-size: 0.85em;
+}
+
+.reg-swatch.reg-seq-plus,
+.reg-swatch.reg-seq-minus,
+.reg-swatch.reg-seq-both {
+  border: 1px solid #ccc;
 }
 
 /* Promoter map */

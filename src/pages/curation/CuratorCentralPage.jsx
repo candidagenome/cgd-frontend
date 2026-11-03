@@ -76,6 +76,9 @@ function CuratorCentralPage() {
                 <a href="https://wiki.candidagenome.org/index.php/Help:Interaction_Curation_Help" target="_blank" rel="noopener noreferrer">Help</a>
               </li>
               <li>
+                <Link to="/curation/regulation">Curate Regulation</Link>
+              </li>
+              <li>
                 <Link to="/curation/feature/new">Add a New Feature</Link>
                 {' | '}
                 <a href="https://wiki.candidagenome.org/index.php/Help:CurateLocusFeat" target="_blank" rel="noopener noreferrer">Help</a>
