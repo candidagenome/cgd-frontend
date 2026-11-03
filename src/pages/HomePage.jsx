@@ -28,6 +28,18 @@ const MEETINGS = [
     date: 'January 17 - 22, 2027',
   },
   {
+    title: 'EMBO | EMBL Symposium: Mechanisms of Drug Resistance and Tolerance in Bacteria, Fungi and Cancer',
+    url: 'https://www.embl.org/about/info/course-and-conference-office/events/ees27-05/',
+    location: 'Heidelberg, Germany (in person and virtual)',
+    date: 'March 9 - 12, 2027',
+  },
+  {
+    title: 'Fungal Pathogen Genomics 2027',
+    url: 'https://coursesandconferences.wellcomeconnectingscience.org/technologies-and-approaches-courses-conferences-and-training/',
+    location: 'Wellcome Sanger Institute (virtual)',
+    date: 'June 7 - 11, 2027',
+  },
+  {
     title: '40th International Specialized Symposium on Yeasts (ISSY40)',
     url: 'https://www.issy40.com.br/',
     location: 'Santos, Sao Paulo, Brazil',
