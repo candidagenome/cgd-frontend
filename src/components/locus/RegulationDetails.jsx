@@ -248,6 +248,11 @@ function RegulatorsView({ orgData }) {
     both: regulators.filter(r => r.documented && r.potential).length,
   }), [regulators]);
 
+  // Predicted sites come from a separate promoter scan that has not been
+  // run for every gene; without one, hide the predicted-site controls
+  const hasPredictions = counts.potential > 0;
+  const regulatorFilters = REGULATOR_FILTERS.filter(f => hasPredictions || f.id !== 'potential');
+
   const visible = regulators.filter(r => {
     if (filter === 'binding' && !r.binding_evidence) return false;
     if (filter === 'documented' && !r.documented) return false;
@@ -282,8 +287,12 @@ function RegulatorsView({ orgData }) {
         <div className="reg-stat"><span className="reg-stat-value">{counts.documented}</span>documented regulators</div>
         <div className="reg-stat"><span className="reg-stat-value">{counts.binding}</span>with DNA binding evidence</div>
         <div className="reg-stat"><span className="reg-stat-value">{counts.expression}</span>with expression evidence</div>
-        <div className="reg-stat"><span className="reg-stat-value">{counts.potential}</span>with a predicted site in the promoter</div>
-        <div className="reg-stat"><span className="reg-stat-value">{counts.both}</span>documented and predicted</div>
+        {hasPredictions && (
+          <>
+            <div className="reg-stat"><span className="reg-stat-value">{counts.potential}</span>with a predicted site in the promoter</div>
+            <div className="reg-stat"><span className="reg-stat-value">{counts.both}</span>documented and predicted</div>
+          </>
+        )}
       </div>
 
       {orgData.promoter && counts.potential > 0 && (
@@ -323,7 +332,7 @@ function RegulatorsView({ orgData }) {
         </h4>
         <div className="reg-controls">
           <div className="reg-segmented" role="group" aria-label="Filter regulators">
-            {REGULATOR_FILTERS.map(f => (
+            {regulatorFilters.map(f => (
               <button
                 key={f.id}
                 type="button"
@@ -349,7 +358,7 @@ function RegulatorsView({ orgData }) {
               <th>Documented evidence</th>
               <th>Effect on {orgData.locus_display_name}</th>
               <th>References</th>
-              <th>Predicted site (consensus)</th>
+              {hasPredictions && <th>Predicted site (consensus)</th>}
             </tr>
           </thead>
           <tbody>
@@ -369,7 +378,7 @@ function RegulatorsView({ orgData }) {
                       </button>
                     ) : <span className="muted">-</span>}
                   </td>
-                  <td>
+                  {hasPredictions && <td>
                     {reg.potential ? (
                       <button
                         type="button"
@@ -381,11 +390,11 @@ function RegulatorsView({ orgData }) {
                         <span className="reg-consensus">{reg.consensus.join(' | ')}</span>
                       </button>
                     ) : <span className="muted">-</span>}
-                  </td>
+                  </td>}
                 </tr>
                 {expanded[reg.tf.name] && (
                   <tr className="reg-evidence-row">
-                    <td colSpan={5}><EvidenceTable regulator={reg} /></td>
+                    <td colSpan={hasPredictions ? 5 : 4}><EvidenceTable regulator={reg} /></td>
                   </tr>
                 )}
               </React.Fragment>
@@ -411,7 +420,9 @@ function RegulatorsView({ orgData }) {
 
 function TargetsView({ orgData }) {
   const tf = orgData.tf_targets;
-  const [filter, setFilter] = useState('binding');
+  const hasPredictions = tf.counts.potential > 0;
+  const targetFilters = TARGET_FILTERS.filter(f => hasPredictions || !['both', 'potential'].includes(f.id));
+  const [filter, setFilter] = useState(tf.counts.binding > 0 ? 'binding' : 'documented');
   const [text, setText] = useState('');
 
   const rows = useMemo(() => tf.targets.filter(t => {
@@ -450,14 +461,14 @@ function TargetsView({ orgData }) {
       valueGetter: p => [p.data.activated && 'activator', p.data.repressed && 'repressor'].filter(Boolean).join(', '),
       cellRenderer: p => <Direction activated={p.data.activated} repressed={p.data.repressed} />,
     },
-    {
+    hasPredictions && {
       headerName: 'Predicted site',
       flex: 0.8,
       minWidth: 110,
       valueGetter: p => (p.data.potential ? 'yes' : ''),
       cellRenderer: p => (p.data.potential ? <span className="reg-check">&#10003;</span> : ''),
     },
-  ], [orgData.locus_display_name]);
+  ].filter(Boolean), [orgData.locus_display_name, hasPredictions]);
 
   const downloadTsv = () => {
     const header = ['gene', 'systematic_name', 'dna_binding', 'expression', 'activated', 'repressed', 'predicted_site'];
@@ -486,7 +497,9 @@ function TargetsView({ orgData }) {
         <div className="reg-stat"><span className="reg-stat-value">{tf.counts.documented}</span>documented targets</div>
         <div className="reg-stat"><span className="reg-stat-value">{tf.counts.activated}</span>activated</div>
         <div className="reg-stat"><span className="reg-stat-value">{tf.counts.repressed}</span>repressed</div>
-        <div className="reg-stat"><span className="reg-stat-value">{tf.counts.potential}</span>with a predicted site</div>
+        {hasPredictions && (
+          <div className="reg-stat"><span className="reg-stat-value">{tf.counts.potential}</span>with a predicted site</div>
+        )}
       </div>
       {tf.consensus.length > 0 && (
         <p className="reg-small">
@@ -501,7 +514,7 @@ function TargetsView({ orgData }) {
       )}
       <div className="reg-controls">
         <div className="reg-segmented" role="group" aria-label="Filter targets">
-          {TARGET_FILTERS.map(f => (
+          {targetFilters.map(f => (
             <button
               key={f.id}
               type="button"
@@ -587,7 +600,7 @@ function RegulationDetails({ data, loading, error, selectedOrganism, onOrganismC
               <a href={orgData.source.gene_url} target="_blank" rel="noopener noreferrer">
                 {orgData.locus_display_name} at PathoYeastract &#8599;
               </a>
-              {orgData.source.retrieved && <span className="muted"> &middot; data retrieved {orgData.source.retrieved}</span>}
+              {orgData.source.retrieved && <span className="muted"> &middot; PathoYeastract release {orgData.source.retrieved}</span>}
               {orgData.source.citation_doi && (
                 <span className="muted"> &middot; cite{' '}
                   <a href={`https://doi.org/${orgData.source.citation_doi}`} target="_blank" rel="noopener noreferrer">
@@ -608,8 +621,9 @@ function RegulationDetails({ data, loading, error, selectedOrganism, onOrganismC
       )}
       {orgData && orgData.covered && !orgData.has_data && (
         <p className="no-data">
-          No regulatory associations are loaded for {orgData.locus_display_name}. Check{' '}
-          <a href={orgData.source?.gene_url} target="_blank" rel="noopener noreferrer">PathoYeastract</a> directly.
+          PathoYeastract lists no documented regulatory associations for {orgData.locus_display_name}. See{' '}
+          <a href={orgData.source?.gene_url} target="_blank" rel="noopener noreferrer">PathoYeastract</a> for
+          predicted binding sites.
         </p>
       )}
 
