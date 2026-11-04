@@ -10,7 +10,7 @@
  *   and whether each target went up or down (the effect follows from both).
  *
  * - Load a paper by PubMed ID to see, edit or delete what has been curated from it.
- * - Add a batch: one regulator, one experiment and condition, and a pasted list
+ * - Add a batch: one regulator, one experiment and strain, and a pasted list
  *   of targets. "Check targets" resolves the names first; "Save" stores the
  *   resolvable rows. The regulator must be a GO DNA-binding transcription
  *   factor, a PathoYeastract regulator, or a gene a curator admitted.
@@ -40,8 +40,6 @@ const EMPTY_BATCH = {
   expression_change: '',
   association_type: 'N/A',
   strain_background: '',
-  condition_group: '',
-  environmental_condition: '',
   regulation_note: '',
   targets: '',
 };
@@ -132,20 +130,14 @@ function EditRow({ row, vocab, onSave, onCancel }) {
         <input value={form.strain_background} onChange={(e) => set('strain_background', e.target.value)} placeholder="Strain" style={styles.input} />
       </td>
       <td style={styles.td}>
-        <select value={form.condition_group} onChange={(e) => set('condition_group', e.target.value)} style={styles.input}>
-          <option value="">Condition group...</option>
-          {vocab.condition_groups.map((g) => <option key={g} value={g}>{g}</option>)}
-        </select>
+        {/* Condition fields are no longer entered (they suit transcriptomics); older values are kept */}
+        {form.condition_group && <div><strong>{form.condition_group}</strong></div>}
+        {form.environmental_condition && <div>{form.environmental_condition}</div>}
         <textarea
-          value={form.environmental_condition}
-          onChange={(e) => set('environmental_condition', e.target.value)}
-          rows={2}
-          style={{ ...styles.input, marginTop: '0.25rem', width: '100%' }}
-        />
-        <input
           value={form.regulation_note}
           onChange={(e) => set('regulation_note', e.target.value)}
           placeholder="Note"
+          rows={2}
           style={{ ...styles.input, marginTop: '0.25rem', width: '100%' }}
         />
       </td>
@@ -180,7 +172,7 @@ function AssociationsTable({ rows, vocab, selected, onToggle, onToggleAll, editi
           <th style={styles.th}>Evidence</th>
           <th style={styles.th}>Effect</th>
           <th style={styles.th}>Strain</th>
-          <th style={styles.th}>Condition</th>
+          <th style={styles.th}>Note</th>
           <th style={styles.th}>Curated</th>
           <th style={styles.th}></th>
         </tr>
@@ -851,22 +843,6 @@ function RegulationCurationPage() {
               <label style={styles.label} htmlFor="reg-strain">Strain background</label>
               <input id="reg-strain" value={batch.strain_background} onChange={(e) => setField('strain_background', e.target.value)} placeholder="e.g. CBS138" style={styles.input} />
 
-              <label style={styles.label} htmlFor="reg-group">Condition group</label>
-              <select id="reg-group" value={batch.condition_group} onChange={(e) => setField('condition_group', e.target.value)} style={styles.input}>
-                <option value="">Select...</option>
-                {vocab.condition_groups.map((g) => <option key={g} value={g}>{g}</option>)}
-              </select>
-
-              <label style={styles.label} htmlFor="reg-condition">Condition</label>
-              <textarea
-                id="reg-condition"
-                value={batch.environmental_condition}
-                onChange={(e) => setField('environmental_condition', e.target.value)}
-                rows={2}
-                placeholder="e.g. Grown in YPD at 30 °C to mid-log phase"
-                style={styles.wideInput}
-              />
-
               {isExpression ? (
                 <>
                   <label style={styles.label} htmlFor="reg-change">Target expression</label>
@@ -895,7 +871,13 @@ function RegulationCurationPage() {
               )}
 
               <label style={styles.label} htmlFor="reg-note">Note (optional)</label>
-              <input id="reg-note" value={batch.regulation_note} onChange={(e) => setField('regulation_note', e.target.value)} style={styles.wideInput} />
+              <input
+                id="reg-note"
+                value={batch.regulation_note}
+                onChange={(e) => setField('regulation_note', e.target.value)}
+                placeholder="e.g. the growth condition, when it matters for the result"
+                style={styles.wideInput}
+              />
 
               <label style={styles.label} htmlFor="reg-targets">Target genes</label>
               <div>
