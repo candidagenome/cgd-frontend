@@ -12,7 +12,7 @@ function Fall2025() {
       <section className="newsletter-article" id="introducing-a-public-wiki-for-candida">
         <h2>Introducing a Public Wiki for <em>Candida</em></h2>
         <p>CGD thought it would be useful to provide a single reference source for the pathogenic <em>Candida</em> spp. We envision this site to be useful to established researchers as a reference for quick answers to questions such as "Which pathogenic <em>Candida</em> make true hyphae versus pseudohyphae?" The primary usefulness, however, is likely to be for trainees new to the field of <em>Candida</em>. The site provides links and references covering a wide breadth of knowledge, including strains, protocols, seminal references, and comparisons between species.</p>
-        <p>The <a href="http://publicwiki.candidagenome.org/" target="_blank" rel="noopener noreferrer">site is here</a> and is findable on our homepage via the Community menu. Make a shortcut!</p>
+        <p>The site is here (now at <Link to="/pathogenic-yeast-comparison">Pathogenic Yeast Comparison</Link>) and is findable on our homepage via the Community menu. Make a shortcut!</p>
         <p>Short outline of wiki:</p>
         <ul>
           <li>Seminal <em>Candida</em> Papers</li>
