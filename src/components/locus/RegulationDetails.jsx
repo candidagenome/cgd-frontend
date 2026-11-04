@@ -94,6 +94,7 @@ function EvidenceTable({ regulator }) {
               <td>
                 <strong>{ev.evidence_code === 'Direct' ? 'DNA binding' : 'Expression'}</strong>
                 {ev.experiment && <div className="muted">{ev.experiment}</div>}
+                {ev.mutant_type && <div className="muted">{ev.mutant_type} mutant</div>}
               </td>
               <td className="reg-nowrap">
                 {ev.association_type === 'Positive' && <span className="reg-up">&#9650; activation</span>}
@@ -112,9 +113,13 @@ function EvidenceTable({ regulator }) {
                 {ev.curation_note && <div className="muted">{ev.curation_note}</div>}
               </td>
               <td>
-                {ev.source === 'CGD'
-                  ? <span className="reg-badge reg-badge-cgd" title="Curated by CGD">CGD</span>
-                  : <span className="muted">PathoYeastract</span>}
+                {ev.source === 'CGD' && <span className="reg-badge reg-badge-cgd" title="Curated by CGD">CGD</span>}
+                {ev.source === 'CGD phenotype' && (
+                  <span className="reg-badge reg-badge-cgd" title="From a CGD RNA accumulation phenotype annotation of the mutated regulator">
+                    CGD phenotype
+                  </span>
+                )}
+                {!ev.source?.startsWith('CGD') && <span className="muted">PathoYeastract</span>}
               </td>
             </tr>
           ))}
@@ -436,7 +441,7 @@ function RegulatorsView({ orgData }) {
                       <EvidenceBadges
                         binding={reg.binding_evidence}
                         expression={reg.expression_evidence}
-                        cgd={reg.evidence.some(ev => ev.source === 'CGD')}
+                        cgd={reg.evidence.some(ev => ev.source?.startsWith('CGD'))}
                       />
                     ) : <span className="muted">-</span>}
                   </td>
@@ -655,7 +660,7 @@ function RegulationDetails({ data, loading, error, selectedOrganism, onOrganismC
             Transcriptional regulation of <strong>{orgData.locus_display_name}</strong> from{' '}
             <a href="https://yeastract-plus.org/pathoyeastract/" target="_blank" rel="noopener noreferrer">PathoYeastract</a>
             {orgData.cgd_curated_count > 0 && (
-              <> and CGD curation ({orgData.cgd_curated_count} curated evidence row{orgData.cgd_curated_count === 1 ? '' : 's'}, marked <span className="reg-badge reg-badge-cgd">CGD</span>)</>
+              <> and CGD curation ({orgData.cgd_curated_count} evidence row{orgData.cgd_curated_count === 1 ? '' : 's'}, marked <span className="reg-badge reg-badge-cgd">CGD</span>, including RNA accumulation phenotypes of mutated regulators)</>
             )}.
             {' '}<em>Documented</em> associations are curated from the literature, with direct (DNA binding) or
             indirect (expression) evidence. <em>Predicted</em> associations mean the TF&apos;s binding consensus
