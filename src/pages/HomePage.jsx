@@ -50,6 +50,32 @@ const MEETINGS = [
 // News items
 const NEWS_ITEMS = [
   {
+    title: 'The CGD Public Wiki Has Moved to Pathogenic Yeast Comparison',
+    content: (
+      <>
+        The content of the CGD Public Wiki is now part of CGD itself, on the new{' '}
+        <Link to="/pathogenic-yeast-comparison">Pathogenic Yeast Comparison</Link> pages. They
+        bring together seminal papers, laboratory strains, library collections, protocols, and
+        comparisons of biology across the pathogenic yeasts, such as ploidy, CUG codon usage,
+        filamentous growth, biofilms, mating and drug resistance. The old wiki address
+        (publicwiki.candidagenome.org) is no longer available; please update your bookmarks.
+        The pages are found under the Community menu.
+        <br /><br />
+        <Link to="/pathogenic-yeast-comparison">Pathogenic Yeast Comparison</Link>
+        {' | '}
+        <Link to="/pathogenic-yeast-comparison/seminal-papers">Seminal Papers</Link>
+        {' | '}
+        <Link to="/strains">Strains</Link>
+        {' | '}
+        <Link to="/pathogenic-yeast-comparison/protocols">Protocols</Link>
+        {' | '}
+        <Link to="/pathogenic-yeast-comparison/species-comparisons">Species Comparisons</Link>
+      </>
+    ),
+    date: 'November 2026',
+    highlight: true,
+  },
+  {
     title: 'New: Library Collections and CGD Newsletter Pages',
     content: (
       <>
@@ -342,11 +368,9 @@ const NEWS_ITEMS = [
         true hyphae versus pseudohyphae?" The primary usefulness, however, is likely to be for
         trainees new to the field of <em>Candida</em>. The site provides links and references
         covering a wide breadth of knowledge, including strains, protocols, seminal references, and
-        comparisons between species. The{' '}
-        <a href="http://publicwiki.candidagenome.org/" target="_blank" rel="noopener noreferrer">
-          site is here
-        </a>{' '}
-        and is findable on our homepage via the Community menu. Make a shortcut!
+        comparisons between species. The wiki content has since moved to the{' '}
+        <Link to="/pathogenic-yeast-comparison">Pathogenic Yeast Comparison</Link> pages, found
+        under the Community menu.
       </>
     ),
     date: 'November 3, 2025',

@@ -88,7 +88,6 @@ const HeaderNav = () => {
       to: '/literature',
       submenu: [
         { label: 'Literature Search', to: '/literature-topic-search' },
-        { label: 'CGD Public Wiki', href: 'http://publicwiki.candidagenome.org', external: true },
         { label: 'Genome-Wide Analysis Papers', to: '/genome-wide-analysis-papers' },
         { label: 'Disease-Related Papers', to: '/disease-related-papers' },
         { label: 'CGD Publications', to: '/cgd-publications' }

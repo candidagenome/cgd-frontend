@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './InfoPages.css';
 
 const ExternalResourcesPage = () => {
@@ -165,10 +166,8 @@ const ExternalResourcesPage = () => {
             </li>
 
             <li>
-              <a href="http://publicwiki.candidagenome.org/index.php?title=Main_Page" target="_blank" rel="noopener noreferrer">
-                CGD Public Wiki
-              </a>
-              —Contains seminal <em>Candida</em> papers, strain information, and species comparisons by
+              <Link to="/pathogenic-yeast-comparison">Pathogenic Yeast Comparison</Link>
+              —Formerly the CGD Public Wiki. Contains seminal <em>Candida</em> papers, strain information, and species comparisons by
               topic such as codon usage, filamentation style, mitochondrial genomes, and more.
             </li>
           </ul>
