@@ -1,12 +1,21 @@
 /**
  * Regulation Curation Page
  *
- * Curator entry of transcriptional regulatory associations (transcription
- * factor -> target gene) from papers PathoYeastract has not covered yet.
+ * Curator entry of transcriptional regulatory associations (regulator ->
+ * target gene) from papers PathoYeastract has not covered yet. Two kinds of
+ * entry; large-scale expression studies are left to PathoYeastract:
+ * - DNA binding: targeted assays (EMSA, ChIP-qPCR, ...) or genome-wide binding,
+ *   whose peak file is turned into the target list;
+ * - expression change in a single-gene mutant: how the regulator was mutated,
+ *   and whether each target went up or down (the effect follows from both).
+ *
  * - Load a paper by PubMed ID to see, edit or delete what has been curated from it.
- * - Add a batch: one TF, one experiment and condition, and a pasted list of
- *   targets (one per line, optionally with an effect and a log2 fold change).
- *   "Check targets" resolves the names first; "Save" stores the resolvable rows.
+ * - Add a batch: one regulator, one experiment and condition, and a pasted list
+ *   of targets. "Check targets" resolves the names first; "Save" stores the
+ *   resolvable rows. The regulator must be a GO DNA-binding transcription
+ *   factor, a PathoYeastract regulator, or a gene a curator admitted.
+ * - Review: admitted regulators, and RNA accumulation phenotypes that are not
+ *   on the Regulation tab (regulator not admitted, reporter not a gene).
  * Saved rows appear on the locus Regulation tab as CGD curation.
  *
  * Mirrors the InteractionsCurationPage layout/conventions.
@@ -20,12 +29,15 @@ import { filterAllowedOrganisms } from '../../constants/organisms';
 import { formatCitationString } from '../../utils/formatCitation.jsx';
 
 const EFFECT_LABELS = { Positive: 'activation', Negative: 'repression', 'N/A': 'n/a' };
+const CHANGE_LABELS = { up: 'up', down: 'down' };
 
 const EMPTY_BATCH = {
   organism: '',
   tf: '',
   evidence_code: 'Direct',
   experiment: '',
+  mutant_type: '',
+  expression_change: '',
   association_type: 'N/A',
   strain_background: '',
   condition_group: '',
@@ -45,6 +57,22 @@ const STATUS_LABELS = {
 
 const detail = (err, fallback) => err.response?.data?.detail || err.message || fallback;
 
+const evidenceLabel = (row) => (row.evidence_code === 'Direct'
+  ? 'DNA binding'
+  : `Expression${row.mutant_type ? ` (${row.mutant_type} mutant)` : ''}`);
+
+/** Experiments offered for an evidence type, keeping a row's older experiment selectable. */
+function ExperimentSelect({ vocab, evidenceCode, value, onChange, id, style }) {
+  const options = vocab.experiments[evidenceCode] || [];
+  return (
+    <select id={id} value={value} onChange={(e) => onChange(e.target.value)} style={style}>
+      <option value="">Select experiment...</option>
+      {value && !options.includes(value) && <option value={value}>{value}</option>}
+      {options.map((x) => <option key={x} value={x}>{x}</option>)}
+    </select>
+  );
+}
+
 function GeneLink({ gene }) {
   return (
     <Link to={`/locus/${encodeURIComponent(gene.feature_name)}?tab=regulation`} target="_blank" rel="noopener noreferrer">
@@ -57,6 +85,7 @@ function EditRow({ row, vocab, onSave, onCancel }) {
   const [form, setForm] = useState({
     evidence_code: row.evidence_code,
     experiment: row.experiment,
+    mutant_type: row.mutant_type || '',
     association_type: row.association_type,
     log2fc: row.log2fc ?? '',
     strain_background: row.strain_background || '',
@@ -74,12 +103,19 @@ function EditRow({ row, vocab, onSave, onCancel }) {
         <select value={form.evidence_code} onChange={(e) => set('evidence_code', e.target.value)} style={styles.input}>
           {vocab.evidence_codes.map((c) => <option key={c.code} value={c.code}>{c.label}</option>)}
         </select>
-        <input
-          list={`experiments-${form.evidence_code}`}
+        <ExperimentSelect
+          vocab={vocab}
+          evidenceCode={form.evidence_code}
           value={form.experiment}
-          onChange={(e) => set('experiment', e.target.value)}
+          onChange={(v) => set('experiment', v)}
           style={{ ...styles.input, marginTop: '0.25rem' }}
         />
+        {form.evidence_code === 'Indirect' && (
+          <select value={form.mutant_type} onChange={(e) => set('mutant_type', e.target.value)} style={{ ...styles.input, marginTop: '0.25rem' }}>
+            <option value="">Mutant type...</option>
+            {vocab.mutant_types.map((m) => <option key={m} value={m}>{m}</option>)}
+          </select>
+        )}
       </td>
       <td style={styles.td}>
         <select value={form.association_type} onChange={(e) => set('association_type', e.target.value)} style={styles.input}>
@@ -139,7 +175,7 @@ function AssociationsTable({ rows, vocab, selected, onToggle, onToggleAll, editi
           <th style={styles.th}>
             <input type="checkbox" checked={allSelected} onChange={() => onToggleAll(!allSelected)} aria-label="Select all" />
           </th>
-          <th style={styles.th}>TF</th>
+          <th style={styles.th}>Regulator</th>
           <th style={styles.th}>Target</th>
           <th style={styles.th}>Evidence</th>
           <th style={styles.th}>Effect</th>
@@ -172,13 +208,13 @@ function AssociationsTable({ rows, vocab, selected, onToggle, onToggleAll, editi
             <td style={styles.td}>
               <GeneLink gene={row.target} />
               {row.in_pathoyeastract && (
-                <div style={styles.overlap} title="PathoYeastract already lists this TF and target from the same paper">
+                <div style={styles.overlap} title="PathoYeastract already lists this regulator and target from the same paper">
                   also in PathoYeastract
                 </div>
               )}
             </td>
             <td style={styles.td}>
-              <strong>{row.evidence_code === 'Direct' ? 'DNA binding' : 'Expression'}</strong>
+              <strong>{evidenceLabel(row)}</strong>
               <div style={styles.muted}>{row.experiment}</div>
             </td>
             <td style={styles.td}>
@@ -202,6 +238,325 @@ function AssociationsTable({ rows, vocab, selected, onToggle, onToggleAll, editi
         )))}
       </tbody>
     </table>
+  );
+}
+
+/** Genome-wide binding: turn a peak file into the target list. */
+function PeakPanel({ organism, defaultWindow, onTargets }) {
+  const [text, setText] = useState('');
+  const [fileName, setFileName] = useState('');
+  const [windowBp, setWindowBp] = useState(defaultWindow);
+  const [result, setResult] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState(null);
+
+  const readFile = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setFileName(file.name);
+    const reader = new FileReader();
+    reader.onload = () => setText(String(reader.result || ''));
+    reader.readAsText(file);
+  };
+
+  const run = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      const data = await regulationCurationApi.assignPeaks(organism, text, Number(windowBp) || defaultWindow);
+      setResult(data);
+      onTargets(data.target_lines);
+    } catch (err) {
+      setResult(null);
+      setError(detail(err, 'Failed to read the peaks'));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div style={styles.peakPanel}>
+      <div>
+        <strong>Peaks to targets.</strong> Upload or paste the paper&apos;s peak file (BED or narrowPeak, a
+        chrom,start,end table, or chrom:start-end lines). Each gene whose promoter holds a peak becomes a
+        target; a peak between two divergent genes counts for both. The target list below is replaced.
+      </div>
+      <div style={styles.peakControls}>
+        <input type="file" accept=".bed,.narrowPeak,.broadPeak,.txt,.tsv,.csv" onChange={readFile} />
+        <label>
+          Promoter: <input
+            type="number"
+            min={100}
+            max={5000}
+            step={100}
+            value={windowBp}
+            onChange={(e) => setWindowBp(e.target.value)}
+            style={{ ...styles.input, minWidth: 0, width: '6rem' }}
+          /> bp upstream of the start
+        </label>
+        <button
+          type="button"
+          style={{ ...styles.primaryButton, opacity: busy || !organism || !text.trim() ? 0.5 : 1 }}
+          onClick={run}
+          disabled={busy || !organism || !text.trim()}
+          title={organism ? '' : 'Choose the species first'}
+        >
+          {busy ? 'Assigning...' : 'Find targets'}
+        </button>
+      </div>
+      <textarea
+        value={text}
+        onChange={(e) => { setText(e.target.value); setFileName(''); }}
+        rows={4}
+        placeholder={fileName ? `${fileName} loaded` : 'Or paste peaks here, e.g. Ca22chr1A_C_albicans_SC5314\t120400\t120650'}
+        style={{ ...styles.wideInput, fontFamily: 'monospace', marginTop: '0.5rem' }}
+      />
+      {error && <div style={styles.inlineError}>{error}</div>}
+      {result && (
+        <div style={styles.muted}>
+          {result.peaks} peaks; {result.peaks_assigned} fell in a promoter ({result.window} bp) &rarr;{' '}
+          <strong>{result.targets.length} target genes</strong>
+          {result.skipped_lines > 0 && `; ${result.skipped_lines} header/unreadable lines skipped`}
+          {result.unmatched_chromosomes.length > 0 && (
+            <div style={styles.inlineError}>
+              Chromosome names not in CGD (peaks ignored):{' '}
+              {result.unmatched_chromosomes.map((c) => `${c.name} (${c.peaks})`).join(', ')}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** Shown when the batch's regulator is not a recognized regulator: admit it, with a reason. */
+function AdmitRegulator({ organism, gene, onAdmitted }) {
+  const [note, setNote] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState(null);
+  const admit = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      await regulationCurationApi.allowRegulator(organism, gene.feature_name, note);
+      await onAdmitted();
+    } catch (err) {
+      setError(detail(err, 'Failed to admit the regulator'));
+    } finally {
+      setBusy(false);
+    }
+  };
+  return (
+    <div style={styles.warning}>
+      <div>
+        <strong>{gene.display_name}</strong> is not a recognized regulator: it has no GO DNA-binding
+        transcription factor annotation and is not a PathoYeastract regulator. If the paper supports it as a
+        regulator, admit it; it then counts as one everywhere (including its RNA accumulation phenotypes).
+      </div>
+      <div style={styles.peakControls}>
+        <input
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          placeholder="Why it is a regulator (required)"
+          style={styles.wideInput}
+        />
+        <button
+          type="button"
+          style={{ ...styles.primaryButton, opacity: busy || !note.trim() ? 0.5 : 1 }}
+          onClick={admit}
+          disabled={busy || !note.trim()}
+        >
+          Admit {gene.display_name} as a regulator
+        </button>
+      </div>
+      {error && <div style={styles.inlineError}>{error}</div>}
+    </div>
+  );
+}
+
+/** Admitted regulators and RNA accumulation phenotypes that are not on the Regulation tab. */
+function ReviewSection({ organisms, initialOrganism }) {
+  const [organism, setOrganism] = useState(initialOrganism || '');
+  const [review, setReview] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState(null);
+  const [notes, setNotes] = useState({});
+
+  useEffect(() => {
+    if (!organism && initialOrganism) setOrganism(initialOrganism);
+  }, [initialOrganism, organism]);
+
+  const load = useCallback(async () => {
+    if (!organism) {
+      setReview(null);
+      return;
+    }
+    setBusy(true);
+    setError(null);
+    try {
+      setReview(await regulationCurationApi.getReview(organism));
+    } catch (err) {
+      setReview(null);
+      setError(detail(err, 'Failed to load the review'));
+    } finally {
+      setBusy(false);
+    }
+  }, [organism]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  const act = async (fn) => {
+    setError(null);
+    try {
+      await fn();
+      await load();
+    } catch (err) {
+      setError(detail(err, 'Failed to save'));
+    }
+  };
+
+  return (
+    <section style={styles.section}>
+      <h2 style={styles.sectionHeader}>Regulators and phenotype review</h2>
+      <p style={styles.intro}>
+        RNA accumulation phenotypes appear on the Regulation tab as expression evidence when the mutated gene
+        is a regulator (a GO DNA-binding transcription factor, a PathoYeastract regulator, or admitted here)
+        and the reporter names a gene. Edit phenotypes with the phenotype curation tool.
+      </p>
+      <label style={styles.label} htmlFor="review-organism">Species </label>
+      <select id="review-organism" value={organism} onChange={(e) => setOrganism(e.target.value)} style={styles.input}>
+        <option value="">Select species...</option>
+        {organisms.map((org) => (
+          <option key={org.organism_abbrev} value={org.organism_abbrev}>{org.organism_name}</option>
+        ))}
+      </select>
+      {busy && <span style={styles.muted}> Loading...</span>}
+      {error && <div style={styles.inlineError}>{error}</div>}
+      {review && (
+        <>
+          <div style={styles.muted}>
+            Regulators: {review.regulator_counts.go} with GO DNA-binding transcription factor annotations,{' '}
+            {review.regulator_counts.pathoyeastract} in PathoYeastract, {review.regulator_counts.admitted} admitted.
+          </div>
+
+          <h3 style={styles.subHeader}>Admitted regulators ({review.admitted.length})</h3>
+          {review.admitted.length === 0 ? <div style={styles.muted}>None.</div> : (
+            <table style={styles.table}>
+              <thead>
+                <tr>
+                  <th style={styles.th}>Gene</th>
+                  <th style={styles.th}>Why</th>
+                  <th style={styles.th}>Admitted</th>
+                  <th style={styles.th}></th>
+                </tr>
+              </thead>
+              <tbody>
+                {review.admitted.map((a) => (
+                  <tr key={a.feature_name}>
+                    <td style={styles.td}><GeneLink gene={a} /></td>
+                    <td style={styles.td}>{a.note}</td>
+                    <td style={styles.td}>{a.created_by}<div style={styles.muted}>{a.date_created}</div></td>
+                    <td style={styles.td}>
+                      <button
+                        type="button"
+                        style={styles.linkButton}
+                        onClick={() => window.confirm(`Withdraw ${a.display_name} as an admitted regulator?`)
+                          && act(() => regulationCurationApi.removeRegulator(organism, a.feature_name))}
+                      >
+                        Withdraw
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+
+          <h3 style={styles.subHeader}>
+            Phenotypes left off the tab: mutated gene is not a regulator ({review.excluded_regulators.length} genes)
+          </h3>
+          {review.excluded_regulators.length === 0 ? <div style={styles.muted}>None.</div> : (
+            <table style={styles.table}>
+              <thead>
+                <tr>
+                  <th style={styles.th}>Mutated gene</th>
+                  <th style={styles.th}>Annotations</th>
+                  <th style={styles.th}>Reporters</th>
+                  <th style={styles.th}>Admit as a regulator</th>
+                </tr>
+              </thead>
+              <tbody>
+                {review.excluded_regulators.map((e) => (
+                  <tr key={e.feature_name}>
+                    <td style={styles.td}>
+                      <Link to={`/locus/${encodeURIComponent(e.feature_name)}?tab=phenotype`} target="_blank" rel="noopener noreferrer">
+                        {e.display_name}
+                      </Link>
+                    </td>
+                    <td style={styles.td}>{e.annotations}</td>
+                    <td style={styles.td}>{e.reporters.join('; ')}</td>
+                    <td style={styles.td}>
+                      <input
+                        value={notes[e.feature_name] || ''}
+                        onChange={(ev) => setNotes((n) => ({ ...n, [e.feature_name]: ev.target.value }))}
+                        placeholder="Why it is a regulator"
+                        style={{ ...styles.input, minWidth: '12rem' }}
+                      />{' '}
+                      <button
+                        type="button"
+                        style={{ ...styles.secondaryButton, opacity: (notes[e.feature_name] || '').trim() ? 1 : 0.5 }}
+                        disabled={!(notes[e.feature_name] || '').trim()}
+                        onClick={() => act(() => regulationCurationApi.allowRegulator(
+                          organism, e.feature_name, notes[e.feature_name]))}
+                      >
+                        Admit
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+
+          <h3 style={styles.subHeader}>
+            Reporters with words that are not CGD genes ({review.unresolved_reporters.length})
+          </h3>
+          {review.unresolved_reporters.length === 0 ? <div style={styles.muted}>None.</div> : (
+            <table style={styles.table}>
+              <thead>
+                <tr>
+                  <th style={styles.th}>Mutated gene</th>
+                  <th style={styles.th}>Reporter</th>
+                  <th style={styles.th}>Not a gene</th>
+                  <th style={styles.th}>Shown as targets</th>
+                </tr>
+              </thead>
+              <tbody>
+                {review.unresolved_reporters.map((u) => (
+                  <tr key={`${u.pheno_annotation_no}-${u.reporter}`}>
+                    <td style={styles.td}>
+                      <Link to={`/locus/${encodeURIComponent(u.regulator.feature_name)}?tab=phenotype`} target="_blank" rel="noopener noreferrer">
+                        {u.regulator.display_name}
+                      </Link>
+                      {!u.regulator_shown && <div style={styles.muted}>not a regulator</div>}
+                    </td>
+                    <td style={styles.td}>{u.reporter}</td>
+                    <td style={styles.td}>{u.unresolved.join(', ')}</td>
+                    <td style={styles.td}>
+                      {u.targets.length ? u.targets.map((t, i) => (
+                        <span key={t.feature_name}>{i > 0 && ', '}<GeneLink gene={t} /></span>
+                      )) : '-'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </>
+      )}
+    </section>
   );
 }
 
@@ -282,6 +637,9 @@ function RegulationCurationPage() {
   const previewCurrent = preview && previewKey === payloadKey;
 
   const setField = (field, value) => setBatch((b) => ({ ...b, [field]: value }));
+  const setEvidence = (code) => setBatch((b) => ({ ...b, evidence_code: code, experiment: '', mutant_type: '' }));
+  const isExpression = batch.evidence_code === 'Indirect';
+  const genomeWide = !isExpression && vocab?.genome_wide_experiments.includes(batch.experiment);
 
   const handlePreview = async () => {
     setBusy(true);
@@ -346,7 +704,8 @@ function RegulationCurationPage() {
     }
   };
 
-  const readyCount = previewCurrent ? (preview.counts.ok || 0) : 0;
+  const regulatorOk = !preview || preview.regulator.is_regulator;
+  const readyCount = previewCurrent && regulatorOk ? (preview.counts.ok || 0) : 0;
 
   return (
     <div style={styles.container}>
@@ -359,9 +718,11 @@ function RegulationCurationPage() {
       </div>
 
       <p style={styles.intro}>
-        Enter transcription factor &rarr; target gene associations from papers that PathoYeastract has not
-        covered. They appear on each gene&apos;s Regulation tab as CGD curation, next to PathoYeastract&apos;s
-        associations.
+        Enter regulator &rarr; target gene associations from papers that PathoYeastract has not covered:
+        DNA binding, and expression changes in single-gene mutants. Large-scale expression studies
+        (RNA-seq, microarrays) are left to PathoYeastract. Associations appear on each gene&apos;s Regulation
+        tab as CGD curation, next to PathoYeastract&apos;s; RNA accumulation phenotypes of regulators appear
+        there too, so they need not be entered here.
       </p>
 
       {error && <div style={styles.error}>{error}</div>}
@@ -436,7 +797,7 @@ function RegulationCurationPage() {
                 ))}
               </select>
 
-              <label style={styles.label} htmlFor="reg-tf">Transcription factor</label>
+              <label style={styles.label} htmlFor="reg-tf">Regulator</label>
               <input id="reg-tf" value={batch.tf} onChange={(e) => setField('tf', e.target.value)} placeholder="Gene name or systematic name" style={styles.input} />
 
               <span style={styles.label}>Evidence</span>
@@ -448,22 +809,44 @@ function RegulationCurationPage() {
                       name="evidence_code"
                       value={c.code}
                       checked={batch.evidence_code === c.code}
-                      onChange={() => setField('evidence_code', c.code)}
+                      onChange={() => setEvidence(c.code)}
                     />
-                    {' '}{c.label} ({c.code === 'Direct' ? 'TF binds the promoter' : 'target expression changes'})
+                    {' '}{c.label}{' '}
+                    <span style={styles.muted}>
+                      ({c.code === 'Direct'
+                        ? 'the regulator binds the target\'s promoter or a motif in it'
+                        : 'the regulator is mutated and the target\'s expression measured'})
+                    </span>
                   </label>
                 ))}
               </div>
 
               <label style={styles.label} htmlFor="reg-experiment">Experiment</label>
-              <input
-                id="reg-experiment"
-                list={`experiments-${batch.evidence_code}`}
-                value={batch.experiment}
-                onChange={(e) => setField('experiment', e.target.value)}
-                placeholder="Pick from the list or type your own"
-                style={styles.wideInput}
-              />
+              <div>
+                <ExperimentSelect
+                  id="reg-experiment"
+                  vocab={vocab}
+                  evidenceCode={batch.evidence_code}
+                  value={batch.experiment}
+                  onChange={(v) => setField('experiment', v)}
+                  style={styles.input}
+                />
+                {!isExpression && (
+                  <div style={styles.muted}>
+                    Genome-wide binding ({vocab.genome_wide_experiments.join(', ')}) takes its targets from a peak file.
+                  </div>
+                )}
+              </div>
+
+              {isExpression && (
+                <>
+                  <label style={styles.label} htmlFor="reg-mutant">Regulator mutant</label>
+                  <select id="reg-mutant" value={batch.mutant_type} onChange={(e) => setField('mutant_type', e.target.value)} style={styles.input}>
+                    <option value="">Select mutant type...</option>
+                    {vocab.mutant_types.map((m) => <option key={m} value={m}>{m}</option>)}
+                  </select>
+                </>
+              )}
 
               <label style={styles.label} htmlFor="reg-strain">Strain background</label>
               <input id="reg-strain" value={batch.strain_background} onChange={(e) => setField('strain_background', e.target.value)} placeholder="e.g. CBS138" style={styles.input} />
@@ -484,40 +867,64 @@ function RegulationCurationPage() {
                 style={styles.wideInput}
               />
 
-              <label style={styles.label} htmlFor="reg-effect">Default effect</label>
-              <select id="reg-effect" value={batch.association_type} onChange={(e) => setField('association_type', e.target.value)} style={styles.input}>
-                <option value="N/A">Not stated (n/a)</option>
-                <option value="Positive">Activation</option>
-                <option value="Negative">Repression</option>
-                <option value="infer">From each target&apos;s log2FC sign</option>
-              </select>
+              {isExpression ? (
+                <>
+                  <label style={styles.label} htmlFor="reg-change">Target expression</label>
+                  <div>
+                    <select id="reg-change" value={batch.expression_change} onChange={(e) => setField('expression_change', e.target.value)} style={styles.input}>
+                      <option value="">Given on each line (up / down)</option>
+                      {vocab.expression_changes.map((c) => <option key={c.code} value={c.code}>{c.label}</option>)}
+                      <option value="infer">From each target&apos;s log2FC sign</option>
+                    </select>
+                    <div style={styles.muted}>
+                      The effect follows from the mutant and the change: a target that goes down in a null (or
+                      up on overexpression) is activated by the regulator; the reverse means repression.
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <label style={styles.label} htmlFor="reg-effect">Default effect</label>
+                  <select id="reg-effect" value={batch.association_type} onChange={(e) => setField('association_type', e.target.value)} style={styles.input}>
+                    <option value="N/A">Not stated (n/a)</option>
+                    <option value="Positive">Activation</option>
+                    <option value="Negative">Repression</option>
+                    <option value="infer">From each target&apos;s log2FC sign</option>
+                  </select>
+                </>
+              )}
 
               <label style={styles.label} htmlFor="reg-note">Note (optional)</label>
               <input id="reg-note" value={batch.regulation_note} onChange={(e) => setField('regulation_note', e.target.value)} style={styles.wideInput} />
 
               <label style={styles.label} htmlFor="reg-targets">Target genes</label>
               <div>
+                {genomeWide && (
+                  <PeakPanel
+                    organism={batch.organism}
+                    defaultWindow={vocab.promoter_window}
+                    onTargets={(lines) => setField('targets', lines)}
+                  />
+                )}
                 <textarea
                   id="reg-targets"
                   value={batch.targets}
                   onChange={(e) => setField('targets', e.target.value)}
                   rows={10}
-                  placeholder={'One target per line, optionally followed by an effect and a log2 fold change:\nCDR1\nPDR16  up  2.4\nCAGL0F02717g  -1.3'}
+                  placeholder={isExpression
+                    ? 'One target per line, with the change in the mutant and optionally a log2 fold change:\nCDR1  down\nPDR16  up  2.4\nCAGL0F02717g  -1.3'
+                    : 'One target per line, optionally followed by an effect:\nCDR1\nPDR16  activated\nCAGL0F02717g  repressed'}
                   style={{ ...styles.wideInput, fontFamily: 'monospace' }}
                 />
                 <div style={styles.muted}>
-                  Separate columns with tabs, commas or spaces. Effects: up/activated/positive, down/repressed/negative,
-                  n/a. A line&apos;s own effect overrides the default. Gene names, systematic names, orf19 IDs and
-                  aliases are accepted.
+                  Separate columns with tabs, commas or spaces; text after # is ignored.{' '}
+                  {isExpression
+                    ? 'Changes: up/increased, down/decreased/absent. An explicit effect (activated, repressed) overrides the one inferred.'
+                    : 'Effects: activated/positive, repressed/negative, n/a. A line\'s own effect overrides the default.'}
+                  {' '}Gene names, systematic names, orf19 IDs and aliases are accepted.
                 </div>
               </div>
             </div>
-            {vocab.evidence_codes.map((c) => (
-              <datalist key={c.code} id={`experiments-${c.code}`}>
-                {(vocab.experiments[c.code] || []).map((x) => <option key={x} value={x} />)}
-              </datalist>
-            ))}
-
             <div style={styles.actions}>
               <button type="button" style={styles.primaryButton} onClick={handlePreview} disabled={busy}>
                 {busy && !previewCurrent ? 'Checking...' : 'Check targets'}
@@ -539,13 +946,20 @@ function RegulationCurationPage() {
                 <div>
                   <strong>{preview.tf.display_name}</strong> ({preview.tf.feature_name}) &rarr;{' '}
                   {Object.entries(preview.counts).map(([k, n]) => `${n} ${STATUS_LABELS[k] || k}`).join(', ')}
+                  {preview.regulator.is_regulator && (
+                    <span style={styles.muted}> &middot; regulator: {preview.regulator.reasons.join('; ')}</span>
+                  )}
                 </div>
+                {!preview.regulator.is_regulator && (
+                  <AdmitRegulator organism={preview.organism} gene={preview.tf} onAdmitted={handlePreview} />
+                )}
                 <table style={styles.table}>
                   <thead>
                     <tr>
                       <th style={styles.th}>Line</th>
                       <th style={styles.th}>Entered</th>
                       <th style={styles.th}>Target</th>
+                      {preview.shared.evidence_code === 'Indirect' && <th style={styles.th}>Change</th>}
                       <th style={styles.th}>Effect</th>
                       <th style={styles.th}>log2FC</th>
                       <th style={styles.th}>Status</th>
@@ -557,6 +971,9 @@ function RegulationCurationPage() {
                         <td style={styles.td}>{r.line}</td>
                         <td style={styles.td}>{r.name}</td>
                         <td style={styles.td}>{r.target ? <GeneLink gene={r.target} /> : '-'}</td>
+                        {preview.shared.evidence_code === 'Indirect' && (
+                          <td style={styles.td}>{CHANGE_LABELS[r.change] || '-'}</td>
+                        )}
                         <td style={styles.td}>{EFFECT_LABELS[r.effect]}</td>
                         <td style={styles.td}>{r.log2fc ?? ''}</td>
                         <td style={styles.td}>
@@ -572,6 +989,8 @@ function RegulationCurationPage() {
           </section>
         </>
       )}
+
+      {vocab && <ReviewSection organisms={organisms} initialOrganism={batch.organism} />}
     </div>
   );
 }
@@ -616,6 +1035,11 @@ const styles = {
   secondaryButton: { padding: '0.45rem 1rem', backgroundColor: '#eee', border: '1px solid #ccc', borderRadius: '4px', cursor: 'pointer' },
   deleteButton: { padding: '0.3rem 0.8rem', backgroundColor: '#d9534f', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem' },
   linkButton: { background: 'none', border: 'none', color: '#337ab7', cursor: 'pointer', padding: 0, textDecoration: 'underline' },
+  peakPanel: { padding: '0.75rem', marginBottom: '0.5rem', backgroundColor: '#f5f8fc', border: '1px solid #c9d8ea', borderRadius: '4px', fontSize: '0.85rem', maxWidth: '48rem', boxSizing: 'border-box' },
+  peakControls: { display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap', marginTop: '0.5rem' },
+  warning: { padding: '0.75rem', margin: '0.5rem 0', backgroundColor: '#fcf8e3', border: '1px solid #faebcc', borderRadius: '4px', color: '#8a6d3b', fontSize: '0.9rem' },
+  inlineError: { color: '#c00', fontSize: '0.85rem', marginTop: '0.25rem' },
+  subHeader: { fontSize: '1rem', margin: '1rem 0 0.25rem' },
 };
 
 export default RegulationCurationPage;
