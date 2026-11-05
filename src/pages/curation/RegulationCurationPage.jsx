@@ -159,13 +159,21 @@ function AssociationsTable({ rows, vocab, selected, onToggle, onToggleAll, editi
   if (rows.length === 0) {
     return <div style={styles.noRows}>No associations curated yet.</div>;
   }
-  const allSelected = rows.every((r) => selected.has(r.regulation_no));
+  // Rows transferred from RNA accumulation phenotypes follow their phenotype and are not deleted here
+  const deletable = rows.filter((r) => !r.pheno_annotation_no);
+  const allSelected = deletable.length > 0 && deletable.every((r) => selected.has(r.regulation_no));
   return (
     <table style={styles.table}>
       <thead>
         <tr>
           <th style={styles.th}>
-            <input type="checkbox" checked={allSelected} onChange={() => onToggleAll(!allSelected)} aria-label="Select all" />
+            <input
+              type="checkbox"
+              checked={allSelected}
+              disabled={deletable.length === 0}
+              onChange={() => onToggleAll(!allSelected)}
+              aria-label="Select all"
+            />
           </th>
           <th style={styles.th}>Regulator</th>
           <th style={styles.th}>Target</th>
@@ -189,12 +197,14 @@ function AssociationsTable({ rows, vocab, selected, onToggle, onToggleAll, editi
         ) : (
           <tr key={row.regulation_no}>
             <td style={styles.td}>
-              <input
-                type="checkbox"
-                checked={selected.has(row.regulation_no)}
-                onChange={() => onToggle(row.regulation_no)}
-                aria-label={`Select ${row.tf.display_name} - ${row.target.display_name}`}
-              />
+              {!row.pheno_annotation_no && (
+                <input
+                  type="checkbox"
+                  checked={selected.has(row.regulation_no)}
+                  onChange={() => onToggle(row.regulation_no)}
+                  aria-label={`Select ${row.tf.display_name} - ${row.target.display_name}`}
+                />
+              )}
             </td>
             <td style={styles.td}><GeneLink gene={row.tf} /></td>
             <td style={styles.td}>
@@ -202,6 +212,14 @@ function AssociationsTable({ rows, vocab, selected, onToggle, onToggleAll, editi
               {row.in_pathoyeastract && (
                 <div style={styles.overlap} title="PathoYeastract already lists this regulator and target from the same paper">
                   also in PathoYeastract
+                </div>
+              )}
+              {row.pheno_annotation_no && (
+                <div
+                  style={styles.muted}
+                  title="Transferred nightly from an RNA accumulation phenotype annotation. To change the target, direction or paper, or to remove it, correct the phenotype annotation."
+                >
+                  from phenotype
                 </div>
               )}
             </td>
@@ -670,7 +688,9 @@ function RegulationCurationPage() {
     if (next.has(no)) next.delete(no); else next.add(no);
     return next;
   });
-  const toggleAll = (on) => setSelected(on ? new Set(paper.associations.map((r) => r.regulation_no)) : new Set());
+  const toggleAll = (on) => setSelected(on
+    ? new Set(paper.associations.filter((r) => !r.pheno_annotation_no).map((r) => r.regulation_no))
+    : new Set());
 
   const handleDelete = async () => {
     if (selected.size === 0) return;

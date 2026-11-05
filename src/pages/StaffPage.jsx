@@ -22,15 +22,14 @@ const StaffPage = () => {
         name: 'Shuai Weng, Ph.D.',
         title: 'Senior Scientific Programmer',
         image: '/images/staff/weng_shuai.jpeg'
-      },
-      {
-        name: 'Stuart Miyasato',
-        title: 'Senior Systems Administrator',
-        phone: '650-725-3125',
-        image: '/images/staff/stuart_miyasato_tn.jpg'
       }
     ],
     pastContributors: [
+      {
+        name: 'Stuart Miyasato',
+        title: 'Senior Systems Administrator',
+        image: '/images/staff/stuart_miyasato_tn.jpg'
+      },
       {
         name: 'Jon Binkley',
         title: 'Senior Scientific Programmer',
