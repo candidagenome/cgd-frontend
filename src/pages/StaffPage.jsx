@@ -156,7 +156,7 @@ const StaffPage = () => {
 
         <div className="info-section">
           <h2 style={{ textAlign: 'center' }}>Programming, Database and Systems Administration Staff</h2>
-          <div className="staff-grid">
+          <div className="staff-grid staff-grid-single">
             {staffMembers.programming.map((member, index) => (
               <StaffCard key={index} member={member} />
             ))}
