@@ -117,7 +117,7 @@ const StaffPage = () => {
   };
 
   return (
-    <div className="info-page">
+    <div className="info-page staff-page">
       <div className="info-page-content">
         <h1><em>Candida</em> Genome Database Staff</h1>
         <hr />
