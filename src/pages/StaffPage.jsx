@@ -111,12 +111,6 @@ const StaffPage = () => {
           )}
           <br />
           {member.title}
-          {member.phone && (
-            <>
-              <br />
-              Voice: {member.phone}
-            </>
-          )}
         </div>
       </div>
     );
@@ -131,33 +125,15 @@ const StaffPage = () => {
         <div className="info-section" style={{ textAlign: 'center' }}>
           <p>
             <strong>General Contact Information:</strong><br />
-            Voice: 650-498-6012<br />
-            FAX: 650-724-3701<br />
             Email: candida-curator [at] lists.stanford.edu
           </p>
           <h2>Stanford University School of Medicine</h2>
         </div>
 
         <div className="info-section">
-          <h2 style={{ textAlign: 'center' }}>Principal Investigator</h2>
-          <div className="staff-grid staff-grid-single">
+          <div className="staff-grid staff-grid-three">
             <StaffCard member={staffMembers.principalInvestigator} />
-          </div>
-        </div>
-
-        <div className="info-section">
-          <h2 style={{ textAlign: 'center' }}>Bioinformatics and Scientific Curation Staff</h2>
-          <div className="staff-grid staff-grid-single">
-            {staffMembers.bioinformatics.map((member, index) => (
-              <StaffCard key={index} member={member} />
-            ))}
-          </div>
-        </div>
-
-        <div className="info-section">
-          <h2 style={{ textAlign: 'center' }}>Programming and Database Staff</h2>
-          <div className="staff-grid staff-grid-single">
-            {staffMembers.programming.map((member, index) => (
+            {[...staffMembers.bioinformatics, ...staffMembers.programming].map((member, index) => (
               <StaffCard key={index} member={member} />
             ))}
           </div>

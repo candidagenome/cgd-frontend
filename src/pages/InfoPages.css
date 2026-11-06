@@ -317,6 +317,10 @@
   grid-template-columns: 1fr;
 }
 
+.staff-grid-three {
+  grid-template-columns: repeat(3, 1fr);
+}
+
 .staff-grid-four {
   grid-template-columns: repeat(4, 1fr);
 }
