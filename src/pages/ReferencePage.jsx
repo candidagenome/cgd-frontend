@@ -8,6 +8,25 @@ import './ReferencePage.css';
 const GENES_PER_TABLE = 10;
 const ROWS_PER_PAGE = 10;
 
+// Citation links (from ref_url) that point at the paper's data files
+const DATA_LINK_NAMES = ['Reference Data', 'Download Datasets', 'Reference Supplement'];
+const DATA_LINK_DESCRIPTIONS = {
+  'Reference Data': 'Datasets from this paper archived at CGD',
+  'Download Datasets': 'Datasets from this paper archived at CGD',
+  'Reference Supplement': 'Supplementary material published with the paper',
+};
+
+const EVIDENCE_LABELS = { Direct: 'DNA binding', Indirect: 'Expression' };
+const CONDITION_MAX_CHARS = 80;
+const EFFECT_LABELS = { Positive: 'activation', Negative: 'repression' };
+
+// Gene link for an interaction/regulation participant; unresolved names are plain text
+const renderGeneLink = (gene) => (
+  gene.feature_name
+    ? <Link to={`/locus/${gene.feature_name}`}>{gene.gene_name || gene.feature_name.replace(/_[A-Z]$/, '')}</Link>
+    : gene.display_name
+);
+
 // Download data as TSV file
 const downloadAsTsv = (data, headers, filename) => {
   const headerRow = headers.join('\t');
@@ -56,14 +75,20 @@ function ReferencePage() {
   const [authorSearchError, setAuthorSearchError] = useState(null);
   const [goPage, setGoPage] = useState(1);
   const [phenotypePage, setPhenotypePage] = useState(1);
+  const [interactionPage, setInteractionPage] = useState(1);
+  const [regulationPage, setRegulationPage] = useState(1);
+  const [regulationEvidence, setRegulationEvidence] = useState('');
 
   // Reset pagination when reference changes
   useEffect(() => {
     setGoPage(1);
     setPhenotypePage(1);
+    setInteractionPage(1);
+    setRegulationPage(1);
+    setRegulationEvidence('');
   }, [id]);
 
-  // Load literature topics, GO, and phenotype data on mount
+  // Load literature topics and every annotation type on mount
   useEffect(() => {
     if (loaders.loadLiteratureTopics) {
       loaders.loadLiteratureTopics();
@@ -73,6 +98,12 @@ function ReferencePage() {
     }
     if (loaders.loadPhenotypeDetails) {
       loaders.loadPhenotypeDetails();
+    }
+    if (loaders.loadInteractionDetails) {
+      loaders.loadInteractionDetails();
+    }
+    if (loaders.loadRegulationDetails) {
+      loaders.loadRegulationDetails();
     }
   }, [loaders]);
 
@@ -162,6 +193,36 @@ function ReferencePage() {
         <h2 className="section-header">Abstract</h2>
         <div className="section-content">
           <p className="abstract-text">{data.info.result.abstract}</p>
+        </div>
+      </div>
+    );
+  };
+
+  // Data files linked to the paper (archived datasets, supplements)
+  const getDataLinks = () => (data.info?.result?.links || []).filter(l => DATA_LINK_NAMES.includes(l.name));
+
+  // Render the paper's downloadable data files
+  const renderDataSection = () => {
+    const dataLinks = getDataLinks();
+    if (dataLinks.length === 0) return null;
+
+    return (
+      <div className="section" id="data-downloads">
+        <h2 className="section-header">Data &amp; Downloads</h2>
+        <div className="section-content">
+          <ul className="data-links-list">
+            {dataLinks.map((link, idx) => (
+              <li key={idx}>
+                <a href={link.url} target="_blank" rel="noopener noreferrer">{link.name}</a>
+                {DATA_LINK_DESCRIPTIONS[link.name] && (
+                  <span className="data-link-description"> &ndash; {DATA_LINK_DESCRIPTIONS[link.name]}</span>
+                )}
+              </li>
+            ))}
+          </ul>
+          <p className="data-links-note">
+            Annotations made from this paper can be downloaded from each annotation section below.
+          </p>
         </div>
       </div>
     );
@@ -697,6 +758,262 @@ function ReferencePage() {
     );
   };
 
+  // Render interactions section
+  const renderInteractionSection = () => {
+    if (loading.interactionDetails) {
+      return (
+        <div className="section" id="interactions">
+          <h2 className="section-header">Interactions</h2>
+          <div className="section-content">
+            <div className="loading">Loading interactions...</div>
+          </div>
+        </div>
+      );
+    }
+
+    const interactions = data.interactionDetails?.interactions;
+    if (errors.interactionDetails || !interactions || interactions.length === 0) {
+      return null;
+    }
+
+    // Physical-interaction papers have no phenotypes; drop the empty column
+    const hasPhenotypes = interactions.some(i => i.phenotypes.length > 0);
+    const totalPages = Math.ceil(interactions.length / ROWS_PER_PAGE);
+    const startIdx = (interactionPage - 1) * ROWS_PER_PAGE;
+    const paginatedInteractions = interactions.slice(startIdx, startIdx + ROWS_PER_PAGE);
+
+    const handleInteractionDownload = () => {
+      const headers = ['Interactors', 'Interactor Gene Names', 'Actions', 'Organism', 'Experiment Type',
+        'Phenotype', 'Description', 'Source'];
+      const rows = interactions.map(i => [
+        i.interactors.map(x => x.feature_name).join('|'),
+        i.interactors.map(x => x.gene_name || '').join('|'),
+        i.interactors.map(x => x.action || '').join('|'),
+        i.organism_name || '',
+        i.experiment_type,
+        i.phenotypes.join('|'),
+        i.description || '',
+        i.source || '',
+      ]);
+      downloadAsTsv(rows, headers, `interactions_${id}.tsv`);
+    };
+
+    return (
+      <div className="section" id="interactions">
+        <h2 className="section-header">Interactions</h2>
+        <div className="section-content">
+          <div className="annotation-header-row">
+            <p className="annotation-intro">
+              This reference has been used to make <strong>{interactions.length}</strong> interaction annotation{interactions.length !== 1 ? 's' : ''}.
+            </p>
+            <button onClick={handleInteractionDownload} className="download-btn" title="Download interactions as TSV">
+              Download
+            </button>
+          </div>
+
+          {interactions.length > ROWS_PER_PAGE && renderPagination(interactionPage, totalPages, setInteractionPage, interactions.length, 'interactions')}
+
+          <table className="data-table annotation-table">
+            <thead>
+              <tr>
+                <th>Interactors</th>
+                <th>Experiment Type</th>
+                {hasPhenotypes && <th>Phenotype</th>}
+                <th>Source</th>
+              </tr>
+            </thead>
+            <tbody>
+              {paginatedInteractions.map(interaction => (
+                <tr key={interaction.interaction_no}>
+                  <td>
+                    {interaction.interactors.map((x, idx) => (
+                      <span key={idx}>
+                        {idx > 0 && <br />}
+                        {renderGeneLink(x)}
+                        {x.action && <span className="interactor-action"> ({x.action})</span>}
+                      </span>
+                    ))}
+                    {interaction.organism_name && (
+                      <>
+                        <br />
+                        <span className="organism-label">
+                          (<em>{getOrganismAbbrev(interaction.organism_name)}</em>)
+                        </span>
+                      </>
+                    )}
+                  </td>
+                  <td>
+                    {interaction.experiment_type}
+                    {interaction.description && <div className="ref-note">{interaction.description}</div>}
+                  </td>
+                  {hasPhenotypes && <td>{interaction.phenotypes.join('; ')}</td>}
+                  <td>{interaction.source}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {interactions.length > ROWS_PER_PAGE && renderPagination(interactionPage, totalPages, setInteractionPage, interactions.length, 'interactions')}
+        </div>
+      </div>
+    );
+  };
+
+  // Render regulation section
+  const renderRegulationSection = () => {
+    if (loading.regulationDetails) {
+      return (
+        <div className="section" id="regulation">
+          <h2 className="section-header">Regulation</h2>
+          <div className="section-content">
+            <div className="loading">Loading regulation...</div>
+          </div>
+        </div>
+      );
+    }
+
+    const allRegulations = data.regulationDetails?.regulations;
+    if (errors.regulationDetails || !allRegulations || allRegulations.length === 0) {
+      return null;
+    }
+
+    const regulations = regulationEvidence
+      ? allRegulations.filter(r => r.evidence_code === regulationEvidence)
+      : allRegulations;
+    const bindingCount = allRegulations.filter(r => r.evidence_code === 'Direct').length;
+    const expressionCount = allRegulations.filter(r => r.evidence_code === 'Indirect').length;
+    const regulatorCount = new Set(allRegulations.map(r => r.regulator.feature_name || r.regulator.name)).size;
+    const targetCount = new Set(allRegulations.map(r => r.target.feature_name || r.target.name)).size;
+    const release = data.regulationDetails.pathoyeastract_release;
+
+    const totalPages = Math.ceil(regulations.length / ROWS_PER_PAGE);
+    const startIdx = (regulationPage - 1) * ROWS_PER_PAGE;
+    const paginatedRegulations = regulations.slice(startIdx, startIdx + ROWS_PER_PAGE);
+
+    const handleRegulationDownload = () => {
+      const headers = ['Regulator', 'Regulator Gene Name', 'Target', 'Target Gene Name', 'Organism', 'Evidence',
+        'Experiment', 'Effect', 'Mutant Type', 'Strain', 'Environmental Condition', 'Log2FC', 'Source', 'Note'];
+      const rows = regulations.map(r => [
+        r.regulator.feature_name || r.regulator.name,
+        r.regulator.gene_name || '',
+        r.target.feature_name || r.target.name,
+        r.target.gene_name || '',
+        r.organism_name,
+        EVIDENCE_LABELS[r.evidence_code] || r.evidence_code || '',
+        r.experiment || '',
+        EFFECT_LABELS[r.association_type] || '',
+        r.mutant_type || '',
+        r.strain || '',
+        r.environmental_condition || '',
+        r.log2fc ?? '',
+        r.source,
+        r.note || '',
+      ]);
+      downloadAsTsv(rows, headers, `regulation_${id}.tsv`);
+    };
+
+    return (
+      <div className="section" id="regulation">
+        <h2 className="section-header">Regulation</h2>
+        <div className="section-content">
+          <div className="annotation-header-row">
+            <p className="annotation-intro">
+              This paper reports <strong>{allRegulations.length}</strong> transcriptional regulatory
+              association{allRegulations.length !== 1 ? 's' : ''} (<strong>{bindingCount}</strong> with DNA binding
+              evidence, <strong>{expressionCount}</strong> from expression) between{' '}
+              <strong>{regulatorCount}</strong> regulator{regulatorCount !== 1 ? 's' : ''} and{' '}
+              <strong>{targetCount}</strong> target gene{targetCount !== 1 ? 's' : ''}.
+            </p>
+            <button onClick={handleRegulationDownload} className="download-btn" title="Download regulation as TSV">
+              Download
+            </button>
+          </div>
+          {release && (
+            <p className="ref-note">
+              Includes associations from{' '}
+              <a href="https://yeastract-plus.org/pathoyeastract/" target="_blank" rel="noopener noreferrer">PathoYeastract</a>{' '}
+              (release {release}).
+            </p>
+          )}
+
+          {bindingCount > 0 && expressionCount > 0 && (
+            <div className="regulation-filter">
+              <label>
+                Evidence:{' '}
+                <select
+                  value={regulationEvidence}
+                  onChange={(e) => {
+                    setRegulationEvidence(e.target.value);
+                    setRegulationPage(1);
+                  }}
+                >
+                  <option value="">All ({allRegulations.length})</option>
+                  <option value="Direct">DNA binding ({bindingCount})</option>
+                  <option value="Indirect">Expression ({expressionCount})</option>
+                </select>
+              </label>
+            </div>
+          )}
+
+          {regulations.length > ROWS_PER_PAGE && renderPagination(regulationPage, totalPages, setRegulationPage, regulations.length, 'associations')}
+
+          <table className="data-table annotation-table regulation-table">
+            <thead>
+              <tr>
+                <th style={{ width: '12%' }}>Regulator</th>
+                <th style={{ width: '11%' }}>Target</th>
+                <th style={{ width: '17%' }}>Evidence</th>
+                <th style={{ width: '11%' }}>Effect</th>
+                <th style={{ width: '36%' }}>Details</th>
+                <th style={{ width: '13%' }}>Source</th>
+              </tr>
+            </thead>
+            <tbody>
+              {paginatedRegulations.map((r, idx) => (
+                <tr key={startIdx + idx}>
+                  <td>
+                    {renderGeneLink(r.regulator)}
+                    <br />
+                    <span className="organism-label">
+                      (<em>{getOrganismAbbrev(r.organism_name)}</em>)
+                    </span>
+                  </td>
+                  <td>{renderGeneLink(r.target)}</td>
+                  <td>
+                    {EVIDENCE_LABELS[r.evidence_code] || r.evidence_code}
+                    {r.experiment && <div className="ref-note">{r.experiment}</div>}
+                  </td>
+                  <td className="nowrap-cell">
+                    {r.association_type === 'Positive' && <span className="effect-up">&#9650; activation</span>}
+                    {r.association_type === 'Negative' && <span className="effect-down">&#9660; repression</span>}
+                  </td>
+                  <td className="ref-note">
+                    {[
+                      r.mutant_type && `mutant: ${r.mutant_type}`,
+                      r.strain && `strain: ${r.strain}`,
+                      r.log2fc != null && `log2FC ${r.log2fc.toFixed(2)}`,
+                      r.note,
+                    ].filter(Boolean).join('; ')}
+                    {r.environmental_condition && (
+                      <div title={r.environmental_condition}>
+                        {r.environmental_condition.length > CONDITION_MAX_CHARS
+                          ? `${r.environmental_condition.slice(0, CONDITION_MAX_CHARS)}…`
+                          : r.environmental_condition}
+                      </div>
+                    )}
+                  </td>
+                  <td>{r.source}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {regulations.length > ROWS_PER_PAGE && renderPagination(regulationPage, totalPages, setRegulationPage, regulations.length, 'associations')}
+        </div>
+      </div>
+    );
+  };
+
   // Render author search section
   // Highlight author name in author list
   const highlightAuthor = (authorList, searchQuery) => {
@@ -838,12 +1155,24 @@ function ReferencePage() {
       links.push({ id: 'summary', label: 'Summary Chart' });
     }
 
+    if (getDataLinks().length > 0) {
+      links.push({ id: 'data-downloads', label: 'Data & Downloads' });
+    }
+
     if (data.goDetails?.annotations?.length > 0) {
       links.push({ id: 'go-annotations', label: 'GO Annotations' });
     }
 
     if (data.phenotypeDetails?.annotations?.length > 0) {
       links.push({ id: 'phenotype-annotations', label: 'Phenotype Annotations' });
+    }
+
+    if (data.interactionDetails?.interactions?.length > 0) {
+      links.push({ id: 'interactions', label: 'Interactions' });
+    }
+
+    if (data.regulationDetails?.regulations?.length > 0) {
+      links.push({ id: 'regulation', label: 'Regulation' });
     }
 
     if (data.info?.result?.authors?.length > 0) {
@@ -890,11 +1219,20 @@ function ReferencePage() {
       {renderTopicsSection()}
       {(data.literatureTopics?.all_features?.length > 0 || data.literatureTopics?.topics?.length > 0) && renderPageNav()}
 
+      {renderDataSection()}
+      {getDataLinks().length > 0 && renderPageNav()}
+
       {renderGoSection()}
       {data.goDetails?.annotations?.length > 0 && renderPageNav()}
 
       {renderPhenotypeSection()}
       {data.phenotypeDetails?.annotations?.length > 0 && renderPageNav()}
+
+      {renderInteractionSection()}
+      {data.interactionDetails?.interactions?.length > 0 && renderPageNav()}
+
+      {renderRegulationSection()}
+      {data.regulationDetails?.regulations?.length > 0 && renderPageNav()}
 
       {renderAuthorSearch()}
 

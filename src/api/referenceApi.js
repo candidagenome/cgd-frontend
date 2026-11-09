@@ -31,6 +31,12 @@ export const referenceApi = {
     return response.data;
   },
 
+  // Get regulatory associations (PathoYeastract + CGD) reported by this reference
+  getRegulationDetails: async (pubmedId) => {
+    const response = await api.get(`/api/reference/${encodeURIComponent(pubmedId)}/regulation_details`);
+    return response.data;
+  },
+
   // Get literature topics for this reference
   getLiteratureTopics: async (pubmedId) => {
     const response = await api.get(`/api/reference/${encodeURIComponent(pubmedId)}/literature_topics`);

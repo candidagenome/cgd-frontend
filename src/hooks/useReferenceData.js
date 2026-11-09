@@ -8,6 +8,7 @@ export function useReferenceData(pubmedId) {
     goDetails: null,
     phenotypeDetails: null,
     interactionDetails: null,
+    regulationDetails: null,
     literatureTopics: null,
   });
   const [loading, setLoading] = useState({
@@ -16,6 +17,7 @@ export function useReferenceData(pubmedId) {
     goDetails: false,
     phenotypeDetails: false,
     interactionDetails: false,
+    regulationDetails: false,
     literatureTopics: false,
   });
   const [errors, setErrors] = useState({});
@@ -80,6 +82,10 @@ export function useReferenceData(pubmedId) {
     fetchData('interactionDetails', referenceApi.getInteractionDetails);
   }, [fetchData]);
 
+  const loadRegulationDetails = useCallback(() => {
+    fetchData('regulationDetails', referenceApi.getRegulationDetails);
+  }, [fetchData]);
+
   const loadLiteratureTopics = useCallback(() => {
     fetchData('literatureTopics', referenceApi.getLiteratureTopics);
   }, [fetchData]);
@@ -89,12 +95,14 @@ export function useReferenceData(pubmedId) {
     loadGoDetails,
     loadPhenotypeDetails,
     loadInteractionDetails,
+    loadRegulationDetails,
     loadLiteratureTopics,
   }), [
     loadLocusDetails,
     loadGoDetails,
     loadPhenotypeDetails,
     loadInteractionDetails,
+    loadRegulationDetails,
     loadLiteratureTopics,
   ]);
 
