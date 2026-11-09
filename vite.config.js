@@ -181,6 +181,14 @@ export default defineConfig({
         changeOrigin: true,
         secure: true,
       },
+      // Download files (datasets, GO, sequences) are served by nginx on
+      // www.candidagenome.org, not by the dev server. The regex leaves the
+      // /download, /download-datasets and /download-repeat-te app routes alone.
+      '^/download/': {
+        target: 'https://www.candidagenome.org',
+        changeOrigin: true,
+        secure: true,
+      },
     },
   },
 })
