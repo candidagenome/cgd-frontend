@@ -512,3 +512,9 @@
     padding-left: 0;
   }
 }
+
+.missing-params {
+  margin-left: 10px;
+  color: #b45309;
+  font-size: 0.9em;
+}
