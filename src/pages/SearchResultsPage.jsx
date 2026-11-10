@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { searchApi } from '../api/searchApi';
@@ -151,8 +151,14 @@ const CATEGORY_LABELS = {
 
 const CATEGORY_ORDER = ['genes', 'descriptions', 'cgdid', 'go_terms', 'phenotypes', 'references', 'orthologs'];
 
+// Queries that can only mean one page (a systematic name such as orf19.6062,
+// C1_13700W_A or CAGL0K01881g, or a CGDID) open that page directly. Gene names
+// (ACT1) still list results, since the same name is used across species.
+const DIRECT_MATCH_TYPES = new Set(['systematic_name', 'cgdid']);
+
 const SearchResultsPage = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const query = searchParams.get('query') || '';
 
   // Initial quick search results (for category counts)
@@ -273,6 +279,18 @@ const SearchResultsPage = () => {
       setError(null);
 
       try {
+        try {
+          const resolved = await searchApi.resolve(query.trim());
+          if (!isMounted) return;
+          if (resolved.resolved && resolved.redirect_url && DIRECT_MATCH_TYPES.has(resolved.match_type)) {
+            navigate(resolved.redirect_url, { replace: true });
+            return;
+          }
+        } catch (err) {
+          // Not fatal: fall through to the full results
+          console.error('Resolve error:', err);
+        }
+
         // Perform quick search to get category counts
         const data = await searchApi.quickSearch(query);
         if (!isMounted) return;
@@ -312,7 +330,7 @@ const SearchResultsPage = () => {
     return () => {
       isMounted = false;
     };
-  }, [query, fetchCategoryResults]);
+  }, [query, navigate, fetchCategoryResults]);
 
   // Extract organisms and calculate counts when category results change (fallback when API doesn't provide counts)
   useEffect(() => {
