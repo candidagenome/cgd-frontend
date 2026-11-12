@@ -14,6 +14,7 @@ import ExpressionDetails from '../components/locus/ExpressionDetails';
 import RegulationDetails from '../components/locus/RegulationDetails';
 import SimilarGenesDetails from '../components/locus/SimilarGenesDetails';
 import OrganismSelector, { getDefaultOrganism } from '../components/locus/OrganismSelector';
+import pangenomeApi from '../api/pangenomeApi';
 import { applySeo, buildLocusSeo } from '../utils/seo';
 import './LocusPage.css';
 
@@ -58,6 +59,25 @@ function LocusPage() {
 
   // Compute the effective locus name (convert B allele to A allele)
   const effectiveName = isBAllele ? name.slice(0, -1) + 'A' : name;
+
+  // Pangenome studies covering this locus (Summary tab "Pangenome" row); absent for most genes.
+  // Kept with the name it was fetched for, so a previous locus's result is never shown.
+  const [pangenomeResult, setPangenomeResult] = useState(null);
+  useEffect(() => {
+    let cancelled = false;
+    pangenomeApi
+      .getLocus(effectiveName)
+      .then((result) => {
+        if (!cancelled) setPangenomeResult({ name: effectiveName, result });
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [effectiveName]);
+  const pangenome = pangenomeResult?.name === effectiveName && pangenomeResult.result?.studies?.length
+    ? pangenomeResult.result
+    : null;
 
   // Redirect B alleles to A alleles (e.g., CR_08640C_B -> CR_08640C_A)
   useEffect(() => {
@@ -250,6 +270,7 @@ function LocusPage() {
                 expressionLoading={loading.expressionDetails}
                 interactionData={data.interactionDetails?.results?.[selectedOrganism]}
                 interactionLoading={loading.interactionDetails}
+                pangenomeData={pangenome?.organism === selectedOrganism ? pangenome : null}
               />
             )}
           </div>

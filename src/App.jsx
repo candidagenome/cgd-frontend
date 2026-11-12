@@ -31,6 +31,7 @@ import GOResourcesPage from './pages/GOResourcesPage';
 import CommunityPage from './pages/CommunityPage';
 import SubmitDataPage from './pages/SubmitDataPage';
 import ExploreCGDPage from './pages/ExploreCGDPage';
+import PangenomePage from './pages/PangenomePage';
 import BrowseCategoryPage from './pages/BrowseCategoryPage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import TextSearchResultsPage from './pages/TextSearchResultsPage';
@@ -231,6 +232,8 @@ function App() {
           {/* Main pages */}
           <Route path="/" element={<HomePage />} />
           <Route path="/locus/:name" element={<LocusPage />} />
+          <Route path="/pangenome" element={<PangenomePage />} />
+          <Route path="/pangenome/:studyId" element={<PangenomePage />} />
           <Route path="/reference/NewPapersThisWeek" element={<NewPapersThisWeekPage />} />
           <Route path="/reference/GenomewideAnalysisPapers" element={<GenomeWideAnalysisPapersPage />} />
           <Route path="/genome-wide-analysis-papers" element={<GenomeWideAnalysisPapersPage />} />

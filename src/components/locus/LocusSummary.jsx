@@ -4,6 +4,7 @@ import './LocusComponents.css';
 import { renderCitationItem } from '../../utils/formatCitation.jsx';
 import SyntenySummary from '../synteny/SyntenySummary';
 import { GENETIC_TYPES } from './InteractionDetails';
+import PangenomeSummaryRow from './PangenomeSummaryRow';
 
 function LocusSummary({
   data,
@@ -18,6 +19,7 @@ function LocusSummary({
   expressionLoading,
   interactionData,
   interactionLoading,
+  pangenomeData,
 }) {
   const [showJBrowseViewer, setShowJBrowseViewer] = useState(true); // Show JBrowse viewer by default
 
@@ -916,6 +918,9 @@ function LocusSummary({
               </tr>
             );
           })()}
+
+          {/* Pangenome (published pangenome studies covering this gene) */}
+          <PangenomeSummaryRow data={pangenomeData} featureName={feature.feature_name} />
 
           {/* Sequence Information */}
           {sequenceLoading ? (
