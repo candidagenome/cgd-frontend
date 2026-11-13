@@ -379,7 +379,7 @@ function PangenomeStudy({ studyId }) {
                       <td className="pangenome-id">
                         <span className="pangenome-toggle">{expanded === g.id ? '▾' : '▸'}</span> {g.id}
                       </td>
-                      <td>
+                      <td className="pangenome-nowrap">
                         {g.reference_gene ? (
                           <Link to={`/locus/${g.reference_gene}`} onClick={(e) => e.stopPropagation()}>
                             {g.gene_name ? `${g.gene_name} / ${g.reference_gene}` : g.reference_gene}
@@ -392,12 +392,12 @@ function PangenomeStudy({ studyId }) {
                         <span className={`pangenome-badge ${g.category}`}>{g.category}</span>
                         {!g.in_reference && <span className="pangenome-badge novel">not in reference</span>}
                       </td>
-                      <td>{g.presence !== null && g.presence !== undefined ? `${g.presence}/${total}` : ''}</td>
+                      <td className="pangenome-nowrap">{g.presence !== null && g.presence !== undefined ? `${g.presence}/${total}` : ''}</td>
                       <td>{g.type}</td>
                       <td className="pangenome-note-cell">
                         {[g.ortholog, g.note].filter(Boolean).join(' — ')}
                       </td>
-                      <td>
+                      <td className="pangenome-nowrap">
                         {g.stop_codon_count > 0
                           ? `${g.stop_codon_count} site${g.stop_codon_count > 1 ? 's' : ''}, ${g.stop_codon_isolates} isol.`
                           : ''}
