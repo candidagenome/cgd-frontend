@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import pangenomeApi from '../api/pangenomeApi';
+import PangenomeMap from '../components/pangenome/PangenomeMap';
 import './PangenomePage.css';
 
 const PAGE_SIZE = 50;
@@ -284,7 +285,21 @@ function PangenomeStudy({ studyId }) {
         </li>
       </ul>
 
-      <h2 className="section-header">Genes</h2>
+      <h2 className="section-header">Pangenome browser</h2>
+      <PangenomeMap
+        studyId={studyId}
+        referenceStrain={study.reference_strain}
+        focusId={filters.q}
+        onShowInTable={(id) => {
+          setQueryInput(id);
+          update({ q: id });
+          document.getElementById('pangenome-genes')?.scrollIntoView({ behavior: 'smooth' });
+        }}
+      />
+
+      <h2 className="section-header" id="pangenome-genes">
+        Genes
+      </h2>
       <div className="pangenome-filters">
         <select value={filters.category} onChange={(e) => update({ category: e.target.value })}>
           {CATEGORY_OPTIONS.map((o) => (

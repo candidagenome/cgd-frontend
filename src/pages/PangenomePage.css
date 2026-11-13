@@ -217,6 +217,167 @@
   overflow-x: auto;
 }
 
+/* ---------- graphical browser ---------- */
+.pg-browser {
+  width: 100%;
+  margin-bottom: 18px;
+}
+
+.pg-browser svg {
+  display: block;
+  user-select: none;
+}
+
+.pg-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  font-size: 0.82rem;
+  color: #444;
+  margin: 4px 0 8px;
+}
+
+.pg-swatch {
+  display: inline-block;
+  width: 12px;
+  height: 10px;
+  border-radius: 2px;
+  vertical-align: middle;
+}
+
+.pg-swatch-outline {
+  border: 2px dashed #ef6c00;
+  background: #fff;
+  height: 6px;
+}
+
+.pg-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+.pg-subhead {
+  font-size: 0.98rem;
+  margin: 12px 0 2px;
+  color: #333;
+}
+
+.pg-hint {
+  font-size: 0.82rem;
+  color: #666;
+  margin: 0 0 4px;
+}
+
+.pg-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 6px 0;
+}
+
+.pg-controls button,
+.pg-controls select {
+  font-size: 0.85rem;
+}
+
+.pg-axis-label {
+  font-size: 11px;
+  fill: #555;
+}
+
+.pg-track-label {
+  font-size: 11px;
+  font-weight: 600;
+  fill: #333;
+}
+
+.pg-track-sublabel,
+.pg-empty {
+  font-size: 10px;
+  fill: #888;
+}
+
+.pg-axis {
+  stroke: #999;
+}
+
+.pg-grid {
+  stroke: #eee;
+}
+
+.pg-chrom-bar {
+  fill: #e3e8ee;
+  stroke: #b0bec5;
+  cursor: pointer;
+}
+
+.pg-ov-accessory,
+.pg-gene {
+  cursor: pointer;
+}
+
+.pg-ov-stop {
+  stroke: #7b1fa2;
+  stroke-width: 1;
+  opacity: 0.55;
+}
+
+.pg-ov-window {
+  fill: rgba(25, 118, 210, 0.12);
+  stroke: #1976d2;
+  stroke-width: 1.5;
+}
+
+.pg-gene-label {
+  font-size: 10px;
+  fill: #222;
+  pointer-events: none;
+}
+
+.pg-gene.selected rect {
+  stroke: #0d47a1;
+  stroke-width: 2.5;
+}
+
+.pg-stop-stem {
+  stroke: #9575cd;
+  stroke-width: 1.5;
+}
+
+.pg-stop-hom {
+  fill: #4a148c;
+  background: #4a148c;
+}
+
+.pg-stop-het {
+  fill: #b39ddb;
+  background: #b39ddb;
+}
+
+.pg-selected {
+  font-size: 0.88rem;
+  padding: 8px 12px;
+  border: 1px solid #c5d5e8;
+  background: #f5f9ff;
+  border-radius: 4px;
+  margin: 6px 0 8px;
+}
+
+.pg-selected-links {
+  display: flex;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.pg-selected-links .pangenome-link-button,
+.pg-inline {
+  padding: 0;
+  font-size: inherit;
+}
+
 @media (max-width: 700px) {
   .pangenome-page {
     padding: 12px 16px;

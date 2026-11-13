@@ -19,6 +19,12 @@ export const pangenomeApi = {
     return response.data;
   },
 
+  // Every gene placed on the study's chromosomes, for the graphical browser
+  getMap: async (studyId) => {
+    const response = await api.get(`/api/pangenome/studies/${encodeURIComponent(studyId)}/map`);
+    return response.data;
+  },
+
   // One gene with its premature stop codons per isolate
   getGene: async (studyId, geneId) => {
     const response = await api.get(
