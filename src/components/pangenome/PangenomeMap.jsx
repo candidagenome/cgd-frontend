@@ -98,7 +98,7 @@ function PangenomeMap({ studyId, referenceStrain, focusId, onShowInTable }) {
       const mid = (target.start + target.end) / 2;
       const start = Math.max(0, Math.round(mid - size / 2));
       setView({ chrom: target.chromosome, start, end: Math.min(lengths[target.chromosome], start + size) });
-      setSelectedId(wanted ? target.id : null);
+      setSelectedId(target.id);
     }
   }
 
@@ -202,11 +202,12 @@ function PangenomeMap({ studyId, referenceStrain, focusId, onShowInTable }) {
     (g.stops || []).filter((s) => s.position >= view.start && s.position <= view.end).map((s) => ({ ...s, gene: g }))
   );
 
-  const laneH = 18;
+  const laneH = 18; // variants: label beside the box
+  const geneLaneH = 30; // reference genes: label under the box
   let y = 0;
   const axisY = (y += 22);
   const genesY = (y += 14);
-  y += geneStack.lanes * laneH + 18;
+  y += geneStack.lanes * geneLaneH + 8;
   const variantsY = y;
   y += Math.max(1, variantStack.lanes) * laneH + 22;
   const freqY = y;
@@ -225,11 +226,37 @@ function PangenomeMap({ studyId, referenceStrain, focusId, onShowInTable }) {
   const ticks = [];
   for (let t = Math.ceil(view.start / tickStep) * tickStep; t <= view.end; t += tickStep) ticks.push(t);
 
+  const right = LABEL_W + trackW;
+  const textW = (text) => text.length * 6.1;
+  // Reference-gene labels go under their box; one that would overlap its lane neighbour's label is
+  // dropped (the selected and accessory genes are placed first so they keep theirs)
+  const labelX = {};
+  {
+    const order = [...geneStack.placed].sort(
+      (a, b) =>
+        (b.item.id === selectedId) - (a.item.id === selectedId) ||
+        (b.item.category === 'accessory') - (a.item.category === 'accessory') ||
+        a.item.start - b.item.start
+    );
+    const taken = {};
+    order.forEach(({ item: g, lane }) => {
+      const half = textW(geneLabel(g)) / 2;
+      const mid = (Math.max(LABEL_W, rx(g.start)) + Math.min(right, rx(g.end))) / 2;
+      const x = Math.min(right - half, Math.max(LABEL_W + half, mid));
+      const spans = taken[lane] || [];
+      if (spans.some(([a, b]) => x - half < b + 4 && x + half > a - 4)) return;
+      spans.push([x - half, x + half]);
+      taken[lane] = spans;
+      labelX[g.id] = x;
+    });
+  }
+
   const geneBox = ({ item: g, lane }, top, isVariant) => {
     const x1 = Math.max(LABEL_W, rx(g.start));
-    const x2 = Math.min(LABEL_W + trackW, rx(g.end));
+    const x2 = Math.min(right, rx(g.end));
     const w = Math.max(2, x2 - x1);
     const label = geneLabel(g);
+    const boxY = top + lane * (isVariant ? laneH : geneLaneH);
     const fill = g.category === 'accessory' ? frequencyColor(g.presence, total) : '#7cb342';
     return (
       <g
@@ -239,7 +266,7 @@ function PangenomeMap({ studyId, referenceStrain, focusId, onShowInTable }) {
       >
         <rect
           x={x1}
-          y={top + lane * laneH}
+          y={boxY}
           width={w}
           height={12}
           rx={2}
@@ -248,12 +275,24 @@ function PangenomeMap({ studyId, referenceStrain, focusId, onShowInTable }) {
           strokeWidth={isVariant ? 2 : 0}
           strokeDasharray={isVariant && !g.in_reference ? '4 2' : undefined}
         />
-        {w > label.length * 6.2 + 6 ? (
-          <text x={x1 + w / 2} y={top + lane * laneH + 10} className="pg-gene-label" textAnchor="middle">
-            {label}
-          </text>
-        ) : isVariant ? (
-          <text x={x2 + 3} y={top + lane * laneH + 10} className="pg-gene-label">
+        {isVariant ? (
+          // beside the box; on its left when the right edge is too close
+          x2 + 3 + textW(label) <= right ? (
+            <text x={x2 + 3} y={boxY + 10} className="pg-gene-label">
+              {label}
+            </text>
+          ) : (
+            <text x={x1 - 3} y={boxY + 10} className="pg-gene-label" textAnchor="end">
+              {label}
+            </text>
+          )
+        ) : labelX[g.id] !== undefined ? (
+          <text
+            x={labelX[g.id]}
+            y={boxY + 23}
+            className={`pg-gene-label ${g.category === 'accessory' ? 'pg-label-accessory' : ''}`}
+            textAnchor="middle"
+          >
             {label}
           </text>
         ) : null}
@@ -288,7 +327,7 @@ function PangenomeMap({ studyId, referenceStrain, focusId, onShowInTable }) {
         Variants
       </text>
       <text x={6} y={variantsY + 22} className="pg-track-sublabel">
-        paralogs, fusions
+        drawn at related gene
       </text>
       {variants.length === 0 && (
         <text x={LABEL_W + 4} y={variantsY + 10} className="pg-empty">
@@ -454,8 +493,11 @@ function PangenomeMap({ studyId, referenceStrain, focusId, onShowInTable }) {
               Premature stop at {selected.stops.map((s) => `${fmt(s.position)} (${s.isolates} isolates)`).join(', ')}.
             </>
           )}
-          {selected.placed_by === 'reference_gene' && (
-            <> Drawn at {selected.reference_gene}, the {referenceStrain} gene it derives from.</>
+          {selected.drawn_at && (
+            <>
+              {' '}
+              The study gives it no coordinates of its own; drawn at {selected.drawn_at}.
+            </>
           )}
           <div className="pg-selected-links">
             {selected.reference_gene && <Link to={`/locus/${selected.reference_gene}`}>Locus page</Link>}

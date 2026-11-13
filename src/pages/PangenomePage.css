@@ -337,6 +337,10 @@
   pointer-events: none;
 }
 
+.pg-label-accessory {
+  font-weight: 600;
+}
+
 .pg-gene.selected rect {
   stroke: #0d47a1;
   stroke-width: 2.5;
