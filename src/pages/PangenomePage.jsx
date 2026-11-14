@@ -1,10 +1,13 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { AgGridReact } from 'ag-grid-react';
 import pangenomeApi from '../api/pangenomeApi';
 import PangenomeMap from '../components/pangenome/PangenomeMap';
 import './PangenomePage.css';
 
-const PAGE_SIZE = 50;
+// The dropdowns filter on the server; the grid pages and sorts every matching gene on the client
+const MAX_GENES = 10000;
+const GRID_PAGE_SIZE = 10;
 const fmtInt = (v) => (v === null || v === undefined ? '' : Number(v).toLocaleString());
 
 const CATEGORY_OPTIONS = [
@@ -47,7 +50,7 @@ function PangenomeStudies() {
     <div className="pangenome-page">
       <h1>Pangenome Browser</h1>
       <p className="pangenome-intro">
-        Published pangenome studies of CGD species: which genes are shared by all isolates of a species (core),
+        Published pangenome studies of CGD species: which genes are shared by all or nearly all isolates of a species (core),
         which vary between isolates (accessory), and genes absent from the CGD reference strain.
       </p>
       {error && <div className="error">{error}</div>}
@@ -186,6 +189,7 @@ function PangenomeStudy({ studyId }) {
   const [expanded, setExpanded] = useState(null);
   const [showIsolates, setShowIsolates] = useState(false);
   const [queryInput, setQueryInput] = useState(searchParams.get('q') || '');
+  const gridRef = useRef(null);
 
   const filters = useMemo(
     () => ({
@@ -194,7 +198,6 @@ function PangenomeStudy({ studyId }) {
       stops: searchParams.get('stops') || '',
       q: searchParams.get('q') || '',
       sort: searchParams.get('sort') || 'position',
-      page: Number(searchParams.get('page') || 1),
     }),
     [searchParams]
   );
@@ -207,32 +210,117 @@ function PangenomeStudy({ studyId }) {
   }, [studyId]);
 
   useEffect(() => {
-    const params = { sort: filters.sort, page: filters.page, page_size: PAGE_SIZE };
+    const params = { sort: filters.sort, page: 1, page_size: MAX_GENES };
     ['category', 'reference', 'stops', 'q'].forEach((k) => {
       if (filters[k]) params[k] = filters[k];
     });
     pangenomeApi
       .getGenes(studyId, params)
-      .then(setGenes)
+      .then((r) => {
+        setGenes(r);
+        // A search that finds one gene (e.g. "Show in gene table") opens its detail
+        setExpanded(r.genes.length === 1 ? r.genes[0].id : null);
+      })
       .catch(() => setGenes({ total: 0, genes: [] }));
   }, [studyId, filters]);
+
+  const total = study?.isolate_count;
+  const columnDefs = useMemo(
+    () => [
+      {
+        headerName: 'Gene',
+        field: 'id',
+        minWidth: 200,
+        cellClass: 'pangenome-id',
+        cellRenderer: (p) => (
+          <>
+            <span className="pangenome-toggle">{p.context.expanded === p.value ? '▾' : '▸'}</span> {p.value}
+          </>
+        ),
+      },
+      {
+        headerName: 'CGD locus',
+        minWidth: 170,
+        valueGetter: (p) =>
+          p.data.reference_gene
+            ? p.data.gene_name
+              ? `${p.data.gene_name} / ${p.data.reference_gene}`
+              : p.data.reference_gene
+            : '',
+        cellRenderer: (p) =>
+          p.data.reference_gene ? (
+            <Link to={`/locus/${p.data.reference_gene}`} onClick={(e) => e.stopPropagation()}>
+              {p.value}
+            </Link>
+          ) : (
+            <span className="pangenome-note">none</span>
+          ),
+      },
+      {
+        headerName: 'Category',
+        minWidth: 200,
+        valueGetter: (p) => `${p.data.category}${p.data.in_reference ? '' : ' not in reference'}`,
+        cellRenderer: (p) => (
+          <>
+            <span className={`pangenome-badge ${p.data.category}`}>{p.data.category}</span>
+            {!p.data.in_reference && <span className="pangenome-badge novel">not in reference</span>}
+          </>
+        ),
+      },
+      {
+        headerName: 'Isolates',
+        width: 90,
+        // Core genes have no per-gene count in the study; sort them above every accessory gene
+        valueGetter: (p) => (p.data.presence ?? (p.data.category === 'core' ? total + 1 : null)),
+        valueFormatter: (p) =>
+          p.data.presence !== null && p.data.presence !== undefined
+            ? `${p.data.presence}/${total}`
+            : p.data.category === 'core'
+              ? '≥99.5%'
+              : '',
+      },
+      { headerName: 'Type', field: 'type', minWidth: 160, tooltipField: 'type' },
+      {
+        headerName: 'Ortholog / note',
+        flex: 1,
+        minWidth: 120,
+        cellClass: 'pangenome-note-cell',
+        tooltipValueGetter: (p) => p.value,
+        valueGetter: (p) => [p.data.ortholog, p.data.note].filter(Boolean).join(' — '),
+      },
+      {
+        headerName: 'Stops',
+        minWidth: 140,
+        valueGetter: (p) => p.data.stop_codon_isolates || 0,
+        valueFormatter: (p) => {
+          const n = p.data.stop_codon_count;
+          const k = p.data.stop_codon_isolates;
+          return n > 0 ? `${n} site${n > 1 ? 's' : ''}, ${k} isolate${k > 1 ? 's' : ''}` : '';
+        },
+      },
+    ],
+    [total]
+  );
+
+  // Re-render rows so the toggle arrow and highlight follow the open gene
+  useEffect(() => {
+    gridRef.current?.api?.redrawRows();
+  }, [expanded]);
 
   // Dropdowns apply immediately; the text search waits for Search / Enter
   const update = (changes) => {
     const next = new URLSearchParams(searchParams);
-    Object.entries({ ...changes, page: changes.page || '' }).forEach(([k, v]) => {
+    Object.entries({ ...changes, page: '' }).forEach(([k, v]) => {
       if (v) next.set(k, v);
       else next.delete(k);
     });
-    setExpanded(null);
     setSearchParams(next);
   };
 
   if (error) return <div className="pangenome-page error">{error}</div>;
   if (!study) return <div className="pangenome-page loading">Loading...</div>;
 
-  const total = study.isolate_count;
-  const pages = genes ? Math.max(1, Math.ceil(genes.total / PAGE_SIZE)) : 1;
+  const expandedGene = genes?.genes.find((g) => g.id === expanded);
 
   return (
     <div className="pangenome-page">
@@ -367,84 +455,40 @@ function PangenomeStudy({ studyId }) {
       ) : (
         <>
           <div className="pangenome-count">
-            {fmtInt(genes.total)} {genes.total === 1 ? 'gene' : 'genes'}
-            {pages > 1 && ` · page ${filters.page} of ${pages}`}
+            {fmtInt(genes.total)} {genes.total === 1 ? 'gene' : 'genes'} · click a row for premature stop codons and
+            divergent isolates
           </div>
-          <div className="pangenome-scroll">
-            <table className="pangenome-table">
-              <thead>
-                <tr>
-                  <th>Gene</th>
-                  <th>CGD locus</th>
-                  <th>Category</th>
-                  <th>Isolates</th>
-                  <th>Type</th>
-                  <th>Ortholog / note</th>
-                  <th>Stops</th>
-                </tr>
-              </thead>
-              <tbody>
-                {genes.genes.map((g) => (
-                  <React.Fragment key={g.id}>
-                    <tr
-                      className={`pangenome-row ${expanded === g.id ? 'expanded' : ''}`}
-                      onClick={() => setExpanded(expanded === g.id ? null : g.id)}
-                      title="Show details"
-                    >
-                      <td className="pangenome-id">
-                        <span className="pangenome-toggle">{expanded === g.id ? '▾' : '▸'}</span> {g.id}
-                      </td>
-                      <td className="pangenome-nowrap">
-                        {g.reference_gene ? (
-                          <Link to={`/locus/${g.reference_gene}`} onClick={(e) => e.stopPropagation()}>
-                            {g.gene_name ? `${g.gene_name} / ${g.reference_gene}` : g.reference_gene}
-                          </Link>
-                        ) : (
-                          <span className="pangenome-note">none</span>
-                        )}
-                      </td>
-                      <td>
-                        <span className={`pangenome-badge ${g.category}`}>{g.category}</span>
-                        {!g.in_reference && <span className="pangenome-badge novel">not in reference</span>}
-                      </td>
-                      <td className="pangenome-nowrap">{g.presence !== null && g.presence !== undefined ? `${g.presence}/${total}` : ''}</td>
-                      <td>{g.type}</td>
-                      <td className="pangenome-note-cell">
-                        {[g.ortholog, g.note].filter(Boolean).join(' — ')}
-                      </td>
-                      <td className="pangenome-nowrap">
-                        {g.stop_codon_count > 0
-                          ? `${g.stop_codon_count} site${g.stop_codon_count > 1 ? 's' : ''}, ${g.stop_codon_isolates} isol.`
-                          : ''}
-                      </td>
-                    </tr>
-                    {expanded === g.id && (
-                      <tr className="pangenome-detail-row">
-                        <td colSpan={7}>
-                          <GeneDetail
-                            studyId={studyId}
-                            geneId={g.id}
-                            divergentStrains={study.divergent_strains}
-                          />
-                        </td>
-                      </tr>
-                    )}
-                  </React.Fragment>
-                ))}
-              </tbody>
-            </table>
+          <div className="ag-theme-alpine pangenome-grid" style={{ width: '100%' }}>
+            <AgGridReact
+              ref={gridRef}
+              rowData={genes.genes}
+              columnDefs={columnDefs}
+              defaultColDef={{ sortable: true, resizable: true }}
+              getRowId={(p) => p.data.id}
+              onRowClicked={(e) => setExpanded(expanded === e.data.id ? null : e.data.id)}
+              context={{ expanded }}
+              rowClassRules={{ 'ag-row-selected': (p) => p.data?.id === p.context.expanded }}
+              domLayout="autoHeight"
+              pagination
+              paginationPageSize={GRID_PAGE_SIZE}
+              paginationPageSizeSelector={[10, 25, 50, 100]}
+              tooltipShowDelay={300}
+              suppressCellFocus
+              overlayNoRowsTemplate="No genes match."
+            />
           </div>
-          {pages > 1 && (
-            <div className="pangenome-pager">
-              <button disabled={filters.page <= 1} onClick={() => update({ page: String(filters.page - 1) })}>
-                Previous
-              </button>
-              <span>
-                Page {filters.page} of {pages}
-              </span>
-              <button disabled={filters.page >= pages} onClick={() => update({ page: String(filters.page + 1) })}>
-                Next
-              </button>
+          {expandedGene && (
+            <div className="pangenome-detail-panel">
+              <h3>
+                <span>
+                  {expandedGene.id}
+                  {expandedGene.gene_name && ` (${expandedGene.gene_name})`}
+                </span>
+                <button className="pangenome-link-button" onClick={() => setExpanded(null)}>
+                  Close
+                </button>
+              </h3>
+              <GeneDetail studyId={studyId} geneId={expandedGene.id} divergentStrains={study.divergent_strains} />
             </div>
           )}
         </>

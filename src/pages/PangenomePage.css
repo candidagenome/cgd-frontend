@@ -182,12 +182,28 @@
   vertical-align: top;
 }
 
-.pangenome-pager {
+.pangenome-grid .ag-row {
+  cursor: pointer;
+}
+
+.pangenome-grid .pangenome-badge {
+  line-height: 1.5;
+}
+
+.pangenome-detail-panel {
+  border: 1px solid #d7e3f1;
+  border-radius: 4px;
+  background: #fafcfe;
+  margin: 10px 0 18px;
+}
+
+.pangenome-detail-panel > h3 {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  gap: 12px;
-  margin: 10px 0;
+  margin: 0;
+  padding: 8px 12px 0;
+  font-size: 1rem;
 }
 
 .pangenome-downloads {
@@ -302,6 +318,11 @@
 
 .pg-axis {
   stroke: #999;
+}
+
+.pg-axis.pg-guide {
+  stroke: #ccc;
+  stroke-dasharray: 3 3;
 }
 
 .pg-grid {

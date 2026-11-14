@@ -343,6 +343,11 @@ function PangenomeMap({ studyId, referenceStrain, focusId, onShowInTable }) {
         carrying gene
       </text>
       <line x1={LABEL_W} x2={LABEL_W + trackW} y1={freqY + freqH} y2={freqY + freqH} className="pg-axis" />
+      {/* 100% guide, so a bar's height reads as a share of all isolates */}
+      <line x1={LABEL_W} x2={LABEL_W + trackW} y1={freqY} y2={freqY} className="pg-axis pg-guide" />
+      <text x={LABEL_W + trackW} y={freqY - 3} textAnchor="end" className="pg-track-sublabel">
+        all {total}
+      </text>
       {(() => {
         // Variants drawn at the same gene share a position: put their bars side by side
         const bars = inView.filter((g) => g.category === 'accessory' && g.presence !== null && g.presence !== undefined);
