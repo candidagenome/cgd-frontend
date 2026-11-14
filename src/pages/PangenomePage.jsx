@@ -246,8 +246,10 @@ function PangenomeStudy({ studyId }) {
       .getGenes(studyId, params)
       .then((r) => {
         setGenes(r);
-        // A search that finds one gene (e.g. "Show in gene table") opens its detail
-        setExpanded(r.genes.length === 1 ? r.genes[0].id : null);
+        // A search that finds one gene, or names one exactly (e.g. "Show in gene table"), opens its detail
+        const q = (params.q || '').toUpperCase();
+        const exact = r.genes.filter((g) => q && (g.id.toUpperCase() === q || g.reference_gene?.toUpperCase() === q));
+        setExpanded(r.genes.length === 1 ? r.genes[0].id : exact.length === 1 ? exact[0].id : null);
       })
       .catch(() => setGenes({ total: 0, genes: [] }));
   }, [studyId, filters]);
