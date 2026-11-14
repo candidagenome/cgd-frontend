@@ -24,7 +24,13 @@ function PangenomeSummaryRow({ data, featureName }) {
             <div key={study.study_id} className="summary-inline-row pangenome-summary-row">
               <span className="summary-stat-line">
                 {own ? (
-                  own.category === 'core' ? (
+                  own.category === 'core' && own.type?.startsWith('Core (gap: ') ? (
+                    // Core genes the study annotates in fewer isolates, the gap put down to an artefact
+                    <>
+                      <strong>Core</strong> gene (annotated in {own.presence} of {total} isolates; the study attributes
+                      the gap to {own.type.slice('Core (gap: '.length, -1)})
+                    </>
+                  ) : own.category === 'core' ? (
                     <>
                       <strong>Core</strong> gene ({study.core_definition || 'present in nearly all isolates'})
                     </>
