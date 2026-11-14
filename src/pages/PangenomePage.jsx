@@ -177,6 +177,27 @@ function GeneDetail({ studyId, geneId, study }) {
           </table>
         </>
       )}
+      {Object.keys(gene.copy_number || {}).length > 0 && (
+        <>
+          <h4>Estimated copy number by isolate</h4>
+          <p className="pangenome-note">
+            Highest first; a diploid gene with no change is about 2. Red: absent; amber: at least twice the usual 2.
+          </p>
+          <div className="pangenome-cn-list">
+            {Object.entries(gene.copy_number)
+              .sort((a, b) => b[1] - a[1])
+              .map(([isolate, cn]) => (
+                <span
+                  key={isolate}
+                  className={`pangenome-cn ${cn < 0.2 ? 'absent' : cn >= 4 ? 'high' : ''}`}
+                  title={`${isolate}: ${cn}`}
+                >
+                  {isolate} <strong>{cn.toFixed(1)}</strong>
+                </span>
+              ))}
+          </div>
+        </>
+      )}
       {study.stop_codons_reported && <h4>Premature stop codons</h4>}
       {!study.stop_codons_reported ? null : gene.stop_codons.length === 0 ? (
         <p className="pangenome-note">None reported.</p>
@@ -318,6 +339,16 @@ function PangenomeStudy({ studyId }) {
         tooltipValueGetter: (p) => p.value,
         valueGetter: (p) => [p.data.ortholog, p.data.note].filter(Boolean).join(' — '),
       },
+      study?.copy_number_reported && {
+        headerName: 'Copy number',
+        minWidth: 130,
+        headerTooltip: 'Estimated copy number range across isolates; sorts by the highest',
+        valueGetter: (p) => p.data.copy_number_max,
+        valueFormatter: (p) =>
+          p.data.copy_number_max === null || p.data.copy_number_max === undefined
+            ? ''
+            : `${p.data.copy_number_min.toFixed(1)}–${p.data.copy_number_max.toFixed(1)}`,
+      },
       study?.stop_codons_reported && {
         headerName: 'Stops',
         minWidth: 140,
@@ -329,7 +360,7 @@ function PangenomeStudy({ studyId }) {
         },
       },
     ].filter(Boolean),
-    [total, study?.stop_codons_reported]
+    [total, study?.stop_codons_reported, study?.copy_number_reported]
   );
 
   // Re-render rows so the toggle arrow and highlight follow the open gene
@@ -577,6 +608,11 @@ function PangenomeStudy({ studyId }) {
         {study.stop_codons_reported && (
           <li>
             <a href={pangenomeApi.downloadUrl(studyId, 'stop_codons')}>Premature stop codons by isolate</a> (TSV)
+          </li>
+        )}
+        {study.copy_number_reported && (
+          <li>
+            <a href={pangenomeApi.downloadUrl(studyId, 'copy_number')}>Copy number by gene and isolate</a> (TSV)
           </li>
         )}
         <li>

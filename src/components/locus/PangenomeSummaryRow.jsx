@@ -42,6 +42,12 @@ function PangenomeSummaryRow({ data, featureName }) {
                 ) : (
                   <>Related accessory genes only</>
                 )}
+                {own && own.copy_number_max !== null && own.copy_number_max !== undefined && (
+                  <>
+                    ; estimated copy number <strong>{own.copy_number_min.toFixed(1)}</strong>&ndash;
+                    <strong>{own.copy_number_max.toFixed(1)}</strong> across isolates
+                  </>
+                )}
                 {own && own.stop_codon_isolates > 0 && (
                   <>
                     ; premature stop codon in <strong>{own.stop_codon_isolates}</strong>{' '}

@@ -196,6 +196,32 @@
   word-break: break-word;
 }
 
+.pangenome-cn-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  margin: 4px 0 8px;
+}
+
+.pangenome-cn {
+  font-size: 0.78rem;
+  padding: 1px 6px;
+  border: 1px solid #e3e3e3;
+  border-radius: 8px;
+  background: #fff;
+  white-space: nowrap;
+}
+
+.pangenome-cn.high {
+  background: #fff1d6;
+  border-color: #f0c36b;
+}
+
+.pangenome-cn.absent {
+  background: #fde2e2;
+  border-color: #e69a9a;
+}
+
 .pangenome-stat-split {
   color: #666;
 }
