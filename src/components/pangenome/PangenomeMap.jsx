@@ -16,7 +16,8 @@ const frequencyColor = (presence, total) => {
   return '#f9a825';
 };
 const geneLabel = (g) => (g.placed_by === 'own' && g.gene_name ? g.gene_name : g.id);
-const shortChrom = (name) => name.replace(/^.*_Chr_?/i, 'Chr ');
+// cpar_Chr_1 -> Chr 1; ChrA_C_glabrata_CBS138 -> Chr A
+const shortChrom = (name) => name.replace(/^.*_Chr_?/i, 'Chr ').replace(/^Chr([A-Z0-9]+)_.*$/i, 'Chr $1');
 
 /** Lay out overlapping intervals in lanes; returns [{item, lane}] and the lane count */
 function stack(items, gap) {
@@ -49,7 +50,7 @@ function useWidth(ref) {
  * accessory genes and premature stop codons, and a zoomable region view with
  * gene, variant, isolate-frequency and stop-codon tracks.
  */
-function PangenomeMap({ studyId, referenceStrain, focusId, onShowInTable }) {
+function PangenomeMap({ studyId, referenceStrain, focusId, onShowInTable, showStops = true }) {
   const containerRef = useRef(null);
   const width = useWidth(containerRef);
   const [map, setMap] = useState(null);
@@ -114,6 +115,8 @@ function PangenomeMap({ studyId, referenceStrain, focusId, onShowInTable }) {
   const maxLen = Math.max(...map.chromosomes.map((c) => c.length));
   const trackW = width - LABEL_W - 12;
   const selected = map.genes.find((g) => g.id === selectedId);
+  // Studies whose extra genes all lack a reference gene to draw them at have no variants track
+  const showVariants = map.genes.some((g) => !(g.placed_by === 'own' && g.in_reference));
 
   // ---------- overview ----------
   const rowH = 26;
@@ -209,13 +212,13 @@ function PangenomeMap({ studyId, referenceStrain, focusId, onShowInTable }) {
   const genesY = (y += 14);
   y += geneStack.lanes * geneLaneH + 8;
   const variantsY = y;
-  y += Math.max(1, variantStack.lanes) * laneH + 22;
+  y += showVariants ? Math.max(1, variantStack.lanes) * laneH + 22 : 14;
   const freqY = y;
   const freqH = 46;
-  y += freqH + 22;
+  y += freqH + (showStops ? 22 : 10);
   const stopsY = y;
   const stopsH = 46;
-  y += stopsH + 10;
+  if (showStops) y += stopsH + 10;
   const regionH = y;
 
   const tickStep = (() => {
@@ -323,18 +326,22 @@ function PangenomeMap({ studyId, referenceStrain, focusId, onShowInTable }) {
       </text>
       {geneStack.placed.map((p) => geneBox(p, genesY, false))}
 
-      <text x={6} y={variantsY + 10} className="pg-track-label">
-        Variants
-      </text>
-      <text x={6} y={variantsY + 22} className="pg-track-sublabel">
-        drawn at related gene
-      </text>
-      {variants.length === 0 && (
-        <text x={LABEL_W + 4} y={variantsY + 10} className="pg-empty">
-          none in this region
+      {showVariants && (
+        <>
+        <text x={6} y={variantsY + 10} className="pg-track-label">
+          Variants
         </text>
+        <text x={6} y={variantsY + 22} className="pg-track-sublabel">
+          drawn at related gene
+        </text>
+        {variants.length === 0 && (
+          <text x={LABEL_W + 4} y={variantsY + 10} className="pg-empty">
+            none in this region
+          </text>
+        )}
+        {variantStack.placed.map((p) => geneBox(p, variantsY, true))}
+        </>
       )}
-      {variantStack.placed.map((p) => geneBox(p, variantsY, true))}
 
       <text x={6} y={freqY + 12} className="pg-track-label">
         Isolates
@@ -375,34 +382,38 @@ function PangenomeMap({ studyId, referenceStrain, focusId, onShowInTable }) {
         </text>
       )}
 
-      <text x={6} y={stopsY + 12} className="pg-track-label">
-        Premature
-      </text>
-      <text x={6} y={stopsY + 24} className="pg-track-label">
-        stops
-      </text>
-      <line x1={LABEL_W} x2={LABEL_W + trackW} y1={stopsY + stopsH} y2={stopsY + stopsH} className="pg-axis" />
-      {stopsInView.length === 0 && (
-        <text x={LABEL_W + 4} y={stopsY + stopsH - 4} className="pg-empty">
-          none in this region
+      {showStops && (
+        <>
+        <text x={6} y={stopsY + 12} className="pg-track-label">
+          Premature
         </text>
+        <text x={6} y={stopsY + 24} className="pg-track-label">
+          stops
+        </text>
+        <line x1={LABEL_W} x2={LABEL_W + trackW} y1={stopsY + stopsH} y2={stopsY + stopsH} className="pg-axis" />
+        {stopsInView.length === 0 && (
+          <text x={LABEL_W + 4} y={stopsY + stopsH - 4} className="pg-empty">
+            none in this region
+          </text>
+        )}
+        {stopsInView.map((s) => {
+          const x = rx(s.position);
+          const h = 6 + (Math.log(s.isolates + 1) / Math.log(maxStop + 1)) * (stopsH - 10);
+          return (
+            <g key={`${s.gene.id}-${s.position}`} className="pg-gene" onClick={() => setSelectedId(s.gene.id)}>
+              <line x1={x} x2={x} y1={stopsY + stopsH} y2={stopsY + stopsH - h} className="pg-stop-stem" />
+              <circle
+                cx={x}
+                cy={stopsY + stopsH - h}
+                r={3.5}
+                className={s.homozygous > 0 ? 'pg-stop-hom' : 'pg-stop-het'}
+              />
+              <title>{`${s.gene.id} stop at ${fmt(s.position)}: ${s.isolates} isolates (${s.homozygous} homozygous)`}</title>
+            </g>
+          );
+        })}
+        </>
       )}
-      {stopsInView.map((s) => {
-        const x = rx(s.position);
-        const h = 6 + (Math.log(s.isolates + 1) / Math.log(maxStop + 1)) * (stopsH - 10);
-        return (
-          <g key={`${s.gene.id}-${s.position}`} className="pg-gene" onClick={() => setSelectedId(s.gene.id)}>
-            <line x1={x} x2={x} y1={stopsY + stopsH} y2={stopsY + stopsH - h} className="pg-stop-stem" />
-            <circle
-              cx={x}
-              cy={stopsY + stopsH - h}
-              r={3.5}
-              className={s.homozygous > 0 ? 'pg-stop-hom' : 'pg-stop-het'}
-            />
-            <title>{`${s.gene.id} stop at ${fmt(s.position)}: ${s.isolates} isolates (${s.homozygous} homozygous)`}</title>
-          </g>
-        );
-      })}
     </svg>
   );
 
@@ -442,17 +453,24 @@ function PangenomeMap({ studyId, referenceStrain, focusId, onShowInTable }) {
           <i className="pg-swatch" style={{ background: '#ef6c00' }} /> 10&ndash;50%{' '}
           <i className="pg-swatch" style={{ background: '#f9a825' }} /> &ge;50% of isolates
         </span>
-        <span>
-          <i className="pg-swatch pg-swatch-outline" /> variant not in {referenceStrain} (dashed)
-        </span>
-        <span>
-          <i className="pg-dot pg-stop-hom" /> stop, homozygous in some isolates <i className="pg-dot pg-stop-het" />{' '}
-          heterozygous only
-        </span>
+        {showVariants && (
+          <span>
+            <i className="pg-swatch pg-swatch-outline" /> variant not in {referenceStrain} (dashed)
+          </span>
+        )}
+        {showStops && (
+          <span>
+            <i className="pg-dot pg-stop-hom" /> stop, homozygous in some isolates <i className="pg-dot pg-stop-het" />{' '}
+            heterozygous only
+          </span>
+        )}
       </div>
 
       <h3 className="pg-subhead">Genome overview</h3>
-      <p className="pg-hint">Coloured ticks are accessory genes; purple marks are premature stop codons. Click to zoom in.</p>
+      <p className="pg-hint">
+        Coloured ticks are accessory genes{showStops ? '; purple marks are premature stop codons' : ''}. Click to zoom
+        in.
+      </p>
       {overview}
 
       <h3 className="pg-subhead">
@@ -515,8 +533,8 @@ function PangenomeMap({ studyId, referenceStrain, focusId, onShowInTable }) {
 
       {map.unplaced.length > 0 && (
         <p className="pg-hint">
-          {map.unplaced.length} genes are not drawn: the study gives no coordinates or {referenceStrain} gene for
-          them.{' '}
+          {map.unplaced.length} genes are not drawn: they have no position, or {referenceStrain} gene to draw them at,
+          in the current annotation.{' '}
           <button className="pangenome-link-button pg-inline" onClick={() => setShowUnplaced(!showUnplaced)}>
             {showUnplaced ? 'Hide list' : 'Show list'}
           </button>

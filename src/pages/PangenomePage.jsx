@@ -92,8 +92,9 @@ function PangenomeStudies() {
   );
 }
 
-/** Expanded row: premature stop codons per isolate and the two divergent strains */
-function GeneDetail({ studyId, geneId, divergentStrains }) {
+/** Gene details: isolates carrying the gene, premature stop codons per isolate and the divergent strains */
+function GeneDetail({ studyId, geneId, study }) {
+  const divergentStrains = study.divergent_strains;
   const [gene, setGene] = useState(null);
   const [error, setError] = useState(null);
 
@@ -149,8 +150,35 @@ function GeneDetail({ studyId, geneId, divergentStrains }) {
           </table>
         </>
       )}
-      <h4>Premature stop codons</h4>
-      {gene.stop_codons.length === 0 ? (
+      {Object.keys(gene.isolate_genes || {}).length > 0 && (
+        <>
+          <h4>
+            Carried by {Object.keys(gene.isolate_genes).length} of {study.isolate_count} isolates
+          </h4>
+          {(() => {
+            const absent = study.isolates.map((i) => i.name).filter((n) => !gene.isolate_genes[n]);
+            return absent.length > 0 && <p className="pangenome-note">Absent from: {absent.join(', ')}</p>;
+          })()}
+          <table className="pangenome-subtable">
+            <thead>
+              <tr>
+                <th>Isolate</th>
+                <th>Its genes in this family</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.entries(gene.isolate_genes).map(([isolate, ids]) => (
+                <tr key={isolate}>
+                  <td>{isolate}</td>
+                  <td className="pangenome-id-list">{ids.join(', ')}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
+      {study.stop_codons_reported && <h4>Premature stop codons</h4>}
+      {!study.stop_codons_reported ? null : gene.stop_codons.length === 0 ? (
         <p className="pangenome-note">None reported.</p>
       ) : (
         <table className="pangenome-subtable">
@@ -288,7 +316,7 @@ function PangenomeStudy({ studyId }) {
         tooltipValueGetter: (p) => p.value,
         valueGetter: (p) => [p.data.ortholog, p.data.note].filter(Boolean).join(' — '),
       },
-      {
+      study?.stop_codons_reported && {
         headerName: 'Stops',
         minWidth: 140,
         valueGetter: (p) => p.data.stop_codon_isolates || 0,
@@ -298,8 +326,8 @@ function PangenomeStudy({ studyId }) {
           return n > 0 ? `${n} site${n > 1 ? 's' : ''}, ${k} isolate${k > 1 ? 's' : ''}` : '';
         },
       },
-    ],
-    [total]
+    ].filter(Boolean),
+    [total, study?.stop_codons_reported]
   );
 
   // Re-render rows so the toggle arrow and highlight follow the open gene
@@ -321,6 +349,37 @@ function PangenomeStudy({ studyId }) {
   if (!study) return <div className="pangenome-page loading">Loading...</div>;
 
   const expandedGene = genes?.genes.find((g) => g.id === expanded);
+  // Isolate table columns, leaving out those the study gives no values for
+  const isolateColumns = [
+    { key: 'name', label: 'Isolate', render: (i) => i.name },
+    { key: 'origin', label: 'Origin', render: (i) => i.origin },
+    {
+      key: 'reads',
+      label: 'Reads',
+      has: (i) => i.short_read_accession || i.long_read_accession,
+      render: (i) =>
+        [i.short_read_accession, i.long_read_accession].filter(Boolean).map((acc) => (
+          <a
+            key={acc}
+            className="pangenome-accession"
+            href={`https://www.ncbi.nlm.nih.gov/sra/?term=${encodeURIComponent(acc)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {acc}
+          </a>
+        )),
+    },
+    {
+      key: 'assembly',
+      label: 'Assembly',
+      has: (i) => i.assembly_level || i.platform,
+      render: (i) => [i.assembly_level, i.platform].filter(Boolean).join(', '),
+    },
+    { key: 'contigs', label: 'Contigs', render: (i) => fmtInt(i.contigs) },
+    { key: 'n50', label: 'N50', render: (i) => fmtInt(i.n50) },
+    { key: 'gene_count', label: 'Genes', render: (i) => fmtInt(i.gene_count) },
+  ].filter((c) => study.isolates.some((i) => (c.has ? c.has(i) : i[c.key] !== null && i[c.key] !== undefined)));
 
   return (
     <div className="pangenome-page">
@@ -365,9 +424,11 @@ function PangenomeStudy({ studyId }) {
             </span>
           )}
         </div>
-        <div>
-          <strong>{fmtInt(study.counts.with_stop_codons)}</strong> genes with premature stops
-        </div>
+        {study.stop_codons_reported && (
+          <div>
+            <strong>{fmtInt(study.counts.with_stop_codons)}</strong> genes with premature stops
+          </div>
+        )}
       </div>
       <ul className="pangenome-notes">
         {study.core_definition && <li>Core genes are {study.core_definition}.</li>}
@@ -384,6 +445,7 @@ function PangenomeStudy({ studyId }) {
       <PangenomeMap
         studyId={studyId}
         referenceStrain={study.reference_strain}
+        showStops={study.stop_codons_reported}
         focusId={filters.q}
         onShowInTable={(id) => {
           setQueryInput(id);
@@ -410,20 +472,22 @@ function PangenomeStudy({ studyId }) {
             </option>
           ))}
         </select>
-        <label>
-          Stop codons{' '}
-          <select value={filters.stops} onChange={(e) => update({ stops: e.target.value })}>
-            {STOP_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
-              </option>
-            ))}
-          </select>
-        </label>
+        {study.stop_codons_reported && (
+          <label>
+            Stop codons{' '}
+            <select value={filters.stops} onChange={(e) => update({ stops: e.target.value })}>
+              {STOP_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
         <label>
           Sort{' '}
           <select value={filters.sort} onChange={(e) => update({ sort: e.target.value })}>
-            {SORT_OPTIONS.map((o) => (
+            {SORT_OPTIONS.filter((o) => o.value !== 'stops' || study.stop_codons_reported).map((o) => (
               <option key={o.value} value={o.value}>
                 {o.label}
               </option>
@@ -462,8 +526,7 @@ function PangenomeStudy({ studyId }) {
       ) : (
         <>
           <div className="pangenome-count">
-            {fmtInt(genes.total)} {genes.total === 1 ? 'gene' : 'genes'} · click a row for premature stop codons and
-            divergent isolates
+            {fmtInt(genes.total)} {genes.total === 1 ? 'gene' : 'genes'} · click a row for details
           </div>
           <div className="ag-theme-alpine pangenome-grid" style={{ width: '100%' }}>
             <AgGridReact
@@ -495,7 +558,7 @@ function PangenomeStudy({ studyId }) {
                   Close
                 </button>
               </h3>
-              <GeneDetail studyId={studyId} geneId={expandedGene.id} divergentStrains={study.divergent_strains} />
+              <GeneDetail studyId={studyId} geneId={expandedGene.id} study={study} />
             </div>
           )}
         </>
@@ -509,9 +572,11 @@ function PangenomeStudy({ studyId }) {
         <li>
           <a href={pangenomeApi.downloadUrl(studyId, 'accessory')}>Accessory genes</a> (TSV)
         </li>
-        <li>
-          <a href={pangenomeApi.downloadUrl(studyId, 'stop_codons')}>Premature stop codons by isolate</a> (TSV)
-        </li>
+        {study.stop_codons_reported && (
+          <li>
+            <a href={pangenomeApi.downloadUrl(studyId, 'stop_codons')}>Premature stop codons by isolate</a> (TSV)
+          </li>
+        )}
         <li>
           <a href={pangenomeApi.downloadUrl(studyId, 'isolates')}>Isolates</a> (TSV)
         </li>
@@ -528,35 +593,17 @@ function PangenomeStudy({ studyId }) {
           <table className="pangenome-table">
             <thead>
               <tr>
-                <th>Isolate</th>
-                <th>Origin</th>
-                <th>Reads</th>
-                <th>Assembly</th>
-                <th>Contigs</th>
-                <th>N50</th>
+                {isolateColumns.map((c) => (
+                  <th key={c.key}>{c.label}</th>
+                ))}
               </tr>
             </thead>
             <tbody>
               {study.isolates.map((i) => (
                 <tr key={i.name}>
-                  <td>{i.name}</td>
-                  <td>{i.origin}</td>
-                  <td>
-                    {[i.short_read_accession, i.long_read_accession].filter(Boolean).map((acc) => (
-                      <a
-                        key={acc}
-                        className="pangenome-accession"
-                        href={`https://www.ncbi.nlm.nih.gov/sra/?term=${encodeURIComponent(acc)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {acc}
-                      </a>
-                    ))}
-                  </td>
-                  <td>{[i.assembly_level, i.platform].filter(Boolean).join(', ')}</td>
-                  <td>{fmtInt(i.contigs)}</td>
-                  <td>{fmtInt(i.n50)}</td>
+                  {isolateColumns.map((c) => (
+                    <td key={c.key}>{c.render(i)}</td>
+                  ))}
                 </tr>
               ))}
             </tbody>
