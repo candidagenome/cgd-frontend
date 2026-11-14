@@ -63,7 +63,7 @@ function PangenomeSummaryRow({ data, featureName }) {
                 )}
                 <span className="pangenome-source">
                   {' '}
-                  &mdash; {study.species} pangenome of {total} isolates,{' '}
+                  &mdash; {study.title.replace(/ \(.*\)$/, '')}, {total} isolates,{' '}
                   {study.reference_dbxref_id ? (
                     <Link to={`/reference/${study.reference_dbxref_id}`}>{shortCitation(study.citation)}</Link>
                   ) : (
