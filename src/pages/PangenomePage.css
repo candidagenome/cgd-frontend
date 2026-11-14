@@ -190,6 +190,10 @@
   line-height: 1.5;
 }
 
+.pangenome-stat-split {
+  color: #666;
+}
+
 .pangenome-detail-panel {
   border: 1px solid #d7e3f1;
   border-radius: 4px;

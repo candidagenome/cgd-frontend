@@ -357,6 +357,13 @@ function PangenomeStudy({ studyId }) {
         </div>
         <div>
           <strong>{fmtInt(study.counts.not_in_reference)}</strong> not in {study.reference_strain}
+          {study.counts.not_in_reference_core !== null && study.counts.not_in_reference_core !== undefined && (
+            <span className="pangenome-stat-split">
+              {' '}
+              ({fmtInt(study.counts.not_in_reference_core)} core, {fmtInt(study.counts.not_in_reference_accessory)}{' '}
+              accessory)
+            </span>
+          )}
         </div>
         <div>
           <strong>{fmtInt(study.counts.with_stop_codons)}</strong> genes with premature stops
