@@ -270,7 +270,10 @@ function LocusPage() {
                 expressionLoading={loading.expressionDetails}
                 interactionData={data.interactionDetails?.results?.[selectedOrganism]}
                 interactionLoading={loading.interactionDetails}
-                pangenomeData={pangenome?.organism === selectedOrganism ? pangenome : null}
+                pangenomeData={
+                  // A name such as ACT1 has records in several species; older responses carry only the first
+                  (pangenome?.organisms || [pangenome]).find((o) => o?.organism === selectedOrganism) || null
+                }
               />
             )}
           </div>
