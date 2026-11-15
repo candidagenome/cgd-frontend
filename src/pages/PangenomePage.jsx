@@ -286,7 +286,9 @@ function PangenomeStudy({ studyId }) {
         setGenes(r);
         // A search that finds one gene, or names one exactly (e.g. "Show in gene table"), opens its detail
         const q = (params.q || '').toUpperCase();
-        const exact = r.genes.filter((g) => q && (g.id.toUpperCase() === q || g.reference_gene?.toUpperCase() === q));
+        // a gene's own ID wins over other study genes drawn at the same CGD locus
+        const byId = r.genes.filter((g) => q && g.id.toUpperCase() === q);
+        const exact = byId.length ? byId : r.genes.filter((g) => q && g.reference_gene?.toUpperCase() === q);
         setExpanded(r.genes.length === 1 ? r.genes[0].id : exact.length === 1 ? exact[0].id : null);
       })
       .catch(() => setGenes({ total: 0, genes: [], error: true }));
