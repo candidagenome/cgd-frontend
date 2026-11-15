@@ -6,7 +6,7 @@ import PangenomeMap from '../components/pangenome/PangenomeMap';
 import './PangenomePage.css';
 
 // The dropdowns filter on the server; the grid pages and sorts every matching gene on the client
-const MAX_GENES = 10000;
+const MAX_GENES = 50000;
 const GRID_PAGE_SIZE = 10;
 const fmtInt = (v) => (v === null || v === undefined ? '' : Number(v).toLocaleString());
 
@@ -18,8 +18,19 @@ const CATEGORY_OPTIONS = [
 const REFERENCE_OPTIONS = [
   { value: '', label: 'In reference or not' },
   { value: 'in', label: 'In reference annotation' },
-  { value: 'novel', label: 'Not in reference' },
+  { value: 'novel', label: 'No gene in reference annotation' },
 ];
+// "Not in reference" means the reference annotation has no corresponding gene, not that the sequence is absent
+const NOT_IN_REFERENCE_HELP = (strain) =>
+  `No corresponding gene in the ${strain} reference annotation; the sequence may still be present in its genome.`;
+
+/** Short Isolates-column text for core genes without a per-gene count, from the study's core definition */
+const coreShortLabel = (definition) => {
+  const pct = (definition || '').match(/(\d+(?:\.\d+)?)\s*%/);
+  if (pct) return `≥${pct[1]}%`;
+  const all = (definition || '').match(/\ball (\d+)\b/);
+  return all ? `${all[1]}/${all[1]}` : 'core';
+};
 const STOP_OPTIONS = [
   { value: '', label: 'Any' },
   { value: 'true', label: 'With premature stops' },
@@ -65,7 +76,7 @@ function PangenomeStudies() {
                 <th>Isolates</th>
                 <th>Core</th>
                 <th>Accessory</th>
-                <th>Not in reference</th>
+                <th title={NOT_IN_REFERENCE_HELP('reference')}>Not in reference</th>
               </tr>
             </thead>
             <tbody>
@@ -238,6 +249,12 @@ function PangenomeStudy({ studyId }) {
   const [expanded, setExpanded] = useState(null);
   const [showIsolates, setShowIsolates] = useState(false);
   const [queryInput, setQueryInput] = useState(searchParams.get('q') || '');
+  // Keep the search box in step with q when it changes from outside the box (back / forward, map links)
+  const [syncedQuery, setSyncedQuery] = useState(searchParams.get('q') || '');
+  if (syncedQuery !== (searchParams.get('q') || '')) {
+    setSyncedQuery(searchParams.get('q') || '');
+    setQueryInput(searchParams.get('q') || '');
+  }
   const gridRef = useRef(null);
 
   const filters = useMemo(
@@ -272,7 +289,7 @@ function PangenomeStudy({ studyId }) {
         const exact = r.genes.filter((g) => q && (g.id.toUpperCase() === q || g.reference_gene?.toUpperCase() === q));
         setExpanded(r.genes.length === 1 ? r.genes[0].id : exact.length === 1 ? exact[0].id : null);
       })
-      .catch(() => setGenes({ total: 0, genes: [] }));
+      .catch(() => setGenes({ total: 0, genes: [], error: true }));
   }, [studyId, filters]);
 
   const total = study?.isolate_count;
@@ -314,7 +331,11 @@ function PangenomeStudy({ studyId }) {
         cellRenderer: (p) => (
           <>
             <span className={`pangenome-badge ${p.data.category}`}>{p.data.category}</span>
-            {!p.data.in_reference && <span className="pangenome-badge novel">not in reference</span>}
+            {!p.data.in_reference && (
+              <span className="pangenome-badge novel" title={NOT_IN_REFERENCE_HELP(study?.reference_strain)}>
+                not in reference
+              </span>
+            )}
           </>
         ),
       },
@@ -327,7 +348,7 @@ function PangenomeStudy({ studyId }) {
           p.data.presence !== null && p.data.presence !== undefined
             ? `${p.data.presence}/${total}`
             : p.data.category === 'core'
-              ? '≥99.5%'
+              ? coreShortLabel(study?.core_definition)
               : '',
       },
       { headerName: 'Type', field: 'type', minWidth: 160, tooltipField: 'type' },
@@ -360,7 +381,7 @@ function PangenomeStudy({ studyId }) {
         },
       },
     ].filter(Boolean),
-    [total, study?.stop_codons_reported, study?.copy_number_reported]
+    [total, study?.stop_codons_reported, study?.copy_number_reported, study?.core_definition, study?.reference_strain]
   );
 
   // Re-render rows so the toggle arrow and highlight follow the open gene
@@ -435,6 +456,15 @@ function PangenomeStudy({ studyId }) {
             </a>
           </>
         )}
+        {study.doi && (
+          <>
+            {' '}
+            &middot;{' '}
+            <a href={`https://doi.org/${study.doi}`} target="_blank" rel="noopener noreferrer">
+              DOI: {study.doi}
+            </a>
+          </>
+        )}
       </p>
 
       <div className="pangenome-stats">
@@ -447,7 +477,7 @@ function PangenomeStudy({ studyId }) {
         <div>
           <strong>{fmtInt(study.counts.accessory)}</strong> accessory genes
         </div>
-        <div>
+        <div title={NOT_IN_REFERENCE_HELP(study.reference_strain)}>
           <strong>{fmtInt(study.counts.not_in_reference)}</strong> not in {study.reference_strain}
           {study.counts.not_in_reference_core !== null && study.counts.not_in_reference_core !== undefined && (
             <span className="pangenome-stat-split">
@@ -556,11 +586,19 @@ function PangenomeStudy({ studyId }) {
 
       {!genes ? (
         <div className="loading">Loading genes...</div>
+      ) : genes.error ? (
+        <div className="error">Could not load the gene list. Please try again later.</div>
       ) : (
         <>
           <div className="pangenome-count">
             {fmtInt(genes.total)} {genes.total === 1 ? 'gene' : 'genes'} · click a row for details
           </div>
+          {genes.genes.length < genes.total && (
+            <div className="pangenome-warning">
+              Showing the first {fmtInt(genes.genes.length)} of {fmtInt(genes.total)} genes; narrow the list with the
+              filters or search, or use the downloads for all of them.
+            </div>
+          )}
           <div className="ag-theme-alpine pangenome-grid" style={{ width: '100%' }}>
             <AgGridReact
               ref={gridRef}
