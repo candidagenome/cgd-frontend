@@ -341,7 +341,7 @@ function PangenomeStudy({ studyId }) {
       },
       {
         headerName: 'Isolates',
-        width: 90,
+        width: 110,
         // Core genes have no per-gene count in the study; sort them above every accessory gene
         valueGetter: (p) => (p.data.presence ?? (p.data.category === 'core' ? total + 1 : null)),
         valueFormatter: (p) =>

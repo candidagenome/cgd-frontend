@@ -56,8 +56,12 @@ function PangenomeSummaryRow({ data, featureName }) {
                 )}
                 {derived.length > 0 && (
                   <>
-                    ; <strong>{derived.length}</strong> accessory{' '}
-                    {derived.length === 1 ? 'variant' : 'variants'} (
+                    ; <strong>{derived.length}</strong>{' '}
+                    {derived.every((g) => g.category === 'accessory') ? 'accessory ' : 'related study '}
+                    {derived.every((g) => g.category === 'accessory')
+                      ? derived.length === 1 ? 'variant' : 'variants'
+                      : derived.length === 1 ? 'gene' : 'genes'}{' '}
+                    (
                     {derived.map((g) => `${g.id} ${g.presence}/${total}`).join(', ')})
                   </>
                 )}
