@@ -36,7 +36,8 @@ function PangenomeSummaryRow({ data, featureName }) {
                     </>
                   ) : (
                     <>
-                      <strong>Accessory</strong> gene: present in <strong>{own.presence}</strong> of {total} isolates
+                      <strong>Accessory</strong> gene: present in <strong>{own.presence.toLocaleString()}</strong> of{' '}
+                      {total.toLocaleString()} isolates
                     </>
                   )
                 ) : (
@@ -67,7 +68,7 @@ function PangenomeSummaryRow({ data, featureName }) {
                 )}
                 <span className="pangenome-source">
                   {' '}
-                  &mdash; {study.title.replace(/ \(.*\)$/, '')}, {total} isolates,{' '}
+                  &mdash; {study.title.replace(/ \(.*\)$/, '')}, {total.toLocaleString()} isolates,{' '}
                   {study.reference_dbxref_id ? (
                     <Link to={`/reference/${study.reference_dbxref_id}`}>{shortCitation(study.citation)}</Link>
                   ) : (
