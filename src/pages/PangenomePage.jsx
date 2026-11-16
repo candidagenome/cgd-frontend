@@ -69,7 +69,9 @@ function PangenomeStudies({ section }) {
   return (
     <div className="pangenome-page">
       <h1>{config.title}</h1>
-      <p className="pangenome-intro">{config.intro}</p>
+      <p className="pangenome-intro">
+        {config.intro} <Link to={`/help/pangenome${pangenome ? '' : '#strain-variation'}`}>Help</Link>
+      </p>
       {error && <div className="error">{error}</div>}
       {!studies && !error && <div className="loading">Loading...</div>}
       {studies && studies.length === 0 && <p className="pangenome-note">No studies loaded yet.</p>}
@@ -495,6 +497,9 @@ function PangenomeStudy({ studyId, section }) {
     <div className="pangenome-page">
       <div className="pangenome-breadcrumb">
         <Link to={config.path}>{config.title}</Link> &rsaquo; {study.title}
+        {' '}
+        &middot;{' '}
+        <Link to={`/help/pangenome${study.section === 'strain_variation' ? '#strain-variation' : ''}`}>Help</Link>
       </div>
       <h1>{study.title}</h1>
       <p className="pangenome-citation">
