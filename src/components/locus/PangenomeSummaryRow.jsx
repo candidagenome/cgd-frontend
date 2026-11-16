@@ -9,7 +9,7 @@ const shortCitation = (citation) => (citation || '').replace(/\) .*$/, ')');
  * covering the gene: for each study, whether the gene is core or accessory, how many isolates carry it,
  * its copy number and premature stop codons, and accessory paralogs / fusions derived from it.
  */
-function PangenomeSummaryRow({ data, featureName }) {
+function PangenomeSummaryRow({ data, featureName, geneName }) {
   const studies = data?.studies || [];
   if (studies.length === 0) return null;
 
@@ -19,14 +19,14 @@ function PangenomeSummaryRow({ data, featureName }) {
     return (
       <tr key={section} className="pangenome-section-header section-with-divider section-grey-bg">
         <th>{config.row}</th>
-        <td>{inSection.map((record) => studyLine(record, featureName, config))}</td>
+        <td>{inSection.map((record) => studyLine(record, featureName, geneName || featureName, config))}</td>
       </tr>
     );
   });
 }
 
-/** One study's line in a row */
-function studyLine({ study, isolate_count: total, genes }, featureName, config) {
+/** One study's line in a row; each sentence names the gene, so it reads on its own */
+function studyLine({ study, isolate_count: total, genes }, featureName, subject, config) {
   const own = genes.find((g) => g.id === featureName) || genes.find((g) => g.reference_gene === g.id);
   const derived = genes.filter((g) => g !== own);
   const browse = `${config.path}/${study.study_id}?q=${encodeURIComponent(featureName)}`;
@@ -35,36 +35,40 @@ function studyLine({ study, isolate_count: total, genes }, featureName, config) 
       <span className="summary-stat-line">
         {own && study.presence_reported === false ? (
           // A study of variants says nothing on presence: the gene's stop codons are the whole line
-          <>Premature {own.type.replace(/^./, (c) => c.toLowerCase())}</>
+          <>
+            {subject} has a premature {own.type.replace(/^./, (c) => c.toLowerCase())}
+          </>
         ) : own && config === SECTIONS.strain_variation ? (
           // Strain variation follows reference genes: say where the gene is found, not core / accessory
           own.presence < total ? (
             <>
-              Absent from <strong>{(total - own.presence).toLocaleString()}</strong> of {total.toLocaleString()}{' '}
-              isolates
+              {subject} is absent from <strong>{(total - own.presence).toLocaleString()}</strong> of{' '}
+              {total.toLocaleString()} isolates
             </>
           ) : (
-            <>Detected in all {total.toLocaleString()} isolates</>
+            <>
+              {subject} is detected in all {total.toLocaleString()} isolates
+            </>
           )
         ) : own ? (
           own.category === 'core' && own.type?.startsWith('Core (gap: ') ? (
             // Core genes the study annotates in fewer isolates, the gap put down to an artefact
             <>
-              <strong>Core</strong> gene (annotated in {own.presence} of {total} isolates; the study attributes
+              {subject} is a <strong>core</strong> gene (annotated in {own.presence} of {total} isolates; the study attributes
               the gap to {own.type.slice('Core (gap: '.length, -1)})
             </>
           ) : own.category === 'core' ? (
             <>
-              <strong>Core</strong> gene ({study.core_definition || 'present in nearly all isolates'})
+              {subject} is a <strong>core</strong> gene ({study.core_definition || 'present in nearly all isolates'})
             </>
           ) : (
             <>
-              <strong>Accessory</strong> gene: present in <strong>{own.presence.toLocaleString()}</strong> of{' '}
+              {subject} is an <strong>accessory</strong> gene: present in <strong>{own.presence.toLocaleString()}</strong> of{' '}
               {total.toLocaleString()} isolates
             </>
           )
         ) : (
-          <>Related accessory genes only</>
+          <>Only variants of {subject} are in this study</>
         )}
         {own && own.copy_number_max !== null && own.copy_number_max !== undefined && (
           <>

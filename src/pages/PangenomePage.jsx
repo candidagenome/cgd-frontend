@@ -719,6 +719,11 @@ function PangenomeStudy({ studyId, section }) {
         <li>
           <a href={pangenomeApi.downloadUrl(studyId, 'genes')}>{config.genesDownload}</a> (TSV)
         </li>
+        {presence && config.coreDownload && (
+          <li>
+            <a href={pangenomeApi.downloadUrl(studyId, 'core')}>{config.coreDownload}</a> (TSV)
+          </li>
+        )}
         {presence && (
           <li>
             <a href={pangenomeApi.downloadUrl(studyId, 'accessory')}>{config.accessoryDownload}</a> (TSV)

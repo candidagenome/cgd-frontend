@@ -920,7 +920,11 @@ function LocusSummary({
           })()}
 
           {/* Pangenome and Strain variation (published studies covering this gene) */}
-          <PangenomeSummaryRow data={pangenomeData} featureName={feature.feature_name} />
+          <PangenomeSummaryRow
+            data={pangenomeData}
+            featureName={feature.feature_name}
+            geneName={feature.gene_name}
+          />
 
           {/* Sequence Information */}
           {sequenceLoading ? (

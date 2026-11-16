@@ -18,6 +18,7 @@ export const SECTIONS = {
     stepGene: 'accessory gene',
     coreNote: 'Core genes are',
     genesDownload: 'All pangenome genes',
+    coreDownload: 'Core genes',
     accessoryDownload: 'Accessory genes',
   },
   strain_variation: {
