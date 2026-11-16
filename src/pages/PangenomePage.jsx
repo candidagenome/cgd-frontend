@@ -599,7 +599,7 @@ function PangenomeStudy({ studyId, section }) {
             </option>
           ))}
         </select>
-        {study.stop_codons_reported && (
+        {study.stop_codons_reported && presence && (
           <label>
             Stop codons{' '}
             <select value={filters.stops} onChange={(e) => update({ stops: e.target.value })}>
@@ -704,9 +704,11 @@ function PangenomeStudy({ studyId, section }) {
         <li>
           <a href={pangenomeApi.downloadUrl(studyId, 'genes')}>{config.genesDownload}</a> (TSV)
         </li>
-        <li>
-          <a href={pangenomeApi.downloadUrl(studyId, 'accessory')}>{config.accessoryDownload}</a> (TSV)
-        </li>
+        {presence && (
+          <li>
+            <a href={pangenomeApi.downloadUrl(studyId, 'accessory')}>{config.accessoryDownload}</a> (TSV)
+          </li>
+        )}
         {study.stop_codons_reported && (
           <li>
             <a href={pangenomeApi.downloadUrl(studyId, 'stop_codons')}>Premature stop codons by isolate</a> (TSV)
