@@ -362,7 +362,9 @@ function PangenomeStudy({ studyId, section }) {
         valueGetter: (p) => `${p.data.category}${p.data.in_reference ? '' : ' not in reference'}`,
         cellRenderer: (p) => (
           <>
-            <span className={`pangenome-badge ${p.data.category}`}>{categories[p.data.category] || p.data.category}</span>
+            <span className={`pangenome-badge ${p.data.category}`}>
+              {p.data.presence === 0 ? categories.absentAll : categories[p.data.category] || p.data.category}
+            </span>
             {!p.data.in_reference && (
               <span className="pangenome-badge novel" title={NOT_IN_REFERENCE_HELP(study?.reference_strain)}>
                 not in reference
@@ -513,6 +515,9 @@ function PangenomeStudy({ studyId, section }) {
         </div>
         <div>
           <strong>{fmtInt(study.counts.accessory)}</strong> {config.accessory}
+          {study.section === 'strain_variation' && study.counts.absent_from_all > 0 && (
+            <span className="pangenome-stat-split"> ({fmtInt(study.counts.absent_from_all)} from all)</span>
+          )}
         </div>
         {study.section !== 'strain_variation' && (
           <div title={NOT_IN_REFERENCE_HELP(study.reference_strain)}>
@@ -553,6 +558,8 @@ function PangenomeStudy({ studyId, section }) {
         referenceStrain={study.reference_strain}
         showStops={study.stop_codons_reported}
         categories={config.categories}
+        mapTicks={config.mapTicks}
+        stepGene={config.stepGene}
         focusId={filters.q}
         onShowInTable={(id) => {
           setQueryInput(id);
@@ -568,7 +575,11 @@ function PangenomeStudy({ studyId, section }) {
         <select value={filters.category} onChange={(e) => update({ category: e.target.value })}>
           {CATEGORY_OPTIONS.map((o) => (
             <option key={o.value} value={o.value}>
-              {o.value ? config.categories[o.value].replace(/^./, (c) => c.toUpperCase()) : o.label}
+              {o.value === 'accessory'
+                ? config.categories.filter
+                : o.value
+                  ? config.categories[o.value].replace(/^./, (c) => c.toUpperCase())
+                  : o.label}
             </option>
           ))}
         </select>

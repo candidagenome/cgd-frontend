@@ -56,7 +56,9 @@ function PangenomeMap({
   focusId,
   onShowInTable,
   showStops = true,
-  categories = { core: 'core', accessory: 'accessory' },
+  categories = { core: 'core', accessory: 'accessory', absentAll: 'accessory' },
+  mapTicks = 'accessory genes',
+  stepGene = 'accessory gene',
 }) {
   const containerRef = useRef(null);
   const width = useWidth(containerRef);
@@ -475,7 +477,7 @@ function PangenomeMap({
 
       <h3 className="pg-subhead">Genome overview</h3>
       <p className="pg-hint">
-        Coloured ticks are accessory genes{showStops ? '; purple marks are premature stop codons' : ''}. Click to zoom
+        Coloured ticks are {mapTicks}{showStops ? '; purple marks are premature stop codons' : ''}. Click to zoom
         in.
       </p>
       {overview}
@@ -502,15 +504,17 @@ function PangenomeMap({
         </button>
         <button onClick={() => zoom(0.5)}>Zoom in</button>
         <button onClick={() => zoom(2)}>Zoom out</button>
-        <button onClick={() => step(-1)}>&lsaquo; Previous accessory gene</button>
-        <button onClick={() => step(1)}>Next accessory gene &rsaquo;</button>
+        <button onClick={() => step(-1)}>&lsaquo; Previous {stepGene}</button>
+        <button onClick={() => step(1)}>Next {stepGene} &rsaquo;</button>
       </div>
       {region}
 
       {selected && (
         <div className="pg-selected">
           <strong>{selected.id}</strong>
-          {selected.gene_name && ` (${selected.gene_name})`}: <span className={`pangenome-badge ${selected.category}`}>{categories[selected.category]}</span>
+          {selected.gene_name && ` (${selected.gene_name})`}: <span className={`pangenome-badge ${selected.category}`}>
+            {selected.presence === 0 ? categories.absentAll : categories[selected.category]}
+          </span>
           {!selected.in_reference && <span className="pangenome-badge novel">not in {referenceStrain}</span>}
           {selected.presence !== null && selected.presence !== undefined && (
             <> present in {selected.presence} of {total} isolates.</>
