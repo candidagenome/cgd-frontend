@@ -265,7 +265,14 @@ function GeneDetail({ studyId, geneId, study }) {
                   {s.source_position && <div className="pangenome-note">study: {s.source_position}</div>}
                 </td>
                 <td>{s.protein_change || s.aa_position}</td>
-                <td>{s.homozygous.length ? s.homozygous.join(', ') : '-'}</td>
+                <td>
+                  {s.homozygous.length
+                    ? s.homozygous.join(', ')
+                    : // studies giving counts, not isolate lists
+                      Object.entries(s.group_counts || {})
+                        .map(([group, n]) => `${n} in ${group}`)
+                        .join('; ') || '-'}
+                </td>
                 <td>{s.heterozygous.length ? s.heterozygous.join(', ') : '-'}</td>
               </tr>
             ))}
