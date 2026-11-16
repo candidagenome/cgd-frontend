@@ -16,8 +16,12 @@ const frequencyColor = (presence, total) => {
   return '#f9a825';
 };
 const geneLabel = (g) => (g.placed_by === 'own' && g.gene_name ? g.gene_name : g.id);
-// cpar_Chr_1 -> Chr 1; ChrA_C_glabrata_CBS138 -> Chr A
-const shortChrom = (name) => name.replace(/^.*_Chr_?/i, 'Chr ').replace(/^Chr([A-Z0-9]+)_.*$/i, 'Chr $1');
+// cpar_Chr_1 -> Chr 1; ChrA_C_glabrata_CBS138 -> Chr A; Ca22chrRA_C_albicans_SC5314 -> Chr R
+const shortChrom = (name) =>
+  name
+    .replace(/^Ca\d+chr([0-9R])A_.*$/i, 'Chr $1')
+    .replace(/^.*_Chr_?/i, 'Chr ')
+    .replace(/^Chr([A-Z0-9]+)_.*$/i, 'Chr $1');
 
 /** Lay out overlapping intervals in lanes; returns [{item, lane}] and the lane count */
 function stack(items, gap) {

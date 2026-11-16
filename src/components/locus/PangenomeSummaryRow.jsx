@@ -35,7 +35,7 @@ function studyLine({ study, isolate_count: total, genes }, featureName, config) 
       <span className="summary-stat-line">
         {own && study.presence_reported === false ? (
           // A study of variants says nothing on presence: the gene's stop codons are the whole line
-          <>Premature {own.type.replace(/^Stop/, 'stop')}</>
+          <>Premature {own.type.replace(/^./, (c) => c.toLowerCase())}</>
         ) : own && config === SECTIONS.strain_variation ? (
           // Strain variation follows reference genes: say where the gene is found, not core / accessory
           own.presence < total ? (
