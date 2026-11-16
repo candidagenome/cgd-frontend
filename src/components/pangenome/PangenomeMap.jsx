@@ -56,6 +56,7 @@ function PangenomeMap({
   focusId,
   onShowInTable,
   showStops = true,
+  showPresence = true,
   categories = { core: 'core', accessory: 'accessory', absentAll: 'accessory' },
   mapTicks = 'accessory genes',
   stepGene = 'accessory gene',
@@ -82,7 +83,11 @@ function PangenomeMap({
     });
     return out;
   }, [map]);
-  const accessory = useMemo(() => (map?.genes || []).filter((g) => g.category === 'accessory'), [map]);
+  // The genes the browser steps through: accessory genes, or genes with stops for a study of stop codons
+  const accessory = useMemo(
+    () => (map?.genes || []).filter((g) => (showPresence ? g.category === 'accessory' : g.stops?.length)),
+    [map, showPresence]
+  );
   const lengths = useMemo(
     () => Object.fromEntries((map?.chromosomes || []).map((c) => [c.name, c.length])),
     [map]
@@ -224,7 +229,7 @@ function PangenomeMap({
   y += showVariants ? Math.max(1, variantStack.lanes) * laneH + 22 : 14;
   const freqY = y;
   const freqH = 46;
-  y += freqH + (showStops ? 22 : 10);
+  if (showPresence) y += freqH + (showStops ? 22 : 10);
   const stopsY = y;
   const stopsH = 46;
   if (showStops) y += stopsH + 10;
@@ -352,43 +357,47 @@ function PangenomeMap({
         </>
       )}
 
-      <text x={6} y={freqY + 12} className="pg-track-label">
-        Isolates
-      </text>
-      <text x={6} y={freqY + 24} className="pg-track-sublabel">
-        carrying gene
-      </text>
-      <line x1={LABEL_W} x2={LABEL_W + trackW} y1={freqY + freqH} y2={freqY + freqH} className="pg-axis" />
-      {/* 100% guide, so a bar's height reads as a share of all isolates */}
-      <line x1={LABEL_W} x2={LABEL_W + trackW} y1={freqY} y2={freqY} className="pg-axis pg-guide" />
-      <text x={LABEL_W + trackW} y={freqY - 3} textAnchor="end" className="pg-track-sublabel">
-        all {total}
-      </text>
-      {(() => {
-        // Variants drawn at the same gene share a position: put their bars side by side
-        const bars = inView.filter((g) => g.category === 'accessory' && g.presence !== null && g.presence !== undefined);
-        const groups = {};
-        bars.forEach((g) => {
-          (groups[`${g.start}-${g.end}`] = groups[`${g.start}-${g.end}`] || []).push(g);
-        });
-        return Object.values(groups).flatMap((group) =>
-          group.map((g, i) => {
-            const mid = rx((Math.max(g.start, view.start) + Math.min(g.end, view.end)) / 2);
-            const x = mid - (group.length * 12) / 2 + i * 12 + 1;
-            const h = Math.max(2, (g.presence / total) * freqH);
-            return (
-              <g key={`f-${g.id}`} onClick={() => setSelectedId(g.id)} className={`pg-gene ${selectedId === g.id ? 'selected' : ''}`}>
-                <rect x={x} y={freqY + freqH - h} width={10} height={h} fill={frequencyColor(g.presence, total)} />
-                <title>{`${g.id}: ${g.presence}/${total}`}</title>
-              </g>
-            );
-          })
-        );
-      })()}
-      {inView.some((g) => g.category === 'accessory') ? null : (
-        <text x={LABEL_W + 4} y={freqY + freqH - 4} className="pg-empty">
-          all genes here are core
+      {showPresence && (
+        <>
+        <text x={6} y={freqY + 12} className="pg-track-label">
+          Isolates
         </text>
+        <text x={6} y={freqY + 24} className="pg-track-sublabel">
+          carrying gene
+        </text>
+        <line x1={LABEL_W} x2={LABEL_W + trackW} y1={freqY + freqH} y2={freqY + freqH} className="pg-axis" />
+        {/* 100% guide, so a bar's height reads as a share of all isolates */}
+        <line x1={LABEL_W} x2={LABEL_W + trackW} y1={freqY} y2={freqY} className="pg-axis pg-guide" />
+        <text x={LABEL_W + trackW} y={freqY - 3} textAnchor="end" className="pg-track-sublabel">
+          all {total}
+        </text>
+        {(() => {
+          // Variants drawn at the same gene share a position: put their bars side by side
+          const bars = inView.filter((g) => g.category === 'accessory' && g.presence !== null && g.presence !== undefined);
+          const groups = {};
+          bars.forEach((g) => {
+            (groups[`${g.start}-${g.end}`] = groups[`${g.start}-${g.end}`] || []).push(g);
+          });
+          return Object.values(groups).flatMap((group) =>
+            group.map((g, i) => {
+              const mid = rx((Math.max(g.start, view.start) + Math.min(g.end, view.end)) / 2);
+              const x = mid - (group.length * 12) / 2 + i * 12 + 1;
+              const h = Math.max(2, (g.presence / total) * freqH);
+              return (
+                <g key={`f-${g.id}`} onClick={() => setSelectedId(g.id)} className={`pg-gene ${selectedId === g.id ? 'selected' : ''}`}>
+                  <rect x={x} y={freqY + freqH - h} width={10} height={h} fill={frequencyColor(g.presence, total)} />
+                  <title>{`${g.id}: ${g.presence}/${total}`}</title>
+                </g>
+              );
+            })
+          );
+        })()}
+        {inView.some((g) => g.category === 'accessory') ? null : (
+          <text x={LABEL_W + 4} y={freqY + freqH - 4} className="pg-empty">
+            all genes here are core
+          </text>
+        )}
+        </>
       )}
 
       {showStops && (
@@ -454,14 +463,19 @@ function PangenomeMap({
   return (
     <div className="pg-browser" ref={containerRef}>
       <div className="pg-legend">
-        <span>
-          <i className="pg-swatch" style={{ background: '#7cb342' }} /> {categories.core}
-        </span>
-        <span>
-          {categories.accessory.replace(/^./, (c) => c.toUpperCase())}, carried by: <i className="pg-swatch" style={{ background: '#c62828' }} /> &lt;10%{' '}
-          <i className="pg-swatch" style={{ background: '#ef6c00' }} /> 10&ndash;50%{' '}
-          <i className="pg-swatch" style={{ background: '#f9a825' }} /> &ge;50% of isolates
-        </span>
+        {showPresence && (
+          <span>
+            <i className="pg-swatch" style={{ background: '#7cb342' }} /> {categories.core}
+          </span>
+        )}
+        {showPresence && (
+          <span>
+            {categories.accessory.replace(/^./, (c) => c.toUpperCase())}, carried by:{' '}
+            <i className="pg-swatch" style={{ background: '#c62828' }} /> &lt;10%{' '}
+            <i className="pg-swatch" style={{ background: '#ef6c00' }} /> 10&ndash;50%{' '}
+            <i className="pg-swatch" style={{ background: '#f9a825' }} /> &ge;50% of isolates
+          </span>
+        )}
         {showVariants && (
           <span>
             <i className="pg-swatch pg-swatch-outline" /> variant not in {referenceStrain} (dashed)
@@ -477,8 +491,10 @@ function PangenomeMap({
 
       <h3 className="pg-subhead">Genome overview</h3>
       <p className="pg-hint">
-        Coloured ticks are {mapTicks}{showStops ? '; purple marks are premature stop codons' : ''}. Click to zoom
-        in.
+        {showPresence
+          ? `Coloured ticks are ${mapTicks}${showStops ? '; purple marks are premature stop codons' : ''}.`
+          : 'Purple marks are premature stop codons.'}{' '}
+        Click to zoom in.
       </p>
       {overview}
 
@@ -512,9 +528,12 @@ function PangenomeMap({
       {selected && (
         <div className="pg-selected">
           <strong>{selected.id}</strong>
-          {selected.gene_name && ` (${selected.gene_name})`}: <span className={`pangenome-badge ${selected.category}`}>
-            {selected.presence === 0 ? categories.absentAll : categories[selected.category]}
-          </span>
+          {selected.gene_name && ` (${selected.gene_name})`}:{' '}
+          {showPresence && (
+            <span className={`pangenome-badge ${selected.category}`}>
+              {selected.presence === 0 ? categories.absentAll : categories[selected.category]}
+            </span>
+          )}
           {!selected.in_reference && <span className="pangenome-badge novel">not in {referenceStrain}</span>}
           {selected.presence !== null && selected.presence !== undefined && (
             <> present in {selected.presence} of {total} isolates.</>

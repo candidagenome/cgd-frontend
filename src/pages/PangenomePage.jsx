@@ -325,6 +325,8 @@ function PangenomeStudy({ studyId, section }) {
 
   const total = study?.isolate_count;
   const categories = (SECTIONS[study?.section] || SECTIONS.pangenome).categories;
+  // Studies of variants (stop codons) say which isolates carry them, not which isolates carry each gene
+  const presence = study?.presence_reported !== false;
   const columnDefs = useMemo(
     () => [
       {
@@ -356,7 +358,7 @@ function PangenomeStudy({ studyId, section }) {
             <span className="pangenome-note">none</span>
           ),
       },
-      {
+      presence && {
         headerName: 'Category',
         minWidth: 200,
         valueGetter: (p) => `${p.data.category}${p.data.in_reference ? '' : ' not in reference'}`,
@@ -373,7 +375,7 @@ function PangenomeStudy({ studyId, section }) {
           </>
         ),
       },
-      {
+      presence && {
         headerName: 'Isolates',
         width: 110,
         // Core genes have no per-gene count in the study; sort them above every accessory gene
@@ -415,7 +417,7 @@ function PangenomeStudy({ studyId, section }) {
         },
       },
     ].filter(Boolean),
-    [total, study, categories]
+    [total, study, categories, presence]
   );
 
   // Re-render rows so the toggle arrow and highlight follow the open gene
@@ -510,15 +512,19 @@ function PangenomeStudy({ studyId, section }) {
         <div>
           <strong>{fmtInt(total)}</strong> isolates
         </div>
-        <div>
-          <strong>{fmtInt(study.counts.core)}</strong> {config.core}
-        </div>
-        <div>
-          <strong>{fmtInt(study.counts.accessory)}</strong> {config.accessory}
-          {study.section === 'strain_variation' && study.counts.absent_from_all > 0 && (
-            <span className="pangenome-stat-split"> ({fmtInt(study.counts.absent_from_all)} from all)</span>
-          )}
-        </div>
+        {presence && (
+          <>
+          <div>
+            <strong>{fmtInt(study.counts.core)}</strong> {config.core}
+          </div>
+          <div>
+            <strong>{fmtInt(study.counts.accessory)}</strong> {config.accessory}
+            {study.section === 'strain_variation' && study.counts.absent_from_all > 0 && (
+              <span className="pangenome-stat-split"> ({fmtInt(study.counts.absent_from_all)} from all)</span>
+            )}
+          </div>
+          </>
+        )}
         {study.section !== 'strain_variation' && (
           <div title={NOT_IN_REFERENCE_HELP(study.reference_strain)}>
             <strong>{fmtInt(study.counts.not_in_reference)}</strong> not in {study.reference_strain}
@@ -559,7 +565,8 @@ function PangenomeStudy({ studyId, section }) {
         showStops={study.stop_codons_reported}
         categories={config.categories}
         mapTicks={config.mapTicks}
-        stepGene={config.stepGene}
+        stepGene={presence ? config.stepGene : 'gene with a stop'}
+        showPresence={presence}
         focusId={filters.q}
         onShowInTable={(id) => {
           setQueryInput(id);
@@ -572,17 +579,19 @@ function PangenomeStudy({ studyId, section }) {
         Genes
       </h2>
       <div className="pangenome-filters">
-        <select value={filters.category} onChange={(e) => update({ category: e.target.value })}>
-          {CATEGORY_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.value === 'accessory'
-                ? config.categories.filter
-                : o.value
-                  ? config.categories[o.value].replace(/^./, (c) => c.toUpperCase())
-                  : o.label}
-            </option>
-          ))}
-        </select>
+        {presence && (
+          <select value={filters.category} onChange={(e) => update({ category: e.target.value })}>
+            {CATEGORY_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.value === 'accessory'
+                  ? config.categories.filter
+                  : o.value
+                    ? config.categories[o.value].replace(/^./, (c) => c.toUpperCase())
+                    : o.label}
+              </option>
+            ))}
+          </select>
+        )}
         <select value={filters.reference} onChange={(e) => update({ reference: e.target.value })}>
           {REFERENCE_OPTIONS.map((o) => (
             <option key={o.value} value={o.value}>

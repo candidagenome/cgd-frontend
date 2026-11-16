@@ -33,7 +33,10 @@ function studyLine({ study, isolate_count: total, genes }, featureName, config) 
   return (
     <div key={study.study_id} className="summary-inline-row pangenome-summary-row">
       <span className="summary-stat-line">
-        {own && config === SECTIONS.strain_variation ? (
+        {own && study.presence_reported === false ? (
+          // A study of variants says nothing on presence: the gene's stop codons are the whole line
+          <>Premature {own.type.replace(/^Stop/, 'stop')}</>
+        ) : own && config === SECTIONS.strain_variation ? (
           // Strain variation follows reference genes: say where the gene is found, not core / accessory
           own.presence < total ? (
             <>
@@ -69,7 +72,7 @@ function studyLine({ study, isolate_count: total, genes }, featureName, config) 
             <strong>{fmtCopies(own.copy_number_max, study)}</strong> across isolates
           </>
         )}
-        {own && own.stop_codon_isolates > 0 && (
+        {own && own.stop_codon_isolates > 0 && study.presence_reported !== false && (
           <>
             ; premature stop codon in <strong>{own.stop_codon_isolates}</strong>{' '}
             {own.stop_codon_isolates === 1 ? 'isolate' : 'isolates'}
