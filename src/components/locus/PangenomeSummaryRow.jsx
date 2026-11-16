@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { SECTIONS } from '../pangenome/sections';
+import { SECTIONS, fmtCopies } from '../pangenome/sections';
 
 const shortCitation = (citation) => (citation || '').replace(/\) .*$/, ')');
 
@@ -65,8 +65,8 @@ function studyLine({ study, isolate_count: total, genes }, featureName, config) 
         )}
         {own && own.copy_number_max !== null && own.copy_number_max !== undefined && (
           <>
-            ; estimated copy number <strong>{own.copy_number_min.toFixed(1)}</strong>&ndash;
-            <strong>{own.copy_number_max.toFixed(1)}</strong> across isolates
+            ; copy number <strong>{fmtCopies(own.copy_number_min, study)}</strong>&ndash;
+            <strong>{fmtCopies(own.copy_number_max, study)}</strong> across isolates
           </>
         )}
         {own && own.stop_codon_isolates > 0 && (

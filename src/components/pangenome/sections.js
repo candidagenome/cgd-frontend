@@ -28,3 +28,6 @@ export const SECTIONS = {
 };
 
 export const sectionOf = (study) => SECTIONS[study?.section] || SECTIONS.pangenome;
+
+/** A copy number for display: gene counts as whole numbers, read-coverage estimates to one decimal */
+export const fmtCopies = (cn, study) => (study?.copy_number_kind === 'count' ? String(Math.round(cn)) : cn.toFixed(1));

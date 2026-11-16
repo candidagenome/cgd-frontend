@@ -3,7 +3,7 @@ import { Link, Navigate, useLocation, useParams, useSearchParams } from 'react-r
 import { AgGridReact } from 'ag-grid-react';
 import pangenomeApi from '../api/pangenomeApi';
 import PangenomeMap from '../components/pangenome/PangenomeMap';
-import { SECTIONS } from '../components/pangenome/sections';
+import { SECTIONS, fmtCopies } from '../components/pangenome/sections';
 import './PangenomePage.css';
 
 // The dropdowns filter on the server; the grid pages and sorts every matching gene on the client
@@ -131,6 +131,7 @@ function PangenomeStudies({ section }) {
 /** Gene details: isolates carrying the gene, premature stop codons per isolate and the divergent strains */
 function GeneDetail({ studyId, geneId, study }) {
   const divergentStrains = study.divergent_strains;
+  const baseline = study.copy_number_baseline || 2;
   const [gene, setGene] = useState(null);
   const [error, setError] = useState(null);
 
@@ -215,9 +216,11 @@ function GeneDetail({ studyId, geneId, study }) {
       )}
       {Object.keys(gene.copy_number || {}).length > 0 && (
         <>
-          <h4>Estimated copy number by isolate</h4>
+          <h4>Copy number by isolate</h4>
           <p className="pangenome-note">
-            Highest first; a diploid gene with no change is about 2. Red: absent; amber: at least twice the usual 2.
+            Highest first; an unchanged gene is about {baseline}
+            {baseline === 2 ? ' (diploid)' : baseline === 1 ? ' (haploid)' : ''}. Red: absent; amber: at least twice
+            that.
           </p>
           <div className="pangenome-cn-list">
             {Object.entries(gene.copy_number)
@@ -225,10 +228,10 @@ function GeneDetail({ studyId, geneId, study }) {
               .map(([isolate, cn]) => (
                 <span
                   key={isolate}
-                  className={`pangenome-cn ${cn < 0.2 ? 'absent' : cn >= 4 ? 'high' : ''}`}
+                  className={`pangenome-cn ${cn < 0.2 ? 'absent' : cn >= 2 * baseline ? 'high' : ''}`}
                   title={`${isolate}: ${cn}`}
                 >
-                  {isolate} <strong>{cn.toFixed(1)}</strong>
+                  {isolate} <strong>{fmtCopies(cn, study)}</strong>
                 </span>
               ))}
           </div>
@@ -391,12 +394,12 @@ function PangenomeStudy({ studyId, section }) {
       study?.copy_number_reported && {
         headerName: 'Copy number',
         minWidth: 130,
-        headerTooltip: 'Estimated copy number range across isolates; sorts by the highest',
+        headerTooltip: 'Copy number range across isolates; sorts by the highest',
         valueGetter: (p) => p.data.copy_number_max,
         valueFormatter: (p) =>
           p.data.copy_number_max === null || p.data.copy_number_max === undefined
             ? ''
-            : `${p.data.copy_number_min.toFixed(1)}–${p.data.copy_number_max.toFixed(1)}`,
+            : `${fmtCopies(p.data.copy_number_min, study)}–${fmtCopies(p.data.copy_number_max, study)}`,
       },
       study?.stop_codons_reported && {
         headerName: 'Stops',
@@ -409,7 +412,7 @@ function PangenomeStudy({ studyId, section }) {
         },
       },
     ].filter(Boolean),
-    [total, study?.stop_codons_reported, study?.copy_number_reported, study?.core_definition, study?.reference_strain]
+    [total, study]
   );
 
   // Re-render rows so the toggle arrow and highlight follow the open gene
