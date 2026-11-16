@@ -12,6 +12,11 @@ export const SECTIONS = {
     link: 'View in pangenome browser',
     core: 'core genes',
     accessory: 'accessory genes',
+    // category names on badges, filters and the map; the note introducing the study's core definition
+    categories: { core: 'core', accessory: 'accessory' },
+    coreNote: 'Core genes are',
+    genesDownload: 'All pangenome genes',
+    accessoryDownload: 'Accessory genes',
   },
   strain_variation: {
     path: '/strain-variation',
@@ -24,6 +29,10 @@ export const SECTIONS = {
     link: 'View in strain variation browser',
     core: 'genes detected in all isolates',
     accessory: 'genes absent from some isolates',
+    categories: { core: 'in all isolates', accessory: 'absent from some' },
+    coreNote: 'In all isolates means',
+    genesDownload: 'All genes',
+    accessoryDownload: 'Genes absent from some isolates',
   },
 };
 

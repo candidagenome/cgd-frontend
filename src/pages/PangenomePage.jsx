@@ -324,6 +324,7 @@ function PangenomeStudy({ studyId, section }) {
   }, [studyId, filters]);
 
   const total = study?.isolate_count;
+  const categories = (SECTIONS[study?.section] || SECTIONS.pangenome).categories;
   const columnDefs = useMemo(
     () => [
       {
@@ -361,7 +362,7 @@ function PangenomeStudy({ studyId, section }) {
         valueGetter: (p) => `${p.data.category}${p.data.in_reference ? '' : ' not in reference'}`,
         cellRenderer: (p) => (
           <>
-            <span className={`pangenome-badge ${p.data.category}`}>{p.data.category}</span>
+            <span className={`pangenome-badge ${p.data.category}`}>{categories[p.data.category] || p.data.category}</span>
             {!p.data.in_reference && (
               <span className="pangenome-badge novel" title={NOT_IN_REFERENCE_HELP(study?.reference_strain)}>
                 not in reference
@@ -412,7 +413,7 @@ function PangenomeStudy({ studyId, section }) {
         },
       },
     ].filter(Boolean),
-    [total, study]
+    [total, study, categories]
   );
 
   // Re-render rows so the toggle arrow and highlight follow the open gene
@@ -532,7 +533,11 @@ function PangenomeStudy({ studyId, section }) {
         )}
       </div>
       <ul className="pangenome-notes">
-        {study.core_definition && <li>Core genes are {study.core_definition}.</li>}
+        {study.core_definition && (
+          <li>
+            {config.coreNote} {study.core_definition}.
+          </li>
+        )}
         {study.notes.map((n) => (
           <li key={n}>{n}</li>
         ))}
@@ -547,6 +552,7 @@ function PangenomeStudy({ studyId, section }) {
         studyId={studyId}
         referenceStrain={study.reference_strain}
         showStops={study.stop_codons_reported}
+        categories={config.categories}
         focusId={filters.q}
         onShowInTable={(id) => {
           setQueryInput(id);
@@ -562,7 +568,7 @@ function PangenomeStudy({ studyId, section }) {
         <select value={filters.category} onChange={(e) => update({ category: e.target.value })}>
           {CATEGORY_OPTIONS.map((o) => (
             <option key={o.value} value={o.value}>
-              {o.label}
+              {o.value ? config.categories[o.value].replace(/^./, (c) => c.toUpperCase()) : o.label}
             </option>
           ))}
         </select>
@@ -676,10 +682,10 @@ function PangenomeStudy({ studyId, section }) {
       <h2 className="section-header">Downloads</h2>
       <ul className="pangenome-downloads">
         <li>
-          <a href={pangenomeApi.downloadUrl(studyId, 'genes')}>All pangenome genes</a> (TSV)
+          <a href={pangenomeApi.downloadUrl(studyId, 'genes')}>{config.genesDownload}</a> (TSV)
         </li>
         <li>
-          <a href={pangenomeApi.downloadUrl(studyId, 'accessory')}>Accessory genes</a> (TSV)
+          <a href={pangenomeApi.downloadUrl(studyId, 'accessory')}>{config.accessoryDownload}</a> (TSV)
         </li>
         {study.stop_codons_reported && (
           <li>

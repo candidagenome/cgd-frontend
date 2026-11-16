@@ -50,7 +50,14 @@ function useWidth(ref) {
  * accessory genes and premature stop codons, and a zoomable region view with
  * gene, variant, isolate-frequency and stop-codon tracks.
  */
-function PangenomeMap({ studyId, referenceStrain, focusId, onShowInTable, showStops = true }) {
+function PangenomeMap({
+  studyId,
+  referenceStrain,
+  focusId,
+  onShowInTable,
+  showStops = true,
+  categories = { core: 'core', accessory: 'accessory' },
+}) {
   const containerRef = useRef(null);
   const width = useWidth(containerRef);
   const [map, setMap] = useState(null);
@@ -446,10 +453,10 @@ function PangenomeMap({ studyId, referenceStrain, focusId, onShowInTable, showSt
     <div className="pg-browser" ref={containerRef}>
       <div className="pg-legend">
         <span>
-          <i className="pg-swatch" style={{ background: '#7cb342' }} /> core
+          <i className="pg-swatch" style={{ background: '#7cb342' }} /> {categories.core}
         </span>
         <span>
-          Accessory, carried by: <i className="pg-swatch" style={{ background: '#c62828' }} /> &lt;10%{' '}
+          {categories.accessory.replace(/^./, (c) => c.toUpperCase())}, carried by: <i className="pg-swatch" style={{ background: '#c62828' }} /> &lt;10%{' '}
           <i className="pg-swatch" style={{ background: '#ef6c00' }} /> 10&ndash;50%{' '}
           <i className="pg-swatch" style={{ background: '#f9a825' }} /> &ge;50% of isolates
         </span>
@@ -503,7 +510,7 @@ function PangenomeMap({ studyId, referenceStrain, focusId, onShowInTable, showSt
       {selected && (
         <div className="pg-selected">
           <strong>{selected.id}</strong>
-          {selected.gene_name && ` (${selected.gene_name})`}: <span className={`pangenome-badge ${selected.category}`}>{selected.category}</span>
+          {selected.gene_name && ` (${selected.gene_name})`}: <span className={`pangenome-badge ${selected.category}`}>{categories[selected.category]}</span>
           {!selected.in_reference && <span className="pangenome-badge novel">not in {referenceStrain}</span>}
           {selected.presence !== null && selected.presence !== undefined && (
             <> present in {selected.presence} of {total} isolates.</>
