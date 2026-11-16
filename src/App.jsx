@@ -234,6 +234,9 @@ function App() {
           <Route path="/locus/:name" element={<LocusPage />} />
           <Route path="/pangenome" element={<PangenomePage />} />
           <Route path="/pangenome/:studyId" element={<PangenomePage />} />
+          <Route path="/strain-variation" element={<PangenomePage section="strain_variation" />} />
+          <Route path="/strain-variation/:studyId" element={<PangenomePage section="strain_variation" />} />
+          <Route path="/multi-genome" element={<Navigate to="/strain-variation" replace />} />
           <Route path="/reference/NewPapersThisWeek" element={<NewPapersThisWeekPage />} />
           <Route path="/reference/GenomewideAnalysisPapers" element={<GenomeWideAnalysisPapersPage />} />
           <Route path="/genome-wide-analysis-papers" element={<GenomeWideAnalysisPapersPage />} />

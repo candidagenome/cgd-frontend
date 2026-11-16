@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, Navigate, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import pangenomeApi from '../api/pangenomeApi';
 import PangenomeMap from '../components/pangenome/PangenomeMap';
+import { SECTIONS } from '../components/pangenome/sections';
 import './PangenomePage.css';
 
 // The dropdowns filter on the server; the grid pages and sorts every matching gene on the client
@@ -45,28 +46,34 @@ const SORT_OPTIONS = [
 
 const shortCitation = (citation) => (citation || '').replace(/\) .*$/, ')');
 
-/** Study list (/pangenome) */
-function PangenomeStudies() {
+/** What a strain-variation study reports, for the study list */
+const studyData = (s) =>
+  [s.copy_number_reported && 'Copy number', s.stop_codons_reported && 'Premature stop codons']
+    .filter(Boolean)
+    .join(', ');
+
+/** Study list (/pangenome, /strain-variation) */
+function PangenomeStudies({ section }) {
+  const config = SECTIONS[section];
   const [studies, setStudies] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     pangenomeApi
-      .getStudies()
+      .getStudies(section)
       .then((r) => setStudies(r.studies))
-      .catch(() => setError('Could not load pangenome studies.'));
-  }, []);
+      .catch(() => setError('Could not load the studies.'));
+  }, [section]);
 
+  const pangenome = section === 'pangenome';
   return (
     <div className="pangenome-page">
-      <h1>Pangenome Browser</h1>
-      <p className="pangenome-intro">
-        Published pangenome studies of CGD species: which genes are shared by all or nearly all isolates of a species (core),
-        which vary between isolates (accessory), and genes absent from the CGD reference strain.
-      </p>
+      <h1>{config.title}</h1>
+      <p className="pangenome-intro">{config.intro}</p>
       {error && <div className="error">{error}</div>}
       {!studies && !error && <div className="loading">Loading...</div>}
-      {studies && (
+      {studies && studies.length === 0 && <p className="pangenome-note">No studies loaded yet.</p>}
+      {studies && studies.length > 0 && (
         <div className="pangenome-scroll">
           <table className="pangenome-table">
             <thead>
@@ -74,25 +81,43 @@ function PangenomeStudies() {
                 <th>Study</th>
                 <th>Species</th>
                 <th>Isolates</th>
-                <th>Core</th>
-                <th>Accessory</th>
-                <th title={NOT_IN_REFERENCE_HELP('reference')}>Not in reference</th>
+                {pangenome ? (
+                  <>
+                    <th>Core</th>
+                    <th>Accessory</th>
+                    <th title={NOT_IN_REFERENCE_HELP('reference')}>Not in reference</th>
+                  </>
+                ) : (
+                  <>
+                    <th>Genes</th>
+                    <th>Data</th>
+                  </>
+                )}
               </tr>
             </thead>
             <tbody>
               {studies.map((s) => (
                 <tr key={s.study_id}>
                   <td>
-                    <Link to={`/pangenome/${s.study_id}`}>{s.title}</Link>
+                    <Link to={`${config.path}/${s.study_id}`}>{s.title}</Link>
                     <div className="pangenome-note">{shortCitation(s.citation)}</div>
                   </td>
                   <td>
                     <em>{s.species}</em> ({s.reference_strain})
                   </td>
                   <td>{fmtInt(s.isolate_count)}</td>
-                  <td>{fmtInt(s.counts.core)}</td>
-                  <td>{fmtInt(s.counts.accessory)}</td>
-                  <td>{fmtInt(s.counts.not_in_reference)}</td>
+                  {pangenome ? (
+                    <>
+                      <td>{fmtInt(s.counts.core)}</td>
+                      <td>{fmtInt(s.counts.accessory)}</td>
+                      <td>{fmtInt(s.counts.not_in_reference)}</td>
+                    </>
+                  ) : (
+                    <>
+                      <td>{fmtInt(s.counts.genes)}</td>
+                      <td>{studyData(s)}</td>
+                    </>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -241,7 +266,8 @@ function GeneDetail({ studyId, geneId, study }) {
 }
 
 /** One study (/pangenome/:studyId) */
-function PangenomeStudy({ studyId }) {
+function PangenomeStudy({ studyId, section }) {
+  const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [study, setStudy] = useState(null);
   const [genes, setGenes] = useState(null);
@@ -403,6 +429,11 @@ function PangenomeStudy({ studyId }) {
 
   if (error) return <div className="pangenome-page error">{error}</div>;
   if (!study) return <div className="pangenome-page loading">Loading...</div>;
+  // A study opened under the other section's address moves to its own (old /pangenome/bergin2024 links)
+  const config = SECTIONS[study.section] || SECTIONS.pangenome;
+  if ((study.section || 'pangenome') !== section) {
+    return <Navigate to={`${config.path}/${studyId}${location.search}`} replace />;
+  }
 
   const expandedGene = genes?.genes.find((g) => g.id === expanded);
   // Isolate table columns, leaving out those the study gives no values for
@@ -440,7 +471,7 @@ function PangenomeStudy({ studyId }) {
   return (
     <div className="pangenome-page">
       <div className="pangenome-breadcrumb">
-        <Link to="/pangenome">Pangenome Browser</Link> &rsaquo; {study.title}
+        <Link to={config.path}>{config.title}</Link> &rsaquo; {study.title}
       </div>
       <h1>{study.title}</h1>
       <p className="pangenome-citation">
@@ -474,21 +505,23 @@ function PangenomeStudy({ studyId }) {
           <strong>{fmtInt(total)}</strong> isolates
         </div>
         <div>
-          <strong>{fmtInt(study.counts.core)}</strong> core genes
+          <strong>{fmtInt(study.counts.core)}</strong> {config.core}
         </div>
         <div>
-          <strong>{fmtInt(study.counts.accessory)}</strong> accessory genes
+          <strong>{fmtInt(study.counts.accessory)}</strong> {config.accessory}
         </div>
-        <div title={NOT_IN_REFERENCE_HELP(study.reference_strain)}>
-          <strong>{fmtInt(study.counts.not_in_reference)}</strong> not in {study.reference_strain}
-          {study.counts.not_in_reference_core !== null && study.counts.not_in_reference_core !== undefined && (
-            <span className="pangenome-stat-split">
-              {' '}
-              ({fmtInt(study.counts.not_in_reference_core)} core, {fmtInt(study.counts.not_in_reference_accessory)}{' '}
-              accessory)
-            </span>
-          )}
-        </div>
+        {study.section !== 'strain_variation' && (
+          <div title={NOT_IN_REFERENCE_HELP(study.reference_strain)}>
+            <strong>{fmtInt(study.counts.not_in_reference)}</strong> not in {study.reference_strain}
+            {study.counts.not_in_reference_core !== null && study.counts.not_in_reference_core !== undefined && (
+              <span className="pangenome-stat-split">
+                {' '}
+                ({fmtInt(study.counts.not_in_reference_core)} core, {fmtInt(study.counts.not_in_reference_accessory)}{' '}
+                accessory)
+              </span>
+            )}
+          </div>
+        )}
         {study.stop_codons_reported && (
           <div>
             <strong>{fmtInt(study.counts.with_stop_codons)}</strong> genes with premature stops
@@ -506,7 +539,7 @@ function PangenomeStudy({ studyId }) {
         </li>
       </ul>
 
-      <h2 className="section-header">Pangenome browser</h2>
+      <h2 className="section-header">{config.browser}</h2>
       <PangenomeMap
         studyId={studyId}
         referenceStrain={study.reference_strain}
@@ -692,9 +725,13 @@ function PangenomeStudy({ studyId }) {
   );
 }
 
-function PangenomePage() {
+function PangenomePage({ section = 'pangenome' }) {
   const { studyId } = useParams();
-  return studyId ? <PangenomeStudy studyId={studyId} /> : <PangenomeStudies />;
+  return studyId ? (
+    <PangenomeStudy studyId={studyId} section={section} />
+  ) : (
+    <PangenomeStudies section={section} />
+  );
 }
 
 export default PangenomePage;

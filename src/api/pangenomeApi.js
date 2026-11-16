@@ -1,9 +1,9 @@
 import api from './config';
 
 export const pangenomeApi = {
-  // All loaded pangenome studies with summary counts
-  getStudies: async () => {
-    const response = await api.get('/api/pangenome/studies');
+  // All loaded studies with summary counts; section: pangenome or strain_variation
+  getStudies: async (section) => {
+    const response = await api.get('/api/pangenome/studies', { params: section ? { section } : {} });
     return response.data;
   },
 
