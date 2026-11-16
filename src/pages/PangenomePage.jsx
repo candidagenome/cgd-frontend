@@ -245,18 +245,26 @@ function GeneDetail({ studyId, geneId, study }) {
           <thead>
             <tr>
               <th>Position</th>
-              <th>Codon (aa)</th>
+              <th>{gene.stop_codons.some((s) => s.protein_change) ? 'Protein change' : 'Codon (aa)'}</th>
               <th>Homozygous in</th>
               <th>Heterozygous in</th>
             </tr>
           </thead>
           <tbody>
             {gene.stop_codons.map((s) => (
-              <tr key={`${s.chromosome}-${s.position}`}>
+              <tr key={`${s.chromosome}-${s.position}-${s.source_position}`}>
                 <td>
-                  {s.chromosome}:{fmtInt(s.position)}
+                  {s.position ? (
+                    <>
+                      {s.position_approximate ? '≈ ' : ''}
+                      {s.chromosome}:{fmtInt(s.position)}
+                    </>
+                  ) : (
+                    '-'
+                  )}
+                  {s.source_position && <div className="pangenome-note">study: {s.source_position}</div>}
                 </td>
-                <td>{s.aa_position}</td>
+                <td>{s.protein_change || s.aa_position}</td>
                 <td>{s.homozygous.length ? s.homozygous.join(', ') : '-'}</td>
                 <td>{s.heterozygous.length ? s.heterozygous.join(', ') : '-'}</td>
               </tr>
