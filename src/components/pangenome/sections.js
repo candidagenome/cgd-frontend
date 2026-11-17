@@ -1,0 +1,52 @@
+// Two sections share these pages: pangenomes (gene families across isolates) and strain variation
+// (how reference genes vary across isolates: copy number, variants). A study's section picks its home.
+export const SECTIONS = {
+  pangenome: {
+    path: '/pangenome',
+    title: 'Pangenome Browser',
+    intro:
+      'Published pangenome studies of CGD species: which genes are shared by all or nearly all isolates of a ' +
+      'species (core), which vary between isolates (accessory), and genes absent from the CGD reference strain.',
+    browser: 'Pangenome browser',
+    row: 'Pangenome',
+    link: 'View in pangenome browser',
+    core: 'core genes',
+    accessory: 'accessory genes',
+    // category names on badges, filters and the map; the note introducing the study's core definition
+    categories: { core: 'core', accessory: 'accessory', absentAll: 'accessory', filter: 'Accessory' },
+    mapTicks: 'accessory genes',
+    stepGene: 'accessory gene',
+    coreNote: 'Core genes are',
+    genesDownload: 'All pangenome genes',
+    coreDownload: 'Core genes',
+    accessoryDownload: 'Accessory genes',
+  },
+  strain_variation: {
+    path: '/strain-variation',
+    title: 'Strain Variation Browser',
+    intro:
+      "Published studies of how CGD reference genes vary across a species' isolates, such as gene copy number " +
+      'and gene loss. Unlike a pangenome, these studies follow the reference genes only.',
+    browser: 'Genome browser',
+    row: 'Strain variation',
+    link: 'View in strain variation browser',
+    core: 'genes detected in all isolates',
+    accessory: 'genes absent from some isolates',
+    categories: {
+      core: 'in all isolates',
+      accessory: 'absent from some',
+      absentAll: 'absent from all',
+      filter: 'Absent from some or all',
+    },
+    mapTicks: 'genes absent from some isolates',
+    stepGene: 'variable gene',
+    coreNote: 'In all isolates means',
+    genesDownload: 'All genes',
+    accessoryDownload: 'Genes absent from some isolates',
+  },
+};
+
+export const sectionOf = (study) => SECTIONS[study?.section] || SECTIONS.pangenome;
+
+/** A copy number for display: gene counts as whole numbers, read-coverage estimates to one decimal */
+export const fmtCopies = (cn, study) => (study?.copy_number_kind === 'count' ? String(Math.round(cn)) : cn.toFixed(1));

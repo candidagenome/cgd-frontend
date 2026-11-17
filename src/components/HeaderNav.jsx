@@ -75,10 +75,20 @@ const HeaderNav = () => {
           title: 'Enrichment, expression, orthologs and downloads for a set of genes',
         },
         { label: 'Ortholog Converter', to: '/ortholog-converter' },
+        {
+          label: 'Pangenome Browser',
+          to: '/pangenome',
+          title: 'Core and accessory genes across isolates of a species',
+        },
         { label: 'PatMatch', to: '/patmatch' },
         { label: 'Primers', to: '/webprimer' },
         { label: 'Phenotype Search', to: '/phenotype/search' },
         { label: 'Restriction Mapper', to: '/restriction-mapper' },
+        {
+          label: 'Strain Variation Browser',
+          to: '/strain-variation',
+          title: 'How genes vary across isolates of a species',
+        },
         { label: 'Synteny Browser', to: '/synteny-browser' },
         { label: 'Virulence Factor Browser', to: '/virulence-factor-browser' }
       ]

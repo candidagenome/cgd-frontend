@@ -82,6 +82,17 @@ function HelpPage() {
 
         <div className="help-item">
           <h3>
+            <Link to="/help/pangenome">Pangenome and Strain Variation Browsers</Link>
+          </h3>
+          <p>
+            How the two browsers present published multi-isolate studies of CGD species: core and
+            accessory genes, gene copy number, gene loss and premature stop codons across isolates,
+            and what the downloads contain.
+          </p>
+        </div>
+
+        <div className="help-item">
+          <h3>
             <Link to="/help/search-form">Search Help</Link>
           </h3>
           <p>Documentation about search tools in CGD. Additional tool-specific documentation:</p>

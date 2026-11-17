@@ -84,12 +84,22 @@ const ToolsPage = () => {
     },
     {
       heading: 'Comparative Genomics',
-      blurb: 'Work across Candida species and S. cerevisiae.',
+      blurb: 'Work across Candida species and S. cerevisiae, or across isolates of one species.',
       tools: [
         {
           title: 'Ortholog Converter',
           url: '/ortholog-converter',
           description: 'Convert gene lists between Candida species or to S. cerevisiae for functional analysis'
+        },
+        {
+          title: 'Pangenome Browser',
+          url: '/pangenome',
+          description: 'Core and accessory genes across isolates of a species, from published pangenome studies'
+        },
+        {
+          title: 'Strain Variation Browser',
+          url: '/strain-variation',
+          description: 'How genes vary across isolates of a species: copy number, gene loss and premature stop codons'
         },
         {
           title: 'Synteny Browser',

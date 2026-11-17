@@ -50,6 +50,30 @@ const MEETINGS = [
 // News items
 const NEWS_ITEMS = [
   {
+    title: 'New: Pangenome and Strain Variation Browsers',
+    content: (
+      <>
+        Two new browsers show how genes vary between isolates of a species, using data from
+        published studies of <em>C. parapsilosis</em>, <em>C. glabrata</em> and <em>C. auris</em>.
+        The <Link to="/pangenome">Pangenome Browser</Link> shows which genes all or nearly all
+        isolates share (core), which only some carry (accessory), and genes the reference strain
+        lacks. The <Link to="/strain-variation">Strain Variation Browser</Link> follows the
+        reference strain&apos;s genes across isolates: their copy number, gene loss and premature
+        stop codons. Each study has a genome browser, a searchable gene table and downloads, and
+        locus pages now show a Pangenome and a Strain variation row for genes the studies cover.
+        Both browsers are in the Tools menu.
+        <br /><br />
+        <Link to="/pangenome">Pangenome Browser</Link>
+        {' | '}
+        <Link to="/strain-variation">Strain Variation Browser</Link>
+        {' | '}
+        <Link to="/help/pangenome">Help</Link>
+      </>
+    ),
+    date: 'November 2026',
+    highlight: true,
+  },
+  {
     title: 'The CGD Public Wiki Has Moved to Pathogenic Yeast Comparison',
     content: (
       <>

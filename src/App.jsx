@@ -31,6 +31,7 @@ import GOResourcesPage from './pages/GOResourcesPage';
 import CommunityPage from './pages/CommunityPage';
 import SubmitDataPage from './pages/SubmitDataPage';
 import ExploreCGDPage from './pages/ExploreCGDPage';
+import PangenomePage from './pages/PangenomePage';
 import BrowseCategoryPage from './pages/BrowseCategoryPage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import TextSearchResultsPage from './pages/TextSearchResultsPage';
@@ -162,6 +163,7 @@ import SyntenyBrowserHelp from './pages/help/SyntenyBrowserHelp';
 import NonCodingRNAHelp from './pages/help/NonCodingRNAHelp';
 import RepeatTEHelp from './pages/help/RepeatTEHelp';
 import OrthologNameTransferHelp from './pages/help/OrthologNameTransferHelp';
+import PangenomeHelp from './pages/help/PangenomeHelp';
 
 import ScrollToTop from './components/ScrollToTop';
 import Analytics from './components/Analytics';
@@ -231,6 +233,11 @@ function App() {
           {/* Main pages */}
           <Route path="/" element={<HomePage />} />
           <Route path="/locus/:name" element={<LocusPage />} />
+          <Route path="/pangenome" element={<PangenomePage />} />
+          <Route path="/pangenome/:studyId" element={<PangenomePage />} />
+          <Route path="/strain-variation" element={<PangenomePage section="strain_variation" />} />
+          <Route path="/strain-variation/:studyId" element={<PangenomePage section="strain_variation" />} />
+          <Route path="/multi-genome" element={<Navigate to="/strain-variation" replace />} />
           <Route path="/reference/NewPapersThisWeek" element={<NewPapersThisWeekPage />} />
           <Route path="/reference/GenomewideAnalysisPapers" element={<GenomeWideAnalysisPapersPage />} />
           <Route path="/genome-wide-analysis-papers" element={<GenomeWideAnalysisPapersPage />} />
@@ -664,6 +671,7 @@ function App() {
           <Route path="/help/non-coding-rna" element={<NonCodingRNAHelp />} />
           <Route path="/help/repeat-te" element={<RepeatTEHelp />} />
           <Route path="/help/ortholog-name-transfer" element={<OrthologNameTransferHelp />} />
+          <Route path="/help/pangenome" element={<PangenomeHelp />} />
         </Routes>
 
         {/* =========================
