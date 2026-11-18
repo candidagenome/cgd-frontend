@@ -7,7 +7,7 @@ const DEFAULT_WINDOW = 60000;
 const MIN_WINDOW = 2000;
 const fmt = (v) => Number(v).toLocaleString();
 
-// Accessory gene colour by the share of isolates carrying it
+// Accessory gene color by the share of isolates carrying it
 const frequencyColor = (presence, total) => {
   if (presence === null || presence === undefined) return '#9e9e9e';
   const f = presence / total;
@@ -15,7 +15,7 @@ const frequencyColor = (presence, total) => {
   if (f < 0.5) return '#ef6c00';
   return '#f9a825';
 };
-// Duplicated gene colour by the share of isolates in which it is duplicated
+// Duplicated gene color by the share of isolates in which it is duplicated
 const duplicationColor = (isolates, total) => {
   const f = isolates / total;
   if (f < 0.1) return '#64b5f6';
@@ -81,6 +81,8 @@ function PangenomeMap({
   const [view, setView] = useState(null); // { chrom, start, end }
   const [selectedId, setSelectedId] = useState(null);
   const [showUnplaced, setShowUnplaced] = useState(false);
+  const [geneQuery, setGeneQuery] = useState('');
+  const [geneQueryMessage, setGeneQueryMessage] = useState('');
   // Copy-number studies open on duplications, which they are mostly about; losses are a toggle away
   const [mode, setMode] = useState(duplicationThreshold ? 'duplications' : 'losses');
   const duplications = Boolean(duplicationThreshold) && mode === 'duplications';
@@ -273,6 +275,8 @@ function PangenomeMap({
     return [1, 2, 5, 10].map((m) => m * pow).find((s) => s >= raw);
   })();
   const ticks = [];
+  // Mb labels carry enough decimals for neighbouring ticks to differ (1.020, 1.025 Mb, not 1.02, 1.02)
+  const mbDecimals = Math.max(0, Math.ceil(-Math.log10(tickStep / 1e6) - 1e-9));
   for (let t = Math.ceil(view.start / tickStep) * tickStep; t <= view.end; t += tickStep) ticks.push(t);
 
   const right = LABEL_W + trackW;
@@ -363,7 +367,7 @@ function PangenomeMap({
         <g key={t}>
           <line x1={rx(t)} x2={rx(t)} y1={axisY - 6} y2={regionH} className="pg-grid" />
           <text x={rx(t)} y={axisY - 10} className="pg-axis-label" textAnchor="middle">
-            {t >= 1e6 ? `${(t / 1e6).toFixed(t % 1e6 ? 2 : 0)} Mb` : `${fmt(t / 1000)} kb`}
+            {t >= 1e6 ? `${(t / 1e6).toFixed(mbDecimals)} Mb` : `${fmt(t / 1000)} kb`}
           </text>
         </g>
       ))}
@@ -482,6 +486,23 @@ function PangenomeMap({
     const size = span * factor;
     setWindow(mid - size / 2, size);
   };
+  // Jump to a gene by CGD gene name, systematic name or study ID
+  const findGene = (e) => {
+    e.preventDefault();
+    const q = geneQuery.trim().toUpperCase();
+    if (!q) return;
+    const matches = (list) =>
+      list.filter((g) => [g.id, g.gene_name, g.reference_gene].some((v) => v && v.toUpperCase() === q));
+    const found = matches(map.genes).sort((a, b) => (a.placed_by !== 'own') - (b.placed_by !== 'own'));
+    if (found.length) {
+      centerOn(found[0]);
+      setGeneQueryMessage('');
+    } else if (matches(map.unplaced).length) {
+      setGeneQueryMessage(`${geneQuery.trim()} has no position in the current annotation, so it is not drawn.`);
+    } else {
+      setGeneQueryMessage(`${geneQuery.trim()} is not in this study.`);
+    }
+  };
   const step = (dir) => {
     const mid = (view.start + view.end) / 2;
     const ordered = accessory;
@@ -555,7 +576,7 @@ function PangenomeMap({
       <h3 className="pg-subhead">Genome overview</h3>
       <p className="pg-hint">
         {showPresence
-          ? `Coloured ticks are ${duplications ? `genes with ${copies} in some isolates` : mapTicks}${
+          ? `Colored ticks are ${duplications ? `genes with ${copies} in some isolates` : mapTicks}${
               showStops ? '; purple marks are premature stop codons' : ''
             }.`
           : 'Purple marks are premature stop codons.'}{' '}
@@ -577,6 +598,16 @@ function PangenomeMap({
             </option>
           ))}
         </select>
+        <form className="pg-gene-search" onSubmit={findGene}>
+          <input
+            type="text"
+            value={geneQuery}
+            placeholder="Gene name or ID"
+            aria-label="Go to gene"
+            onChange={(e) => setGeneQuery(e.target.value)}
+          />
+          <button type="submit">Go</button>
+        </form>
         <button onClick={() => setWindow(view.start - span / 2, span)} title="Pan left">
           &larr;
         </button>
@@ -588,6 +619,7 @@ function PangenomeMap({
         <button onClick={() => step(-1)}>&lsaquo; Previous {duplications ? 'duplicated gene' : stepGene}</button>
         <button onClick={() => step(1)}>Next {duplications ? 'duplicated gene' : stepGene} &rsaquo;</button>
       </div>
+      {geneQueryMessage && <p className="pg-hint pg-search-message">{geneQueryMessage}</p>}
       {region}
 
       {selected && (

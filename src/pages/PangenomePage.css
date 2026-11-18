@@ -370,6 +370,21 @@
   font-size: 0.85rem;
 }
 
+/* Go-to-gene box beside the chromosome menu */
+.pg-gene-search {
+  display: flex;
+  gap: 4px;
+}
+
+.pg-gene-search input {
+  font-size: 0.85rem;
+  width: 150px;
+}
+
+.pg-search-message {
+  color: #b71c1c;
+}
+
 .pg-axis-label {
   font-size: 11px;
   fill: #555;

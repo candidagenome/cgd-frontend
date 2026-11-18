@@ -127,11 +127,12 @@ function PangenomeHelp() {
             </li>
             <li>
               <strong>Genome browser</strong>: the <em>genome overview</em> draws every chromosome,
-              with coloured ticks for accessory genes (or genes absent from some isolates) and purple
+              with colored ticks for accessory genes (or genes absent from some isolates) and purple
               marks for premature stop codons. Click anywhere on it to zoom in on that region. The{' '}
-              <em>region view</em> below draws the genes in the selected region, coloured by how
-              many isolates carry them. Use the arrows to pan, Zoom in and Zoom out to change the
-              scale, and Previous and Next to jump between variable genes. Click a gene to see a
+              <em>region view</em> below draws the genes in the selected region, colored by how
+              many isolates carry them. Type a gene name or ID in the box beside the chromosome menu
+              to jump to it. Use the arrows to pan, Zoom in and Zoom out to change the scale, and
+              Previous and Next to jump between variable genes. Click a gene to see a
               summary with links to its CGD locus page and its row in the gene table. Genes with no
               position in the CGD annotation, such as genes the reference strain lacks, are listed
               below the map rather than drawn; a study gene derived from a CGD gene is drawn at
