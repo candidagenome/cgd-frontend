@@ -37,11 +37,17 @@ const STOP_OPTIONS = [
   { value: 'true', label: 'With premature stops' },
   { value: 'false', label: 'Without' },
 ];
+const DUPLICATION_OPTIONS = [
+  { value: '', label: 'Any' },
+  { value: 'true', label: 'Duplicated in some isolates' },
+  { value: 'false', label: 'Not duplicated' },
+];
 const SORT_OPTIONS = [
   { value: 'position', label: 'Chromosome position' },
   { value: 'id', label: 'Gene ID' },
   { value: 'presence', label: 'Rarest accessory first' },
   { value: 'stops', label: 'Most isolates with stops' },
+  { value: 'duplicated', label: 'Most isolates duplicated' },
 ];
 
 const shortCitation = (citation) => (citation || '').replace(/\) .*$/, ')');
@@ -221,8 +227,8 @@ function GeneDetail({ studyId, geneId, study }) {
           <h4>Copy number by isolate</h4>
           <p className="pangenome-note">
             Highest first; an unchanged gene is about {baseline}
-            {baseline === 2 ? ' (diploid)' : baseline === 1 ? ' (haploid)' : ''}. Red: absent; amber: at least twice
-            that.
+            {baseline === 2 ? ' (diploid)' : baseline === 1 ? ' (haploid)' : ''}. Red: absent; amber: duplicated (at
+            least twice that).
           </p>
           <div className="pangenome-cn-list">
             {Object.entries(gene.copy_number)
@@ -308,6 +314,7 @@ function PangenomeStudy({ studyId, section }) {
       category: searchParams.get('category') || '',
       reference: searchParams.get('reference') || '',
       stops: searchParams.get('stops') || '',
+      duplicated: searchParams.get('duplicated') || '',
       q: searchParams.get('q') || '',
       sort: searchParams.get('sort') || 'position',
     }),
@@ -323,7 +330,7 @@ function PangenomeStudy({ studyId, section }) {
 
   useEffect(() => {
     const params = { sort: filters.sort, page: 1, page_size: MAX_GENES };
-    ['category', 'reference', 'stops', 'q'].forEach((k) => {
+    ['category', 'reference', 'stops', 'duplicated', 'q'].forEach((k) => {
       if (filters[k]) params[k] = filters[k];
     });
     pangenomeApi
@@ -422,6 +429,13 @@ function PangenomeStudy({ studyId, section }) {
           p.data.copy_number_max === null || p.data.copy_number_max === undefined
             ? ''
             : `${fmtCopies(p.data.copy_number_min, study)}–${fmtCopies(p.data.copy_number_max, study)}`,
+      },
+      study?.duplication_threshold && {
+        headerName: 'Duplicated',
+        width: 120,
+        headerTooltip: `Isolates with ${study.duplication_threshold} or more copies (twice the normal copy number)`,
+        valueGetter: (p) => p.data.duplicated_isolates || 0,
+        valueFormatter: (p) => (p.value ? `${p.value}/${total}` : ''),
       },
       study?.stop_codons_reported && {
         headerName: 'Stops',
@@ -557,6 +571,12 @@ function PangenomeStudy({ studyId, section }) {
             )}
           </div>
         )}
+        {study.duplication_threshold && (
+          <div title="At least twice the normal copy number in one or more isolates">
+            <strong>{fmtInt(study.counts.duplicated)}</strong> genes duplicated in some isolates
+            <span className="pangenome-stat-split"> ({study.duplication_threshold} or more copies)</span>
+          </div>
+        )}
         {study.stop_codons_reported && (
           <div>
             <strong>{fmtInt(study.counts.with_stop_codons)}</strong> genes with premature stops
@@ -587,6 +607,7 @@ function PangenomeStudy({ studyId, section }) {
         mapTicks={config.mapTicks}
         stepGene={presence ? config.stepGene : 'gene with a stop'}
         showPresence={presence}
+        duplicationThreshold={study.duplication_threshold}
         focusId={filters.q}
         onShowInTable={(id) => {
           setQueryInput(id);
@@ -631,10 +652,26 @@ function PangenomeStudy({ studyId, section }) {
             </select>
           </label>
         )}
+        {study.duplication_threshold && (
+          <label>
+            Duplications{' '}
+            <select value={filters.duplicated} onChange={(e) => update({ duplicated: e.target.value })}>
+              {DUPLICATION_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
         <label>
           Sort{' '}
           <select value={filters.sort} onChange={(e) => update({ sort: e.target.value })}>
-            {SORT_OPTIONS.filter((o) => o.value !== 'stops' || study.stop_codons_reported).map((o) => (
+            {SORT_OPTIONS.filter(
+              (o) =>
+                (o.value !== 'stops' || study.stop_codons_reported) &&
+                (o.value !== 'duplicated' || study.duplication_threshold)
+            ).map((o) => (
               <option key={o.value} value={o.value}>
                 {o.label}
               </option>
@@ -732,6 +769,11 @@ function PangenomeStudy({ studyId, section }) {
         {presence && (
           <li>
             <a href={pangenomeApi.downloadUrl(studyId, 'accessory')}>{config.accessoryDownload}</a> (TSV)
+          </li>
+        )}
+        {study.duplication_threshold && (
+          <li>
+            <a href={pangenomeApi.downloadUrl(studyId, 'duplicated')}>Genes duplicated in some isolates</a> (TSV)
           </li>
         )}
         {study.stop_codons_reported && (

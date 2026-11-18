@@ -7,13 +7,20 @@ const DEFAULT_WINDOW = 60000;
 const MIN_WINDOW = 2000;
 const fmt = (v) => Number(v).toLocaleString();
 
-// Accessory gene colour by the share of isolates carrying it
+// Accessory gene color by the share of isolates carrying it
 const frequencyColor = (presence, total) => {
   if (presence === null || presence === undefined) return '#9e9e9e';
   const f = presence / total;
   if (f < 0.1) return '#c62828';
   if (f < 0.5) return '#ef6c00';
   return '#f9a825';
+};
+// Duplicated gene color by the share of isolates in which it is duplicated
+const duplicationColor = (isolates, total) => {
+  const f = isolates / total;
+  if (f < 0.1) return '#64b5f6';
+  if (f < 0.5) return '#1e88e5';
+  return '#0d47a1';
 };
 const geneLabel = (g) => (g.placed_by === 'own' && g.gene_name ? g.gene_name : g.id);
 // cpar_Chr_1 -> Chr 1; ChrA_C_glabrata_CBS138 -> Chr A; Ca22chrRA_C_albicans_SC5314 -> Chr R
@@ -64,6 +71,8 @@ function PangenomeMap({
   categories = { core: 'core', accessory: 'accessory', absentAll: 'accessory' },
   mapTicks = 'accessory genes',
   stepGene = 'accessory gene',
+  // copy number at which a gene counts as duplicated (copy-number studies): adds a Duplications / Losses toggle
+  duplicationThreshold = null,
 }) {
   const containerRef = useRef(null);
   const width = useWidth(containerRef);
@@ -72,6 +81,16 @@ function PangenomeMap({
   const [view, setView] = useState(null); // { chrom, start, end }
   const [selectedId, setSelectedId] = useState(null);
   const [showUnplaced, setShowUnplaced] = useState(false);
+  const [geneQuery, setGeneQuery] = useState('');
+  const [geneQueryMessage, setGeneQueryMessage] = useState('');
+  // Copy-number studies open on duplications, which they are mostly about; losses are a toggle away
+  const [mode, setMode] = useState(duplicationThreshold ? 'duplications' : 'losses');
+  const duplications = Boolean(duplicationThreshold) && mode === 'duplications';
+  // The genes highlighted on the map: duplicated ones, or accessory ones (absent from some isolates)
+  const highlighted = (g) => (duplications ? g.duplicated > 0 : g.category === 'accessory');
+  const highlightColor = (g, total) =>
+    duplications ? duplicationColor(g.duplicated, total) : frequencyColor(g.presence, total);
+  const copies = `${duplicationThreshold} or more copies`;
 
   useEffect(() => {
     pangenomeApi
@@ -87,10 +106,13 @@ function PangenomeMap({
     });
     return out;
   }, [map]);
-  // The genes the browser steps through: accessory genes, or genes with stops for a study of stop codons
+  // The genes the browser steps through: the highlighted genes, or genes with stops for a study of stop codons
   const accessory = useMemo(
-    () => (map?.genes || []).filter((g) => (showPresence ? g.category === 'accessory' : g.stops?.length)),
-    [map, showPresence]
+    () =>
+      (map?.genes || []).filter((g) =>
+        showPresence ? (duplications ? g.duplicated > 0 : g.category === 'accessory') : g.stops?.length
+      ),
+    [map, showPresence, duplications]
   );
   const lengths = useMemo(
     () => Object.fromEntries((map?.chromosomes || []).map((c) => [c.name, c.length])),
@@ -105,13 +127,17 @@ function PangenomeMap({
     setSelectedId(gene.id);
   };
 
-  // Initial view: the gene named in the page's search, else the first accessory gene
+  // Initial view: the gene named in the page's search, else the gene duplicated in the most isolates (on
+  // duplications), else the first accessory gene
   const focusKey = `${map ? 'loaded' : ''}:${focusId || ''}`;
   const [appliedFocus, setAppliedFocus] = useState(null);
   if (map && appliedFocus !== focusKey) {
     setAppliedFocus(focusKey);
     const wanted = focusId && map.genes.find((g) => g.id.toUpperCase() === focusId.toUpperCase());
-    const target = wanted || accessory[0] || map.genes[0];
+    const mostDuplicated = duplications
+      ? accessory.reduce((best, g) => (!best || g.duplicated > best.duplicated ? g : best), null)
+      : null;
+    const target = wanted || mostDuplicated || accessory[0] || map.genes[0];
     if (target) {
       const size = Math.max(DEFAULT_WINDOW / 2, (target.end - target.start) * 6);
       const mid = (target.start + target.end) / 2;
@@ -180,7 +206,7 @@ function PangenomeMap({
                 />
               ))}
             {genes
-              .filter((g) => g.category === 'accessory')
+              .filter(highlighted)
               .map((g) => (
                 <rect
                   key={`a-${g.id}`}
@@ -188,11 +214,15 @@ function PangenomeMap({
                   y={y - 3}
                   width={3}
                   height={16}
-                  fill={frequencyColor(g.presence, total)}
+                  fill={highlightColor(g, total)}
                   className="pg-ov-accessory"
                   onClick={() => centerOn(g)}
                 >
-                  <title>{`${g.id}: ${g.presence}/${total} isolates`}</title>
+                  <title>
+                    {duplications
+                      ? `${geneLabel(g)}: ${copies} in ${g.duplicated}/${total} isolates`
+                      : `${g.id}: ${g.presence}/${total} isolates`}
+                  </title>
                 </rect>
               ))}
             {view.chrom === c.name && (
@@ -245,6 +275,8 @@ function PangenomeMap({
     return [1, 2, 5, 10].map((m) => m * pow).find((s) => s >= raw);
   })();
   const ticks = [];
+  // Mb labels carry enough decimals for neighbouring ticks to differ (1.020, 1.025 Mb, not 1.02, 1.02)
+  const mbDecimals = Math.max(0, Math.ceil(-Math.log10(tickStep / 1e6) - 1e-9));
   for (let t = Math.ceil(view.start / tickStep) * tickStep; t <= view.end; t += tickStep) ticks.push(t);
 
   const right = LABEL_W + trackW;
@@ -256,7 +288,7 @@ function PangenomeMap({
     const order = [...geneStack.placed].sort(
       (a, b) =>
         (b.item.id === selectedId) - (a.item.id === selectedId) ||
-        (b.item.category === 'accessory') - (a.item.category === 'accessory') ||
+        highlighted(b.item) - highlighted(a.item) ||
         a.item.start - b.item.start
     );
     const taken = {};
@@ -278,7 +310,7 @@ function PangenomeMap({
     const w = Math.max(2, x2 - x1);
     const label = geneLabel(g);
     const boxY = top + lane * (isVariant ? laneH : geneLaneH);
-    const fill = g.category === 'accessory' ? frequencyColor(g.presence, total) : '#7cb342';
+    const fill = highlighted(g) ? highlightColor(g, total) : '#7cb342';
     return (
       <g
         key={g.id}
@@ -311,7 +343,7 @@ function PangenomeMap({
           <text
             x={labelX[g.id]}
             y={boxY + 23}
-            className={`pg-gene-label ${g.category === 'accessory' ? 'pg-label-accessory' : ''}`}
+            className={`pg-gene-label ${highlighted(g) ? 'pg-label-accessory' : ''}`}
             textAnchor="middle"
           >
             {label}
@@ -320,7 +352,9 @@ function PangenomeMap({
         <title>
           {`${g.id}${g.gene_name ? ` (${g.gene_name})` : ''}: ${g.category}${
             g.presence !== null && g.presence !== undefined ? `, ${g.presence}/${total} isolates` : ''
-          }${g.type ? `, ${g.type}` : ''}`}
+          }${duplicationThreshold ? `, ${copies} in ${g.duplicated}/${total} isolates` : ''}${
+            g.type ? `, ${g.type}` : ''
+          }`}
         </title>
       </g>
     );
@@ -333,7 +367,7 @@ function PangenomeMap({
         <g key={t}>
           <line x1={rx(t)} x2={rx(t)} y1={axisY - 6} y2={regionH} className="pg-grid" />
           <text x={rx(t)} y={axisY - 10} className="pg-axis-label" textAnchor="middle">
-            {t >= 1e6 ? `${(t / 1e6).toFixed(t % 1e6 ? 2 : 0)} Mb` : `${fmt(t / 1000)} kb`}
+            {t >= 1e6 ? `${(t / 1e6).toFixed(mbDecimals)} Mb` : `${fmt(t / 1000)} kb`}
           </text>
         </g>
       ))}
@@ -367,7 +401,7 @@ function PangenomeMap({
           Isolates
         </text>
         <text x={6} y={freqY + 24} className="pg-track-sublabel">
-          carrying gene
+          {duplications ? `with ≥${duplicationThreshold} copies` : 'carrying gene'}
         </text>
         <line x1={LABEL_W} x2={LABEL_W + trackW} y1={freqY + freqH} y2={freqY + freqH} className="pg-axis" />
         {/* 100% guide, so a bar's height reads as a share of all isolates */}
@@ -377,7 +411,8 @@ function PangenomeMap({
         </text>
         {(() => {
           // Variants drawn at the same gene share a position: put their bars side by side
-          const bars = inView.filter((g) => g.category === 'accessory' && g.presence !== null && g.presence !== undefined);
+          const count = (g) => (duplications ? g.duplicated : g.presence);
+          const bars = inView.filter((g) => highlighted(g) && count(g) !== null && count(g) !== undefined);
           const groups = {};
           bars.forEach((g) => {
             (groups[`${g.start}-${g.end}`] = groups[`${g.start}-${g.end}`] || []).push(g);
@@ -386,19 +421,19 @@ function PangenomeMap({
             group.map((g, i) => {
               const mid = rx((Math.max(g.start, view.start) + Math.min(g.end, view.end)) / 2);
               const x = mid - (group.length * 12) / 2 + i * 12 + 1;
-              const h = Math.max(2, (g.presence / total) * freqH);
+              const h = Math.max(2, (count(g) / total) * freqH);
               return (
                 <g key={`f-${g.id}`} onClick={() => setSelectedId(g.id)} className={`pg-gene ${selectedId === g.id ? 'selected' : ''}`}>
-                  <rect x={x} y={freqY + freqH - h} width={10} height={h} fill={frequencyColor(g.presence, total)} />
-                  <title>{`${g.id}: ${g.presence}/${total}`}</title>
+                  <rect x={x} y={freqY + freqH - h} width={10} height={h} fill={highlightColor(g, total)} />
+                  <title>{`${geneLabel(g)}: ${count(g)}/${total}`}</title>
                 </g>
               );
             })
           );
         })()}
-        {inView.some((g) => g.category === 'accessory') ? null : (
+        {inView.some(highlighted) ? null : (
           <text x={LABEL_W + 4} y={freqY + freqH - 4} className="pg-empty">
-            all genes here are core
+            {duplications ? 'no duplicated genes here' : `all genes here are ${categories.core}`}
           </text>
         )}
         </>
@@ -451,6 +486,23 @@ function PangenomeMap({
     const size = span * factor;
     setWindow(mid - size / 2, size);
   };
+  // Jump to a gene by CGD gene name, systematic name or study ID
+  const findGene = (e) => {
+    e.preventDefault();
+    const q = geneQuery.trim().toUpperCase();
+    if (!q) return;
+    const matches = (list) =>
+      list.filter((g) => [g.id, g.gene_name, g.reference_gene].some((v) => v && v.toUpperCase() === q));
+    const found = matches(map.genes).sort((a, b) => (a.placed_by !== 'own') - (b.placed_by !== 'own'));
+    if (found.length) {
+      centerOn(found[0]);
+      setGeneQueryMessage('');
+    } else if (matches(map.unplaced).length) {
+      setGeneQueryMessage(`${geneQuery.trim()} has no position in the current annotation, so it is not drawn.`);
+    } else {
+      setGeneQueryMessage(`${geneQuery.trim()} is not in this study.`);
+    }
+  };
   const step = (dir) => {
     const mid = (view.start + view.end) / 2;
     const ordered = accessory;
@@ -466,13 +518,41 @@ function PangenomeMap({
 
   return (
     <div className="pg-browser" ref={containerRef}>
+      {duplicationThreshold && (
+        <div className="pg-mode" role="group" aria-label="Show on the map">
+          Show:{' '}
+          {[
+            ['duplications', `Duplications (${copies})`],
+            ['losses', 'Losses'],
+          ].map(([value, label]) => (
+            <button
+              key={value}
+              type="button"
+              className={mode === value ? 'active' : ''}
+              aria-pressed={mode === value}
+              onClick={() => setMode(value)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      )}
       <div className="pg-legend">
         {showPresence && (
           <span>
-            <i className="pg-swatch" style={{ background: '#7cb342' }} /> {categories.core}
+            <i className="pg-swatch" style={{ background: '#7cb342' }} />{' '}
+            {duplications ? 'not duplicated' : categories.core}
           </span>
         )}
-        {showPresence && (
+        {showPresence && duplications && (
+          <span>
+            Duplicated in:{' '}
+            <i className="pg-swatch" style={{ background: '#64b5f6' }} /> &lt;10%{' '}
+            <i className="pg-swatch" style={{ background: '#1e88e5' }} /> 10&ndash;50%{' '}
+            <i className="pg-swatch" style={{ background: '#0d47a1' }} /> &ge;50% of isolates
+          </span>
+        )}
+        {showPresence && !duplications && (
           <span>
             {categories.accessory.replace(/^./, (c) => c.toUpperCase())}, carried by:{' '}
             <i className="pg-swatch" style={{ background: '#c62828' }} /> &lt;10%{' '}
@@ -496,7 +576,9 @@ function PangenomeMap({
       <h3 className="pg-subhead">Genome overview</h3>
       <p className="pg-hint">
         {showPresence
-          ? `Coloured ticks are ${mapTicks}${showStops ? '; purple marks are premature stop codons' : ''}.`
+          ? `Colored ticks are ${duplications ? `genes with ${copies} in some isolates` : mapTicks}${
+              showStops ? '; purple marks are premature stop codons' : ''
+            }.`
           : 'Purple marks are premature stop codons.'}{' '}
         Click to zoom in.
       </p>
@@ -516,6 +598,16 @@ function PangenomeMap({
             </option>
           ))}
         </select>
+        <form className="pg-gene-search" onSubmit={findGene}>
+          <input
+            type="text"
+            value={geneQuery}
+            placeholder="Gene name or ID"
+            aria-label="Go to gene"
+            onChange={(e) => setGeneQuery(e.target.value)}
+          />
+          <button type="submit">Go</button>
+        </form>
         <button onClick={() => setWindow(view.start - span / 2, span)} title="Pan left">
           &larr;
         </button>
@@ -524,9 +616,10 @@ function PangenomeMap({
         </button>
         <button onClick={() => zoom(0.5)}>Zoom in</button>
         <button onClick={() => zoom(2)}>Zoom out</button>
-        <button onClick={() => step(-1)}>&lsaquo; Previous {stepGene}</button>
-        <button onClick={() => step(1)}>Next {stepGene} &rsaquo;</button>
+        <button onClick={() => step(-1)}>&lsaquo; Previous {duplications ? 'duplicated gene' : stepGene}</button>
+        <button onClick={() => step(1)}>Next {duplications ? 'duplicated gene' : stepGene} &rsaquo;</button>
       </div>
+      {geneQueryMessage && <p className="pg-hint pg-search-message">{geneQueryMessage}</p>}
       {region}
 
       {selected && (
@@ -541,6 +634,14 @@ function PangenomeMap({
           {!selected.in_reference && <span className="pangenome-badge novel">not in {referenceStrain}</span>}
           {selected.presence !== null && selected.presence !== undefined && (
             <> present in {selected.presence} of {total} isolates.</>
+          )}
+          {duplicationThreshold && (
+            <>
+              {' '}
+              {selected.duplicated > 0
+                ? `Duplicated (${copies}) in ${selected.duplicated} of ${total} isolates.`
+                : 'Not duplicated in any isolate.'}
+            </>
           )}
           {selected.type && <> {selected.type}.</>}
           {selected.ortholog && <> Ortholog {selected.ortholog}.</>}

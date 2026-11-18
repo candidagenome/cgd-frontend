@@ -290,6 +290,31 @@
   user-select: none;
 }
 
+/* Duplications / Losses toggle on copy-number studies */
+.pg-mode {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  margin: 4px 0 6px;
+}
+
+.pg-mode button {
+  font-size: 0.85rem;
+  padding: 3px 10px;
+  border: 1px solid #90a4ae;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.pg-mode button.active {
+  background: #0d47a1;
+  border-color: #0d47a1;
+  color: #fff;
+}
+
 .pg-legend {
   display: flex;
   flex-wrap: wrap;
@@ -343,6 +368,21 @@
 .pg-controls button,
 .pg-controls select {
   font-size: 0.85rem;
+}
+
+/* Go-to-gene box beside the chromosome menu */
+.pg-gene-search {
+  display: flex;
+  gap: 4px;
+}
+
+.pg-gene-search input {
+  font-size: 0.85rem;
+  width: 150px;
+}
+
+.pg-search-message {
+  color: #b71c1c;
 }
 
 .pg-axis-label {

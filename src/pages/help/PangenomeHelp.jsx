@@ -97,7 +97,10 @@ function PangenomeHelp() {
               read depth, where the normal copy number of a diploid species such as{' '}
               <em>C. parapsilosis</em> is about 2. Others count the genes each isolate has in a gene
               family, where the normal number for a haploid species such as <em>C. glabrata</em> is 1.
-              The study page says which.
+              The study page says which. A gene with at least twice the normal copy number in an isolate
+              (4 or more copies in a diploid, 2 or more in a haploid) counts as <strong>duplicated</strong>{' '}
+              there; lower cut-offs would also flag every gene on an extra copy of a chromosome. For these
+              studies the genome browser shows duplications, with a button to switch to losses.
             </li>
             <li>
               <strong>Detected in all isolates</strong>, or <strong>absent from some isolates</strong>,
@@ -124,11 +127,12 @@ function PangenomeHelp() {
             </li>
             <li>
               <strong>Genome browser</strong>: the <em>genome overview</em> draws every chromosome,
-              with coloured ticks for accessory genes (or genes absent from some isolates) and purple
+              with colored ticks for accessory genes (or genes absent from some isolates) and purple
               marks for premature stop codons. Click anywhere on it to zoom in on that region. The{' '}
-              <em>region view</em> below draws the genes in the selected region, coloured by how
-              many isolates carry them. Use the arrows to pan, Zoom in and Zoom out to change the
-              scale, and Previous and Next to jump between variable genes. Click a gene to see a
+              <em>region view</em> below draws the genes in the selected region, colored by how
+              many isolates carry them. Type a gene name or ID in the box beside the chromosome menu
+              to jump to it. Use the arrows to pan, Zoom in and Zoom out to change the scale, and
+              Previous and Next to jump between variable genes. Click a gene to see a
               summary with links to its CGD locus page and its row in the gene table. Genes with no
               position in the CGD annotation, such as genes the reference strain lacks, are listed
               below the map rather than drawn; a study gene derived from a CGD gene is drawn at
@@ -184,6 +188,10 @@ function PangenomeHelp() {
               spreadsheet. The <em>cgd_page</em> column links to the gene&apos;s CGD locus page, or
               for a study gene not in CGD to the CGD gene it derives from, and <em>about_id</em> says
               which kind of ID each row has.
+            </li>
+            <li>
+              <strong>Genes duplicated in some isolates</strong> (copy-number studies): one row per gene, with
+              the number of isolates in which it is duplicated.
             </li>
             <li><strong>Premature stop codons by isolate</strong>: one row per stop codon.</li>
             <li><strong>Copy number by gene and isolate</strong>: a gene-by-isolate table.</li>
