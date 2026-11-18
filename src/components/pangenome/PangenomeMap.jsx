@@ -125,13 +125,17 @@ function PangenomeMap({
     setSelectedId(gene.id);
   };
 
-  // Initial view: the gene named in the page's search, else the first accessory gene
+  // Initial view: the gene named in the page's search, else the gene duplicated in the most isolates (on
+  // duplications), else the first accessory gene
   const focusKey = `${map ? 'loaded' : ''}:${focusId || ''}`;
   const [appliedFocus, setAppliedFocus] = useState(null);
   if (map && appliedFocus !== focusKey) {
     setAppliedFocus(focusKey);
     const wanted = focusId && map.genes.find((g) => g.id.toUpperCase() === focusId.toUpperCase());
-    const target = wanted || accessory[0] || map.genes[0];
+    const mostDuplicated = duplications
+      ? accessory.reduce((best, g) => (!best || g.duplicated > best.duplicated ? g : best), null)
+      : null;
+    const target = wanted || mostDuplicated || accessory[0] || map.genes[0];
     if (target) {
       const size = Math.max(DEFAULT_WINDOW / 2, (target.end - target.start) * 6);
       const mid = (target.start + target.end) / 2;
