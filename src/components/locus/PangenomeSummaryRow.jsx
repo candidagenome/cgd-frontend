@@ -76,6 +76,12 @@ function studyLine({ study, isolate_count: total, genes }, featureName, subject,
             <strong>{fmtCopies(own.copy_number_max, study)}</strong> across isolates
           </>
         )}
+        {own && study.duplication_threshold && own.duplicated_isolates > 0 && (
+          <>
+            ; <strong>duplicated</strong> ({study.duplication_threshold} or more copies) in{' '}
+            <strong>{own.duplicated_isolates}</strong> {own.duplicated_isolates === 1 ? 'isolate' : 'isolates'}
+          </>
+        )}
         {own && own.stop_codon_isolates > 0 && study.presence_reported !== false && (
           <>
             ; premature stop codon in <strong>{own.stop_codon_isolates}</strong>{' '}

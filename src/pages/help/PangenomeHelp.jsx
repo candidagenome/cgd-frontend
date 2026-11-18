@@ -97,7 +97,10 @@ function PangenomeHelp() {
               read depth, where the normal copy number of a diploid species such as{' '}
               <em>C. parapsilosis</em> is about 2. Others count the genes each isolate has in a gene
               family, where the normal number for a haploid species such as <em>C. glabrata</em> is 1.
-              The study page says which.
+              The study page says which. A gene with at least twice the normal copy number in an isolate
+              (4 or more copies in a diploid, 2 or more in a haploid) counts as <strong>duplicated</strong>{' '}
+              there; lower cut-offs would also flag every gene on an extra copy of a chromosome. For these
+              studies the genome browser shows duplications, with a button to switch to losses.
             </li>
             <li>
               <strong>Detected in all isolates</strong>, or <strong>absent from some isolates</strong>,
@@ -184,6 +187,10 @@ function PangenomeHelp() {
               spreadsheet. The <em>cgd_page</em> column links to the gene&apos;s CGD locus page, or
               for a study gene not in CGD to the CGD gene it derives from, and <em>about_id</em> says
               which kind of ID each row has.
+            </li>
+            <li>
+              <strong>Genes duplicated in some isolates</strong> (copy-number studies): one row per gene, with
+              the number of isolates in which it is duplicated.
             </li>
             <li><strong>Premature stop codons by isolate</strong>: one row per stop codon.</li>
             <li><strong>Copy number by gene and isolate</strong>: a gene-by-isolate table.</li>
